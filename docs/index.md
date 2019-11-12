@@ -21,8 +21,6 @@
 
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
-## For people that want to get from Point A to Point B, and have fun along the way.
-
 ### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
 ---
 
@@ -40,6 +38,7 @@ pip3 install pysimplegui
 
 ```python
 import PySimpleGUI as sg
+sg.change_look_and_feel('DarkAmber')   # Add a little color 
 # All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -61,7 +60,7 @@ window.close()
 
 and returns the value input as well as the button clicked.
 
-![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
 
 ### Any Questions?  It's that simple.
 
@@ -129,6 +128,8 @@ and returns the value input as well as the button clicked.
 
 "I love PySimpleGUI! I've been teaching it in my Python classes instead of Tkinter."
 
+"I wish PySimpleGUI was available for every friggin programming language"
+
 ### START HERE - User Manual with Table of Contents
 
 [ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
@@ -147,7 +148,7 @@ and returns the value input as well as the button clicked.
 
 [Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
 
-[Lots of screenshots](https://github.com/PySimpleGUI/PySimpleGUI/issues/1)
+[Lots of screenshots](https://www.bountysource.com/issues/60766522-screen-shots)
 
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
@@ -263,6 +264,7 @@ This makes the coding process extremely quick and the amount of code very small
 
 ```python
 import PySimpleGUI as sg
+sg.change_look_and_feel('DarkAmber')   # Add a little color to your windows
 # All the stuff inside your window. This is the PSG magic code compactor...
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -272,14 +274,14 @@ layout = [  [sg.Text('Some text on Row 1')],
 window = sg.Window('Window Title', layout)
 # Event Loop to process "events"
 while True:             
-    event, values = window.Read()
+    event, values = window.read()
     if event in (None, 'Cancel'):
         break
 
-window.Close()
+window.close()
 ```
 
-![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
 
 You gotta admit that the code above is a lot more "fun" looking that tkinter code you've studied before.  Adding stuff to your GUI is ***trivial***.  You can clearly see the "mapping" of those 3 lines of code to specific Elements laid out in a Window.   It's not a trick.  It's how easy it is to code in PySimpleGUI.  With this simple concept comes the ability to create any window layout you wish.  There are parameters to move elements around inside the window should you need more control.
 
@@ -5501,6 +5503,22 @@ Parameter Descriptions:
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### click
 
 Generates a click of the button as if the user clicked the button
@@ -5524,6 +5542,87 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### get_text
+
+Returns the current text shown on a button
+
+`get_text()`
+
+|Name|Meaning|
+|---|---|
+| **return** | (str) The text currently displayed on the button |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -5669,6 +5768,22 @@ Parameter Descriptions:
 |menu_definition|(List[List]) New menu definition (in menu definition format)|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5683,6 +5798,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -5775,6 +5961,22 @@ Parameter Descriptions:
 
 #### property: TKCanvas
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5789,6 +5991,81 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### tk_canvas
+
+#### property: tk_canvas
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ## Checkbox Element
 
@@ -5905,6 +6182,22 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5929,6 +6222,77 @@ Return the current state of this checkbox
 |Name|Meaning|
 |---|---|
 | **return** | (bool) Current state of checkbox |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -6073,6 +6437,36 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
+### add_row
+
+Not recommended user call.  Used to add rows of Elements to the Column Element.
+
+```
+add_row(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6087,6 +6481,25 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
 
 ### layout
 
@@ -6103,6 +6516,58 @@ Parameter Descriptions:
 |rows|List[List[Element]] The rows of Elements|
 |||
 | **return** | (Column) Used for chaining |
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -6243,6 +6708,22 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6269,6 +6750,77 @@ You should be using values from your call to window.Read instead.  Know what you
 |---|---|
 | **return** | Union[Any, None] Returns the value of what is currently chosen |
 
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
+
 ### update
 
 Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -6294,139 +6846,6 @@ Parameter Descriptions:
 |readonly|(bool) if True make element readonly (user cannot change any choices)|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
-
-## ErrorElement Element
-
-    A "dummy Element" that is returned when there are error conditions, like trying to find an element that's invalid
-
-```
-ErrorElement(key=None, metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-### ButtonReboundCallback
-
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
-### Get
-
-One of the method names found in other Elements. Used here to return an error string in case it's called
-
-`Get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) A warning text string. |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|force|(bool) if True will call focus_force otherwise calls focus_set|
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|tooltip_text|(str) the text to show in tooltip.|
-
-### Update
-
-Update method for the Error Element, an element that should not be directly used by developer
-
-```
-Update(silent_on_error=True,
-    args,
-    kwargs)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|silent_on_error|(bool) if False, then a Popup window will be shown|
-|*args|(Any) meant to "soak up" any normal parameters passed in|
-|**kwargs|(Any) meant to "soak up" any keyword parameters that were passed in|
-|||
-| **return** | (ErrorElement) returns 'self' so call can be chained |
-
-### expand
-
-Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
-
-```
-expand(expand_x=False, expand_y=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|expand_x|(Bool) If True Element will expand in the Horizontal directions|
-|expand_y|(Bool) If True Element will expand in the Vertical directions|
-
-### get
-
-One of the method names found in other Elements. Used here to return an error string in case it's called
-
-`get()`
-
-|Name|Meaning|
-|---|---|
-| **return** | (str) A warning text string. |
-
-### update
-
-Update method for the Error Element, an element that should not be directly used by developer
-
-```
-update(silent_on_error=True,
-    args,
-    kwargs)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|silent_on_error|(bool) if False, then a Popup window will be shown|
-|*args|(Any) meant to "soak up" any normal parameters passed in|
-|**kwargs|(Any) meant to "soak up" any keyword parameters that were passed in|
-|||
-| **return** | (ErrorElement) returns 'self' so call can be chained |
 
 ## Frame Element
 
@@ -6561,6 +6980,36 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
+### add_row
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+add_row(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6575,6 +7024,25 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
 
 ### layout
 
@@ -6591,6 +7059,58 @@ Parameter Descriptions:
 |rows|List[List[Element]] The rows of Elements|
 |||
 | **return** | (Frame) Used for chaining |
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -6873,7 +7393,8 @@ Draw a rectangle given 2 points. Can control the line and fill colors
 DrawRectangle(top_left,
     bottom_right,
     fill_color=None,
-    line_color=None)
+    line_color=None,
+    line_width=None)
 ```
 
 Parameter Descriptions:
@@ -7048,6 +7569,265 @@ Parameter Descriptions:
 |background_color|color of background|
 |visible|(bool) control visibility of element|
 
+### bring_figure_to_front
+
+Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
+
+```
+bring_figure_to_front(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(int) value returned by tkinter when creating the figure / drawing|
+
+### button_press_call_back
+
+Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
+
+```
+button_press_call_back(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Contains the x and y coordinates of a click|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
+### button_release_call_back
+
+Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
+
+```
+button_release_call_back(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Note not used in this method|
+
+### delete_figure
+
+Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
+
+```
+delete_figure(id)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|id|(int) the id returned to you when calling one of the drawing methods|
+
+### draw_arc
+
+Draws different types of arcs.  Uses a "bounding box" to define location
+
+```
+draw_arc(top_left,
+    bottom_right,
+    extent,
+    start_angle,
+    style=None,
+    arc_color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
+|extent|(float) Andle to end drawing. Used in conjunction with start_angle|
+|start_angle|(float) Angle to begin drawing. Used in conjunction with extent|
+|style|(str) Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter'|
+|arc_color|(str) color to draw arc with|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc |
+
+### draw_circle
+
+Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
+
+```
+draw_circle(center_location,
+    radius,
+    fill_color=None,
+    line_color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|center_location|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
+|radius|Union[int, float] Radius in user's coordinate values.|
+|fill_color|(str) color of the point to draw|
+|line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
+
+### draw_image
+
+Places an image onto your canvas.  It's a really important method for this element as it enables so much
+
+```
+draw_image(filename=None,
+    data=None,
+    location=(None, None),
+    color="black",
+    font=None,
+    angle=0)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) if image is in a file, path and filename for the image. (GIF and PNG only!)|
+|data|Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename|
+|location|Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner|
+|color|(str) text color|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image |
+
+### draw_line
+
+Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
+
+```
+draw_line(point_from,
+    point_to,
+    color="black",
+    width=1)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|point_from|Union[Tuple[int, int], Tuple[float, float]] Starting point for line|
+|point_to|Union[Tuple[int, int], Tuple[float, float]] Ending point for line|
+|color|(str) Color of the line|
+|width|(int) width of line in pixels|
+|||
+| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
+
+### draw_oval
+
+Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
+
+```
+draw_oval(top_left,
+    bottom_right,
+    fill_color=None,
+    line_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
+|fill_color|(str) color of the interrior|
+|line_color|(str) color of outline of oval|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
+
+### draw_point
+
+Draws a "dot" at the point you specify using the USER'S coordinate system
+
+```
+draw_point(point,
+    size=2,
+    color="black")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|point|Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system|
+|size|Union[int, float] Radius? (Or is it the diameter?) in user's coordinate values.|
+|color|(str) color of the point to draw|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
+
+### draw_rectangle
+
+Draw a rectangle given 2 points. Can control the line and fill colors
+
+```
+draw_rectangle(top_left,
+    bottom_right,
+    fill_color=None,
+    line_color=None,
+    line_width=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|top_left|Union[Tuple[int, int], Tuple[float, float]] the top left point of rectangle|
+|bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle|
+|fill_color|(str) color of the interior|
+|line_color|(str) color of outline|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
+
+### draw_text
+
+Draw some text on your graph.  This is how you label graph number lines for example
+
+```
+draw_text(text,
+    location,
+    color="black",
+    font=None,
+    angle=0,
+    text_location="center")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|text|(str) text to display|
+|location|Union[Tuple[int, int], Tuple[float, float]] location to place first letter|
+|color|(str) text color|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|angle|(float) Angle 0 to 360 to draw the text. Zero represents horizontal text|
+|text_location|(enum) "anchor" location for the text. Values start with TEXT_LOCATION_|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text |
+
 ### erase
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
@@ -7071,6 +7851,39 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### motion_call_back
+
+Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
+
+```
+motion_call_back(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
+
 ### move
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
@@ -7085,6 +7898,113 @@ Parameter Descriptions:
 |---|---|
 |x_direction|Union[int, float] how far to move in the "X" direction in your coordinates|
 |y_direction|Union[int, float] how far to move in the "Y" direction in your coordinates|
+
+### move_figure
+
+Moves a previously drawn figure using a "delta" from current position
+
+```
+move_figure(figure,
+    x_direction,
+    y_direction)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
+|x_direction|Union[int, float] delta to apply to position in the X direction|
+|y_direction|Union[int, float] delta to apply to position in the Y direction|
+
+### relocate_figure
+
+Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
+uses absolute coordinates versus relative for Move
+
+```
+relocate_figure(figure,
+    x,
+    y)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(id) Previously obtained figure-id. These are returned from all Draw methods|
+|x|Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure|
+|y|Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure|
+
+### send_figure_to_back
+
+Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
+
+```
+send_figure_to_back(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|(int) value returned by tkinter when creating the figure / drawing|
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### tk_canvas
+
+#### property: tk_canvas
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -7195,7 +8115,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |filename|(str) filename to the new image to display.|
-|data|(str) Base64 encoded string|
+|data|Union[str, tkPhotoImage] Base64 encoded string OR a tk.PhotoImage object|
 |size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
 |visible|(bool) control visibility of element|
 
@@ -7215,6 +8135,22 @@ Parameter Descriptions:
 |source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
 |time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7229,6 +8165,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -7246,9 +8253,25 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |filename|(str) filename to the new image to display.|
-|data|(str) Base64 encoded string|
+|data|Union[str, tkPhotoImage] Base64 encoded string OR a tk.PhotoImage object|
 |size|Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high|
 |visible|(bool) control visibility of element|
+
+### update_animation
+
+Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
+NOTE - does NOT perform a sleep call to delay
+
+```
+update_animation(source, time_between_frames=0)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
+|time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
 ## InputText Element
 
@@ -7378,6 +8401,22 @@ Parameter Descriptions:
 |background_color|(str) change color of the background|
 |move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7402,6 +8441,77 @@ Read and return the current value of the input element. Must call `Window.Read` 
 |Name|Meaning|
 |---|---|
 | **return** | (str) current value of Input field or '' if error encountered |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -7579,6 +8689,22 @@ Parameter Descriptions:
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7593,6 +8719,111 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_indexes
+
+Returns the items currently selected as a list of indexes
+
+`get_indexes()`
+
+|Name|Meaning|
+|---|---|
+| **return** | List[int] A list of offsets into values that is currently selected |
+
+### get_list_values
+
+Returns list of Values provided by the user in the user's format
+
+`get_list_values()`
+
+|Name|Meaning|
+|---|---|
+| **return** | List[Any]. List of values. Can be any / mixed types -> [] |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### set_value
+
+Set listbox highlighted choices
+
+```
+set_value(values)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|values|List[Any] new values to choose based on previously set values|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -7716,6 +8947,22 @@ Parameter Descriptions:
 |menu_definition|List[List[Tuple[str, List[str]]]|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7730,6 +8977,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -7882,6 +9200,22 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7906,6 +9240,77 @@ Return current contents of the Multiline Element
 |Name|Meaning|
 |---|---|
 | **return** | (str) current contents of the Multiline Element (used as an input type of Multiline |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8038,6 +9443,22 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8052,6 +9473,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8159,6 +9651,10 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### TKOut
+
+#### property: TKOut
+
 ### Update
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -8174,6 +9670,22 @@ Parameter Descriptions:
 |value|(str) string that will replace current contents of the output area|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8188,6 +9700,81 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### tk_out
+
+#### property: tk_out
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8298,6 +9885,22 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8312,6 +9915,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8436,6 +10110,22 @@ Parameter Descriptions:
 |current_count|(int) sets the current value|
 |max|(int) changes the max value|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8451,6 +10141,77 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
+
 ### update
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -8464,6 +10225,21 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |visible|(bool) control visibility of element|
+
+### update_bar
+
+Change what the bar shows by changing the current count and optionally the max count
+
+```
+update_bar(current_count, max=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|current_count|(int) sets the current value|
+|max|(int) changes the max value|
 
 ## Radio Element
 
@@ -8590,6 +10366,22 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8614,6 +10406,85 @@ A snapshot of the value of Radio Button -> (bool)
 |Name|Meaning|
 |---|---|
 | **return** | (bool) True if this radio button is selected |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### reset_group
+
+Sets all Radio Buttons in the group to not selected
+
+```python
+reset_group()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8749,6 +10620,22 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8763,6 +10650,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -8902,6 +10860,22 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8928,6 +10902,77 @@ item returned will be an int (not a string)
 |Name|Meaning|
 |---|---|
 | **return** | (Any) The currently visible entry |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -9057,6 +11102,22 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9071,6 +11132,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -9232,6 +11364,36 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### add_row
+
+Not recommended use call.  Used to add rows of Elements to the Frame Element.
+
+```
+add_row(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9246,6 +11408,25 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
 
 ### layout
 
@@ -9269,6 +11450,58 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 
 ```python
 select()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
 ```
 
 ### update
@@ -9431,6 +11664,36 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### add_row
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+add_row(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9446,6 +11709,22 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 
+### find_key_from_tab_name
+
+Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
+
+```
+find_key_from_tab_name(tab_name)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tab_name||
+|||
+| **return** | Union[key, None] Returns the key or None if no key found |
+
 ### get
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
@@ -9458,6 +11737,25 @@ are using this method correctly?
 |Name|Meaning|
 |---|---|
 | **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
 
 ### layout
 
@@ -9474,6 +11772,58 @@ Parameter Descriptions:
 |rows|List[List[Element]] The rows of Elements|
 |||
 | **return** | (Frame) Used for chaining |
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ## Table Element
 
@@ -9623,6 +11973,22 @@ Parameter Descriptions:
 |alternating_row_color|(str) the color to make every other row|
 |row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9649,6 +12015,107 @@ user when Table was created or Updated.
 |Name|Meaning|
 |---|---|
 | **return** | List[List[Any]] the current table values (for now what was originally provided up updated) |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### treeview_double_click
+
+Not user callable.  Callback function that is called when something is selected from Table.
+Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
+
+```
+treeview_double_click(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) event information from tkinter|
+
+### treeview_selected
+
+Not user callable.  Callback function that is called when something is selected from Table.
+Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
+
+```
+treeview_selected(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) event information from tkinter|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -9786,6 +12253,22 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9800,6 +12283,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -9952,6 +12506,36 @@ Parameter Descriptions:
 |icon|Union[bytes, str] can be either a base64 icon or a filename for the icon|
 |visible|(bool) control visibility of element|
 
+### add_treeview_data
+
+Not a user function.  Recursive method that inserts tree data into the tkinter treeview widget.
+
+```
+add_treeview_data(node)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|node|(TreeData) The node to insert. Will insert all nodes from starting point downward, recursively|
+
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9966,6 +12550,92 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### treeview_selected
+
+Not a user function.  Callback function that happens when an item is selected from the tree.  In this
+method, it saves away the reported selections so they can be properly returned.
+
+```
+treeview_selected(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(Any) An event parameter passed in by tkinter. Not used|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ### update
 
@@ -10010,6 +12680,41 @@ This is the ONLY user callable method in the TreeData class
 
 ```
 Insert(parent,
+    key,
+    text,
+    values,
+    icon=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|parent|(Node) the parent Node|
+|key|(Any) Used to uniquely identify this node|
+|text|(str) The text that is displayed at this node's location|
+|values|List[Any] The list of values that are displayed at this node|
+|icon|Union[str, bytes]|
+
+### Node
+
+Contains information about the individual node in the tree
+
+```
+Node(parent,
+    key,
+    text,
+    values,
+    icon=None)
+```
+
+### insert
+
+Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
+This is the ONLY user callable method in the TreeData class
+
+```
+insert(parent,
     key,
     text,
     values,
@@ -10085,6 +12790,22 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### button_rebound_callback
+
+Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
+callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
+callback function that is normally called.
+
+```
+button_rebound_callback(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(unknown) Not used in this function.|
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -10099,6 +12820,77 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[int, int] - Width, Height of the element |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|force|(bool) if True will call focus_force otherwise calls focus_set|
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|size|Tuple[int, int] The size in characters, rows typically. In some cases they are pixels|
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|tooltip_text|(str) the text to show in tooltip.|
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
 
 ## Window
 
@@ -10680,8 +13472,6 @@ Parameter Descriptions:
 
 ### Size
 
-Note the `Window.Size` can be used for both reading and writing
-
 #### property: Size
 
 Return the current size of the window in pixels
@@ -10709,6 +13499,57 @@ call and then have that same source run on plain PySimpleGUI.
 |---|---|
 | **return** |  |
 
+### add_row
+
+Adds a single row of elements to a window's self.Rows variables.
+Generally speaking this is NOT how users should be building Window layouts.
+Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
+
+```
+add_row(args)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Elements]|
+
+### add_rows
+
+Loops through a list of lists of elements and adds each row, list, to the layout.
+This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
+it as a parameter to the Window call is better.
+
+```
+add_rows(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Elements]] A list of a list of elements|
+
+### alpha_channel
+
+#### property: alpha_channel
+
+A property that changes the current alpha channel value (internal value)
+
+|Name|Meaning|
+|---|---|
+| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
+
+### bring_to_front
+
+Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
+        on top")
+
+```python
+bring_to_front()
+```
+
 ### close
 
 Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
@@ -10718,12 +13559,30 @@ Closes window.  Users can safely call even if window has been destroyed.   Shoul
 close()
 ```
 
+### current_location
+
+Get the current location of the window's top left corner
+
+`current_location()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Tuple[(int), (int)] The x and y location in tuple form (x,y) |
+
 ### disable
 
 Disables window from taking any input from the user
 
 ```python
 disable()
+```
+
+### disable_debugger
+
+Disable the internal debugger. By default the debugger is ENABLED
+
+```python
+disable_debugger()
 ```
 
 ### disappear
@@ -10812,6 +13671,14 @@ Re-enables window to take user input after having it be Disabled previously
 enable()
 ```
 
+### enable_debugger
+
+Enables the internal debugger. By default, the debugger IS enabled
+
+```python
+enable_debugger()
+```
+
 ### fill
 
 Fill in elements that are input fields with data based on a 'values dictionary'
@@ -10874,6 +13741,86 @@ Parameter Descriptions:
 |||
 | **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
 
+### find_element
+
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
+FindElement == Element == Find
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+find_element(key, silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
+|silent_on_error|(bool) If True do not display popup nor print warning of key errors|
+|||
+| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+
+### find_element_with_focus
+
+Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
+
+`find_element_with_focus()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Element, None] An Element if one has been found with focus or None if no element found |
+
+### get_screen_dimensions
+
+Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
+
+`get_screen_dimensions()`
+
+|Name|Meaning|
+|---|---|
+| **return** | Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels |
+
+### get_screen_size
+
+Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
+
+```
+get_screen_size() -> Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+```
+
+### grab_any_where_off
+
+Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+grab_any_where_off()
+```
+
+### grab_any_where_on
+
+Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+grab_any_where_on()
+```
+
 ### hide
 
 Hides the window from the screen and the task bar
@@ -10900,6 +13847,20 @@ Parameter Descriptions:
 |rows|List[List[Elements]] Your entire layout|
 |||
 | **return** | (Window} self so that you can chain method calls |
+
+### load_from_disk
+
+Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
+
+```
+load_from_disk(filename)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) Pickle Filename to load|
 
 ### maximize
 
@@ -10981,6 +13942,67 @@ Without this call your changes to a Window will not be visible to the user until
 |---|---|
 | **return** | (Window) `self` so that method calls can be easily "chained" |
 
+### save_to_disk
+
+Saves the values contained in each of the input areas of the form. Basically saves what would be returned
+from a call to Read.  It takes these results and saves them to disk using pickle
+
+```
+save_to_disk(filename)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|filename|(str) Filename to save the values to in pickled form|
+
+### set_alpha
+
+Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
+
+```
+set_alpha(alpha)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|alpha|(float) 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through)|
+
+### set_icon
+
+Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
+* a filename which must be a .ICO icon file for windows
+* a bytes object
+* a BASE64 encoded file held in a variable
+
+```
+set_icon(icon=None, pngbase64=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon|(str) Filename or bytes object|
+|pngbase64|(str) Base64 encoded GIF or PNG file|
+
+### set_transparent_color
+
+Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
+
+```
+set_transparent_color(color)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|color|(str) Color string that defines the transparent color|
+
 ### size
 
 #### property: size
@@ -10990,6 +14012,25 @@ Return the current size of the window in pixels
 |Name|Meaning|
 |---|---|
 | **return** | Tuple[(int), (int)] the (width, height) of the window |
+
+### un_hide
+
+Used to bring back a window that was previously hidden using the Hide method
+
+```python
+un_hide()
+```
+
+### visibility_changed
+
+This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
+call and then have that same source run on plain PySimpleGUI.
+
+`visibility_changed()`
+
+|Name|Meaning|
+|---|---|
+| **return** |  |
 
 ```
 CButton(button_text,
