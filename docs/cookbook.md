@@ -48,6 +48,16 @@ PEP8 names are a really good example.  Previously many of the method names for t
 In short, it's brainwashing you to program PySimpleGUI a certain way.  The effect is that one person has no problem picking up the code from another PySimpleGUI programmer and recognizing it.  If you stick with variable names shown here, like many other PySimpleGUI users have, then you'll understand other people's code (and the demos too) quicker.
 
 
+# Keys
+
+Keys are an extremely important concept for you to understand as you learn PySimpleGUI.  They are the "labels" you give Elements.  Keys are used:
+
+* To tell you when one of them generates an event
+* When you want to change them later
+* To communicate their value when performing a `window.read()`
+
+**Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
+
 # GETTING STARTED - Copy these design patterns!      
       
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.  The two types of windows are:
@@ -59,23 +69,28 @@ The **One-shot window** is one that pops up, collects some data, and then disapp
 
 The **Persistent window** is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. It's more like a typical Windows/Mac/Linux  program.
 
-
-## Keys
-
-Keys are an extremely important concept for you to understand as you learn PySimpleGUI.  They are the "labels" you give Elements.  Keys are used:
-
-* To tell you when one of them generates an event
-* When you want to change them later
-* To communicate their value when performing a `window.read()`
-
-**Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
       
 ## Pattern 1 - "One-shot Window" - (The Simplest Pattern)    
+
 
 ![Pattern1](https://user-images.githubusercontent.com/46163555/64929604-0c4fe500-d7f6-11e9-9dc1-bb34d5aafd23.jpg)   
 
 
 ![Pattern1 Popup](https://user-images.githubusercontent.com/46163555/64929603-0c4fe500-d7f6-11e9-8309-68a9279c6c72.jpg)
+
+Or with the addition of:
+
+```python
+sg.change_look_and_feel('DarkTanBlue')
+```
+
+you get this color scheme
+
+
+![image](https://user-images.githubusercontent.com/46163555/68633523-305f3800-04c0-11ea-8eaa-54873bab8fed.png)
+
+![image](https://user-images.githubusercontent.com/46163555/68633533-36edaf80-04c0-11ea-8646-8e858a17f080.png)
+
 
 
 This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and then closed.
@@ -90,7 +105,9 @@ This design pattern does not specify a `key` for the `InputText` element, so its
    
 ```python    
 import PySimpleGUI as sg      
-    
+
+sg.change_look_and_feel('DarkTanBlue')
+
 layout = [[sg.Text('My one-shot window.')],      
                  [sg.InputText()],      
                  [sg.Submit(), sg.Cancel()]]      
@@ -108,7 +125,9 @@ If you want to use a key instead of an auto-generated key:
 
 ```python    
 import PySimpleGUI as sg      
-    
+
+sg.change_look_and_feel('DarkTanBlue')
+
 layout = [[sg.Text('My one-shot window.')],      
                  [sg.InputText(key='-IN-')],      
                  [sg.Submit(), sg.Cancel()]]      
@@ -127,24 +146,28 @@ sg.popup('You entered', text_input)
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)      
 
 
-![Pattern2](https://user-images.githubusercontent.com/46163555/64929605-0c4fe500-d7f6-11e9-8c00-b74988a706e3.jpg)
+![image](https://user-images.githubusercontent.com/46163555/68600333-5361fb80-0470-11ea-91cb-691e32832b60.png)
 
 
-Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.  In other words, a typical Window, Mac or Linux window.  You are writing ***real GUI code*** that will look and act like other windows you're used to using.
+Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.  In other words, a typical Window, Mac or Linux window.  
+
+*Let this sink in for a moment....* in 10 lines of Python code, you can display and interact with your own custom GUI window.  You are writing "*real GUI code*" (as one user put it) that will look and act like other windows you're used to using daily.
     
 This code will present a window and will print values until the user clicks the exit button or closes window using an X.    
 
       
 ```python    
 import PySimpleGUI as sg      
-      
+
+sg.change_look_and_feel('DarkAmber')    # Remove line if you want plain gray windows
+
 layout = [[sg.Text('Persistent window')],      
           [sg.Input(key='-IN-')],      
           [sg.Button('Read'), sg.Exit()]]      
       
 window = sg.Window('Window that stays open', layout)      
       
-while True:      
+while True:                             # The Event Loop
     event, values = window.read() 
     print(event, values)       
     if event in (None, 'Exit'):      
@@ -179,7 +202,7 @@ In some cirsumstances when a window is closed with an X, both of the return valu
 
 ## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
 
-![Pattern2B](https://user-images.githubusercontent.com/46163555/64929632-7c5e6b00-d7f6-11e9-90b3-70e79cd2547c.jpg)
+![image](https://user-images.githubusercontent.com/46163555/68633697-df9c0f00-04c0-11ea-9fb3-121a72a87a59.png)
 
 This is a slightly more complex, but more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
 
@@ -188,6 +211,8 @@ Do not worry yet what all of these statements mean.  Just copy it so you can beg
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('BluePurple')
 
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(15,1), key='-OUTPUT-')],
           [sg.Input(key='-IN-')],
@@ -289,11 +314,13 @@ Note that ***you cannot make any PySimpleGUI calls from a thread*** other than t
 
 -----
 
-# Colors Other Than Gray... Use them!
+# Window "Beautification" - Colors Other Than Gray... Use them!
 
 One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that in 1 line of PySimpleGUI code. A call to `change_look_and_feel` will set the colors to be used when creating windows.  It sets text color, background colork, input field colors, button color, etc.  
 
 Even windows that are created for you, such as popups, will use the color settings.
+
+This one line of code helps, but it's not the only thing that is going to make your window attractive.  "Beautiful windows" don't just happen.  
 
 In this example, "GreenTan" was chosen.  This causes all elements created in the future to use a specific set of colors for the background, text colors, button color, etc.
 
@@ -301,7 +328,7 @@ In this example, "GreenTan" was chosen.  This causes all elements created in the
 sg.change_look_and_feel('GreenTan')
 ```
 
-The list of valid look and feel settings includes:
+As of this writing (Nov 2019) the list of valid look and feel settings includes:
 
 SystemDefault, Material1, Material2, Reddit, Topanga, GreenTan, Dark, LightGreen, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green, BluePurple, Purple, BlueMono, GreenMono, BrownBlue, BrightColors, NeutralBlue, Kayak, SandyBeach, TealMono
 
@@ -357,6 +384,119 @@ while True:  # Event Loop
 window.close()
 ```
 
+
+## More Ways to "Dress Up Your Windows"
+
+In addition to color there are a several of other ways to potentially make your window more attractive.  A few easy ones include:
+
+* Remove the titlebar
+* Make your window semi-transparent
+* Replace normal buttons with graphics
+
+You can use a combination of these 3 settings to create windows that look like Rainmeter style desktop-widgets.
+
+This window demonstrates these settings.  As you can see, there is text showing through the background of the window.  This is because the "Alpha Channel" was set to a semi-transparent setting.  There is no titlebar going across the window and there is a little red X in the upper corner, resumably to close the window.
+
+![image](https://user-images.githubusercontent.com/46163555/68679617-35f36700-052e-11ea-93b3-4f8507e3f4ee.png)
+
+
+### Removing the Titlebar & Making Semi-Transparent
+
+Both of these can be set when you create your window.  These 2 parameters are all you need - `no_titlebar` and `alpha_channel`.
+
+When creating a window without a titlebar you create a problem where the user is unable to move your window as they have no titlebar to grab and drag.  Another parameter to the window creation will fix this problem - `grab_anywhere`.  When true, this parameter allows the user to move the window by clicking anywhere within the window and dragging it, just as if they clicked the titlebar.  Some PySimpleGUI ports allow you to click on input fields and drag, others require you to grab a spot on the background of the window.  Note - you do not have to remove the titlebar in order to use `grab_anywhere`
+
+To create a window like the one above, your window creation call would look something like:
+
+```python
+window = sg.Window('PSG System Dashboard', layout, no_titlebar=True, alpha_channel=.5, grab_anywhere=True)
+```
+
+### Replacing a Button with a Graphic
+
+In PySimpleGUI you can use PNG and GIF image files as buttons.  You can also encode those files into Base64 strings and put them directly into your code.
+
+It's a 4 step process to make a button using a graphic
+
+1. Find your PNG or GIF graphic
+2. Convert your graphic into a Base64 byte string
+3. Add Base64 string to your code as a variable
+4. Specify the Base64 string as the image to use when creating your button
+
+#### Step 1 - Find your graphic
+
+There are a LOT of places for you to find your graphics.  [This page](https://savedelete.com/design/best-free-icon-search-engines/9644/#.UINbScWWvh4) lists a number of ways to search for what you need.  Bing also has a great image search tool that you can filter your results on to get a list of PNG files (choose "Transparent" using their "filter" on the page.)
+
+Here's the [search results](https://www.bing.com/images/search?sp=-1&pq=red+x+i&sc=8-7&sk=&cvid=CAF7086A80704229B299A829D60F330E&q=red+x+icon&qft=+filterui:photo-transparent&FORM=IRFLTR) for "red x icon" using Bing with a filter.
+
+I chose this one from the list:
+http://icons.iconarchive.com/icons/iconarchive/red-orb-alphabet/256/Letter-X-icon.png
+
+You can download your image or get a copy of the link to it.
+
+#### Step 2 - Convert to Base64
+
+One of the demo programs provided on the PySimpleGUI GitHub is called "Demo_Base64_Image_Encoder.py".  This program will convert all of the images in a folder and write the encoded data to a file named `output.py`.
+
+You can also use an online conversion tool such as https://base64.guru/converter/encode/image
+
+On that page I chose to use the "Remote URL" (see above), pasted it into the input box and clicked "Encode image to Base64". Under the encode button is an area labeled "Base64".  If your conversion was successful, you'll see it filled with data like shown here:
+
+![SNAG-0551](https://user-images.githubusercontent.com/46163555/68682006-6ccb7c00-0532-11ea-8053-4513e32b2017.jpg)
+
+
+#### Step 3 - Make Base64 String Variable
+
+Select all of the data in the Base64 box and paste into your code by making a variable that is equal to a byte-string.
+
+```python
+red_x_base64 = b''
+```
+
+Paste the long data you got from the webpage inside the quotes after the `b`.
+
+You can also copy and paste the byte string from the `output.py` file if you used the demo program.
+
+#### Step 4 - Use Base64 Variable to Make Your Button
+
+This is the Button Element that is added to the layout to create the Red X Button graphic.
+
+The `image_subsample` parameter was used in this case because the button used in the example was HUGE.  It measures 256.x256.  The better approach would have been to download the button and then resize it.  This parameter is only usable in the tkinter port of PySimpleGUI so it's better to have your graphics pre-sized to fit correctly.
+
+The `image_subsample` value indicated how much to "divide" the size by.  The value of "8" specified above means to use 1/8 the size of the original.  If the value was "2" then 1/2 of the original size will be shown.
+
+If your background is not the standard gray background, then you would set your button color to match the background the button is on.
+
+```python
+sg.Button('', image_data=red_x_base64, button_color=sg.COLOR_SYSTEM_DEFAULT, border_width=0, image_subsample=8, key='Exit')
+```
+
+This is the window the code below creates using the button graphic found online.
+
+![image](https://user-images.githubusercontent.com/46163555/68683541-f419ef00-0534-11ea-866e-38ff5f760216.png)
+
+
+You can [run this code online on Trinket](https://pysimplegui.trinket.io/demo-programs#/window-colors-and-graphics/base64-button-graphics)
+
+
+```python
+import PySimpleGUI as sg
+
+red_x_base64 = b'paste the base64 encoded string here'
+
+layout = [  [sg.Text('My borderless window with a button graphic')],
+            [sg.Button('', image_data=red_x_base64, button_color=sg.COLOR_SYSTEM_DEFAULT, border_width=0, image_subsample=8, key='Exit')]  ]
+
+window = sg.Window('Window Title', layout)
+
+while True:             # Event Loop
+    event, values = window.read()
+    print(event, values)
+    if event in (None, 'Exit'):
+        break
+window.close()
+
+```
 
 ----
 
@@ -578,10 +718,14 @@ Use caution when using windows with a timeout.  You should **rarely** need to us
 A note about timers... this is not a good design for a stopwatch as it can very easily drift. This would never pass for a good solution in a bit of commercial code.  For better accuracy always get the actual time from a reputable source, like the operating system.  Use that as what you use to measure and display the time.  
 
       
-![non-blocking](https://user-images.githubusercontent.com/13696193/43955295-70f6ac48-9c6d-11e8-8ea2-e6729ba9330c.jpg)      
+![image](https://user-images.githubusercontent.com/46163555/68599926-82c43880-046f-11ea-9901-84fae885ec8d.png)
+
+ 
       
 ```python      
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('DarkAmber')
 
 layout = [  [sg.Text('Stopwatch', size=(20, 2), justification='center')],
             [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='_OUTPUT_')],
@@ -589,17 +733,17 @@ layout = [  [sg.Text('Stopwatch', size=(20, 2), justification='center')],
 
 window = sg.Window('Stopwatch Timer', layout)
 
-timer_running, i = True, 0
+timer_running, counter = True, 0
 
-while True:        # Event Loop
+while True:                                 # Event Loop
     event, values = window.read(timeout=10) # Please try and use as high of a timeout value as you can
-    if event in (None, 'Quit'):    # if user closed the window using X or clicked Quit button
+    if event in (None, 'Quit'):             # if user closed the window using X or clicked Quit button
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
     if timer_running:
-        window['_OUTPUT_'].update('{:02d}:{:02d}.{:02d}'.format((i // 100) // 60, (i // 100) % 60, i % 100))
-        i += 1
+        window['_OUTPUT_'].update('{:02d}:{:02d}.{:02d}'.format((counter // 100) // 60, (counter // 100) % 60, counter % 100))
+        counter += 1
 ```          
 
       
