@@ -335,6 +335,38 @@ SystemDefault, Material1, Material2, Reddit, Topanga, GreenTan, Dark, LightGreen
 ***Mac users*** - Unfortunately tkinter and the Mac haven't been playing well together when it comes to colors, in particular button colors.  For this reason the change_look_and_feel is "disabled" for Macs, however you can force it by assing the parameter to the call `force=True`.  You may be able to get away with the change if you change the button settings back to the default setting by calling `set_options`.
 
 
+## Look and Feel Theme Summary
+
+Here is a quick-reference view of the available Look and Feel themes.
+
+![image](https://user-images.githubusercontent.com/46163555/68784032-ed10e080-0609-11ea-81bc-22dc8b27692d.png)
+
+Here is the code that produced it so that you can run it on your system to see the current list of themes and how they appear on your monitor.
+
+```python
+import PySimpleGUI as sg
+
+WINDOW_BACKGROUND = 'lightblue'
+
+def sample_layout():
+    return [[sg.Text('Text element'), sg.InputText('Input data here')],
+                [sg.Button('Ok'), sg.Button('Cancel')] ]
+
+layout =   [[sg.Text('Here is a complete list of themes', font='Default 18', background_color=WINDOW_BACKGROUND)]]
+
+row = []
+for count, theme in enumerate(sg.ListOfLookAndFeelValues()):
+    sg.change_look_and_feel(theme)
+
+    row += [sg.Frame(theme, sample_layout())]
+    if count % 2:
+        layout += [row]
+        row = []
+
+sg.Window('Window Title', layout, background_color=WINDOW_BACKGROUND).read()
+```
+
+
 ## Look and Feel Browser
 
 This Recipe is a "Look and Feel Browser" that enables you to see the different color schemes.
