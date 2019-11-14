@@ -10078,6 +10078,31 @@ def ChangeLookAndFeel(index, force=False):
         print('valid values are', list_of_look_and_feel_values())
 
 
+def preview_all_look_and_feel_themes():
+    web=False
+
+    WINDOW_BACKGROUND = 'lightblue'
+
+    def sample_layout():
+        return [[Text('Text element'), InputText('Input data here', size=(15, 1))],
+                [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(10, 15))]]
+
+    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=WINDOW_BACKGROUND)]]
+
+    row = []
+    for count, theme in enumerate(ListOfLookAndFeelValues()):
+        change_look_and_feel(theme)
+        if not count % 3:
+            layout += [row]
+            row = []
+        row += [Frame(theme, sample_layout() if not web else [[T(theme)]] + sample_layout())]
+    if row:
+        layout += [row]
+
+    window = Window('Preview of all Look and Feel choices', layout, background_color=WINDOW_BACKGROUND)
+    window.read()
+    window.close()
+    del window
 
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
