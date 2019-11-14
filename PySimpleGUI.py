@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.2 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj"
+version = __version__ = "4.6.0.4 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -805,6 +805,10 @@ class Element():
 
 
     def hide_row(self):
+        """
+        Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+        """
         try:
             self.ParentRowFrame.pack_forget()
         except:
@@ -812,6 +816,10 @@ class Element():
 
 
     def unhide_row(self):
+        """
+        Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+        """
         try:
             self.ParentRowFrame.pack()
         except:
@@ -852,6 +860,10 @@ class Element():
         :return:
         """
         return self.Update(*args, **kwargs)
+
+    button_rebound_callback = ButtonReboundCallback
+    set_tooltip = SetTooltip
+    set_focus = SetFocus
 
 
 # ---------------------------------------------------------------------- #
@@ -3849,6 +3861,7 @@ class Slider(Element):
         self.Disabled = disabled
         self.TickInterval = tick_interval
         self.DisableNumericDisplay = disable_number_display
+        self.TroughColor = DEFAULT_SCROLLBAR_COLOR
         temp_size = size
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
@@ -5322,6 +5335,11 @@ class Window:
 
     @classmethod
     def get_screen_size(self):
+        """
+        Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
+
+        :return: Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+        """
         root = tk.Tk()
         screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
         screen_height = root.winfo_screenheight()
@@ -8596,6 +8614,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # row_should_expand = True
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
+                element = element                   # type: Slider
                 slider_length = element_size[0] * CharWidthInPixels()
                 slider_width = element_size[1]
                 element.TKIntVar = tk.IntVar()
@@ -8627,8 +8646,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
-                    if DEFAULT_SCROLLBAR_COLOR != COLOR_SYSTEM_DEFAULT:
-                        tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
+                if element.TroughColor != COLOR_SYSTEM_DEFAULT:
+                    tkscale.config(troughcolor=element.TroughColor)
                 if element.DisableNumericDisplay:
                     tkscale.config(showvalue=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -9674,31 +9693,43 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 LOOK_AND_FEEL_TABLE = {'SystemDefault':
                            {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
                             'TEXT': COLOR_SYSTEM_DEFAULT,
-                            'INPUT': COLOR_SYSTEM_DEFAULT, 'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+                            'INPUT': COLOR_SYSTEM_DEFAULT,
+                            'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
                             'SCROLL': COLOR_SYSTEM_DEFAULT,
                             'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
                             'PROGRESS': COLOR_SYSTEM_DEFAULT,
                             'BORDER': 1, 'SLIDER_DEPTH': 1,
                             'PROGRESS_DEPTH': 0},
 
+                    'SystemDefaultForReal':
+                           {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+                            'TEXT': COLOR_SYSTEM_DEFAULT,
+                            'INPUT': COLOR_SYSTEM_DEFAULT,
+                            'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+                            'SCROLL': COLOR_SYSTEM_DEFAULT,
+                            'BUTTON': COLOR_SYSTEM_DEFAULT,
+                            'PROGRESS': COLOR_SYSTEM_DEFAULT,
+                            'BORDER': 1, 'SLIDER_DEPTH': 1,
+                            'PROGRESS_DEPTH': 0},
+
                     'Material1': {'BACKGROUND': '#E3F2FD',
-                                      'TEXT': '#000000',
-                                      'INPUT': '#86A8FF',
-                                      'TEXT_INPUT': '#000000',
-                                      'SCROLL': '#86A8FF', #I can't see it change, so I don't know it is good color.
-                                      'BUTTON': ('#FFFFFF', '#5079D3'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 0, 'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0,
-                                      'ACCENT1': '#FF0266',
-                                      'ACCENT2': '#FF5C93',
-                                      'ACCENT3': '#C5003C'},
+                                  'TEXT': '#000000',
+                                  'INPUT': '#86A8FF',
+                                  'TEXT_INPUT': '#000000',
+                                  'SCROLL': '#86A8FF',
+                                  'BUTTON': ('#FFFFFF', '#5079D3'),
+                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                                  'BORDER': 0, 'SLIDER_DEPTH': 0,
+                                  'PROGRESS_DEPTH': 0,
+                                  'ACCENT1': '#FF0266',
+                                  'ACCENT2': '#FF5C93',
+                                  'ACCENT3': '#C5003C'},
 
                     'Material2': {'BACKGROUND': '#FAFAFA',
                                       'TEXT': '#000000',
                                       'INPUT': '#004EA1',
                                       'TEXT_INPUT': '#FFFFFF',
-                                      'SCROLL': '#5EA7FF', #I can't see it change, so I don't know it is good color.
+                                      'SCROLL': '#5EA7FF',
                                       'BUTTON': ('#FFFFFF', '#0079D3'), #based on Reddit color
                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
                                       'BORDER': 0, 'SLIDER_DEPTH': 0,
@@ -9728,7 +9759,8 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                    'SCROLL': '#E7C855',
                                    'BUTTON': ('#E7C855', '#284B5A'),
                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                   'BORDER': 1,
+                                   'SLIDER_DEPTH': 0,
                                    'PROGRESS_DEPTH': 0,
                                    'ACCENT1': '#c15226',
                                    'ACCENT2': '#7a4d5f',
@@ -9966,7 +9998,8 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
 
                        'TealMono': {'BACKGROUND': '#a8cfdd',
                                     'TEXT': 'black',
-                                    'INPUT': '#dfedf2', 'SCROLL': '#dfedf2',
+                                    'INPUT': '#dfedf2',
+                                    'SCROLL': '#dfedf2',
                                     'TEXT_INPUT': 'black',
                                     'BUTTON': ('white', '#183440'),
                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
