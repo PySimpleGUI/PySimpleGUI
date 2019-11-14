@@ -6056,7 +6056,10 @@ class Window:
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
-        self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
+        if sys.platform=='linux' :
+            self.LastKeyboardEvent = 'MouseWheel:Down' if event.num ==5 else 'MouseWheel:Up'
+        else:
+            self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
         if not self.NonBlocking:
             _BuildResults(self, False, self)
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
@@ -9090,9 +9093,15 @@ def StartupTK(my_flex_form):
     if my_flex_form.ReturnKeyboardEvents and not my_flex_form.NonBlocking:
         root.bind("<KeyRelease>", my_flex_form._KeyboardCallback)
         root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
+        if sys.platform == 'linux': # if platform is linux, should also bind  <Button-4> and <Button-5> 
+            root.bind("<Button-4>", my_flex_form._MouseWheelCallback)
+            root.bind("<Button-5>", my_flex_form._MouseWheelCallback)
     elif my_flex_form.ReturnKeyboardEvents:
         root.bind("<Key>", my_flex_form._KeyboardCallback)
         root.bind("<MouseWheel>", my_flex_form._MouseWheelCallback)
+        if sys.platform == 'linux': # if platform is linux, should also bind  <Button-4> and <Button-5> 
+            root.bind("<Button-4>", my_flex_form._MouseWheelCallback)
+            root.bind("<Button-5>", my_flex_form._MouseWheelCallback)
 
     if my_flex_form.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if my_flex_form.AutoCloseDuration is None else my_flex_form.AutoCloseDuration
