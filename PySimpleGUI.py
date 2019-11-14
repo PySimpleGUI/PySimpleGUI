@@ -10010,7 +10010,10 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
 
 
 def ListOfLookAndFeelValues():
-    """ """
+    """
+    Get a list of the valid values to pass into your call to change_look_and_feel
+    :return: List[str] - list of valid string values
+    """
     return list(LOOK_AND_FEEL_TABLE.keys())
 
 
@@ -10051,11 +10054,9 @@ def ChangeLookAndFeel(index, force=False):
     :param force: (bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors
     """
 
-    if sys.platform == 'darwin' and not force:
-        print('*** Changing look and feel is not supported on Mac platform ***')
-        return
-
-    # look and feel table
+    # if sys.platform.startswith('darwin') and not force:
+    #     print('*** Changing look and feel is not supported on Mac platform ***')
+    #     return
 
     try:
         colors = LOOK_AND_FEEL_TABLE[index]
@@ -10065,7 +10066,7 @@ def ChangeLookAndFeel(index, force=False):
                    element_background_color=colors['BACKGROUND'],
                    text_color=colors['TEXT'],
                    input_elements_background_color=colors['INPUT'],
-                   button_color=colors['BUTTON'],
+                   button_color=colors['BUTTON'] if not sys.platform.startswith('darwin') else None,
                    progress_meter_color=colors['PROGRESS'],
                    border_width=colors['BORDER'],
                    slider_border_width=colors['SLIDER_DEPTH'],
