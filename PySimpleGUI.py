@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.4 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix"
+version = __version__ = "4.6.0.5 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -8110,7 +8110,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
-                if element.DefaultValue:
+                if element.DefaultValue is not None:
                     for i, v in enumerate(element.Values):
                         if v == element.DefaultValue:
                             element.TKCombo.current(i)
