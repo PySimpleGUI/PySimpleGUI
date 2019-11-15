@@ -8666,7 +8666,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TABLE:
                 element = element  # type: Table
                 frame = tk.Frame(tk_row_frame)
-
+                element.table_frame = frame
                 height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
