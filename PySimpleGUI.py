@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.8 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default, huge number of look and feel themes added, theme renames"
+version = __version__ = "4.6.0.9 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default, huge number of look and feel themes added, theme renames, random theme"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -10530,7 +10530,7 @@ def ChangeLookAndFeel(index, force=False):
         TealMono
 
     In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
-    The "Formula is"
+    The "Formula" is:
     ["Dark" or "Light"] Color Number
     Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
     The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
@@ -10562,9 +10562,10 @@ def ChangeLookAndFeel(index, force=False):
     elif opt2 in lf_values:
         ix = lf_values.index(opt2)
     else:
+        ix = randint(0,len(lf_values))
         print('** Warning - {} Look and Feel value not valid. Change your ChangeLookAndFeel call. **'.format(index))
         print('valid values are', list_of_look_and_feel_values())
-        return
+        print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
 
     selection = list_of_look_and_feel_values()[ix]
 
