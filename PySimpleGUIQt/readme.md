@@ -729,6 +729,23 @@ It's been a LONG LONG LONG time coming
 * Popups switched to using new layout parm in Window call and uses keys too
 
 
+## 0.30.0 PySimpleGUIQt 16-Nov-2019
+
+* THEMES!! Over 100 new Look and Feel themes to choose from!
+* New func preview_all_look_and_feel_themes() that will display a large window with all possible themes shown
+* Metadata!  Now available on all elements when creating and accessable directly by program
+* Metadata added to SystemTray objects and Window objects
+* Metadata parameter added to all shortcut buttons and funcs
+* Completed removal of PyQt5 code
+* ML, MLine shortcuts added for Multiline (input)
+* MLineOut shortcut for MultilineOutput
+* Text element text is optional now
+* Fixed bug in BrowseFiles button.  Was only getting first item in list instead of full list of filenames
+* BMenu shortcut for ButtonMenu
+* PBar, Prog shortcuts for ProgressBar
+* Range is now properly set in Slider.Update
+* Background color supported for MenuBars now
+* Added 5 extra pixels to window size. Now adding a total of 10 so things don't get cut off
 
 # Design        
  ## Author 
