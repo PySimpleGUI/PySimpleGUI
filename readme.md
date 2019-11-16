@@ -10,7 +10,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.5.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.6.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)
@@ -38,7 +38,8 @@ pip3 install pysimplegui
 
 ```python
 import PySimpleGUI as sg
-sg.change_look_and_feel('DarkAmber')   # Add a little color 
+
+sg.change_look_and_feel('DarkAmber')	# Add a touch of color
 # All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -72,7 +73,6 @@ and returns the value input as well as the button clicked.
 * sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?
 * into Machine Learning and are sick of the command line?
 * an IT guy/gal that has written some cool tools but due to corporate policies are unable to share unless an EXE file?
-* wanting to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?
 * want to share your program with your friends or families (that aren't so freakish that they have Python running)
 * wanting to run a program in your system tray?
 * a teacher wanting to teach your students how to program using a GUI?
@@ -107,9 +107,10 @@ and returns the value input as well as the button clicked.
 
 #### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
 
-## GUI Development does not have to be difficult nor painful.  It can be FUN
+## GUI Development does not have to be difficult nor painful.  It can be (and is) FUN
 
 #### What users are saying about PySimpleGUI
+
 ***(None of these comments were solicited & are not paid endorsements - other than a huge thank you they received!)***
 
 "I've been working to learn PyQT for the past week in my off time as an intro to GUI design and how to apply it to my existing scripts... Took me ~30 minutes to figure out PySimpleGUI and get my scripts working with a GUI."
@@ -777,6 +778,12 @@ Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 wind
 ![concurrent_windows](https://user-images.githubusercontent.com/13696193/62832448-3eb96180-bbfc-11e9-8777-6f2669566c93.png)
 
 ![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
+
+Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `change_look_and_feel` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
+
+In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
+
+![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
@@ -14163,8 +14170,10 @@ Parameter Descriptions:
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexe into the dictionary LOOK_AND_FEEL_TABLE
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
 SystemDefault
+SystemDefaultForRead
 Material1
 Material2
 Reddit
@@ -14191,6 +14200,14 @@ NeutralBlue
 Kayak
 SandyBeach
 TealMono
+
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
 
 ```
 ChangeLookAndFeel(index, force=False)
@@ -14631,8 +14648,10 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
+Get a list of the valid values to pass into your call to change_look_and_feel
+
 ```
-ListOfLookAndFeelValues()
+ListOfLookAndFeelValues() -> List[str] - list of valid string values
 ```
 
 ```
@@ -14699,6 +14718,8 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+
 ```
 ObjToString(obj, extra="    ")
 ```
@@ -14707,8 +14728,11 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj||
-|extra|(Default value = ' ')|
+|obj|(Any) The object to display|
+|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+Returns only the top-most object's variables instead of drilling down to dispolay more
 
 ```
 ObjToStringSingleObj(obj)
@@ -14718,7 +14742,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj||
+|obj|(Any) The object to display returns (str) Formatted output of the object's values|
 
 ```
 Ok(button_text="Ok",
@@ -15479,8 +15503,10 @@ Parameter Descriptions:
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexe into the dictionary LOOK_AND_FEEL_TABLE
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
 SystemDefault
+SystemDefaultForRead
 Material1
 Material2
 Reddit
@@ -15507,6 +15533,14 @@ NeutralBlue
 Kayak
 SandyBeach
 TealMono
+
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
 
 ```
 change_look_and_feel(index, force=False)
@@ -15594,8 +15628,10 @@ Parameter Descriptions:
 |window|(Window) The window object to fill|
 |values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
 
+Get a list of the valid values to pass into your call to change_look_and_feel
+
 ```
-list_of_look_and_feel_values()
+list_of_look_and_feel_values() -> List[str] - list of valid string values
 ```
 
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
@@ -15603,6 +15639,8 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 ```
 main()
 ```
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 
 ```
 obj_to_string(obj, extra="    ")
@@ -15612,8 +15650,11 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj||
-|extra|(Default value = ' ')|
+|obj|(Any) The object to display|
+|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+Returns only the top-most object's variables instead of drilling down to dispolay more
 
 ```
 obj_to_string_single_obj(obj)
@@ -15623,7 +15664,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj||
+|obj|(Any) The object to display returns (str) Formatted output of the object's values|
 
 ```
 one_line_progress_meter(title,
@@ -17771,7 +17812,29 @@ Let's hope it doesn't all blow up in our faces!
 * Fix in popup_get_files when 0 length of filename
 * Fix in Window.SetIcon - properly sets icon using file with Linux now. Was always defaulting
 
+## 4.6 PySimpleGUI 16-Nov-2019
+
+* Themes!!!
+* Added a LOT of Look and Feel themes. Total < 100 now
+* Doctring comments for some missing functions
+* PEP8 bindings for button_rebound_collback, set_tooltip, set_focus
+* Spin Element Update - shortened code
+* Allow tk.PhotoImage objeft to be passed into Image.update as the data
+* DrawRectangle - added line_width parameter. Defaults to 1
+* Fix for Slider - was only setting the trough color if the background color was being set_focus
+* Added a deiconify call to Window.Normal so it can be used to restore a window that has been minimized.  Not working on Linux
+* Combo - Fix for not allowing a "0" to be specified as the default
+* Table - Saving the Frame that contains a table in the member variable table_frame.  This will enable the frame to be changed to expandable in the future so that the table can be resized as a window expands.
+* LOTS AND LOTS of Look and Feel themes!!!!
+* Added SystemDefaultForReal to look and feel that will prodce 100% not styled windows
+* Changed the "gray" strings in look and feel table into RGB strtings (e.g. gray25 = #404040). No all graphics subsystems
+* Removed Mac restriction from Look and Feel setting changes.  All color settings are changed EXCEPT for the button color now on a Mac
+* "Fuzzy Logic" Look and Feel Theme Selection - No longer have to memorize every character and get the case right. Now can get "close enough" and it'll working
+* New function - preview_all_look_and_feel_themes.  Causes a window to be shown that shows all of the currently available look and feel themes
+* Removed use of CloseButton in popup get file, folder, text.  Was causing problems where input fields stopped working.  See bug on GitHub
+
 ### Upcoming
+
 Make suggestions people!  Future release features
 
 ## Code Condition

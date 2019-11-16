@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.9 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default, huge number of look and feel themes added, theme renames, random theme"
+version = __version__ = "4.6.0 Released 11-Nov-2019"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -9780,11 +9780,11 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
               'BORDER': 1, 'SLIDER_DEPTH': 0,
               'PROGRESS_DEPTH': 0},
 
- 'Dark': {'BACKGROUND': 'gray25',
+ 'Dark': {'BACKGROUND': '#404040',
           'TEXT': 'white',
-          'INPUT': 'gray30',
+          'INPUT': '#4D4D4D',
           'TEXT_INPUT': 'white',
-          'SCROLL': 'gray44',
+          'SCROLL': '#707070',
           'BUTTON': ('white', '#004F00'),
           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
           'BORDER': 1,
@@ -9805,11 +9805,11 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
                 'ACCENT3': '#0a1c84',
                 'PROGRESS_DEPTH': 0},
 
- 'Dark2': {'BACKGROUND': 'gray25',
+ 'Dark2': {'BACKGROUND': '#404040',
            'TEXT': 'white',
            'INPUT': 'white',
            'TEXT_INPUT': 'black',
-           'SCROLL': 'gray44',
+           'SCROLL': '#707070',
            'BUTTON': ('white', '#004F00'),
            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
            'BORDER': 1,
@@ -9818,9 +9818,9 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
 
  'Black': {'BACKGROUND': 'black',
            'TEXT': 'white',
-           'INPUT': 'gray30',
+           'INPUT': '#4D4D4D',
            'TEXT_INPUT': 'white',
-           'SCROLL': 'gray44',
+           'SCROLL': '#707070',
            'BUTTON': ('black', 'white'),
            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
            'BORDER': 1,
@@ -10097,11 +10097,11 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
               'BORDER': 1, 'SLIDER_DEPTH': 0,
               'PROGRESS_DEPTH': 0},
 
- 'DarkGrey': {'BACKGROUND': 'gray25',
+ 'DarkGrey': {'BACKGROUND': '#404040',
           'TEXT': 'white',
-          'INPUT': 'gray30',
+          'INPUT': '#4D4D4D',
           'TEXT_INPUT': 'white',
-          'SCROLL': 'gray44',
+          'SCROLL': '#707070',
           'BUTTON': ('white', '#004F00'),
           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
           'BORDER': 1,
@@ -10122,11 +10122,11 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
                 'ACCENT3': '#0a1c84',
                 'PROGRESS_DEPTH': 0},
 
- 'DarkGrey1': {'BACKGROUND': 'gray25',
+ 'DarkGrey1': {'BACKGROUND': '#404040',
            'TEXT': 'white',
            'INPUT': 'white',
            'TEXT_INPUT': 'black',
-           'SCROLL': 'gray44',
+           'SCROLL': '#707070',
            'BUTTON': ('white', '#004F00'),
            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
            'BORDER': 1,
@@ -10135,9 +10135,9 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
 
  'DarkBlack': {'BACKGROUND': 'black',
            'TEXT': 'white',
-           'INPUT': 'gray30',
+           'INPUT': '#4D4D4D',
            'TEXT_INPUT': 'white',
-           'SCROLL': 'gray44',
+           'SCROLL': '#707070',
            'BUTTON': ('black', 'white'),
            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
            'BORDER': 1,
@@ -12084,8 +12084,8 @@ def main():
     :return:
     """
     from random import randint
-
-    ChangeLookAndFeel('DarkPurple1')
+    # preview_all_look_and_feel_themes()
+    ChangeLookAndFeel('Light Green 1')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
