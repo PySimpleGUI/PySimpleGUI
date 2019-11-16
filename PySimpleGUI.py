@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.7 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default, huge number of look and feel themes added, theme renames"
+version = __version__ = "4.6.0.8 Unreleased - Added border to Graph.draw_rectangle, Image.Update data parm can be tk.PhotoImage obj, more PEP8 bindings for Element, Slider trough color fix, look and feel previewer, fix for combo default, huge number of look and feel themes added, theme renames"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -10074,7 +10074,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
             'ACCENT2': '#33a8ff',
             'ACCENT3': '#dbf0ff'},
 
- 'DarkBrown2': {'BACKGROUND': '#282923',
+ 'DarkBrown': {'BACKGROUND': '#282923',
              'TEXT': '#E7DB74',
              'INPUT': '#393a32',
              'TEXT_INPUT': '#E7C855',
@@ -10177,7 +10177,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
                  'SLIDER_DEPTH': 0,
                  'PROGRESS_DEPTH': 0},
 
- 'DarkBrown4': {'BACKGROUND': '#2c2825',
+ 'DarkBrown1': {'BACKGROUND': '#2c2825',
                'TEXT': '#fdcb52',
                'INPUT': '#705e52',
                'TEXT_INPUT': '#fdcb52',
@@ -10198,7 +10198,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
               'BORDER': 1, 'SLIDER_DEPTH': 0,
               'PROGRESS_DEPTH': 0},
 
- 'DarkBrown5': {'BACKGROUND': '#280001',
+ 'DarkBrown2': {'BACKGROUND': '#280001',
           'TEXT': 'white',
           'INPUT': '#d8d584',
           'TEXT_INPUT': 'black',
@@ -10343,9 +10343,6 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
  'DarkPurple': {'BACKGROUND': '#472b62', 'TEXT': '#fb5b5a', 'INPUT': '#bc4873', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#bc4873', 'BUTTON': ('#FFFFFF', '#472b62'),
                  'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                  'COLOR_LIST': ['#003f5c', '#472b62', '#bc4873', '#fb5b5a'], },
- 'LightBrown5': {'BACKGROUND': '#d7c79e', 'TEXT': '#a35638', 'INPUT': '#9dab86', 'TEXT_INPUT': '#000000', 'SCROLL': '#a35638', 'BUTTON': ('white', '#a35638'),
-                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
-                 'COLOR_LIST': ['#a35638', '#9dab86', '#e08f62', '#d7c79e'], },
  'LightGreen6': {'BACKGROUND': '#eafbea', 'TEXT': '#1f6650', 'INPUT': '#6f9a8d', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#1f6650', 'BUTTON': ('white', '#1f6650'),
                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                 'COLOR_LIST': ['#1f6650', '#6f9a8d', '#ea5e5e', '#eafbea'], },
@@ -10448,7 +10445,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
  'DarkTeal6': {'BACKGROUND': '#204969', 'TEXT': '#fff7f7', 'INPUT': '#dadada', 'TEXT_INPUT': '#000000', 'SCROLL': '#dadada',
                     'BUTTON': ('black', '#fff7f7'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                     'COLOR_LIST': ['#204969', '#08ffc8', '#dadada', '#fff7f7'],},
- 'DarkBrown13': {'BACKGROUND': '#252525', 'TEXT': '#ff0000', 'INPUT': '#af0404', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#af0404', 'BUTTON': ('white', '#252525'),
+ 'DarkBrown4': {'BACKGROUND': '#252525', 'TEXT': '#ff0000', 'INPUT': '#af0404', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#af0404', 'BUTTON': ('white', '#252525'),
              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
              'COLOR_LIST': ['#252525', '#414141', '#af0404', '#ff0000'], },
  'LightYellow': {'BACKGROUND': '#f4ff61', 'TEXT': '#27aa80', 'INPUT': '#32ff6a', 'TEXT_INPUT': '#000000', 'SCROLL': '#27aa80', 'BUTTON': ('#f4ff61', '#27aa80'),
@@ -10483,7 +10480,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
  'DarkRed1': {'BACKGROUND': '#c10000', 'TEXT': '#eeeeee', 'INPUT': '#dedede', 'TEXT_INPUT': '#000000', 'SCROLL': '#dedede', 'BUTTON': ('#c10000', '#eeeeee'),
                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
                'COLOR_LIST': ['#c10000', '#ff4949', '#dedede', '#eeeeee'],},
- 'LightBrown12': {'BACKGROUND': '#fff591', 'TEXT': '#e41749', 'INPUT': '#f5587b', 'TEXT_INPUT': '#000000', 'SCROLL': '#e41749', 'BUTTON': ('#fff591', '#e41749'),
+ 'LightBrown5': {'BACKGROUND': '#fff591', 'TEXT': '#e41749', 'INPUT': '#f5587b', 'TEXT_INPUT': '#000000', 'SCROLL': '#e41749', 'BUTTON': ('#fff591', '#e41749'),
               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
               'COLOR_LIST': ['#e41749', '#f5587b', '#ff8a5c', '#fff591']}
                  }
