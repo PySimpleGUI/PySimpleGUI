@@ -1,17 +1,17 @@
-import PySimpleGUI as sg
+import PySimpleGUIWeb as sg
+from random import randint
 
 """
     Another simple table created from Input Text Elements.  This demo adds the ability to "navigate" around the drawing using
     the arrow keys. The tab key works automatically, but the arrow keys are done in the code below.
 """
 
+sg.change_look_and_feel('Light green 5')     # No excuse for gray windows
+
 MAX_COLS = MAX_ROWS = 5
-
-sg.change_look_and_feel('Dark Brown 1')     # No excuse for gray windows
-
 # Create an Excel style window layout quickly and easily using list comprehensions
 layout =  [[sg.Text(' '*11)]+[sg.Text(s+ ' '*19) for s in 'ABCDE'] ] + \
-          [[sg.T(r)] + [sg.Input('0', justification='r', key=(r,c)) for c in range(MAX_COLS)] for r in range(MAX_ROWS)] + \
+          [[sg.T(r)] + [sg.Input(randint(0,100), justification='r', key=(r,c)) for c in range(MAX_COLS)] for r in range(MAX_ROWS)] + \
           [[sg.Button('Table Values'), sg.Button('Exit')]]
 
 # Create the window and show it
@@ -21,7 +21,8 @@ while True:             # Event Loop
     event, values = window.read()
     if event in (None, 'Exit'):         # If user closed the window
         break
-    current_cell = window.find_element_with_focus().Key
+    elem = window.find_element_with_focus()
+    current_cell = elem.Key if elem else (0,0)
     r,c = current_cell
     # Process arrow keys
     if event.startswith('Down'):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import PySimpleGUI as sg
+import PySimpleGUIQt as sg
 
 """
    
@@ -688,13 +688,13 @@ for rows in range(40):
         try:
             color = color_list[rows+40*i]
             row.append(sg.Button(color, button_color=('black', color),
-                            key=color, tooltip=color_map[color]))
+                            key=color, tooltip=color_map[color], border_width=0))
         except:
             pass
     layout.append(row)
 
 
-window = sg.Window('Color Viewer', layout, grab_anywhere=False, font=('any 9'))
+window = sg.Window('Color Viewer', layout, grab_anywhere=False, font=('any 9'), element_padding=(0,0), border_depth=0)
 
 # -- Event loop --
 while True:
