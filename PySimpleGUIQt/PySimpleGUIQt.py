@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.30.0 Released 16-Nov-2019"
+version = __version__ = "0.31.1 UnReleased"
 
 import sys
 import types
@@ -5386,7 +5386,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 window.QT_QTabWidget.addTab(tab_widget, element.Title)
             # -------------------------  TabGroup element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
-
+                element = element       # type:TabGroup
                 element.Widget = element.QT_QTabWidget = qtab =QTabWidget()
 
                 style = qtab.styleSheet()
@@ -5398,6 +5398,14 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     style += 'QTabBar::tab {color: %s;}'%element.TextColor
                 qtab.setStyleSheet(style)
 
+                if element.TabLocation is not None:
+                    position_dict = {'left': QtWidgets.QTabWidget.TabPosition.West, 'right': QtWidgets.QTabWidget.TabPosition.East, 'top': QtWidgets.QTabWidget.TabPosition.North, 'bottom': QtWidgets.QTabWidget.TabPosition.South, 'lefttop': QtWidgets.QTabWidget.TabPosition.North,
+                                     'leftbottom': QtWidgets.QTabWidget.TabPosition.South, 'righttop': QtWidgets.QTabWidget.TabPosition.North, 'rightbottom': QtWidgets.QTabWidget.TabPosition.South, 'bottomleft': QtWidgets.QTabWidget.TabPosition.South,
+                                     'bottomright': QtWidgets.QTabWidget.TabPosition.South, 'topleft': QtWidgets.QTabWidget.TabPosition.North, 'topright': QtWidgets.QTabWidget.TabPosition.North}
+                    try:
+                        element.Widget.setTabPosition(position_dict[element.TabLocation])
+                    except:
+                        print('Bad tab position specified {}', element.TabLocation)
                 PackFormIntoFrame(element, element.ParentForm.QFormLayout, toplevel_win)
 
                 qt_row_layout.addWidget(element.QT_QTabWidget)
@@ -7969,7 +7977,7 @@ def main():
          Frame('Variable Choice Group', frame4, title_color='blue'), Stretch()],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
-        [TabGroup([[tab1, tab2]],title_color='black')],
+        [TabGroup([[tab1, tab2]],title_color='black', tab_location='bottom')],
         [ProgressBar(max_value=600, start_value=400, size=(600, 25), key='+PROGRESS+'),
          Text('', key='_PROGTEXT_'), Stretch(),
          ButtonMenu('&Menu', ['Menu', ['&Pause Graph', 'Menu item::optional_key']], key='_MENU_',
