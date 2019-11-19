@@ -6,13 +6,13 @@ import imwatchingyou
     This enables you to have a live debugger / REPL in a running PySimpleGUIQt program
 """
 layout = [[sg.Text('My PySimpleGUIQt layout')],
-          [sg.Button('OK'), sg.Button('Debugger'), sg.B('Popout')]]
+          [sg.B('OK'), sg.B('Debugger'), sg.B('Popout')]]
 
 window = sg.Window('My window', layout)
 
 counter = 0  # something to see updating in the popout window
 while True:
-    event, values = window.Read(timeout=100)
+    event, values = window.read(timeout=100)
     if event is None:
         break
     if event == 'Debugger':
