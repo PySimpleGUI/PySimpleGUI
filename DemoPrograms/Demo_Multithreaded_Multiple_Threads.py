@@ -61,8 +61,7 @@ def the_gui():
               [sg.Text('Click Go to start a long-running function call')],
               [sg.Text('', size=(25, 1), key='-OUTPUT-')],
               [sg.Text('', size=(25, 1), key='-OUTPUT2-')],
-              [sg.Graph((10, 10), (0, 0), (10, 10),
-                        background_color='black', key=i) for i in range(20)],
+              [sg.Text('  ',size=(2,1), background_color='blue', key=i) for i in range(20)],
               [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window', layout)
@@ -102,7 +101,7 @@ def the_gui():
             window[completed_work_id].update(background_color='green')
 
         if event == 'Popup':
-            sg.popup('This is a popup showing that the GUI is running')
+            sg.popup_non_blocking('This is a popup showing that the GUI is running', grab_anywhere=True)
     # if user exits the window, then close the window and exit the GUI func
     window.close()
 
