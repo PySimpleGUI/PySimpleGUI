@@ -46,16 +46,15 @@ class QueueHandler(logging.Handler):
 def main():
 
     layout = [
-            [sg.MLine(size=(50, 15), key='Log')],
+            [sg.Multiline(size=(50, 15), key='-LOG-')],
             [sg.Button('Start', bind_return_key=True, key='-START-'), sg.Button('Exit')]
         ]
 
-    window = sg.FlexForm('Log window', layout,
+    window = sg.Window('Log window', layout,
             default_element_size=(30, 2),
             font=('Helvetica', ' 10'),
-            default_button_element_size=(8, 2),
-            return_keyboard_events=True)
-    window.read(timeout=0)
+            default_button_element_size=(8, 2),)
+
     appStarted = False
 
     # Setup logging and start app
@@ -86,7 +85,7 @@ def main():
             pass
         else:
             msg = queue_handler.format(record)
-            window['Log'].update(msg+'\n', append=True)
+            window['-LOG-'].update(msg+'\n', append=True)
 
     window.close()
 
