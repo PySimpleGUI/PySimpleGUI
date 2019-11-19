@@ -70,7 +70,7 @@ The **One-shot window** is one that pops up, collects some data, and then disapp
 The **Persistent window** is one that sticks around.  With these programs, you loop, reading and processing "events" such as button clicks. It's more like a typical Windows/Mac/Linux  program.
 
       
-## Pattern 1 - "One-shot Window" - (The Simplest Pattern)    
+## Recipe -  Pattern 1 - "One-shot Window" - (The Simplest Pattern)    
 
 
 ![Pattern1](https://user-images.githubusercontent.com/46163555/64929604-0c4fe500-d7f6-11e9-9dc1-bb34d5aafd23.jpg)   
@@ -81,7 +81,7 @@ The **Persistent window** is one that sticks around.  With these programs, you l
 Or with the addition of:
 
 ```python
-sg.change_look_and_feel('DarkTanBlue')
+sg.change_look_and_feel('DarkBlue1')    # or DarkTanBlue if using older PySimpleGUI versions
 ```
 
 you get this color scheme
@@ -106,7 +106,7 @@ This design pattern does not specify a `key` for the `InputText` element, so its
 ```python    
 import PySimpleGUI as sg      
 
-sg.change_look_and_feel('DarkTanBlue')
+sg.change_look_and_feel('DarkBlue1')
 
 layout = [[sg.Text('My one-shot window.')],      
                  [sg.InputText()],      
@@ -126,7 +126,7 @@ If you want to use a key instead of an auto-generated key:
 ```python    
 import PySimpleGUI as sg      
 
-sg.change_look_and_feel('DarkTanBlue')
+sg.change_look_and_feel('DarkBlue1')
 
 layout = [[sg.Text('My one-shot window.')],      
                  [sg.InputText(key='-IN-')],      
@@ -143,7 +143,7 @@ sg.popup('You entered', text_input)
 
 
 
-## Pattern 2 A - Persistent window (multiple reads using an event loop)      
+## Recipe - Pattern 2 A - Persistent window (multiple reads using an event loop)      
 
 
 ![image](https://user-images.githubusercontent.com/46163555/68600333-5361fb80-0470-11ea-91cb-691e32832b60.png)
@@ -200,7 +200,7 @@ The `event` returned from the read is set to `None` and so are the input fields 
 In some cirsumstances when a window is closed with an X, both of the return values from `window.read()` will be `None`.  This is why it's important to check for `event is None` before attempting to access anything in the `values` variable.
 
 
-## Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
+## Recipe - Pattern 2 B - Persistent window (multiple reads using an event loop + updates data in window)   
 
 ![image](https://user-images.githubusercontent.com/46163555/68633697-df9c0f00-04c0-11ea-9fb3-121a72a87a59.png)
 
@@ -260,11 +260,11 @@ Yes, it looks a little strange.
 
 **The Summary**
 
-`window[key]` means you're finding an element in that window.  Anything after that part of the statement means you're working directly with an element.  Maybe the element has another method besides `update` you want to call, like `get()`.  If so, then it is written simply as:
+`window[key]` means you're finding an element in that window.  Anything after that part of the statement means you're working directly with an element.  Maybe the element has another method besides `update` you want to call, like `set_tooltip()`.  If so, then it is written simply as:
 
 
 ```python
-window[my_key].get()
+window[my_key].set_tooltip('New Tooltip')   # note - only in base PySimpleGUI port currently
 ```
 
 ----
@@ -316,32 +316,93 @@ Note that ***you cannot make any PySimpleGUI calls from a thread*** other than t
 
 # Window "Beautification" - Colors Other Than Gray... Use them!
 
-One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that in 1 line of PySimpleGUI code. A call to `change_look_and_feel` will set the colors to be used when creating windows.  It sets text color, background colork, input field colors, button color, etc.  
+One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that in 1 line of PySimpleGUI code. 
 
-Even windows that are created for you, such as popups, will use the color settings.
-
-This one line of code helps, but it's not the only thing that is going to make your window attractive.  "Beautiful windows" don't just happen.  
-
-In this example, "GreenTan" was chosen.  This causes all elements created in the future to use a specific set of colors for the background, text colors, button color, etc.
+A call to `change_look_and_feel` will set the colors to be used when creating windows.  It sets text color, background color, input field colors, button color,.... 13 different settings are changed.  
 
 ```python
-sg.change_look_and_feel('GreenTan')
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('GreenMono')
 ```
 
-As of this writing (Nov 2019) the list of valid look and feel settings includes:
+At the start of Nov 2019, the list of valid look and feel settings includes:
 
 SystemDefault, Material1, Material2, Reddit, Topanga, GreenTan, Dark, LightGreen, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green, BluePurple, Purple, BlueMono, GreenMono, BrownBlue, BrightColors, NeutralBlue, Kayak, SandyBeach, TealMono
 
-***Mac users*** - Unfortunately tkinter and the Mac haven't been playing well together when it comes to colors, in particular button colors.  For this reason the change_look_and_feel is "disabled" for Macs, however you can force it by assing the parameter to the call `force=True`.  You may be able to get away with the change if you change the button settings back to the default setting by calling `set_options`.
-
-
-## Look and Feel Theme Summary
-
-Here is a quick-reference view of the available Look and Feel themes.
+**A quick reference of Themes available in releases prior to November 2019**
 
 ![image](https://user-images.githubusercontent.com/46163555/68784032-ed10e080-0609-11ea-81bc-22dc8b27692d.png)
 
-Here is the code that produced it so that you can run it on your system to see the current list of themes and how they appear on your monitor.
+Even windows that are created for you, such as popups, will use the color settings you specify.  And, you can change them at any point, even mid-way through defining a window layout.
+
+
+This one line of code helps, but it's not the only thing that is going to make your window attractive.  "Beautiful windows" don't just happen.  
+
+
+***Mac users*** - Unfortunately tkinter and the Mac haven't been playing well together when it comes to colors, in particular button colors. The Themes you see here will set everything except the button colors on a Mac.
+
+## Look and Feel Theme Explosion
+
+In Nov 2019 the number of available themes balooned to 105 Themes.  The existing 28 themes are still available and they are available using 2 different naming schemes, the initial names as seen in the above image and a new naming format explained below. 
+
+These new additions were added beginning with release 4.6 of the tkinter port of PySimpleGUI.  They were simultaneously released to the other 3 ports of PySimpleGUI as well (Qt, WxPython, Remi)
+
+**A quick reference of Themes available in releases after mid November 2019**
+
+
+![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+
+### Theme Name Format
+
+In addition to getting lots of new Themes, the process of choosing and specifying one was improved.
+
+You can look at the table of available themes to get the name of a theme you want to try, or you can "guess" at one using this formula:
+
+`<"Dark" | "Light"> <Color> [#]`
+
+Where Color is one of these:
+
+`Black, Blue, Green, Teal, Brown, Yellow, Gray, Purple`
+
+The # is optional and is used when there is more than 1 choice for a color.  For example, for "Dark Blue" there are 12 different themes (Dark Blue, and Dark Blue 1-11).  These colors specify the rough color of the background.  These can vary wildly so you'll have to try them out to see what you like the best.
+
+
+### Recipe - Built-in Theme Viewer
+
+If you want to see a window on your system like the above screenshot, then make this call and you'll see the same window:
+
+```python
+import PySimpleGUI as sg
+
+sg.preview_all_look_and_feel_themes()
+```
+
+### Specifying and Getting Theme Names
+
+In addition to getting all of these new themes, the format of the string used to specify them got "fuzzy".  You no longer have to specify the ***exact*** string shown in the preview.  Now you can add spaces, change the case, even move words around and you'll still get the correct theme.
+
+For example the theme `"DarkBrown2"` can be specified also as `"Dark Brown 2"`.
+
+If you can't remember the names and get it wrong, you'll get a text list of the available choices printed on your console.  
+
+You can also get the list of theme names by calling `list_of_look_and_feel_values`
+
+```python
+import PySimpleGUI as sg
+
+theme_name_list = sg.list_of_look_and_feel_values()
+```
+
+Also, if you guess incorrectly, then you'll get a random theme presented instead of some hard coded default.  You were calling change_look_and_feel to get more color, in theory, so instead of giving you a gray window, you'll get a randomly chosen theme (and you'll get the name of this theme printed on the console)
+
+
+---
+
+
+## Recipe - Theme Previewer
+
+If you don't like the theme previewer built into PySimpleGUI, then you can write your own like in this recipe.
 
 ```python
 import PySimpleGUI as sg
@@ -349,54 +410,49 @@ import PySimpleGUI as sg
 WINDOW_BACKGROUND = 'lightblue'
 
 def sample_layout():
-    return [[sg.Text('Text element'), sg.InputText('Input data here')],
+    return [[sg.Text('Text element'), sg.InputText('Input data here', size=(12,1))],
                 [sg.Button('Ok'), sg.Button('Cancel')] ]
 
-layout =   [[sg.Text('Here is a complete list of themes', font='Default 18', background_color=WINDOW_BACKGROUND)]]
+layout =   [[sg.Text('My Theme Previewer', font='Default 18', background_color=WINDOW_BACKGROUND)]]
 
 row = []
 for count, theme in enumerate(sg.ListOfLookAndFeelValues()):
     sg.change_look_and_feel(theme)
-
-    row += [sg.Frame(theme, sample_layout())]
-    if count % 2:
+    if not count % 10:
         layout += [row]
         row = []
-
+    row += [sg.Frame(theme, sample_layout())]
+if row:
+    layout += [row]
 sg.Window('Window Title', layout, background_color=WINDOW_BACKGROUND).read()
 ```
 
+-----
 
-## Look and Feel Browser
+## Recipe - Look and Feel Browser
 
 This Recipe is a "Look and Feel Browser" that enables you to see the different color schemes.
 
-You're first shown this window that lists all of the available "Look and Feel" settings.  This window was created after the Look and Feel were set to "GreenTan".
+You're first shown this window that lists all of the available "Look and Feel" settings.  This window was created after the Look and Feel were set to "Dark Brown".
 
-![SNAG-0548](https://user-images.githubusercontent.com/46163555/68547124-a8880980-03ab-11ea-9302-388da5777979.jpg)
-
+![image](https://user-images.githubusercontent.com/46163555/69106236-bee13580-0a3b-11ea-9eaa-f5f0282b1c63.png)
 
 If you click on an item in the list, you will immediately get a popup window that is created using the new Look and Feel.
 
 ![SNAG-0549](https://user-images.githubusercontent.com/46163555/68547123-a8880980-03ab-11ea-92f3-cb8d3136ae07.jpg)
 
 
-So, **please**, add one of these `change_look_and_feel` calls to the top of your programs so they are more colorful!
-
-Also, if you come up with your own colors, post them on the project's GitHub so they can be included in future releases.  More choices == better.
-
-
 ```python
 import PySimpleGUI as sg
 
 """
-    Allows you to "browse" through the look and feel settings.  Click on one and you'll see a 
-    Popup window using the color scheme you chose.  It's a simply little program that demonstrates
+    Allows you to "browse" through the look and feel settings.  Click on one and you'll see a
+    Popup window using the color scheme you chose.  It's a simple little program that also demonstrates
     how snappy a GUI can feel if you enable an element's events rather than waiting on a button click.
     In this program, as soon as a listbox entry is clicked, the read returns.
 """
 
-sg.change_look_and_feel('GreenTan')
+sg.change_look_and_feel('Dark Brown')
 
 layout = [[sg.Text('Look and Feel Browser')],
           [sg.Text('Click a look and feel color to see demo window')],
@@ -415,7 +471,85 @@ while True:  # Event Loop
 
 window.close()
 ```
+----
 
+## Making Changes to Themes & Adding Your Own Themes
+
+Modifying and creating your own theme is not difficult.
+
+The Look and Feel Theme definitions are stored in a dictionary.  The underlying dictionary can be directly accessed via the variable `LOOK_AND_FEEL_TABLE`.
+
+A single entry in this dictionary has this format (copy this code):
+
+```python
+ 'LightGreen3': {'BACKGROUND': '#A8C1B4',
+               'TEXT': 'black',
+               'INPUT': '#DDE0DE',
+               'SCROLL': '#E3E3E3',
+               'TEXT_INPUT': 'black',
+               'BUTTON': ('white', '#6D9F85'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0}
+```
+
+As you can see, a single entry in the Look and Feel dictionary is itself a dictionary.
+
+---
+
+### Modifying an existing entry
+
+Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the entry in the table directly.
+
+```python
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('LightGreen3')
+sg.popup_no_wait('This is the standard LightGreen3 Theme', 'It has white button text')
+
+# Modify the theme directly
+sg.LOOK_AND_FEEL_TABLE['LightGreen3']['BUTTON'] =  ('black', '#6D9F85')
+
+sg.change_look_and_feel('LightGreen3')
+sg.popup('This is the modified LightGreen3 Theme', 'It has black button text')
+```
+
+Produces these 2 windows
+
+![image](https://user-images.githubusercontent.com/46163555/69111481-b3960600-0a4b-11ea-83dc-4833897e7250.png)
+
+----
+
+### Adding Your Own Theme
+
+The great thing about these themes is that you set it onces and all future Elements will use the new settings.  If you're adding the same colors in your element definitions over and over then perhaps making your own theme is in order.
+
+Let's say that you need to match a logo's green color and you've come up with matching other colors to go with it.  To add the new theme to the standard themes this code will do it:
+
+```python
+import PySimpleGUI as sg
+# Add your new theme colors and settings
+sg.LOOK_AND_FEEL_TABLE['MyNewTheme'] = {'BACKGROUND': '#709053',
+                                        'TEXT': '#fff4c9',
+                                        'INPUT': '#c7e78b',
+                                        'TEXT_INPUT': '#000000',
+                                        'SCROLL': '#c7e78b',
+                                        'BUTTON': ('white', '#709053'),
+                                        'PROGRESS': ('#01826B', '#D0D0D0'),
+                                        'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                                        }
+# Switch to use your newly created theme
+sg.change_look_and_feel('MyNewTheme')
+# Call a popup to show what the theme looks like
+sg.popup_get_text('This how the MyNewTheme custom theme looks')      
+```
+
+
+![image](https://user-images.githubusercontent.com/46163555/69112494-5f405580-0a4e-11ea-9f20-1ea4e93f89bd.png)
+
+
+----
 
 ## More Ways to "Dress Up Your Windows"
 
@@ -513,7 +647,7 @@ You can [run this code online on Trinket](https://pysimplegui.trinket.io/demo-pr
 
 ```python
 import PySimpleGUI as sg
-
+# Note that the base64 string is quite long.  You can get the code from Trinket that includes the button
 red_x_base64 = b'paste the base64 encoded string here'
 
 layout = [  [sg.Text('My borderless window with a button graphic')],
@@ -530,10 +664,27 @@ window.close()
 
 ```
 
+When working with PNG/GIF files as button images the background you choose for the button matters.  It should match the background of whatever it is being placed upon.
+
+For example, if the theme was changed to use `DarkTeal7` and you did not change your `Button` element's background (left it as the system default), then your window will look like this:
+
+![image](https://user-images.githubusercontent.com/46163555/69113068-ed690b80-0a4f-11ea-8d61-e13c2caa3fd4.png)
+
+
+To get it to match, change your `Button` element's background to match the one from the theme.  Your `Button` in your layout will look like this:
+
+```python
+sg.Button('', image_data=red_x_base64, button_color=('white',sg.LOOK_AND_FEEL_TABLE['DarkTeal7']['BACKGROUND']), border_width=0, image_subsample=8, key='Exit'
+```
+
+
+![image](https://user-images.githubusercontent.com/46163555/69113177-42a51d00-0a50-11ea-928d-ae384160f8bf.png)
+
+
 ----
 
 
-# 1 Shot - Simple Data Entry - Return Values - Auto Numbered   
+# Recipe - 1 Shot Window - Simple Data Entry - Return Values - Auto Numbered   
 
 An Element's key will be automatically numbered, starting at 0, if you do not use the `key` parameter when creating an element and it's an element that will return values to you via the `Window.read()` call.
 
@@ -566,7 +717,7 @@ print(event, values[0], values[1], values[2])    # the input data looks like a s
 
 --------------------------      
 
-## Add GUI to Front-End of Script 
+## Recipe - Add GUI to Front-End of Script 
 
 Quickly add a GUI allowing the user to browse for a filename if a filename is not supplied on the command line using this simple GUI. It's the best of both worlds.  If you want command line, you can use it.  If you don't specify, then the GUI will fire up.
 
@@ -595,8 +746,10 @@ if not fname:
 else:
     sg.popup('The filename you chose was', fname)
 ```
-      
-### The `popup_get_file` Version
+
+---
+
+### Recipe - The `popup_get_file` Version of Add GUI to Front-End of Script
 
 Why recreate the wheel?  There's a `Popup` function that will get a Filename for you.  This is a single-line GUI:
 
@@ -627,11 +780,16 @@ else:
     sg.popup('The filename you chose was', fname)
 ```
 
-How about a GUI **_and_** traditional CLI argument in 1 line of code?
+
+How about a GUI **_and_** traditional CLI argument in 1 line of code?  Let's also add 1 line to get the colors to *not* be system-default-grey.
+
+![image](https://user-images.githubusercontent.com/46163555/69107643-11bcec00-0a40-11ea-8962-d3b733b643ac.png)
 
 ```python
 import PySimpleGUI as sg
 import sys
+
+sg.change_look_and_feel('Dark Grey 3')
 
 fname = sys.argv[1] if len(sys.argv) > 1 else sg.popup_get_file('Document to open')
 
@@ -642,30 +800,37 @@ else:
     sg.popup('The filename you chose was', fname)
 ```
 
+Recall the (long) sections above about color?  You can use the color themes even for these simple front-ends.  Simply add a call to `change_look_and_feel` before you call any PySimpleGUI code like a popup.  In this example, we're choosing "Dark Grey 3" for the color.
+
 
 --------------      
       
-## Compare 2 Files      
+## Recipe - Compare 2 Files      
       
-Browse to get 2 file names that can be then compared.      
+Sometimes you just need to get a couple of filenames.  Browse to get 2 file names that can be then compared.  By using `Input` elements the user can either use the Browse button to browse to select a file or they can paste the filename into the input element directly.    
       
-![compare 2 files](https://user-images.githubusercontent.com/13696193/43934659-60dc5fbe-9c1e-11e8-8d2b-07c0e3b61892.jpg)      
+![image](https://user-images.githubusercontent.com/46163555/69107788-9445ab80-0a40-11ea-87e2-3c5efe893ea0.png)   
       
 ```python
-    import PySimpleGUI as sg      
-      
-    layout = [[sg.Text('Enter 2 files to comare')],    
-                 [sg.Text('File 1', size=(8, 1)), sg.Input(), sg.FileBrowse()],      
-                 [sg.Text('File 2', size=(8, 1)), sg.Input(), sg.FileBrowse()],      
-                 [sg.Submit(), sg.Cancel()]]      
-      
-    window = sg.Window('File Compare', layout)  
-      
-    event, values = window.read()  
-    window.close()
-    print(event, values)      
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('Light Blue 2')
+
+layout = [[sg.Text('Enter 2 files to comare')],
+          [sg.Text('File 1', size=(8, 1)), sg.Input(), sg.FileBrowse()],
+          [sg.Text('File 2', size=(8, 1)), sg.Input(), sg.FileBrowse()],
+          [sg.Submit(), sg.Cancel()]]
+
+window = sg.Window('File Compare', layout)
+
+event, values = window.read()
+window.close()
+print(f'You clicked {event}')
+print(f'You chose filenames {values[0]} and {values[1]}')
 ```      
----------------      
+
+--------------- 
+
 ## Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
 
 Example of nearly all of the Elements in a single window.  Uses a customized color scheme, lots of Elements, default values, Columns, Frames with colored text, tooltips, file browsing.  There are at least 13 different Elements used.  
@@ -757,7 +922,7 @@ A note about timers... this is not a good design for a stopwatch as it can very 
 ```python      
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('DarkAmber')
+sg.change_look_and_feel('DarkBrown1')
 
 layout = [  [sg.Text('Stopwatch', size=(20, 2), justification='center')],
             [sg.Text('', size=(10, 2), font=('Helvetica', 20), justification='center', key='_OUTPUT_')],
@@ -784,11 +949,12 @@ while True:                                 # Event Loop
 ## Callback Function Simulation      
 The architecture of some programs works better with button callbacks instead of handling in-line.  While button callbacks are part of the PySimpleGUI implementation, they are not directly exposed to the caller.  The way to get the same result as callbacks is to simulate them with a recipe like this one.      
       
-![button callback 2](https://user-images.githubusercontent.com/13696193/43955588-e139ddc6-9c6e-11e8-8c78-c1c226b8d9b1.jpg)      
+![image](https://user-images.githubusercontent.com/46163555/69109891-0ae5a780-0a47-11ea-8cc4-9442f46c7fa7.png)
 
 ```python      
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Light Blue 3')
 # This design pattern simulates button callbacks
 # Note that callbacks are NOT a part of the package's interface to the
 # caller intentionally.  The underlying implementation actually does use
@@ -829,21 +995,23 @@ window.close()
 
     # All done!
 sg.popup_ok('Done')
-```
-      
+```  
 
       
 ## OneLineProgressMeter      
       
 This recipe shows just how easy it is to add a progress meter to your code.      
       
-![onelineprogressmeter](https://user-images.githubusercontent.com/13696193/45589254-bd285900-b8f0-11e8-9122-b43f06bf074d.jpg)      
+![image](https://user-images.githubusercontent.com/46163555/69110052-80517800-0a47-11ea-8c59-9d86aa3e851d.png)
+ 
       
 ```python      
-    import PySimpleGUI as sg      
-      
-    for i in range(1000):      
-        sg.OneLineProgressMeter('One Line Meter Example', i+1, 1000, 'key')      
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 8')
+
+for i in range(1000):
+    sg.OneLineProgressMeter('One Line Meter Example', i + 1, 1000, 'key')
 ```      
       
      
