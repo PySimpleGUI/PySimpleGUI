@@ -35,21 +35,57 @@ import PySimpleGUI as sg
 #    ##    ##     ## ##    ##  ##       ##     ## ##     ##
 #    ##    ##     ## ##     ## ######## ##     ## ########
 
-def worker_thread(thread_name, run_freq,  gui_queue):
+def worker_thread1(thread_name, run_freq,  gui_queue):
     """
-    A worker thrread that communicates with the GUI
-    These threads can call functions that block withouth affecting the GUI (a good thing)
+    A worker thread that communicates with the GUI
+    These threads can call functions that block without affecting the GUI (a good thing)
     Note that this function is the code started as each thread. All threads are identical in this way
     :param thread_name: Text name used  for displaying info
     :param run_freq: How often the thread should run in milliseconds
     :param gui_queue: Queue used to communicate with the GUI
     :return:
     """
-    print('Starting thread - {} that runs every {} ms'.format(thread_name, run_freq))
+    print('Starting thread 1 - {} that runs every {} ms'.format(thread_name, run_freq))
     for i in itertools.count():                             # loop forever, keeping count in i as it loops
         time.sleep(run_freq/1000)                           # sleep for a while
         # put a message into queue for GUI
         gui_queue.put('{} - {}'.format(thread_name, i))
+
+
+def worker_thread2(thread_name, run_freq,  gui_queue):
+    """
+    A worker thread that communicates with the GUI
+    These threads can call functions that block without affecting the GUI (a good thing)
+    Note that this function is the code started as each thread. All threads are identical in this way
+    :param thread_name: Text name used  for displaying info
+    :param run_freq: How often the thread should run in milliseconds
+    :param gui_queue: Queue used to communicate with the GUI
+    :return:
+    """
+    print('Starting thread 2 - {} that runs every {} ms'.format(thread_name, run_freq))
+    for i in itertools.count():                             # loop forever, keeping count in i as it loops
+        time.sleep(run_freq/1000)                           # sleep for a while
+        # put a message into queue for GUI
+        gui_queue.put('{} - {}'.format(thread_name, i))
+
+
+def worker_thread3(thread_name, run_freq,  gui_queue):
+    """
+    A worker thread that communicates with the GUI
+    These threads can call functions that block without affecting the GUI (a good thing)
+    Note that this function is the code started as each thread. All threads are identical in this way
+    :param thread_name: Text name used  for displaying info
+    :param run_freq: How often the thread should run in milliseconds
+    :param gui_queue: Queue used to communicate with the GUI
+    :return:
+    """
+    print('Starting thread 3 - {} that runs every {} ms'.format(thread_name, run_freq))
+    for i in itertools.count():                             # loop forever, keeping count in i as it loops
+        time.sleep(run_freq/1000)                           # sleep for a while
+        # put a message into queue for GUI
+        gui_queue.put('{} - {}'.format(thread_name, i))
+
+
 
 #  ######   ##     ## ####
 # ##    ##  ##     ##  ##
@@ -109,12 +145,12 @@ if __name__ == '__main__':
     # -- Create a Queue to communicate with GUI --
     # queue used to communicate between the gui and the threads
     gui_queue = queue.Queue()
-    # -- Start worker threads, one runs twice as often as the other
-    threading.Thread(target=worker_thread, args=(
+    # -- Start worker threads, each taking a different amount of time
+    threading.Thread(target=worker_thread1, args=(
         'Thread 1', 500, gui_queue,),  daemon=True).start()
-    threading.Thread(target=worker_thread, args=(
+    threading.Thread(target=worker_thread2, args=(
         'Thread 2', 200, gui_queue,),  daemon=True).start()
-    threading.Thread(target=worker_thread, args=(
+    threading.Thread(target=worker_thread3, args=(
         'Thread 3', 1000, gui_queue,),  daemon=True).start()
     # -- Start the GUI passing in the Queue --
     the_gui(gui_queue)
