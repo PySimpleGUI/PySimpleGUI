@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0 Released 11-Nov-2019"
+version = __version__ = "4.6.0.51 Unreleased - New options for popup_scrolled, new input parmater - use_"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -876,7 +876,7 @@ class InputText(Element):
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None,   text_color=None, font=None, tooltip=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
-                 right_click_menu=None, visible=True, metadata=None):
+                 use_readonly_for_disable=True, right_click_menu=None, visible=True, metadata=None):
         """
 
         :param default_text: (str) Text initially shown in the input box as a default value(Default value = '')
@@ -894,6 +894,7 @@ class InputText(Element):
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param focus: (bool) Determines if initial focus should go to this element.
         :param pad:  (int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
+        :param use_readonly_for_disable: (bool) If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
         :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :param visible: (bool) set visibility state of the element (Default = True)
         :param metadata: (Any) User metadata that can be set to ANYTHING
@@ -908,6 +909,7 @@ class InputText(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
+        self.UseReadonlyForDisable = use_readonly_for_disable
         self.TKEntry = self.Widget = None          # type: tk.Entry
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -928,7 +930,7 @@ class InputText(Element):
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
         if disabled is True:
-            self.TKEntry['state'] = 'readonly'
+            self.TKEntry['state'] = 'readonly' if self.UseReadonlyForDisable else 'disabled'
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
         if background_color is not None:
@@ -8044,7 +8046,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     toplevel_form.FocusSet = True
                     element.TKEntry.focus_set()
                 if element.Disabled:
-                    element.TKEntry['state'] = 'readonly'
+                    element.TKEntry['state'] = 'readonly' if element.UseReadonlyForDisable else 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
@@ -10490,7 +10492,7 @@ def ListOfLookAndFeelValues():
     Get a list of the valid values to pass into your call to change_look_and_feel
     :return: List[str] - list of valid string values
     """
-    return list(LOOK_AND_FEEL_TABLE.keys())
+    return sorted(list(LOOK_AND_FEEL_TABLE.keys()))
 
 
 def ChangeLookAndFeel(index, force=False):
@@ -10501,7 +10503,7 @@ def ChangeLookAndFeel(index, force=False):
     The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
     The original list was (prior to a major rework and renaming)... these names still work...
         SystemDefault
-        SystemDefaultForRead
+        SystemDefaultForReal
         Material1
         Material2
         Reddit
@@ -10677,10 +10679,7 @@ def test_func(parm):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK,
-          auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False,
-          icon=None, line_width=None,
-          font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -10795,8 +10794,7 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None),
-                  location=(None, None),non_blocking=False):
+def PopupScrolled(*args,  title=None, button_color=None,  background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None),non_blocking=False,no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
@@ -10816,7 +10814,8 @@ def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_clos
     width, height = size
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
-                    auto_close_duration=auto_close_duration, location=location, resizable=True)
+                    auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
@@ -10834,14 +10833,14 @@ def PopupScrolled(*args,  title=None, button_color=None, yes_no=False, auto_clos
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
-    window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed)))
+    window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed), background_color=background_color, text_color=text_color))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
     button = DummyButton if non_blocking else CloseButton
     if yes_no:
-        window.AddRow(Text('', size=(pad, 1), auto_size_text=False), button('Yes'), button('No'))
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('Yes'), button('No'))
     else:
-        window.AddRow(Text('', size=(pad, 1), auto_size_text=False),
+        window.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color),
                       button('OK', size=(5, 1), button_color=button_color))
 
     if non_blocking:
@@ -12085,7 +12084,7 @@ def main():
     """
     from random import randint
     # preview_all_look_and_feel_themes()
-    ChangeLookAndFeel('Light Green 1')
+    ChangeLookAndFeel('Dark Red')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
