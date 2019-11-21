@@ -4852,7 +4852,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
 
     if win2_active:
         ev2, vals2 = win2.Read(timeout=100)
@@ -4887,7 +4887,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
         while True:
             ev2, vals2 = win2.Read()
             if ev2 is None or ev2 == 'Exit':
