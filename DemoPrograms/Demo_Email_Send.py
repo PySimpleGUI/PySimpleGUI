@@ -1,4 +1,7 @@
 import PySimpleGUI as sg
+# import PySimpleGUIWeb as sg
+# import PySimpleGUIWx as sg
+# import PySimpleGUIQt as sg
 
 '''
     Copyright 2019 PySimpleGUI.org
@@ -21,8 +24,6 @@ def send_an_email(from_address, to_address, subject, message_text, user, passwor
     if 'gmail' in user:
         smtp_host, smtp_port = google_smtp_server
     elif 'hotmail' in user or 'live' in user:
-        smtp_host, smtp_port = microsoft_smtp_server
-    elif 'live' in user:
         smtp_host, smtp_port = microsoft_smtp_server
     elif 'yahoo' in user:
         smtp_host, smtp_port = yahoo_smtp_server
@@ -62,12 +63,12 @@ def send_an_email(from_address, to_address, subject, message_text, user, passwor
 def main():
     sg.change_look_and_feel('Dark Blue 3')
     layout = [[sg.Text('Send an Email', font='Default 18')],
-              [sg.T('From:', size=(8,1)), sg.Input(key='-EMAIL FROM-')],
-              [sg.T('To:', size=(8,1)), sg.Input(key='-EMAIL TO-')],
-              [sg.T('Subject:', size=(8,1)), sg.Input(key='-EMAIL SUBJECT-')],
+              [sg.T('From:', size=(8,1)), sg.Input(key='-EMAIL FROM-', size=(35,1))],
+              [sg.T('To:', size=(8,1)), sg.Input(key='-EMAIL TO-', size=(35,1))],
+              [sg.T('Subject:', size=(8,1)), sg.Input(key='-EMAIL SUBJECT-', size=(35,1))],
               [sg.T('Mail login information', font='Default 18')],
-              [sg.T('User:', size=(8,1)), sg.Input(key='-USER-')],
-              [sg.T('Password:', size=(8,1)), sg.Input(password_char='*', key='-PASSWORD-')],
+              [sg.T('User:', size=(8,1)), sg.Input(key='-USER-', size=(35,1))],
+              [sg.T('Password:', size=(8,1)), sg.Input(password_char='*', key='-PASSWORD-', size=(35,1))],
               [sg.Multiline('Type your message here', size=(60,10), key='-EMAIL TEXT-')],
               [sg.Button('Send'), sg.Button('Exit')]]
 
@@ -78,7 +79,8 @@ def main():
         if event in (None, 'Exit'):
             break
         if event == 'Send':
-            sg.popup_quick_message('Sending your message... this will take a moment...', background_color='red')
+            if sg.__name__ != 'PySimpleGUIWeb':     # auto close popups not yet supported in PySimpleGUIWeb
+                sg.popup_quick_message('Sending your message... this will take a moment...', background_color='red')
             send_an_email(from_address=values['-EMAIL FROM-'],
                           to_address=values['-EMAIL TO-'],
                           subject=values['-EMAIL SUBJECT-'],
