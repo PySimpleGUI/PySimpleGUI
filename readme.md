@@ -1979,7 +1979,7 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
