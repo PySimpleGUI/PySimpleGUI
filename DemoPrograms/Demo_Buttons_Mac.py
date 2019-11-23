@@ -25,7 +25,7 @@ def show_win():
                        alpha_channel=0, finalize=True)
 
     for i in range(100):
-        window.eet_alpha(i/100)
+        window.set_alpha(i/100)
         time.sleep(.01)
 
     while True:     # Event Loop
