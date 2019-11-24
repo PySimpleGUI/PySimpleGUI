@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.53 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!"
+version = __version__ = "4.6.0.54 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!"
 port = 'PySimpleGUI'
 
 
@@ -2190,7 +2190,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=(None, None),
+                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
@@ -2225,7 +2225,7 @@ class Button(Element):
         self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
-        self.ButtonColor = button_color if button_color != (None, None) else DEFAULT_BUTTON_COLOR
+        self.ButtonColor = button_color if button_color != None else DEFAULT_BUTTON_COLOR
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -12282,7 +12282,6 @@ def main():
     tab2 = Tab('Graph Number 2', [[]],)
 
     layout1 = [
-        [B('First Button', button_color=('white','green'))],
         [Image(data=DEFAULT_BASE64_ICON)],
         [Text('You are running the py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Text('You should be importing it rather than running it', font='ANY 15')],
