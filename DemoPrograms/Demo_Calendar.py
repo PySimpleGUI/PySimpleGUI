@@ -10,4 +10,4 @@ layout = [[sg.Text('Calendar Test')],
 window = sg.Window('Calendar', layout, grab_anywhere=False)
 event, values = window.read()
 sg.popup(values['input'])
-windowclose()
+window.close()
