@@ -54,14 +54,16 @@ def long_function_wrapper(work_id, gui_queue):
 
 ############################# Begin GUI code #############################
 def the_gui():
+    sg.change_look_and_feel('Light Brown 3')
+
     # queue used to communicate between the gui and long-running code
     gui_queue = queue.Queue()
 
     layout = [[sg.Text('Multithreaded Work Example')],
               [sg.Text('Click Go to start a long-running function call')],
-              [sg.Text('', size=(25, 1), key='-OUTPUT-')],
-              [sg.Text('', size=(25, 1), key='-OUTPUT2-')],
-              [sg.Text('  ',size=(2,1), background_color='blue', key=i) for i in range(20)],
+              [sg.Text(size=(25, 1), key='-OUTPUT-')],
+              [sg.Text(size=(25, 1), key='-OUTPUT2-')],
+              [sg.Text('⚫', text_color='blue', key=i, pad=(0,0), font='Default 14') for i in range(20)],
               [sg.Button('Go'), sg.Button('Popup'), sg.Button('Exit')], ]
 
     window = sg.Window('Multithreaded Window', layout)
@@ -74,7 +76,7 @@ def the_gui():
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
             window['-OUTPUT-'].update('Starting long work %s' % work_id)
-            window[work_id].update(background_color='red')
+            window[work_id].update(text_color='red')
             # LOCATION 2
             # STARTING long run by starting a thread
             thread_id = threading.Thread(
@@ -98,7 +100,7 @@ def the_gui():
             completed_work_id = int(message[:message.index(' :::')])
             window['-OUTPUT2-'].update(
                 'Complete Work ID "{}"'.format(completed_work_id))
-            window[completed_work_id].update(background_color='green')
+            window[completed_work_id].update(text_color='green')
 
         if event == 'Popup':
             sg.popup_non_blocking('This is a popup showing that the GUI is running', grab_anywhere=True)
