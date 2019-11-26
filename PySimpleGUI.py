@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from logging import warning
 
 version = __version__ = "4.6.0.66 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!, options for setting theme and forcing ttk buttons"
 port = 'PySimpleGUI'
@@ -12299,7 +12298,7 @@ def main():
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_', background_color='green',selected_title_color='red', title_color='blue' )],
         [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal', metadata='my metadata'),
-         Button('Exit', tooltip='Exit button')],
+         Button('Exit', use_ttk_buttons=True, tooltip='Exit button')],
     ]
 
     layout = [[Menu(menu_def, key='_MENU_')]] + layout1
@@ -12312,7 +12311,6 @@ def main():
                     keep_on_top=True,
                     element_justification='left',
                     metadata='My window metadata',
-                    use_ttk_buttons=True, ttk_theme=None
                     # icon=PSG_DEBUGGER_LOGO
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
