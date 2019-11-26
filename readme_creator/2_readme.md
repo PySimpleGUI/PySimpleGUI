@@ -504,7 +504,7 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
@@ -2504,7 +2504,7 @@ window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 
 In my opinion, the tkinter Canvas Widget is the most powerful of the tkinter widget.  While I try my best to completely isolate the user from anything that is tkinter related, the Canvas Element is the one exception.  It enables integration with a number of other packages, often with spectacular results.
 
-However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.
+However, there's another way to get that power and that's through the Graph Element, an even MORE powerful Element as it uses a Canvas that you can directly access if needed.  The Graph Element has a large number of drawing methods that the Canvas Element does not have.  Plus, if you need to, you can access the Graph Element's "Canvas" through a member variable.
 
 ### Matplotlib, Pyplot Integration
 
@@ -3556,7 +3556,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
 
     if win2_active:
         ev2, vals2 = win2.Read(timeout=100)
@@ -3592,7 +3592,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
         while True:
             ev2, vals2 = win2.Read()
             if ev2 is None or ev2 == 'Exit':
@@ -4048,1323 +4048,2264 @@ This section of the documentation is generated directly from the source code.  A
 Without further delay... here are all of the Elements and the Window class
 
 
-
-
-### Button Element
+## Button Element
 
 <!-- <+Button.doc+> -->
 <!-- <+Button.__init__+> -->
 
-#### ButtonCallBack
+### ButtonCallBack
 
 <!-- <+Button.ButtonCallBack+> -->
 
-#### ButtonPressCallBack
+### ButtonPressCallBack
 
 <!-- <+Button.ButtonPressCallBack+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Button.ButtonReboundCallback+> -->
 
-#### ButtonReleaseCallBack
+### ButtonReleaseCallBack
 
 <!-- <+Button.ButtonReleaseCallBack+> -->
 
-#### Click
+### Click
 
 <!-- <+Button.Click+> -->
 
-#### GetText
+### GetText
 
 <!-- <+Button.GetText+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Button.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Button.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Button.Update+> -->
 
-#### click
+### button_rebound_callback
+
+<!-- <+Button.button_rebound_callback+> -->
+
+### click
 
 <!-- <+Button.click+> -->
 
-#### expand
+### expand
 
 <!-- <+Button.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Button.get_size+> -->
+
+### get_text
+
+<!-- <+Button.get_text+> -->
+
+### hide_row
+
+<!-- <+Button.hide_row+> -->
+
+### set_focus
+
+<!-- <+Button.set_focus+> -->
+
+### set_size
+
+<!-- <+Button.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Button.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Button.unhide_row+> -->
+
+### update
 
 <!-- <+Button.update+> -->
 
-### ButtonMenu Element
+## ButtonMenu Element
 
 <!-- <+ButtonMenu.doc+> -->
 <!-- <+ButtonMenu.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+ButtonMenu.ButtonReboundCallback+> -->
 
-#### Click
+### Click
 
 <!-- <+ButtonMenu.Click+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+ButtonMenu.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+ButtonMenu.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+ButtonMenu.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+ButtonMenu.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+ButtonMenu.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+ButtonMenu.get_size+> -->
+
+### hide_row
+
+<!-- <+ButtonMenu.hide_row+> -->
+
+### set_focus
+
+<!-- <+ButtonMenu.set_focus+> -->
+
+### set_size
+
+<!-- <+ButtonMenu.set_size+> -->
+
+### set_tooltip
+
+<!-- <+ButtonMenu.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+ButtonMenu.unhide_row+> -->
+
+### update
 
 <!-- <+ButtonMenu.update+> -->
 
-### Canvas Element
+## Canvas Element
 
 <!-- <+Canvas.doc+> -->
 <!-- <+Canvas.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Canvas.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Canvas.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Canvas.SetTooltip+> -->
 
-#### TKCanvas
+### TKCanvas
 
 <!-- <+Canvas.TKCanvas+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Canvas.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Canvas.expand+> -->
 
-### Checkbox Element
+### get_size
+
+<!-- <+Canvas.get_size+> -->
+
+### hide_row
+
+<!-- <+Canvas.hide_row+> -->
+
+### set_focus
+
+<!-- <+Canvas.set_focus+> -->
+
+### set_size
+
+<!-- <+Canvas.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Canvas.set_tooltip+> -->
+
+### tk_canvas
+
+<!-- <+Canvas.tk_canvas+> -->
+
+### unhide_row
+
+<!-- <+Canvas.unhide_row+> -->
+
+## Checkbox Element
 
 <!-- <+Checkbox.doc+> -->
 <!-- <+Checkbox.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Checkbox.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Checkbox.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Checkbox.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Checkbox.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Checkbox.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Checkbox.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Checkbox.expand+> -->
 
-#### get
+### get
 
 <!-- <+Checkbox.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Checkbox.get_size+> -->
+
+### hide_row
+
+<!-- <+Checkbox.hide_row+> -->
+
+### set_focus
+
+<!-- <+Checkbox.set_focus+> -->
+
+### set_size
+
+<!-- <+Checkbox.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Checkbox.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Checkbox.unhide_row+> -->
+
+### update
 
 <!-- <+Checkbox.update+> -->
 
-### Column Element
+## Column Element
 
 <!-- <+Column.doc+> -->
 <!-- <+Column.__init__+> -->
 
-#### AddRow
+### AddRow
 
 <!-- <+Column.AddRow+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Column.ButtonReboundCallback+> -->
 
-#### Layout
+### Layout
 
 <!-- <+Column.Layout+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Column.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Column.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Column.Update+> -->
 
-#### expand
+### add_row
+
+<!-- <+Column.add_row+> -->
+
+### button_rebound_callback
+
+<!-- <+Column.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Column.expand+> -->
 
-#### layout
+### get_size
+
+<!-- <+Column.get_size+> -->
+
+### hide_row
+
+<!-- <+Column.hide_row+> -->
+
+### layout
 
 <!-- <+Column.layout+> -->
 
-#### update
+### set_focus
+
+<!-- <+Column.set_focus+> -->
+
+### set_size
+
+<!-- <+Column.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Column.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Column.unhide_row+> -->
+
+### update
 
 <!-- <+Column.update+> -->
 
-### Combo Element
+## Combo Element
 
 <!-- <+Combo.doc+> -->
 <!-- <+Combo.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Combo.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Combo.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Combo.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Combo.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Combo.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Combo.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Combo.expand+> -->
 
-#### get
+### get
 
 <!-- <+Combo.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Combo.get_size+> -->
+
+### hide_row
+
+<!-- <+Combo.hide_row+> -->
+
+### set_focus
+
+<!-- <+Combo.set_focus+> -->
+
+### set_size
+
+<!-- <+Combo.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Combo.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Combo.unhide_row+> -->
+
+### update
 
 <!-- <+Combo.update+> -->
 
-
-### ErrorElement Element
-
-<!-- <+ErrorElement.doc+> -->
-<!-- <+ErrorElement.__init__+> -->
-
-#### ButtonReboundCallback
-
-<!-- <+ErrorElement.ButtonReboundCallback+> -->
-
-#### Get
-
-<!-- <+ErrorElement.Get+> -->
-
-#### SetFocus
-
-<!-- <+ErrorElement.SetFocus+> -->
-
-#### SetTooltip
-
-<!-- <+ErrorElement.SetTooltip+> -->
-
-#### Update
-
-<!-- <+ErrorElement.Update+> -->
-
-#### expand
-
-<!-- <+ErrorElement.expand+> -->
-
-#### get
-
-<!-- <+ErrorElement.get+> -->
-
-#### update
-
-<!-- <+ErrorElement.update+> -->
-
-### Frame Element
+## Frame Element
 
 <!-- <+Frame.doc+> -->
 <!-- <+Frame.__init__+> -->
 
-#### AddRow
+### AddRow
 
 <!-- <+Frame.AddRow+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Frame.ButtonReboundCallback+> -->
 
-#### Layout
+### Layout
 
 <!-- <+Frame.Layout+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Frame.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Frame.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Frame.Update+> -->
 
-#### expand
+### add_row
+
+<!-- <+Frame.add_row+> -->
+
+### button_rebound_callback
+
+<!-- <+Frame.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Frame.expand+> -->
 
-#### layout
+### get_size
+
+<!-- <+Frame.get_size+> -->
+
+### hide_row
+
+<!-- <+Frame.hide_row+> -->
+
+### layout
 
 <!-- <+Frame.layout+> -->
 
-#### update
+### set_focus
+
+<!-- <+Frame.set_focus+> -->
+
+### set_size
+
+<!-- <+Frame.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Frame.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Frame.unhide_row+> -->
+
+### update
 
 <!-- <+Frame.update+> -->
 
-### Graph Element
+## Graph Element
 
 <!-- <+Graph.doc+> -->
 <!-- <+Graph.__init__+> -->
 
-#### BringFigureToFront
+### BringFigureToFront
 
 <!-- <+Graph.BringFigureToFront+> -->
 
-#### ButtonPressCallBack
+### ButtonPressCallBack
 
 <!-- <+Graph.ButtonPressCallBack+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Graph.ButtonReboundCallback+> -->
 
-#### ButtonReleaseCallBack
+### ButtonReleaseCallBack
 
 <!-- <+Graph.ButtonReleaseCallBack+> -->
 
-#### DeleteFigure
+### DeleteFigure
 
 <!-- <+Graph.DeleteFigure+> -->
 
-#### DrawArc
+### DrawArc
 
 <!-- <+Graph.DrawArc+> -->
 
-#### DrawCircle
+### DrawCircle
 
 <!-- <+Graph.DrawCircle+> -->
 
-#### DrawImage
+### DrawImage
 
 <!-- <+Graph.DrawImage+> -->
 
-#### DrawLine
+### DrawLine
 
 <!-- <+Graph.DrawLine+> -->
 
-#### DrawOval
+### DrawOval
 
 <!-- <+Graph.DrawOval+> -->
 
-#### DrawPoint
+### DrawPoint
 
 <!-- <+Graph.DrawPoint+> -->
 
-#### DrawRectangle
+### DrawRectangle
 
 <!-- <+Graph.DrawRectangle+> -->
 
-#### DrawText
+### DrawText
 
 <!-- <+Graph.DrawText+> -->
 
-#### Erase
+### Erase
 
 <!-- <+Graph.Erase+> -->
 
-#### MotionCallBack
+### MotionCallBack
 
 <!-- <+Graph.MotionCallBack+> -->
 
-#### Move
+### Move
 
 <!-- <+Graph.Move+> -->
 
-#### MoveFigure
+### MoveFigure
 
 <!-- <+Graph.MoveFigure+> -->
 
-#### RelocateFigure
+### RelocateFigure
 
 <!-- <+Graph.RelocateFigure+> -->
 
-#### SendFigureToBack
+### SendFigureToBack
 
 <!-- <+Graph.SendFigureToBack+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Graph.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Graph.SetTooltip+> -->
 
-#### TKCanvas
+### TKCanvas
 
 <!-- <+Graph.TKCanvas+> -->
 
-#### Update
+### Update
 
 <!-- <+Graph.Update+> -->
 
-#### erase
+### bring_figure_to_front
+
+<!-- <+Graph.bring_figure_to_front+> -->
+
+### button_press_call_back
+
+<!-- <+Graph.button_press_call_back+> -->
+
+### button_rebound_callback
+
+<!-- <+Graph.button_rebound_callback+> -->
+
+### button_release_call_back
+
+<!-- <+Graph.button_release_call_back+> -->
+
+### delete_figure
+
+<!-- <+Graph.delete_figure+> -->
+
+### draw_arc
+
+<!-- <+Graph.draw_arc+> -->
+
+### draw_circle
+
+<!-- <+Graph.draw_circle+> -->
+
+### draw_image
+
+<!-- <+Graph.draw_image+> -->
+
+### draw_line
+
+<!-- <+Graph.draw_line+> -->
+
+### draw_oval
+
+<!-- <+Graph.draw_oval+> -->
+
+### draw_point
+
+<!-- <+Graph.draw_point+> -->
+
+### draw_rectangle
+
+<!-- <+Graph.draw_rectangle+> -->
+
+### draw_text
+
+<!-- <+Graph.draw_text+> -->
+
+### erase
 
 <!-- <+Graph.erase+> -->
 
-#### expand
+### expand
 
 <!-- <+Graph.expand+> -->
 
-#### move
+### get_size
+
+<!-- <+Graph.get_size+> -->
+
+### hide_row
+
+<!-- <+Graph.hide_row+> -->
+
+### motion_call_back
+
+<!-- <+Graph.motion_call_back+> -->
+
+### move
 
 <!-- <+Graph.move+> -->
 
-#### update
+### move_figure
+
+<!-- <+Graph.move_figure+> -->
+
+### relocate_figure
+
+<!-- <+Graph.relocate_figure+> -->
+
+### send_figure_to_back
+
+<!-- <+Graph.send_figure_to_back+> -->
+
+### set_focus
+
+<!-- <+Graph.set_focus+> -->
+
+### set_size
+
+<!-- <+Graph.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Graph.set_tooltip+> -->
+
+### tk_canvas
+
+<!-- <+Graph.tk_canvas+> -->
+
+### unhide_row
+
+<!-- <+Graph.unhide_row+> -->
+
+### update
 
 <!-- <+Graph.update+> -->
 
-### Image Element
+## Image Element
 
 <!-- <+Image.doc+> -->
 <!-- <+Image.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Image.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Image.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Image.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Image.Update+> -->
 
-#### UpdateAnimation
+### UpdateAnimation
 
 <!-- <+Image.UpdateAnimation+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Image.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Image.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Image.get_size+> -->
+
+### hide_row
+
+<!-- <+Image.hide_row+> -->
+
+### set_focus
+
+<!-- <+Image.set_focus+> -->
+
+### set_size
+
+<!-- <+Image.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Image.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Image.unhide_row+> -->
+
+### update
 
 <!-- <+Image.update+> -->
 
-### InputText Element
+### update_animation
+
+<!-- <+Image.update_animation+> -->
+
+## InputText Element
 
 <!-- <+InputText.doc+> -->
 <!-- <+InputText.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+InputText.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+InputText.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+InputText.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+InputText.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+InputText.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+InputText.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+InputText.expand+> -->
 
-#### get
+### get
 
 <!-- <+InputText.get+> -->
 
-#### update
+### get_size
+
+<!-- <+InputText.get_size+> -->
+
+### hide_row
+
+<!-- <+InputText.hide_row+> -->
+
+### set_focus
+
+<!-- <+InputText.set_focus+> -->
+
+### set_size
+
+<!-- <+InputText.set_size+> -->
+
+### set_tooltip
+
+<!-- <+InputText.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+InputText.unhide_row+> -->
+
+### update
 
 <!-- <+InputText.update+> -->
 
-### Listbox Element
+## Listbox Element
 
 <!-- <+Listbox.doc+> -->
 <!-- <+Listbox.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Listbox.ButtonReboundCallback+> -->
 
-#### GetIndexes
+### GetIndexes
 
 <!-- <+Listbox.GetIndexes+> -->
 
-#### GetListValues
+### GetListValues
 
 <!-- <+Listbox.GetListValues+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Listbox.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Listbox.SetTooltip+> -->
 
-#### SetValue
+### SetValue
 
 <!-- <+Listbox.SetValue+> -->
 
-#### Update
+### Update
 
 <!-- <+Listbox.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Listbox.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Listbox.expand+> -->
 
-#### update
+### get_indexes
+
+<!-- <+Listbox.get_indexes+> -->
+
+### get_list_values
+
+<!-- <+Listbox.get_list_values+> -->
+
+### get_size
+
+<!-- <+Listbox.get_size+> -->
+
+### hide_row
+
+<!-- <+Listbox.hide_row+> -->
+
+### set_focus
+
+<!-- <+Listbox.set_focus+> -->
+
+### set_size
+
+<!-- <+Listbox.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Listbox.set_tooltip+> -->
+
+### set_value
+
+<!-- <+Listbox.set_value+> -->
+
+### unhide_row
+
+<!-- <+Listbox.unhide_row+> -->
+
+### update
 
 <!-- <+Listbox.update+> -->
 
-### Menu Element
+## Menu Element
 
 <!-- <+Menu.doc+> -->
 <!-- <+Menu.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Menu.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Menu.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Menu.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Menu.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Menu.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Menu.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Menu.get_size+> -->
+
+### hide_row
+
+<!-- <+Menu.hide_row+> -->
+
+### set_focus
+
+<!-- <+Menu.set_focus+> -->
+
+### set_size
+
+<!-- <+Menu.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Menu.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Menu.unhide_row+> -->
+
+### update
 
 <!-- <+Menu.update+> -->
 
-### Multiline Element
+## Multiline Element
 
 <!-- <+Multiline.doc+> -->
 <!-- <+Multiline.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Multiline.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Multiline.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Multiline.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Multiline.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Multiline.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Multiline.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Multiline.expand+> -->
 
-#### get
+### get
 
 <!-- <+Multiline.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Multiline.get_size+> -->
+
+### hide_row
+
+<!-- <+Multiline.hide_row+> -->
+
+### set_focus
+
+<!-- <+Multiline.set_focus+> -->
+
+### set_size
+
+<!-- <+Multiline.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Multiline.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Multiline.unhide_row+> -->
+
+### update
 
 <!-- <+Multiline.update+> -->
 
-### OptionMenu Element
+## OptionMenu Element
 
 <!-- <+OptionMenu.doc+> -->
 <!-- <+OptionMenu.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+OptionMenu.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+OptionMenu.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+OptionMenu.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+OptionMenu.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+OptionMenu.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+OptionMenu.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+OptionMenu.get_size+> -->
+
+### hide_row
+
+<!-- <+OptionMenu.hide_row+> -->
+
+### set_focus
+
+<!-- <+OptionMenu.set_focus+> -->
+
+### set_size
+
+<!-- <+OptionMenu.set_size+> -->
+
+### set_tooltip
+
+<!-- <+OptionMenu.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+OptionMenu.unhide_row+> -->
+
+### update
 
 <!-- <+OptionMenu.update+> -->
 
-### Output Element
+## Output Element
 
 <!-- <+Output.doc+> -->
 <!-- <+Output.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Output.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Output.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Output.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Output.SetTooltip+> -->
 
+### TKOut
 
-#### Update
+<!-- <+Output.TKOut+> -->
+
+### Update
 
 <!-- <+Output.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Output.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Output.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Output.get_size+> -->
+
+### hide_row
+
+<!-- <+Output.hide_row+> -->
+
+### set_focus
+
+<!-- <+Output.set_focus+> -->
+
+### set_size
+
+<!-- <+Output.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Output.set_tooltip+> -->
+
+### tk_out
+
+<!-- <+Output.tk_out+> -->
+
+### unhide_row
+
+<!-- <+Output.unhide_row+> -->
+
+### update
 
 <!-- <+Output.update+> -->
 
-### Pane Element
+## Pane Element
 
 <!-- <+Pane.doc+> -->
 <!-- <+Pane.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Pane.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Pane.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Pane.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Pane.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Pane.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Pane.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Pane.get_size+> -->
+
+### hide_row
+
+<!-- <+Pane.hide_row+> -->
+
+### set_focus
+
+<!-- <+Pane.set_focus+> -->
+
+### set_size
+
+<!-- <+Pane.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Pane.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Pane.unhide_row+> -->
+
+### update
 
 <!-- <+Pane.update+> -->
 
-### ProgressBar Element
+## ProgressBar Element
 
 <!-- <+ProgressBar.doc+> -->
 <!-- <+ProgressBar.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+ProgressBar.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+ProgressBar.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+ProgressBar.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+ProgressBar.Update+> -->
 
-#### UpdateBar
+### UpdateBar
 
 <!-- <+ProgressBar.UpdateBar+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+ProgressBar.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+ProgressBar.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+ProgressBar.get_size+> -->
+
+### hide_row
+
+<!-- <+ProgressBar.hide_row+> -->
+
+### set_focus
+
+<!-- <+ProgressBar.set_focus+> -->
+
+### set_size
+
+<!-- <+ProgressBar.set_size+> -->
+
+### set_tooltip
+
+<!-- <+ProgressBar.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+ProgressBar.unhide_row+> -->
+
+### update
 
 <!-- <+ProgressBar.update+> -->
 
-### Radio Element
+### update_bar
+
+<!-- <+ProgressBar.update_bar+> -->
+
+## Radio Element
 
 <!-- <+Radio.doc+> -->
 <!-- <+Radio.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Radio.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Radio.Get+> -->
 
-#### ResetGroup
+### ResetGroup
 
 <!-- <+Radio.ResetGroup+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Radio.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Radio.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Radio.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Radio.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Radio.expand+> -->
 
-#### get
+### get
 
 <!-- <+Radio.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Radio.get_size+> -->
+
+### hide_row
+
+<!-- <+Radio.hide_row+> -->
+
+### reset_group
+
+<!-- <+Radio.reset_group+> -->
+
+### set_focus
+
+<!-- <+Radio.set_focus+> -->
+
+### set_size
+
+<!-- <+Radio.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Radio.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Radio.unhide_row+> -->
+
+### update
 
 <!-- <+Radio.update+> -->
 
-### Slider Element
+## Slider Element
 
 <!-- <+Slider.doc+> -->
 <!-- <+Slider.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Slider.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Slider.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Slider.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Slider.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Slider.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Slider.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Slider.get_size+> -->
+
+### hide_row
+
+<!-- <+Slider.hide_row+> -->
+
+### set_focus
+
+<!-- <+Slider.set_focus+> -->
+
+### set_size
+
+<!-- <+Slider.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Slider.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Slider.unhide_row+> -->
+
+### update
 
 <!-- <+Slider.update+> -->
 
-### Spin Element
+## Spin Element
 
 <!-- <+Spin.doc+> -->
 <!-- <+Spin.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Spin.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Spin.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Spin.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Spin.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Spin.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Spin.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Spin.expand+> -->
 
-#### get
+### get
 
 <!-- <+Spin.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Spin.get_size+> -->
+
+### hide_row
+
+<!-- <+Spin.hide_row+> -->
+
+### set_focus
+
+<!-- <+Spin.set_focus+> -->
+
+### set_size
+
+<!-- <+Spin.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Spin.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Spin.unhide_row+> -->
+
+### update
 
 <!-- <+Spin.update+> -->
 
-### StatusBar Element
+## StatusBar Element
 
 <!-- <+StatusBar.doc+> -->
 <!-- <+StatusBar.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+StatusBar.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+StatusBar.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+StatusBar.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+StatusBar.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+StatusBar.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+StatusBar.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+StatusBar.get_size+> -->
+
+### hide_row
+
+<!-- <+StatusBar.hide_row+> -->
+
+### set_focus
+
+<!-- <+StatusBar.set_focus+> -->
+
+### set_size
+
+<!-- <+StatusBar.set_size+> -->
+
+### set_tooltip
+
+<!-- <+StatusBar.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+StatusBar.unhide_row+> -->
+
+### update
 
 <!-- <+StatusBar.update+> -->
 
-### Tab Element
+## Tab Element
 
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
 
-#### AddRow
+### AddRow
 
 <!-- <+Tab.AddRow+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Tab.ButtonReboundCallback+> -->
 
-#### Layout
+### Layout
 
 <!-- <+Tab.Layout+> -->
 
-#### Select
+### Select
 
 <!-- <+Tab.Select+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Tab.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Tab.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Tab.Update+> -->
 
-#### expand
+### add_row
+
+<!-- <+Tab.add_row+> -->
+
+### button_rebound_callback
+
+<!-- <+Tab.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Tab.expand+> -->
 
-#### layout
+### get_size
+
+<!-- <+Tab.get_size+> -->
+
+### hide_row
+
+<!-- <+Tab.hide_row+> -->
+
+### layout
 
 <!-- <+Tab.layout+> -->
 
-#### select
+### select
 
 <!-- <+Tab.select+> -->
 
-#### update
+### set_focus
+
+<!-- <+Tab.set_focus+> -->
+
+### set_size
+
+<!-- <+Tab.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Tab.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Tab.unhide_row+> -->
+
+### update
 
 <!-- <+Tab.update+> -->
 
-### TabGroup Element
+## TabGroup Element
 
 <!-- <+TabGroup.doc+> -->
 <!-- <+TabGroup.__init__+> -->
 
-#### AddRow
+### AddRow
 
 <!-- <+TabGroup.AddRow+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+TabGroup.ButtonReboundCallback+> -->
 
-#### FindKeyFromTabName
+### FindKeyFromTabName
 
 <!-- <+TabGroup.FindKeyFromTabName+> -->
 
-#### Get
+### Get
 
 <!-- <+TabGroup.Get+> -->
 
-#### Layout
+### Layout
 
 <!-- <+TabGroup.Layout+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+TabGroup.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+TabGroup.SetTooltip+> -->
 
-#### expand
+### add_row
+
+<!-- <+TabGroup.add_row+> -->
+
+### button_rebound_callback
+
+<!-- <+TabGroup.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+TabGroup.expand+> -->
 
-#### get
+### find_key_from_tab_name
+
+<!-- <+TabGroup.find_key_from_tab_name+> -->
+
+### get
 
 <!-- <+TabGroup.get+> -->
 
-#### layout
+### get_size
+
+<!-- <+TabGroup.get_size+> -->
+
+### hide_row
+
+<!-- <+TabGroup.hide_row+> -->
+
+### layout
 
 <!-- <+TabGroup.layout+> -->
 
-### Table Element
+### set_focus
+
+<!-- <+TabGroup.set_focus+> -->
+
+### set_size
+
+<!-- <+TabGroup.set_size+> -->
+
+### set_tooltip
+
+<!-- <+TabGroup.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+TabGroup.unhide_row+> -->
+
+## Table Element
 
 <!-- <+Table.doc+> -->
 <!-- <+Table.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Table.ButtonReboundCallback+> -->
 
-#### Get
+### Get
 
 <!-- <+Table.Get+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Table.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Table.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Table.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Table.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Table.expand+> -->
 
-#### get
+### get
 
 <!-- <+Table.get+> -->
 
-#### update
+### get_size
+
+<!-- <+Table.get_size+> -->
+
+### hide_row
+
+<!-- <+Table.hide_row+> -->
+
+### set_focus
+
+<!-- <+Table.set_focus+> -->
+
+### set_size
+
+<!-- <+Table.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Table.set_tooltip+> -->
+
+### treeview_double_click
+
+<!-- <+Table.treeview_double_click+> -->
+
+### treeview_selected
+
+<!-- <+Table.treeview_selected+> -->
+
+### unhide_row
+
+<!-- <+Table.unhide_row+> -->
+
+### update
 
 <!-- <+Table.update+> -->
 
-### Text Element
+## Text Element
 
 <!-- <+Text.doc+> -->
 <!-- <+Text.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Text.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Text.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Text.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Text.Update+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+Text.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Text.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Text.get_size+> -->
+
+### hide_row
+
+<!-- <+Text.hide_row+> -->
+
+### set_focus
+
+<!-- <+Text.set_focus+> -->
+
+### set_size
+
+<!-- <+Text.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Text.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+Text.unhide_row+> -->
+
+### update
 
 <!-- <+Text.update+> -->
 
 
-### Tree Element
+## Tree Element
 
 <!-- <+Tree.doc+> -->
 <!-- <+Tree.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+Tree.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+Tree.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+Tree.SetTooltip+> -->
 
-#### Update
+### Update
 
 <!-- <+Tree.Update+> -->
 
-#### expand
+### add_treeview_data
+
+<!-- <+Tree.add_treeview_data+> -->
+
+### button_rebound_callback
+
+<!-- <+Tree.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+Tree.expand+> -->
 
-#### update
+### get_size
+
+<!-- <+Tree.get_size+> -->
+
+### hide_row
+
+<!-- <+Tree.hide_row+> -->
+
+### set_focus
+
+<!-- <+Tree.set_focus+> -->
+
+### set_size
+
+<!-- <+Tree.set_size+> -->
+
+### set_tooltip
+
+<!-- <+Tree.set_tooltip+> -->
+
+### treeview_selected
+
+<!-- <+Tree.treeview_selected+> -->
+
+### unhide_row
+
+<!-- <+Tree.unhide_row+> -->
+
+### update
 
 <!-- <+Tree.update+> -->
 
-### TreeData Element
+## TreeData Element
 
 <!-- <+TreeData.doc+> -->
 <!-- <+TreeData.__init__+> -->
 
-#### Insert
+### Insert
 
 <!-- <+TreeData.Insert+> -->
 
+### Node
 
-### VerticalSeparator Element
+<!-- <+TreeData.Node+> -->
+
+### insert
+
+<!-- <+TreeData.insert+> -->
+
+## VerticalSeparator Element
 
 <!-- <+VerticalSeparator.doc+> -->
 <!-- <+VerticalSeparator.__init__+> -->
 
-#### ButtonReboundCallback
+### ButtonReboundCallback
 
 <!-- <+VerticalSeparator.ButtonReboundCallback+> -->
 
-#### SetFocus
+### SetFocus
 
 <!-- <+VerticalSeparator.SetFocus+> -->
 
-#### SetTooltip
+### SetTooltip
 
 <!-- <+VerticalSeparator.SetTooltip+> -->
 
-#### expand
+### button_rebound_callback
+
+<!-- <+VerticalSeparator.button_rebound_callback+> -->
+
+### expand
 
 <!-- <+VerticalSeparator.expand+> -->
 
-### Window
+### get_size
+
+<!-- <+VerticalSeparator.get_size+> -->
+
+### hide_row
+
+<!-- <+VerticalSeparator.hide_row+> -->
+
+### set_focus
+
+<!-- <+VerticalSeparator.set_focus+> -->
+
+### set_size
+
+<!-- <+VerticalSeparator.set_size+> -->
+
+### set_tooltip
+
+<!-- <+VerticalSeparator.set_tooltip+> -->
+
+### unhide_row
+
+<!-- <+VerticalSeparator.unhide_row+> -->
+
+## Window
 
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
 
-#### AddRow
+### AddRow
 
 <!-- <+Window.AddRow+> -->
 
-#### AddRows
+### AddRows
 
 <!-- <+Window.AddRows+> -->
 
-#### AlphaChannel
+### AlphaChannel
 
 <!-- <+Window.AlphaChannel+> -->
 
-#### BringToFront
+### BringToFront
 
 <!-- <+Window.BringToFront+> -->
 
-#### Close
+### Close
 
 <!-- <+Window.Close+> -->
 
-
-#### CurrentLocation
+### CurrentLocation
 
 <!-- <+Window.CurrentLocation+> -->
 
-#### Disable
+### Disable
 
 <!-- <+Window.Disable+> -->
 
-#### DisableDebugger
+### DisableDebugger
 
 <!-- <+Window.DisableDebugger+> -->
 
-#### Disappear
+### Disappear
 
 <!-- <+Window.Disappear+> -->
 
-#### Elem
+### Elem
 
 <!-- <+Window.Elem+> -->
 
-#### Element
+### Element
 
 <!-- <+Window.Element+> -->
 
-#### Enable
+### Enable
 
 <!-- <+Window.Enable+> -->
 
-#### EnableDebugger
+### EnableDebugger
 
 <!-- <+Window.EnableDebugger+> -->
 
-#### Fill
+### Fill
 
 <!-- <+Window.Fill+> -->
 
-#### Finalize
+### Finalize
 
 <!-- <+Window.Finalize+> -->
 
-#### Find
+### Find
 
 <!-- <+Window.Find+> -->
 
-#### FindElement
+### FindElement
 
 <!-- <+Window.FindElement+> -->
 
-#### FindElementWithFocus
+### FindElementWithFocus
 
 <!-- <+Window.FindElementWithFocus+> -->
 
-
-#### GetScreenDimensions
+### GetScreenDimensions
 
 <!-- <+Window.GetScreenDimensions+> -->
 
-#### GrabAnyWhereOff
+### GrabAnyWhereOff
 
 <!-- <+Window.GrabAnyWhereOff+> -->
 
-#### GrabAnyWhereOn
+### GrabAnyWhereOn
 
 <!-- <+Window.GrabAnyWhereOn+> -->
 
-#### Hide
+### Hide
 
 <!-- <+Window.Hide+> -->
 
-
-#### Layout
+### Layout
 
 <!-- <+Window.Layout+> -->
 
-#### LoadFromDisk
+### LoadFromDisk
 
 <!-- <+Window.LoadFromDisk+> -->
 
-#### Maximize
+### Maximize
 
 <!-- <+Window.Maximize+> -->
 
-#### Minimize
+### Minimize
 
 <!-- <+Window.Minimize+> -->
 
-#### Move
+### Move
 
 <!-- <+Window.Move+> -->
 
-#### Normal
+### Normal
 
 <!-- <+Window.Normal+> -->
 
-
-#### Read
+### Read
 
 <!-- <+Window.Read+> -->
 
-#### Reappear
+### Reappear
 
 <!-- <+Window.Reappear+> -->
 
-#### Refresh
+### Refresh
 
 <!-- <+Window.Refresh+> -->
 
-#### SaveToDisk
+### SaveToDisk
 
 <!-- <+Window.SaveToDisk+> -->
 
-#### SetAlpha
+### SetAlpha
 
 <!-- <+Window.SetAlpha+> -->
 
-#### SetIcon
+### SetIcon
 
 <!-- <+Window.SetIcon+> -->
 
-#### SetTransparentColor
+### SetTransparentColor
 
 <!-- <+Window.SetTransparentColor+> -->
 
-#### Size
-
-Note the `Window.Size` can be used for both reading and writing
+### Size
 
 <!-- <+Window.Size+> -->
 
-#### UnHide
+### UnHide
 
 <!-- <+Window.UnHide+> -->
 
-#### VisibilityChanged
+### VisibilityChanged
 
 <!-- <+Window.VisibilityChanged+> -->
 
-#### close
+### add_row
+
+<!-- <+Window.add_row+> -->
+
+### add_rows
+
+<!-- <+Window.add_rows+> -->
+
+### alpha_channel
+
+<!-- <+Window.alpha_channel+> -->
+
+### bring_to_front
+
+<!-- <+Window.bring_to_front+> -->
+
+### close
 
 <!-- <+Window.close+> -->
 
-#### disable
+### current_location
+
+<!-- <+Window.current_location+> -->
+
+### disable
 
 <!-- <+Window.disable+> -->
 
-#### disappear
+### disable_debugger
+
+<!-- <+Window.disable_debugger+> -->
+
+### disappear
 
 <!-- <+Window.disappear+> -->
 
-#### elem
+### elem
 
 <!-- <+Window.elem+> -->
 
-#### element
+### element
 
 <!-- <+Window.element+> -->
 
-#### enable
+### enable
 
 <!-- <+Window.enable+> -->
 
-#### fill
+### enable_debugger
+
+<!-- <+Window.enable_debugger+> -->
+
+### fill
 
 <!-- <+Window.fill+> -->
 
-#### finalize
+### finalize
 
 <!-- <+Window.finalize+> -->
 
-#### find
+### find
 
 <!-- <+Window.find+> -->
 
-#### hide
+### find_element
+
+<!-- <+Window.find_element+> -->
+
+### find_element_with_focus
+
+<!-- <+Window.find_element_with_focus+> -->
+
+### get_screen_dimensions
+
+<!-- <+Window.get_screen_dimensions+> -->
+
+### get_screen_size
+
+<!-- <+Window.get_screen_size+> -->
+
+### grab_any_where_off
+
+<!-- <+Window.grab_any_where_off+> -->
+
+### grab_any_where_on
+
+<!-- <+Window.grab_any_where_on+> -->
+
+### hide
 
 <!-- <+Window.hide+> -->
 
-#### layout
+### layout
 
 <!-- <+Window.layout+> -->
 
-#### maximize
+### load_from_disk
+
+<!-- <+Window.load_from_disk+> -->
+
+### maximize
 
 <!-- <+Window.maximize+> -->
 
-#### minimize
+### minimize
 
 <!-- <+Window.minimize+> -->
 
-#### move
+### move
 
 <!-- <+Window.move+> -->
 
-#### normal
+### normal
 
 <!-- <+Window.normal+> -->
 
-#### read
+### read
 
 <!-- <+Window.read+> -->
 
-#### reappear
+### reappear
 
 <!-- <+Window.reappear+> -->
 
-#### refresh
+### refresh
 
 <!-- <+Window.refresh+> -->
 
-#### size
+### save_to_disk
+
+<!-- <+Window.save_to_disk+> -->
+
+### set_alpha
+
+<!-- <+Window.set_alpha+> -->
+
+### set_icon
+
+<!-- <+Window.set_icon+> -->
+
+### set_transparent_color
+
+<!-- <+Window.set_transparent_color+> -->
+
+### size
 
 <!-- <+Window.size+> -->
+
+### un_hide
+
+<!-- <+Window.un_hide+> -->
+
+### visibility_changed
+
+<!-- <+Window.visibility_changed+> -->
+
 
 <!-- <+func.CButton+> -->
 <!-- <+func.CalendarButton+> -->
