@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.6.0.66 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!, options for setting theme and forcing ttk buttons"
+version = __version__ = "4.7.0 Released 26-Nov-2019 Welcome back Macs!"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -883,6 +883,7 @@ class InputText(Element):
     """
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None,   text_color=None, font=None, tooltip=None,
+
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
                  use_readonly_for_disable=True, right_click_menu=None, visible=True, metadata=None):
         """
@@ -12211,7 +12212,8 @@ def main():
     """
     from random import randint
     # preview_all_look_and_feel_themes()
-    ChangeLookAndFeel('Dark Red')
+    look_and_feel = 'DarkRed'
+    ChangeLookAndFeel(look_and_feel)
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -12243,11 +12245,9 @@ def main():
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
 
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
-        [Combo((1, 2, 3, 4, 5), key='-COMBO2-',)],
-
-        [Combo(['Combo item 1',2,3,4 ], size=(20, 3), default_value=2,key='_COMBO1_', background_color='green')],
-        [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='_COMBO2_')],
-        [Spin([1, 2, 3, 'a','b','c'], size=(4, 3))],
+        [Combo(['Combo item %s'%i for i in range(5)], size=(20, 3), default_value='Combo item 2',key='_COMBO1_', background_color='green')],
+        # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='_COMBO2_')],
+        [Spin([1, 2, 3, 'a','b','c'], initial_value='a', size=(4, 3))],
     ]
 
     frame3 = [
@@ -12263,45 +12263,44 @@ def main():
     matrix = [[str(x * y) for x in range(1,5)] for y in range(1,8)]
 
     frame5 = [[
-        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
-             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, background_color='green'),
         Table(values=matrix, headings=matrix[0],
                auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',
                num_rows=10, alternating_row_color='lightblue', key='_table_', text_color='black',
-               col_widths=[5, 5, 5, 5], size=(400, 200), background_color='green'), T(' '),
+               col_widths=[5, 5, 5, 5], size=(400, 200), background_color='green'),
+        T('  '),
+        Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
+             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, background_color='green'),
          ],
     ]
 
-    graph_elem = Graph((800, 150), (0, 0), (800, 300), key='+GRAPH+')
+    graph_elem = Graph((600, 150), (0, 0), (800, 300), key='+GRAPH+')
 
     frame6 = [
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph Number 1', frame6, tooltip='tab 1', title_color='red' )
-    tab2 = Tab('Graph Number 2', [[]],)
+    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red' )
+    tab2 = Tab('Multiple/Binary Choice Groups', [ [Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
+    Frame('Binary Choice Group', frame3, title_color='white', tooltip='Binary Choice'),]])
+    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red' )
+    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red' )
+
+
 
     layout1 = [
-        [Image(data=DEFAULT_BASE64_ICON)],
-        [Text('You are running the py file itself', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
-        [Text('You should be importing it rather than running it', font='ANY 15')],
+        [Image(data=DEFAULT_BASE64_ICON),Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
+         Text('You are running the PySimpleGUI.py file instead of importing it.\nAnd are thus seeing a test harness instead of your code', font='ANY 15', tooltip='My tooltip', key='_TEXT1_')],
         [Frame('Input Text Group', frame1, title_color='red'),
-         Text('VERSION\n{}'.format(__version__), size=(18, 3), text_color='red', font='ANY 24'),
-         Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
+         Text('VERSION\n{}'.format(__version__), size=(25, 4), font='ANY 20'),
          ],
-        [
-        # Frame('Multiple Choice Group', frame2, title_color='green'),
-        Column(frame2),
-         Frame('Binary Choice Group', frame3, title_color='purple', tooltip='Binary Choice'),
-         Frame('Variable Choice Group', frame4, title_color='blue')],
-        [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]]), ],
-        # [Frame('Graphing Group', frame6)],
-        [TabGroup([[tab1, tab2]],key='_TAB_GROUP_', background_color='green',selected_title_color='red', title_color='blue' )],
-        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal', metadata='my metadata'),
-         Button('Exit', use_ttk_buttons=True, tooltip='Exit button')],
+        [TabGroup([[tab1, tab2, tab3, tab4]],key='_TAB_GROUP_', background_color='green',selected_title_color='red', title_color='blue' )],
+        [Button('Button'), B('Hide Stuff', metadata='my metadata'),
+         Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
+         Button('See-through Mode', tooltip='Make the background transparent'),
+         Button('Exit', tooltip='Exit button')],
     ]
 
-    layout = [[Menu(menu_def, key='_MENU_')]] + layout1
+    layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(50, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('Window Title', layout,
                     font=('Helvetica', 13),
                     # background_color='black',
@@ -12316,9 +12315,10 @@ def main():
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     while True:  # Event Loop
-        event, values = window.Read(timeout=20)
+        event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
             print(event, values)
+            Print(event, values, location=(0,0), font='Courier 8', size=(60,15), grab_anywhere=True)
         if event is None or event == 'Exit':
             break
         if i < 800:
@@ -12331,18 +12331,18 @@ def main():
         i += 1
         if event == 'Button':
             window.Element('_TEXT1_').SetTooltip('NEW TEXT')
-            window.SetTransparentColor('#9FB8AD')
             window.Element('_MENU_').Update(visible=True)
-        elif event == 'Normal':
-            window.Normal()
+        elif event.startswith('Hide'):
+            # window.Normal()
             window.Element('_MENU_').Update(visible=False)
-            print()
         elif event == 'Popout':
             show_debugger_popout_window()
         elif event == 'Launch Debugger':
             show_debugger_window()
         elif event == 'About...':
-            popup('About this program...')
+            popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
+        elif event.startswith('See'):
+            window.SetTransparentColor(LOOK_AND_FEEL_TABLE[look_and_feel]['BACKGROUND'])
     window.Close()
 
 
