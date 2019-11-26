@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.5.0.0.1 The ALMOST Released but still un-released version 04-Nov-2019"
+version = __version__ = "4.6.0 Released 11-Nov-2019"
 
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -805,6 +805,10 @@ class Element():
 
 
     def hide_row(self):
+        """
+        Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+        """
         try:
             self.ParentRowFrame.pack_forget()
         except:
@@ -812,6 +816,10 @@ class Element():
 
 
     def unhide_row(self):
+        """
+        Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+        """
         try:
             self.ParentRowFrame.pack()
         except:
@@ -852,6 +860,10 @@ class Element():
         :return:
         """
         return self.Update(*args, **kwargs)
+
+    button_rebound_callback = ButtonReboundCallback
+    set_tooltip = SetTooltip
+    set_focus = SetFocus
 
 
 # ---------------------------------------------------------------------- #
@@ -1582,14 +1594,17 @@ class Spin(Element):
             except:
                 pass
         self.DefaultValue = value
-        if disabled == True:
-            self.TKSpinBox.configure(state='disabled')
-        elif disabled == False:
-            self.TKSpinBox.configure(state='normal')
+        if disabled is not None:
+            self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
+        # if disabled == True:
+        #     self.TKSpinBox.configure(state='disabled')
+        # elif disabled == False:
+        #     self.TKSpinBox.configure(state='normal')
         if visible is False:
             self.TKSpinBox.pack_forget()
         elif visible is True:
             self.TKSpinBox.pack()
+
 
     def _SpinChangedHandler(self, event):
         """
@@ -2727,11 +2742,12 @@ class Image(Element):
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
         :param filename: (str) filename to the new image to display.
-        :param data: (str) Base64 encoded string
+        :param data: Union[str, tkPhotoImage] Base64 encoded string OR a tk.PhotoImage object
         :param size: Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high
         :param visible: (bool) control visibility of element
         """
 
+        image = None
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
@@ -2741,16 +2757,18 @@ class Image(Element):
             # if type(data) is bytes:
             try:
                 image = tk.PhotoImage(data=data)
-            except:
-                return  # an error likely means the window has closed so exit
+            except Exception as e:
+                image = data
+                # return  # an error likely means the window has closed so exit
         else:
             return
-        width, height = size[0] or image.width(), size[1] or image.height()
-        try:  # sometimes crashes if user closed with X
-            self.tktext_label.configure(image=image, width=width, height=height)
-        except:
-            pass
-        self.tktext_label.image = image
+        if image is not None:
+            width, height = size[0] or image.width(), size[1] or image.height()
+            try:  # sometimes crashes if user closed with X
+                self.tktext_label.configure(image=image, width=width, height=height)
+            except:
+                pass
+            self.tktext_label.image = image
         if visible is False:
             self.tktext_label.pack_forget()
         elif visible is True:
@@ -3067,7 +3085,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None):
+    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=None):
         """
         Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -3084,10 +3102,12 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
+        if line_width is None:
+            line_width = 1
         try:  # in case closed with X
             id = self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1],
                                                   converted_bottom_right[0],
-                                                  converted_bottom_right[1], fill=fill_color, outline=line_color)
+                                                  converted_bottom_right[1], fill=fill_color, outline=line_color, width=line_width)
         except:
             id = None
         return id
@@ -3841,6 +3861,7 @@ class Slider(Element):
         self.Disabled = disabled
         self.TickInterval = tick_interval
         self.DisableNumericDisplay = disable_number_display
+        self.TroughColor = DEFAULT_SCROLLBAR_COLOR
         temp_size = size
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
@@ -5314,6 +5335,11 @@ class Window:
 
     @classmethod
     def get_screen_size(self):
+        """
+        Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
+
+        :return: Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+        """
         root = tk.Tk()
         screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
         screen_height = root.winfo_screenheight()
@@ -5956,10 +5982,13 @@ class Window:
         """
         Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
         """
-        if sys.platform != 'linux':
-            self.TKroot.state('normal')
+        if self.TKroot.state() == 'iconic':
+            self.TKroot.deiconify()
         else:
-            self.TKroot.attributes('-fullscreen', False)
+            if sys.platform != 'linux':
+                self.TKroot.state('normal')
+            else:
+                self.TKroot.attributes('-fullscreen', False)
 
     def _StartMove(self, event):
         """
@@ -7990,6 +8019,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
                 show = element.PasswordCharacter if element.PasswordCharacter else ""
+                # bd = element.BorderDepth if element.BorderDepth is not None else border_depth
+                bd = border_depth
                 if element.Justification is not None:
                     justification = element.Justification
                 else:
@@ -7997,7 +8028,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0],
-                                                            textvariable=element.TKStringVar, bd=border_depth,
+                                                            textvariable=element.TKStringVar, bd=bd,
                                                             font=font, show=show, justify=justify)
                 if element.ChangeSubmits:
                     element.TKEntry.bind('<Key>', element._KeyboardHandler)
@@ -8084,7 +8115,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
-                if element.DefaultValue:
+                if element.DefaultValue is not None:
                     for i, v in enumerate(element.Values):
                         if v == element.DefaultValue:
                             element.TKCombo.current(i)
@@ -8588,6 +8619,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # row_should_expand = True
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
+                element = element                   # type: Slider
                 slider_length = element_size[0] * CharWidthInPixels()
                 slider_width = element_size[1]
                 element.TKIntVar = tk.IntVar()
@@ -8619,8 +8651,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tkscale.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(background=element.BackgroundColor)
-                    if DEFAULT_SCROLLBAR_COLOR != COLOR_SYSTEM_DEFAULT:
-                        tkscale.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
+                if element.TroughColor != COLOR_SYSTEM_DEFAULT:
+                    tkscale.config(troughcolor=element.TroughColor)
                 if element.DisableNumericDisplay:
                     tkscale.config(showvalue=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -8637,7 +8669,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TABLE:
                 element = element  # type: Table
                 frame = tk.Frame(tk_row_frame)
-
+                element.table_frame = frame
                 height = element.NumRows
                 if element.Justification == 'left':
                     anchor = tk.W
@@ -9663,313 +9695,801 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 # Predefined settings that will change the colors and styles #
 # of the elements.                                           #
 ##############################################################
-LOOK_AND_FEEL_TABLE = {'SystemDefault':
-                           {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
-                            'TEXT': COLOR_SYSTEM_DEFAULT,
-                            'INPUT': COLOR_SYSTEM_DEFAULT, 'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
-                            'SCROLL': COLOR_SYSTEM_DEFAULT,
-                            'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
-                            'PROGRESS': COLOR_SYSTEM_DEFAULT,
-                            'BORDER': 1, 'SLIDER_DEPTH': 1,
-                            'PROGRESS_DEPTH': 0},
+LOOK_AND_FEEL_TABLE = { 'SystemDefault':
+     {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+      'TEXT': COLOR_SYSTEM_DEFAULT,
+      'INPUT': COLOR_SYSTEM_DEFAULT,
+      'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+      'SCROLL': COLOR_SYSTEM_DEFAULT,
+      'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
+      'PROGRESS': COLOR_SYSTEM_DEFAULT,
+      'BORDER': 1, 'SLIDER_DEPTH': 1,
+      'PROGRESS_DEPTH': 0},
 
-                    'Material1': {'BACKGROUND': '#E3F2FD',
-                                      'TEXT': '#000000',
-                                      'INPUT': '#86A8FF',
-                                      'TEXT_INPUT': '#000000',
-                                      'SCROLL': '#86A8FF', #I can't see it change, so I don't know it is good color.
-                                      'BUTTON': ('#FFFFFF', '#5079D3'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 0, 'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0,
-                                      'ACCENT1': '#FF0266',
-                                      'ACCENT2': '#FF5C93',
-                                      'ACCENT3': '#C5003C'},
+ 'SystemDefaultForReal':
+     {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+      'TEXT': COLOR_SYSTEM_DEFAULT,
+      'INPUT': COLOR_SYSTEM_DEFAULT,
+      'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+      'SCROLL': COLOR_SYSTEM_DEFAULT,
+      'BUTTON': COLOR_SYSTEM_DEFAULT,
+      'PROGRESS': COLOR_SYSTEM_DEFAULT,
+      'BORDER': 1, 'SLIDER_DEPTH': 1,
+      'PROGRESS_DEPTH': 0},
 
-                    'Material2': {'BACKGROUND': '#FAFAFA',
-                                      'TEXT': '#000000',
-                                      'INPUT': '#004EA1',
-                                      'TEXT_INPUT': '#FFFFFF',
-                                      'SCROLL': '#5EA7FF', #I can't see it change, so I don't know it is good color.
-                                      'BUTTON': ('#FFFFFF', '#0079D3'), #based on Reddit color
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 0, 'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0,
-                                      'ACCENT1': '#FF0266',
-                                      'ACCENT2': '#FF5C93',
-                                      'ACCENT3': '#C5003C'},
+ 'Material1': {'BACKGROUND': '#E3F2FD',
+               'TEXT': '#000000',
+               'INPUT': '#86A8FF',
+               'TEXT_INPUT': '#000000',
+               'SCROLL': '#86A8FF',
+               'BUTTON': ('#FFFFFF', '#5079D3'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 0, 'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0,
+               'ACCENT1': '#FF0266',
+               'ACCENT2': '#FF5C93',
+               'ACCENT3': '#C5003C'},
 
-                       'Reddit': {'BACKGROUND': '#ffffff',
-                                  'TEXT': '#1a1a1b',
-                                  'INPUT': '#dae0e6',
-                                  'TEXT_INPUT': '#222222',
-                                  'SCROLL': '#a5a4a4',
-                                  'BUTTON': ('white', '#0079d3'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                  'BORDER': 1,
-                                  'SLIDER_DEPTH': 0,
-                                  'PROGRESS_DEPTH': 0,
-                                  'ACCENT1': '#ff5414',
-                                  'ACCENT2': '#33a8ff',
-                                  'ACCENT3': '#dbf0ff'},
+ 'Material2': {'BACKGROUND': '#FAFAFA',
+               'TEXT': '#000000',
+               'INPUT': '#004EA1',
+               'TEXT_INPUT': '#FFFFFF',
+               'SCROLL': '#5EA7FF',
+               'BUTTON': ('#FFFFFF', '#0079D3'),  # based on Reddit color
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 0, 'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0,
+               'ACCENT1': '#FF0266',
+               'ACCENT2': '#FF5C93',
+               'ACCENT3': '#C5003C'},
 
-                       'Topanga': {'BACKGROUND': '#282923',
-                                   'TEXT': '#E7DB74',
-                                   'INPUT': '#393a32',
-                                   'TEXT_INPUT': '#E7C855',
-                                   'SCROLL': '#E7C855',
-                                   'BUTTON': ('#E7C855', '#284B5A'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                   'PROGRESS_DEPTH': 0,
-                                   'ACCENT1': '#c15226',
-                                   'ACCENT2': '#7a4d5f',
-                                   'ACCENT3': '#889743'},
+ 'Reddit': {'BACKGROUND': '#ffffff',
+            'TEXT': '#1a1a1b',
+            'INPUT': '#dae0e6',
+            'TEXT_INPUT': '#222222',
+            'SCROLL': '#a5a4a4',
+            'BUTTON': ('white', '#0079d3'),
+            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+            'BORDER': 1,
+            'SLIDER_DEPTH': 0,
+            'PROGRESS_DEPTH': 0,
+            'ACCENT1': '#ff5414',
+            'ACCENT2': '#33a8ff',
+            'ACCENT3': '#dbf0ff'},
 
-                       'GreenTan': {'BACKGROUND': '#9FB8AD',
-                                    'TEXT': COLOR_SYSTEM_DEFAULT,
-                                    'INPUT': '#F7F3EC', 'TEXT_INPUT': 'black',
-                                    'SCROLL': '#F7F3EC',
-                                    'BUTTON': ('white', '#475841'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                    'PROGRESS_DEPTH': 0},
+ 'Topanga': {'BACKGROUND': '#282923',
+             'TEXT': '#E7DB74',
+             'INPUT': '#393a32',
+             'TEXT_INPUT': '#E7C855',
+             'SCROLL': '#E7C855',
+             'BUTTON': ('#E7C855', '#284B5A'),
+             'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+             'BORDER': 1,
+             'SLIDER_DEPTH': 0,
+             'PROGRESS_DEPTH': 0,
+             'ACCENT1': '#c15226',
+             'ACCENT2': '#7a4d5f',
+             'ACCENT3': '#889743'},
 
-                       'Dark': {'BACKGROUND': 'gray25',
-                                'TEXT': 'white',
-                                'INPUT': 'gray30',
-                                'TEXT_INPUT': 'white',
-                                'SCROLL': 'gray44',
-                                'BUTTON': ('white', '#004F00'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                'BORDER': 1,
-                                'SLIDER_DEPTH': 0,
-                                'PROGRESS_DEPTH': 0},
+ 'GreenTan': {'BACKGROUND': '#9FB8AD',
+              'TEXT': COLOR_SYSTEM_DEFAULT,
+              'INPUT': '#F7F3EC', 'TEXT_INPUT': 'black',
+              'SCROLL': '#F7F3EC',
+              'BUTTON': ('white', '#475841'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1, 'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
 
-                       'LightGreen': {'BACKGROUND': '#B7CECE',
-                                      'TEXT': 'black',
-                                      'INPUT': '#FDFFF7',
-                                      'TEXT_INPUT': 'black',
-                                      'SCROLL': '#FDFFF7',
-                                      'BUTTON': ('white', '#658268'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 1,
-                                      'SLIDER_DEPTH': 0,
-                                      'ACCENT1': '#76506d',
-                                      'ACCENT2': '#5148f1',
-                                      'ACCENT3': '#0a1c84',
-                                      'PROGRESS_DEPTH': 0},
+ 'Dark': {'BACKGROUND': '#404040',
+          'TEXT': 'white',
+          'INPUT': '#4D4D4D',
+          'TEXT_INPUT': 'white',
+          'SCROLL': '#707070',
+          'BUTTON': ('white', '#004F00'),
+          'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+          'BORDER': 1,
+          'SLIDER_DEPTH': 0,
+          'PROGRESS_DEPTH': 0},
 
-                       'Dark2': {'BACKGROUND': 'gray25',
-                                 'TEXT': 'white',
-                                 'INPUT': 'white',
-                                 'TEXT_INPUT': 'black',
-                                 'SCROLL': 'gray44',
-                                 'BUTTON': ('white', '#004F00'),
-                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                 'BORDER': 1,
-                                 'SLIDER_DEPTH': 0,
-                                 'PROGRESS_DEPTH': 0},
+ 'LightGreen': {'BACKGROUND': '#B7CECE',
+                'TEXT': 'black',
+                'INPUT': '#FDFFF7',
+                'TEXT_INPUT': 'black',
+                'SCROLL': '#FDFFF7',
+                'BUTTON': ('white', '#658268'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'ACCENT1': '#76506d',
+                'ACCENT2': '#5148f1',
+                'ACCENT3': '#0a1c84',
+                'PROGRESS_DEPTH': 0},
 
-                       'Black': {'BACKGROUND': 'black',
-                                 'TEXT': 'white',
-                                 'INPUT': 'gray30',
-                                 'TEXT_INPUT': 'white',
-                                 'SCROLL': 'gray44',
-                                 'BUTTON': ('black', 'white'),
-                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                 'BORDER': 1,
-                                 'SLIDER_DEPTH': 0,
-                                 'PROGRESS_DEPTH': 0},
+ 'Dark2': {'BACKGROUND': '#404040',
+           'TEXT': 'white',
+           'INPUT': 'white',
+           'TEXT_INPUT': 'black',
+           'SCROLL': '#707070',
+           'BUTTON': ('white', '#004F00'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
 
-                       'Tan': {'BACKGROUND': '#fdf6e3',
-                               'TEXT': '#268bd1',
-                               'INPUT': '#eee8d5',
-                               'TEXT_INPUT': '#6c71c3',
-                               'SCROLL': '#eee8d5',
-                               'BUTTON': ('white', '#063542'),
-                               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                               'BORDER': 1,
-                               'SLIDER_DEPTH': 0,
-                               'PROGRESS_DEPTH': 0},
+ 'Black': {'BACKGROUND': 'black',
+           'TEXT': 'white',
+           'INPUT': '#4D4D4D',
+           'TEXT_INPUT': 'white',
+           'SCROLL': '#707070',
+           'BUTTON': ('black', 'white'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
 
-                       'TanBlue': {'BACKGROUND': '#e5dece',
-                                   'TEXT': '#063289',
-                                   'INPUT': '#f9f8f4',
-                                   'TEXT_INPUT': '#242834',
-                                   'SCROLL': '#eee8d5',
-                                   'BUTTON': ('white', '#063289'),
-                                   'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                   'BORDER': 1,
-                                   'SLIDER_DEPTH': 0,
-                                   'PROGRESS_DEPTH': 0},
+ 'Tan': {'BACKGROUND': '#fdf6e3',
+         'TEXT': '#268bd1',
+         'INPUT': '#eee8d5',
+         'TEXT_INPUT': '#6c71c3',
+         'SCROLL': '#eee8d5',
+         'BUTTON': ('white', '#063542'),
+         'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+         'BORDER': 1,
+         'SLIDER_DEPTH': 0,
+         'PROGRESS_DEPTH': 0},
 
-                       'DarkTanBlue': {'BACKGROUND': '#242834',
-                                       'TEXT': '#dfe6f8',
-                                       'INPUT': '#97755c',
-                                       'TEXT_INPUT': 'white',
-                                       'SCROLL': '#a9afbb',
-                                       'BUTTON': ('white', '#063289'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                       'BORDER': 1,
-                                       'SLIDER_DEPTH': 0,
-                                       'PROGRESS_DEPTH': 0},
+ 'TanBlue': {'BACKGROUND': '#e5dece',
+             'TEXT': '#063289',
+             'INPUT': '#f9f8f4',
+             'TEXT_INPUT': '#242834',
+             'SCROLL': '#eee8d5',
+             'BUTTON': ('white', '#063289'),
+             'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+             'BORDER': 1,
+             'SLIDER_DEPTH': 0,
+             'PROGRESS_DEPTH': 0},
 
-                       'DarkAmber': {'BACKGROUND': '#2c2825',
-                                     'TEXT': '#fdcb52',
-                                     'INPUT': '#705e52',
-                                     'TEXT_INPUT': '#fdcb52',
-                                     'SCROLL': '#705e52',
-                                     'BUTTON': ('black', '#fdcb52'),
-                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                     'BORDER': 1,
-                                     'SLIDER_DEPTH': 0,
-                                     'PROGRESS_DEPTH': 0},
+ 'DarkTanBlue': {'BACKGROUND': '#242834',
+                 'TEXT': '#dfe6f8',
+                 'INPUT': '#97755c',
+                 'TEXT_INPUT': 'white',
+                 'SCROLL': '#a9afbb',
+                 'BUTTON': ('white', '#063289'),
+                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                 'BORDER': 1,
+                 'SLIDER_DEPTH': 0,
+                 'PROGRESS_DEPTH': 0},
 
-                       'DarkBlue': {'BACKGROUND': '#1a2835',
-                                    'TEXT': '#d1ecff',
-                                    'INPUT': '#335267',
-                                    'TEXT_INPUT': '#acc2d0',
-                                    'SCROLL': '#1b6497',
-                                    'BUTTON': ('black', '#fafaf8'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                    'PROGRESS_DEPTH': 0},
+ 'DarkAmber': {'BACKGROUND': '#2c2825',
+               'TEXT': '#fdcb52',
+               'INPUT': '#705e52',
+               'TEXT_INPUT': '#fdcb52',
+               'SCROLL': '#705e52',
+               'BUTTON': ('black', '#fdcb52'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
 
-                       'Reds': {'BACKGROUND': '#280001',
-                                'TEXT': 'white',
-                                'INPUT': '#d8d584',
-                                'TEXT_INPUT': 'black',
-                                'SCROLL': '#763e00',
-                                'BUTTON': ('black', '#daad28'),
-                                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                'BORDER': 1,
-                                'SLIDER_DEPTH': 0,
-                                'PROGRESS_DEPTH': 0},
+ 'DarkBlue': {'BACKGROUND': '#1a2835',
+              'TEXT': '#d1ecff',
+              'INPUT': '#335267',
+              'TEXT_INPUT': '#acc2d0',
+              'SCROLL': '#1b6497',
+              'BUTTON': ('black', '#fafaf8'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1, 'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
 
-                       'Green': {'BACKGROUND': '#82a459',
-                                 'TEXT': 'black',
-                                 'INPUT': '#d8d584',
-                                 'TEXT_INPUT': 'black',
-                                 'SCROLL': '#e3ecf3',
-                                 'BUTTON': ('white', '#517239'),
-                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                 'BORDER': 1,
-                                 'SLIDER_DEPTH': 0,
-                                 'PROGRESS_DEPTH': 0},
+ 'Reds': {'BACKGROUND': '#280001',
+          'TEXT': 'white',
+          'INPUT': '#d8d584',
+          'TEXT_INPUT': 'black',
+          'SCROLL': '#763e00',
+          'BUTTON': ('black', '#daad28'),
+          'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+          'BORDER': 1,
+          'SLIDER_DEPTH': 0,
+          'PROGRESS_DEPTH': 0},
 
-                       'BluePurple': {'BACKGROUND': '#A5CADD',
-                                      'TEXT': '#6E266E',
-                                      'INPUT': '#E0F5FF',
-                                      'TEXT_INPUT': 'black',
-                                      'SCROLL': '#E0F5FF',
-                                      'BUTTON': ('white', '#303952'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 1,
-                                      'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0},
+ 'Green': {'BACKGROUND': '#82a459',
+           'TEXT': 'black',
+           'INPUT': '#d8d584',
+           'TEXT_INPUT': 'black',
+           'SCROLL': '#e3ecf3',
+           'BUTTON': ('white', '#517239'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
 
-                       'Purple': {'BACKGROUND': '#B0AAC2',
-                                  'TEXT': 'black',
-                                  'INPUT': '#F2EFE8',
-                                  'SCROLL': '#F2EFE8',
-                                  'TEXT_INPUT': 'black',
-                                  'BUTTON': ('black', '#C2D4D8'),
-                                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                  'BORDER': 1,
-                                  'SLIDER_DEPTH': 0,
-                                  'PROGRESS_DEPTH': 0},
+ 'BluePurple': {'BACKGROUND': '#A5CADD',
+                'TEXT': '#6E266E',
+                'INPUT': '#E0F5FF',
+                'TEXT_INPUT': 'black',
+                'SCROLL': '#E0F5FF',
+                'BUTTON': ('white', '#303952'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0},
 
-                       'BlueMono': {'BACKGROUND': '#AAB6D3',
-                                    'TEXT': 'black',
-                                    'INPUT': '#F1F4FC',
-                                    'SCROLL': '#F1F4FC',
-                                    'TEXT_INPUT': 'black',
-                                    'BUTTON': ('white', '#7186C7'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1,
-                                    'SLIDER_DEPTH': 0,
-                                    'PROGRESS_DEPTH': 0},
+ 'Purple': {'BACKGROUND': '#B0AAC2',
+            'TEXT': 'black',
+            'INPUT': '#F2EFE8',
+            'SCROLL': '#F2EFE8',
+            'TEXT_INPUT': 'black',
+            'BUTTON': ('black', '#C2D4D8'),
+            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+            'BORDER': 1,
+            'SLIDER_DEPTH': 0,
+            'PROGRESS_DEPTH': 0},
 
-                       'GreenMono': {'BACKGROUND': '#A8C1B4',
-                                     'TEXT': 'black',
-                                     'INPUT': '#DDE0DE',
-                                     'SCROLL': '#E3E3E3',
-                                     'TEXT_INPUT': 'black',
-                                     'BUTTON': ('white', '#6D9F85'),
-                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                     'BORDER': 1,
-                                     'SLIDER_DEPTH': 0,
-                                     'PROGRESS_DEPTH': 0},
+ 'BlueMono': {'BACKGROUND': '#AAB6D3',
+              'TEXT': 'black',
+              'INPUT': '#F1F4FC',
+              'SCROLL': '#F1F4FC',
+              'TEXT_INPUT': 'black',
+              'BUTTON': ('white', '#7186C7'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1,
+              'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
 
-                       'BrownBlue': {'BACKGROUND': '#64778d',
-                                     'TEXT': 'white',
-                                     'INPUT': '#f0f3f7',
-                                     'SCROLL': '#A6B2BE',
-                                     'TEXT_INPUT': 'black',
-                                     'BUTTON': ('white', '#283b5b'),
-                                     'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                     'BORDER': 1,
-                                     'SLIDER_DEPTH': 0,
-                                     'PROGRESS_DEPTH': 0},
+ 'GreenMono': {'BACKGROUND': '#A8C1B4',
+               'TEXT': 'black',
+               'INPUT': '#DDE0DE',
+               'SCROLL': '#E3E3E3',
+               'TEXT_INPUT': 'black',
+               'BUTTON': ('white', '#6D9F85'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
 
-                       'BrightColors': {'BACKGROUND': '#b4ffb4',
-                                        'TEXT': 'black',
-                                        'INPUT': '#ffff64',
-                                        'SCROLL': '#ffb482',
-                                        'TEXT_INPUT': 'black',
-                                        'BUTTON': ('black', '#ffa0dc'),
-                                        'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                        'BORDER': 1,
-                                        'SLIDER_DEPTH': 0,
-                                        'PROGRESS_DEPTH': 0},
+ 'BrownBlue': {'BACKGROUND': '#64778d',
+               'TEXT': 'white',
+               'INPUT': '#f0f3f7',
+               'SCROLL': '#A6B2BE',
+               'TEXT_INPUT': 'black',
+               'BUTTON': ('white', '#283b5b'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
 
-                       'NeutralBlue': {'BACKGROUND': '#92aa9d',
-                                       'TEXT': 'black',
-                                       'INPUT': '#fcfff6',
-                                       'SCROLL': '#fcfff6',
-                                       'TEXT_INPUT': 'black',
-                                       'BUTTON': ('black', '#d0dbbd'),
-                                       'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                       'BORDER': 1,
-                                       'SLIDER_DEPTH': 0,
-                                       'PROGRESS_DEPTH': 0},
+ 'BrightColors': {'BACKGROUND': '#b4ffb4',
+                  'TEXT': 'black',
+                  'INPUT': '#ffff64',
+                  'SCROLL': '#ffb482',
+                  'TEXT_INPUT': 'black',
+                  'BUTTON': ('black', '#ffa0dc'),
+                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                  'BORDER': 1,
+                  'SLIDER_DEPTH': 0,
+                  'PROGRESS_DEPTH': 0},
 
-                       'Kayak': {'BACKGROUND': '#a7ad7f',
-                                 'TEXT': 'black',
-                                 'INPUT': '#e6d3a8',
-                                 'SCROLL': '#e6d3a8',
-                                 'TEXT_INPUT': 'black',
-                                 'BUTTON': ('white', '#5d907d'),
-                                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                 'BORDER': 1,
-                                 'SLIDER_DEPTH': 0,
-                                 'PROGRESS_DEPTH': 0},
+ 'NeutralBlue': {'BACKGROUND': '#92aa9d',
+                 'TEXT': 'black',
+                 'INPUT': '#fcfff6',
+                 'SCROLL': '#fcfff6',
+                 'TEXT_INPUT': 'black',
+                 'BUTTON': ('black', '#d0dbbd'),
+                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                 'BORDER': 1,
+                 'SLIDER_DEPTH': 0,
+                 'PROGRESS_DEPTH': 0},
 
-                       'SandyBeach': {'BACKGROUND': '#efeccb',
-                                      'TEXT': '#012f2f',
-                                      'INPUT': '#e6d3a8',
-                                      'SCROLL': '#e6d3a8',
-                                      'TEXT_INPUT': '#012f2f',
-                                      'BUTTON': ('white', '#046380'),
-                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                      'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0},
+ 'Kayak': {'BACKGROUND': '#a7ad7f',
+           'TEXT': 'black',
+           'INPUT': '#e6d3a8',
+           'SCROLL': '#e6d3a8',
+           'TEXT_INPUT': 'black',
+           'BUTTON': ('white', '#5d907d'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
 
-                       'TealMono': {'BACKGROUND': '#a8cfdd',
-                                    'TEXT': 'black',
-                                    'INPUT': '#dfedf2', 'SCROLL': '#dfedf2',
-                                    'TEXT_INPUT': 'black',
-                                    'BUTTON': ('white', '#183440'),
-                                    'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
-                                    'BORDER': 1,
-                                    'SLIDER_DEPTH': 0,
-                                    'PROGRESS_DEPTH': 0}
-                       }
+ 'SandyBeach': {'BACKGROUND': '#efeccb',
+                'TEXT': '#012f2f',
+                'INPUT': '#e6d3a8',
+                'SCROLL': '#e6d3a8',
+                'TEXT_INPUT': '#012f2f',
+                'BUTTON': ('white', '#046380'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1, 'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0},
 
+ 'TealMono': {'BACKGROUND': '#a8cfdd',
+              'TEXT': 'black',
+              'INPUT': '#dfedf2',
+              'SCROLL': '#dfedf2',
+              'TEXT_INPUT': 'black',
+              'BUTTON': ('white', '#183440'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1,
+              'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
+################################## Renamed Original Themes ##################################
+'Default':
+     {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+      'TEXT': COLOR_SYSTEM_DEFAULT,
+      'INPUT': COLOR_SYSTEM_DEFAULT,
+      'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+      'SCROLL': COLOR_SYSTEM_DEFAULT,
+      'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
+      'PROGRESS': COLOR_SYSTEM_DEFAULT,
+      'BORDER': 1, 'SLIDER_DEPTH': 1,
+      'PROGRESS_DEPTH': 0},
+
+ 'Default1':
+     {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+      'TEXT': COLOR_SYSTEM_DEFAULT,
+      'INPUT': COLOR_SYSTEM_DEFAULT,
+      'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+      'SCROLL': COLOR_SYSTEM_DEFAULT,
+      'BUTTON': COLOR_SYSTEM_DEFAULT,
+      'PROGRESS': COLOR_SYSTEM_DEFAULT,
+      'BORDER': 1, 'SLIDER_DEPTH': 1,
+      'PROGRESS_DEPTH': 0},
+
+ 'LightBlue': {'BACKGROUND': '#E3F2FD',
+               'TEXT': '#000000',
+               'INPUT': '#86A8FF',
+               'TEXT_INPUT': '#000000',
+               'SCROLL': '#86A8FF',
+               'BUTTON': ('#FFFFFF', '#5079D3'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 0, 'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0,
+               'ACCENT1': '#FF0266',
+               'ACCENT2': '#FF5C93',
+               'ACCENT3': '#C5003C'},
+
+ 'LightGrey': {'BACKGROUND': '#FAFAFA',
+               'TEXT': '#000000',
+               'INPUT': '#004EA1',
+               'TEXT_INPUT': '#FFFFFF',
+               'SCROLL': '#5EA7FF',
+               'BUTTON': ('#FFFFFF', '#0079D3'),  # based on Reddit color
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 0, 'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0,
+               'ACCENT1': '#FF0266',
+               'ACCENT2': '#FF5C93',
+               'ACCENT3': '#C5003C'},
+
+ 'LightGrey1': {'BACKGROUND': '#ffffff',
+            'TEXT': '#1a1a1b',
+            'INPUT': '#dae0e6',
+            'TEXT_INPUT': '#222222',
+            'SCROLL': '#a5a4a4',
+            'BUTTON': ('white', '#0079d3'),
+            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+            'BORDER': 1,
+            'SLIDER_DEPTH': 0,
+            'PROGRESS_DEPTH': 0,
+            'ACCENT1': '#ff5414',
+            'ACCENT2': '#33a8ff',
+            'ACCENT3': '#dbf0ff'},
+
+ 'DarkBrown': {'BACKGROUND': '#282923',
+             'TEXT': '#E7DB74',
+             'INPUT': '#393a32',
+             'TEXT_INPUT': '#E7C855',
+             'SCROLL': '#E7C855',
+             'BUTTON': ('#E7C855', '#284B5A'),
+             'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+             'BORDER': 1,
+             'SLIDER_DEPTH': 0,
+             'PROGRESS_DEPTH': 0,
+             'ACCENT1': '#c15226',
+             'ACCENT2': '#7a4d5f',
+             'ACCENT3': '#889743'},
+
+ 'LightGreen1': {'BACKGROUND': '#9FB8AD',
+              'TEXT': COLOR_SYSTEM_DEFAULT,
+              'INPUT': '#F7F3EC', 'TEXT_INPUT': 'black',
+              'SCROLL': '#F7F3EC',
+              'BUTTON': ('white', '#475841'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1, 'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
+
+ 'DarkGrey': {'BACKGROUND': '#404040',
+          'TEXT': 'white',
+          'INPUT': '#4D4D4D',
+          'TEXT_INPUT': 'white',
+          'SCROLL': '#707070',
+          'BUTTON': ('white', '#004F00'),
+          'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+          'BORDER': 1,
+          'SLIDER_DEPTH': 0,
+          'PROGRESS_DEPTH': 0},
+
+ 'LightGreen2': {'BACKGROUND': '#B7CECE',
+                'TEXT': 'black',
+                'INPUT': '#FDFFF7',
+                'TEXT_INPUT': 'black',
+                'SCROLL': '#FDFFF7',
+                'BUTTON': ('white', '#658268'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'ACCENT1': '#76506d',
+                'ACCENT2': '#5148f1',
+                'ACCENT3': '#0a1c84',
+                'PROGRESS_DEPTH': 0},
+
+ 'DarkGrey1': {'BACKGROUND': '#404040',
+           'TEXT': 'white',
+           'INPUT': 'white',
+           'TEXT_INPUT': 'black',
+           'SCROLL': '#707070',
+           'BUTTON': ('white', '#004F00'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
+
+ 'DarkBlack': {'BACKGROUND': 'black',
+           'TEXT': 'white',
+           'INPUT': '#4D4D4D',
+           'TEXT_INPUT': 'white',
+           'SCROLL': '#707070',
+           'BUTTON': ('black', 'white'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
+
+ 'LightBrown': {'BACKGROUND': '#fdf6e3',
+         'TEXT': '#268bd1',
+         'INPUT': '#eee8d5',
+         'TEXT_INPUT': '#6c71c3',
+         'SCROLL': '#eee8d5',
+         'BUTTON': ('white', '#063542'),
+         'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+         'BORDER': 1,
+         'SLIDER_DEPTH': 0,
+         'PROGRESS_DEPTH': 0},
+
+ 'LightBrown1': {'BACKGROUND': '#e5dece',
+             'TEXT': '#063289',
+             'INPUT': '#f9f8f4',
+             'TEXT_INPUT': '#242834',
+             'SCROLL': '#eee8d5',
+             'BUTTON': ('white', '#063289'),
+             'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+             'BORDER': 1,
+             'SLIDER_DEPTH': 0,
+             'PROGRESS_DEPTH': 0},
+
+ 'DarkBlue1': {'BACKGROUND': '#242834',
+                 'TEXT': '#dfe6f8',
+                 'INPUT': '#97755c',
+                 'TEXT_INPUT': 'white',
+                 'SCROLL': '#a9afbb',
+                 'BUTTON': ('white', '#063289'),
+                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                 'BORDER': 1,
+                 'SLIDER_DEPTH': 0,
+                 'PROGRESS_DEPTH': 0},
+
+ 'DarkBrown1': {'BACKGROUND': '#2c2825',
+               'TEXT': '#fdcb52',
+               'INPUT': '#705e52',
+               'TEXT_INPUT': '#fdcb52',
+               'SCROLL': '#705e52',
+               'BUTTON': ('black', '#fdcb52'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
+
+ 'DarkBlue2': {'BACKGROUND': '#1a2835',
+              'TEXT': '#d1ecff',
+              'INPUT': '#335267',
+              'TEXT_INPUT': '#acc2d0',
+              'SCROLL': '#1b6497',
+              'BUTTON': ('black', '#fafaf8'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1, 'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
+
+ 'DarkBrown2': {'BACKGROUND': '#280001',
+          'TEXT': 'white',
+          'INPUT': '#d8d584',
+          'TEXT_INPUT': 'black',
+          'SCROLL': '#763e00',
+          'BUTTON': ('black', '#daad28'),
+          'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+          'BORDER': 1,
+          'SLIDER_DEPTH': 0,
+          'PROGRESS_DEPTH': 0},
+
+ 'DarkGreen': {'BACKGROUND': '#82a459',
+           'TEXT': 'black',
+           'INPUT': '#d8d584',
+           'TEXT_INPUT': 'black',
+           'SCROLL': '#e3ecf3',
+           'BUTTON': ('white', '#517239'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
+
+ 'LightBlue1': {'BACKGROUND': '#A5CADD',
+                'TEXT': '#6E266E',
+                'INPUT': '#E0F5FF',
+                'TEXT_INPUT': 'black',
+                'SCROLL': '#E0F5FF',
+                'BUTTON': ('white', '#303952'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0},
+
+ 'LightPurple': {'BACKGROUND': '#B0AAC2',
+            'TEXT': 'black',
+            'INPUT': '#F2EFE8',
+            'SCROLL': '#F2EFE8',
+            'TEXT_INPUT': 'black',
+            'BUTTON': ('black', '#C2D4D8'),
+            'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+            'BORDER': 1,
+            'SLIDER_DEPTH': 0,
+            'PROGRESS_DEPTH': 0},
+
+ 'LightBlue2': {'BACKGROUND': '#AAB6D3',
+              'TEXT': 'black',
+              'INPUT': '#F1F4FC',
+              'SCROLL': '#F1F4FC',
+              'TEXT_INPUT': 'black',
+              'BUTTON': ('white', '#7186C7'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1,
+              'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
+
+ 'LightGreen3': {'BACKGROUND': '#A8C1B4',
+               'TEXT': 'black',
+               'INPUT': '#DDE0DE',
+               'SCROLL': '#E3E3E3',
+               'TEXT_INPUT': 'black',
+               'BUTTON': ('white', '#6D9F85'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
+
+ 'DarkBlue3': {'BACKGROUND': '#64778d',
+               'TEXT': 'white',
+               'INPUT': '#f0f3f7',
+               'SCROLL': '#A6B2BE',
+               'TEXT_INPUT': 'black',
+               'BUTTON': ('white', '#283b5b'),
+               'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+               'BORDER': 1,
+               'SLIDER_DEPTH': 0,
+               'PROGRESS_DEPTH': 0},
+
+ 'LightGreen4': {'BACKGROUND': '#b4ffb4',
+                  'TEXT': 'black',
+                  'INPUT': '#ffff64',
+                  'SCROLL': '#ffb482',
+                  'TEXT_INPUT': 'black',
+                  'BUTTON': ('black', '#ffa0dc'),
+                  'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                  'BORDER': 1,
+                  'SLIDER_DEPTH': 0,
+                  'PROGRESS_DEPTH': 0},
+
+ 'LightGreen5': {'BACKGROUND': '#92aa9d',
+                 'TEXT': 'black',
+                 'INPUT': '#fcfff6',
+                 'SCROLL': '#fcfff6',
+                 'TEXT_INPUT': 'black',
+                 'BUTTON': ('black', '#d0dbbd'),
+                 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                 'BORDER': 1,
+                 'SLIDER_DEPTH': 0,
+                 'PROGRESS_DEPTH': 0},
+
+ 'LightBrown2': {'BACKGROUND': '#a7ad7f',
+           'TEXT': 'black',
+           'INPUT': '#e6d3a8',
+           'SCROLL': '#e6d3a8',
+           'TEXT_INPUT': 'black',
+           'BUTTON': ('white', '#5d907d'),
+           'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+           'BORDER': 1,
+           'SLIDER_DEPTH': 0,
+           'PROGRESS_DEPTH': 0},
+
+ 'LightBrown3': {'BACKGROUND': '#efeccb',
+                'TEXT': '#012f2f',
+                'INPUT': '#e6d3a8',
+                'SCROLL': '#e6d3a8',
+                'TEXT_INPUT': '#012f2f',
+                'BUTTON': ('white', '#046380'),
+                'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+                'BORDER': 1, 'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0},
+
+ 'LightBlue3': {'BACKGROUND': '#a8cfdd',
+              'TEXT': 'black',
+              'INPUT': '#dfedf2',
+              'SCROLL': '#dfedf2',
+              'TEXT_INPUT': 'black',
+              'BUTTON': ('white', '#183440'),
+              'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR,
+              'BORDER': 1,
+              'SLIDER_DEPTH': 0,
+              'PROGRESS_DEPTH': 0},
+
+
+################################## End Renamed Original Themes ##################################
+
+
+#
+ 'LightBrown4': {'BACKGROUND': '#d7c79e', 'TEXT': '#a35638', 'INPUT': '#9dab86', 'TEXT_INPUT': '#000000', 'SCROLL': '#a35638', 'BUTTON': ('white', '#a35638'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#a35638', '#9dab86', '#e08f62', '#d7c79e'], },
+ 'DarkTeal': {'BACKGROUND': '#003f5c', 'TEXT': '#fb5b5a', 'INPUT': '#bc4873', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#bc4873', 'BUTTON': ('white', '#fb5b5a'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#003f5c', '#472b62', '#bc4873', '#fb5b5a'], },
+ 'DarkPurple': {'BACKGROUND': '#472b62', 'TEXT': '#fb5b5a', 'INPUT': '#bc4873', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#bc4873', 'BUTTON': ('#FFFFFF', '#472b62'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#003f5c', '#472b62', '#bc4873', '#fb5b5a'], },
+ 'LightGreen6': {'BACKGROUND': '#eafbea', 'TEXT': '#1f6650', 'INPUT': '#6f9a8d', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#1f6650', 'BUTTON': ('white', '#1f6650'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#1f6650', '#6f9a8d', '#ea5e5e', '#eafbea'], },
+ 'DarkGrey2': {'BACKGROUND': '#2b2b28', 'TEXT': '#f8f8f8', 'INPUT': '#f1d6ab', 'TEXT_INPUT': '#000000', 'SCROLL': '#f1d6ab', 'BUTTON': ('#2b2b28', '#e3b04b'),
+              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              'COLOR_LIST': ['#2b2b28', '#e3b04b', '#f1d6ab', '#f8f8f8'], },
+ 'LightBrown6': {'BACKGROUND': '#f9b282', 'TEXT': '#8f4426', 'INPUT': '#de6b35', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#8f4426', 'BUTTON': ('white', '#8f4426'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#8f4426', '#de6b35', '#64ccda', '#f9b282'], },
+ 'DarkTeal1': {'BACKGROUND': '#396362', 'TEXT': '#ffe7d1', 'INPUT': '#f6c89f', 'TEXT_INPUT': '#000000', 'SCROLL': '#f6c89f',
+                   'BUTTON': ('#ffe7d1', '#4b8e8d'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                   'COLOR_LIST': ['#396362', '#4b8e8d', '#f6c89f', '#ffe7d1'],},
+ 'LightBrown7': {'BACKGROUND': '#f6c89f', 'TEXT': '#396362', 'INPUT': '#4b8e8d', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#396362',
+                    'BUTTON': ('white', '#396362'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                    'COLOR_LIST': ['#396362', '#4b8e8d', '#f6c89f', '#ffe7d1'],},
+ 'DarkPurple1': {'BACKGROUND': '#0c093c', 'TEXT': '#fad6d6', 'INPUT': '#eea5f6', 'TEXT_INPUT': '#000000', 'SCROLL': '#eea5f6', 'BUTTON': ('#FFFFFF', '#df42d1'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#0c093c', '#df42d1', '#eea5f6', '#fad6d6'], },
+ 'DarkGrey3': {'BACKGROUND': '#211717', 'TEXT': '#dfddc7', 'INPUT': '#f58b54', 'TEXT_INPUT': '#000000', 'SCROLL': '#f58b54', 'BUTTON': ('#dfddc7', '#a34a28'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#211717', '#a34a28', '#f58b54', '#dfddc7'], },
+ 'LightBrown8': {'BACKGROUND': '#dfddc7', 'TEXT': '#211717', 'INPUT': '#a34a28', 'TEXT_INPUT': '#dfddc7', 'SCROLL': '#211717', 'BUTTON': ('#dfddc7', '#a34a28'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#211717', '#a34a28', '#f58b54', '#dfddc7'], },
+ 'DarkBlue4': {'BACKGROUND': '#494ca2', 'TEXT': '#e3e7f1', 'INPUT': '#c6cbef', 'TEXT_INPUT': '#000000', 'SCROLL': '#c6cbef', 'BUTTON': ('#FFFFFF', '#8186d5'),
+              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              'COLOR_LIST': ['#494ca2', '#8186d5', '#c6cbef', '#e3e7f1'],},
+ 'LightBlue4': {'BACKGROUND': '#5c94bd', 'TEXT': '#470938', 'INPUT': '#1a3e59', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#470938', 'BUTTON': ('white', '#470938'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#470938', '#1a3e59', '#5c94bd', '#f2d6eb'],},
+ 'DarkTeal2': {'BACKGROUND': '#394a6d', 'TEXT': '#c0ffb3', 'INPUT': '#52de97', 'TEXT_INPUT': '#000000', 'SCROLL': '#52de97',
+                    'BUTTON': ('#c0ffb3', '#394a6d'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                    'COLOR_LIST': ['#394a6d', '#3c9d9b', '#52de97', '#c0ffb3'],},
+ 'DarkTeal3': {'BACKGROUND': '#3c9d9b', 'TEXT': '#c0ffb3', 'INPUT': '#52de97', 'TEXT_INPUT': '#000000', 'SCROLL': '#52de97',
+                    'BUTTON': ('#c0ffb3', '#394a6d'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                    'COLOR_LIST': ['#394a6d', '#3c9d9b', '#52de97', '#c0ffb3'], },
+ 'DarkPurple5': {'BACKGROUND': '#730068', 'TEXT': '#f6f078', 'INPUT': '#01d28e', 'TEXT_INPUT': '#000000', 'SCROLL': '#01d28e', 'BUTTON': ('#f6f078', '#730068'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#730068', '#434982', '#01d28e', '#f6f078'],},
+ 'DarkPurple2': {'BACKGROUND': '#202060', 'TEXT': '#b030b0', 'INPUT': '#602080', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#602080', 'BUTTON': ('white', '#202040'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#202040', '#202060', '#602080', '#b030b0'], },
+ 'DarkBlue5': {'BACKGROUND': '#000272', 'TEXT': '#ff6363', 'INPUT': '#a32f80', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#a32f80', 'BUTTON': ('#FFFFFF', '#341677'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#000272', '#341677', '#a32f80', '#ff6363'], },
+ 'LightGrey2': {'BACKGROUND': '#f6f6f6', 'TEXT': '#420000', 'INPUT': '#d4d7dd', 'TEXT_INPUT': '#420000', 'SCROLL': '#420000', 'BUTTON': ('#420000', '#d4d7dd'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#420000', '#d4d7dd', '#eae9e9', '#f6f6f6'],},
+ 'LightGrey3': {'BACKGROUND': '#eae9e9', 'TEXT': '#420000', 'INPUT': '#d4d7dd', 'TEXT_INPUT': '#420000', 'SCROLL': '#420000', 'BUTTON': ('#420000', '#d4d7dd'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#420000', '#d4d7dd', '#eae9e9', '#f6f6f6'], },
+ 'DarkBlue6': {'BACKGROUND': '#01024e', 'TEXT': '#ff6464', 'INPUT': '#8b4367', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#8b4367', 'BUTTON': ('#FFFFFF', '#543864'),
+              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              'COLOR_LIST': ['#01024e', '#543864', '#8b4367', '#ff6464'],},
+ 'DarkBlue7': {'BACKGROUND': '#241663', 'TEXT': '#eae7af', 'INPUT': '#a72693', 'TEXT_INPUT': '#eae7af', 'SCROLL': '#a72693', 'BUTTON': ('#eae7af', '#160f30'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#160f30', '#241663', '#a72693', '#eae7af'], },
+ 'LightBrown9': {'BACKGROUND': '#f6d365', 'TEXT': '#3a1f5d', 'INPUT': '#c83660', 'TEXT_INPUT': '#f6d365', 'SCROLL': '#3a1f5d', 'BUTTON': ('#f6d365', '#c83660'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#3a1f5d', '#c83660', '#e15249', '#f6d365'], },
+ 'DarkPurple3': {'BACKGROUND': '#6e2142', 'TEXT': '#ffd692', 'INPUT': '#e16363', 'TEXT_INPUT': '#ffd692', 'SCROLL': '#e16363', 'BUTTON': ('#ffd692', '#943855'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#6e2142', '#943855', '#e16363', '#ffd692'], },
+ 'LightBrown10': {'BACKGROUND': '#ffd692', 'TEXT': '#6e2142', 'INPUT': '#943855', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#6e2142', 'BUTTON': ('white', '#6e2142'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#6e2142', '#943855', '#e16363', '#ffd692'],},
+ 'DarkPurple4': {'BACKGROUND': '#200f21', 'TEXT': '#f638dc', 'INPUT': '#5a3d5c', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#5a3d5c', 'BUTTON': ('#FFFFFF', '#382039'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#200f21', '#382039', '#5a3d5c', '#f638dc'],},
+ 'LightBlue5': {'BACKGROUND': '#b2fcff', 'TEXT': '#3e64ff', 'INPUT': '#5edfff', 'TEXT_INPUT': '#000000', 'SCROLL': '#3e64ff', 'BUTTON': ('white', '#3e64ff'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#3e64ff', '#5edfff', '#b2fcff', '#ecfcff'], },
+ 'DarkTeal4': {'BACKGROUND': '#464159', 'TEXT': '#c7f0db', 'INPUT': '#8bbabb', 'TEXT_INPUT': '#000000', 'SCROLL': '#8bbabb',
+                   'BUTTON': ('#FFFFFF', '#6c7b95'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                   'COLOR_LIST': ['#464159', '#6c7b95', '#8bbabb', '#c7f0db'], },
+ 'LightTeal': {'BACKGROUND': '#c7f0db', 'TEXT': '#464159', 'INPUT': '#6c7b95', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#464159',
+                     'BUTTON': ('white', '#464159'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                     'COLOR_LIST': ['#464159', '#6c7b95', '#8bbabb', '#c7f0db'],},
+ 'DarkTeal5': {'BACKGROUND': '#8bbabb', 'TEXT': '#464159', 'INPUT': '#6c7b95', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#464159',
+                     'BUTTON': ('#c7f0db', '#6c7b95'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                     'COLOR_LIST': ['#464159', '#6c7b95', '#8bbabb', '#c7f0db'], },
+ 'LightGrey4': {'BACKGROUND': '#faf5ef', 'TEXT': '#672f2f', 'INPUT': '#99b19c', 'TEXT_INPUT': '#672f2f', 'SCROLL': '#672f2f', 'BUTTON': ('#672f2f', '#99b19c'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#672f2f', '#99b19c', '#d7d1c9', '#faf5ef'], },
+ 'LightGreen7': {'BACKGROUND': '#99b19c', 'TEXT': '#faf5ef', 'INPUT': '#d7d1c9', 'TEXT_INPUT': '#000000', 'SCROLL': '#d7d1c9', 'BUTTON': ('#FFFFFF', '#99b19c'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#672f2f', '#99b19c', '#d7d1c9', '#faf5ef'],},
+ 'LightGrey5': {'BACKGROUND': '#d7d1c9', 'TEXT': '#672f2f', 'INPUT': '#99b19c', 'TEXT_INPUT': '#672f2f', 'SCROLL': '#672f2f', 'BUTTON': ('white', '#672f2f'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#672f2f', '#99b19c', '#d7d1c9', '#faf5ef'], },
+ 'DarkBrown3': {'BACKGROUND': '#a0855b', 'TEXT': '#f9f6f2', 'INPUT': '#f1d6ab', 'TEXT_INPUT': '#000000', 'SCROLL': '#f1d6ab', 'BUTTON': ('white', '#38470b'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#38470b', '#a0855b', '#f1d6ab', '#f9f6f2'], },
+ 'LightBrown11': {'BACKGROUND': '#f1d6ab', 'TEXT': '#38470b', 'INPUT': '#a0855b', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#38470b', 'BUTTON': ('#f9f6f2', '#a0855b'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#38470b', '#a0855b', '#f1d6ab', '#f9f6f2'],},
+ 'DarkRed': {'BACKGROUND': '#83142c', 'TEXT': '#f9d276', 'INPUT': '#ad1d45', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#ad1d45', 'BUTTON': ('#f9d276', '#ad1d45'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#44000d', '#83142c', '#ad1d45', '#f9d276'], },
+ 'DarkTeal6': {'BACKGROUND': '#204969', 'TEXT': '#fff7f7', 'INPUT': '#dadada', 'TEXT_INPUT': '#000000', 'SCROLL': '#dadada',
+                    'BUTTON': ('black', '#fff7f7'), 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                    'COLOR_LIST': ['#204969', '#08ffc8', '#dadada', '#fff7f7'],},
+ 'DarkBrown4': {'BACKGROUND': '#252525', 'TEXT': '#ff0000', 'INPUT': '#af0404', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#af0404', 'BUTTON': ('white', '#252525'),
+             'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+             'COLOR_LIST': ['#252525', '#414141', '#af0404', '#ff0000'], },
+ 'LightYellow': {'BACKGROUND': '#f4ff61', 'TEXT': '#27aa80', 'INPUT': '#32ff6a', 'TEXT_INPUT': '#000000', 'SCROLL': '#27aa80', 'BUTTON': ('#f4ff61', '#27aa80'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#27aa80', '#32ff6a', '#a8ff3e', '#f4ff61'],},
+ 'DarkGreen1': {'BACKGROUND': '#2b580c', 'TEXT': '#fdef96', 'INPUT': '#f7b71d', 'TEXT_INPUT': '#000000', 'SCROLL': '#f7b71d', 'BUTTON': ('#fdef96', '#2b580c'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#2b580c', '#afa939', '#f7b71d', '#fdef96'], },
+ 'LightGreen8': {'BACKGROUND': '#c8dad3', 'TEXT': '#63707e', 'INPUT': '#93b5b3', 'TEXT_INPUT': '#000000', 'SCROLL': '#63707e', 'BUTTON': ('white', '#63707e'),
+                'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                'COLOR_LIST': ['#63707e', '#93b5b3', '#c8dad3', '#f2f6f5'], },
+ 'DarkTeal7': {'BACKGROUND': '#248ea9', 'TEXT': '#fafdcb', 'INPUT': '#aee7e8', 'TEXT_INPUT': '#000000', 'SCROLL': '#aee7e8', 'BUTTON': ('black', '#fafdcb'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#248ea9', '#28c3d4', '#aee7e8', '#fafdcb'],},
+'DarkBlue8': {'BACKGROUND': '#454d66', 'TEXT': '#d9d872', 'INPUT': '#58b368', 'TEXT_INPUT': '#000000', 'SCROLL': '#58b368',
+              'BUTTON': ('black', '#009975'),
+              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                                      'COLOR_LIST': ['#009975', '#454d66', '#58b368', '#d9d872'], },
+ 'DarkBlue9': {'BACKGROUND': '#263859', 'TEXT': '#ff6768', 'INPUT': '#6b778d', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#6b778d', 'BUTTON': ('#ff6768', '#263859'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#17223b', '#263859', '#6b778d', '#ff6768'], },
+ 'DarkBlue10': {'BACKGROUND': '#0028ff', 'TEXT': '#f1f4df', 'INPUT': '#10eaf0', 'TEXT_INPUT': '#000000', 'SCROLL': '#10eaf0', 'BUTTON': ('#f1f4df', '#24009c'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#24009c', '#0028ff', '#10eaf0', '#f1f4df'],},
+ 'DarkBlue11': {'BACKGROUND': '#6384b3', 'TEXT': '#e6f0b6', 'INPUT': '#b8e9c0', 'TEXT_INPUT': '#000000', 'SCROLL': '#b8e9c0', 'BUTTON': ('#e6f0b6', '#684949'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#684949', '#6384b3', '#b8e9c0', '#e6f0b6'], },
+
+ 'DarkTeal8': {'BACKGROUND': '#71a0a5', 'TEXT': '#212121', 'INPUT': '#665c84', 'TEXT_INPUT': '#FFFFFF', 'SCROLL': '#212121', 'BUTTON': ('#fab95b', '#665c84'),
+                 'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                 'COLOR_LIST': ['#212121', '#665c84', '#71a0a5', '#fab95b']},
+ 'DarkRed1': {'BACKGROUND': '#c10000', 'TEXT': '#eeeeee', 'INPUT': '#dedede', 'TEXT_INPUT': '#000000', 'SCROLL': '#dedede', 'BUTTON': ('#c10000', '#eeeeee'),
+               'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+               'COLOR_LIST': ['#c10000', '#ff4949', '#dedede', '#eeeeee'],},
+ 'LightBrown5': {'BACKGROUND': '#fff591', 'TEXT': '#e41749', 'INPUT': '#f5587b', 'TEXT_INPUT': '#000000', 'SCROLL': '#e41749', 'BUTTON': ('#fff591', '#e41749'),
+              'PROGRESS': ('#01826B', '#D0D0D0'), 'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              'COLOR_LIST': ['#e41749', '#f5587b', '#ff8a5c', '#fff591']}
+                 }
 
 def ListOfLookAndFeelValues():
-    """ """
+    """
+    Get a list of the valid values to pass into your call to change_look_and_feel
+    :return: List[str] - list of valid string values
+    """
     return list(LOOK_AND_FEEL_TABLE.keys())
 
 
@@ -9978,8 +10498,10 @@ def ChangeLookAndFeel(index, force=False):
     Change the "color scheme" of all future PySimpleGUI Windows.
     The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
     There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-    The look and feel table itself has these indexe into the dictionary LOOK_AND_FEEL_TABLE
+    The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+    The original list was (prior to a major rework and renaming)... these names still work...
         SystemDefault
+        SystemDefaultForRead
         Material1
         Material2
         Reddit
@@ -10006,25 +10528,56 @@ def ChangeLookAndFeel(index, force=False):
         Kayak
         SandyBeach
         TealMono
+
+    In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+    The "Formula" is:
+    ["Dark" or "Light"] Color Number
+    Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+    The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+    Default = The default settings (only button color is different than system default)
+    Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
     :param index: (str) the name of the index into the Look and Feel table
     :param force: (bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors
     """
 
-    if sys.platform == 'darwin' and not force:
-        print('*** Changing look and feel is not supported on Mac platform ***')
-        return
+    # if sys.platform.startswith('darwin') and not force:
+    #     print('*** Changing look and feel is not supported on Mac platform ***')
+    #     return
 
-    # look and feel table
+    theme = index
+    # normalize available l&f values
+    lf_values = [item.lower() for item in list_of_look_and_feel_values()]
+
+    # option 1
+    opt1 = theme.replace(' ', '').lower()
+
+    # option 2 (reverse lookup)
+    optx = theme.lower().split(' ')
+    optx.reverse()
+    opt2 = ''.join(optx)
+
+    # search for valid l&f name
+    if opt1 in lf_values:
+        ix = lf_values.index(opt1)
+    elif opt2 in lf_values:
+        ix = lf_values.index(opt2)
+    else:
+        ix = randint(0,len(lf_values))
+        print('** Warning - {} Look and Feel value not valid. Change your ChangeLookAndFeel call. **'.format(index))
+        print('valid values are', list_of_look_and_feel_values())
+        print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
+
+    selection = list_of_look_and_feel_values()[ix]
 
     try:
-        colors = LOOK_AND_FEEL_TABLE[index]
+        colors = LOOK_AND_FEEL_TABLE[selection]
 
         SetOptions(background_color=colors['BACKGROUND'],
                    text_element_background_color=colors['BACKGROUND'],
                    element_background_color=colors['BACKGROUND'],
                    text_color=colors['TEXT'],
                    input_elements_background_color=colors['INPUT'],
-                   button_color=colors['BUTTON'],
+                   button_color=colors['BUTTON'] if not sys.platform.startswith('darwin') else None,
                    progress_meter_color=colors['PROGRESS'],
                    border_width=colors['BORDER'],
                    slider_border_width=colors['SLIDER_DEPTH'],
@@ -10037,14 +10590,46 @@ def ChangeLookAndFeel(index, force=False):
         print('valid values are', list_of_look_and_feel_values())
 
 
+def preview_all_look_and_feel_themes():
+    """
+    Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
+    They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+    """
+    web=False
+
+    WINDOW_BACKGROUND = 'lightblue'
+
+    def sample_layout():
+        return [[Text('Text element'), InputText('Input data here', size=(15, 1))],
+                [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(10, 15))]]
+
+    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=WINDOW_BACKGROUND)]]
+
+    names = list_of_look_and_feel_values()
+    names.sort()
+    row = []
+    for count, theme in enumerate(names):
+        change_look_and_feel(theme)
+        if not count % 9:
+            layout += [row]
+            row = []
+        row += [Frame(theme, sample_layout() if not web else [[T(theme)]] + sample_layout())]
+    if row:
+        layout += [row]
+
+    window = Window('Preview of all Look and Feel choices', layout, background_color=WINDOW_BACKGROUND)
+    window.read()
+    window.close()
+    del window
 
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
 def ObjToStringSingleObj(obj):
     """
-
-    :param obj:
-
+    Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+    Returns only the top-most object's variables instead of drilling down to dispolay more
+    :param obj: (Any) The object to display
+    returns (str) Formatted output of the object's values
     """
     if obj is None:
         return 'None'
@@ -10054,10 +10639,10 @@ def ObjToStringSingleObj(obj):
 
 def ObjToString(obj, extra='    '):
     """
-
-    :param obj:
+    Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+    :param obj: (Any) The object to display
     :param extra:  (Default value = '    ')
-
+    returns (str) Formatted output of the object's values
     """
     if obj is None:
         return 'None'
@@ -10541,6 +11126,7 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
     :param location: Location on screen to display
     :param location:
+
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
           text_color=text_color,
@@ -10585,22 +11171,21 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     """
     Display popup with OK and Cancel buttons
 
-    :param args:
+    :param *args:
     :param title:
-    :param button_color:
-    :param background_color:
-    :param text_color:
-    :param auto_close:
+    :param button_color: button color (foreground, background)
+    :param background_color: color of background
+    :param text_color: color of the text
+    :param auto_close:  (Default = False)
     :param auto_close_duration:
-    :param non_blocking:
-    :param icon:
-    :param line_width:
-    :param font:
-    :param no_titlebar:
-    :param grab_anywhere:
-    :param keep_on_top:
-    :param location:
-    :return:
+    :param non_blocking:  (Default = False)
+    :param icon: Icon to display
+    :param line_width: Width of lines in characters
+    :param font:  specifies the font family, size, etc
+    :param no_titlebar:  (Default = False)
+    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
+    :param location: Location on screen to display
+    :return: Union["OK", "Cancel", None]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color,
                  text_color=text_color,
@@ -10702,7 +11287,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'),
                FolderBrowse(initial_folder=initial_folder)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
@@ -10800,7 +11385,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'), browse_button],
-              [CloseButton('Ok', size=(6, 1), bind_return_key=True), CloseButton('Cancel', size=(6, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font,
@@ -10843,7 +11428,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
-              [CloseButton('Ok', size=(5, 1), bind_return_key=True), CloseButton('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     no_titlebar=no_titlebar,
@@ -11499,8 +12084,8 @@ def main():
     :return:
     """
     from random import randint
-
-    ChangeLookAndFeel('GreenTan')
+    # preview_all_look_and_feel_themes()
+    ChangeLookAndFeel('Light Green 1')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],

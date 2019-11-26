@@ -24,12 +24,12 @@ psg_classes  = list(zip([i.__name__ for i in psg_classes_], psg_classes_))
 for i in sorted(psg_classes):
     if 'Tk' in i[0] or 'TK' in i[0] or 'Element' == i[0]: # or 'Window' == i[0]:
         continue
-    print(f'### {i[0]} Element')
+    print(f'## {i[0]} Element')
     print('')
     print(f'<!-- <+{i[0]}.doc+> -->')
     print(f'<!-- <+{i[0]}.__init__+> -->')
     print('')
-    print('\n'.join([f"#### {j[0]}\n\n<!-- <+{i[0]}.{j[0]}+> -->\n" for j in inspect.getmembers(i[1]) if '_' not in j[0]  ]))
+    print('\n'.join([f"### {j[0]}\n\n<!-- <+{i[0]}.{j[0]}+> -->\n" for j in inspect.getmembers(i[1]) if not j[0].startswith('_')  ]))
 
 print('\n------------------------- Functions start here -------------------------\n')
 

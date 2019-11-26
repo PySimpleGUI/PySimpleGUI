@@ -38,7 +38,7 @@ HOW DO I INSERT IMAGES ???
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.5.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.6.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)
@@ -69,6 +69,8 @@ pip3 install pysimplegui
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('DarkAmber')	# Add a touch of color
 # All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -90,7 +92,9 @@ window.close()
 
 and returns the value input as well as the button clicked.
 
-![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
+
+
 
 ### Any Questions?  It's that simple.
 
@@ -106,7 +110,6 @@ and returns the value input as well as the button clicked.
 * sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?
 * into Machine Learning and are sick of the command line?
 * an IT guy/gal that has written some cool tools but due to corporate policies are unable to share unless an EXE file?
-* wanting to distribute your Python code to Windows users as a single .EXE file that launches straight into a GUI, much like a WinForms app?
 * want to share your program with your friends or families (that aren't so freakish that they have Python running)
 * wanting to run a program in your system tray?
 * a teacher wanting to teach your students how to program using a GUI?
@@ -141,9 +144,10 @@ and returns the value input as well as the button clicked.
 
 #### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
 
-## GUI Development does not have to be difficult nor painful.  It can be FUN
+## GUI Development does not have to be difficult nor painful.  It can be (and is) FUN
 
 #### What users are saying about PySimpleGUI
+
 ***(None of these comments were solicited & are not paid endorsements - other than a huge thank you they received!)***
 
 "I've been working to learn PyQT for the past week in my off time as an intro to GUI design and how to apply it to my existing scripts... Took me ~30 minutes to figure out PySimpleGUI and get my scripts working with a GUI."
@@ -162,7 +166,7 @@ and returns the value input as well as the button clicked.
 
 "I love PySimpleGUI! I've been teaching it in my Python classes instead of Tkinter."
 
-
+"I wish PySimpleGUI was available for every friggin programming language"
 
 
 ### START HERE - User Manual with Table of Contents
@@ -184,7 +188,7 @@ and returns the value input as well as the button clicked.
 
 [Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
 
-[Lots of screenshots](https://github.com/PySimpleGUI/PySimpleGUI/issues/1)
+[Lots of screenshots](https://www.bountysource.com/issues/60766522-screen-shots)
 
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
@@ -304,6 +308,7 @@ This makes the coding process extremely quick and the amount of code very small
 
 ```python
 import PySimpleGUI as sg
+sg.change_look_and_feel('DarkAmber')   # Add a little color to your windows
 # All the stuff inside your window. This is the PSG magic code compactor...
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -313,14 +318,16 @@ layout = [  [sg.Text('Some text on Row 1')],
 window = sg.Window('Window Title', layout)
 # Event Loop to process "events"
 while True:             
-    event, values = window.Read()
+    event, values = window.read()
     if event in (None, 'Cancel'):
         break
 
-window.Close()
+window.close()
 ```
 
-![image](https://user-images.githubusercontent.com/13696193/61077153-cdfc0b00-a3eb-11e9-9e93-d6ec2ffb442a.png)
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
+
+
 
 You gotta admit that the code above is a lot more "fun" looking that tkinter code you've studied before.  Adding stuff to your GUI is ***trivial***.  You can clearly see the "mapping" of those 3 lines of code to specific Elements laid out in a Window.   It's not a trick.  It's how easy it is to code in PySimpleGUI.  With this simple concept comes the ability to create any window layout you wish.  There are parameters to move elements around inside the window should you need more control.
 
@@ -840,6 +847,13 @@ Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 wind
 
 
 ![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
+
+Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `change_look_and_feel` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
+
+In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
+
+![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 

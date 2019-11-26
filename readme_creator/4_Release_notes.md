@@ -834,7 +834,31 @@ Let's hope it doesn't all blow up in our faces!
 * Fix in popup_get_files when 0 length of filename
 * Fix in Window.SetIcon - properly sets icon using file with Linux now. Was always defaulting
 
+## 4.6 PySimpleGUI 16-Nov-2019
+
+* Themes!!!
+* Added a LOT of Look and Feel themes. Total < 100 now
+* Doctring comments for some missing functions
+* PEP8 bindings for button_rebound_collback, set_tooltip, set_focus
+* Spin Element Update - shortened code
+* Allow tk.PhotoImage objeft to be passed into Image.update as the data
+* DrawRectangle - added line_width parameter. Defaults to 1
+* Fix for Slider - was only setting the trough color if the background color was being set_focus
+* Added a deiconify call to Window.Normal so it can be used to restore a window that has been minimized.  Not working on Linux
+* Combo - Fix for not allowing a "0" to be specified as the default
+* Table - Saving the Frame that contains a table in the member variable table_frame.  This will enable the frame to be changed to expandable in the future so that the table can be resized as a window expands.
+* LOTS AND LOTS of Look and Feel themes!!!!
+* Added SystemDefaultForReal to look and feel that will prodce 100% not styled windows
+* Changed the "gray" strings in look and feel table into RGB strtings (e.g. gray25 = #404040). No all graphics subsystems
+* Removed Mac restriction from Look and Feel setting changes.  All color settings are changed EXCEPT for the button color now on a Mac
+* "Fuzzy Logic" Look and Feel Theme Selection - No longer have to memorize every character and get the case right. Now can get "close enough" and it'll working
+* New function - preview_all_look_and_feel_themes.  Causes a window to be shown that shows all of the currently available look and feel themes
+* Removed use of CloseButton in popup get file, folder, text.  Was causing problems where input fields stopped working.  See bug on GitHub
+
+
+
 ### Upcoming
+
 Make suggestions people!  Future release features
 
 

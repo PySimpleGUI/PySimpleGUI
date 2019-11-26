@@ -13,7 +13,7 @@ for i in psg_funcs:
         continue
     print('')
     print(f'<!-- <+func.{i[0]}+> -->')
-    # print('\n'.join(['\t' +  j[0] for j in inspect.getmembers(i[1]) if '_' not in j[0]  ]))
+    print('\n'.join(['\t' +  j[0] for j in inspect.getmembers(i[1]) if not j[0].startswith('_')]))
 
 sg.Popup()
 sg.Button()
