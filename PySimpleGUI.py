@@ -1,8 +1,8 @@
 #!/usr/bin/python3
+from logging import warning
 
-version = __version__ = "4.6.0.54 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!"
+version = __version__ = "4.6.0.66 Unreleased - New options for popup_scrolled, new InputText parmater - use_readonly_for_disable, port variable, ttk Button for Macs!!, options for setting theme and forcing ttk buttons"
 port = 'PySimpleGUI'
-
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
 #  88    `8b          88.    "'                        88          d8'   `88 88     88 88
@@ -13,6 +13,7 @@ port = 'PySimpleGUI'
 #                 .88                         88
 #                 .88                         88
 #             d8888P                          dP
+
 
 
 
@@ -115,6 +116,7 @@ else: # Do NOT remove any of these regardless of what your IDE or lint says. The
     import tkColorChooser
     import tkFont
     import ScrolledText
+
 
 import datetime
 import time
@@ -251,12 +253,27 @@ RELIEF_RIDGE = 'ridge'
 RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
+# These are the spepific themes that tkinter offers
+THEME_DEFAULT = 'default'
+THEME_WINNATIVE = 'winnative'
+THEME_CLAM = 'clam'
+THEME_ALT = 'alt'
+THEME_CLASSIC = 'classic'
+THEME_VISTA = 'vista'
+THEME_XPNATIVE = 'xpnative'
+THEME_LIST = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
+
+# The theme to use by default for all windows
+DEFAULT_TTK_THEME = THEME_DEFAULT
+USE_TTK_BUTTONS = None
+
+
 DEFAULT_PROGRESS_BAR_COLOR = (GREENS[0], '#D0D0D0')  # a nice green progress bar
 DEFAULT_PROGRESS_BAR_SIZE = (20, 20)  # Size of Progress Bar (characters for length, pixels for width)
 DEFAULT_PROGRESS_BAR_BORDER_WIDTH = 1
 DEFAULT_PROGRESS_BAR_RELIEF = RELIEF_GROOVE
 PROGRESS_BAR_STYLES = ('default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative')
-DEFAULT_PROGRESS_BAR_STYLE = 'default'
+DEFAULT_PROGRESS_BAR_STYLE = DEFAULT_TTK_THEME
 DEFAULT_METER_ORIENTATION = 'Horizontal'
 DEFAULT_SLIDER_ORIENTATION = 'vertical'
 DEFAULT_SLIDER_BORDER_WIDTH = 1
@@ -298,15 +315,6 @@ TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
 
-THEME_DEFAULT = 'default'
-THEME_WINNATIVE = 'winnative'
-THEME_CLAM = 'clam'
-THEME_ALT = 'alt'
-THEME_CLASSIC = 'classic'
-THEME_VISTA = 'vista'
-THEME_XPNATIVE = 'xpnative'
-
-# DEFAULT_METER_ORIENTATION = 'Vertical'
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
 
@@ -1937,7 +1945,7 @@ class StatusBar(Element):
 
 class TKProgressBar():
     """ """
-    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_PROGRESS_BAR_STYLE,
+    def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_TTK_THEME,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
         """
@@ -2190,7 +2198,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None,
+                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, use_ttk_buttons=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
@@ -2209,7 +2217,8 @@ class Button(Element):
         :param border_width: (int) width of border around button in pixels
         :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
         :param auto_size_button: (bool) if True the button size is sized to fit the text
-        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs
+        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :param use_ttk_buttons: (bool) True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param bind_return_key: (bool) If True the return key will cause this button to be pressed
         :param focus: (bool) if True, initial focus will be put on this button
@@ -2240,6 +2249,11 @@ class Button(Element):
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.UseTtkButtons = use_ttk_buttons
+        if sys.platform.startswith('darwin'):
+            self.UseTtkButtons = True
+        if image_filename or image_data:
+            self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -2641,7 +2655,7 @@ class ProgressBar(Element):
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
         self.BarColor = bar_color
-        self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
+        self.BarStyle = style if style else DEFAULT_TTK_THEME
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
@@ -3689,7 +3703,7 @@ class TabGroup(Element):
         :param enable_events: (bool) If True then switching tabs will generate an Event
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :param border_width: (int)  width of border around element in pixels
-        :param theme: (enum) tabs can be 'themed'. These are the choices (some may not work on your OS): THEME_DEFAULT THEME_WINNATIVE THEME_CLAM THEME_ALT THEME_CLASSIC THEME_VISTA THEME_XPNATIVE
+        :param theme: (enum) DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
         :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param tooltip: (str) text, that will appear when mouse hovers over the element
         :param visible: (bool) set visibility state of the element
@@ -3708,7 +3722,6 @@ class TabGroup(Element):
         self.Widget = None                  # type: ttk.Notebook
         self.TabCount = 0
         self.BorderWidth = border_width
-        self.Theme = theme
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
@@ -5189,7 +5202,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 finalize=False, element_justification='left', theme=THEME_DEFAULT, use_ttk_buttons=False, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, metadata=None):
         """
         :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
         :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
@@ -5225,6 +5238,8 @@ class Window:
         :param debugger_enabled: (bool) If True then the internal debugger will be enabled
         :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :param element_justification: (str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
+        :param ttk_theme: (str) Set the tkinter ttk "theme" of the window.  Default = DEFAULT_TTK_THEME.  Sets all ttk widgets to this theme as their default
+        :param use_ttk_buttons: (bool) Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
         :param metadata: (Any) User metadata that can be set to ANYTHING
         """
 
@@ -5296,8 +5311,8 @@ class Window:
         self.ElementJustification = element_justification
         self.FocusSet = False
         self.metadata = metadata
-        self.Theme = theme
-        self.UseTtkButtons = use_ttk_buttons
+        self.TtkTheme = ttk_theme or DEFAULT_TTK_THEME
+        self.UseTtkButtons = use_ttk_buttons if use_ttk_buttons is not None else USE_TTK_BUTTONS
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -7872,7 +7887,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
             # -------------------------  BUTTON element non-ttk version  ------------------------- #
-            elif element_type == ELEM_TYPE_BUTTON and (not sys.platform.startswith('darwin') and not toplevel_form.UseTtkButtons):
+            elif (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is False) or \
+                 (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is not True and toplevel_form.UseTtkButtons is not True):
                 element = element  # type: Button
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
@@ -7897,12 +7913,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 bd = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
                     tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
-                                                          command=element.ButtonCallBack, justify=tk.LEFT,
-                                                          bd=bd, font=font)
+                                                          command=element.ButtonCallBack, justify=tk.CENTER, bd=bd, font=font)
                 else:
                     tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
-                                                          justify=tk.LEFT,
-                                                          bd=bd, font=font)
+                                                          justify=tk.CENTER, bd=bd, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -7954,8 +7968,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  BUTTON element ttk version ------------------------- #
-            elif element_type == ELEM_TYPE_BUTTON and (sys.platform.startswith('darwin') or toplevel_form.UseTtkButtons):
-                print('USING TTK BUTTONS')
+            elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
@@ -7977,7 +7990,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = toplevel_form.ButtonColor
                 else:
                     bc = DEFAULT_BUTTON_COLOR
-                print(f'TTK Button color = {bc}')
                 bd = element.BorderWidth
                 if btype != BUTTON_TYPE_REALTIME:
                     tkbutton = element.Widget = ttk.Button(tk_row_frame, text=btext, width=width, command=element.ButtonCallBack)
@@ -7988,7 +8000,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 style_name = str(element.Key) + 'custombutton.TButton'
                 button_style = ttk.Style()
-                button_style.theme_use(toplevel_form.Theme)
+                button_style.theme_use(toplevel_form.TtkTheme)
                 # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                 #     button_style.configure(style_name, background=element.BackgroundColor)
                 # if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
@@ -7996,7 +8008,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 button_style.configure(style_name, font=font)
 
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
-                    print(f'Configuring button color = {bc[0], bc[1]}')
                     button_style.configure(style_name, foreground=bc[0], background=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     button_style.configure(style_name, foreground=bc[0])
@@ -8013,29 +8024,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     button_style.configure(style_name, wraplength=wraplen)  # set wrap to width of widget
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
-                if element.ImageFilename:  # if button has an image on it
-                    button_style.configure(style_name, highlightthickness=0)
-                    photo = tk.PhotoImage(file=element.ImageFilename)
-                    if element.ImageSubsample:
-                        photo = photo.subsample(element.ImageSubsample)
-                    if element.ImageSize != (None, None):
-                        width, height = element.ImageSize
-                    else:
-                        width, height = photo.width(), photo.height()
-                    button_style.configure(style_name, image=photo, compound=tk.CENTER, width=width, height=height)
-                    button_style.image = photo
-                if element.ImageData:  # if button has an image on it
-                    button_style.configure(style_name, highlightthickness=0)
-                    photo = tk.PhotoImage(data=element.ImageData)
-                    if element.ImageSubsample:
-                        photo = photo.subsample(element.ImageSubsample)
-                    if element.ImageSize != (None, None):
-                        width, height = element.ImageSize
-                    else:
-                        width, height = photo.width(), photo.height()
-                    button_style.configure(style_name, image=photo, compound=tk.CENTER, width=width, height=height)
-                    tkbutton.image = photo
-
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     tkbutton.pack_forget()
@@ -8183,13 +8171,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 s = ttk.Style()
-                s.theme_use(toplevel_form.Theme)
+                s.theme_use(toplevel_form.TtkTheme)
                 # s.theme_use('default')
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
                     style_name = str(element.Key) +'.TCombobox'
                     combostyle = ttk.Style()
-                    combostyle.theme_use(toplevel_form.Theme)
+                    combostyle.theme_use(toplevel_form.TtkTheme)
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
 
@@ -8407,7 +8395,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKProgressBar = TKProgressBar(tk_row_frame, element.MaxValue, progress_length, progress_width,
                                                       orientation=direction, BarColor=bar_color,
                                                       border_width=element.BorderWidth, relief=element.Relief,
-                                                      style=toplevel_form.Theme, key=element.Key)
+                                                      style=toplevel_form.TtkTheme, key=element.Key)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
@@ -8697,7 +8685,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element=element     # type: TabGroup
                 custom_style = str(element.Key) + 'customtab.TNotebook'
                 style = ttk.Style(tk_row_frame)
-                style.theme_use(toplevel_form.Theme)
+                style.theme_use(toplevel_form.TtkTheme)
                 if element.TabLocation is not None:
                     position_dict = {'left': 'w', 'right': 'e', 'top': 'n', 'bottom': 's', 'lefttop': 'wn',
                                      'leftbottom': 'ws', 'righttop': 'en', 'rightbottom': 'es', 'bottomleft': 'sw',
@@ -8864,7 +8852,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ------ Do Styling of Colors -----
                 style_name = str(element.Key) + 'customtable.Treeview'
                 table_style = ttk.Style()
-                table_style.theme_use(toplevel_form.Theme)
+                table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
@@ -8975,7 +8963,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ----- configure colors -----
                 style_name = str(element.Key) + '.Treeview'
                 tree_style = ttk.Style()
-                tree_style.theme_use(toplevel_form.Theme)
+                tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, background=element.BackgroundColor,
                                           fieldbackground=element.BackgroundColor)
@@ -9644,7 +9632,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, use_ttk_buttons=None, ttk_theme=None):
     """
 
     :param icon: filename of icon used for taskbar and title bar
@@ -9680,6 +9668,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :param window_location:  (Default = (None))
     :param error_button_color:  (Default = (None))
     :param tooltip_time:  time in milliseconds to wait before showing a tooltip. Default is 400ms
+    :param use_ttk_buttons: (bool) if True will cause all buttons to be ttk buttons
+    :param ttk_theme:  (str) Theme to use with ttk widgets.  Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
 
     """
     global DEFAULT_ELEMENT_SIZE
@@ -9714,6 +9704,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_INPUT_TEXT_COLOR
     global DEFAULT_TOOLTIP_TIME
     global DEFAULT_ERROR_BUTTON_COLOR
+    global DEFAULT_TTK_THEME
+    global USE_TTK_BUTTONS
     # global _my_windows
 
     if icon:
@@ -9757,7 +9749,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
         DEFAULT_PROGRESS_BAR_BORDER_WIDTH = progress_meter_border_depth
 
     if progress_meter_style != None:
-        DEFAULT_PROGRESS_BAR_STYLE = progress_meter_style
+        warnings.warn('You can no longer set a progress bar style. All ttk styles must be the same for the window', UserWarning)
+        # DEFAULT_PROGRESS_BAR_STYLE = progress_meter_style
 
     if progress_meter_relief != None:
         DEFAULT_PROGRESS_BAR_RELIEF = progress_meter_relief
@@ -9815,6 +9808,14 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if error_button_color != (None, None):
         DEFAULT_ERROR_BUTTON_COLOR = error_button_color
+
+    if ttk_theme is not None:
+        DEFAULT_TTK_THEME = ttk_theme
+
+    if use_ttk_buttons is not None:
+        USE_TTK_BUTTONS = use_ttk_buttons
+
+
 
     return True
 
@@ -12297,7 +12298,7 @@ def main():
         [Column([[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]]), ],
         # [Frame('Graphing Group', frame6)],
         [TabGroup([[tab1, tab2]],key='_TAB_GROUP_', background_color='green',selected_title_color='red', title_color='blue' )],
-        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+', style=theme), Button('Button'), B('Normal', metadata='my metadata'),
+        [ProgressBar(max_value=800, size=(60, 25), key='+PROGRESS+'), Button('Button'), B('Normal', metadata='my metadata'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -12311,7 +12312,7 @@ def main():
                     keep_on_top=True,
                     element_justification='left',
                     metadata='My window metadata',
-                    use_ttk_buttons=True
+                    use_ttk_buttons=True, ttk_theme=None
                     # icon=PSG_DEBUGGER_LOGO
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
