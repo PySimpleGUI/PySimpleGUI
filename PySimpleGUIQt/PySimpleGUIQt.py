@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.1 UnReleased"
+version = __version__ = "0.30.0.53 UnReleased - Tab positioning added to TabGround, added port variable, BAD bug in Output Element, error check for element re-use, Multiline better color support"
+
+port = 'PySimpleGUIQt'
 
 import sys
 import types
@@ -9,6 +11,7 @@ import pickle
 import base64
 import calendar
 from random import randint
+import warnings
 
 
 ######           #####                                       #####   #     #  ###   #####
@@ -30,6 +33,7 @@ import PySide2.QtCore as QtCore
 import PySide2.QtWidgets as QtWidgets
 
 using_pyqt5 = False
+
 
 
 """
@@ -384,6 +388,7 @@ class Element():
             style += create_style_from_font(font)
         if text_color is not None:
             style += ' color: %s;' % text_color
+            self.TextColor = text_color
         if background_color is not None:
             style += 'background-color: %s;' % background_color
         if add_brace:
@@ -977,13 +982,34 @@ class Multiline(Element):
         _element_callback_quit_mainloop(self)
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, visible=None):
+        """
+        Changes some of the settings for the Multiline Element. Must call `Window.read` or `Window.finalize` or "finalize" the window using finalize parameter prior
+
+        :param value: (str) new text to display
+        :param disabled: (bool) disable or enable state of the element
+        :param append: (bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.
+        :param background_color: (str) color of background
+        :param text_color: (str) color of the text
+        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param text_color_for_value: (str) color of the new text being added
+        :param visible: (bool) set visibility state of the element
+        :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
+        """
+
         if value is not None and not append:
             self.DefaultText = value
             self.QT_TextEdit.setText(str(value))
         elif value is not None and append:
             self.DefaultText = value
-            self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
+            # self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value)) # original code
+            # self.QT_TextEdit.append(str(value))   # can't use because adds a newline
+            if text_color_for_value is not None:
+                self.QT_TextEdit.setTextColor(text_color_for_value)
+                self.QT_TextEdit.insertPlainText(str(value))    # code that retains color for a single update
+                self.QT_TextEdit.setTextColor(self.TextColor)
+            else:
+                self.QT_TextEdit.insertPlainText(str(value))    # code that retains color for a single update
         if disabled == True:
             self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
@@ -1149,8 +1175,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.Widget = self.QT_TextBrowser = None            # type: QTextBrowser
-
-        tsize = size_px if size_px != (None,None) else convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT,height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE) if size[0] is not None else size
+        tsize = size_px if size_px != (None,None) else _convert_tkinter_size_to_Qt(size, scaling=DEFAULT_PIXELS_TO_CHARS_SCALING_MULTILINE_TEXT,height_cutoff=DEFAULT_PIXEL_TO_CHARS_CUTOFF_MULTILINE) if size[0] is not None else size
 
         super().__init__(ELEM_TYPE_OUTPUT, size=(None, None), background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, size_px=tsize, metadata=metadata)
@@ -3158,6 +3183,33 @@ class Window:
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
+            if type(element) == list:
+                PopupError('Error creating layout',
+                      'Layout has a LIST instead of an ELEMENT',
+                      'This means you have a badly placed ]',
+                      'The offensive list is:',
+                      element,
+                      'This list will be stripped from your layout'
+                      )
+                continue
+            elif callable(element) and not isinstance(element, Element):
+                PopupError('Error creating layout',
+                      'Layout has a FUNCTION instead of an ELEMENT',
+                      'This means you are missing () from your layout',
+                      'The offensive list is:',
+                      element,
+                      'This item will be stripped from your layout')
+                continue
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE A LAYOUT! You must not attempt this kind of re-use ***', UserWarning)
+                PopupError('Error creating layout',
+                      'The layout specified has already been used',
+                      'You MUST start witha "clean", unused layout every time you create a window',
+                      'The offensive Element = ',
+                      element,
+                      'and has a key = ', element.Key,
+                      'This item will be stripped from your layout')
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -3167,6 +3219,15 @@ class Window:
     # ------------------------- Add Multiple Rows to Form ------------------------- #
     def AddRows(self, rows):
         for row in rows:
+            try:
+                iter(row)
+            except TypeError:
+                PopupError('Error creating layout',
+                      'Your row is not an iterable (e.g. a list)',
+                      'The offensive row = ',
+                      row,
+                      'This item will be stripped from your layout')
+                continue
             self.AddRow(*row)
 
     def Layout(self, rows):
@@ -7977,7 +8038,7 @@ def main():
          Frame('Variable Choice Group', frame4, title_color='blue'), Stretch()],
         [Frame('Structured Data Group', frame5, title_color='red'), ],
         # [Frame('Graphing Group', frame6)],
-        [TabGroup([[tab1, tab2]],title_color='black', tab_location='bottom')],
+        [TabGroup([[tab1, tab2]],title_color='black')],
         [ProgressBar(max_value=600, start_value=400, size=(600, 25), key='+PROGRESS+'),
          Text('', key='_PROGTEXT_'), Stretch(),
          ButtonMenu('&Menu', ['Menu', ['&Pause Graph', 'Menu item::optional_key']], key='_MENU_',
