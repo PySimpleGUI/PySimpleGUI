@@ -3,35 +3,28 @@ import winsound
 import sys
 import PySimpleGUI as sg
 
-
 if not sys.platform.startswith('win'):
     sg.popup_error('Sorry, you gotta be on Windows')
     sys.exit(0)
 
+# .WAV files that contain your click sounds. Put full path if not in your application's folder
+click_sound = r'ButtonClick.wav'
+click_sound1 = r'ButtonClick1.wav'
 
-# sg.change_look_and_feel('Dark')
-# sg.set_options(element_padding=(0,0))
+sg.change_look_and_feel('Dark Blue 3')      # because gray windows are boring
 
-layout = [
-    [sg.Button('Start', button_color=('white', 'black'), key='start'),
-     sg.Button('Stop', button_color=('white', 'black'), key='stop'),
-     sg.Button('Reset', button_color=('white', 'firebrick3'), key='reset'),
-     sg.Button('Submit', button_color=('white', 'springgreen4'), key='submit')]
-]
+# Your window's layout
+layout = [  [sg.Text('Click a button to hear a click')],
+            [sg.Button('Click'), sg.Button('Another Click')]]
+# Create your Window
+window = sg.Window("Button Click", layout)
 
-window = sg.Window("Button Click", layout, finalize=True,
-         default_element_size=(12, 1), text_justification='r',
-         auto_size_text=False, auto_size_buttons=False,
-         default_button_element_size=(12, 1), use_default_focus=False )
-
-window['submit'].update(disabled=True)
-
-recording = have_data = False
-while True:
-    event, values = window.read(timeout=100)
+while True:             # The Event Loops
+    event, values = window.read()
     if event is None:
         break
-    if event != sg.TIMEOUT_KEY:
-      winsound.PlaySound("ButtonClick.wav", 1)
-
+    if event == 'Click':
+        winsound.PlaySound(click_sound, 1)
+    elif event == 'Another Click':
+        winsound.PlaySound(click_sound1, 1)
 window.close()
