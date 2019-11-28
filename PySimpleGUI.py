@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.7.0 Released 26-Nov-2019 Welcome back Macs!"
+version = __version__ = "4.7.1.1 Unreleased! included 4.7.1 patch"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -126,6 +126,8 @@ import inspect
 # from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 from random import randint
 import warnings
+warnings.simplefilter('always', UserWarning)
+
 
 g_time_start = 0
 g_time_end = 0
@@ -2448,13 +2450,16 @@ class Button(Element):
             if text is not None:
                 self.TKButton.configure(text=text)
                 self.ButtonText = text
-            if sys.platform == 'darwin' and button_color != (None, None):
-                print('Button.Update *** WARNING - Button colors are not supported on the Mac***')
             if button_color != (None, None):
-                self.TKButton.config(foreground=button_color[0], background=button_color[1], activebackground=button_color[1])
+                if self.UseTtkButtons:
+                    style_name = str(self.Key) + 'custombutton.TButton'
+                    button_style = ttk.Style()
+                    button_style.configure(style_name, foreground=button_color[0], background=button_color[1] )
+                else:
+                    self.TKButton.config(foreground=button_color[0], background=button_color[1], activebackground=button_color[1])
                 self.ButtonColor = button_color
-        except:
-            return
+        except Exception as e:
+            warnings.warn('Error updating button color with {}'.format(button_color))
         if disabled == True:
             self.TKButton['state'] = 'disabled'
         elif disabled == False:
@@ -5424,7 +5429,7 @@ class Window:
             except TypeError:
                 PopupError('Error creating layout',
                       'Your row is not an iterable (e.g. a list)',
-                        f'Instead of a list, the type found was {type(row)}',
+                        'Instead of a list, the type found was {}'.format(type(row)),
                       'The offensive row = ',
                       row,
                       'This item will be stripped from your layout')
@@ -7890,6 +7895,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is False) or \
                  (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is not True and toplevel_form.UseTtkButtons is not True):
                 element = element  # type: Button
+                element.UseTtkButtons = False           # indicate that ttk button was not used
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 element.Location = (row_num, col_num)
@@ -7970,6 +7976,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  BUTTON element ttk version ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
+                element.UseTtkButtons = True           # indicate that ttk button was used
                 stringvar = tk.StringVar()
                 element.TKStringVar = stringvar
                 element.Location = (row_num, col_num)
@@ -8001,10 +8008,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 style_name = str(element.Key) + 'custombutton.TButton'
                 button_style = ttk.Style()
                 button_style.theme_use(toplevel_form.TtkTheme)
-                # if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                #     button_style.configure(style_name, background=element.BackgroundColor)
-                # if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
-                #     button_style.configure(style_name, foreground=element.TextColor)
                 button_style.configure(style_name, font=font)
 
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
