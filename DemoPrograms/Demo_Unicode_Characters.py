@@ -34,7 +34,7 @@ layout = [  [sg.Text('Unicode Characters Demo', font='Def 16')],
                        [sg.B('Display Chars'), sg.T('Display Font Size'),  sg.Spin(list(range(10,25)), initial_value=18, font='Any 14', key='-FONTSIZE-')],
                       ])],
             [sg.Multiline(size=(30,10), font='Any 18',key='-MLINE-'+sg.WRITE_ONLY_KEY)],
-            [sg.B(UP),sg.B(UP), sg.B(DOWN), sg.B(LEFT), sg.B(RIGHT), sg.B('Exit')]  ]
+            [sg.B(UP), sg.B(DOWN), sg.B(LEFT), sg.B(RIGHT), sg.B('Exit')]  ]
 
 window = sg.Window('Window Title', layout)
 
