@@ -855,6 +855,45 @@ Let's hope it doesn't all blow up in our faces!
 * New function - preview_all_look_and_feel_themes.  Causes a window to be shown that shows all of the currently available look and feel themes
 * Removed use of CloseButton in popup get file, folder, text.  Was causing problems where input fields stopped working.  See bug on GitHub
 
+## 4.7.0 PySimpleGUI 26-Nov-2019
+
+TTK WIDGETS!  Welcome back Mac Users!
+
+* Significant progress on using ttk widgets properly
+* Added ttk buttons - MACS can use colored buttons again!!  (Big damned deal)
+* The existing ttk based Elements are now correctly being colored and styled
+* Ability to set the ttk theme for individual windows or system-wide, but no longer on a single Element basis
+* Ability to use ttk buttons on a selective basis for non-Mac systems
+* port variable == 'PySimpleGUI' so that your code can determine which PySimpleGUI is running
+* InputText new parameter - use_readonly_for_dsiable defaults to True enables user to switch between a true disable and readonly setting when disabling
+* Rework of progress bar's ttk style name
+* Button - new parameter use_ttk_buttons - True = force use, False = force not used, None = let PySimpleGUI determine use
+* Macs are forced to use ttk buttons EXCEPT when an image is added to the button
+* TabGroup - can no longer set ttk theme directly
+* Window new parameters
+	* ttk_theme - sets the theme for the entire window
+	* use_ttk_buttons - sets ttk button use policy for the entire window
+* More Window layout error checking - checks that rows are iterables (a list). If not, an error popup is shown to help user find error
+* Fixed progessbars not getting a key auto assigned to theme
+* New Window method - send_to_back (SendToBack) - sends the window to the bottom of stack of all windows
+* Fixed normal tk button text - was left justifying instead of centering
+* Fixed table colors - wasn't setting correctly due to bad ttk styling
+* Fixed tree ccolors - wasn't setting correctly due to bad ttk styling
+* TabGroups now function correction with colors including currently selected tab color and background color of non-tab area (next to the tabs)
+* New set_options parameters
+	* use_ttk_buttons - sets system-wide policy for using ttk buttons. Needed for things like popups to work with ttk buttons
+	* ttk_theme - sets system-wide tth theme
+	* progress_meter_style parameter no longer used and generates a warning
+* list_of_look_and_feel_values now sorts the list prior to returning
+* Removed Mac restriction on Button colors from look and feel calls. Now can set button colors to anything!
+* popup_scrolled new parameters - all popups need more parameters but these are for sure needed for the scrolled popup
+	* background_color
+	* text_color
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+	* font
+* Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
 
 
 ### Upcoming
