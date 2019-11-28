@@ -6126,6 +6126,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.SaveToDisk+> -->
 
+### SendToBack
+
+<!-- <+Window.SendToBack+> -->
+
 ### SetAlpha
 
 <!-- <+Window.SetAlpha+> -->
@@ -6282,6 +6286,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.save_to_disk+> -->
 
+### send_to_back
+
+<!-- <+Window.send_to_back+> -->
+
 ### set_alpha
 
 <!-- <+Window.set_alpha+> -->
@@ -6394,3 +6402,4 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.show_debugger_window+> -->
 <!-- <+func.sprint+> -->
 <!-- <+func.test+> -->
+<!-- <+func.popup_ok_cancel+> -->

@@ -1,7 +1,7 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
@@ -10,12 +10,12 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.6.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.7.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.28.1-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.33.0-orange.svg?longCache=true&style=for-the-badge)
 
 # PySimpleGUI User's Manual
 
@@ -142,6 +142,8 @@ and returns the value input as well as the button clicked.
 [Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
 
 [COOKBOOK!](http://Cookbook.PySimpleGUI.org)
+
+[Trinket an online Cookbook](http://Trinket.PySimpleGUI.org)
 
 [Brief Tutorial](http://Tutorial.PySimpleGUI.org)
 
@@ -1413,12 +1415,18 @@ want, just like a print statement.
 PopupScrolled(args,
     title=None,
     button_color=None,
+    background_color=None,
+    text_color=None,
     yes_no=False,
     auto_close=False,
     auto_close_duration=None,
     size=(None, None),
     location=(None, None),
-    non_blocking=False)
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
@@ -1979,7 +1987,7 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', key='_OUTPUT_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
@@ -4852,7 +4860,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
 
     if win2_active:
         ev2, vals2 = win2.Read(timeout=100)
@@ -4887,7 +4895,7 @@ while True:
         layout2 = [[sg.Text('Window 2')],       # note must create a layout from scratch every time. No reuse
                    [sg.Button('Exit')]]
 
-        win2 = sg.Window('Window 2', layout)
+        win2 = sg.Window('Window 2', layout2)
         while True:
             ev2, vals2 = win2.Read()
             if ev2 is None or ev2 == 'Exit':
@@ -5345,6 +5353,7 @@ Button(button_text="",
     size=(None, None),
     auto_size_button=None,
     button_color=None,
+    use_ttk_buttons=None,
     font=None,
     bind_return_key=False,
     focus=False,
@@ -5374,7 +5383,8 @@ Parameter Descriptions:
 |border_width|(int) width of border around button in pixels|
 |size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
 |auto_size_button|(bool) if True the button size is sized to fit the text|
-|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Note - Does not always work on Macs|
+|button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".|
+|use_ttk_buttons|(bool) True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |bind_return_key|(bool) If True the return key will cause this button to be pressed|
 |focus|(bool) if True, initial focus will be put on this button|
@@ -8300,6 +8310,7 @@ InputText(default_text="",
     key=None,
     focus=False,
     pad=None,
+    use_readonly_for_disable=True,
     right_click_menu=None,
     visible=True,
     metadata=None)
@@ -8324,6 +8335,7 @@ Parameter Descriptions:
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |focus|(bool) Determines if initial focus should go to this element.|
 |pad|(int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))|
+|use_readonly_for_disable|(bool) If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'|
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element (Default = True)|
 |metadata|(Any) User metadata that can be set to ANYTHING|
@@ -11562,7 +11574,7 @@ Parameter Descriptions:
 |enable_events|(bool) If True then switching tabs will generate an Event|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |border_width|(int) width of border around element in pixels|
-|theme|(enum) tabs can be 'themed'. These are the choices (some may not work on your OS): THEME_DEFAULT THEME_WINNATIVE THEME_CLAM THEME_ALT THEME_CLASSIC THEME_VISTA THEME_XPNATIVE|
+|theme|(enum) DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis|
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
@@ -12938,6 +12950,8 @@ Window(title,
     debugger_enabled=True,
     finalize=False,
     element_justification="left",
+    ttk_theme=None,
+    use_ttk_buttons=None,
     metadata=None)
 ```
 
@@ -12979,6 +12993,8 @@ Parameter Descriptions:
 |debugger_enabled|(bool) If True then the internal debugger will be enabled|
 |finalize|(bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code|
 |element_justification|(str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values|
+|ttk_theme|(str) Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default|
+|use_ttk_buttons|(bool) Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
 ### AddRow
@@ -13430,6 +13446,14 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |filename|(str) Filename to save the values to in pickled form|
+
+### SendToBack
+
+Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
+
+```python
+SendToBack()
+```
 
 ### SetAlpha
 
@@ -13964,6 +13988,14 @@ Parameter Descriptions:
 |---|---|
 |filename|(str) Filename to save the values to in pickled form|
 
+### send_to_back
+
+Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
+
+```python
+send_to_back()
+```
+
 ### set_alpha
 
 Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
@@ -14173,7 +14205,7 @@ There are 13 different color settings that are changed at one time using a singl
 The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
 The original list was (prior to a major rework and renaming)... these names still work...
 SystemDefault
-SystemDefaultForRead
+SystemDefaultForReal
 Material1
 Material2
 Reddit
@@ -14937,12 +14969,18 @@ want, just like a print statement.
 PopupScrolled(args,
     title=None,
     button_color=None,
+    background_color=None,
+    text_color=None,
     yes_no=False,
     auto_close=False,
     auto_close_duration=None,
     size=(None, None),
     location=(None, None),
-    non_blocking=False)
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
@@ -15311,12 +15349,18 @@ want, just like a print statement.
 ScrolledTextBox(args,
     title=None,
     button_color=None,
+    background_color=None,
+    text_color=None,
     yes_no=False,
     auto_close=False,
     auto_close_duration=None,
     size=(None, None),
     location=(None, None),
-    non_blocking=False)
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
@@ -15381,7 +15425,9 @@ SetOptions(icon=None,
     debug_win_size=(None, None),
     window_location=(None, None),
     error_button_color=(None, None),
-    tooltip_time=None)
+    tooltip_time=None,
+    use_ttk_buttons=None,
+    ttk_theme=None)
 ```
 
 Parameter Descriptions:
@@ -15421,6 +15467,8 @@ Parameter Descriptions:
 |window_location|(Default = (None))|
 |error_button_color|(Default = (None))|
 |tooltip_time|time in milliseconds to wait before showing a tooltip. Default is 400ms|
+|use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
+|ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
 
 ```
 Submit(button_text="Submit",
@@ -15506,7 +15554,7 @@ There are 13 different color settings that are changed at one time using a singl
 The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
 The original list was (prior to a major rework and renaming)... these names still work...
 SystemDefault
-SystemDefaultForRead
+SystemDefaultForReal
 Material1
 Material2
 Reddit
@@ -16445,12 +16493,18 @@ want, just like a print statement.
 popup_scrolled(args,
     title=None,
     button_color=None,
+    background_color=None,
+    text_color=None,
     yes_no=False,
     auto_close=False,
     auto_close_duration=None,
     size=(None, None),
     location=(None, None),
-    non_blocking=False)
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
@@ -16630,7 +16684,9 @@ set_options(icon=None,
     debug_win_size=(None, None),
     window_location=(None, None),
     error_button_color=(None, None),
-    tooltip_time=None)
+    tooltip_time=None,
+    use_ttk_buttons=None,
+    ttk_theme=None)
 ```
 
 Parameter Descriptions:
@@ -16670,6 +16726,8 @@ Parameter Descriptions:
 |window_location|(Default = (None))|
 |error_button_color|(Default = (None))|
 |tooltip_time|time in milliseconds to wait before showing a tooltip. Default is 400ms|
+|use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
+|ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
 
 ```
 sgprint(args,
@@ -16737,12 +16795,18 @@ want, just like a print statement.
 sprint(args,
     title=None,
     button_color=None,
+    background_color=None,
+    text_color=None,
     yes_no=False,
     auto_close=False,
     auto_close_duration=None,
     size=(None, None),
     location=(None, None),
-    non_blocking=False)
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
@@ -17832,6 +17896,46 @@ Let's hope it doesn't all blow up in our faces!
 * "Fuzzy Logic" Look and Feel Theme Selection - No longer have to memorize every character and get the case right. Now can get "close enough" and it'll working
 * New function - preview_all_look_and_feel_themes.  Causes a window to be shown that shows all of the currently available look and feel themes
 * Removed use of CloseButton in popup get file, folder, text.  Was causing problems where input fields stopped working.  See bug on GitHub
+
+## 4.7.0 PySimpleGUI 26-Nov-2019
+
+TTK WIDGETS!  Welcome back Mac Users!
+
+* Significant progress on using ttk widgets properly
+* Added ttk buttons - MACS can use colored buttons again!!  (Big damned deal)
+* The existing ttk based Elements are now correctly being colored and styled
+* Ability to set the ttk theme for individual windows or system-wide, but no longer on a single Element basis
+* Ability to use ttk buttons on a selective basis for non-Mac systems
+* port variable == 'PySimpleGUI' so that your code can determine which PySimpleGUI is running
+* InputText new parameter - use_readonly_for_dsiable defaults to True enables user to switch between a true disable and readonly setting when disabling
+* Rework of progress bar's ttk style name
+* Button - new parameter use_ttk_buttons - True = force use, False = force not used, None = let PySimpleGUI determine use
+* Macs are forced to use ttk buttons EXCEPT when an image is added to the button
+* TabGroup - can no longer set ttk theme directly
+* Window new parameters
+	* ttk_theme - sets the theme for the entire window
+	* use_ttk_buttons - sets ttk button use policy for the entire window
+* More Window layout error checking - checks that rows are iterables (a list). If not, an error popup is shown to help user find error
+* Fixed progessbars not getting a key auto assigned to theme
+* New Window method - send_to_back (SendToBack) - sends the window to the bottom of stack of all windows
+* Fixed normal tk button text - was left justifying instead of centering
+* Fixed table colors - wasn't setting correctly due to bad ttk styling
+* Fixed tree ccolors - wasn't setting correctly due to bad ttk styling
+* TabGroups now function correction with colors including currently selected tab color and background color of non-tab area (next to the tabs)
+* New set_options parameters
+	* use_ttk_buttons - sets system-wide policy for using ttk buttons. Needed for things like popups to work with ttk buttons
+	* ttk_theme - sets system-wide tth theme
+	* progress_meter_style parameter no longer used and generates a warning
+* list_of_look_and_feel_values now sorts the list prior to returning
+* Removed Mac restriction on Button colors from look and feel calls. Now can set button colors to anything!
+* popup_scrolled new parameters - all popups need more parameters but these are for sure needed for the scrolled popup
+	* background_color
+	* text_color
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+	* font
+* Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
 
 ### Upcoming
 

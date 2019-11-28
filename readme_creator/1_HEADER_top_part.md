@@ -27,9 +27,8 @@ HOW DO I INSERT IMAGES ???
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
-
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
@@ -38,12 +37,12 @@ HOW DO I INSERT IMAGES ???
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.6.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.7.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.11.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.28.1-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.33.0-orange.svg?longCache=true&style=for-the-badge)
 
 
 
@@ -99,9 +98,6 @@ and returns the value input as well as the button clicked.
 ### Any Questions?  It's that simple.
 
 ---
-
-
-
 
 
 #### Looking for a GUI package?     Are you....
@@ -181,6 +177,8 @@ and returns the value input as well as the button clicked.
 [Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
 
 [COOKBOOK!](http://Cookbook.PySimpleGUI.org)
+
+[Trinket an online Cookbook](http://Trinket.PySimpleGUI.org)
 
 [Brief Tutorial](http://Tutorial.PySimpleGUI.org)
 
