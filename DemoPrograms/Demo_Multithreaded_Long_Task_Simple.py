@@ -68,7 +68,7 @@ def the_gui():
 
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.read(timeout=400)
+        event, values = window.read(timeout=100)
         if event in (None, 'Exit'):
             break
         elif event.startswith('Do'):
