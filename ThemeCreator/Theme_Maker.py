@@ -29,13 +29,17 @@ import color_themes
     figure out how to get the syntax correct for adding it to the main dictionary of themes.
 """
 
+#----------------- Window to get layout for window ---------#
+
 CANDIDATES_PER_ROW = 4
 PALETTES_PER_WINDOW = 5
+STARTING_PALETTE = 0
 sg.change_look_and_feel('Dark Blue 3')
 layout = [
           [sg.T('Choose your window layout (default is a huge window)')],
           [sg.In(default_text=CANDIDATES_PER_ROW),sg.T('Candidates Per Row')],
           [sg.In(default_text=PALETTES_PER_WINDOW),sg.T('Palettes Per Window (4 candidates for each)')],
+          [sg.In(default_text=0),sg.T(f'Starting palette number of {len(color_themes.themes)} palettes')],
           [sg.OK()]]
 window = sg.Window('Choose Theme Layout', layout,default_element_size=(4,1))
 event, values = window.read()
@@ -46,10 +50,14 @@ if event is None:
     exit()
 try:
     CANDIDATES_PER_ROW = int(values[0])
-    TOTAL_CANDIDATES_PER_PAGE = int(values[1]) * 4
+    PALETTES_PER_WINDOW = int(values[1])
+    STARTING_PALETTE = int(values[2])
 except:
     sg.popup_no_buttons('Bad input... Aborting....', no_titlebar=True, auto_close=True, keep_on_top=True)
     exit()
+
+TOTAL_CANDIDATES_PER_PAGE = PALETTES_PER_WINDOW * 4
+#-----------------------------------------------------------#
 
 def rgb_to_hsl(r, g, b):
     r = float(r)
@@ -85,9 +93,12 @@ def sorted_tuple(tup, position):
 sg.popup_quick_message('Hang on this could me a few moments....', background_color='red', text_color='white', keep_on_top=True)
 
 sg.LOOK_AND_FEEL_TABLE = {}         # Entirely replace the look and feel table in PySimpleGUI
+palette_counter = 0
 for key, colors in color_themes.themes.items():
+    if palette_counter < STARTING_PALETTE:
+        palette_counter += 1
+        continue
     # Sort the colors from darkest to lightest
-
     color_lightness_pairs = []
     for color in colors:
         if type(color) in (tuple, list):
@@ -196,7 +207,6 @@ if row:
 if layout:
     layouts.append(layout)
 
-print(f'len layouts = {len(layouts)}')
 for layout in layouts:
     window = sg.Window('PySimpleGUI Theme Maker', layout, background_color=WINDOW_BACKGROUND, default_element_size=(30,1))
     event, values = window.read()
