@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.7.1.2 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons"
+version = __version__ = "4.7.1.3 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -223,6 +223,8 @@ if sys.platform == 'darwin':
 else:
     DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
+CURRENT_LOOK_AND_FEEL = 'Default'
+
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
@@ -10706,6 +10708,8 @@ def ChangeLookAndFeel(index, force=False):
     :param force: (bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors
     """
 
+    global CURRENT_LOOK_AND_FEEL
+
     # if sys.platform.startswith('darwin') and not force:
     #     print('*** Changing look and feel is not supported on Mac platform ***')
     #     return
@@ -10734,7 +10738,7 @@ def ChangeLookAndFeel(index, force=False):
         print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
 
     selection = list_of_look_and_feel_values()[ix]
-
+    CURRENT_LOOK_AND_FEEL = selection
     try:
         colors = LOOK_AND_FEEL_TABLE[selection]
 

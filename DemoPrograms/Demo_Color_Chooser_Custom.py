@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 
-def color_chooser():
+
+def popup_color_chooser(look_and_feel=None):
     """
 
     :return: Any(str, None) Returns hex string of color chosen or None if nothing was chosen
@@ -658,9 +659,13 @@ def color_chooser():
         'YellowGreen': '#9ACD32',
     }
 
-    sg.change_look_and_feel('Dark Blue 3')
+    old_look_and_feel = sg.CURRENT_LOOK_AND_FEEL
+    if look_and_feel is None:
+        look_and_feel = sg.CURRENT_LOOK_AND_FEEL
+    sg.change_look_and_feel(look_and_feel)
 
-    button_size = (1,1)
+    button_size = (1, 1)
+
     # button_size = (None,None)         # for very compact buttons
 
     def ColorButton(color):
@@ -669,20 +674,20 @@ def color_chooser():
         :param color: Tuple[str, str] ( color name, hex string)
         :return: sg.Button object
         """
-        return sg.B(button_color=('white', color[1]), pad=(0,0), size=button_size,key=color, tooltip=f'{color[0]}:{color[1]}', border_width=0)
+        return sg.B(button_color=('white', color[1]), pad=(0, 0), size=button_size, key=color, tooltip=f'{color[0]}:{color[1]}', border_width=0)
 
     num_colors = len(list(color_map.keys()))
-    row_len=40
+    row_len = 40
 
-    grid = [[ColorButton(list(color_map.items())[c+j*row_len]) for c in range(0,row_len)] for j in range(0,num_colors//row_len)]
-    grid += [[ColorButton(list(color_map.items())[c+num_colors-num_colors%row_len]) for c in range(0,num_colors%row_len)]]
+    grid = [[ColorButton(list(color_map.items())[c + j * row_len]) for c in range(0, row_len)] for j in range(0, num_colors // row_len)]
+    grid += [[ColorButton(list(color_map.items())[c + num_colors - num_colors % row_len]) for c in range(0, num_colors % row_len)]]
 
-    layout = [  [sg.Text('Pick a color', font='Def 18')]] + grid + \
-                [[sg.Button('OK'), sg.T(size=(30,1), key='-OUT-')]]
+    layout = [[sg.Text('Pick a color', font='Def 18')]] + grid + \
+             [[sg.Button('OK'), sg.T(size=(30, 1), key='-OUT-')]]
 
     window = sg.Window('Window Title', layout, no_titlebar=True, grab_anywhere=True, keep_on_top=True, use_ttk_buttons=True)
     color_chosen = None
-    while True:             # Event Loop
+    while True:  # Event Loop
         event, values = window.read()
         if event in (None, 'OK'):
             if event is None:
@@ -691,6 +696,7 @@ def color_chooser():
         window['-OUT-'](f'You chose {event[0]} : {event[1]}')
         color_chosen = event[1]
     window.close()
+    sg.change_look_and_feel(old_look_and_feel)
     return color_chosen
 
 
@@ -705,6 +711,8 @@ if __name__ == '__main__':
             break
         if event.startswith('Color'):
             window.hide()
-            color_chosen = color_chooser()
+            color_chosen = popup_color_chooser('Dark Blue 3')
             window['-CHOICE-'].update(color_chosen)
             window.un_hide()
+        else:
+            print(f'The current look and feel = {sg.CURRENT_LOOK_AND_FEEL}')
