@@ -659,10 +659,10 @@ def popup_color_chooser(look_and_feel=None):
         'YellowGreen': '#9ACD32',
     }
 
-    old_look_and_feel = sg.CURRENT_LOOK_AND_FEEL
-    if look_and_feel is None:
-        look_and_feel = sg.CURRENT_LOOK_AND_FEEL
-    sg.change_look_and_feel(look_and_feel)
+    old_look_and_feel = None
+    if look_and_feel is not None:
+        old_look_and_feel = sg.CURRENT_LOOK_AND_FEEL
+        sg.change_look_and_feel(look_and_feel)
 
     button_size = (1, 1)
 
@@ -696,7 +696,8 @@ def popup_color_chooser(look_and_feel=None):
         window['-OUT-'](f'You chose {event[0]} : {event[1]}')
         color_chosen = event[1]
     window.close()
-    sg.change_look_and_feel(old_look_and_feel)
+    if old_look_and_feel is not None:
+        sg.change_look_and_feel(old_look_and_feel)
     return color_chosen
 
 
