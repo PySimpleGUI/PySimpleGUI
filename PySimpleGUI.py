@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.7.1.1 Unreleased! included 4.7.1 patch"
+version = __version__ = "4.7.1.2 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -2254,8 +2254,8 @@ class Button(Element):
         self.UseTtkButtons = use_ttk_buttons
         if sys.platform.startswith('darwin'):
             self.UseTtkButtons = True
-        if image_filename or image_data:
-            self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
+        # if image_filename or image_data:
+        #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -2446,14 +2446,15 @@ class Button(Element):
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
+        if self.UseTtkButtons:
+            style_name = str(self.Key) + 'custombutton.TButton'
+            button_style = ttk.Style()
         try:
             if text is not None:
                 self.TKButton.configure(text=text)
                 self.ButtonText = text
             if button_color != (None, None):
                 if self.UseTtkButtons:
-                    style_name = str(self.Key) + 'custombutton.TButton'
-                    button_style = ttk.Style()
                     button_style.configure(style_name, foreground=button_color[0], background=button_color[1] )
                 else:
                     self.TKButton.config(foreground=button_color[0], background=button_color[1], activebackground=button_color[1])
@@ -2472,7 +2473,10 @@ class Button(Element):
                 width, height = image.width(), image.height()
             if image_subsample:
                 image = image.subsample(image_subsample)
-            self.TKButton.config(image=image, width=width, height=height)
+            if self.UseTtkButtons:
+                button_style.configure(style_name, image=image, width=width, height=height)
+            else:
+                self.TKButton.config(image=image, width=width, height=height)
             self.TKButton.image = image
         if image_filename is not None:
             self.TKButton.config(highlightthickness=0)
@@ -2483,7 +2487,10 @@ class Button(Element):
                 width, height = image.width(), image.height()
             if image_subsample:
                 image = image.subsample(image_subsample)
-            self.TKButton.config(image=image, width=width, height=height)
+            if self.UseTtkButtons:
+                button_style.configure(style_name, image=image, width=width, height=height)
+            else:
+                self.TKButton.config(image=image, width=width, height=height)
             self.TKButton.image = image
         if visible is False:
             self.TKButton.pack_forget()
@@ -8025,6 +8032,33 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if width != 0:
                     button_style.configure(style_name, wraplength=wraplen)  # set wrap to width of widget
+
+                if element.ImageFilename:  # if button has an image on it
+                    button_style.configure(style_name, borderwidth=0)
+                    # tkbutton.configure(highlightthickness=0)
+                    photo = tk.PhotoImage(file=element.ImageFilename)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                    else:
+                        width, height = photo.width(), photo.height()
+                    button_style.configure(style_name,image=photo, compound=tk.CENTER, width=width, height=height)
+                    tkbutton.image = photo
+                if element.ImageData:  # if button has an image on it
+                    # tkbutton.configure(highlightthickness=0)
+                    button_style.configure(style_name, borderwidth=0)
+
+                    photo = tk.PhotoImage(data=element.ImageData)
+                    if element.ImageSubsample:
+                        photo = photo.subsample(element.ImageSubsample)
+                    if element.ImageSize != (None, None):
+                        width, height = element.ImageSize
+                    else:
+                        width, height = photo.width(), photo.height()
+                    button_style.configure(style_name,image=photo, compound=tk.CENTER, width=width, height=height)
+                    # tkbutton.configure(image=photo, compound=tk.CENTER, width=width, height=height)
+                    tkbutton.image = photo
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
