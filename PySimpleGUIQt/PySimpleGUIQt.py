@@ -138,7 +138,7 @@ DEFAULT_INPUT_TEXT_COLOR = COLOR_SYSTEM_DEFAULT
 DEFAULT_SCROLLBAR_COLOR = None
 
 # A transparent button is simply one that matches the background
-TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
+TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
@@ -982,7 +982,7 @@ class Multiline(Element):
         _element_callback_quit_mainloop(self)
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or `Window.finalize` or "finalize" the window using finalize parameter prior
 
@@ -1006,10 +1006,13 @@ class Multiline(Element):
             # self.QT_TextEdit.append(str(value))   # can't use because adds a newline
             if text_color_for_value is not None:
                 self.QT_TextEdit.setTextColor(text_color_for_value)
-                self.QT_TextEdit.insertPlainText(str(value))    # code that retains color for a single update
+            if background_color_for_value is not None:
+                self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
+            self.QT_TextEdit.insertPlainText(str(value))
+            if text_color_for_value is not None:
                 self.QT_TextEdit.setTextColor(self.TextColor)
-            else:
-                self.QT_TextEdit.insertPlainText(str(value))    # code that retains color for a single update
+            if background_color_for_value is not None:
+                self.QT_TextEdit.setTextBackgroundColor(self.BackgroundColor)
         if disabled == True:
             self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
@@ -2705,15 +2708,27 @@ class Tree(Element):
     def _treeview_selected(self, event):
         selections = 000000
         self.SelectedRows = [x for x in selections]
+        print('Got selection')
         if self.ChangeSubmits:
-            MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
-            self.ParentForm.FormRemainedOpen = True
-            if self.ParentForm.CurrentlyRunningMainloop:
-                self.ParentForm.TKroot.quit()
+            _element_callback_quit_mainloop(self)
+
+    def _QtCallbackCellActivated(self, value=None):
+        # print('CELL ACTIVATED ', value)
+        # first, get the results table built
+        # modify the Results table in the parent FlexForm object
+        if not self.ChangeSubmits:
+            return
+        _element_callback_quit_mainloop(self)
+
+        # if self.ChangeSubmits:
+        #     MyForm = self.ParentForm
+        #     if self.Key is not None:
+        #         self.ParentForm.LastButtonClicked = self.Key
+        #     else:
+        #         self.ParentForm.LastButtonClicked = ''
+        #     self.ParentForm.FormRemainedOpen = True
+        #     if self.ParentForm.CurrentlyRunningMainloop:
+        #         self.ParentForm.TKroot.quit()
 
 
     def Update(self, values=None, key=None, value=None, text=None, visible=None):
@@ -4325,7 +4340,10 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     for index in sorted(indexes):
                         value.append(index.row())
                 elif element.Type == ELEM_TYPE_TREE:
-                    value = 0
+                    value = []
+                    indexes = element.QT_QTreeWidget.selectionModel().selectedRows()
+                    for index in sorted(indexes):
+                        value.append(index.row())
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
@@ -5678,6 +5696,9 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style += 'border: {}px solid gray; '.format(border_depth)
                 style += '}'
                 element.QT_QTreeWidget.setStyleSheet(style)
+
+                if element.ChangeSubmits:
+                    element.QT_QTreeWidget.itemSelectionChanged.connect(element._QtCallbackCellActivated)
 
                 if element.ShowExpanded:
                     element.QT_QTreeWidget.expandAll()
@@ -8008,10 +8029,10 @@ def main():
 
     frame5 = [
         [Table(values=matrix, max_col_width=25, headings=('aaa', 'bbb', 'ccc', 'ddd'),
-                  auto_size_columns=True, display_row_numbers=True, change_submits=False, bind_return_key=True,
+                  auto_size_columns=True, display_row_numbers=True, enable_events=True, bind_return_key=True,
                   justification='right', num_rows=6, alternating_row_color='lightblue', key='_table_',
                   text_color='black', tooltip='Table'),
-         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
+         Tree(data=treedata, headings=['col1', 'col2', 'col3'], enable_events=True, auto_size_columns=True,
                  num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, size=(200, 150), tooltip='Tree'),
          Stretch()],
     ]
@@ -8046,21 +8067,21 @@ def main():
          Button('Button'), Button('Exit', tooltip='Exit button')],
     ]
 
-    window = Window('Window Title',
+    window = Window('Window Title', layout,
                        font=('Helvetica', 13),
                        default_button_element_size=(100, 30),
                        auto_size_buttons=False,
                        default_element_size=(200, 22),
                        border_depth=1,
-                       ).Layout(layout).Finalize()
-    graph_elem.DrawCircle((200, 200), 50, 'blue')
+                       )
+    # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     graph_paused = False
 
     # window.Element('_LISTBOX_').SetValue(['Listbox 1','Listbox 3'])
     while True:  # Event Loop
         # TimerStart()
-        event, values = window.Read(timeout=0)
+        event, values = window.Read()
         print(event, values) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
             break
