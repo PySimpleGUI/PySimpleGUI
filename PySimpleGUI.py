@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.7.1.3 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable"
+version = __version__ = "4.7.1.4 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -246,7 +246,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
 
 # A transparent button is simply one that matches the background
-TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
+TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
@@ -1702,13 +1702,13 @@ class Multiline(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
+        self.TagCounter = 0
         self.TKText = self.Widget = None            # type: tkst.ScrolledText
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None,
-               visible=None, autoscroll=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None,text_color_for_value=None,background_color_for_value=None, visible=None, autoscroll=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1721,19 +1721,27 @@ class Multiline(Element):
         :param visible: (bool) set visibility state of the element
         :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
         """
-
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
         if autoscroll is not None:
             self.Autoscroll = autoscroll
+        # Multicolored text
+        if text_color_for_value is not None:
+            self.TKText.tag_configure(str(self.TagCounter), foreground = text_color_for_value)
+        if background_color_for_value is not None:
+            self.TKText.tag_configure(str(self.TagCounter), background = background_color_for_value)
+
         if value is not None:
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                self.TKText.insert(tk.END, value)
+                if text_color_for_value is not None or background_color_for_value is not None:
+                    self.TKText.insert(tk.END, value, str(self.TagCounter))
+                else:
+                    self.TKText.insert(tk.END, value)
             except:
                 pass
             if self.Disabled:
@@ -1755,6 +1763,9 @@ class Multiline(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack()
+        self.TagCounter += 1        # doesn't matter if the counter is bumped every call
+
+
 
     def Get(self):
         """
@@ -2297,7 +2308,7 @@ class Button(Element):
 
         # print('Button callback')
 
-        # print(f'Parent = {self.ParentForm}   Position = {self.Position}')
+        # print(f'Button Callback - Parent = {self.ParentForm}   Position = {self.Position}')
         # Buttons modify targets or return from the form
         # If modifying target, get the element object at the target and modify its StrVar
         target = self.Target
@@ -2481,7 +2492,6 @@ class Button(Element):
                 self.TKButton.config(image=image, width=width, height=height)
             self.TKButton.image = image
         if image_filename is not None:
-            self.TKButton.config(highlightthickness=0)
             image = tk.PhotoImage(file=image_filename)
             if image_size is not None:
                 width, height = image_size
@@ -2492,7 +2502,7 @@ class Button(Element):
             if self.UseTtkButtons:
                 button_style.configure(style_name, image=image, width=width, height=height)
             else:
-                self.TKButton.config(image=image, width=width, height=height)
+                self.TKButton.config(highlightthickness=0,image=image, width=width, height=height)
             self.TKButton.image = image
         if visible is False:
             self.TKButton.pack_forget()
@@ -5335,6 +5345,10 @@ class Window:
             if finalize:
                 self.Finalize()
 
+        if CURRENT_LOOK_AND_FEEL == 'Default':
+            print('Warning - your window is going to be a boring gray. Try adding call to change_look_and_feel\n',
+                  'It costs you nothing is makes the world a more colorful place. Try adding this 1 line:\n',
+                  'change_look_and_feel("Dark Blue 3") # it looks nice\n')
 
     @classmethod
     def GetAContainerNumber(cls):
