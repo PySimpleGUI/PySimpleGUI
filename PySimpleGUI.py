@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from tables.tests.test_backcompat import BackCompatAttrsTestCase
 
-version = __version__ = "4.7.1.4 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag"
+version = __version__ = "4.7.1.5 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag, Print/Easyprint multiple color output"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -12372,8 +12372,8 @@ def main():
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
             print(event, values)
-            Print(event, location=(0,0), font='Courier 8', size=(60,15), grab_anywhere=True, text_color='green', background_color='white')
-            Print(values, location=(0,0), font='Courier 8', size=(60,15), grab_anywhere=True, text_color='blue', background_color='white')
+            Print(event, location=(0,0), font='Courier 12', size=(60,15), grab_anywhere=True, text_color='green', background_color='white',  end='')
+            Print(values, location=(0,0), font='Courier 12', size=(60,15), grab_anywhere=True)
         if event is None or event == 'Exit':
             break
         if i < 800:
