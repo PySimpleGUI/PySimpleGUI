@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from tables.tests.test_backcompat import BackCompatAttrsTestCase
 
-version = __version__ = "4.7.1.4 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag"
+version = __version__ = "4.7.1.5 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag, Print/Easyprint multiple color output"
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -5346,9 +5347,7 @@ class Window:
                 self.Finalize()
 
         if CURRENT_LOOK_AND_FEEL == 'Default':
-            print('Warning - your window is going to be a boring gray. Try adding call to change_look_and_feel\n',
-                  'It costs you nothing is makes the world a more colorful place. Try adding this 1 line:\n',
-                  'change_look_and_feel("Dark Blue 3") # it looks nice\n')
+            print("Window will be a boring gray. Try adding call to change_look_and_feel('Dark Blue 3') before your layout definition")
 
     @classmethod
     def GetAContainerNumber(cls):
@@ -9581,7 +9580,7 @@ class DebugWin():
         self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
         return
 
-    def Print(self, *args, end=None, sep=None):
+    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None):
         """
 
         :param *args:
@@ -9607,7 +9606,7 @@ class DebugWin():
             for arg in args:
                 outstring += str(arg) + sepchar
             outstring += endchar
-            self.output_element.Update(outstring, append=True)
+            self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
         else:
             print(*args, sep=sepchar, end=endchar)
 
@@ -9624,7 +9623,7 @@ def PrintClose():
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None):
     """
 
     :param *args:
@@ -9644,7 +9643,7 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
         DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                          no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                                          do_not_reroute_stdout=do_not_reroute_stdout)
-    DebugWin.debug_window.Print(*args, end=end, sep=sep)
+    DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color, background_color=background_color)
 
 
 Print = EasyPrint
@@ -12312,8 +12311,8 @@ def main():
     ]
 
     frame4 = [
-        [Slider(range=(0, 100), orientation='v', size=(7, 15), default_value=40),
-         Slider(range=(0, 100), orientation='h', size=(11, 15), default_value=40), ],
+        [Slider(range=(0, 100), orientation='v', size=(7, 15), default_value=40, key='-SLIDER1-'),
+         Slider(range=(0, 100), orientation='h', size=(11, 15), default_value=40, key='-SLIDER2-'), ],
     ]
     matrix = [[str(x * y) for x in range(1,5)] for y in range(1,8)]
 
@@ -12373,7 +12372,8 @@ def main():
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
             print(event, values)
-            Print(event, values, location=(0,0), font='Courier 8', size=(60,15), grab_anywhere=True)
+            Print(event, location=(0,0), font='Courier 12', size=(60,15), grab_anywhere=True, text_color='green', background_color='white',  end='')
+            Print(values, location=(0,0), font='Courier 12', size=(60,15), grab_anywhere=True)
         if event is None or event == 'Exit':
             break
         if i < 800:
@@ -12397,8 +12397,8 @@ def main():
         elif event == 'About...':
             popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
         elif event.startswith('See'):
-            window.SetTransparentColor(LOOK_AND_FEEL_TABLE[look_and_feel]['BACKGROUND'])
-    window.Close()
+            window.set_transparent_color(LOOK_AND_FEEL_TABLE[look_and_feel]['BACKGROUND'])
+    window.close()
 
 
 
