@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from tables.tests.test_backcompat import BackCompatAttrsTestCase
 
 version = __version__ = "4.7.1.6 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag, Print/Easyprint multiple color output"
 port = 'PySimpleGUI'
@@ -1722,6 +1721,7 @@ class Multiline(Element):
         :param visible: (bool) set visibility state of the element
         :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
         """
+        value=str(value)
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
