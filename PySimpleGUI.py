@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 version = __version__ = "4.7.1.6 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag, Print/Easyprint multiple color output"
+
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -366,6 +367,8 @@ BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 BUTTON_TYPE_SHOW_DEBUGGER = 50
+
+BROWSE_FILES_DELIMETER = ';'            # the delimeter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 
@@ -2368,7 +2371,7 @@ class Button(Element):
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
             if file_name != '':
-                file_name = ';'.join(file_name)
+                file_name = BROWSE_FILES_DELIMETER.join(file_name)      # normally a ';'
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
@@ -6576,6 +6579,8 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
                 change_submits=False, enable_events=False,
                 font=None, pad=None, key=None, metadata=None):
     """
+    Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
+    BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
 
     :param button_text: text in the button (Default value = 'Browse')
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
