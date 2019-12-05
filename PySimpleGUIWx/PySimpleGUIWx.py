@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "0.14.0 Released 17-Nov-2019"
+version = __version__ = "0.14.0.51 Unreleased - added port variable, BrowseFiles delimeter variable"
+
+port = 'PySimpleGUIWx'
 
 import sys
 import wx
@@ -135,7 +137,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
 
 # A transparent button is simply one that matches the background
-TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')
+TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
@@ -258,6 +260,8 @@ BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
+
+BROWSE_FILES_DELIMITER = ';'            # the delimeter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 # class ElementType(Enum):
@@ -1379,7 +1383,7 @@ class Button(Element):
             else:
                 file_names = ''
             if file_names != '':
-                file_names = ';'.join(file_names)
+                file_names = BROWSE_FILES_DELIMITER.join(file_names)
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_names
                 else:
