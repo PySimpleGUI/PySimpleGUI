@@ -10,7 +10,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.7.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.8.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -9202,6 +9202,8 @@ Update(value=None,
     font=None,
     text_color=None,
     background_color=None,
+    text_color_for_value=None,
+    background_color_for_value=None,
     visible=None,
     autoscroll=None)
 ```
@@ -9342,6 +9344,8 @@ update(value=None,
     font=None,
     text_color=None,
     background_color=None,
+    text_color_for_value=None,
+    background_color_for_value=None,
     visible=None,
     autoscroll=None)
 ```
@@ -14427,7 +14431,9 @@ EasyPrint(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -14557,6 +14563,9 @@ Parameter Descriptions:
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 |||
 | **return** | (Button) |
+
+Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
+BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
 
 ```
 FilesBrowse(button_text="Browse",
@@ -15092,7 +15101,9 @@ Print(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -15612,7 +15623,9 @@ easy_print(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -15645,7 +15658,9 @@ eprint(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -16740,7 +16755,9 @@ sgprint(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -16830,6 +16847,47 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 ```
 test()
 ```
+
+Display popup with OK and Cancel buttons
+
+```
+popup_ok_cancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=...,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["OK", "Cancel", None] |
 
 ---
 
@@ -17937,9 +17995,43 @@ TTK WIDGETS!  Welcome back Mac Users!
 	* font
 * Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
 
+## 4.8.0 PySimpleGUI 4-Dec-2019
+
+Multicolored multiline text!  Often asked for feature going way back
+ttk Buttons can have images
+Print in color!
+
+* Multiline Element got 2 new parameters to the update method
+	* text_color_for_value - color for the newly added text
+	* background_color_for_value - background color of the newly added text
+* New Print/EasyPrint parameters and capability
+	* text_color, background_color - control the text's color and background color when printing to "Debug Window"
+	* Must be done only when used in mode where stdout is not re-routed (the default)
+	* Wouldn't it be really nice if normal print calls had this parameter?
+	* Print(event, text_color='green', background_color='white',  end='')
+* ttk Buttons
+	* can have images. No longer forces Buttons with images to be the old tk Butons. Now you can choose either	
+	* can update the button color
+	* can update the button image
+* Set warning filter so that warnings are repeated
+* New global variables:
+	* CURRENT_LOOK_AND_FEEL - The current look and feel setting in use. Starts out as "Default"
+	* BROWSE_FILES_DELIMITER - Defaults to ";"  It is the string placed between entries returned from a FilesBrowse button
+	* TRANSPARENT_BUTTON - Depricated - was being used incorrectly as it was a relic from the early days. It's value was a color of gray
+* Window - gentle reminder if you don't choose a look and feel for your window. It's easy to stop them. Add a change_look_and_feel line
+* Test harness uses a debug window so don't be shocked when 2 windows appear when running PySimpleGUI by itself
+	* Prints the "Event" in Green on White text
+	* Prints the "values" normally
+
 ### Upcoming
 
-Make suggestions people!  Future release features
+There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
+
+The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
+
+At some point, while those 3 are being completed, the PySimpleGUIKivy code will be picked back up and restarted.  Several elements are already completed so the base port is done.
+
+In addition to the ports there is ongoing work with educators that want to bring PySimpleGUI into their classrooms.  Some projects have already started with teachers.  One effort is to examine a number of books that teach Python to kids and convert the exercises to use PySimpleGUI instead of tkinter or command line.  Another educational effort is in integrating with Circuit Python.  It's unclear exactly how PySimpleGUI will fit into the picture.  A board from Adafruit is arriving soon which should help solidify what's possible.
 
 ## Code Condition
 
@@ -17947,11 +18039,11 @@ Make suggestions people!  Future release features
     Make it right
     Make it fast
 
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the enternally facing interfaces all adhere to PEP8 names.
 
-Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
+Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
 ## Design
 

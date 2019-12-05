@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.7.1.7 Unreleased - included 4.7.1 patch, ability to update ttk buttons, images for ttk buttons, CURRENT_LOOK_AND_FEEL variable, Multiline colored text (FINALLY), experimental gray window warning/nag, Print/Easyprint multiple color output, BrowseFiles delimeter variable"
+version = __version__ = "4.8.0 Released - 04-Dec-2019"
 
 port = 'PySimpleGUI'
 
