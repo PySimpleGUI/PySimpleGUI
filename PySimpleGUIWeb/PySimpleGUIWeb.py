@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.33.0.50 Unreleased - added port variable"
+version = __version__ = "0.33.0.61 Unreleased - added port variable, browse file delimeter varaible (unused currently)"
 
 port = 'PySimpleGUIWeb'
 
@@ -263,7 +263,7 @@ BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 
-BROWSE_FILES_DELIMETER = ';'            # the delimeter to be used between each file in the returned string
+BROWSE_FILES_DELIMITER = ';'            # the delimeter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 # These used to be enums ElementType(Enum):
@@ -1243,7 +1243,7 @@ class Button(Element):
             else:
                 file_names = ''
             if file_names != '':
-                file_names = BROWSE_FILES_DELIMETER.join(file_names)
+                file_names = BROWSE_FILES_DELIMITER.join(file_names)
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_names
                 else:
