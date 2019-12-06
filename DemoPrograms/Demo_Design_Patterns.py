@@ -1,4 +1,3 @@
-import PySimpleGUI as sg
 """
 When creating a new PySimpleGUI program from scratch, start here.
 These are the accepted design patterns that cover the two primary use cases
@@ -10,6 +9,9 @@ These are the accepted design patterns that cover the two primary use cases
 # ---------------------------------#
 # DESIGN PATTERN 1 - Simple Window #
 # ---------------------------------#
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 3')
 
 layout = [[ sg.Text('My Oneshot') ],
           [ sg.Button('OK') ]]
@@ -22,11 +24,15 @@ window.close()
 # -------------------------------------#
 # DESIGN PATTERN 2 - Persistent Window #
 # -------------------------------------#
+import PySimpleGUI as sg
 
-layout = [[ sg.Text('My layout') ],
+sg.change_look_and_feel('Dark Blue 3')
+
+layout = [[ sg.Text('My layout', text_color='red') ],
+          [ sg.Input(key='-INPUT-')],
           [ sg.Button('OK'), sg.Button('Cancel') ]]
 
-window = sg.Window('Design Pattern 2', layout)
+window = sg.Window('Design Pattern 2 - Persistent Window', layout)
 
 while True:     # Event Loop
     event, values = window.read()
@@ -37,6 +43,9 @@ window.close()
 # ------------------------------------------------------------------#
 # DESIGN PATTERN 3 - Persistent Window with "early update" required #
 # ------------------------------------------------------------------#
+import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 3')
 
 layout = [[ sg.Text('My layout', key='-TEXT-KEY-') ],
           [ sg.Button('OK'), sg.Button('Cancel') ]]
