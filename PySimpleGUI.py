@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.8.0.1 Unreleased - Tab colors!"
+version = __version__ = "4.8.0.2 Unreleased - Tab colors!"
 
 port = 'PySimpleGUI'
 
@@ -3732,9 +3732,10 @@ class TabGroup(Element):
         :param layout: List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :param tab_location: (str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
         :param title_color: (str) color of text on tabs
+        :param tab_background_color: (str) color of all tabs that are not selected
         :param selected_title_color: (str) color of tab text when it is selected
         :param selected_background_color: (str) color of tab when it is selected
-        :param background_color: (str) color of background of tabs
+        :param background_color: (str) color of background area that tabs are located on
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
         :param enable_events: (bool) If True then switching tabs will generate an Event
