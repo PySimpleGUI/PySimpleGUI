@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.8.0.5 Unreleased - Tab colors! No nag theme = DefaultNoMoreNagging"
+version = __version__ = "4.8.0.6 Unreleased - Tab colors! No nag theme = DefaultNoMoreNagging, auto-color tabs based on look and feel"
 
 port = 'PySimpleGUI'
 
@@ -3754,9 +3754,10 @@ class TabGroup(Element):
         self.ReturnValuesDictionary = {}
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
-        self.SelectedTitleColor = selected_title_color
-        self.SelectedBackgroundColor = selected_background_color
-        self.TabBackgroundColor = tab_background_color
+        self.SelectedTitleColor = selected_title_color if selected_title_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT']
+        self.SelectedBackgroundColor = selected_background_color if selected_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['BACKGROUND']
+        title_color = title_color if title_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
+        self.TabBackgroundColor = tab_background_color if tab_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
         self.Rows = []
         self.TKNotebook = None              # type: ttk.Notebook
         self.Widget = None                  # type: ttk.Notebook
@@ -3766,6 +3767,7 @@ class TabGroup(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
         self.ElementJustification = 'left'
+
 
         self.Layout(layout)
 
@@ -12369,7 +12371,7 @@ def main():
         [Frame('Input Text Group', frame1, title_color='red'),
          Text('VERSION\n{}'.format(__version__), size=(25, 4), font='ANY 20'),
          ],
-        [TabGroup([[tab1, tab2, tab3, tab4]],key='_TAB_GROUP_', background_color='green',selected_title_color='red', title_color='blue' )],
+        [TabGroup([[tab1, tab2, tab3, tab4]],key='_TAB_GROUP_', background_color='green')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
@@ -12386,6 +12388,7 @@ def main():
                     keep_on_top=True,
                     element_justification='left',
                     metadata='My window metadata',
+                    # ttk_theme=THEME_VISTA,
                     # icon=PSG_DEBUGGER_LOGO
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
