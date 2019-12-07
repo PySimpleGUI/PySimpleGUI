@@ -2,73 +2,90 @@
   
 # Add GUIs to your programs and scripts easily with PySimpleGUI    
     
-PySimpleGUI now supports BOTH Python 2.7 and Python 3
-    
+
+## Dec 2019 - This tutorial is out of date and being updated!
+
+Please don't use the code found in this tutorial as a starting point in your coding.  The coding conventions and design patterns have changed.
+
+The [Cookbook](http://Cookbook.PySimpleGUI.org) is very easy to use to get started.  It has much of the same material that's presented here, except it is more up to date.
+
+
+
+
 ## Introduction    
-Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  While GUIs, using tkinter, are possible using standard Python installations, it's unlikely many programs do this.    
-    
-What if it were easy so to open a Python program into a GUI that complete beginners could do it?  Would anyone care?  Would anyone use it?  It's difficult to answer because to date it's not been "easy" to build a custom GUI.     
-    
-There seems to be a gap in the ability to add a GUI onto a Python program/script.  Complete beginners are left using only the command line and many advanced programmers don't want to take the time required to code up a tkinter GUI.    
-    
-    
-    
+Few people run Python programs by double clicking the .py file as if it were a .exe file.  When a typical user (non-programmer types) double clicks an exe file, they expect it to pop open with a window they can interact with.  Writing GUIs is of course possible using tkinter, but it's out of reach for some Python users.
+     
+There seems to be a gap in the ability to add a GUI onto a Python program/script.  Complete beginners are left using only the command line and many advanced programmers don't want to take the time required to code up a GUI. 
+       
     
 ## GUI Frameworks    
-There is no shortage of GUI frameworks for Python.  tkinter, WxPython, Qt, Kivy are a few of the major packages.  In addition, there are a good number of dumbed down GUI packages that wrap one of the major packages.  These include EasyGUI, PyGUI, Pyforms, ...    
+
+There is no shortage of GUI frameworks for Python.  tkinter, WxPython, Qt, Kivy are a few of the packages commonly mentioned.  In addition, there are number of simplified GUI packages that wrap one of the GUI frameworks.  These include EasyGUI, PyGUI, Pyforms, ...  These solutions involve templates of windows or other high-level layouts.  They don't offer a general, build the GUI you have in your head, solution.
     
-The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the major packages.  That leaves the wrapper-packages.  Users will likely find it difficult or impossible to build a custom GUI layout using the smaller packages.     
+The problem is that beginners (those with experience of less than 6 weeks) are not capable of learning even the simplest of the GUI Frameworks.  That leaves the wrapper-packages.  Users will likely find it difficult or impossible to build a custom GUI layout using the easier wrapper packages.     
     
-PySimpleGUI attempts to address these GUI challenges by providing a super-simple, easy to understand interface to GUIs that can be easily customized.  Complex GUIs are often less than 20 lines of code when PySimpleGUI is used.    
+PySimpleGUI attempts to address these GUI challenges by providing a simple to understand, easy to write. Python friendly interface to GUIs that can be easily customized.  Complex GUIs are often less than 20 lines of code when PySimpleGUI is used.    
     
 ## The Secret    
     
 What makes PySimpleGUI superior for newcomers is that the package contains the majority of the code that the user is normally expected to write.  Button callbacks are handled by PySimpleGUI, not the user's code.  Beginners struggle to grasp the concept of a function, expecting them to understand a call-back function in the first few weeks is a stretch.    
     
-With some GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI uses an "auto-packer" that creates the layout for the user automatically.  There is no concept of a pack nor a grid system needed to layout a GUI Window.       
+With some GUIs arranging the GUI Widgets often requires several lines of code.... at least one or two lines per widget.  PySimpleGUI users define their Window using rows of widgets where the widgets are configured in place.  In one line of code you are both defailing the location of your widget, but also its configuration. There is no concept of a pack nor a grid system needed to layout a GUI Window.       
     
-Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  When a Widget is created in a window layout, it is configured in-place, not several lines of code away.  Results are returned as a simple list or a dictionary.    
+Finally, PySimpleGUI leverages the Python language constructs in clever ways that shortens the amount of code and returns the GUI data in a straightforward manner.  Results are returned as a simple list or a dictionary.    
     
 ## What is a GUI?    
     
-Most GUIs do one thing.... they collect information from the user and return it.  From a programmer's viewpoint a GUI that collects information, like a window, could be summed up as a function call that looks like this:    
+Most GUIs do two things.... they present and collect information from the user.  From a programmer's viewpoint a GUI that collects information, like a window, could be summed up as a function call that looks like this:    
     
-    button, values = GUI_Display(gui_layout)    
+```python
+button, values = GUI_Display(gui_layout)    
+```
+
+What's expected from most GUIs is the button that was clicked (OK, cancel, save, yes, no, etc), and the values that were input by the user.  The essence of a GUI can be boiled down into a single line of code.... show the GUI, get the values in the window, return events that happen and the values to the user.    
     
-What's expected from most GUIs is the button that was clicked (OK, cancel, save, yes, no, etc), and the values that were input by the user.  The essence of a GUI can be boiled down into a single line of code.      
+This is exactly how PySimpleGUI works.  When the call is made to display the GUI, execution does not return (i.e. it blocks) until a button is clicked or some other "event" happens in the window.      
     
-This is exactly how PySimpleGUI works (for these simple kinds of GUIs).  When the call is made to display the GUI, execution does no return until a button is clicked that closes the window.      
-    
-There are more complex GUIs such as those that don't close after a button is clicked.  These resemble a windows program and also be created with PySimpleGUI.  A remote control interface for a robot and a chat window are a couple of examples where you want to keep the window open after a button is clicked.     
-    
+Because things can happen in a window other than button clicks (closing the window with an X is one) the above line of code is written as:
+
+```python
+event, value = window.read()
+```
+
+
+
 ## The 5-Minute GUI    
     
 When is PySimpleGUI useful?  ***Immediately***, anytime you've got a GUI need.  It will take under 5 minutes for you to create and try your GUI.  With those kinds of times, what do you have to lose trying it?    
     
-The best way to go about making your GUI in under 5 minutes is to copy one of the GUIs from the [PySimpleGUI Cookbook](https://pysimplegui.readthedocs.io/en/latest/cookbook/).  Follow these steps:    
+The best way to go about making your GUI in under 5 minutes is to copy one of the GUIs from the [PySimpleGUI Cookbook](http://Cookbook.PySimpleGUI.org).  Follow these steps:    
+
 * Install PySimpleGUI    (see short section in readme on installation)
-*  Find a GUI that looks similar to what you want to create    
+* Find a GUI that looks similar to what you want to create    
 * Copy code from Cookbook    
 * Paste into your IDE and run    
     
 Let's look at the first recipe from the book    
     
-    import PySimpleGUI as sg      
-          
-    # Very basic window.  Return values as a list      
-          
-    layout = [      
-              [sg.Text('Please enter your Name, Address, Phone')],      
-              [sg.Text('Name', size=(15, 1)), sg.InputText('name')],      
-              [sg.Text('Address', size=(15, 1)), sg.InputText('address')],      
-              [sg.Text('Phone', size=(15, 1)), sg.InputText('phone')],      
-              [sg.Submit(), sg.Cancel()]      
-             ]      
+```python
+import PySimpleGUI as sg      
+        
+# Very basic window.  Return values as a list      
+        
+layout = [      
+            [sg.Text('Please enter your Name, Address, Phone')],      
+            [sg.Text('Name', size=(15, 1)), sg.InputText('name')],      
+            [sg.Text('Address', size=(15, 1)), sg.InputText('address')],      
+            [sg.Text('Phone', size=(15, 1)), sg.InputText('phone')],      
+            [sg.Submit(), sg.Cancel()]      
+            ]      
 
-    window = sg.Window('Simple data entry window').Layout(layout)         
-    button, values = window.Read() 
-          
-    print(button, values[0], values[1], values[2])    
+window = sg.Window('Simple data entry window').Layout(layout)         
+button, values = window.Read() 
+        
+print(button, values[0], values[1], values[2])    
+```
+
     
     
 It's a reasonably sized window.    
@@ -78,31 +95,21 @@ It's a reasonably sized window.
     
 If you only need to collect a few values and they're all basically strings, then you would copy this recipe and modify it to suit your needs.    
 
-### Python 2.7 Differences
-
-The only noticeable difference between PySimpleGUI code running under Python 2.7 and one running on Python 3 is the import statement.
-
-Python 3.x:
-
-    import PySimpleGUI as sg
-
-Python 2.7:
-
-    import PySimpleGUI27 as sg
-
     
 ## The 5-line GUI    
     
 Not all GUIs take 5 minutes.  Some take 5 lines of code.  This is a GUI with a custom layout contained in 5 lines of code.    
     
-    import PySimpleGUI as sg        
-          
-    layout = [ [sg.Text('Enter your name'), sg.InputText()],      
-               [sg.OK()] ]        
-          
-    window = sg.Window('My first GUI').Layout(layout)
-    button, (name,) = window.Read()
-    
+```python
+import PySimpleGUI as sg        
+        
+layout = [ [sg.Text('Enter your name'), sg.Input()],      
+           [sg.OK()] ]        
+        
+window = sg.Window('My first GUI', layout)
+event, values = window.read()
+```
+
     
 ![myfirstgui](https://user-images.githubusercontent.com/13696193/44315412-d2918c80-a3f1-11e8-9eda-0d5d9bfefb0f.jpg)    
     
@@ -337,7 +344,4 @@ Works on all systems that run tkinter, including the Raspberry Pi
 
 ### Home Page (GitHub)    
     
-[www.PySimpleGUI.com](http://www.PySimpleGUI.com)
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEyODg5NTU4MjZdfQ==
--->
+[www.PySimpleGUI.com](www.PySimpleGUI.com)
