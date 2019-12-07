@@ -8625,7 +8625,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 width, height = element_size
-                print(f'Graph canvas size being created = {element_size}')
                 # I don't know why TWO canvases were being defined, on inside the other.  Was it so entire canvas can move?
                 # if element._TKCanvas is None:
                 #     element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
