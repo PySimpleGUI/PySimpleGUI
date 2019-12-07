@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.8.0.2 Unreleased - Tab colors!"
+version = __version__ = "4.8.0.4 Unreleased - Tab colors! New look and feel to stop gray nagging - DefaultNoMoreNagging"
 
 port = 'PySimpleGUI'
 
@@ -33,7 +33,7 @@ port = 'PySimpleGUI'
 
 
 """
-Copyright 2018, 2019 PySimpleGUI.org
+Copyright 2018, 2019, 2020 PySimpleGUI.org
 
 OK, let's get the bullshit out of the way
 
@@ -10201,7 +10201,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
               'SLIDER_DEPTH': 0,
               'PROGRESS_DEPTH': 0},
 ################################## Renamed Original Themes ##################################
-'Default':
+'Default':      # plain gray but blue buttons
      {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
       'TEXT': COLOR_SYSTEM_DEFAULT,
       'INPUT': COLOR_SYSTEM_DEFAULT,
@@ -10212,7 +10212,7 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
       'BORDER': 1, 'SLIDER_DEPTH': 1,
       'PROGRESS_DEPTH': 0},
 
- 'Default1':
+ 'Default1':    # everything is gray
      {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
       'TEXT': COLOR_SYSTEM_DEFAULT,
       'INPUT': COLOR_SYSTEM_DEFAULT,
@@ -10222,6 +10222,19 @@ LOOK_AND_FEEL_TABLE = { 'SystemDefault':
       'PROGRESS': COLOR_SYSTEM_DEFAULT,
       'BORDER': 1, 'SLIDER_DEPTH': 1,
       'PROGRESS_DEPTH': 0},
+
+'DefaultNoMoreNagging':      # a duplicate of "Default" for users that are tired of the nag screen
+     {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+      'TEXT': COLOR_SYSTEM_DEFAULT,
+      'INPUT': COLOR_SYSTEM_DEFAULT,
+      'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+      'SCROLL': COLOR_SYSTEM_DEFAULT,
+      'BUTTON': OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,
+      'PROGRESS': COLOR_SYSTEM_DEFAULT,
+      'BORDER': 1, 'SLIDER_DEPTH': 1,
+      'PROGRESS_DEPTH': 0},
+
+
 
  'LightBlue': {'BACKGROUND': '#E3F2FD',
                'TEXT': '#000000',
