@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.8.0.4 Unreleased - Tab colors! New look and feel to stop gray nagging - DefaultNoMoreNagging"
+version = __version__ = "4.8.0.5 Unreleased - Tab colors! No nag theme = DefaultNoMoreNagging"
 
 port = 'PySimpleGUI'
 
@@ -5362,7 +5362,8 @@ class Window:
                 self.Finalize()
 
         if CURRENT_LOOK_AND_FEEL == 'Default':
-            print("Window will be a boring gray. Try adding call to change_look_and_feel('Dark Blue 3') before your layout definition")
+            print("Window will be a boring gray. Try adding call to change_look_and_feel('Dark Blue 3') before your layout definition\n",
+                  "If you seriously want this gray window and no more nagging, add  change_look_and_feel('DefaultNoMoreNagging') ")
 
     @classmethod
     def GetAContainerNumber(cls):
