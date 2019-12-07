@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+ #!/usr/bin/python3
 
-version = __version__ = "4.8.0 Released - 04-Dec-2019"
+version = __version__ = "4.8.0.1 Unreleased - Tab colors!"
 
 port = 'PySimpleGUI'
 
@@ -3061,13 +3061,18 @@ class Graph(Element):
         if center_location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
+        radius_converted = self._convert_xy_to_canvas_xy(0,radius)
+        # radius = radius_converted[1]-5
+        # print(f'center = {converted_point} radius converted = {radius_converted}')
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
+        # print('Oval parms', int(converted_point[0]) - int(radius), int(converted_point[1]) - int(radius),
+        #                                      int(converted_point[0]) + int(radius), int(converted_point[1]) + int(radius))
         try:  # needed in case the window was closed with an X
-            id = self._TKCanvas2.create_oval(converted_point[0] - radius, converted_point[1] - radius,
-                                             converted_point[0] + radius, converted_point[1] + radius, fill=fill_color,
+            id = self._TKCanvas2.create_oval(int(converted_point[0]) - int(radius), int(converted_point[1]) - int(radius),
+                                             int(converted_point[0]) + int(radius), int(converted_point[1]) + int(radius), fill=fill_color,
                                              outline=line_color)
         except:
             id = None
@@ -3666,15 +3671,18 @@ class Tab(Element):
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
-        if disabled is None:
-            return
-        self.Disabled = disabled
-        state = 'disabled' if disabled is True else 'normal'
-        self.ParentNotebook.tab(self.TabID, state=state)
+        state = 'normal'
+        if disabled is not None:
+            self.Disabled = disabled
+            if disabled:
+                state = 'disabled'
         if visible is False:
-            self.ParentNotebook.pack_forget()
-        elif visible is True:
-            self.ParentNotebook.pack()
+            state = 'hidden'
+        self.ParentNotebook.tab(self.TabID, state=state)
+        # if visible is False:
+        #     self.ParentNotebook.pack_forget()
+        # elif visible is True:
+        #     self.ParentNotebook.pack()
         return self
 
     def _GetElementAtLocation(self, location):
@@ -3717,14 +3725,15 @@ class TabGroup(Element):
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
     """
 
-    def __init__(self, layout, tab_location=None, title_color=None, selected_title_color=None, background_color=None,
+    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
                  key=None, tooltip=None, visible=True, metadata=None):
         """
         :param layout: List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :param tab_location: (str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
         :param title_color: (str) color of text on tabs
-        :param selected_title_color: (str) color of tab when it is selected
+        :param selected_title_color: (str) color of tab text when it is selected
+        :param selected_background_color: (str) color of tab when it is selected
         :param background_color: (str) color of background of tabs
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
@@ -3745,6 +3754,8 @@ class TabGroup(Element):
         self.DictionaryKeyCounter = 0
         self.ParentWindow = None
         self.SelectedTitleColor = selected_title_color
+        self.SelectedBackgroundColor = selected_background_color
+        self.TabBackgroundColor = tab_background_color
         self.Rows = []
         self.TKNotebook = None              # type: ttk.Notebook
         self.Widget = None                  # type: ttk.Notebook
@@ -5293,7 +5304,7 @@ class Window:
             self.WindowIcon = DEFAULT_WINDOW_ICON
         self.AutoClose = auto_close
         self.NonBlocking = False
-        self.TKroot = None
+        self.TKroot = None                          # type: tk.Tk
         self.TKrootDestroyed = False
         self.CurrentlyRunningMainloop = False
         self.FormRemainedOpen = False
@@ -8613,6 +8624,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 width, height = element_size
+                print(f'Graph canvas size being created = {element_size}')
                 # I don't know why TWO canvases were being defined, on inside the other.  Was it so entire canvas can move?
                 # if element._TKCanvas is None:
                 #     element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
@@ -8705,10 +8717,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element               # type: Tab
                 element.TKFrame = element.Widget = tk.Frame(form.TKNotebook)
                 PackFormIntoFrame(element, element.TKFrame, toplevel_form)
+                state = 'normal'
                 if element.Disabled:
-                    form.TKNotebook.add(element.TKFrame, text=element.Title, state='disabled')
-                else:
-                    form.TKNotebook.add(element.TKFrame, text=element.Title)
+                    state = 'disabled'
+                if element.Visible is False:
+                    state = 'hidden'
+                form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
                 form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
@@ -8717,13 +8731,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKFrame.configure(background=element.BackgroundColor,
                                               highlightbackground=element.BackgroundColor,
                                               highlightcolor=element.BackgroundColor)
-                # if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
-                #     element.TKFrame.configure(foreground=element.TextColor)
-
-                # ttk.Style().configure("TNotebook", background='red')
-                # ttk.Style().map("TNotebook.Tab", background=[("selected", 'orange')],
-                #             foreground=[("selected", 'green')])
-                # ttk.Style().configure("TNotebook.Tab", background='blue', foreground='yellow')
 
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
@@ -8756,19 +8763,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style, background=element.BackgroundColor, foreground='purple')
 
-                # style.theme_create("yummy", parent="alt", settings={
-                #     "TNotebook": {"configure": {"tabmargins": [2, 5, 2, 0]}},
-                #     "TNotebook.Tab": {
-                #         "configure": {"padding": [5, 1], "background": mygreen},
-                #         "map": {"background": [("selected", myred)],
-                #                 "expand": [("selected", [1, 1, 1, 0])]}}})
-
-                # style.configure(custom_style+'.Tab', background='red')
-                if element.SelectedTitleColor != None:
+                # FINALLY the proper styling to get tab colors!
+                if element.SelectedTitleColor is not None and element.SelectedTitleColor != COLOR_SYSTEM_DEFAULT:
                     style.map(custom_style + '.Tab', foreground=[("selected", element.SelectedTitleColor)])
+                if element.SelectedBackgroundColor is not None  and element.SelectedBackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style.map(custom_style + '.Tab', background=[("selected", element.SelectedBackgroundColor)])
+                if element.TabBackgroundColor is not None and element.TabBackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    style.configure(custom_style + '.Tab', background= element.TabBackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
-                # style.configure(custom_style, background='blue', foreground='yellow')
 
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
 
