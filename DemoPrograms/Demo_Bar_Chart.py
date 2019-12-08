@@ -25,6 +25,8 @@ EDGE_OFFSET = 3
 GRAPH_SIZE = (500,500)
 DATA_SIZE = (500,500)
 
+sg.change_look_and_feel('Light Brown 1')
+
 graph = sg.Graph(GRAPH_SIZE, (0,0), DATA_SIZE)
 
 layout = [[sg.Text('Labelled Bar graphs using PySimpleGUI')],
@@ -45,7 +47,3 @@ while True:
                             bottom_right=(i * BAR_SPACING + EDGE_OFFSET + BAR_WIDTH, 0), fill_color='blue')
         graph.draw_text(text=graph_value, location=(i*BAR_SPACING+EDGE_OFFSET+25, graph_value+10))
 window.close()
-# del window
-
-while  True:
-    pass
