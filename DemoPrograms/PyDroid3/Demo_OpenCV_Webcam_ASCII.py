@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 import PySimpleGUI as sg
 
-font_size = 4
+font_size = 3
 CAMERA_FRONT = 1
 CAMERA_REAR = 0
 
