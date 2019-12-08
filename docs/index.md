@@ -10,7 +10,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.8.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.9.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -155,11 +155,18 @@ and returns the value input as well as the button clicked.
 
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
-The YouTube videos - If you like instructional videos, there are over 15 videos
+The YouTube videos - If you like instructional videos, there are over 15 videos made by PySimpleGUI project
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
 - [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
 - [The Naked Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
 - There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
+
+YouTube Videos made by others.  These have much higher production values than the above videos.
+
+- A ***fantastic*** tutorial [PySimpleGUI Concepts - Video 1](https://youtu.be/cLcfLm_GgiM)
+- Build a calculator [Python Calculator with GUI | PySimpleGUI | Texas Instruments DataMath II](https://youtu.be/x5LSTDdffFk)
+- Notepad [Notepad in Python - PySimpleGUI](https://youtu.be/JQY641uynKo)
+- File Search Engine [File Search Engine | Project for Python Portfolio with GUI | PySimpleGUI](https://youtu.be/IWDC9vcBIFQ)
 
 # About The PySimpleGUI Documentation System
 
@@ -785,7 +792,9 @@ Just because you can't match a pair of socks doesn't mean your windows have to a
 
 In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
 
-![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+In release 4.9 another 32 Color Themes were added... here are the current choices
+
+![Dec 2019 Look And Feel Themes](https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg)
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
@@ -1216,34 +1225,15 @@ Then use either "high level" API calls or build your own windows.
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
-***WARNING*** Do NOT use PySimpleGUI with Python 3.7.3 and 3.7.4.  tkiter is having issues with that release.  Things like Table colors stopped working entirely.  None of us want to debug tkinter code.  It's difficult enough debugging your code and PySimpleGUI code.  A lot of time has already been spent debugging this one so no need for you to suffer too.
-
 ### Python 3.7
 
-It puzzles me why a beginner would install 3.7.  Or even a seasoned programmer.  What specific feature of 3.7 are you using that is not in 3.6?  If you are unable to answer this, then ***it's strongly suggested that you run 3.6***, an immensely solid release of Python with all those goodie inside like f-strings.  If you must run 3.7, try 3.7.2 instead.  It does work with PySimpleGUI with no known issues.
+If you must run 3.7, try 3.7.2.  It does work with PySimpleGUI with no known issues.
 
-## Using  - Python 2.7
+***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  It's unclear if there's been a change that makes the tkinter API no longer working which means they are not backwards compatible.  That would be a real shame. If so, more work needs to be done in PySimpleGUI
 
-Those using Python 2.7 will import a different module name
+## Python 2.7
 
-```python
-import PySimpleGUI27 as sg
-```
-
-## Code to Automatically Import Correct Version
-
-Many of the demo programs use this check to see which package to use:
-```python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-```
-
-This will automatically import the correct library based on the Python version number reported by the Python interpreter.
-
-NOTE: It's 2019 and 2.7 support is being systematically removed.  This construct will be removed from the demo programs shortly.  2.7 users can still run these demos, but they will need to change the import from PySimpleGUI to PySimpleGUI27.  It save 4 lines of code and an import from sys in the process.
+On December 31, 2019 the Python 2.7 version of PySimpleGUI will be **deleted** from the GitHub.  Sorry but Legacy Python has no permanent home here.  The security experts claim that supporting 2.7 is doing a diservice to the Python community.  I understand why.  There are some very narrow cases where 2.7 is required.  If you have one, make a copy of PySimpleGUI27.py quickly before it disappears for good.
 
 ---
 
@@ -11550,7 +11540,9 @@ Parameter Descriptions:
 TabGroup(layout,
     tab_location=None,
     title_color=None,
+    tab_background_color=None,
     selected_title_color=None,
+    selected_background_color=None,
     background_color=None,
     font=None,
     change_submits=False,
@@ -11571,8 +11563,10 @@ Parameter Descriptions:
 |layout|List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row|
 |tab_location|(str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright|
 |title_color|(str) color of text on tabs|
-|selected_title_color|(str) color of tab when it is selected|
-|background_color|(str) color of background of tabs|
+|tab_background_color|(str) color of all tabs that are not selected|
+|selected_title_color|(str) color of tab text when it is selected|
+|selected_background_color|(str) color of tab when it is selected|
+|background_color|(str) color of background area that tabs are located on|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
 |enable_events|(bool) If True then switching tabs will generate an Event|
@@ -14208,35 +14202,6 @@ The scheme are string names that specify a group of colors. Background colors, t
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
 The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
 The original list was (prior to a major rework and renaming)... these names still work...
-SystemDefault
-SystemDefaultForReal
-Material1
-Material2
-Reddit
-Topanga
-GreenTan
-Dark
-LightGreen
-Dark2
-Black
-Tan
-TanBlue
-DarkTanBlue
-DarkAmber
-DarkBlue
-Reds
-Green
-BluePurple
-Purple
-BlueMono
-GreenMono
-BrownBlue
-BrightColors
-NeutralBlue
-Kayak
-SandyBeach
-TealMono
-
 In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
 The "Formula" is:
 ["Dark" or "Light"] Color Number
@@ -14253,8 +14218,8 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|index|(str) the name of the index into the Look and Feel table|
-|force|(bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
 
 ```
 CloseButton(button_text,
@@ -14888,6 +14853,697 @@ Parameter Descriptions:
 |focus|if focus should be set to this|
 |pad|Amount of padding to put around element|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
+
+Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
+"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
+
+```
+Popup(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    button_type=0,
+    auto_close=False,
+    auto_close_duration=None,
+    custom_text=(None, None),
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of your arguments. Load up the call with stuff to see!|
+|title|(str) Optional title for the window. If none provided, the first arg will be used instead.|
+|button_color|Tuple[str, str] Color of the buttons shown (text color, button color)|
+|background_color|(str) Window's background color|
+|text_color|(str) text color|
+|button_type|(enum) NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.|
+|auto_close|(bool) If True the window will automatically close|
+|auto_close_duration|(int) time in seconds to keep window open before closing it automatically|
+|custom_text|Union[Tuple[str, str], str] A string or pair of strings that contain the text to display on the buttons|
+|non_blocking|(bool) If True then will immediately return from the function without waiting for the user's input.|
+|icon|Union[str, bytes] icon to display on the window. Same format as a Window call|
+|line_width|(int) Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH|
+|font|Union[str, tuple(font name, size, modifiers) specifies the font family, size, etc|
+|no_titlebar|(bool) If True will not show the frame around the window and the titlebar across the top|
+|grab_anywhere|(bool) If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too|
+|location|Tuple[int, int] Location on screen to display the top left corner of window. Defaults to window centered on screen|
+|||
+| **return** | Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
+ and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
+ event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+ loop.
+
+```
+PopupAnimated(image_source,
+    message=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    no_titlebar=True,
+    grab_anywhere=True,
+    keep_on_top=True,
+    location=(None, None),
+    alpha_channel=None,
+    time_between_frames=0,
+    transparent_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|image_source|Union[str, bytes] Either a filename or a base64 string.|
+|message|(str) An optional message to be shown with the animation|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|font|Union[str, tuple) specifies the font family, size, etc|
+|no_titlebar|(bool) If True then the titlebar and window frame will not be shown|
+|grab_anywhere|(bool) If True then you can move the window just clicking anywhere on window, hold and drag|
+|keep_on_top|(bool) If True then Window will remain on top of all other windows currently shownn|
+|location|(int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen|
+|alpha_channel|(float) Window transparency 0 = invisible 1 = completely visible. Values between are see through|
+|time_between_frames|(int) Amount of time in milliseconds between each frame|
+|transparent_color|(str) This color will be completely see-through in your window. Can even click through|
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupAnnoying(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Popup that closes itself after some time period
+
+```
+PopupAutoClose(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with "cancelled" button text
+
+```
+PopupCancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Popup with colored button and 'Error' as button text
+
+```
+PopupError(args,
+    title=None,
+    button_color=(None, None),
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|(Default = (None))|
+
+Display popup window with text entry field and browse button so that a file can be chosen by user.
+
+```
+PopupGetFile(message,
+    title=None,
+    default_path="",
+    default_extension="",
+    save_as=False,
+    multiple_files=False,
+    file_types=(('ALL Files', '*.*'),),
+    no_window=False,
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None),
+    initial_folder=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|default_extension|(str) If no extension entered by user, add this to filename (only used in saveas dialogs)|
+|save_as|(bool) if True, the "save as" dialog is shown which will verify before overwriting|
+|multiple_files|(bool) if True, then allows multiple files to be selected that are returned with ';' between each filename|
+|file_types|Tuple[Tuple[str,str]] List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
+|||
+| **return** | Union[str, None]  string representing the file(s) chosen, None if cancelled or window closed with X |
+
+Display popup with text entry field and browse button so that a folder can be chosen.
+
+```
+PopupGetFolder(message,
+    title=None,
+    default_path="",
+    no_window=False,
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None),
+    initial_folder=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
+|||
+| **return** | Union[str, None]  string representing the path chosen, None if cancelled or window closed with X |
+
+Display Popup with text entry field. Returns the text entered or None if closed / cancelled
+
+```
+PopupGetText(message,
+    title=None,
+    default_text="",
+    password_char="",
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_text|(str) default value to put into input area|
+|password_char|(str) character to be shown instead of actually typed characters|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|||
+| **return** | Union[str, None] Text entered or None if window was closed or cancel button clicked |
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoBorder(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Show a Popup but without any buttons
+
+```
+PopupNoButtons(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoFrame(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoTitlebar(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Show Popup window and immediately return (does not block)
+
+```
+PopupNoWait(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show Popup window and immediately return (does not block)
+
+```
+PopupNonBlocking(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with OK button only
+
+```
+PopupOK(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display popup with OK and Cancel buttons
+
+```
+PopupOKCancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=...,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["OK", "Cancel", None] |
 
 Show Popup box that doesn't block and closes itself
 
@@ -15564,35 +16220,6 @@ The scheme are string names that specify a group of colors. Background colors, t
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
 The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
 The original list was (prior to a major rework and renaming)... these names still work...
-SystemDefault
-SystemDefaultForReal
-Material1
-Material2
-Reddit
-Topanga
-GreenTan
-Dark
-LightGreen
-Dark2
-Black
-Tan
-TanBlue
-DarkTanBlue
-DarkAmber
-DarkBlue
-Reds
-Green
-BluePurple
-Purple
-BlueMono
-GreenMono
-BrownBlue
-BrightColors
-NeutralBlue
-Kayak
-SandyBeach
-TealMono
-
 In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
 The "Formula" is:
 ["Dark" or "Light"] Color Number
@@ -15609,8 +16236,8 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|index|(str) the name of the index into the Look and Feel table|
-|force|(bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
 
 ```
 easy_print(args,
@@ -16419,6 +17046,47 @@ Parameter Descriptions:
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
 |location||
 
+Display popup with OK and Cancel buttons
+
+```
+popup_ok_cancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=...,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["OK", "Cancel", None] |
+
 Show Popup box that doesn't block and closes itself
 
 ```
@@ -16619,6 +17287,19 @@ Parameter Descriptions:
 |location|Location on screen to display|
 |||
 | **return** | Union["Yes", "No", None] |
+
+Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
+They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+
+```
+preview_all_look_and_feel_themes(columns=12)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|columns|(int) The number of themes to display per row|
 
 ```
 quit(button_text="Quit",
@@ -16915,6 +17596,9 @@ https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Pro
 
 There are not many programs under each of the port's folders because the main Demo Programs should run on all of the other platforms with minimal changes (often only the import statement changes).
 
+You will also find a lot of demos running on Trinket
+http://Trinket.PySimpleGUI.org
+
 ## Packages Used In Demos
 
   While the core PySimpleGUI code  does not utilize any 3rd party packages, some of the demos do.  They add a GUI to a few popular packages.  These packages include:
@@ -17080,37 +17764,47 @@ You'll quickly wonder how you ever coded without it.
 
 Well, there are a few quirks, and problems of course.  Check the [GitHub Issues database](https://github.com/PySimpleGUI/PySimpleGUI/issues) for a list of them.
 
-As previously mentioned this is also where you should post all problems and enhancements.
+As previously mentioned **this is where you should post all problems and enhancements.**
 
-## MACS + tkinter = SUCKS
+Random crashes have been rared.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
 
-Not sure why, but for over a year and a half, setting the color of buttons does not work on Macs.  There have been numerous other problems.  Checking the Issues database is the best place to see what they are.  If there was a magic wand it would have been used long ago to fix these problems, but there does not appear to be a magic fix.
+## MACS & tkinter
 
-This was already mentioned at the top of this document but want to make sure it's covered as a "known issue"
+Macs and PySimpleGUI did not play well together up until Nov 2019 and the release of ttk buttons.  Prior to that buttons had to be white.  Now the Mac can use any color for buttons and they work great.  Images on buttons work as well.
+
+The problems were the normal tk.Button was not working correctly on the Mac.  You couldn't set the button color.  If you tried it appeared as if the text was missing.
+
+Users have recently reported the ability to install Python 3.7 from the Python.org website and NOT used (I think removed) the "Homebrew" version of Python.  This resolved all of the button color problems. 
+
+Regardless, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
+
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, you should consider switching back.  One reason to return is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
 
 ## Multiple threads
 
-While not an "issue" this is a ***stern warning***
+Consider this is a ***stern warning***
 
-## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
+### **Do not attempt** to call `PySimpleGUI` from multiple threads! At least the `tkinter` based port because tkinter is not threadsafe and has known issues with multiple threads
 
 Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`
+Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+
+Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
 
 # Contributing
 
-## Core Code
+## Write Applications
 
-***Core code changes/pull requests are not being accepted at this time.***
+The way for you to contribute to the PySimpleGUI is to create and share PySimpleGUI GUIs.  **Everyone** learns from seeing other peoples' implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project and helped to create thw you see today.
 
-## Demos
+## Pull Requests
 
-You're welcome to share a PySimpleGUI program you've written that you think fits the model of a PySimpleGUI Demo Program.
+***PySimpleGUI code changes/pull requests are not being accepted at this time.***
 
 ## GitHub Repos
 
-If you've created a GitHub for your project that uses PySimpleGUI then please submit it to be included in this document or on the PySimpleGUI GitHub site.  Also, you'll find a lot more people will look at your code, explore your repo if you have posted **screen shots in your readme**.  People *love* success stories and showing your GUI's screen shows you've been successful.  Everyone wins!
+If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the annoucements. People *love* success stories and showing your GUI's screen visually communicates your success. 
 
 ## Versions
 |Version | Description |
@@ -18023,13 +18717,60 @@ Print in color!
 	* Prints the "Event" in Green on White text
 	* Prints the "values" normally
 
+## 4.9.0 PySimpleGUI 7-Dec-2019
+
+The "Finally Nailed Tabs" release
+
+* Colors for Tabs!
+	* When creating TabGroup can now specify
+	* Text & Background color of all tabs
+	* Text & Background color of selected tab
+	* If nothing is specified then the Look and Feel theme will be used (which turned out GREAT)
+* Tab visibility - Can finally control individual tab's visibility using update and when creating
+* More "Look and Feel" Themes!  There's no excuse to be grey again. There are now 126 themes to choose from.  Here are the 32 new themes"
+	DefaultNoMoreNagging
+	DarkBlack1
+	DarkBlue12
+	DarkBlue13
+	DarkBlue14
+	DarkBlue15
+	DarkBlue16
+	DarkBlue17
+	DarkBrown5
+	DarkBrown6
+	DarkGreen2
+	DarkGreen3
+	DarkGreen4
+	DarkGreen5
+	DarkGreen6
+	DarkGrey4
+	DarkGrey5
+	DarkGrey6
+	DarkGrey7
+	DarkPurple6
+	DarkRed2
+	DarkTeal10
+	DarkTeal11
+	DarkTeal12
+	DarkTeal9
+	LightBlue6
+	LightBlue7
+	LightBrown12
+	LightBrown13
+	LightGray1
+	LightGreen10
+	LightGreen9
+	LightGrey6
+* preview_all_look_and_feel_themes now has a columns parameter to control number of entries per rows
+	* also made each theme display smaller due to large number of themes
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
 
 The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
 
-At some point, while those 3 are being completed, the PySimpleGUIKivy code will be picked back up and restarted.  Several elements are already completed so the base port is done.
+PySimpleGUIDroid is in the works....
 
 In addition to the ports there is ongoing work with educators that want to bring PySimpleGUI into their classrooms.  Some projects have already started with teachers.  One effort is to examine a number of books that teach Python to kids and convert the exercises to use PySimpleGUI instead of tkinter or command line.  Another educational effort is in integrating with Circuit Python.  It's unclear exactly how PySimpleGUI will fit into the picture.  A board from Adafruit is arriving soon which should help solidify what's possible.
 
