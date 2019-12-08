@@ -36,7 +36,7 @@ SC, GCF, WCF = .1, 1, 7/4
 sg.change_look_and_feel('Dark Black 1') # make it look cool
 
 # ---------------- A Quick Little Window - to get camera to use ----------------
-win_get_cam = sg.Window('Which Camera?',[[sg.T('Which camera?')],[sg.Combo(['Front', 'Rear'], default_value='Rear', font='any 20')], [sg.Ok()]], location=(0,0))
+win_get_cam = sg.Window('Which Camera?',[[sg.T('Which camera?')],[sg.Combo(['Front', 'Rear'], default_value='Rear', font='any 20')],[sg.T(size=(1,2))], [sg.Ok()]], location=(0,0))
 event, values = win_get_cam.read()
 win_get_cam.close()
 if event != 'Ok': exit()
