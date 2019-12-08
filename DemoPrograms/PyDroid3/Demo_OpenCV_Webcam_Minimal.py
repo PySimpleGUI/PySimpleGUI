@@ -11,7 +11,16 @@ import cv2
 
 CAMERA_FRONT = 1
 CAMERA_REAR = 0
+
 sg.change_look_and_feel('Dark Black 1')
+
+# ---------------- A Quick Little Window - to get camera to use ----------------
+win_get_cam = sg.Window('Which Camera?',[[sg.T('Which camera?')],[sg.Combo(['Front', 'Rear'], default_value='Rear', font='any 20')],[sg.T(size=(1,2))], [sg.Ok()]], location=(0,0))
+event, values = win_get_cam.read()
+win_get_cam.close()
+if event != 'Ok': exit()
+USE_CAMERA = [CAMERA_FRONT, CAMERA_REAR][values[0]=='Rear']
+
 
 # define the window layout
 layout = [[sg.Image(filename='', key='-IMAGE-', tooltip='Right click for exit menu')],
@@ -23,7 +32,7 @@ window = sg.Window('Demo Application - OpenCV Integration', layout, location=(0,
                    right_click_menu=['&Right', ['E&xit']], )  # if trying Qt, you will need to remove this right click menu
 
 # ---===--- Event LOOP Read and display frames, operate the GUI --- #
-cap = cv2.VideoCapture(CAMERA_REAR)                               # Setup the OpenCV capture device (webcam)
+cap = cv2.VideoCapture(USE_CAMERA)                               # Setup the OpenCV capture device (webcam)
 while True:
     event, values = window.read(timeout=20)
     if event in ('Exit', None):
