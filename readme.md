@@ -1,16 +1,20 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.9.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.10.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -399,6 +403,35 @@ PySimpleGUIWeb is first and foremost a **GUI**, a program's front-end. It is des
 
 If more than 1 person connects at a time, then both users will see the exact same stuff and will be interacting with the program as if a single user was using it.
 
+## Android Version
+
+PySimpleGUI runs on Android devices with the help of either the PyDroid3 app or the Termux app.  Both are capable of running tkinter programs which means both are capable of running PySimpleGUI.
+
+To use with PyDroid3 you will need to add this import to the top of all of your PySimpleGUI program files:
+
+```python
+import tkinter
+```
+
+This evidently triggers PyDroid3 that the application is going to need to use the GUI.
+
+You will also want to create your windows with the `location` parameter set to `(0,0)`.
+
+Here's a quick demo that uses OpenCV2 to display your webcam in a window that runs on PyDroid3:
+
+```python
+import tkinter
+import cv2, PySimpleGUI as sg
+USE_CAMERA = 0      # change to 1 for front facing camera
+window, cap = sg.Window('Demo Application - OpenCV Integration', [[sg.Image(filename='', key='image')], ], location=(0, 0), grab_anywhere=True), cv2.VideoCapture(USE_CAMERA)
+while window(timeout=20)[0] is not None:
+    window['image'](data=cv2.imencode('.png', cap.read()[1])[1].tobytes())
+```
+
+You will need to pip install opencv-python as well as PySimpleGUI to run this program.
+
+Also, you must be using the Premium, yes paid, version of PyDroid3 in order to run OpenCV.  The cost is CHEAP when compared to the rest of things in life.  A movie ticket will cost you more.  Which is more fun, seeing **your Python program** running on your phone and using your phone's camera, or some random movie currently playing?  From experience, the Python choice is a winner.  If you're cheap, well, then you won't get to use OpenCV. No, there is no secret commercial pact between the PySimpleGUI project and the PyDroid3 app team.  
+
 ## Source code compatibility
 
 In theory, your source code is completely portable from one platform to another by simply changing the import statement.  That's the GOAL and suprisingly many times this 1-line change works.  Seeing your code run on tkinter, then change the import to `import  PySimpleGUIWeb as sg` and instead of a tkinter window, up pops your default browser with your window running on it is an incredible feeling.
@@ -691,13 +724,16 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Filename')],
-          [sg.Input(), sg.FileBrowse()], 
-	  [sg.OK(), sg.Cancel()]] 
+sg.change_look_and_feel('Dark Blue 3')  # please make your creations colorful
+
+layout = [	[sg.Text('Filename')],
+          	[sg.Input(), sg.FileBrowse()], 
+	  		[sg.OK(), sg.Cancel()]] 
 
 window = sg.Window('Get filename example', layout)
 
 event, values = window.Read()
+window.close()
 ```
 
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
@@ -918,6 +954,7 @@ Features of PySimpleGUI include:
 	- Calendar chooser
 	- Color chooser
 	- Button Menu
+- TTK Buttons or "normal" TK Buttons
 - Checkboxes
 - Radio Buttons
 - Listbox
@@ -1031,7 +1068,7 @@ Beginners certainly can add more `if event == 'my button':` statements to the ev
 
 The hope is that beginners that are interested in graphic design, and are taking a Python course, will have an easy way to express themselves, right from the start of their Python experience.  Even if they're not the best programmers they will be able express themselves to show custom GUI layouts, colors and artwork with ease.
 
-> Fill the GUI Gap
+> Fill the GUI Gap (Democratize GUIs)
 
 There is a noticeable gap in the Python GUI solution.  Fill that gap and who knows what will happen.  At the moment, to make a tradiional GUI window using tkinter, Qt, WxPython and Remi, it takes much more than a week, or a month of Python education to use these GUI packages.  
 
@@ -1086,6 +1123,8 @@ More information about installing tkinter can be found here: https://www.techinf
 
 ### Installing for Python 2.7
 
+**IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
+
 `pip install --upgrade PySimpleGUI27`
 or
 `pip2 install --upgrade PySimpleGUI27`
@@ -1095,8 +1134,6 @@ You may need to also install "future" for version 2.7
 `pip install future`
 or
 `pip2 install future`
-
-Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
 
 Like above, you may have to install either pip or tkinter.  To do this on Python 2.7:
 
@@ -1902,11 +1939,13 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
 			[sg.OK(), sg.Cancel()] ]
 
-window sg.Window('Get filename example', layout)
+window = sg.Window('Get filename example', layout)
 event, values = window.read()
 window.close()
 
@@ -1928,6 +1967,8 @@ The input fields in your window will be returned to you as a dictionary (syntact
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 				 [sg.InputText(), sg.FileBrowse()],
 				 [sg.Submit(), sg.Cancel()]]
@@ -1948,6 +1989,8 @@ This code will present a window and will print values until the user clicks the 
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Persistent window')],
 		  [sg.Input()],
@@ -1977,7 +2020,9 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
@@ -2014,6 +2059,8 @@ Let's dissect this little program
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Rename files or folders')],
 			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
 			[sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
@@ -2027,7 +2074,15 @@ folder_path, file_path = values[0], values[1]       # get the data from the valu
 print(folder_path, file_path)
 ```
 
+#### Colors
+
+![image](https://user-images.githubusercontent.com/46163555/70470775-cd01ff00-1a99-11ea-8b9c-8b33c8880c99.png)
+
+The first line of code after the import is a call to `change_look_and_feel`.  This single line of code make the window look like the window above instead of the window below.  It will also stop PySimpleGUI from nagging you to put one of these calls into your program.
+
 ![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
+
+#### Window contents
 
 Let's agree the window has 4 rows.
 
@@ -2051,6 +2106,8 @@ And what about those return values?  Most people simply want to show a window, g
 For return values the window is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
+
+#### "Reading" the window's values (also displays the window)
 
 ```python
 event, values = window.read()
@@ -2119,7 +2176,7 @@ while True:
 	event, values = window.read()
 	if event is None:
 		break
-window.Close()
+window.close()
 ```
 
 You will very often see the examples and demo programs write this check as:
@@ -2258,6 +2315,8 @@ Let's take a look at your first dictionary-based window.
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
 			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
@@ -2268,7 +2327,7 @@ layout = [
 
 window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
-window.Close()
+window.close()
 
 sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
 ```
@@ -2347,6 +2406,7 @@ layout = [
 
 window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
 event, values = window.read()
+window.close()
 
 sg.Popup('Title',
          'The results of the window.',
@@ -2468,12 +2528,6 @@ You can get your window's size by access the `Size` property.  The window has to
 To finalize your window:
 
 ```python
-window = Window('My Title', layout).Finalize()
-```
-
-If using PySimpleGUI 4.2 and later:
-
-```python
 window = Window('My Title', layout, finalize=True)
 ```
 
@@ -2519,6 +2573,27 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
 
 PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
 
+### TTK Buttons
+
+Beginning in release 4.7.0 PySimpleGUI supports both "normal" tk Buttons and ttk Buttons.  This change was needed so that Mac users can use colors on their buttons.  There is a bug that causes tk Buttons to not show text when you attempt to change the button color.  Note that this problem goes away if you install Python from the official Python.org site rather than using Homebrew.  A number of users have switched and are quite happy since even tk Buttons work on the Mac after the switch.
+
+By default Mac users will get ttk Buttons when a Button Element is used.  All other platforms will get a normal tk Button.  There are ways to override this behavior.  One is by using the parameter `use_ttk_buttons` when you create your window.  If set to True, all buttons will be ttk Buttons in the window.  If set to False, all buttons will be normal tk Buttons.  If not set then the platform or the Button Element determines which is used.
+
+If a system-wide setting is desired, then the default can be set using `set_options`.  This will affect all windows such as popups and the debug window.
+
+### TTK Themes
+
+tkinter has a number of "Themes" that can be used with ttk widgets.  In PySimpleGUI these widgets include - Table, Tree, Combobox, Button, ProgressBar, Tabs & TabGroups.  Some elements have a 'theme' parameter but these are no longer used and should be ignored.  The initial release of PySimpleGUI attempted to mix themes in a single window but since have learned this is not possible so instead it is set at the Window or the system level.
+
+If a system-wide setting is desired, then the default can be set using `set_options`. This will affect all windows such as popups and the debug window.
+
+The ttk theme choices depend on the platform. Linux has a shorter number of selections than Windows.  These are the Windows choices:
+'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+
+There are constants defined to help you with code completion to determine what your choices are.  Theme constants start with `THEME_`.  For example, the "clam" theme is `THEME_CLAM`
+
+You're urged to experiment with this setting to determine which you like the most.  They change the ttk-based elements in subtle but still significant ways.
+
 ## Closing Windows
 
 When you are completely done with a window, you should close it and then delete it so that the resources, in particular the tkinter resources, are properly cleaned up.
@@ -2549,8 +2624,8 @@ This is the "long form" as each method is called individually.
 
 ```python
 window = sg.Window('My Title')
-window.Layout(layout)
-window.Finalize()
+window.layout(layout)
+window.finalize()
 ```
 
 ### Chaining The Calls (the old method)
@@ -2558,7 +2633,7 @@ window.Finalize()
 The next level  of compression that was done was to chain the calls together into a single line of code.
 
 ```python
-window = sg.Window('My Title').Layout(layout).Finalize()
+window = sg.Window('My Title').Layout(layout).finalize()
 ```
 
 ### Using Parameters Instead of Calls (New Preferred Method)
@@ -2579,13 +2654,13 @@ Call to set the window layout.  Must be called prior to `Read`.  Most likely "ch
 window = sg.Window('My window title', layout)
 ```
 
-#### `Finalize()` or `Window` parameter `finalize=True`
+#### `finalize()` or `Window` parameter `finalize=True`
 
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.  This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
 If you want to call an element's `Update` method or call a `Graph` element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
-#### Read(timeout=None, timeout_key=TIMEOUT_KEY)
+#### read(timeout=None, timeout_key=TIMEOUT_KEY)
 
 Read the Window's input values and button clicks in a blocking-fashion
 
@@ -2809,10 +2884,12 @@ The first part should look familiar since it was just discussed as being what bu
 
 ### Putting it all together
 
-Here is our final program that uses simple addition to add the headers onto the top of the input matrix.
+Here is our final program that uses simple addition to add the headers onto the top of the input matrix.  To make it more attractive, the color theme is set to 'Dark Brown 1'.
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Brown 1')
 
 headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
 header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
@@ -2824,6 +2901,8 @@ layout = header + input_rows
 window = sg.Window('Table Simulation', layout, font='Courier 12')
 event, values = window.read()
 ```
+
+![image](https://user-images.githubusercontent.com/46163555/70472374-f7a18700-1a9c-11ea-9cd1-27d386cd9066.png)
 
 ## User Defined Elements / Compound Elements
 
@@ -18763,6 +18842,16 @@ The "Finally Nailed Tabs" release
 	LightGrey6
 * preview_all_look_and_feel_themes now has a columns parameter to control number of entries per rows
 	* also made each theme display smaller due to large number of themes
+
+## 4.10.0 PySimpleGUI 9-Dec-2019
+
+"Oh crap the debugger is broken!" + "Pretty Progress Bars" release
+
+* Fix for built-in debugger not working
+	* Important due to upcoming educational usage
+	* Has been broken since 4.5.0 when a change to Finalize was made
+* ProgessBar element colors set using Look and Feel colors
+	* Combination of button color, input element, and input element text are used
 
 ### Upcoming
 
