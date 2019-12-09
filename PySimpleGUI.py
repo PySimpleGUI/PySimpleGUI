@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.9.0 Released 7-Dec-2019 Colored Tabs"
+version = __version__ = "4.9.0.1 Unreleased - fixed built-in debugger"
 
 port = 'PySimpleGUI'
 
@@ -11820,7 +11820,12 @@ class _Debugger():
                   [Button('', image_data=red_x, key='_EXIT_', button_color=None),]]
 
         # ------------------------------- Create main window -------------------------------
-        window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location).Finalize()
+        window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location)
+
+        Window.read_call_from_debugger = True
+        window.finalize()
+        Window.read_call_from_debugger = False
+
         window.Element('_VAR1_').SetFocus()
         self.watcher_window = window
         ChangeLookAndFeel('SystemDefault')           # set look and feel to default before exiting
@@ -12140,7 +12145,12 @@ class _Debugger():
 
         self.popout_window = Window('Floating', layout, alpha_channel=0, no_titlebar=True, grab_anywhere=True,
                                            element_padding=(0, 0), margins=(0, 0), keep_on_top=True,
-                                       right_click_menu=['&Right', ['Debugger::RightClick', 'Exit::RightClick']], location=location ).Finalize()
+                                       right_click_menu=['&Right', ['Debugger::RightClick', 'Exit::RightClick']], location=location, finalize=False )
+
+        Window.read_call_from_debugger = True
+        self.popout_window.Finalize()
+        Window.read_call_from_debugger = False
+
         if location == (None, None):
             screen_size = self.popout_window.GetScreenDimensions()
             self.popout_window.Move(screen_size[0] - self.popout_window.Size[0], 0)
