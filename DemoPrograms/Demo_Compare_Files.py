@@ -5,12 +5,14 @@ import PySimpleGUI as sg
     Simple "diff" in PySimpleGUI
 '''
 
+sg.change_look_and_feel('Dark Blue 3')
+
 def GetFilesToCompare():
     form_rows = [[sg.Text('Enter 2 files to comare')],
                  [sg.Text('File 1', size=(15, 1)),
                     sg.InputText(key='-file1-'), sg.FileBrowse()],
                  [sg.Text('File 2', size=(15, 1)), sg.InputText(key='-file2-'),
-                  sg.FileBrowse(target='file2')],
+                  sg.FileBrowse(target='-file2-')],
                  [sg.Submit(), sg.Cancel()]]
 
     window = sg.Window('File Compare', form_rows)
