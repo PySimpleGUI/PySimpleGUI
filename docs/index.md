@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.10.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.11.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -5462,58 +5462,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonCallBack
-
-Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
-
-```python
-ButtonCallBack()
-```
-
-### ButtonPressCallBack
-
-Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
-
-```
-ButtonPressCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|Event info passed in by tkinter|
-
-### ButtonReboundCallback
-
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
-### ButtonReleaseCallBack
-
-Not a user callable function.  Called by tkinter when a "realtime" button is released
-
-```
-ButtonReleaseCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|the event info from tkinter|
-
 ### Click
 
 Generates a click of the button as if the user clicked the button
@@ -5589,11 +5537,26 @@ Parameter Descriptions:
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -5788,9 +5751,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -5854,11 +5816,26 @@ Parameter Descriptions:
 |menu_definition|(List[List]) New menu definition (in menu definition format)|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6001,9 +5978,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6047,11 +6023,26 @@ Parameter Descriptions:
 
 #### property: TKCanvas
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6197,9 +6188,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6268,11 +6258,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6435,25 +6440,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Column Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6464,22 +6454,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Column) Used for chaining |
 
 ### SetFocus
 
@@ -6537,11 +6511,26 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6715,9 +6704,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6794,11 +6782,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6977,25 +6980,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -7006,22 +6994,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
 
 ### SetFocus
 
@@ -7066,25 +7038,26 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
-### add_row
+### bind
 
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -7129,22 +7102,6 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
-
-### layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
 
 ### set_focus
 
@@ -7291,9 +7248,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -7304,20 +7260,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### ButtonReleaseCallBack
-
-Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
-
-```
-ButtonReleaseCallBack(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Note not used in this method|
 
 ### DeleteFigure
 
@@ -7655,6 +7597,22 @@ Parameter Descriptions:
 |background_color|color of background|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### bring_figure_to_front
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
@@ -7685,9 +7643,8 @@ Parameter Descriptions:
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -7698,20 +7655,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### button_release_call_back
-
-Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
-
-```
-button_release_call_back(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Note not used in this method|
 
 ### delete_figure
 
@@ -7956,20 +7899,6 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-### motion_call_back
-
-Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
-
-```
-motion_call_back(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
-
 ### move
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
@@ -8143,9 +8072,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8221,11 +8149,26 @@ Parameter Descriptions:
 |source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
 |time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8411,9 +8354,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8489,11 +8431,26 @@ Parameter Descriptions:
 |background_color|(str) change color of the background|
 |move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8679,9 +8636,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8777,11 +8733,26 @@ Parameter Descriptions:
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8978,9 +8949,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9035,11 +9005,26 @@ Parameter Descriptions:
 |menu_definition|List[List[Tuple[str, List[str]]]|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9208,9 +9193,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9290,11 +9274,26 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9473,9 +9472,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9535,11 +9533,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9691,9 +9704,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9762,11 +9774,26 @@ Parameter Descriptions:
 |value|(str) string that will replace current contents of the output area|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9921,9 +9948,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9977,11 +10003,26 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10131,9 +10172,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10202,11 +10242,26 @@ Parameter Descriptions:
 |current_count|(int) sets the current value|
 |max|(int) changes the max value|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10380,9 +10435,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10458,11 +10512,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10650,9 +10719,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10712,11 +10780,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10878,9 +10961,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10952,11 +11034,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11130,9 +11227,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11194,11 +11290,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11359,25 +11470,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended use call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11388,22 +11484,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The list of rows|
-|||
-| **return** | (Tab) used for chaining |
 
 ### Select
 
@@ -11456,25 +11536,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### add_row
+### bind
 
-Not recommended use call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11519,22 +11600,6 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
-
-### layout
-
-Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
-
-```
-layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The list of rows|
-|||
-| **return** | (Tab) used for chaining |
 
 ### select
 
@@ -11657,25 +11722,10 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11716,22 +11766,6 @@ are using this method correctly?
 |---|---|
 | **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
 
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -11760,25 +11794,26 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-### add_row
+### bind
 
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11991,9 +12026,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12069,11 +12103,26 @@ Parameter Descriptions:
 |alternating_row_color|(str) the color to make every other row|
 |row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12174,36 +12223,6 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-### treeview_double_click
-
-Not user callable.  Callback function that is called when something is selected from Table.
-Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
-
-```
-treeview_double_click(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) event information from tkinter|
-
-### treeview_selected
-
-Not user callable.  Callback function that is called when something is selected from Table.
-Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
-
-```
-treeview_selected(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) event information from tkinter|
-
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -12285,9 +12304,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12349,11 +12367,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12473,6 +12506,86 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+## ToolTip Element
+
+    Create a tooltip for a given widget
+    (inspired by https://stackoverflow.com/a/36221216)
+    This is an INTERNALLY USED only class.  Users should not refer to this class at all.
+
+```
+ToolTip(widget,
+    text,
+    timeout=400)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|widget|(widget type varies) The tkinter widget|
+|text|(str) text for the tooltip. It can inslude|
+|timeout|(int) Time in milliseconds that mouse must remain still before tip is shown|
+
+### enter
+
+Called by tkinter when mouse enters a widget
+
+```
+enter(event=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|from tkinter. Has x,y coordinates of mouse|
+
+### hidetip
+
+Destroy the tooltip window
+
+```python
+hidetip()
+```
+
+### leave
+
+Called by tktiner when mouse exits a widget
+
+```
+leave(event=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|from tkinter. Event info that's not used by function.|
+
+### schedule
+
+Schedule a timer to time how long mouse is hovering
+
+```python
+schedule()
+```
+
+### showtip
+
+Creates a topoltip window with the tooltip text inside of it
+
+```python
+showtip()
+```
+
+### unschedule
+
+Cancel timer used to time mouse hover
+
+```python
+unschedule()
+```
+
 ## Tree Element
 
     Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
@@ -12536,9 +12649,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12616,11 +12728,26 @@ Parameter Descriptions:
 |---|---|
 |node|(TreeData) The node to insert. Will insert all nodes from starting point downward, recursively|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12844,9 +12971,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12886,11 +13012,26 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12988,7 +13129,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-## Window
+## Window Element
 
     Represents a single Window
 
@@ -13648,6 +13789,22 @@ A property that changes the current alpha channel value (internal value)
 |Name|Meaning|
 |---|---|
 | **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
+
+### bind
+
+Used to add tkinter events to a Window.
+The tkinter specific data is in the Window's member variable user_bind_event
+
+```
+bind(bind_string, key)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key|The event that will be generated when the tkinter event occurs|
 
 ### bring_to_front
 
@@ -17608,47 +17765,6 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 test()
 ```
 
-Display popup with OK and Cancel buttons
-
-```
-popup_ok_cancel(args,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    auto_close=False,
-    auto_close_duration=None,
-    non_blocking=False,
-    icon=...,
-    line_width=None,
-    font=None,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    location=(None, None))
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|title||
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|auto_close|(Default = False)|
-|auto_close_duration||
-|non_blocking|(Default = False)|
-|icon|Icon to display|
-|line_width|Width of lines in characters|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location|Location on screen to display|
-|||
-| **return** | Union["OK", "Cancel", None] |
-
 ---
 
 # "Demo Programs" Applications
@@ -18852,6 +18968,18 @@ The "Finally Nailed Tabs" release
 	* Has been broken since 4.5.0 when a change to Finalize was made
 * ProgessBar element colors set using Look and Feel colors
 	* Combination of button color, input element, and input element text are used
+
+## 4.11.0 PySimpleGUI 10-Dec-2019
+
+The Element & Window bindings release
+
+* Element.bind - New method of all Elements
+	* Enables tkinter bindings to be added to any element
+	* Will get an event returned from window.read() if the tkinter event happens
+* Window.bind - New method for Windows, just like Elements
+	* Enables tkinter bindings to be added to Windows
+	* Will get an event returned from window.read() if the tkinter event happens
+* TabGround fonts - can now set the font and font size for Tab text
 
 ### Upcoming
 
