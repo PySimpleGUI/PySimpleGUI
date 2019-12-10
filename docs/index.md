@@ -5333,55 +5333,57 @@ Watch this space in the future for the more standardized variable name for this 
 
 ## Binding tkiner "events"
 
-If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then there's a particular way at the moment to make this happen.  
+If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
 
-tkinter performs a callback into user code when an event happens, but that's not how PySimpleGUI works.  Instead of callbacks, a PySimpleGUI user's program simply returns an event via the `window.read()` call.  In order for your "event" to generate an event that will be returned to you via your read call, follow these instructions:
+Both the Elements and Window objects have a method called `bind`.  You specify 2 parameters to this function.  One is the string that is used to tell tkinter what events to bind.  The other is a "key modifier" for Elements and a "key" for Windows.
 
-1. Create a Button for each event you wish to receive
-2. Set visible=False when creating the buttons
-3. Make the Button text be the event you want to see returned to you or set the button's Key to that value
-4. After creating / finalizing the window, make the tkinter bind call, passing `element.ButtonReboundCallback` as the function to call.
+The `key_modifier` in the `Element.bind` call is something that is added to your key. If your key is a string, then this modifier will be appended to your key and the event will be a single string.
 
-This sample code binds not an element events but events from the window itself.  In this case, Focus events.
+If your element's key is not a string, then a tuple will be returned as the event
+(your_key, key_modifier)
 
-```python
-import PySimpleGUI as sg
+This will enable you to continue to use your weird, non-string keys. Just be aware that you'll be getting back a tuple instead of your key in these situations.
 
-layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Exit'),
-             sg.Button('-FOCUS-IN-', visible=False), sg.Button('-FOCUS-OUT-', visible=False)]  ]
+The best example of when this can happen is in a Minesweeper game where each button is already a tuple of the (x,y) position of the button. Normal left clicks will return (x,y). A right click that was generated as a result of bind call will be ((x,y), key_modifier).
 
-window = sg.Window('Window Title', layout, finalize=True)
+It'll be tricky for the user to parse these events, but it's assumed you're an advanced user if you're using this capability and are also using non-string keys.
 
-window.TKroot.bind("<FocusIn>", window['-FOCUS-IN-'].ButtonReboundCallback)
-window.TKroot.bind("<FocusOut>", window['-FOCUS-OUT-'].ButtonReboundCallback)
-```
+There are 2 member variables that have also been added as shown in the documentation for the bind methods. This added variable contains the tkinter specific event information. In other words, the 'event' that tkinter normally sends back when a callback happens.
 
-This code binds the right mouse button to a button so that you can right click a button and get a different event than if you left clicked it.
+Here is sample code that shows how to make these calls.
+
+Three events are being bound.
+
+1. Any button clicks in the window will return an event "Window Click" from window.read()
+2. Right clicking the "Go" buttons will return an event "Go+RIGHT CLICK+" from window.read()
+3. When the Input Element receives focus, an event "-IN-+FOCUS+" will be returned from window.read()
 
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Green 2')
+
 layout = [  [sg.Text('My Window')],
             [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Right Click Me')],
-            [sg.Button('-RIGHT-', visible=False)]
-            ]
+            [sg.Button('Go'), sg.Button('Exit')]
+              ]
 
 window = sg.Window('Window Title', layout, finalize=True)
 
-window['Right Click Me'].Widget.bind("<Button-3>", window['-RIGHT-'].ButtonReboundCallback)
+window['-IN-'].bind("<FocusIn>", '+FOCUS+')
+window.bind("<Button-1>", 'Window Click')
+window['Go'].bind("<Button-3>", '+RIGHT CLICK+')
 
-has_focus = True
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
     if event in (None, 'Exit'):
         break
-window.close()
+
+window.close(); del window
 ```
 
+There is no way to "unbind" and event at this time.  (sorry, didn't think of it before releasing)
 ---
 
 ------------------
