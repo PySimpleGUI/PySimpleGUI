@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.10.0.1 Unreleased - Fonts for TabGroups"
+version = __version__ = "4.10.0.2 Unreleased - Fonts for TabGroups, Element.bind, Window.bind"
 
 port = 'PySimpleGUI'
 
@@ -561,6 +561,8 @@ class Element():
         self.Tearoff = False
         self.ParentRowFrame = None          # type tk.Frame
         self.metadata = metadata                # type: Any
+        self.user_bind_dict = {}                # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
+        self.user_bind_event = None             # Used when user defines a tkinter binding using bind method - event data from tkinter
 
     def _RightClickMenuCallback(self, event):
         """
@@ -747,6 +749,37 @@ class Element():
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
+
+
+    def _user_bind_callback(self, bind_string, event):
+        """
+        Used when user binds a tkinter event directly to an element
+
+        :param bind_string: The event that was bound so can lookup the key modifier
+        :param event: Event data passed in by tkinter (not used)
+        """
+        key_suffix = self.user_bind_dict.get(bind_string, '')
+        self.user_bind_event = event
+        if self.Key is not None:
+            if isinstance(self.Key, str):
+                self.ParentForm.LastButtonClicked = self.Key + str(key_suffix)
+            else:
+                self.ParentForm.LastButtonClicked = (self.Key, key_suffix)
+        else:
+            self.ParentForm.LastButtonClicked = bind_string
+        self.ParentForm.FormRemainedOpen = True
+        if self.ParentForm.CurrentlyRunningMainloop:
+            self.ParentForm.TKroot.quit()
+
+    def bind(self, bind_string, key_modifier):
+        """
+        Used to add tkinter events to an Element.
+        The tkinter specific data is in the Element's member variable user_bind_event
+        :param bind_string: The string tkinter expected in its bind function
+        :param key_modifier: Additional data to be added to the element's key when event is returned
+        """
+        self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
+        self.user_bind_dict[bind_string] = key_modifier
 
     def ButtonReboundCallback(self, event):
         """
@@ -5356,6 +5389,9 @@ class Window:
         self.metadata = metadata
         self.TtkTheme = ttk_theme or DEFAULT_TTK_THEME
         self.UseTtkButtons = use_ttk_buttons if use_ttk_buttons is not None else USE_TTK_BUTTONS
+        self.user_bind_dict = {}                # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
+        self.user_bind_event = None             # Used when user defines a tkinter binding using bind method - event data from tkinter
+
         if layout is not None and type(layout) not in  (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -6363,6 +6399,36 @@ class Window:
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
+
+
+    def _user_bind_callback(self, bind_string, event):
+        """
+        Used when user binds a tkinter event directly to an element
+
+        :param bind_string: The event that was bound so can lookup the key modifier
+        :param event: Event data passed in by tkinter (not used)
+        """
+
+        key = self.user_bind_dict.get(bind_string, '')
+        self.user_bind_event = event
+        if key is not None:
+            self.LastButtonClicked = key
+        else:
+            self.LastButtonClicked = bind_string
+        self.FormRemainedOpen = True
+        if self.CurrentlyRunningMainloop:
+            self.TKroot.quit()
+
+
+    def bind(self, bind_string, key):
+        """
+        Used to add tkinter events to a Window.
+        The tkinter specific data is in the Window's member variable user_bind_event
+        :param bind_string: The string tkinter expected in its bind function
+        :param key: The event that will be generated when the tkinter event occurs
+        """
+        self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
+        self.user_bind_dict[bind_string] = key
 
 
     def _callback_main_debugger_window_create_keystroke(self, event):
