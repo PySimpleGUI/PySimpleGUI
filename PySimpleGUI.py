@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.10.0 Released 9-Dec-2019"
+version = __version__ = "4.10.0.1 Unreleased - Fonts for TabGroups"
 
 port = 'PySimpleGUI'
 
@@ -756,7 +756,7 @@ class Element():
 
         :param event: (unknown) Not used in this function.
         """
-        # print(f'Button callback event = {obj_to_string_single_obj(event)}')
+        # print(f'Button callback event = {event}, {other}')
         try:
             self.ButtonCallBack()
         except:
@@ -8777,6 +8777,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', background= element.TabBackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
+                if element.Font is not None:
+                    style.configure(custom_style + '.Tab', font=element.Font)
 
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
 
