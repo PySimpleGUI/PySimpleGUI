@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.10.0.2 Unreleased - Fonts for TabGroups, Element.bind, Window.bind"
+version = __version__ = "4.11.0 Released 10-Dec-2019"
 
 port = 'PySimpleGUI'
 
@@ -783,9 +783,8 @@ class Element():
 
     def ButtonReboundCallback(self, event):
         """
-        Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-        callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-        callback function that is normally called.
+        *** DEPRICATED ***
+        Use Element.bind instead
 
         :param event: (unknown) Not used in this function.
         """
