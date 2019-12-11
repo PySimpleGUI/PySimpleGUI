@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.30.0.53 UnReleased - Tab positioning added to TabGround, added port variable, BAD bug in Output Element, error check for element re-use, Multiline better color support"
+version = __version__ = "0.30.0.55 UnReleased - Tab positioning added to TabGroup, added port variable, BAD bug in Output Element, error check for element re-use, Multiline better color support, Browse Files Delimeter, Multiline accepts drag and drop"
 
 port = 'PySimpleGUIQt'
 
@@ -255,6 +255,8 @@ BUTTON_TYPE_READ_FORM = 7
 BUTTON_TYPE_REALTIME = 9
 BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
+
+BROWSE_FILES_DELIMITER = ';'            # the delimeter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 # Used in Element - Was an enum once ElementType(Enum):
@@ -982,6 +984,19 @@ class Multiline(Element):
         _element_callback_quit_mainloop(self)
 
 
+
+    def _dragEnterEvent(self, e):
+        if e.mimeData().hasText():
+            e.accept()
+        else:
+            e.ignore()
+
+    def _dropEvent(self, e):
+        self.Widget.setText(e.mimeData().text())
+
+
+
+
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or `Window.finalize` or "finalize" the window using finalize parameter prior
@@ -1356,7 +1371,7 @@ class Button(Element):
             qt_types = convert_tkinter_filetypes_to_qt(self.FileTypes)
             file_name = QFileDialog.getOpenFileNames(dir=self.InitialFolder, filter=qt_types)
             if file_name != '':
-                file_name = ';'.join(file_name[0])
+                file_name = BROWSE_FILES_DELIMITER.join(file_name[0])
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
                 else:
@@ -4809,17 +4824,19 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Label)
             # -------------------------  BUTTON element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
+                element = element            #type: Button
                 btext = element.ButtonText
                 btype = element.BType
                 element.Widget = element.QT_QPushButton = QPushButton(btext)
                 style = Style('QPushButton')
                 style.append(create_style_from_font(font))
                 style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
-                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                style.add(background_color=(element.BackgroundColor))
                 style.add(border=('none', element.BorderWidth!=0))
                 style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
                 style.add(border='{}px solid gray '.format(border_depth))
                 element.QT_QPushButton.setStyleSheet(style.content)
+                # element.QT_QPushButton.setFlat(False)
                 if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
                         element.QT_QPushButton.setFixedWidth(element_size[0])
@@ -5024,9 +5041,15 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_ListWidget)
             # -------------------------  INPUT MULTI LINE element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
+                element = element           # type: Multiline
                 default_text = element.DefaultText
                 width, height = element_size
                 element.Widget = element.QT_TextEdit = QTextEdit()
+
+                element.QT_TextEdit.setAcceptDrops(True)
+                element.QT_TextEdit.dragEnterEvent = element._dragEnterEvent
+                element.QT_TextEdit.dropEvent = element._dropEvent
+
                 style = 'QTextEdit {'
                 style += create_style_from_font(font)
 
@@ -8072,7 +8095,7 @@ def main():
                        default_button_element_size=(100, 30),
                        auto_size_buttons=False,
                        default_element_size=(200, 22),
-                       border_depth=1,
+                       # border_depth=1,
                        )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
@@ -8081,7 +8104,7 @@ def main():
     # window.Element('_LISTBOX_').SetValue(['Listbox 1','Listbox 3'])
     while True:  # Event Loop
         # TimerStart()
-        event, values = window.Read()
+        event, values = window.Read(timeout=100)
         print(event, values) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
             break
