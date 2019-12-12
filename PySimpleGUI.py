@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.11.0 Released 10-Dec-2019"
+version = __version__ = "4.11.0.1 Unreleased - ability to set the disabled text color for tk.Buttons"
 
 port = 'PySimpleGUI'
 
@@ -2250,7 +2250,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, use_ttk_buttons=None,
+                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_text_color=None, use_ttk_buttons=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
@@ -2270,6 +2270,7 @@ class Button(Element):
         :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
         :param auto_size_button: (bool) if True the button size is sized to fit the text
         :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :param disabled_text_color: (str) color to use when button is disabled
         :param use_ttk_buttons: (bool) True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param bind_return_key: (bool) If True the return key will cause this button to be pressed
@@ -2304,6 +2305,7 @@ class Button(Element):
         self.UseTtkButtons = use_ttk_buttons
         if sys.platform.startswith('darwin'):
             self.UseTtkButtons = True
+        self.DisabledTextColor = disabled_text_color
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2479,7 +2481,7 @@ class Button(Element):
         return
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
-               visible=None, image_subsample=None, image_size=None):
+               visible=None, image_subsample=None, disabled_text_color=None, image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -2488,6 +2490,7 @@ class Button(Element):
         :param disabled: (bool) disable or enable state of the element
         :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
         :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
+        :param disabled_text_color: (str) color to use when button is disabled
         :param visible: (bool) control visibility of element
         :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
@@ -2545,6 +2548,10 @@ class Button(Element):
             self.TKButton.pack_forget()
         elif visible is True:
             self.TKButton.pack()
+        if disabled_text_color is not None:
+            self.DisabledTextColor = disabled_text_color
+            if not self.UseTtkButtons:
+                self.TKButton['disabledforeground'] = disabled_text_color
 
     def GetText(self):
         """
@@ -8078,6 +8085,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     toplevel_form.TKroot.focus_force()
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
+                if element.DisabledTextColor:
+                    element.TKButton['disabledforeground'] = element.DisabledTextColor
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -11787,7 +11796,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window = Window.animated_popup_dict[image_source]
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
 
-    window.Refresh()  # call refresh instead of Read to save significant CPU time
+    window.read(timeout=10)  # call refresh instead of Read to save significant CPU time
 
 
 #####################################################################################################
