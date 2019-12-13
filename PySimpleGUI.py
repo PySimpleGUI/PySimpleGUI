@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.11.0.2 Unreleased - ability to set the disabled text color for tk.Buttons, popup no more closebutton use"
+version = __version__ = "4.11.0.3 Unreleased - ability to set the disabled text color for tk.Buttons, popup no more closebutton use, browse cancel fix for linux"
 
 port = 'PySimpleGUI'
 
@@ -1106,14 +1106,16 @@ class Combo(Element):
                 self.DefaultValue = self.Values[set_to_index]
             except:
                 pass
+        if readonly:
+            self.Readonly = True
+            self.TKCombo['state'] = 'readonly'
+        elif readonly is False:
+            self.Readonly = False
+            self.TKCombo['state'] = 'enable'
         if disabled == True:
             self.TKCombo['state'] = 'disable'
         elif disabled == False:
             self.TKCombo['state'] = 'enable'
-            if readonly is not None:
-                self.Readonly = readonly
-            if self.Readonly:
-                self.TKCombo['state'] = 'readonly'
         if font is not None:
             self.TKCombo.configure(font=font)
         if visible is False:
@@ -2379,7 +2381,7 @@ class Button(Element):
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
-            if folder_name != '':
+            if folder_name:
                 try:
                     strvar.set(folder_name)
                     self.TKStringVar.set(folder_name)
@@ -2392,7 +2394,7 @@ class Button(Element):
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
                                                           initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
-            if file_name != '':
+            if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
@@ -2405,7 +2407,7 @@ class Button(Element):
                 file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
-            if file_name != '':
+            if file_name:
                 file_name = BROWSE_FILES_DELIMITER.join(file_name)      # normally a ';'
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -2416,7 +2418,7 @@ class Button(Element):
             else:
                 file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
                                                             initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
-            if file_name != '':
+            if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
@@ -12433,7 +12435,7 @@ def main():
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
 
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
-        [Combo(['Combo item %s'%i for i in range(5)], size=(20, 3), default_value='Combo item 2',key='_COMBO1_', background_color='green')],
+        [Combo(['Combo item %s'%i for i in range(5)], size=(20, 3), default_value='Combo item 2',key='_COMBO1_',)],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a','b','c'], initial_value='a', size=(4, 3))],
     ]
