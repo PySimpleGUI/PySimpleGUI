@@ -1,6 +1,6 @@
  #!/usr/bin/python3
 
-version = __version__ = "4.11.0.1 Unreleased - ability to set the disabled text color for tk.Buttons"
+version = __version__ = "4.11.0.2 Unreleased - ability to set the disabled text color for tk.Buttons, popup no more closebutton use"
 
 port = 'PySimpleGUI'
 
@@ -11042,7 +11042,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     if non_blocking:
         PopupButton = DummyButton  # important to use or else button will close other windows too!
     else:
-        PopupButton = CloseButton
+        PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if custom_text != (None, None):
         if type(custom_text) is not tuple:
@@ -11078,6 +11078,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
+        window.close()
 
     return button
 
@@ -11141,7 +11142,7 @@ def PopupScrolled(*args,  title=None, button_color=None,  background_color=None,
     window.AddRow(Multiline(complete_output, size=(max_line_width, height_computed), background_color=background_color, text_color=text_color))
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
-    button = DummyButton if non_blocking else CloseButton
+    button = DummyButton if non_blocking else Button
     if yes_no:
         window.AddRow(Text('', size=(pad, 1), auto_size_text=False, background_color=background_color), button('Yes'), button('No'))
     else:
@@ -11152,7 +11153,7 @@ def PopupScrolled(*args,  title=None, button_color=None,  background_color=None,
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-        # window.Close()
+        window.close()
     return button
 
 
