@@ -1,4 +1,4 @@
- #!/usr/bin/python3
+#!/usr/bin/python3
 
 version = __version__ = "4.11.0.3 Unreleased - ability to set the disabled text color for tk.Buttons, popup no more closebutton use, browse cancel fix for linux"
 
@@ -2252,7 +2252,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_text_color=None, use_ttk_buttons=None,
+                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None, use_ttk_buttons=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
         :param button_text: (str) Text to be displayed on the button
@@ -2290,6 +2290,7 @@ class Button(Element):
         self.Target = target
         self.ButtonText = str(button_text)
         self.ButtonColor = button_color if button_color != None else DEFAULT_BUTTON_COLOR
+        self.DisabledButtonColor = disabled_button_color
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -2307,7 +2308,6 @@ class Button(Element):
         self.UseTtkButtons = use_ttk_buttons
         if sys.platform.startswith('darwin'):
             self.UseTtkButtons = True
-        self.DisabledTextColor = disabled_text_color
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2483,7 +2483,7 @@ class Button(Element):
         return
 
     def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
-               visible=None, image_subsample=None, disabled_text_color=None, image_size=None):
+               visible=None, image_subsample=None, disabled_button_color=None, image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -2550,10 +2550,15 @@ class Button(Element):
             self.TKButton.pack_forget()
         elif visible is True:
             self.TKButton.pack()
-        if disabled_text_color is not None:
-            self.DisabledTextColor = disabled_text_color
+        if disabled_button_color is not None:
+            self.DisabledButtonColor = disabled_button_color
             if not self.UseTtkButtons:
-                self.TKButton['disabledforeground'] = disabled_text_color
+                self.TKButton['disabledforeground'] = disabled_button_color[0]
+            else:
+                if disabled_button_color[0] is not None:
+                    button_style.map(style_name, foreground=[('disabled', disabled_button_color[0])])
+                if disabled_button_color[1] is not None:
+                    button_style.map(style_name, background=[('disabled', disabled_button_color[1])])
 
     def GetText(self):
         """
@@ -8087,8 +8092,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     toplevel_form.TKroot.focus_force()
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
-                if element.DisabledTextColor:
-                    element.TKButton['disabledforeground'] = element.DisabledTextColor
+                if element.DisabledButtonColor is not None:
+                    if element.DisabledButtonColor[0] is not None:
+                        element.TKButton['disabledforeground'] = element.DisabledButtonColor[0]
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -8139,6 +8145,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     button_style.configure(style_name, borderwidth=bd)
                 button_style.configure(style_name, justify=tk.CENTER)
+                if element.DisabledButtonColor is not None:
+                    if element.DisabledButtonColor[0] is not None:
+                        button_style.map(style_name, foreground=[('disabled', element.DisabledButtonColor[0])])
+                    if element.DisabledButtonColor[1] is not None:
+                        button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
                 if height > 1:
                     button_style.configure(style_name, padding=height*CharWidthInPixels())
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
