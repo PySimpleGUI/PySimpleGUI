@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.11.0.5 Unreleased - ability to set disabled colors for buttons (tk + ttk), popup no more closebutton use, browse cancel fix for linux, highlight thickness=0"
+version = __version__ = "4.12.0  Released 14-Dec-2019"
 
 port = 'PySimpleGUI'
 
@@ -11188,7 +11188,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-        window.close()
+        window.close(); del window
 
     return button
 
@@ -11263,7 +11263,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-        window.close()
+        window.close(); del window
     return button
 
 
@@ -11708,7 +11708,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
                     location=location)
 
     button, values = window.Read()
-    window.Close()
+    window.close(); del window
     if button != 'Ok':
         return None
     else:
@@ -11806,7 +11806,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
 
     button, values = window.Read()
-    window.Close()
+    window.close(); del window
     if button != 'Ok':
         return None
     else:
@@ -11849,7 +11849,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
                     location=location)
 
     button, values = window.Read()
-    window.Close()
+    window.close(); del window
     if button != 'Ok':
         return None
     else:
@@ -11905,7 +11905,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window = Window.animated_popup_dict[image_source]
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
 
-    window.read(timeout=10)  # call refresh instead of Read to save significant CPU time
+    window.refresh() # call refresh instead of Read to save significant CPU time
 
 
 #####################################################################################################
@@ -12206,21 +12206,21 @@ class _Debugger():
                 cur_col += 1
         ScrolledTextBox(out_text, non_blocking=True)
 
-    #####                                        #     #
+     #####                                        #     #
     #     # #    #  ####   ####   ####  ######    #  #  #   ##   #####  ####  #    #
     #       #    # #    # #    # #      #         #  #  #  #  #    #   #    # #    #
     #       ###### #    # #    #  ####  #####     #  #  # #    #   #   #      ######
     #       #    # #    # #    #      # #         #  #  # ######   #   #      #    #
     #     # #    # #    # #    # #    # #         #  #  # #    #   #   #    # #    #
-    #####  #    #  ####   ####   ####  ######     ## ##  #    #   #    ####  #    #
+     #####  #    #  ####   ####   ####  ######     ## ##  #    #   #    ####  #    #
 
     #     #                                                       #     #
     #     #   ##   #####  #   ##   #####  #      ######  ####     #  #  # # #    #
     #     #  #  #  #    # #  #  #  #    # #      #      #         #  #  # # ##   #
     #     # #    # #    # # #    # #####  #      #####   ####     #  #  # # # #  #
-    #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
-    # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
-    #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
+     #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
+      # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
+       #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
         """
@@ -12297,7 +12297,7 @@ class _Debugger():
     #  #  # # # #  # #    # #    # #    #
     #  #  # # #  # # #    # #    # # ## #
     #  #  # # #   ## #    # #    # ##  ##
-    ## ##  # #    # #####   ####  #    #
+     ## ##  # #    # #####   ####  #    #
 
     def _build_floating_window(self, location=(None, None)):
         """
@@ -12378,7 +12378,7 @@ class _Debugger():
     #  #  # # # #  # #    # #    # #    #
     #  #  # # #  # # #    # #    # # ## #
     #  #  # # #   ## #    # #    # ##  ##
-    ## ##  # #    # #####   ####  #    #
+     ## ##  # #    # #####   ####  #    #
 
     def _refresh_floating_window(self):
         """ """

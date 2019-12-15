@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.11.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.12.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -5424,6 +5424,7 @@ Button(button_text="",
     size=(None, None),
     auto_size_button=None,
     button_color=None,
+    disabled_button_color=None,
     use_ttk_buttons=None,
     font=None,
     bind_return_key=False,
@@ -5455,6 +5456,7 @@ Parameter Descriptions:
 |size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
 |auto_size_button|(bool) if True the button size is sized to fit the text|
 |button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |use_ttk_buttons|(bool) True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |bind_return_key|(bool) If True the return key will cause this button to be pressed|
@@ -5523,6 +5525,7 @@ Update(text=None,
     image_filename=None,
     visible=None,
     image_subsample=None,
+    disabled_button_color=(None, None),
     image_size=None)
 ```
 
@@ -5535,6 +5538,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
 |image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |visible|(bool) control visibility of element|
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
@@ -5687,6 +5691,7 @@ update(text=None,
     image_filename=None,
     visible=None,
     image_subsample=None,
+    disabled_button_color=(None, None),
     image_size=None)
 ```
 
@@ -5699,6 +5704,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
 |image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |visible|(bool) control visibility of element|
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
@@ -14307,6 +14313,8 @@ call and then have that same source run on plain PySimpleGUI.
 |---|---|
 | **return** |  |
 
+## Function Reference
+
 ```
 CButton(button_text,
     image_filename=None,
@@ -15022,6 +15030,39 @@ Parameter Descriptions:
 | **return** | (Button) |
 
 ```
+Open(button_text="Open",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Open')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+## OneLineProgressMeter
+
+```
 OneLineProgressMeter(title,
     current_value,
     max_value,
@@ -15061,36 +15102,7 @@ Parameter Descriptions:
 |---|---|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 
-```
-Open(button_text="Open",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    bind_return_key=True,
-    tooltip=None,
-    font=None,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Open')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|bind_return_key|(Default = True)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
+## Popup Functions
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -16453,6 +16465,8 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
+## PEP8 Function Bindings
+
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
@@ -16633,6 +16647,8 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
+
+## Popups
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -18981,7 +18997,24 @@ The Element & Window bindings release
 * Window.bind - New method for Windows, just like Elements
 	* Enables tkinter bindings to be added to Windows
 	* Will get an event returned from window.read() if the tkinter event happens
-* TabGround fonts - can now set the font and font size for Tab text
+* TabGroup fonts - can now set the font and font size for Tab text
+
+## 4.12.0 PySimpleGUI 14-Dec-2019
+
+Finally no more outlines around TK Elements on Linux
+
+* Fixed a long-term problem of the mysterious white border around (almost) all TK Elements on Linux
+* Ability to set the disabled button colors
+	* New Button and Button.update parameter - disabled_button_color
+	* Specified as (Text Color, Background Color) just like button colors
+	* For Normal / TK Buttons - can set button text color only
+	* For TTK Buttons - can set both a disabled button and text color
+	* Either parameter can be None to use current setting
+* Removed use of CloseButton from Popups (still have a bug in the CloseButton code but not in popups now)
+* Combobox - removed requirement of setting disabled if want to set to readonly using update method
+* Fix for cancelling out of file/folder browse on Linux caused target to be cleared instead of just cancelling
+* Removed try block around setting button colors - if user sets a bad color, well don't do that
+* Now deleting windows after closing them for popup
 
 ### Upcoming
 
