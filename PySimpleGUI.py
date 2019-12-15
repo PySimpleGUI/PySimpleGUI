@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0  Released 14-Dec-2019"
+version = __version__ = "4.12.0.1  Unreleased - Element.expand added expand_row parm"
 
 port = 'PySimpleGUI'
 
@@ -865,14 +865,14 @@ class Element():
         except:
             print('Warning, error hiding element row for key =', self.Key)
 
-    def expand(self, expand_x=False, expand_y=False):
+    def expand(self, expand_x=False, expand_y=False, expand_row=False):
         """
         Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
         :param expand_x: (Bool) If True Element will expand in the Horizontal directions
         :param expand_y:  (Bool) If True Element will expand in the Vertical directions
+        :param expand_row:  (Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row
         """
-
         if expand_x and expand_y:
             fill = tk.BOTH
         elif expand_x:
@@ -883,7 +883,7 @@ class Element():
             return
 
         self.Widget.pack(expand=True, fill=fill)
-        self.ParentRowFrame.pack(expand=True, fill=fill)
+        self.ParentRowFrame.pack(expand=expand_row, fill=fill)
 
     def __call__(self, *args, **kwargs):
         """
@@ -6192,6 +6192,14 @@ class Window:
             except:
                 pass
         self.TKrootDestroyed = True
+        # for row in self.Rows:
+        #     for elem in row:
+        #         try:
+        #             # elem.Widget.__del__()
+        #             del elem.Widget
+        #         except Exception as e:
+        #             print(f'Exception deleting {e}')
+        # self.TKroot.__del__()
         del self.TKroot
         del self.Rows
 
