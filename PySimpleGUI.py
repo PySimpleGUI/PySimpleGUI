@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0.1  Unreleased - Element.expand added expand_row parm"
+version = __version__ = "4.12.0.2  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified"
 
 port = 'PySimpleGUI'
 
@@ -865,7 +865,7 @@ class Element():
         except:
             print('Warning, error hiding element row for key =', self.Key)
 
-    def expand(self, expand_x=False, expand_y=False, expand_row=False):
+    def expand(self, expand_x=False, expand_y=False, expand_row=True):
         """
         Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8582,7 +8582,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKSpinBox = element.Widget = tk.Spinbox(tk_row_frame, values=element.Values,
                                                                 textvariable=element.TKStringVar,
                                                                 width=width, bd=border_depth)
-                element.TKStringVar.set(element.DefaultValue)
+                if element.DefaultValue is not None:
+                    element.TKStringVar.set(element.DefaultValue)
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
