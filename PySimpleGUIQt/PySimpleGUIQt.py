@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.30.0.55 UnReleased - Tab positioning added to TabGroup, added port variable, BAD bug in Output Element, error check for element re-use, Multiline better color support, Browse Files Delimeter, Multiline accepts drag and drop"
+version = __version__ = "0.30.0.56 UnReleased - Tab positioning added to TabGroup, added port variable, BAD bug in Output Element, error check for element re-use, Multiline better color support, Browse Files Delimeter, Multiline accepts drag and drop, 3D buttons"
 
 port = 'PySimpleGUIQt'
 
@@ -4832,9 +4832,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style.append(create_style_from_font(font))
                 style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
                 style.add(background_color=(element.BackgroundColor))
-                style.add(border=('none', element.BorderWidth!=0))
+                if element.BorderWidth == 0:
+                    style.add(border='none')
                 style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
-                style.add(border='{}px solid gray '.format(border_depth))
+                # style.add(border='{}px solid gray '.format(border_depth))
                 element.QT_QPushButton.setStyleSheet(style.content)
                 # element.QT_QPushButton.setFlat(False)
                 if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
@@ -5394,7 +5395,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if element.BorderWidth == 0:
                     style += 'border: none;'
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                style += 'border: {}px solid gray; '.format(border_depth)
+                # style += 'border: {}px solid gray; '.format(border_depth)
                 element.QT_QPushButton.setStyleSheet(style)
                 if (element.AutoSizeButton is False or toplevel_win.AutoSizeButtons is False or element.Size[0] is not None) and element.ImageData is None:
                     if element_size[0] is not None:
@@ -8001,7 +8002,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 def main():
     # preview_all_look_and_feel_themes()
-    ChangeLookAndFeel('Dark Blue 3')
+    ChangeLookAndFeel('Dark Red')
     # SetOptions(progress_meter_color=(COLOR_SYSTEM_DEFAULT))
     # SetOptions(element_padding=(0,0))
     # ------ Menu Definition ------ #
