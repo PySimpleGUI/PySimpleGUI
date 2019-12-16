@@ -865,6 +865,7 @@ class Element():
         except:
             print('Warning, error hiding element row for key =', self.Key)
 
+    def expand(self, expand_x=False, expand_y=False, expand_row=True):
         """
         Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
