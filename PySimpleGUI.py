@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0.2  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified"
+version = __version__ = "4.12.0.3  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element"
 
 port = 'PySimpleGUI'
 
@@ -123,6 +123,7 @@ import inspect
 # from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 from random import randint
 import warnings
+from math import floor
 
 warnings.simplefilter('always', UserWarning)
 
@@ -3039,7 +3040,7 @@ class Graph(Element):
         if self.FloatValues:
             return new_x, new_y
         else:
-            return int(new_x), int(new_y)
+            return floor(new_x), floor(new_y)
 
     def DrawLine(self, point_from, point_to, color='black', width=1):
         """
