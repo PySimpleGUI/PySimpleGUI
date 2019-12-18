@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0.4  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element, Table & Tree header colors and font"
+version = __version__ = "4.12.0.5  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element, Table & Tree header colors and font, Graph get figures and bounding box"
 
 port = 'PySimpleGUI'
 
@@ -3104,7 +3104,8 @@ class Graph(Element):
         if center_location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(center_location[0], center_location[1])
-        radius_converted = self._convert_xy_to_canvas_xy(0, radius)
+        radius_converted = self._convert_xy_to_canvas_xy(center_location[0]+radius, center_location[1])
+        radius = radius_converted[0]-converted_point[0]
         # radius = radius_converted[1]-5
         # print(f'center = {converted_point} radius converted = {radius_converted}')
         if self._TKCanvas2 is None:
@@ -3375,6 +3376,30 @@ class Graph(Element):
         """
         self.TKCanvas.tag_raise(figure)  # move figure to the "top" of all other figures
 
+
+    def GetFiguresAtLocation(self, location):
+        """
+        Returns a list of figures located at a particular x,y location within the Graph
+
+        :param location:  Union[Tuple[int, int], Tuple[float, float]] point to check
+        :return: List[int] a list of previously drawn "Figures" (returned from the drawing primitives)
+        """
+        x, y = self._convert_xy_to_canvas_xy(location[0], location[1])
+        ids = self.TKCanvas.find_overlapping(x,y,x,y)
+        return ids
+
+    def GetBoundingBox(self, figure):
+        """
+        Given a figure, returns the upper left and lower right bounding box coordinates
+
+        :param figure: a previously drawing figure
+        :return: Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y
+        """
+        box = self.TKCanvas.bbox(figure)
+        top_left = self._convert_canvas_xy_to_xy(box[0], box[1])
+        bottom_right = self._convert_canvas_xy_to_xy(box[2], box[3])
+        return top_left,bottom_right
+
     @property
     def TKCanvas(self):
         """ """
@@ -3453,6 +3478,8 @@ class Graph(Element):
     draw_point = DrawPoint
     draw_rectangle = DrawRectangle
     draw_text = DrawText
+    get_figures_at_location = GetFiguresAtLocation
+    get_bounding_box = GetBoundingBox
     erase = Erase
     motion_call_back = MotionCallBack
     move = Move
