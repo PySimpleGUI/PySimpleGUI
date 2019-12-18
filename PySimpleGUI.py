@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0.3  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element"
+version = __version__ = "4.12.0.4  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element, Table & Tree header colors and font"
 
 port = 'PySimpleGUI'
 
@@ -4731,7 +4731,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
-                 alternating_row_color=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
+                 alternating_row_color=None, header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
@@ -4754,7 +4754,10 @@ class Table(Element):
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
         :param alternating_row_color: (str) if set then every other row will have this color in the background.
-        :param row_colors:
+        :param header_text_color: (str) sets the text color for the header
+        :param header_background_color: (str) sets the background color for the header
+        :param header_font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+        :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
         :param vertical_scroll_only:  (bool) if True only the vertical scrollbar will be visible
         :param hide_vertical_scroll:  (bool) if True vertical scrollbar will be hidden
         :param size: Tuple[int, int] DO NOT USE! Use num_rows instead
@@ -4778,6 +4781,9 @@ class Table(Element):
         self.AutoSizeColumns = auto_size_columns
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
+        self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
+        self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
+        self.HeaderFont = header_font
         self.Justification = justification
         self.InitialState = None
         self.SelectMode = select_mode
@@ -4932,7 +4938,7 @@ class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
-                 background_color=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
+                 background_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
 
@@ -4955,6 +4961,7 @@ class Tree(Element):
         :param justification:  (str) 'left', 'right', 'center' are valid choices
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
+        :param header_font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param num_rows: (int) The number of rows of the table to display at a time
         :param row_height: (int) height of a single row in pixels
         :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -4974,6 +4981,9 @@ class Tree(Element):
         self.AutoSizeColumns = auto_size_columns
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
+        self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
+        self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
+        self.HeaderFont = header_font
         self.Justification = justification
         self.InitialState = None
         self.SelectMode = select_mode
@@ -8987,6 +8997,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     table_style.configure(style_name, foreground=element.TextColor)
                 if element.RowHeight is not None:
                     table_style.configure(style_name, rowheight=element.RowHeight)
+                if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
+                    table_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
+                if element.HeaderBackgroundColor is not None and element.HeaderBackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    table_style.configure(style_name+'.Heading', background=element.HeaderBackgroundColor)
+                if element.HeaderFont is not None:
+                    table_style.configure(style_name+'.Heading', font=element.HeaderFont)
                 table_style.configure(style_name, font=font)
                 treeview.configure(style=style_name)
 
@@ -9097,7 +9113,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                          fieldbackground=element.BackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, foreground=element.TextColor)
-
+                if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
+                    table_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
+                if element.HeaderBackgroundColor is not None and element.HeaderBackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    table_style.configure(style_name+'.Heading', background=element.HeaderBackgroundColor)
+                if element.HeaderFont is not None:
+                    table_style.configure(style_name+'.Heading', font=element.HeaderFont)
                 tree_style.configure(style_name, font=font)
                 if element.RowHeight:
                     tree_style.configure(style_name, rowheight=element.RowHeight)
@@ -12515,7 +12536,7 @@ def main():
     """
     from random import randint
     # preview_all_look_and_feel_themes()
-    look_and_feel = 'DarkRed'
+    look_and_feel = 'Anything'
     ChangeLookAndFeel(look_and_feel)
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
@@ -12568,11 +12589,11 @@ def main():
     frame5 = [[
         Table(values=matrix, headings=matrix[0],
               auto_size_columns=False, display_row_numbers=True, change_submits=False, justification='right',
-              num_rows=10, alternating_row_color='lightblue', key='_table_', text_color='black',
-              col_widths=[5, 5, 5, 5], size=(400, 200), background_color='green'),
+              num_rows=10, alternating_row_color='lightblue', key='_table_',
+              col_widths=[5, 5, 5, 5], size=(400, 200), ),
         T('  '),
         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
-             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, background_color='green'),
+             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True,),
     ],
     ]
 
@@ -12595,7 +12616,7 @@ def main():
         [Frame('Input Text Group', frame1, title_color='red'),
          Text('VERSION\n{}'.format(__version__), size=(25, 4), font='ANY 20'),
          ],
-        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', background_color='green')],
+        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', )],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
