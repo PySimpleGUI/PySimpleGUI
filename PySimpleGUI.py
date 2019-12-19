@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.13.0  Released 18-Dec-2019"
+version = __version__ = "4.13.0.1  Unreleased - Element.set_cursor, theme(), Combo.update allows any value, beginning of theme reworking with theme() call, table & tree header font defaults to window font"
 
 port = 'PySimpleGUI'
 
