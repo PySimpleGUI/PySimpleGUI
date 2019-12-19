@@ -11,18 +11,21 @@ def main():
 
     sg.change_look_and_feel('Dark Blue 3')
 
-    col = [[sg.R('Draw Rectangles', 1, key='-RECT-')],
-           [sg.R('Draw Circle', 1, True, key='-CIRCLE-')],
-           [sg.R('Draw Line', 1, True, key='-LINE-')],
-           [sg.R('Draw point', 1, True, key='-POINT-')],
-           [sg.R('Erase item', 1, True, key='-ERASE-')],
-           [sg.R('Erase all', 1, True, key='-CLEAR-')],
-           [sg.R('Move Everything', 1, True, key='-MOVEALL-')],
-           [sg.R('Move Stuff', 1, True, key='-MOVE-')],
+    col = [[sg.T('Choose what clicking a figure does', enable_events=True)],
+           [sg.R('Draw Rectangles', 1, key='-RECT-', enable_events=True)],
+           [sg.R('Draw Circle', 1, key='-CIRCLE-', enable_events=True)],
+           [sg.R('Draw Line', 1, key='-LINE-', enable_events=True)],
+           [sg.R('Draw point', 1,  key='-POINT-', enable_events=True)],
+           [sg.R('Erase item', 1, key='-ERASE-', enable_events=True)],
+           [sg.R('Erase all', 1, key='-CLEAR-', enable_events=True)],
+           [sg.R('Send to back', 1, key='-BACK-', enable_events=True)],
+           [sg.R('Bring to front', 1, key='-FRONT-', enable_events=True)],
+           [sg.R('Move Everything', 1, key='-MOVEALL-', enable_events=True)],
+           [sg.R('Move Stuff', 1, True, key='-MOVE-', enable_events=True)],
            ]
 
     layout = [[sg.Graph(
-        canvas_size=(1200,1200),
+        canvas_size=(400, 400),
         graph_bottom_left=(0, 0),
         graph_top_right=(400, 400),
         key="-GRAPH-",
@@ -39,11 +42,18 @@ def main():
 
     dragging = False
     start_point = end_point = prior_rect = None
-
+    graph.bind('<Button-3>', '+RIGHT+')
     while True:
         event, values = window.read()
         if event is None:
             break  # exit
+        if event in ('-MOVE-', '-MOVEALL-'):
+            graph.Widget.config(cursor='fleur')
+            # graph.set_cursor(cursor='fleur')          # not yet released method... coming soon!
+        elif not event.startswith('-GRAPH-'):
+            # graph.set_cursor(cursor='left_ptr')       # not yet released method... coming soon!
+            graph.Widget.config(cursor='left_ptr')
+
         if event == "-GRAPH-":  # if there's a "Graph" event, then it's a mouse
             x, y = values["-GRAPH-"]
             if not dragging:
@@ -77,6 +87,12 @@ def main():
                     graph.erase()
                 elif values['-MOVEALL-']:
                     graph.move(delta_x, delta_y)
+                elif values['-FRONT-']:
+                    for fig in drag_figures:
+                        graph.bring_figure_to_front(fig)
+                elif values['-BACK-']:
+                    for fig in drag_figures:
+                        graph.send_figure_to_back(fig)
         elif event.endswith('+UP'):  # The drawing has ended because mouse up
             info = window["info"]
             info.update(value=f"grabbed rectangle from {start_point} to {end_point}")
