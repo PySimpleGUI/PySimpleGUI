@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.12.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -5588,7 +5588,9 @@ click()
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -5597,6 +5599,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -5860,7 +5863,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -5869,6 +5874,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -6067,7 +6073,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6076,6 +6084,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -6302,7 +6311,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6311,6 +6322,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -6555,7 +6567,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6564,6 +6578,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -6826,7 +6841,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6835,6 +6852,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -7082,7 +7100,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -7091,6 +7111,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -7317,7 +7338,8 @@ Draws a circle, cenetered at the location provided.  Can set the fill and outlin
 DrawCircle(center_location,
     radius,
     fill_color=None,
-    line_color="black")
+    line_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7328,6 +7350,7 @@ Parameter Descriptions:
 |radius|Union[int, float] Radius in user's coordinate values.|
 |fill_color|(str) color of the point to draw|
 |line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|line_width|(int) width of the line around the circle, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
 
@@ -7387,7 +7410,8 @@ Draws an oval based on coordinates in user coordinate system. Provide the locati
 DrawOval(top_left,
     bottom_right,
     fill_color=None,
-    line_color=None)
+    line_color=None,
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7398,6 +7422,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
 |fill_color|(str) color of the interrior|
 |line_color|(str) color of outline of oval|
+|line_width|(int) width of the line around the oval, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
 
@@ -7478,19 +7503,37 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 Erase()
 ```
 
-### MotionCallBack
+### GetBoundingBox
 
-Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
+Given a figure, returns the upper left and lower right bounding box coordinates
 
 ```
-MotionCallBack(event)
+GetBoundingBox(figure)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
+|figure|a previously drawing figure|
+|||
+| **return** | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y |
+
+### GetFiguresAtLocation
+
+Returns a list of figures located at a particular x,y location within the Graph
+
+```
+GetFiguresAtLocation(location)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Union[Tuple[int, int], Tuple[float, float]] point to check|
+|||
+| **return** | List[int] a list of previously drawn "Figures" (returned from the drawing primitives) |
 
 ### Move
 
@@ -7712,7 +7755,8 @@ Draws a circle, cenetered at the location provided.  Can set the fill and outlin
 draw_circle(center_location,
     radius,
     fill_color=None,
-    line_color="black")
+    line_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7723,6 +7767,7 @@ Parameter Descriptions:
 |radius|Union[int, float] Radius in user's coordinate values.|
 |fill_color|(str) color of the point to draw|
 |line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|line_width|(int) width of the line around the circle, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
 
@@ -7782,7 +7827,8 @@ Draws an oval based on coordinates in user coordinate system. Provide the locati
 draw_oval(top_left,
     bottom_right,
     fill_color=None,
-    line_color=None)
+    line_color=None,
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7793,6 +7839,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
 |fill_color|(str) color of the interrior|
 |line_color|(str) color of outline of oval|
+|line_width|(int) width of the line around the oval, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
 
@@ -7878,7 +7925,9 @@ erase()
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -7887,6 +7936,39 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
+
+### get_bounding_box
+
+Given a figure, returns the upper left and lower right bounding box coordinates
+
+```
+get_bounding_box(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|a previously drawing figure|
+|||
+| **return** | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y |
+
+### get_figures_at_location
+
+Returns a list of figures located at a particular x,y location within the Graph
+
+```
+get_figures_at_location(location)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Union[Tuple[int, int], Tuple[float, float]] point to check|
+|||
+| **return** | List[int] a list of previously drawn "Figures" (returned from the drawing primitives) |
 
 ### get_size
 
@@ -8193,7 +8275,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8202,6 +8286,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -8475,7 +8560,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8484,6 +8571,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -8777,7 +8865,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8786,6 +8876,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_indexes
 
@@ -9049,7 +9140,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9058,6 +9151,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -9318,7 +9412,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9327,6 +9423,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -9577,7 +9674,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9586,6 +9685,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10047,7 +10147,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10056,6 +10158,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10286,7 +10389,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10295,6 +10400,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10556,7 +10662,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10565,6 +10673,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -10824,7 +10933,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10833,6 +10944,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -11078,7 +11190,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11087,6 +11201,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -11334,7 +11449,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11343,6 +11460,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -11580,7 +11698,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11589,6 +11709,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -11838,7 +11959,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11847,6 +11970,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### find_key_from_tab_name
 
@@ -11983,6 +12107,9 @@ Table(values,
     text_color=None,
     background_color=None,
     alternating_row_color=None,
+    header_text_color=None,
+    header_background_color=None,
+    header_font=None,
     row_colors=None,
     vertical_scroll_only=True,
     hide_vertical_scroll=False,
@@ -12018,7 +12145,10 @@ Parameter Descriptions:
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
 |alternating_row_color|(str) if set then every other row will have this color in the background.|
-|row_colors||
+|header_text_color|(str) sets the text color for the header|
+|header_background_color|(str) sets the background color for the header|
+|header_font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)|
 |vertical_scroll_only|(bool) if True only the vertical scrollbar will be visible|
 |hide_vertical_scroll|(bool) if True vertical scrollbar will be hidden|
 |size|Tuple[int, int] DO NOT USE! Use num_rows instead|
@@ -12147,7 +12277,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12156,6 +12288,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -12411,7 +12544,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12420,6 +12555,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -12616,6 +12752,9 @@ Tree(data=None,
     justification="right",
     text_color=None,
     background_color=None,
+    header_text_color=None,
+    header_background_color=None,
+    header_font=None,
     num_rows=None,
     row_height=None,
     pad=None,
@@ -12646,6 +12785,9 @@ Parameter Descriptions:
 |justification|(str) 'left', 'right', 'center' are valid choices|
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
+|header_text_color|(str) sets the text color for the header|
+|header_background_color|(str) sets the background color for the header|
+|header_font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |num_rows|(int) The number of rows of the table to display at a time|
 |row_height|(int) height of a single row in pixels|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
@@ -12772,7 +12914,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12781,6 +12925,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -13056,7 +13201,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -13065,6 +13212,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -19015,6 +19163,28 @@ Finally no more outlines around TK Elements on Linux
 * Fix for cancelling out of file/folder browse on Linux caused target to be cleared instead of just cancelling
 * Removed try block around setting button colors - if user sets a bad color, well don't do that
 * Now deleting windows after closing them for popup
+
+## 4.13.0 PySimpleGUI 18-Dec-2019
+
+Table and Tree header colors, expanded Graph methods
+
+* Element.expand new parameter - expand_row. If true then row will expand along with the widgets. Provides better resizing control
+* Using math.floor now instead of an int cast in Graph Element's unit conversions
+* Graph.draw_point - now using caller's graph units for specifying point size
+* Graph.draw_circle - converted radius size from user's graph units.
+* Graph.draw_circle - added line_width parameter
+* Graph.draw_oval - added line_width parameter
+* Graph.get_figures_at_location - new method for getting a list of figures at a particular point
+* Graph.get_bounding_box - returns bounding box for a previously drawn figure
+* Table and Tree Elements
+	* 3 new element creation parameters
+		* header_text_color - color of the text for the column headings
+		* header_background_color - color of the background of column headings
+		* header_font - font family, style , size for the column headings
+	* Defaults to using the current look and feel setting
+		* Uses similar algorithm as Tabs - Input Text background and text colors are used
+* Spin element - fixed bug that showed "None" if default value is "None"
+* Test Harness sets incorrect look and feel on purpose so a random one is chosen
 
 ### Upcoming
 

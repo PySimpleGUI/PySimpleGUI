@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.12.0.5  Unreleased - Element.expand added expand_row parm, spin - defaults to first entry if none specified, use math.floor to convert in Graph element, Table & Tree header colors and font, Graph get figures and bounding box"
+version = __version__ = "4.13.0  Released 18-Dec-2019"
 
 port = 'PySimpleGUI'
 
@@ -3079,6 +3079,8 @@ class Graph(Element):
         if point == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(point[0], point[1])
+        size_converted = self._convert_xy_to_canvas_xy(point[0]+size, point[1])
+        size = size_converted[0]-converted_point[0]
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
@@ -3091,7 +3093,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawCircle(self, center_location, radius, fill_color=None, line_color='black'):
+    def DrawCircle(self, center_location, radius, fill_color=None, line_color='black', line_width=1):
         """
         Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
 
@@ -3099,6 +3101,7 @@ class Graph(Element):
         :param radius: Union[int, float] Radius in user's coordinate values.
         :param fill_color: (str) color of the point to draw
         :param line_color:  (str) color of the outer line that goes around the circle (sorry, can't set thickness)
+        :param line_width:  (int) width of the line around the circle, the outline, in pixels
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle
         """
         if center_location == (None, None):
@@ -3117,12 +3120,12 @@ class Graph(Element):
         try:  # needed in case the window was closed with an X
             id = self._TKCanvas2.create_oval(int(converted_point[0]) - int(radius), int(converted_point[1]) - int(radius),
                                              int(converted_point[0]) + int(radius), int(converted_point[1]) + int(radius), fill=fill_color,
-                                             outline=line_color)
+                                             outline=line_color, width=line_width)
         except:
             id = None
         return id
 
-    def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None):
+    def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=1):
         """
         Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
 
@@ -3130,6 +3133,7 @@ class Graph(Element):
         :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle
         :param fill_color: (str) color of the interrior
         :param line_color: (str) color of outline of oval
+        :param line_width:  (int) width of the line around the oval, the outline, in pixels
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -3140,7 +3144,7 @@ class Graph(Element):
             return None
         try:  # in case windows close with X
             id = self._TKCanvas2.create_oval(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
-                                             converted_bottom_right[1], fill=fill_color, outline=line_color)
+                                             converted_bottom_right[1], fill=fill_color, outline=line_color, width=line_width )
         except:
             id = None
 
@@ -4988,6 +4992,8 @@ class Tree(Element):
         :param justification:  (str) 'left', 'right', 'center' are valid choices
         :param text_color: (str) color of the text
         :param background_color: (str) color of background
+        :param header_text_color: (str) sets the text color for the header
+        :param header_background_color: (str) sets the background color for the header
         :param header_font: Union[str, Tuple[str, int]] specifies the font family, size, etc
         :param num_rows: (int) The number of rows of the table to display at a time
         :param row_height: (int) height of a single row in pixels
@@ -6230,14 +6236,6 @@ class Window:
             except:
                 pass
         self.TKrootDestroyed = True
-        # for row in self.Rows:
-        #     for elem in row:
-        #         try:
-        #             # elem.Widget.__del__()
-        #             del elem.Widget
-        #         except Exception as e:
-        #             print(f'Exception deleting {e}')
-        # self.TKroot.__del__()
         del self.TKroot
         del self.Rows
 
