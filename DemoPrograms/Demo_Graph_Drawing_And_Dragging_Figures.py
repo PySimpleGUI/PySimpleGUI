@@ -13,11 +13,16 @@ def main():
 
     col = [[sg.R('Draw Rectangles', 1, key='-RECT-')],
            [sg.R('Draw Circle', 1, True, key='-CIRCLE-')],
+           [sg.R('Draw Line', 1, True, key='-LINE-')],
+           [sg.R('Draw point', 1, True, key='-POINT-')],
+           [sg.R('Erase item', 1, True, key='-ERASE-')],
+           [sg.R('Erase all', 1, True, key='-CLEAR-')],
+           [sg.R('Move Everything', 1, True, key='-MOVEALL-')],
            [sg.R('Move Stuff', 1, True, key='-MOVE-')],
            ]
 
     layout = [[sg.Graph(
-        canvas_size=(400, 400),
+        canvas_size=(1200,1200),
         graph_bottom_left=(0, 0),
         graph_top_right=(400, 400),
         key="-GRAPH-",
@@ -26,7 +31,7 @@ def main():
         drag_submits=True), sg.Col(col) ],
         [sg.Text(key='info', size=(60, 1))]]
 
-    window = sg.Window("draw rect on image", layout, finalize=True)
+    window = sg.Window("Drawing and Moving Stuff Around", layout, finalize=True)
 
     # get the graph element for ease of use later
     graph = window["-GRAPH-"]  # type: sg.Graph
@@ -50,20 +55,28 @@ def main():
                 end_point = (x, y)
             if prior_rect:
                 graph.delete_figure(prior_rect)
-            delta_x = x - lastxy[0]
-            delta_y = y - lastxy[1]
+            delta_x, delta_y = x - lastxy[0], y - lastxy[1]
             lastxy = x,y
             if None not in (start_point, end_point):
                 if values['-MOVE-']:
                     for fig in drag_figures:
-                        location = graph.get_bounding_box(fig)
                         graph.move_figure(fig, delta_x, delta_y)
                         graph.update()
                 elif values['-RECT-']:
                     prior_rect = graph.draw_rectangle(start_point, end_point,fill_color='green', line_color='red')
                 elif values['-CIRCLE-']:
                     prior_rect = graph.draw_circle(start_point, end_point[0]-start_point[0], fill_color='red', line_color='green')
-
+                elif values['-LINE-']:
+                    prior_rect = graph.draw_line(start_point, end_point, width=4)
+                elif values['-POINT-']:
+                    prior_rect = graph.draw_point(start_point, size=1)
+                elif values['-ERASE-']:
+                    for figure in drag_figures:
+                        graph.delete_figure(figure)
+                elif values['-CLEAR-']:
+                    graph.erase()
+                elif values['-MOVEALL-']:
+                    graph.move(delta_x, delta_y)
         elif event.endswith('+UP'):  # The drawing has ended because mouse up
             info = window["info"]
             info.update(value=f"grabbed rectangle from {start_point} to {end_point}")
