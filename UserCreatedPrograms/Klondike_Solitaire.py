@@ -82,7 +82,7 @@ show_card   = [38, 40, 43, 47, 52, 58, 65]  # Cards shown when beginning
 start_x     = int((width-card_width)/2)     # Position for flash card show
 start_y     = card_height+pad_y
 # Image BASE64 data of cards with top-side and bottom-side
-byte        = [['']+[c0 for i in range(52)],[cn,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,
+byte        = [['']+[c0 for __ in range(52)],[cn,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,
               c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,
               c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,
               c43,c44,c45,c46,c47,c48,c49,c50,c51,c52]]
@@ -209,12 +209,13 @@ class poker():
                     x0 += step_x
                     y0 += step_y
                     draw.RelocateFigure(p[i].ids, x0, y0)
-                    draw.TKCanvas.update_idletasks()
+                    draw.ParentForm.refresh()
                     if num == count:
                         break
                 # Move image to final position on cells
                 draw.RelocateFigure(p[i].ids, x, y)
-                draw.TKCanvas.update_idletasks()
+                draw.ParentForm.refresh()
+
 
     def move_back(self):
         # Move card back to original position after drag
@@ -225,7 +226,7 @@ class poker():
             if pp.up==None:
                 break
             pp = p[pp.up]
-        draw.TKCanvas.update_idletasks()
+        draw.ParentForm.refresh()
 
     def move_from_rack1_to_rack2(self, rack):
         # Drag card from Rack 1 to Top (Rack 3 ~ 6)
@@ -320,7 +321,7 @@ class poker():
             draw.RelocateFigure(pp.ids, pp.x, pp.y)
             if pp.up == None: break
             pp = p[pp.up]
-        draw.TKCanvas.update_idletasks()
+        draw.ParentForm.refresh()
 
     def move_rack(self, rack):
         # move top cards of caller to up side of card2
@@ -440,7 +441,7 @@ class poker():
             draw.BringFigureToFront(self.ids)
         if same:
             draw.RelocateFigure(self.ids, self.x, self.y)
-            draw.TKCanvas.update_idletasks()
+            draw.ParentForm.refresh()
         else:
             index = (self.kind-1)*13+self.no if self.kind!=0 else 0
             d = byte[self.side][index]
@@ -456,8 +457,7 @@ def id_to_card(ids):
 
 def get_card(x, y, down=True):
     # get card by position (x,y), button down for 1st one, button up for 2nd one
-    x, y = draw._convert_canvas_xy_to_xy(x, y)
-    ids = draw.TKCanvas.find_overlapping(x,y,x,y)
+    ids = draw.get_figures_at_location((x,y))
     if down+len(ids)<2: return None
     return id_to_card(ids[down-2])
 
@@ -481,6 +481,7 @@ def condition():
     if card2!=None and p[card2].side==1:        result.add('S2' )
     return result
 
+sg.change_look_and_feel('Green')
 # Three buttons on top side - 'New Game', 'Game Over' and 'Flush All'
 # One Graphic area on bottom side
 layout= [[sg.Button('New Game',  pad=(pad_x, (pad_y,0)), font=font),
@@ -492,9 +493,9 @@ layout= [[sg.Button('New Game',  pad=(pad_x, (pad_y,0)), font=font),
 
 # Create window
 window  = sg.Window('Klondike Solitaire', layout=layout,
-                    background_color='green', finalize=True).Finalize()
+                    background_color='green', finalize=True)
 # Easy name for graphic element
-draw    = window['Graph']
+draw    = window['Graph']       # type: sg.Graph
 
 # Loop Start for event detect
 while True:
@@ -510,7 +511,7 @@ while True:
         for card in show_card: p[card].turn_over()
         New_Start = False
 
-    event, values = window.read(timeout=100)    # read window event
+    event, values = window.read()    # read window event
 
     if event==None or event=='Game Over':   # Window close of Game over clicked
         break
@@ -534,7 +535,7 @@ while True:
                 result = result or ok
             if not result: break
 
-    if event == 'Graph':                # Button down event
+    if event == 'Graph':                # Button DOWN event
 
         x1, y1 = values['Graph']
         if not start:                   # Keep position
@@ -558,7 +559,7 @@ while True:
             if card1 != None:
                 p1 = p[card1]
 
-    elif event == 'Graph+UP':           # Button down event
+    elif event == 'Graph+UP':           # Button UP event
 
         x2, y2 = values['Graph']
         card2   = get_card(x2, y2, down=False)
