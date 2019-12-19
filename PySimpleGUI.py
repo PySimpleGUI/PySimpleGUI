@@ -886,6 +886,19 @@ class Element():
         self.Widget.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
 
+
+    def set_cursor(self,cursor):
+        """
+        Sets the cursor for the current Element.
+        :param cursor: (str) The tkinter cursor name
+        """
+        try:
+            self.Widget.config(cursor=cursor)
+        except Exception as e:
+            print('Warning bad cursor specified ', cursor)
+            print(e)
+
+
     def __call__(self, *args, **kwargs):
         """
         Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
@@ -1085,14 +1098,17 @@ class Combo(Element):
                 pass
             self.Values = values
         if value is not None:
-            for index, v in enumerate(self.Values):
-                if v == value:
-                    try:
-                        self.TKCombo.current(index)
-                    except:
-                        pass
-                    self.DefaultValue = value
-                    break
+            if value not in self.Values:
+                self.TKCombo.set(value)
+            else:
+                for index, v in enumerate(self.Values):
+                    if v == value:
+                        try:
+                            self.TKCombo.current(index)
+                        except:
+                            pass
+                        self.DefaultValue = value
+                        break
         if set_to_index is not None:
             try:
                 self.TKCombo.current(set_to_index)
@@ -8873,8 +8889,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', background=element.TabBackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
-                if element.Font is not None:
-                    style.configure(custom_style + '.Tab', font=element.Font)
+                style.configure(custom_style + '.Tab', font=font)
 
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
 
@@ -9028,6 +9043,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     table_style.configure(style_name+'.Heading', background=element.HeaderBackgroundColor)
                 if element.HeaderFont is not None:
                     table_style.configure(style_name+'.Heading', font=element.HeaderFont)
+                else:
+                    table_style.configure(style_name+'.Heading', font=font)
                 table_style.configure(style_name, font=font)
                 treeview.configure(style=style_name)
 
@@ -9139,11 +9156,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, foreground=element.TextColor)
                 if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
-                    table_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
+                    tree_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
                 if element.HeaderBackgroundColor is not None and element.HeaderBackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    table_style.configure(style_name+'.Heading', background=element.HeaderBackgroundColor)
+                    tree_style.configure(style_name+'.Heading', background=element.HeaderBackgroundColor)
                 if element.HeaderFont is not None:
-                    table_style.configure(style_name+'.Heading', font=element.HeaderFont)
+                    tree_style.configure(style_name+'.Heading', font=element.HeaderFont)
+                else:
+                    tree_style.configure(style_name+'.Heading', font=font)
                 tree_style.configure(style_name, font=font)
                 if element.RowHeight:
                     tree_style.configure(style_name, rowheight=element.RowHeight)
@@ -10968,7 +10987,6 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'BUTTON': ('#e3e3e3', '#455d7a'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                       'PROGRESS_DEPTH': 0, 'COLOR_LIST': ['#233142', '#455d7a', '#f95959', '#e3e3e3'],
                                       'DESCRIPTION': ['Black', 'Blue', 'Red', 'Grey']},
-
                        }
 
 
@@ -10978,6 +10996,28 @@ def ListOfLookAndFeelValues():
     :return: List[str] - list of valid string values
     """
     return sorted(list(LOOK_AND_FEEL_TABLE.keys()))
+
+
+def get_theme():
+    """
+    Returns the current "Look and Feel" theme
+    :return:
+    """
+    return CURRENT_LOOK_AND_FEEL
+
+
+def theme(new_theme=None):
+    """
+    Sets / Gets the current Theme.  If none is specified then returns the current theme
+
+    :param new_theme: (str) the new theme name to use
+    :return: (str) the currently selected theme
+    """
+    if new_theme is not None:
+        set_theme(new_theme)
+    return get_theme()
+
+
 
 
 def ChangeLookAndFeel(index, force=False):
@@ -12562,7 +12602,7 @@ def main():
     from random import randint
     # preview_all_look_and_feel_themes()
     look_and_feel = 'Anything'
-    ChangeLookAndFeel(look_and_feel)
+    set_theme(look_and_feel)
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -12650,7 +12690,7 @@ def main():
 
     layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(50, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('Window Title', layout,
-                    font=('Helvetica', 13),
+                    font=('Helvetica', 18),
                     # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
@@ -12693,13 +12733,14 @@ def main():
         elif event == 'About...':
             popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
         elif event.startswith('See'):
-            window.set_transparent_color(LOOK_AND_FEEL_TABLE[look_and_feel]['BACKGROUND'])
+            window.set_transparent_color(LOOK_AND_FEEL_TABLE[get_theme()]['BACKGROUND'])
     window.close()
 
 
 # ------------------------ PEP8-ify The SDK ------------------------#
 
 change_look_and_feel = ChangeLookAndFeel
+set_theme = ChangeLookAndFeel
 convert_args_to_single_string = ConvertArgsToSingleString
 convert_flex_to_tk = ConvertFlexToTK
 easy_print = EasyPrint
