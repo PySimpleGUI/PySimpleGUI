@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.13.0.1  Unreleased - Element.set_cursor, theme(), Combo.update allows any value, beginning of theme reworking with theme() call, table & tree header font defaults to window font"
+version = __version__ = "4.13.1.2  Unreleased - Element.set_cursor, NEW theme(), Combo.update allows any value,  table & tree header font defaults to window font, default theme now Dark Blue 3"
 
 port = 'PySimpleGUI'
 
@@ -222,7 +222,7 @@ if sys.platform == 'darwin':
 else:
     DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
-CURRENT_LOOK_AND_FEEL = 'Default'
+CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
@@ -7792,7 +7792,7 @@ else:
 # Y88b.  888 "88b 888 888  888 Y88b.  Y8b.     888
 #  "Y888 888  888 888 888  888  "Y888  "Y8888  888
 
-# My crappy tkinter code starts here
+# My crappy tkinter code starts here.  (search for "crappy" to get here quickly... that's the purpose if you hadn't caught on
 
 """
          )
@@ -7803,6 +7803,9 @@ else:
       (_______)
 
 """
+
+
+# Also, to get to the point in the code where each element's widget is created, look for element + "p lacement" (without the space)
 
 
 # ========================   TK CODE STARTS HERE ========================================= #
@@ -7863,7 +7866,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_size = toplevel_form.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
-            # -------------------------  COLUMN element  ------------------------- #
+            # -------------------------  COLUMN placement element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element  # type: Column
                 if element.Scrollable:
@@ -7937,7 +7940,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand = True
-            # -------------------------  Pane element  ------------------------- #
+            # -------------------------  Pane placement element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
                 bd = element.BorderDepth if element.BorderDepth is not None else border_depth
                 element.PanedWindow = element.Widget = tk.PanedWindow(tk_row_frame,
@@ -7969,7 +7972,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.PanedWindow.pack_forget()
-            # -------------------------  TEXT element  ------------------------- #
+            # -------------------------  TEXT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 # auto_size_text = element.AutoSizeText
                 element = element  # type: Text
@@ -8031,7 +8034,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
-            # -------------------------  BUTTON element non-ttk version  ------------------------- #
+            # -------------------------  BUTTON placement element non-ttk version  ------------------------- #
             elif (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is False) or \
                     (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is not True and toplevel_form.UseTtkButtons is not True):
                 element = element  # type: Button
@@ -8116,7 +8119,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  BUTTON element ttk version ------------------------- #
+            # -------------------------  BUTTON placement element ttk version ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
                 element.UseTtkButtons = True  # indicate that ttk button was used
@@ -8220,7 +8223,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  BUTTONMENU element  ------------------------- #
+            # -------------------------  BUTTONMENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTONMENU:
                 element = element  # type: ButtonMenu
                 element.Location = (row_num, col_num)
@@ -8293,7 +8296,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
 
 
-            # -------------------------  INPUT element  ------------------------- #
+            # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
                 default_text = element.DefaultText
@@ -8338,7 +8341,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand = True
 
-            # -------------------------  COMBOBOX element  ------------------------- #
+            # -------------------------  COMBO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 element = element  # type: InputCombo
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
@@ -8403,10 +8406,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Visible is False:
                     element.TKCombo.pack_forget()
                 if element.DefaultValue is not None:
-                    for i, v in enumerate(element.Values):
-                        if v == element.DefaultValue:
-                            element.TKCombo.current(i)
-                            break
+                    element.TKCombo.set(element.DefaultValue)
+                    # for i, v in enumerate(element.Values):
+                    #     if v == element.DefaultValue:
+                    #         element.TKCombo.current(i)
+                    #         break
                 # elif element.Values:
                 #     element.TKCombo.current(0)
                 if element.ChangeSubmits:
@@ -8417,7 +8421,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OPTION MENU Element (Like ComboBox but different) element  ------------------------- #
+            # -------------------------  OPTION MENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
@@ -8443,7 +8447,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKOptionMenu, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  LISTBOX element  ------------------------- #
+            # -------------------------  LISTBOX placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 element = element  # type: Listbox
                 max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) else 0
@@ -8490,7 +8494,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKListbox.bind('<Button-3>', element._RightClickMenuCallback)
-            # -------------------------  MULTILINE element  ------------------------- #
+            # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element  # type: Multiline
                 default_text = element.DefaultText
@@ -8560,7 +8564,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  PROGRESS BAR element  ------------------------- #
+            # -------------------------  PROGRESS placement element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 element = element  # type: ProgressBar
                 # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
@@ -8582,7 +8586,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 element.Widget = element.TKProgressBar.TKProgressBarForReal
-                # -------------------------  RADIO BUTTON element  ------------------------- #
+                # -------------------------  RADIO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 element = element  # type: Radio
                 width = 0 if auto_size_text else element_size[0]
@@ -8625,7 +8629,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  SPIN element  ------------------------- #
+                # -------------------------  SPIN placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 element = element  # type: Spin
                 width, height = element_size
@@ -8652,7 +8656,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                # -------------------------  OUTPUT element  ------------------------- #
+                # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 width, height = element_size
                 element._TKOut = element.Widget = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
@@ -8716,7 +8720,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         AddMenuItem(top_menu, menu[1], element)
                         element.TKRightClickMenu = top_menu
                         element.tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
-                # -------------------------  Canvas element  ------------------------- #
+                # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
                 if element._TKCanvas is None:
@@ -8738,7 +8742,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKCanvas.bind('<Button-3>', element._RightClickMenuCallback)
-                # -------------------------  Graph element  ------------------------- #
+                # -------------------------  Graph placement element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 width, height = element_size
@@ -8772,7 +8776,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element._TKCanvas2.bind('<Button-3>', element._RightClickMenuCallback)
-            # -------------------------  MENUBAR element  ------------------------- #
+            # -------------------------  MENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
                 menu_def = element.MenuDefinition
@@ -8797,7 +8801,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if len(menu_entry) > 1:
                         AddMenuItem(baritem, menu_entry[1], element)
                 toplevel_form.TKroot.configure(menu=element.TKMenu)
-            # -------------------------  Frame element  ------------------------- #
+            # -------------------------  Frame placement element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 element = element  # type: Frame
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
@@ -8829,7 +8833,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand=True
-            # -------------------------  Tab element  ------------------------- #
+            # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element = element  # type: Tab
                 element.TKFrame = element.Widget = tk.Frame(form.TKNotebook)
@@ -8861,7 +8865,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand = True
-            # -------------------------  TabGroup element  ------------------------- #
+            # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element  # type: TabGroup
                 custom_style = str(element.Key) + 'customtab.TNotebook'
@@ -8903,7 +8907,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 # row_should_expand = True
-                # -------------------------  SLIDER element  ------------------------- #
+                # -------------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
                 slider_length = element_size[0] * CharWidthInPixels()
@@ -8951,7 +8955,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  TABLE element  ------------------------- #
+            # -------------------------  TABLE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element = element  # type: Table
                 frame = tk.Frame(tk_row_frame)
@@ -9079,7 +9083,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
-            # -------------------------  Tree element  ------------------------- #
+            # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element  # type: Tree
                 frame = tk.Frame(tk_row_frame)
@@ -9185,12 +9189,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
-            # -------------------------  Separator element  ------------------------- #
+            # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
-            # -------------------------  StatusBar element  ------------------------- #
+            # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
                 display_text = element.DisplayText  # text to display
@@ -10987,6 +10991,10 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'BUTTON': ('#e3e3e3', '#455d7a'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                       'PROGRESS_DEPTH': 0, 'COLOR_LIST': ['#233142', '#455d7a', '#f95959', '#e3e3e3'],
                                       'DESCRIPTION': ['Black', 'Blue', 'Red', 'Grey']},
+                       'HotDogStand': {'BACKGROUND': 'red', 'TEXT': 'yellow', 'INPUT': 'yellow', 'TEXT_INPUT': 'black', 'SCROLL': 'yellow',
+                                      'BUTTON': ('red', 'yellow'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
+                                      'PROGRESS_DEPTH': 0,
+                                     },
                        }
 
 
@@ -10998,27 +11006,89 @@ def ListOfLookAndFeelValues():
     return sorted(list(LOOK_AND_FEEL_TABLE.keys()))
 
 
-def get_theme():
-    """
-    Returns the current "Look and Feel" theme
-    :return:
-    """
-    return CURRENT_LOOK_AND_FEEL
-
-
 def theme(new_theme=None):
     """
-    Sets / Gets the current Theme.  If none is specified then returns the current theme
+    Sets / Gets the current Theme.  If none is specified then returns the current theme.
+    This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
 
     :param new_theme: (str) the new theme name to use
     :return: (str) the currently selected theme
     """
     if new_theme is not None:
-        set_theme(new_theme)
-    return get_theme()
+        change_look_and_feel(new_theme)
+    return CURRENT_LOOK_AND_FEEL
 
 
+def theme_background_color():
+    """
+    Returns the background color specified by the current color theme
 
+    :return: (str) - color string of the background color defined by current theme
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['BACKGROUND']
+
+
+def theme_text_color():
+    """
+    Returns the text color specified by the current color theme
+
+    :return: (str) - color string of the text color defined by current theme
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['TEXT']
+
+
+def theme_input_background_color():
+    """
+    Returns the input element background color specified by the current color theme
+
+    :return: (str) - color string of the input element background color defined by current theme
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['INPUT']
+
+
+def theme_input_text_color():
+    """
+    Returns the input element text color specified by the current color theme
+
+    :return: (str) - color string of the input element text color defined by current theme
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['TEXT_INPUT']
+
+
+def theme_text_color():
+    """
+    Returns the text color specified by the current color theme
+
+    :return: (str) - color string of the text color defined by current theme
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['TEXT']
+
+
+def theme_button_color():
+    """
+    Returns the button color specified by the current color theme
+
+    :return: Tuple[str, str] - TUPLE with color strings of the button color defined by current theme (button text color, button background color)
+    """
+    return LOOK_AND_FEEL_TABLE[theme()]['BUTTON']
+
+
+def theme_list():
+    """
+    Returns a sorted list of the currently available color themes
+
+    :return: List[str] - A sorted list of the currently available color themes
+    """
+    return list_of_look_and_feel_values()
+
+
+def theme_previewer(columns=12):
+    """
+    Show a window with all of the color themes - takes a while so be patient
+
+    :param columns: (int) number of themes in a single row
+    """
+    preview_all_look_and_feel_themes(columns)
 
 def ChangeLookAndFeel(index, force=False):
     """
@@ -11105,8 +11175,11 @@ def preview_all_look_and_feel_themes(columns=12):
     Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
     They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
     :param columns: (int) The number of themes to display per row
-
     """
+
+    # Show a "splash" type message so the user doesn't give up waiting
+    popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='white', auto_close=True, non_blocking=True)
+
     web = False
 
     WINDOW_BACKGROUND = 'lightblue'
@@ -12601,8 +12674,8 @@ def main():
     """
     from random import randint
     # preview_all_look_and_feel_themes()
-    look_and_feel = 'Anything'
-    set_theme(look_and_feel)
+    # look_and_feel = 'Hot Dog Stand'
+    # theme('Hot Dog Stand')
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -12628,7 +12701,6 @@ def main():
         [Input('Input Text', size=(25, 1)), ],
         [Multiline(size=(30, 5), default_text='Multiline Input')],
     ]
-    theme = 'default'
 
     frame2 = [
         # [ProgressBar(100, bar_color=('red', 'green'), orientation='h')],
@@ -12690,7 +12762,7 @@ def main():
 
     layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(50, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('Window Title', layout,
-                    font=('Helvetica', 18),
+                    # font=('Helvetica', 18),
                     # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
@@ -12783,9 +12855,13 @@ set_options = SetOptions
 
 test = main
 
-# __all__ = ['** YOUR from PySimpleGUI import * HAS BEEN BLOCKED. YOU ARE NOT ALLOWED THIS KIND OF IMPORT WITH THIS LIBRARY **']            # do not allow import *
+#------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
+theme(CURRENT_LOOK_AND_FEEL)
+
+
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     main()
     exit(69)
+
