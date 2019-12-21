@@ -28,16 +28,21 @@ HOW DO I INSERT IMAGES ???
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
+
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.7.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.1-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -191,12 +196,18 @@ and returns the value input as well as the button clicked.
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
 
-The YouTube videos - If you like instructional videos, there are over 15 videos
+The YouTube videos - If you like instructional videos, there are over 15 videos made by PySimpleGUI project
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
 - [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
 - [The Naked Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
 - There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
 
+YouTube Videos made by others.  These have much higher production values than the above videos.
+
+- A ***fantastic*** tutorial [PySimpleGUI Concepts - Video 1](https://youtu.be/cLcfLm_GgiM)
+- Build a calculator [Python Calculator with GUI | PySimpleGUI | Texas Instruments DataMath II](https://youtu.be/x5LSTDdffFk)
+- Notepad [Notepad in Python - PySimpleGUI](https://youtu.be/JQY641uynKo)
+- File Search Engine [File Search Engine | Project for Python Portfolio with GUI | PySimpleGUI](https://youtu.be/IWDC9vcBIFQ)
 
 # About The PySimpleGUI Documentation System
 
@@ -260,10 +271,10 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 ### OS
 
 * Windows 7, 8, 10
-* Linux on PC - Tested on **many** distributions
+* Linux on PC - Tested on several distributions
 * Linux on Raspbnerry Pi
 * Linux on Android - Can use either Termux or PyDroid3
-* Mac OS (Sorry don't know much about Macs other than Macs don't like tkinter)
+* Mac OS
 
 
 #### Python versions
@@ -439,6 +450,35 @@ PySimpleGUIWeb is first and foremost a **GUI**, a program's front-end. It is des
 
 If more than 1 person connects at a time, then both users will see the exact same stuff and will be interacting with the program as if a single user was using it.
 
+## Android Version
+
+PySimpleGUI runs on Android devices with the help of either the PyDroid3 app or the Termux app.  Both are capable of running tkinter programs which means both are capable of running PySimpleGUI.
+
+To use with PyDroid3 you will need to add this import to the top of all of your PySimpleGUI program files:
+
+```python
+import tkinter
+```
+
+This evidently triggers PyDroid3 that the application is going to need to use the GUI.
+
+You will also want to create your windows with the `location` parameter set to `(0,0)`.
+
+Here's a quick demo that uses OpenCV2 to display your webcam in a window that runs on PyDroid3:
+
+```python
+import tkinter
+import cv2, PySimpleGUI as sg
+USE_CAMERA = 0      # change to 1 for front facing camera
+window, cap = sg.Window('Demo Application - OpenCV Integration', [[sg.Image(filename='', key='image')], ], location=(0, 0), grab_anywhere=True), cv2.VideoCapture(USE_CAMERA)
+while window(timeout=20)[0] is not None:
+    window['image'](data=cv2.imencode('.png', cap.read()[1])[1].tobytes())
+```
+
+You will need to pip install opencv-python as well as PySimpleGUI to run this program.
+
+Also, you must be using the Premium, yes paid, version of PyDroid3 in order to run OpenCV.  The cost is CHEAP when compared to the rest of things in life.  A movie ticket will cost you more.  Which is more fun, seeing **your Python program** running on your phone and using your phone's camera, or some random movie currently playing?  From experience, the Python choice is a winner.  If you're cheap, well, then you won't get to use OpenCV. No, there is no secret commercial pact between the PySimpleGUI project and the PyDroid3 app team.  
+
 
 ## Source code compatibility
 
@@ -493,13 +533,17 @@ Repl.it is not meant to serve up applications and web pages.  Trying to use it t
 
 It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
 
-However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel" calls are disabled for Macs.  Colored buttons in particular are broken.  And, you are unable to specify filetypes when using the FileBrowse button.  None of this is PySimpleGUI code issues, of course, they're all in tkinter.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, create your own button images.  
+Historicly, PySimpleGUI using tkinter have struggled on Macs.  This was because of a problem setting button colors on the Mac.  However, two events has turned this problem around entirely.
 
-***Look through the open and closed issues if you're a  Mac person with a problem. It's highly likely the problem has been at least seen previously and there may even be a fix or workaround***
+1. Use of ttk Buttons for Macs
+2. Ability for Mac users to install Python from python.org rather than the Homebrew version with button problems
 
-*Switching to "Light Mode" is known to fix some of the problems.*  They honestly are tkinter/Mac problems.
+It's been a long road for Mac users with many deciding to use PySimpleGUIQt so that multi-colored windows could be made.  It's completely understandable to want to make attractive windows that utilitize colors.  
 
-Make sure you're running tkinter 8.6 and up.  However, as I'm learning 8.6 can mean almost anything as the minor release numbers are not provided (8.6.1, etc).  Turns out 8.6 has been in development for YEARS.  The 8.6 that comes with Python 3.7.4 doesn't support table colors for example even though it's version 8.6.
+PySimpleGUI now supports Macs, Linux, and Windows equally well. They all are able to use the "Themes" that automatically add color to your windows.  
+
+Be aware that Macs default to using ttk buttons.  You can override this setting at the Window and Button levels.  If you installed Python from python.org, then it's likely you can use the non-ttk buttons should you wish.
+
 
 
 # Support
@@ -744,13 +788,16 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Filename')],
-          [sg.Input(), sg.FileBrowse()], 
-	  [sg.OK(), sg.Cancel()]] 
+sg.change_look_and_feel('Dark Blue 3')  # please make your creations colorful
+
+layout = [	[sg.Text('Filename')],
+          	[sg.Input(), sg.FileBrowse()], 
+	  		[sg.OK(), sg.Cancel()]] 
 
 window = sg.Window('Get filename example', layout)
 
 event, values = window.Read()
+window.close()
 ```
 
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
@@ -850,8 +897,9 @@ Just because you can't match a pair of socks doesn't mean your windows have to a
 
 In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
 
-![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+In release 4.9 another 32 Color Themes were added... here are the current choices
 
+![Dec 2019 Look And Feel Themes](https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg)
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
@@ -983,6 +1031,7 @@ Features of PySimpleGUI include:
 	- Calendar chooser
 	- Color chooser
 	- Button Menu
+- TTK Buttons or "normal" TK Buttons
 - Checkboxes
 - Radio Buttons
 - Listbox
@@ -1097,7 +1146,7 @@ Beginners certainly can add more `if event == 'my button':` statements to the ev
 
 The hope is that beginners that are interested in graphic design, and are taking a Python course, will have an easy way to express themselves, right from the start of their Python experience.  Even if they're not the best programmers they will be able express themselves to show custom GUI layouts, colors and artwork with ease.
 
-> Fill the GUI Gap
+> Fill the GUI Gap (Democratize GUIs)
 
 There is a noticeable gap in the Python GUI solution.  Fill that gap and who knows what will happen.  At the moment, to make a tradiional GUI window using tkinter, Qt, WxPython and Remi, it takes much more than a week, or a month of Python education to use these GUI packages.  
 
@@ -1155,6 +1204,8 @@ More information about installing tkinter can be found here: https://www.techinf
 
 ### Installing for Python 2.7
 
+**IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
+
 `pip install --upgrade PySimpleGUI27`
 or
 `pip2 install --upgrade PySimpleGUI27`
@@ -1165,7 +1216,6 @@ You may need to also install "future" for version 2.7
 or
 `pip2 install future`
 
-Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
 
 Like above, you may have to install either pip or tkinter.  To do this on Python 2.7:
 
@@ -1304,38 +1354,17 @@ Then use either "high level" API calls or build your own windows.
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
-***WARNING*** Do NOT use PySimpleGUI with Python 3.7.3 and 3.7.4.  tkiter is having issues with that release.  Things like Table colors stopped working entirely.  None of us want to debug tkinter code.  It's difficult enough debugging your code and PySimpleGUI code.  A lot of time has already been spent debugging this one so no need for you to suffer too.
 
 ### Python 3.7
 
-It puzzles me why a beginner would install 3.7.  Or even a seasoned programmer.  What specific feature of 3.7 are you using that is not in 3.6?  If you are unable to answer this, then ***it's strongly suggested that you run 3.6***, an immensely solid release of Python with all those goodie inside like f-strings.  If you must run 3.7, try 3.7.2 instead.  It does work with PySimpleGUI with no known issues.
+If you must run 3.7, try 3.7.2.  It does work with PySimpleGUI with no known issues.
 
+***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  It's unclear if there's been a change that makes the tkinter API no longer working which means they are not backwards compatible.  That would be a real shame. If so, more work needs to be done in PySimpleGUI
 
-## Using  - Python 2.7
+## Python 2.7
 
-Those using Python 2.7 will import a different module name
+On December 31, 2019 the Python 2.7 version of PySimpleGUI will be **deleted** from the GitHub.  Sorry but Legacy Python has no permanent home here.  The security experts claim that supporting 2.7 is doing a diservice to the Python community.  I understand why.  There are some very narrow cases where 2.7 is required.  If you have one, make a copy of PySimpleGUI27.py quickly before it disappears for good.
 
-```python
-import PySimpleGUI27 as sg
-```
-
-
-
-## Code to Automatically Import Correct Version
-
-Many of the demo programs use this check to see which package to use:
-```python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-```
-
-
-This will automatically import the correct library based on the Python version number reported by the Python interpreter.
-
-NOTE: It's 2019 and 2.7 support is being systematically removed.  This construct will be removed from the demo programs shortly.  2.7 users can still run these demos, but they will need to change the import from PySimpleGUI to PySimpleGUI27.  It save 4 lines of code and an import from sys in the process.
 
 ---
 

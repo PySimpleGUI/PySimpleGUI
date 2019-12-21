@@ -1,16 +1,20 @@
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+
 [![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+
 [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
 
 ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.7.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.1-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -155,11 +159,18 @@ and returns the value input as well as the button clicked.
 
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
-The YouTube videos - If you like instructional videos, there are over 15 videos
+The YouTube videos - If you like instructional videos, there are over 15 videos made by PySimpleGUI project
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
 - [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
 - [The Naked Truth (An updaate on the technology)](https://youtu.be/BFTxBmihsUY)
 - There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
+
+YouTube Videos made by others.  These have much higher production values than the above videos.
+
+- A ***fantastic*** tutorial [PySimpleGUI Concepts - Video 1](https://youtu.be/cLcfLm_GgiM)
+- Build a calculator [Python Calculator with GUI | PySimpleGUI | Texas Instruments DataMath II](https://youtu.be/x5LSTDdffFk)
+- Notepad [Notepad in Python - PySimpleGUI](https://youtu.be/JQY641uynKo)
+- File Search Engine [File Search Engine | Project for Python Portfolio with GUI | PySimpleGUI](https://youtu.be/IWDC9vcBIFQ)
 
 # About The PySimpleGUI Documentation System
 
@@ -222,10 +233,10 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 ### OS
 
 * Windows 7, 8, 10
-* Linux on PC - Tested on **many** distributions
+* Linux on PC - Tested on several distributions
 * Linux on Raspbnerry Pi
 * Linux on Android - Can use either Termux or PyDroid3
-* Mac OS (Sorry don't know much about Macs other than Macs don't like tkinter)
+* Mac OS
 
 #### Python versions
 
@@ -392,6 +403,35 @@ PySimpleGUIWeb is first and foremost a **GUI**, a program's front-end. It is des
 
 If more than 1 person connects at a time, then both users will see the exact same stuff and will be interacting with the program as if a single user was using it.
 
+## Android Version
+
+PySimpleGUI runs on Android devices with the help of either the PyDroid3 app or the Termux app.  Both are capable of running tkinter programs which means both are capable of running PySimpleGUI.
+
+To use with PyDroid3 you will need to add this import to the top of all of your PySimpleGUI program files:
+
+```python
+import tkinter
+```
+
+This evidently triggers PyDroid3 that the application is going to need to use the GUI.
+
+You will also want to create your windows with the `location` parameter set to `(0,0)`.
+
+Here's a quick demo that uses OpenCV2 to display your webcam in a window that runs on PyDroid3:
+
+```python
+import tkinter
+import cv2, PySimpleGUI as sg
+USE_CAMERA = 0      # change to 1 for front facing camera
+window, cap = sg.Window('Demo Application - OpenCV Integration', [[sg.Image(filename='', key='image')], ], location=(0, 0), grab_anywhere=True), cv2.VideoCapture(USE_CAMERA)
+while window(timeout=20)[0] is not None:
+    window['image'](data=cv2.imencode('.png', cap.read()[1])[1].tobytes())
+```
+
+You will need to pip install opencv-python as well as PySimpleGUI to run this program.
+
+Also, you must be using the Premium, yes paid, version of PyDroid3 in order to run OpenCV.  The cost is CHEAP when compared to the rest of things in life.  A movie ticket will cost you more.  Which is more fun, seeing **your Python program** running on your phone and using your phone's camera, or some random movie currently playing?  From experience, the Python choice is a winner.  If you're cheap, well, then you won't get to use OpenCV. No, there is no secret commercial pact between the PySimpleGUI project and the PyDroid3 app team.  
+
 ## Source code compatibility
 
 In theory, your source code is completely portable from one platform to another by simply changing the import statement.  That's the GOAL and suprisingly many times this 1-line change works.  Seeing your code run on tkinter, then change the import to `import  PySimpleGUIWeb as sg` and instead of a tkinter window, up pops your default browser with your window running on it is an incredible feeling.
@@ -444,13 +484,16 @@ Repl.it is not meant to serve up applications and web pages.  Trying to use it t
 
 It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
 
-However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel" calls are disabled for Macs.  Colored buttons in particular are broken.  And, you are unable to specify filetypes when using the FileBrowse button.  None of this is PySimpleGUI code issues, of course, they're all in tkinter.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, create your own button images.  
+Historicly, PySimpleGUI using tkinter have struggled on Macs.  This was because of a problem setting button colors on the Mac.  However, two events has turned this problem around entirely.
 
-***Look through the open and closed issues if you're a  Mac person with a problem. It's highly likely the problem has been at least seen previously and there may even be a fix or workaround***
+1. Use of ttk Buttons for Macs
+2. Ability for Mac users to install Python from python.org rather than the Homebrew version with button problems
 
-*Switching to "Light Mode" is known to fix some of the problems.*  They honestly are tkinter/Mac problems.
+It's been a long road for Mac users with many deciding to use PySimpleGUIQt so that multi-colored windows could be made.  It's completely understandable to want to make attractive windows that utilitize colors.  
 
-Make sure you're running tkinter 8.6 and up.  However, as I'm learning 8.6 can mean almost anything as the minor release numbers are not provided (8.6.1, etc).  Turns out 8.6 has been in development for YEARS.  The 8.6 that comes with Python 3.7.4 doesn't support table colors for example even though it's version 8.6.
+PySimpleGUI now supports Macs, Linux, and Windows equally well. They all are able to use the "Themes" that automatically add color to your windows.  
+
+Be aware that Macs default to using ttk buttons.  You can override this setting at the Window and Button levels.  If you installed Python from python.org, then it's likely you can use the non-ttk buttons should you wish.
 
 # Support
 
@@ -684,13 +727,16 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Filename')],
-          [sg.Input(), sg.FileBrowse()], 
-	  [sg.OK(), sg.Cancel()]] 
+sg.change_look_and_feel('Dark Blue 3')  # please make your creations colorful
+
+layout = [	[sg.Text('Filename')],
+          	[sg.Input(), sg.FileBrowse()], 
+	  		[sg.OK(), sg.Cancel()]] 
 
 window = sg.Window('Get filename example', layout)
 
 event, values = window.Read()
+window.close()
 ```
 
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
@@ -785,7 +831,9 @@ Just because you can't match a pair of socks doesn't mean your windows have to a
 
 In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
 
-![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+In release 4.9 another 32 Color Themes were added... here are the current choices
+
+![Dec 2019 Look And Feel Themes](https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg)
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
@@ -909,6 +957,7 @@ Features of PySimpleGUI include:
 	- Calendar chooser
 	- Color chooser
 	- Button Menu
+- TTK Buttons or "normal" TK Buttons
 - Checkboxes
 - Radio Buttons
 - Listbox
@@ -1022,7 +1071,7 @@ Beginners certainly can add more `if event == 'my button':` statements to the ev
 
 The hope is that beginners that are interested in graphic design, and are taking a Python course, will have an easy way to express themselves, right from the start of their Python experience.  Even if they're not the best programmers they will be able express themselves to show custom GUI layouts, colors and artwork with ease.
 
-> Fill the GUI Gap
+> Fill the GUI Gap (Democratize GUIs)
 
 There is a noticeable gap in the Python GUI solution.  Fill that gap and who knows what will happen.  At the moment, to make a tradiional GUI window using tkinter, Qt, WxPython and Remi, it takes much more than a week, or a month of Python education to use these GUI packages.  
 
@@ -1077,6 +1126,8 @@ More information about installing tkinter can be found here: https://www.techinf
 
 ### Installing for Python 2.7
 
+**IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
+
 `pip install --upgrade PySimpleGUI27`
 or
 `pip2 install --upgrade PySimpleGUI27`
@@ -1086,8 +1137,6 @@ You may need to also install "future" for version 2.7
 `pip install future`
 or
 `pip2 install future`
-
-Python 2.7 support is relatively new and the bugs are still being worked out.  I'm unsure what may need to be done to install tkinter for Python 2.7.  Will update this readme when more info is available
 
 Like above, you may have to install either pip or tkinter.  To do this on Python 2.7:
 
@@ -1216,34 +1265,15 @@ Then use either "high level" API calls or build your own windows.
 
 Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
 
-***WARNING*** Do NOT use PySimpleGUI with Python 3.7.3 and 3.7.4.  tkiter is having issues with that release.  Things like Table colors stopped working entirely.  None of us want to debug tkinter code.  It's difficult enough debugging your code and PySimpleGUI code.  A lot of time has already been spent debugging this one so no need for you to suffer too.
-
 ### Python 3.7
 
-It puzzles me why a beginner would install 3.7.  Or even a seasoned programmer.  What specific feature of 3.7 are you using that is not in 3.6?  If you are unable to answer this, then ***it's strongly suggested that you run 3.6***, an immensely solid release of Python with all those goodie inside like f-strings.  If you must run 3.7, try 3.7.2 instead.  It does work with PySimpleGUI with no known issues.
+If you must run 3.7, try 3.7.2.  It does work with PySimpleGUI with no known issues.
 
-## Using  - Python 2.7
+***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  It's unclear if there's been a change that makes the tkinter API no longer working which means they are not backwards compatible.  That would be a real shame. If so, more work needs to be done in PySimpleGUI
 
-Those using Python 2.7 will import a different module name
+## Python 2.7
 
-```python
-import PySimpleGUI27 as sg
-```
-
-## Code to Automatically Import Correct Version
-
-Many of the demo programs use this check to see which package to use:
-```python
-import sys
-if sys.version_info[0] >= 3:
-    import PySimpleGUI as sg
-else:
-    import PySimpleGUI27 as sg
-```
-
-This will automatically import the correct library based on the Python version number reported by the Python interpreter.
-
-NOTE: It's 2019 and 2.7 support is being systematically removed.  This construct will be removed from the demo programs shortly.  2.7 users can still run these demos, but they will need to change the import from PySimpleGUI to PySimpleGUI27.  It save 4 lines of code and an import from sys in the process.
+On December 31, 2019 the Python 2.7 version of PySimpleGUI will be **deleted** from the GitHub.  Sorry but Legacy Python has no permanent home here.  The security experts claim that supporting 2.7 is doing a diservice to the Python community.  I understand why.  There are some very narrow cases where 2.7 is required.  If you have one, make a copy of PySimpleGUI27.py quickly before it disappears for good.
 
 ---
 
@@ -1912,11 +1942,13 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
 			[sg.OK(), sg.Cancel()] ]
 
-window sg.Window('Get filename example', layout)
+window = sg.Window('Get filename example', layout)
 event, values = window.read()
 window.close()
 
@@ -1938,6 +1970,8 @@ The input fields in your window will be returned to you as a dictionary (syntact
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 				 [sg.InputText(), sg.FileBrowse()],
 				 [sg.Submit(), sg.Cancel()]]
@@ -1958,6 +1992,8 @@ This code will present a window and will print values until the user clicks the 
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Persistent window')],
 		  [sg.Input()],
@@ -1987,7 +2023,9 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
@@ -2024,6 +2062,8 @@ Let's dissect this little program
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Rename files or folders')],
 			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
 			[sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
@@ -2037,7 +2077,15 @@ folder_path, file_path = values[0], values[1]       # get the data from the valu
 print(folder_path, file_path)
 ```
 
+#### Colors
+
+![image](https://user-images.githubusercontent.com/46163555/70470775-cd01ff00-1a99-11ea-8b9c-8b33c8880c99.png)
+
+The first line of code after the import is a call to `change_look_and_feel`.  This single line of code make the window look like the window above instead of the window below.  It will also stop PySimpleGUI from nagging you to put one of these calls into your program.
+
 ![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
+
+#### Window contents
 
 Let's agree the window has 4 rows.
 
@@ -2061,6 +2109,8 @@ And what about those return values?  Most people simply want to show a window, g
 For return values the window is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
+
+#### "Reading" the window's values (also displays the window)
 
 ```python
 event, values = window.read()
@@ -2129,7 +2179,7 @@ while True:
 	event, values = window.read()
 	if event is None:
 		break
-window.Close()
+window.close()
 ```
 
 You will very often see the examples and demo programs write this check as:
@@ -2268,6 +2318,8 @@ Let's take a look at your first dictionary-based window.
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
 			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
@@ -2278,7 +2330,7 @@ layout = [
 
 window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
-window.Close()
+window.close()
 
 sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
 ```
@@ -2357,6 +2409,7 @@ layout = [
 
 window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
 event, values = window.read()
+window.close()
 
 sg.Popup('Title',
          'The results of the window.',
@@ -2478,12 +2531,6 @@ You can get your window's size by access the `Size` property.  The window has to
 To finalize your window:
 
 ```python
-window = Window('My Title', layout).Finalize()
-```
-
-If using PySimpleGUI 4.2 and later:
-
-```python
 window = Window('My Title', layout, finalize=True)
 ```
 
@@ -2529,6 +2576,27 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
 
 PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
 
+### TTK Buttons
+
+Beginning in release 4.7.0 PySimpleGUI supports both "normal" tk Buttons and ttk Buttons.  This change was needed so that Mac users can use colors on their buttons.  There is a bug that causes tk Buttons to not show text when you attempt to change the button color.  Note that this problem goes away if you install Python from the official Python.org site rather than using Homebrew.  A number of users have switched and are quite happy since even tk Buttons work on the Mac after the switch.
+
+By default Mac users will get ttk Buttons when a Button Element is used.  All other platforms will get a normal tk Button.  There are ways to override this behavior.  One is by using the parameter `use_ttk_buttons` when you create your window.  If set to True, all buttons will be ttk Buttons in the window.  If set to False, all buttons will be normal tk Buttons.  If not set then the platform or the Button Element determines which is used.
+
+If a system-wide setting is desired, then the default can be set using `set_options`.  This will affect all windows such as popups and the debug window.
+
+### TTK Themes
+
+tkinter has a number of "Themes" that can be used with ttk widgets.  In PySimpleGUI these widgets include - Table, Tree, Combobox, Button, ProgressBar, Tabs & TabGroups.  Some elements have a 'theme' parameter but these are no longer used and should be ignored.  The initial release of PySimpleGUI attempted to mix themes in a single window but since have learned this is not possible so instead it is set at the Window or the system level.
+
+If a system-wide setting is desired, then the default can be set using `set_options`. This will affect all windows such as popups and the debug window.
+
+The ttk theme choices depend on the platform. Linux has a shorter number of selections than Windows.  These are the Windows choices:
+'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+
+There are constants defined to help you with code completion to determine what your choices are.  Theme constants start with `THEME_`.  For example, the "clam" theme is `THEME_CLAM`
+
+You're urged to experiment with this setting to determine which you like the most.  They change the ttk-based elements in subtle but still significant ways.
+
 ## Closing Windows
 
 When you are completely done with a window, you should close it and then delete it so that the resources, in particular the tkinter resources, are properly cleaned up.
@@ -2559,8 +2627,8 @@ This is the "long form" as each method is called individually.
 
 ```python
 window = sg.Window('My Title')
-window.Layout(layout)
-window.Finalize()
+window.layout(layout)
+window.finalize()
 ```
 
 ### Chaining The Calls (the old method)
@@ -2568,7 +2636,7 @@ window.Finalize()
 The next level  of compression that was done was to chain the calls together into a single line of code.
 
 ```python
-window = sg.Window('My Title').Layout(layout).Finalize()
+window = sg.Window('My Title').Layout(layout).finalize()
 ```
 
 ### Using Parameters Instead of Calls (New Preferred Method)
@@ -2589,13 +2657,13 @@ Call to set the window layout.  Must be called prior to `Read`.  Most likely "ch
 window = sg.Window('My window title', layout)
 ```
 
-#### `Finalize()` or `Window` parameter `finalize=True`
+#### `finalize()` or `Window` parameter `finalize=True`
 
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.  This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
 If you want to call an element's `Update` method or call a `Graph` element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
-#### Read(timeout=None, timeout_key=TIMEOUT_KEY)
+#### read(timeout=None, timeout_key=TIMEOUT_KEY)
 
 Read the Window's input values and button clicks in a blocking-fashion
 
@@ -2819,10 +2887,12 @@ The first part should look familiar since it was just discussed as being what bu
 
 ### Putting it all together
 
-Here is our final program that uses simple addition to add the headers onto the top of the input matrix.
+Here is our final program that uses simple addition to add the headers onto the top of the input matrix.  To make it more attractive, the color theme is set to 'Dark Brown 1'.
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Brown 1')
 
 headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
 header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
@@ -2834,6 +2904,8 @@ layout = header + input_rows
 window = sg.Window('Table Simulation', layout, font='Courier 12')
 event, values = window.read()
 ```
+
+![image](https://user-images.githubusercontent.com/46163555/70472374-f7a18700-1a9c-11ea-9cd1-27d386cd9066.png)
 
 ## User Defined Elements / Compound Elements
 
@@ -3360,8 +3432,6 @@ You can call the method without setting the `time_between_frames` value and it w
 
 ## Button Element
 
-**MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
-
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
@@ -3424,6 +3494,12 @@ layout =  [[sg.Ok(), sg.Cancel()]]
 ```
 
 In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
+
+### TTK Buttons & Macs
+
+In 2019 support for ttk Buttons was added.  This gets around the problem of not being able to change button colors on a Mac.  There are a number of places you can control whether or not ttk buttons are used, be it on MAc or other platform.
+
+TTK Buttons and TK Buttons operate slightly differently.  Button highlighting is one different.  How images and text are displayed at the same time is another.  You've got options now that weren't there previously.  It's nice to see that Mac users can finally use the color themes.
 
 ### Button Element Shortcuts
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -4454,7 +4530,7 @@ while True:
         print("Nothing happened")
 ```
 
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and yuou've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
 Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
 
@@ -4501,7 +4577,7 @@ sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
-         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+         [sg.Text(size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
          [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
           sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
@@ -4684,7 +4760,7 @@ import PySimpleGUI as sg
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
 
-text_elem = sg.Text("", size=(18, 1))
+text_elem = sg.Text(size=(18, 1))
 
 layout = [[sg.Text("Press a key or scroll mouse")],
           [text_elem],
@@ -4843,7 +4919,7 @@ import PySimpleGUI as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1), key='_OUTPUT_')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -4878,7 +4954,7 @@ import PySimpleGUIQt as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1),  key='_OUTPUT_')],
           [sg.Button('Launch 2')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -5264,55 +5340,57 @@ Watch this space in the future for the more standardized variable name for this 
 
 ## Binding tkiner "events"
 
-If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then there's a particular way at the moment to make this happen.  
+If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
 
-tkinter performs a callback into user code when an event happens, but that's not how PySimpleGUI works.  Instead of callbacks, a PySimpleGUI user's program simply returns an event via the `window.read()` call.  In order for your "event" to generate an event that will be returned to you via your read call, follow these instructions:
+Both the Elements and Window objects have a method called `bind`.  You specify 2 parameters to this function.  One is the string that is used to tell tkinter what events to bind.  The other is a "key modifier" for Elements and a "key" for Windows.
 
-1. Create a Button for each event you wish to receive
-2. Set visible=False when creating the buttons
-3. Make the Button text be the event you want to see returned to you or set the button's Key to that value
-4. After creating / finalizing the window, make the tkinter bind call, passing `element.ButtonReboundCallback` as the function to call.
+The `key_modifier` in the `Element.bind` call is something that is added to your key. If your key is a string, then this modifier will be appended to your key and the event will be a single string.
 
-This sample code binds not an element events but events from the window itself.  In this case, Focus events.
+If your element's key is not a string, then a tuple will be returned as the event
+(your_key, key_modifier)
 
-```python
-import PySimpleGUI as sg
+This will enable you to continue to use your weird, non-string keys. Just be aware that you'll be getting back a tuple instead of your key in these situations.
 
-layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Exit'),
-             sg.Button('-FOCUS-IN-', visible=False), sg.Button('-FOCUS-OUT-', visible=False)]  ]
+The best example of when this can happen is in a Minesweeper game where each button is already a tuple of the (x,y) position of the button. Normal left clicks will return (x,y). A right click that was generated as a result of bind call will be ((x,y), key_modifier).
 
-window = sg.Window('Window Title', layout, finalize=True)
+It'll be tricky for the user to parse these events, but it's assumed you're an advanced user if you're using this capability and are also using non-string keys.
 
-window.TKroot.bind("<FocusIn>", window['-FOCUS-IN-'].ButtonReboundCallback)
-window.TKroot.bind("<FocusOut>", window['-FOCUS-OUT-'].ButtonReboundCallback)
-```
+There are 2 member variables that have also been added as shown in the documentation for the bind methods. This added variable contains the tkinter specific event information. In other words, the 'event' that tkinter normally sends back when a callback happens.
 
-This code binds the right mouse button to a button so that you can right click a button and get a different event than if you left clicked it.
+Here is sample code that shows how to make these calls.
+
+Three events are being bound.
+
+1. Any button clicks in the window will return an event "Window Click" from window.read()
+2. Right clicking the "Go" buttons will return an event "Go+RIGHT CLICK+" from window.read()
+3. When the Input Element receives focus, an event "-IN-+FOCUS+" will be returned from window.read()
 
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Green 2')
+
 layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Right Click Me')],
-            [sg.Button('-RIGHT-', visible=False)]
-            ]
+            [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
+            [sg.Button('Go'), sg.Button('Exit')]
+              ]
 
 window = sg.Window('Window Title', layout, finalize=True)
 
-window['Right Click Me'].Widget.bind("<Button-3>", window['-RIGHT-'].ButtonReboundCallback)
+window['-IN-'].bind("<FocusIn>", '+FOCUS+')
+window.bind("<Button-1>", 'Window Click')
+window['Go'].bind("<Button-3>", '+RIGHT CLICK+')
 
-has_focus = True
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
     if event in (None, 'Exit'):
         break
-window.close()
+
+window.close(); del window
 ```
 
+There is no way to "unbind" and event at this time.  (sorry, didn't think of it before releasing)
 ---
 
 ------------------
@@ -5353,6 +5431,7 @@ Button(button_text="",
     size=(None, None),
     auto_size_button=None,
     button_color=None,
+    disabled_button_color=None,
     use_ttk_buttons=None,
     font=None,
     bind_return_key=False,
@@ -5384,6 +5463,7 @@ Parameter Descriptions:
 |size|Tuple[int, int] (width, height) of the button in characters wide, rows high|
 |auto_size_button|(bool) if True the button size is sized to fit the text|
 |button_color|Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |use_ttk_buttons|(bool) True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |bind_return_key|(bool) If True the return key will cause this button to be pressed|
@@ -5392,58 +5472,6 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonCallBack
-
-Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
-
-```python
-ButtonCallBack()
-```
-
-### ButtonPressCallBack
-
-Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
-
-```
-ButtonPressCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|Event info passed in by tkinter|
-
-### ButtonReboundCallback
-
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
-### ButtonReleaseCallBack
-
-Not a user callable function.  Called by tkinter when a "realtime" button is released
-
-```
-ButtonReleaseCallBack(parm)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|parm|the event info from tkinter|
 
 ### Click
 
@@ -5504,6 +5532,7 @@ Update(text=None,
     image_filename=None,
     visible=None,
     image_subsample=None,
+    disabled_button_color=(None, None),
     image_size=None)
 ```
 
@@ -5516,15 +5545,31 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
 |image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |visible|(bool) control visibility of element|
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -5550,7 +5595,9 @@ click()
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -5559,6 +5606,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -5653,6 +5701,7 @@ update(text=None,
     image_filename=None,
     visible=None,
     image_subsample=None,
+    disabled_button_color=(None, None),
     image_size=None)
 ```
 
@@ -5665,6 +5714,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |image_data|Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data|
 |image_filename|(str) image filename if there is a button image. GIFs and PNGs only.|
+|disabled_button_color|Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color|
 |visible|(bool) control visibility of element|
 |image_subsample|(int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc|
 |image_size|Tuple[int, int] Size of the image in pixels (width, height)|
@@ -5719,9 +5769,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -5785,11 +5834,26 @@ Parameter Descriptions:
 |menu_definition|(List[List]) New menu definition (in menu definition format)|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -5806,7 +5870,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -5815,6 +5881,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -5932,9 +5999,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -5978,11 +6044,26 @@ Parameter Descriptions:
 
 #### property: TKCanvas
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -5999,7 +6080,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6008,6 +6091,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -6128,9 +6212,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6199,11 +6282,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6220,7 +6318,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6229,6 +6329,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -6366,25 +6467,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Column Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6395,22 +6481,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Column) Used for chaining |
 
 ### SetFocus
 
@@ -6468,11 +6538,26 @@ Parameter Descriptions:
 |---|---|
 |*args|List[Element] The list of elements for this row|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6489,7 +6574,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6498,6 +6585,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -6646,9 +6734,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6725,11 +6812,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -6746,7 +6848,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -6755,6 +6859,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -6908,25 +7013,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -6937,22 +7027,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
 
 ### SetFocus
 
@@ -6997,25 +7071,26 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
-### add_row
+### bind
 
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -7032,7 +7107,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -7041,6 +7118,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -7060,22 +7138,6 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
-
-### layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
 
 ### set_focus
 
@@ -7222,9 +7284,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -7235,20 +7296,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### ButtonReleaseCallBack
-
-Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
-
-```
-ButtonReleaseCallBack(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Note not used in this method|
 
 ### DeleteFigure
 
@@ -7298,7 +7345,8 @@ Draws a circle, cenetered at the location provided.  Can set the fill and outlin
 DrawCircle(center_location,
     radius,
     fill_color=None,
-    line_color="black")
+    line_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7309,6 +7357,7 @@ Parameter Descriptions:
 |radius|Union[int, float] Radius in user's coordinate values.|
 |fill_color|(str) color of the point to draw|
 |line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|line_width|(int) width of the line around the circle, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
 
@@ -7368,7 +7417,8 @@ Draws an oval based on coordinates in user coordinate system. Provide the locati
 DrawOval(top_left,
     bottom_right,
     fill_color=None,
-    line_color=None)
+    line_color=None,
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7379,6 +7429,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
 |fill_color|(str) color of the interrior|
 |line_color|(str) color of outline of oval|
+|line_width|(int) width of the line around the oval, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
 
@@ -7459,19 +7510,37 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 Erase()
 ```
 
-### MotionCallBack
+### GetBoundingBox
 
-Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
+Given a figure, returns the upper left and lower right bounding box coordinates
 
 ```
-MotionCallBack(event)
+GetBoundingBox(figure)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
+|figure|a previously drawing figure|
+|||
+| **return** | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y |
+
+### GetFiguresAtLocation
+
+Returns a list of figures located at a particular x,y location within the Graph
+
+```
+GetFiguresAtLocation(location)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Union[Tuple[int, int], Tuple[float, float]] point to check|
+|||
+| **return** | List[int] a list of previously drawn "Figures" (returned from the drawing primitives) |
 
 ### Move
 
@@ -7586,6 +7655,22 @@ Parameter Descriptions:
 |background_color|color of background|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### bring_figure_to_front
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
@@ -7616,9 +7701,8 @@ Parameter Descriptions:
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -7629,20 +7713,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### button_release_call_back
-
-Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
-
-```
-button_release_call_back(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Note not used in this method|
 
 ### delete_figure
 
@@ -7692,7 +7762,8 @@ Draws a circle, cenetered at the location provided.  Can set the fill and outlin
 draw_circle(center_location,
     radius,
     fill_color=None,
-    line_color="black")
+    line_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7703,6 +7774,7 @@ Parameter Descriptions:
 |radius|Union[int, float] Radius in user's coordinate values.|
 |fill_color|(str) color of the point to draw|
 |line_color|(str) color of the outer line that goes around the circle (sorry, can't set thickness)|
+|line_width|(int) width of the line around the circle, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle |
 
@@ -7762,7 +7834,8 @@ Draws an oval based on coordinates in user coordinate system. Provide the locati
 draw_oval(top_left,
     bottom_right,
     fill_color=None,
-    line_color=None)
+    line_color=None,
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7773,6 +7846,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle|
 |fill_color|(str) color of the interrior|
 |line_color|(str) color of outline of oval|
+|line_width|(int) width of the line around the oval, the outline, in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval |
 
@@ -7858,7 +7932,9 @@ erase()
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -7867,6 +7943,39 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
+
+### get_bounding_box
+
+Given a figure, returns the upper left and lower right bounding box coordinates
+
+```
+get_bounding_box(figure)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|figure|a previously drawing figure|
+|||
+| **return** | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y |
+
+### get_figures_at_location
+
+Returns a list of figures located at a particular x,y location within the Graph
+
+```
+get_figures_at_location(location)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|location|Union[Tuple[int, int], Tuple[float, float]] point to check|
+|||
+| **return** | List[int] a list of previously drawn "Figures" (returned from the drawing primitives) |
 
 ### get_size
 
@@ -7886,20 +7995,6 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
-
-### motion_call_back
-
-Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
-
-```
-motion_call_back(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
 
 ### move
 
@@ -8074,9 +8169,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8152,11 +8246,26 @@ Parameter Descriptions:
 |source|Union[str,bytes] Filename or Base64 encoded string containing Animated GIF|
 |time_between_frames|(int) Number of milliseconds to wait between showing frames|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8173,7 +8282,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8182,6 +8293,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -8342,9 +8454,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8420,11 +8531,26 @@ Parameter Descriptions:
 |background_color|(str) change color of the background|
 |move_cursor_to|Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8441,7 +8567,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8450,6 +8578,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -8610,9 +8739,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8708,11 +8836,26 @@ Parameter Descriptions:
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8729,7 +8872,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8738,6 +8883,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_indexes
 
@@ -8909,9 +9055,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -8966,11 +9111,26 @@ Parameter Descriptions:
 |menu_definition|List[List[Tuple[str, List[str]]]|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -8987,7 +9147,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -8996,6 +9158,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -9139,9 +9302,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9202,6 +9364,8 @@ Update(value=None,
     font=None,
     text_color=None,
     background_color=None,
+    text_color_for_value=None,
+    background_color_for_value=None,
     visible=None,
     autoscroll=None)
 ```
@@ -9219,11 +9383,26 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |autoscroll|(bool) if True then contents of element are scrolled down when new text is added to the end|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9240,7 +9419,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9249,6 +9430,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -9342,6 +9524,8 @@ update(value=None,
     font=None,
     text_color=None,
     background_color=None,
+    text_color_for_value=None,
+    background_color_for_value=None,
     visible=None,
     autoscroll=None)
 ```
@@ -9400,9 +9584,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9462,11 +9645,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9483,7 +9681,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9492,6 +9692,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -9618,9 +9819,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9689,11 +9889,26 @@ Parameter Descriptions:
 |value|(str) string that will replace current contents of the output area|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9848,9 +10063,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -9904,11 +10118,26 @@ Parameter Descriptions:
 |---|---|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -9925,7 +10154,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -9934,6 +10165,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10058,9 +10290,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10129,11 +10360,26 @@ Parameter Descriptions:
 |current_count|(int) sets the current value|
 |max|(int) changes the max value|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10150,7 +10396,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10159,6 +10407,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10307,9 +10556,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10385,11 +10633,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10406,7 +10669,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10415,6 +10680,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -10577,9 +10843,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10639,11 +10904,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10660,7 +10940,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10669,6 +10951,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -10805,9 +11088,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -10879,11 +11161,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -10900,7 +11197,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -10909,6 +11208,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -11057,9 +11357,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11121,11 +11420,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11142,7 +11456,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11151,6 +11467,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -11286,25 +11603,10 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended use call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11315,22 +11617,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(unknown) Not used in this function.|
-
-### Layout
-
-Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The list of rows|
-|||
-| **return** | (Tab) used for chaining |
 
 ### Select
 
@@ -11383,25 +11669,26 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
-### add_row
+### bind
 
-Not recommended use call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11418,7 +11705,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11427,6 +11716,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -11446,22 +11736,6 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
-
-### layout
-
-Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
-
-```
-layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The list of rows|
-|||
-| **return** | (Tab) used for chaining |
 
 ### select
 
@@ -11546,7 +11820,9 @@ Parameter Descriptions:
 TabGroup(layout,
     tab_location=None,
     title_color=None,
+    tab_background_color=None,
     selected_title_color=None,
+    selected_background_color=None,
     background_color=None,
     font=None,
     change_submits=False,
@@ -11567,8 +11843,10 @@ Parameter Descriptions:
 |layout|List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row|
 |tab_location|(str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright|
 |title_color|(str) color of text on tabs|
-|selected_title_color|(str) color of tab when it is selected|
-|background_color|(str) color of background of tabs|
+|tab_background_color|(str) color of all tabs that are not selected|
+|selected_title_color|(str) color of tab text when it is selected|
+|selected_background_color|(str) color of tab when it is selected|
+|background_color|(str) color of background area that tabs are located on|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |change_submits|(bool) * DEPRICATED DO NOT USE! Same as enable_events|
 |enable_events|(bool) If True then switching tabs will generate an Event|
@@ -11580,25 +11858,10 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|List[Element] The list of elements for this row|
-
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11639,22 +11902,6 @@ are using this method correctly?
 |---|---|
 | **return** | Union[Any, None] The key of the currently selected tab or the tab's text if it has no key |
 
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -11683,25 +11930,26 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-### add_row
+### bind
 
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
 
 ```
-add_row(args)
+bind(bind_string, key_modifier)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|*args|List[Element] The list of elements for this row|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
 
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -11718,7 +11966,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -11727,6 +11977,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### find_key_from_tab_name
 
@@ -11863,6 +12114,9 @@ Table(values,
     text_color=None,
     background_color=None,
     alternating_row_color=None,
+    header_text_color=None,
+    header_background_color=None,
+    header_font=None,
     row_colors=None,
     vertical_scroll_only=True,
     hide_vertical_scroll=False,
@@ -11898,7 +12152,10 @@ Parameter Descriptions:
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
 |alternating_row_color|(str) if set then every other row will have this color in the background.|
-|row_colors||
+|header_text_color|(str) sets the text color for the header|
+|header_background_color|(str) sets the background color for the header|
+|header_font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)|
 |vertical_scroll_only|(bool) if True only the vertical scrollbar will be visible|
 |hide_vertical_scroll|(bool) if True vertical scrollbar will be hidden|
 |size|Tuple[int, int] DO NOT USE! Use num_rows instead|
@@ -11914,9 +12171,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -11992,11 +12248,26 @@ Parameter Descriptions:
 |alternating_row_color|(str) the color to make every other row|
 |row_colors|List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12013,7 +12284,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12022,6 +12295,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get
 
@@ -12096,36 +12370,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
-
-### treeview_double_click
-
-Not user callable.  Callback function that is called when something is selected from Table.
-Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
-
-```
-treeview_double_click(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) event information from tkinter|
-
-### treeview_selected
-
-Not user callable.  Callback function that is called when something is selected from Table.
-Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
-
-```
-treeview_selected(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) event information from tkinter|
 
 ### unhide_row
 
@@ -12208,9 +12452,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12272,11 +12515,26 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12293,7 +12551,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12302,6 +12562,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -12396,6 +12657,86 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 
+## ToolTip Element
+
+    Create a tooltip for a given widget
+    (inspired by https://stackoverflow.com/a/36221216)
+    This is an INTERNALLY USED only class.  Users should not refer to this class at all.
+
+```
+ToolTip(widget,
+    text,
+    timeout=400)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|widget|(widget type varies) The tkinter widget|
+|text|(str) text for the tooltip. It can inslude|
+|timeout|(int) Time in milliseconds that mouse must remain still before tip is shown|
+
+### enter
+
+Called by tkinter when mouse enters a widget
+
+```
+enter(event=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|from tkinter. Has x,y coordinates of mouse|
+
+### hidetip
+
+Destroy the tooltip window
+
+```python
+hidetip()
+```
+
+### leave
+
+Called by tktiner when mouse exits a widget
+
+```
+leave(event=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|from tkinter. Event info that's not used by function.|
+
+### schedule
+
+Schedule a timer to time how long mouse is hovering
+
+```python
+schedule()
+```
+
+### showtip
+
+Creates a topoltip window with the tooltip text inside of it
+
+```python
+showtip()
+```
+
+### unschedule
+
+Cancel timer used to time mouse hover
+
+```python
+unschedule()
+```
+
 ## Tree Element
 
     Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
@@ -12418,6 +12759,9 @@ Tree(data=None,
     justification="right",
     text_color=None,
     background_color=None,
+    header_text_color=None,
+    header_background_color=None,
+    header_font=None,
     num_rows=None,
     row_height=None,
     pad=None,
@@ -12448,6 +12792,9 @@ Parameter Descriptions:
 |justification|(str) 'left', 'right', 'center' are valid choices|
 |text_color|(str) color of the text|
 |background_color|(str) color of background|
+|header_text_color|(str) sets the text color for the header|
+|header_background_color|(str) sets the background color for the header|
+|header_font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |num_rows|(int) The number of rows of the table to display at a time|
 |row_height|(int) height of a single row in pixels|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
@@ -12459,9 +12806,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12539,11 +12885,26 @@ Parameter Descriptions:
 |---|---|
 |node|(TreeData) The node to insert. Will insert all nodes from starting point downward, recursively|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12560,7 +12921,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12569,6 +12932,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -12767,9 +13131,8 @@ Parameter Descriptions:
 
 ### ButtonReboundCallback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 ButtonReboundCallback(event)
@@ -12809,11 +13172,26 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key_modifier|Additional data to be added to the element's key when event is returned|
+
 ### button_rebound_callback
 
-Used in combination with tkinter's widget.bind function.  If you wish to have a double-click for a button to call back the button's normal
-callback routine, then you should target your call to tkinter's bind method to point to this function which will in turn call the button
-callback function that is normally called.
+*** DEPRICATED ***
+Use Element.bind instead
 
 ```
 button_rebound_callback(event)
@@ -12830,7 +13208,9 @@ Parameter Descriptions:
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
 ```
-expand(expand_x=False, expand_y=False)
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
 ```
 
 Parameter Descriptions:
@@ -12839,6 +13219,7 @@ Parameter Descriptions:
 |---|---|
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
+|expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
 
 ### get_size
 
@@ -12911,7 +13292,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-## Window
+## Window Element
 
     Represents a single Window
 
@@ -13572,6 +13953,22 @@ A property that changes the current alpha channel value (internal value)
 |---|---|
 | **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
 
+### bind
+
+Used to add tkinter events to a Window.
+The tkinter specific data is in the Window's member variable user_bind_event
+
+```
+bind(bind_string, key)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+|key|The event that will be generated when the tkinter event occurs|
+
 ### bring_to_front
 
 Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
@@ -14071,6 +14468,8 @@ call and then have that same source run on plain PySimpleGUI.
 |---|---|
 | **return** |  |
 
+## Function Reference
+
 ```
 CButton(button_text,
     image_filename=None,
@@ -14198,59 +14597,6 @@ Parameter Descriptions:
 |focus|if focus should be set to this|
 |pad|Amount of padding to put around element|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
-
-Change the "color scheme" of all future PySimpleGUI Windows.
-The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
-There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
-The original list was (prior to a major rework and renaming)... these names still work...
-SystemDefault
-SystemDefaultForReal
-Material1
-Material2
-Reddit
-Topanga
-GreenTan
-Dark
-LightGreen
-Dark2
-Black
-Tan
-TanBlue
-DarkTanBlue
-DarkAmber
-DarkBlue
-Reds
-Green
-BluePurple
-Purple
-BlueMono
-GreenMono
-BrownBlue
-BrightColors
-NeutralBlue
-Kayak
-SandyBeach
-TealMono
-
-In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
-The "Formula" is:
-["Dark" or "Light"] Color Number
-Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
-The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
-Default = The default settings (only button color is different than system default)
-Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
-
-```
-ChangeLookAndFeel(index, force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|index|(str) the name of the index into the Look and Feel table|
-|force|(bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors|
 
 ```
 CloseButton(button_text,
@@ -14417,39 +14763,6 @@ Parameter Descriptions:
 | **return** | (Button) |
 
 ```
-EasyPrint(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-EasyPrintClose()
-```
-
-```
 Exit(button_text="Exit",
     size=(None, None),
     auto_size_button=None,
@@ -14557,6 +14870,9 @@ Parameter Descriptions:
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 |||
 | **return** | (Button) |
+
+Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
+BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
 
 ```
 FilesBrowse(button_text="Browse",
@@ -14679,12 +14995,6 @@ Parameter Descriptions:
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 |||
 | **return** | (Button) |
-
-Get a list of the valid values to pass into your call to change_look_and_feel
-
-```
-ListOfLookAndFeelValues() -> List[str] - list of valid string values
-```
 
 ```
 No(button_text="No",
@@ -14810,46 +15120,6 @@ Parameter Descriptions:
 | **return** | (Button) |
 
 ```
-OneLineProgressMeter(title,
-    current_value,
-    max_value,
-    key,
-    args,
-    orientation="v",
-    bar_color=(None, None),
-    button_color=None,
-    size=(20, 20),
-    border_width=None,
-    grab_anywhere=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|title|text to display|
-|current_value|current progressbar value|
-|max_value|max value of progressbar|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|*args|stuff to output.|
-|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')|
-|bar_color||
-|button_color|button color (foreground, background)|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
-|border_width|width of border around element|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-
-```
-OneLineProgressMeterCancel(key)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-```
 Open(button_text="Open",
     size=(None, None),
     auto_size_button=None,
@@ -14879,240 +15149,6 @@ Parameter Descriptions:
 |focus|if focus should be set to this|
 |pad|Amount of padding to put around element|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
-
-Show Popup box that doesn't block and closes itself
-
-```
-PopupQuick(args,
-    title=None,
-    button_type=0,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    auto_close=True,
-    auto_close_duration=2,
-    non_blocking=True,
-    icon=None,
-    line_width=None,
-    font=None,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    location=(None, None))
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|title||
-|button_type|(Default value = POPUP_BUTTONS_OK)|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|auto_close|(Default = True)|
-|auto_close_duration|(Default value = 2)|
-|non_blocking|(Default = True)|
-|icon|Icon to display|
-|line_width|Width of lines in characters|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location||
-
-Show Popup window with no titlebar, doesn't block, and auto closes itself.
-
-```
-PopupQuickMessage(args,
-    title=None,
-    button_type=5,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    auto_close=True,
-    auto_close_duration=2,
-    non_blocking=True,
-    icon=None,
-    line_width=None,
-    font=None,
-    no_titlebar=True,
-    grab_anywhere=False,
-    keep_on_top=False,
-    location=(None, None))
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|title||
-|button_type|(Default value = POPUP_BUTTONS_NO_BUTTONS)|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|auto_close|(Default = True)|
-|auto_close_duration|(Default value = 2)|
-|non_blocking|(Default = True)|
-|icon|Icon to display|
-|line_width|Width of lines in characters|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = True)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location||
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-PopupScrolled(args,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    yes_no=False,
-    auto_close=False,
-    auto_close_duration=None,
-    size=(None, None),
-    location=(None, None),
-    non_blocking=False,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    font=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|(Any) Variable number of items to display|
-|title|(str) Title to display in the window.|
-|button_color|Tuple[str, str] button color (foreground, background)|
-|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
-|auto_close|(bool) if True window will close itself|
-|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
-|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
-|||
-| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
-
-Popup that closes itself after some time period
-
-```
-PopupTimed(args,
-    title=None,
-    button_type=0,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    auto_close=True,
-    auto_close_duration=None,
-    non_blocking=False,
-    icon=None,
-    line_width=None,
-    font=None,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    location=(None, None))
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|title||
-|button_type|(Default value = POPUP_BUTTONS_OK)|
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|auto_close|(Default = True)|
-|auto_close_duration||
-|non_blocking|(Default = False)|
-|icon|Icon to display|
-|line_width|Width of lines in characters|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location||
-
-Display Popup with Yes and No buttons
-
-```
-PopupYesNo(args,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    auto_close=False,
-    auto_close_duration=None,
-    non_blocking=False,
-    icon=None,
-    line_width=None,
-    font=None,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    location=(None, None))
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|title||
-|button_color|button color (foreground, background)|
-|background_color|color of background|
-|text_color|color of the text|
-|auto_close|(Default = False)|
-|auto_close_duration||
-|non_blocking|(Default = False)|
-|icon|Icon to display|
-|line_width|Width of lines in characters|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|location|Location on screen to display|
-|||
-| **return** | Union["Yes", "No", None] |
-
-```
-Print(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-PrintClose()
-```
 
 ```
 Quit(button_text="Quit",
@@ -15503,18 +15539,6 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
-Time your code easily.... start the timer.
-
-```
-TimerStart()
-```
-
-Time your code easily.... stop the timer and print the number of ms since the timer start
-
-```
-TimerStop()
-```
-
 ```
 Yes(button_text="Yes",
     size=(None, None),
@@ -15548,58 +15572,7 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
-Change the "color scheme" of all future PySimpleGUI Windows.
-The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
-There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
-The original list was (prior to a major rework and renaming)... these names still work...
-SystemDefault
-SystemDefaultForReal
-Material1
-Material2
-Reddit
-Topanga
-GreenTan
-Dark
-LightGreen
-Dark2
-Black
-Tan
-TanBlue
-DarkTanBlue
-DarkAmber
-DarkBlue
-Reds
-Green
-BluePurple
-Purple
-BlueMono
-GreenMono
-BrownBlue
-BrightColors
-NeutralBlue
-Kayak
-SandyBeach
-TealMono
-
-In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
-The "Formula" is:
-["Dark" or "Light"] Color Number
-Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
-The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
-Default = The default settings (only button color is different than system default)
-Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
-
-```
-change_look_and_feel(index, force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|index|(str) the name of the index into the Look and Feel table|
-|force|(bool) if True allows Macs to use the look and feel feature. Otherwise Macs are blocked due to problems with button colors|
+## Debug Window Output
 
 ```
 easy_print(args,
@@ -15612,7 +15585,9 @@ easy_print(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -15645,7 +15620,9 @@ eprint(args,
     no_button=False,
     grab_anywhere=False,
     keep_on_top=False,
-    do_not_reroute_stdout=True)
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
@@ -15663,56 +15640,152 @@ Parameter Descriptions:
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
 |do_not_reroute_stdout|(Default = True)|
 
-Fills a window with values provided in a values dictionary { element_key : new_value }
-
 ```
-fill_form_with_values(window, values_dict)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|window|(Window) The window object to fill|
-|values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
-
-Get a list of the valid values to pass into your call to change_look_and_feel
-
-```
-list_of_look_and_feel_values() -> List[str] - list of valid string values
-```
-
-The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
-
-```
-main()
-```
-
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-
-```
-obj_to_string(obj, extra="    ")
+sgprint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj|(Any) The object to display|
-|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
-
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-Returns only the top-most object's variables instead of drilling down to dispolay more
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
 
 ```
-obj_to_string_single_obj(obj)
+sgprint_close()
+```
+
+```
+EasyPrint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|obj|(Any) The object to display returns (str) Formatted output of the object's values|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+EasyPrintClose()
+```
+
+```
+Print(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+PrintClose()
+```
+
+## OneLineProgressMeter
+
+```
+OneLineProgressMeter(title,
+    current_value,
+    max_value,
+    key,
+    args,
+    orientation="v",
+    bar_color=(None, None),
+    button_color=None,
+    size=(20, 20),
+    border_width=None,
+    grab_anywhere=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|text to display|
+|current_value|current progressbar value|
+|max_value|max value of progressbar|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|*args|stuff to output.|
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')|
+|bar_color||
+|button_color|button color (foreground, background)|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
+|border_width|width of border around element|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+
+```
+OneLineProgressMeterCancel(key)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
 
 ```
 one_line_progress_meter(title,
@@ -15753,6 +15826,902 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
+
+## Popup Functions
+
+Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
+"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
+
+```
+Popup(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    button_type=0,
+    auto_close=False,
+    auto_close_duration=None,
+    custom_text=(None, None),
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of your arguments. Load up the call with stuff to see!|
+|title|(str) Optional title for the window. If none provided, the first arg will be used instead.|
+|button_color|Tuple[str, str] Color of the buttons shown (text color, button color)|
+|background_color|(str) Window's background color|
+|text_color|(str) text color|
+|button_type|(enum) NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.|
+|auto_close|(bool) If True the window will automatically close|
+|auto_close_duration|(int) time in seconds to keep window open before closing it automatically|
+|custom_text|Union[Tuple[str, str], str] A string or pair of strings that contain the text to display on the buttons|
+|non_blocking|(bool) If True then will immediately return from the function without waiting for the user's input.|
+|icon|Union[str, bytes] icon to display on the window. Same format as a Window call|
+|line_width|(int) Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH|
+|font|Union[str, tuple(font name, size, modifiers) specifies the font family, size, etc|
+|no_titlebar|(bool) If True will not show the frame around the window and the titlebar across the top|
+|grab_anywhere|(bool) If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too|
+|location|Tuple[int, int] Location on screen to display the top left corner of window. Defaults to window centered on screen|
+|||
+| **return** | Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
+ and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
+ event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+ loop.
+
+```
+PopupAnimated(image_source,
+    message=None,
+    background_color=None,
+    text_color=None,
+    font=None,
+    no_titlebar=True,
+    grab_anywhere=True,
+    keep_on_top=True,
+    location=(None, None),
+    alpha_channel=None,
+    time_between_frames=0,
+    transparent_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|image_source|Union[str, bytes] Either a filename or a base64 string.|
+|message|(str) An optional message to be shown with the animation|
+|background_color|(str) color of background|
+|text_color|(str) color of the text|
+|font|Union[str, tuple) specifies the font family, size, etc|
+|no_titlebar|(bool) If True then the titlebar and window frame will not be shown|
+|grab_anywhere|(bool) If True then you can move the window just clicking anywhere on window, hold and drag|
+|keep_on_top|(bool) If True then Window will remain on top of all other windows currently shownn|
+|location|(int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen|
+|alpha_channel|(float) Window transparency 0 = invisible 1 = completely visible. Values between are see through|
+|time_between_frames|(int) Amount of time in milliseconds between each frame|
+|transparent_color|(str) This color will be completely see-through in your window. Can even click through|
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupAnnoying(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Popup that closes itself after some time period
+
+```
+PopupAutoClose(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with "cancelled" button text
+
+```
+PopupCancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Popup with colored button and 'Error' as button text
+
+```
+PopupError(args,
+    title=None,
+    button_color=(None, None),
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|(Default = (None))|
+
+Display popup window with text entry field and browse button so that a file can be chosen by user.
+
+```
+PopupGetFile(message,
+    title=None,
+    default_path="",
+    default_extension="",
+    save_as=False,
+    multiple_files=False,
+    file_types=(('ALL Files', '*.*'),),
+    no_window=False,
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None),
+    initial_folder=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|default_extension|(str) If no extension entered by user, add this to filename (only used in saveas dialogs)|
+|save_as|(bool) if True, the "save as" dialog is shown which will verify before overwriting|
+|multiple_files|(bool) if True, then allows multiple files to be selected that are returned with ';' between each filename|
+|file_types|Tuple[Tuple[str,str]] List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
+|||
+| **return** | Union[str, None]  string representing the file(s) chosen, None if cancelled or window closed with X |
+
+Display popup with text entry field and browse button so that a folder can be chosen.
+
+```
+PopupGetFolder(message,
+    title=None,
+    default_path="",
+    no_window=False,
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None),
+    initial_folder=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_path|(str) path to display to user as starting point (filled into the input field)|
+|no_window|(bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|initial_folder|(str) location in filesystem to begin browsing|
+|||
+| **return** | Union[str, None]  string representing the path chosen, None if cancelled or window closed with X |
+
+Display Popup with text entry field. Returns the text entered or None if closed / cancelled
+
+```
+PopupGetText(message,
+    title=None,
+    default_text="",
+    password_char="",
+    size=(None, None),
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    icon=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|message|(str) message displayed to user|
+|title|(str) Window title|
+|default_text|(str) default value to put into input area|
+|password_char|(str) character to be shown instead of actually typed characters|
+|size|Tuple[int, int] (width, height) of the InputText Element|
+|button_color|Tuple[str, str] Color of the button (text, background)|
+|background_color|(str) background color of the entire window|
+|text_color|(str) color of the message text|
+|icon|Union[bytes, str] filename or base64 string to be used for the window's icon|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|no_titlebar|(bool) If True no titlebar will be shown|
+|grab_anywhere|(bool) If True can click and drag anywhere in the window to move the window|
+|keep_on_top|(bool) If True the window will remain above all current windows|
+|location|Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window|
+|||
+| **return** | Union[str, None] Text entered or None if window was closed or cancel button clicked |
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoBorder(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Show a Popup but without any buttons
+
+```
+PopupNoButtons(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoFrame(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+PopupNoTitlebar(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    grab_anywhere=True,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|grab_anywhere|(Default = True)|
+|location||
+
+Show Popup window and immediately return (does not block)
+
+```
+PopupNoWait(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show Popup window and immediately return (does not block)
+
+```
+PopupNonBlocking(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with OK button only
+
+```
+PopupOK(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display popup with OK and Cancel buttons
+
+```
+PopupOKCancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=...,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["OK", "Cancel", None] |
+
+Show Popup box that doesn't block and closes itself
+
+```
+PopupQuick(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=2,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration|(Default value = 2)|
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show Popup window with no titlebar, doesn't block, and auto closes itself.
+
+```
+PopupQuickMessage(args,
+    title=None,
+    button_type=5,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=2,
+    non_blocking=True,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=True,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_NO_BUTTONS)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration|(Default value = 2)|
+|non_blocking|(Default = True)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = True)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+PopupScrolled(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of items to display|
+|title|(str) Title to display in the window.|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
+|||
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+Popup that closes itself after some time period
+
+```
+PopupTimed(args,
+    title=None,
+    button_type=0,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=True,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_type|(Default value = POPUP_BUTTONS_OK)|
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = True)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location||
+
+Display Popup with Yes and No buttons
+
+```
+PopupYesNo(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=None,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["Yes", "No", None] |
+
+## Popups PEP8 Versions
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -16404,6 +17373,47 @@ Parameter Descriptions:
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
 |location||
 
+Display popup with OK and Cancel buttons
+
+```
+popup_ok_cancel(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    auto_close=False,
+    auto_close_duration=None,
+    non_blocking=False,
+    icon=...,
+    line_width=None,
+    font=None,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    location=(None, None))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|title||
+|button_color|button color (foreground, background)|
+|background_color|color of background|
+|text_color|color of the text|
+|auto_close|(Default = False)|
+|auto_close_duration||
+|non_blocking|(Default = False)|
+|icon|Icon to display|
+|line_width|Width of lines in characters|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|location|Location on screen to display|
+|||
+| **return** | Union["OK", "Cancel", None] |
+
 Show Popup box that doesn't block and closes itself
 
 ```
@@ -16605,38 +17615,52 @@ Parameter Descriptions:
 |||
 | **return** | Union["Yes", "No", None] |
 
+## PEP8 Function Bindings
+
+Fills a window with values provided in a values dictionary { element_key : new_value }
+
 ```
-quit(button_text="Quit",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    tooltip=None,
-    font=None,
-    bind_return_key=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
+fill_form_with_values(window, values_dict)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|button_text|text in the button (Default value = 'Quit')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
+|window|(Window) The window object to fill|
+|values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
+
+The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+
+```
+main()
+```
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+
+```
+obj_to_string(obj, extra="    ")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj|(Any) The object to display|
+|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+Returns only the top-most object's variables instead of drilling down to dispolay more
+
+```
+obj_to_string_single_obj(obj)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj|(Any) The object to display returns (str) Formatted output of the object's values|
 
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
@@ -16729,39 +17753,6 @@ Parameter Descriptions:
 |use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
 |ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
 
-```
-sgprint(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-sgprint_close()
-```
-
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
 ```
@@ -16831,6 +17822,146 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 test()
 ```
 
+## Themes
+
+Sets / Gets the current Theme.  If none is specified then returns the current theme.
+This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
+
+```
+theme(new_theme=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|new_theme|(str) the new theme name to use|
+|||
+| **return** | (str) the currently selected theme |
+
+Returns the background color specified by the current color theme
+
+```
+theme_background_color() -> (str) - color string of the background color defined by current theme
+```
+
+Returns the button color specified by the current color theme
+
+```
+theme_button_color() -> Tuple[str, str] - TUPLE with color strings of the button color defined by current theme (button text color, button background color)
+```
+
+Returns the input element background color specified by the current color theme
+
+```
+theme_input_background_color() -> (str) - color string of the input element background color defined by current theme
+```
+
+Returns the input element text color specified by the current color theme
+
+```
+theme_input_text_color() -> (str) - color string of the input element text color defined by current theme
+```
+
+Returns a sorted list of the currently available color themes
+
+```
+theme_list() -> List[str] - A sorted list of the currently available color themes
+```
+
+Show a window with all of the color themes - takes a while so be patient
+
+```
+theme_previewer(columns=12)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|columns|(int) number of themes in a single row|
+
+Returns the text color specified by the current color theme
+
+```
+theme_text_color() -> (str) - color string of the text color defined by current theme
+```
+
+## Old Themes (Look and Feel) - Replaced by theme()
+
+Change the "color scheme" of all future PySimpleGUI Windows.
+The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
+There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
+
+```
+ChangeLookAndFeel(index, force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
+
+Get a list of the valid values to pass into your call to change_look_and_feel
+
+```
+ListOfLookAndFeelValues() -> List[str] - list of valid string values
+```
+
+Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
+They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+
+```
+preview_all_look_and_feel_themes(columns=12)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|columns|(int) The number of themes to display per row|
+
+Get a list of the valid values to pass into your call to change_look_and_feel
+
+```
+list_of_look_and_feel_values() -> List[str] - list of valid string values
+```
+
+Change the "color scheme" of all future PySimpleGUI Windows.
+The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
+There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
+
+```
+change_look_and_feel(index, force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
+
 ---
 
 # "Demo Programs" Applications
@@ -16856,6 +17987,9 @@ Demo programs for PySimpleGUIWeb:
 https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Programs
 
 There are not many programs under each of the port's folders because the main Demo Programs should run on all of the other platforms with minimal changes (often only the import statement changes).
+
+You will also find a lot of demos running on Trinket
+http://Trinket.PySimpleGUI.org
 
 ## Packages Used In Demos
 
@@ -17022,37 +18156,78 @@ You'll quickly wonder how you ever coded without it.
 
 Well, there are a few quirks, and problems of course.  Check the [GitHub Issues database](https://github.com/PySimpleGUI/PySimpleGUI/issues) for a list of them.
 
-As previously mentioned this is also where you should post all problems and enhancements.
+As previously mentioned **this is where you should post all problems and enhancements.**
 
-## MACS + tkinter = SUCKS
+Random crashes have been rared.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
 
-Not sure why, but for over a year and a half, setting the color of buttons does not work on Macs.  There have been numerous other problems.  Checking the Issues database is the best place to see what they are.  If there was a magic wand it would have been used long ago to fix these problems, but there does not appear to be a magic fix.
+## MACS & tkinter
 
-This was already mentioned at the top of this document but want to make sure it's covered as a "known issue"
+Macs and PySimpleGUI did not play well together up until Nov 2019 and the release of ttk buttons.  Prior to that buttons had to be white.  Now the Mac can use any color for buttons and they work great.  Images on buttons work as well.
+
+The problems were the normal tk.Button was not working correctly on the Mac.  You couldn't set the button color.  If you tried it appeared as if the text was missing.
+
+Users have recently reported the ability to install Python 3.7 from the Python.org website and not use the Homebrew version.  This resolved all of the button color problems. 
+
+Regardless of where you get your Python / tkinter, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
+
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
 
 ## Multiple threads
 
-While not an "issue" this is a ***stern warning***
+Consider this is a ***stern warning***
 
-## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
+### **Do not attempt** to call `PySimpleGUI` from multiple threads! At least the `tkinter` based port because tkinter is not threadsafe and has known issues with multiple threads
 
 Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`
+Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+
+Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
+
+### The dreaded "Tcl_AsyncDelete: async handler deleted by the wrong thread" error
+
+This crash has plagued and mystified tkinter users for some time now.  It happens when the user is running multiple threads in their application.  Even if the user doesn't make any calls that are into tkinter, this problem can still cause your program to crash.
+
+I'm thrilled to say there's a solution and it's easy to implement.  If you're getting this error, then here is what is causing it.
+
+When you close a window and delete the layout, the tkinter widgets that were in use in the window are no longer needed.  Python marks them to be handled by the "Garbage Collector".  They're deleted but not quite gone from memory.  Then, later, while your thread is running, the Python Garbage Collect algorithm decides it's time to run garbage collect.  When it tells tkinter to free up the memory, the tkinter code looks to see what context it is running under.  It sees that it's a thread, not the main thread, and generates this exception.  
+
+The way around this is actually quite easy.
+
+When you are finished with a window, be sure to:
+
+* Close the Window
+* Set the `layout` variable to None
+* Set the `window` variable to None
+* Trigger Python's Garbage Collect to run immediately
+
+The sequence looks like this in code:
+
+```python
+    import gc
+
+    # Do all your windows stuff... make a layout... show your window... then when time to exit
+    window.close()
+    layout = None
+    window = None
+    gc.collect()
+```
+
+This will ensure that the tkinter widgets are all deleted in the context of the mainthread and another thread won't accidently run the Garbage Collect
 
 # Contributing
 
-## Core Code
+## Write Applications
 
-***Core code changes/pull requests are not being accepted at this time.***
+The way for you to contribute to the PySimpleGUI is to create and share PySimpleGUI GUIs.  **Everyone** learns from seeing other peoples' implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project and helped to create thw you see today.
 
-## Demos
+## Pull Requests
 
-You're welcome to share a PySimpleGUI program you've written that you think fits the model of a PySimpleGUI Demo Program.
+***PySimpleGUI changes/pull requests are not being accepted at this time.***
 
 ## GitHub Repos
 
-If you've created a GitHub for your project that uses PySimpleGUI then please submit it to be included in this document or on the PySimpleGUI GitHub site.  Also, you'll find a lot more people will look at your code, explore your repo if you have posted **screen shots in your readme**.  People *love* success stories and showing your GUI's screen shows you've been successful.  Everyone wins!
+If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the annoucements. People *love* success stories and showing your GUI's screen visually communicates your success. 
 
 ## Versions
 |Version | Description |
@@ -17937,9 +19112,151 @@ TTK WIDGETS!  Welcome back Mac Users!
 	* font
 * Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
 
+## 4.8.0 PySimpleGUI 4-Dec-2019
+
+Multicolored multiline text!  Often asked for feature going way back
+ttk Buttons can have images
+Print in color!
+
+* Multiline Element got 2 new parameters to the update method
+	* text_color_for_value - color for the newly added text
+	* background_color_for_value - background color of the newly added text
+* New Print/EasyPrint parameters and capability
+	* text_color, background_color - control the text's color and background color when printing to "Debug Window"
+	* Must be done only when used in mode where stdout is not re-routed (the default)
+	* Wouldn't it be really nice if normal print calls had this parameter?
+	* Print(event, text_color='green', background_color='white',  end='')
+* ttk Buttons
+	* can have images. No longer forces Buttons with images to be the old tk Butons. Now you can choose either	
+	* can update the button color
+	* can update the button image
+* Set warning filter so that warnings are repeated
+* New global variables:
+	* CURRENT_LOOK_AND_FEEL - The current look and feel setting in use. Starts out as "Default"
+	* BROWSE_FILES_DELIMITER - Defaults to ";"  It is the string placed between entries returned from a FilesBrowse button
+	* TRANSPARENT_BUTTON - Depricated - was being used incorrectly as it was a relic from the early days. It's value was a color of gray
+* Window - gentle reminder if you don't choose a look and feel for your window. It's easy to stop them. Add a change_look_and_feel line
+* Test harness uses a debug window so don't be shocked when 2 windows appear when running PySimpleGUI by itself
+	* Prints the "Event" in Green on White text
+	* Prints the "values" normally
+
+## 4.9.0 PySimpleGUI 7-Dec-2019
+
+The "Finally Nailed Tabs" release
+
+* Colors for Tabs!
+	* When creating TabGroup can now specify
+	* Text & Background color of all tabs
+	* Text & Background color of selected tab
+	* If nothing is specified then the Look and Feel theme will be used (which turned out GREAT)
+* Tab visibility - Can finally control individual tab's visibility using update and when creating
+* More "Look and Feel" Themes!  There's no excuse to be grey again. There are now 126 themes to choose from.  Here are the 32 new themes"
+	DefaultNoMoreNagging
+	DarkBlack1
+	DarkBlue12
+	DarkBlue13
+	DarkBlue14
+	DarkBlue15
+	DarkBlue16
+	DarkBlue17
+	DarkBrown5
+	DarkBrown6
+	DarkGreen2
+	DarkGreen3
+	DarkGreen4
+	DarkGreen5
+	DarkGreen6
+	DarkGrey4
+	DarkGrey5
+	DarkGrey6
+	DarkGrey7
+	DarkPurple6
+	DarkRed2
+	DarkTeal10
+	DarkTeal11
+	DarkTeal12
+	DarkTeal9
+	LightBlue6
+	LightBlue7
+	LightBrown12
+	LightBrown13
+	LightGray1
+	LightGreen10
+	LightGreen9
+	LightGrey6
+* preview_all_look_and_feel_themes now has a columns parameter to control number of entries per rows
+	* also made each theme display smaller due to large number of themes
+
+## 4.10.0 PySimpleGUI 9-Dec-2019
+
+"Oh crap the debugger is broken!" + "Pretty Progress Bars" release
+
+* Fix for built-in debugger not working
+	* Important due to upcoming educational usage
+	* Has been broken since 4.5.0 when a change to Finalize was made
+* ProgessBar element colors set using Look and Feel colors
+	* Combination of button color, input element, and input element text are used
+
+## 4.11.0 PySimpleGUI 10-Dec-2019
+
+The Element & Window bindings release
+
+* Element.bind - New method of all Elements
+	* Enables tkinter bindings to be added to any element
+	* Will get an event returned from window.read() if the tkinter event happens
+* Window.bind - New method for Windows, just like Elements
+	* Enables tkinter bindings to be added to Windows
+	* Will get an event returned from window.read() if the tkinter event happens
+* TabGroup fonts - can now set the font and font size for Tab text
+
+## 4.12.0 PySimpleGUI 14-Dec-2019
+
+Finally no more outlines around TK Elements on Linux
+
+* Fixed a long-term problem of the mysterious white border around (almost) all TK Elements on Linux
+* Ability to set the disabled button colors
+	* New Button and Button.update parameter - disabled_button_color
+	* Specified as (Text Color, Background Color) just like button colors
+	* For Normal / TK Buttons - can set button text color only
+	* For TTK Buttons - can set both a disabled button and text color
+	* Either parameter can be None to use current setting
+* Removed use of CloseButton from Popups (still have a bug in the CloseButton code but not in popups now)
+* Combobox - removed requirement of setting disabled if want to set to readonly using update method
+* Fix for cancelling out of file/folder browse on Linux caused target to be cleared instead of just cancelling
+* Removed try block around setting button colors - if user sets a bad color, well don't do that
+* Now deleting windows after closing them for popup
+
+## 4.13.0 PySimpleGUI 18-Dec-2019
+
+Table and Tree header colors, expanded Graph methods
+
+* Element.expand new parameter - expand_row. If true then row will expand along with the widgets. Provides better resizing control
+* Using math.floor now instead of an int cast in Graph Element's unit conversions
+* Graph.draw_point - now using caller's graph units for specifying point size
+* Graph.draw_circle - converted radius size from user's graph units.
+* Graph.draw_circle - added line_width parameter
+* Graph.draw_oval - added line_width parameter
+* Graph.get_figures_at_location - new method for getting a list of figures at a particular point
+* Graph.get_bounding_box - returns bounding box for a previously drawn figure
+* Table and Tree Elements
+	* 3 new element creation parameters
+		* header_text_color - color of the text for the column headings
+		* header_background_color - color of the background of column headings
+		* header_font - font family, style , size for the column headings
+	* Defaults to using the current look and feel setting
+		* Uses similar algorithm as Tabs - Input Text background and text colors are used
+* Spin element - fixed bug that showed "None" if default value is "None"
+* Test Harness sets incorrect look and feel on purpose so a random one is chosen
+
 ### Upcoming
 
-Make suggestions people!  Future release features
+There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
+
+The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
+
+PySimpleGUIDroid is in the works....
+
+In addition to the ports there is ongoing work with educators that want to bring PySimpleGUI into their classrooms.  Some projects have already started with teachers.  One effort is to examine a number of books that teach Python to kids and convert the exercises to use PySimpleGUI instead of tkinter or command line.  Another educational effort is in integrating with Circuit Python.  It's unclear exactly how PySimpleGUI will fit into the picture.  A board from Adafruit is arriving soon which should help solidify what's possible.
 
 ## Code Condition
 
@@ -17947,11 +19264,11 @@ Make suggestions people!  Future release features
     Make it right
     Make it fast
 
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the enternally facing interfaces all adhere to PEP8 names.
 
-Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
+Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
 ## Design
 

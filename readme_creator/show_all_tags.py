@@ -8,6 +8,7 @@ import PySimpleGUIlib
     Displays the results in a PySimpleGUI window which can be used to copy and paste into other places.
 
 """
+PySimpleGUIlib.theme('Dark Green 2')
 
 layout = [[PySimpleGUIlib.Output(size=(80,50))]]
 window = PySimpleGUIlib.Window('Dump of tags', layout, resizable=True).Finalize()

@@ -896,9 +896,158 @@ TTK WIDGETS!  Welcome back Mac Users!
 * Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
 
 
+## 4.8.0 PySimpleGUI 4-Dec-2019
+
+Multicolored multiline text!  Often asked for feature going way back
+ttk Buttons can have images
+Print in color!
+
+* Multiline Element got 2 new parameters to the update method
+	* text_color_for_value - color for the newly added text
+	* background_color_for_value - background color of the newly added text
+* New Print/EasyPrint parameters and capability
+	* text_color, background_color - control the text's color and background color when printing to "Debug Window"
+	* Must be done only when used in mode where stdout is not re-routed (the default)
+	* Wouldn't it be really nice if normal print calls had this parameter?
+	* Print(event, text_color='green', background_color='white',  end='')
+* ttk Buttons
+	* can have images. No longer forces Buttons with images to be the old tk Butons. Now you can choose either	
+	* can update the button color
+	* can update the button image
+* Set warning filter so that warnings are repeated
+* New global variables:
+	* CURRENT_LOOK_AND_FEEL - The current look and feel setting in use. Starts out as "Default"
+	* BROWSE_FILES_DELIMITER - Defaults to ";"  It is the string placed between entries returned from a FilesBrowse button
+	* TRANSPARENT_BUTTON - Depricated - was being used incorrectly as it was a relic from the early days. It's value was a color of gray
+* Window - gentle reminder if you don't choose a look and feel for your window. It's easy to stop them. Add a change_look_and_feel line
+* Test harness uses a debug window so don't be shocked when 2 windows appear when running PySimpleGUI by itself
+	* Prints the "Event" in Green on White text
+	* Prints the "values" normally
+
+## 4.9.0 PySimpleGUI 7-Dec-2019
+
+The "Finally Nailed Tabs" release
+
+* Colors for Tabs!
+	* When creating TabGroup can now specify
+	* Text & Background color of all tabs
+	* Text & Background color of selected tab
+	* If nothing is specified then the Look and Feel theme will be used (which turned out GREAT)
+* Tab visibility - Can finally control individual tab's visibility using update and when creating
+* More "Look and Feel" Themes!  There's no excuse to be grey again. There are now 126 themes to choose from.  Here are the 32 new themes"
+	DefaultNoMoreNagging
+	DarkBlack1
+	DarkBlue12
+	DarkBlue13
+	DarkBlue14
+	DarkBlue15
+	DarkBlue16
+	DarkBlue17
+	DarkBrown5
+	DarkBrown6
+	DarkGreen2
+	DarkGreen3
+	DarkGreen4
+	DarkGreen5
+	DarkGreen6
+	DarkGrey4
+	DarkGrey5
+	DarkGrey6
+	DarkGrey7
+	DarkPurple6
+	DarkRed2
+	DarkTeal10
+	DarkTeal11
+	DarkTeal12
+	DarkTeal9
+	LightBlue6
+	LightBlue7
+	LightBrown12
+	LightBrown13
+	LightGray1
+	LightGreen10
+	LightGreen9
+	LightGrey6
+* preview_all_look_and_feel_themes now has a columns parameter to control number of entries per rows
+	* also made each theme display smaller due to large number of themes
+
+
+## 4.10.0 PySimpleGUI 9-Dec-2019
+
+"Oh crap the debugger is broken!" + "Pretty Progress Bars" release
+
+* Fix for built-in debugger not working
+	* Important due to upcoming educational usage
+	* Has been broken since 4.5.0 when a change to Finalize was made
+* ProgessBar element colors set using Look and Feel colors
+	* Combination of button color, input element, and input element text are used
+
+
+## 4.11.0 PySimpleGUI 10-Dec-2019
+
+The Element & Window bindings release
+
+* Element.bind - New method of all Elements
+	* Enables tkinter bindings to be added to any element
+	* Will get an event returned from window.read() if the tkinter event happens
+* Window.bind - New method for Windows, just like Elements
+	* Enables tkinter bindings to be added to Windows
+	* Will get an event returned from window.read() if the tkinter event happens
+* TabGroup fonts - can now set the font and font size for Tab text
+
+
+
+## 4.12.0 PySimpleGUI 14-Dec-2019
+
+Finally no more outlines around TK Elements on Linux
+
+* Fixed a long-term problem of the mysterious white border around (almost) all TK Elements on Linux
+* Ability to set the disabled button colors
+	* New Button and Button.update parameter - disabled_button_color
+	* Specified as (Text Color, Background Color) just like button colors
+	* For Normal / TK Buttons - can set button text color only
+	* For TTK Buttons - can set both a disabled button and text color
+	* Either parameter can be None to use current setting
+* Removed use of CloseButton from Popups (still have a bug in the CloseButton code but not in popups now)
+* Combobox - removed requirement of setting disabled if want to set to readonly using update method
+* Fix for cancelling out of file/folder browse on Linux caused target to be cleared instead of just cancelling
+* Removed try block around setting button colors - if user sets a bad color, well don't do that
+* Now deleting windows after closing them for popup
+
+
+## 4.13.0 PySimpleGUI 18-Dec-2019
+
+Table and Tree header colors, expanded Graph methods
+
+* Element.expand new parameter - expand_row. If true then row will expand along with the widgets. Provides better resizing control
+* Using math.floor now instead of an int cast in Graph Element's unit conversions
+* Graph.draw_point - now using caller's graph units for specifying point size
+* Graph.draw_circle - converted radius size from user's graph units.
+* Graph.draw_circle - added line_width parameter
+* Graph.draw_oval - added line_width parameter
+* Graph.get_figures_at_location - new method for getting a list of figures at a particular point
+* Graph.get_bounding_box - returns bounding box for a previously drawn figure
+* Table and Tree Elements
+	* 3 new element creation parameters
+		* header_text_color - color of the text for the column headings
+		* header_background_color - color of the background of column headings
+		* header_font - font family, style , size for the column headings
+	* Defaults to using the current look and feel setting
+		* Uses similar algorithm as Tabs - Input Text background and text colors are used
+* Spin element - fixed bug that showed "None" if default value is "None"
+* Test Harness sets incorrect look and feel on purpose so a random one is chosen
+
+
 ### Upcoming
 
-Make suggestions people!  Future release features
+There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
+
+The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
+
+PySimpleGUIDroid is in the works....
+
+In addition to the ports there is ongoing work with educators that want to bring PySimpleGUI into their classrooms.  Some projects have already started with teachers.  One effort is to examine a number of books that teach Python to kids and convert the exercises to use PySimpleGUI instead of tkinter or command line.  Another educational effort is in integrating with Circuit Python.  It's unclear exactly how PySimpleGUI will fit into the picture.  A board from Adafruit is arriving soon which should help solidify what's possible.
+
 
 
 ## Code Condition
@@ -907,11 +1056,11 @@ Make suggestions people!  Future release features
     Make it right
     Make it fast
 
-It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module is particularly poor for PEP 8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP 8 for the most part.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the enternally facing interfaces all adhere to PEP8 names.
 
-Please log bugs and suggestions in the GitHub!  It will only make the code stronger and better in the end, a good thing for us all, right?
+Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
 ## Design
 

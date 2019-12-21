@@ -30,6 +30,11 @@ https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Pro
 There are not many programs under each of the port's folders because the main Demo Programs should run on all of the other platforms with minimal changes (often only the import statement changes).
 
 
+You will also find a lot of demos running on Trinket
+http://Trinket.PySimpleGUI.org
+
+
+
 ## Packages Used In Demos
 
 
@@ -213,36 +218,80 @@ You'll quickly wonder how you ever coded without it.
 
 Well, there are a few quirks, and problems of course.  Check the [GitHub Issues database](https://github.com/PySimpleGUI/PySimpleGUI/issues) for a list of them.
 
-As previously mentioned this is also where you should post all problems and enhancements.
+As previously mentioned **this is where you should post all problems and enhancements.**
+
+Random crashes have been rared.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
 
 
-## MACS + tkinter = SUCKS
+## MACS & tkinter
 
-Not sure why, but for over a year and a half, setting the color of buttons does not work on Macs.  There have been numerous other problems.  Checking the Issues database is the best place to see what they are.  If there was a magic wand it would have been used long ago to fix these problems, but there does not appear to be a magic fix.
+Macs and PySimpleGUI did not play well together up until Nov 2019 and the release of ttk buttons.  Prior to that buttons had to be white.  Now the Mac can use any color for buttons and they work great.  Images on buttons work as well.
 
-This was already mentioned at the top of this document but want to make sure it's covered as a "known issue"
+The problems were the normal tk.Button was not working correctly on the Mac.  You couldn't set the button color.  If you tried it appeared as if the text was missing.
+
+Users have recently reported the ability to install Python 3.7 from the Python.org website and not use the Homebrew version.  This resolved all of the button color problems. 
+
+Regardless of where you get your Python / tkinter, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
+
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
+
 
 ## Multiple threads
 
-While not an "issue" this is a ***stern warning***
+Consider this is a ***stern warning***
 
-## **Do not attempt** to call `PySimpleGUI` from multiple threads! It's `tkinter` based and `tkinter` has issues with multiple threads
+### **Do not attempt** to call `PySimpleGUI` from multiple threads! At least the `tkinter` based port because tkinter is not threadsafe and has known issues with multiple threads
 
 Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`
+Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+
+Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
+
+### The dreaded "Tcl_AsyncDelete: async handler deleted by the wrong thread" error
+
+This crash has plagued and mystified tkinter users for some time now.  It happens when the user is running multiple threads in their application.  Even if the user doesn't make any calls that are into tkinter, this problem can still cause your program to crash.
+
+I'm thrilled to say there's a solution and it's easy to implement.  If you're getting this error, then here is what is causing it.
+
+When you close a window and delete the layout, the tkinter widgets that were in use in the window are no longer needed.  Python marks them to be handled by the "Garbage Collector".  They're deleted but not quite gone from memory.  Then, later, while your thread is running, the Python Garbage Collect algorithm decides it's time to run garbage collect.  When it tells tkinter to free up the memory, the tkinter code looks to see what context it is running under.  It sees that it's a thread, not the main thread, and generates this exception.  
+
+The way around this is actually quite easy.
+
+When you are finished with a window, be sure to:
+
+* Close the Window
+* Set the `layout` variable to None
+* Set the `window` variable to None
+* Trigger Python's Garbage Collect to run immediately
+
+The sequence looks like this in code:
+
+```python
+    import gc
+
+    # Do all your windows stuff... make a layout... show your window... then when time to exit
+    window.close()
+    layout = None
+    window = None
+    gc.collect()
+```
+    
+This will ensure that the tkinter widgets are all deleted in the context of the mainthread and another thread won't accidently run the Garbage Collect
+
 
 
 # Contributing
 
-## Core Code
+## Write Applications
 
-***Core code changes/pull requests are not being accepted at this time.***
+The way for you to contribute to the PySimpleGUI is to create and share PySimpleGUI GUIs.  **Everyone** learns from seeing other peoples' implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project and helped to create thw you see today.
 
-## Demos
+## Pull Requests
 
-You're welcome to share a PySimpleGUI program you've written that you think fits the model of a PySimpleGUI Demo Program.
+***PySimpleGUI changes/pull requests are not being accepted at this time.***
+
 
 ## GitHub Repos
 
-If you've created a GitHub for your project that uses PySimpleGUI then please submit it to be included in this document or on the PySimpleGUI GitHub site.  Also, you'll find a lot more people will look at your code, explore your repo if you have posted **screen shots in your readme**.  People *love* success stories and showing your GUI's screen shows you've been successful.  Everyone wins!
+If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the annoucements. People *love* success stories and showing your GUI's screen visually communicates your success. 

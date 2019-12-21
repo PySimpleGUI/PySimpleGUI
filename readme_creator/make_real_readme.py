@@ -298,6 +298,7 @@ def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is
             elif type(val) is str:   rows.append(f'{key}="{val}"')
             elif type(val) is tuple: rows.append(f'{key}={val}')
             elif type(val) is bool:  rows.append(f'{key}={val}')
+            elif type(val) is bytes: rows.append(f'{key}=...')
             else:
                 raise Exception(f'IDK this type -> {key, val}')
 
@@ -434,8 +435,22 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
     # ===========  2 GET classes, funcions, varialbe a.k.a. memes =========== #
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
-    psg_members = getmembers(PySimpleGUIlib) # variables, functions, classes
 
+    def valid_field(pair):
+        bad_fields = 'LOOK_AND_FEEL_TABLE copyright __builtins__ icon'.split(' ')
+        bad_prefix = 'TITLE_ TEXT_ ELEM_TYPE_ DEFAULT_ BUTTON_TYPE_ LISTBOX_SELECT METER_ POPUP_ THEME_'.split(' ')
+
+        field_name, python_object = pair
+        if type(python_object) is bytes:
+            return False
+        if field_name in bad_fields:
+            return False
+        if any([i for i in bad_prefix if field_name.startswith(i)]):
+            return False
+        return True
+
+    psg_members  = [i for i in getmembers(PySimpleGUIlib) if valid_field(i)] # variables, functions, classes
+    # psg_members  = getmembers(PySimpleGUIlib) # variables, functions, classes
     psg_funcs = [o for o in psg_members if isfunction(o[1])] # only functions
     psg_classes = [o for o in psg_members if isclass(o[1])]  # only classes
     psg_classes_ = list(set([i[1] for i in psg_classes]))    # boildown B,Btn,Butt -into-> Button
