@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.13.1.2  Unreleased - Element.set_cursor, NEW theme(), Combo.update allows any value,  table & tree header font defaults to window font, default theme now Dark Blue 3"
+version = __version__ = "4.13.1.3  Unreleased - Element.set_cursor, NEW theme(), Combo.update allows any value,  table & tree header font defaults to window font, default theme now Dark Blue 3, Macs no longer default to colorless windows and buttons"
 
 port = 'PySimpleGUI'
 
@@ -215,13 +215,10 @@ NICE_BUTTON_COLORS = ((GREENS[3], TANS[0]),
                       (YELLOWS[0], GREENS[3]),
                       (YELLOWS[0], BLUES[2]))
 
-COLOR_SYSTEM_DEFAULT = '1234567890'  # Colors should never be this long
-if sys.platform == 'darwin':
-    DEFAULT_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Foreground, Background (None, None) == System Default
-    OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = COLOR_SYSTEM_DEFAULT  # Colors should never be this long
-else:
-    DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
-OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never be this long
+COLOR_SYSTEM_DEFAULT = '1234567890'  # A Magic Number kind of signal to PySimpleGUI that the color should not be set at all
+DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
+OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
+
 CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
@@ -12812,7 +12809,6 @@ def main():
 # ------------------------ PEP8-ify The SDK ------------------------#
 
 change_look_and_feel = ChangeLookAndFeel
-set_theme = ChangeLookAndFeel
 convert_args_to_single_string = ConvertArgsToSingleString
 convert_flex_to_tk = ConvertFlexToTK
 easy_print = EasyPrint
@@ -12848,7 +12844,6 @@ popup_timed = PopupTimed
 popup_yes_no = PopupYesNo
 sgprint = Print
 sgprint_close = PrintClose
-quit = Quit
 rgb = RGB
 set_global_icon = SetGlobalIcon
 set_options = SetOptions

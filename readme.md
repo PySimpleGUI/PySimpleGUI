@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.1-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -233,10 +233,10 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 ### OS
 
 * Windows 7, 8, 10
-* Linux on PC - Tested on **many** distributions
+* Linux on PC - Tested on several distributions
 * Linux on Raspbnerry Pi
 * Linux on Android - Can use either Termux or PyDroid3
-* Mac OS (Sorry don't know much about Macs other than Macs don't like tkinter)
+* Mac OS
 
 #### Python versions
 
@@ -484,13 +484,16 @@ Repl.it is not meant to serve up applications and web pages.  Trying to use it t
 
 It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
 
-However, **Macs** suck.  They suck on tkinter in particular.  The "Look and feel" calls are disabled for Macs.  Colored buttons in particular are broken.  And, you are unable to specify filetypes when using the FileBrowse button.  None of this is PySimpleGUI code issues, of course, they're all in tkinter.  Consider using Qt instead of tkinter on the Mac.  Or, if using tkinter, create your own button images.  
+Historicly, PySimpleGUI using tkinter have struggled on Macs.  This was because of a problem setting button colors on the Mac.  However, two events has turned this problem around entirely.
 
-***Look through the open and closed issues if you're a  Mac person with a problem. It's highly likely the problem has been at least seen previously and there may even be a fix or workaround***
+1. Use of ttk Buttons for Macs
+2. Ability for Mac users to install Python from python.org rather than the Homebrew version with button problems
 
-*Switching to "Light Mode" is known to fix some of the problems.*  They honestly are tkinter/Mac problems.
+It's been a long road for Mac users with many deciding to use PySimpleGUIQt so that multi-colored windows could be made.  It's completely understandable to want to make attractive windows that utilitize colors.  
 
-Make sure you're running tkinter 8.6 and up.  However, as I'm learning 8.6 can mean almost anything as the minor release numbers are not provided (8.6.1, etc).  Turns out 8.6 has been in development for YEARS.  The 8.6 that comes with Python 3.7.4 doesn't support table colors for example even though it's version 8.6.
+PySimpleGUI now supports Macs, Linux, and Windows equally well. They all are able to use the "Themes" that automatically add color to your windows.  
+
+Be aware that Macs default to using ttk buttons.  You can override this setting at the Window and Button levels.  If you installed Python from python.org, then it's likely you can use the non-ttk buttons should you wish.
 
 # Support
 
@@ -3429,8 +3432,6 @@ You can call the method without setting the `time_between_frames` value and it w
 
 ## Button Element
 
-**MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
-
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
@@ -3493,6 +3494,12 @@ layout =  [[sg.Ok(), sg.Cancel()]]
 ```
 
 In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
+
+### TTK Buttons & Macs
+
+In 2019 support for ttk Buttons was added.  This gets around the problem of not being able to change button colors on a Mac.  There are a number of places you can control whether or not ttk buttons are used, be it on MAc or other platform.
+
+TTK Buttons and TK Buttons operate slightly differently.  Button highlighting is one different.  How images and text are displayed at the same time is another.  You've got options now that weren't there previously.  It's nice to see that Mac users can finally use the color themes.
 
 ### Button Element Shortcuts
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -4523,7 +4530,7 @@ while True:
         print("Nothing happened")
 ```
 
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and yuou've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
 Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
 
@@ -4570,7 +4577,7 @@ sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
-         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+         [sg.Text(size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
          [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
           sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
@@ -4753,7 +4760,7 @@ import PySimpleGUI as sg
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
 
-text_elem = sg.Text("", size=(18, 1))
+text_elem = sg.Text(size=(18, 1))
 
 layout = [[sg.Text("Press a key or scroll mouse")],
           [text_elem],
@@ -4912,7 +4919,7 @@ import PySimpleGUI as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1), key='_OUTPUT_')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -4947,7 +4954,7 @@ import PySimpleGUIQt as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1),  key='_OUTPUT_')],
           [sg.Button('Launch 2')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -5364,7 +5371,7 @@ import PySimpleGUI as sg
 sg.change_look_and_feel('Dark Green 2')
 
 layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
+            [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
             [sg.Button('Go'), sg.Button('Exit')]
               ]
 
@@ -14591,30 +14598,6 @@ Parameter Descriptions:
 |pad|Amount of padding to put around element|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 
-Change the "color scheme" of all future PySimpleGUI Windows.
-The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
-There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
-The original list was (prior to a major rework and renaming)... these names still work...
-In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
-The "Formula" is:
-["Dark" or "Light"] Color Number
-Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
-The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
-Default = The default settings (only button color is different than system default)
-Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
-
-```
-ChangeLookAndFeel(index, force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
-|force|(bool) no longer used|
-
 ```
 CloseButton(button_text,
     image_filename=None,
@@ -14778,41 +14761,6 @@ Parameter Descriptions:
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 |||
 | **return** | (Button) |
-
-```
-EasyPrint(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True,
-    text_color=None,
-    background_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-EasyPrintClose()
-```
 
 ```
 Exit(button_text="Exit",
@@ -15048,12 +14996,6 @@ Parameter Descriptions:
 |||
 | **return** | (Button) |
 
-Get a list of the valid values to pass into your call to change_look_and_feel
-
-```
-ListOfLookAndFeelValues() -> List[str] - list of valid string values
-```
-
 ```
 No(button_text="No",
     size=(None, None),
@@ -15208,6 +15150,601 @@ Parameter Descriptions:
 |pad|Amount of padding to put around element|
 |key|Used with window.FindElement and with return values to uniquely identify this element|
 
+```
+Quit(button_text="Quit",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Quit')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+RButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+ReadButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = False)|
+|disabled|set disable state for element (Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+RealtimeButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    disabled=False,
+    bind_return_key=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button|
+|image_filename|image filename if there is a button image|
+|image_data|in-RAM image to be displayed on button|
+|image_size|size of button image in pixels|
+|image_subsample|amount to reduce the size of the image|
+|border_width|width of border around element|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|font|specifies the font family, size, etc|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = False)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+Save(button_text="Save",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    bind_return_key=True,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Save')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|bind_return_key|(Default = True)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+SaveAs(button_text="Save As...",
+    target=(555666777, -1),
+    file_types=(('ALL Files', '*.*'),),
+    initial_folder=None,
+    disabled=False,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    change_submits=False,
+    enable_events=False,
+    font=None,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Save As...')|
+|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
+|file_types|(Default value = (("ALL Files", "*.*")))|
+|initial_folder|starting path for folders and files|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|change_submits|If True, pressing Enter key submits window (Default = False)|
+|enable_events|Turns on the element specific events.(Default = False)|
+|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+ScrolledTextBox(args,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|(Any) Variable number of items to display|
+|title|(str) Title to display in the window.|
+|button_color|Tuple[str, str] button color (foreground, background)|
+|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
+|auto_close|(bool) if True window will close itself|
+|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
+|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
+|||
+| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
+
+Sets the icon which will be used any time a window is created if an icon is not provided when the
+window is created.
+
+```
+SetGlobalIcon(icon)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon|Union[bytes, str] Either a Base64 byte string or a filename|
+
+```
+SetOptions(icon=None,
+    button_color=None,
+    element_size=(None, None),
+    button_element_size=(None, None),
+    margins=(None, None),
+    element_padding=(None, None),
+    auto_size_text=None,
+    auto_size_buttons=None,
+    font=None,
+    border_width=None,
+    slider_border_width=None,
+    slider_relief=None,
+    slider_orientation=None,
+    autoclose_time=None,
+    message_box_line_width=None,
+    progress_meter_border_depth=None,
+    progress_meter_style=None,
+    progress_meter_relief=None,
+    progress_meter_color=None,
+    progress_meter_size=None,
+    text_justification=None,
+    background_color=None,
+    element_background_color=None,
+    text_element_background_color=None,
+    input_elements_background_color=None,
+    input_text_color=None,
+    scrollbar_color=None,
+    text_color=None,
+    element_text_color=None,
+    debug_win_size=(None, None),
+    window_location=(None, None),
+    error_button_color=(None, None),
+    tooltip_time=None,
+    use_ttk_buttons=None,
+    ttk_theme=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|icon|filename of icon used for taskbar and title bar|
+|button_color|button color (foreground, background)|
+|element_size|Tuple[int, int] element size (width, height) in characters|
+|button_element_size|Tuple[int, int]|
+|margins|tkinter margins around outsize (Default = (None))|
+|element_padding|(Default = (None))|
+|auto_size_text|True if size should fit the text length|
+|auto_size_buttons||
+|font|specifies the font family, size, etc|
+|border_width|width of border around element|
+|slider_border_width||
+|slider_relief||
+|slider_orientation||
+|autoclose_time||
+|message_box_line_width||
+|progress_meter_border_depth||
+|progress_meter_style||
+|progress_meter_relief||
+|progress_meter_color||
+|progress_meter_size|Tuple[int, int]|
+|text_justification||
+|background_color|color of background|
+|element_background_color||
+|text_element_background_color||
+|input_elements_background_color||
+|input_text_color||
+|scrollbar_color||
+|text_color|color of the text|
+|element_text_color||
+|debug_win_size|Tuple[int, int] (Default = (None))|
+|window_location|(Default = (None))|
+|error_button_color|(Default = (None))|
+|tooltip_time|time in milliseconds to wait before showing a tooltip. Default is 400ms|
+|use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
+|ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
+
+```
+Submit(button_text="Submit",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    bind_return_key=True,
+    tooltip=None,
+    font=None,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Submit')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|bind_return_key|(Default = True)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+```
+Yes(button_text="Yes",
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    disabled=False,
+    tooltip=None,
+    font=None,
+    bind_return_key=True,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|button_text|text in the button (Default value = 'Yes')|
+|size|(w,h) w=characters-wide, h=rows-high|
+|auto_size_button|True if button size is determined by button text|
+|button_color|button color (foreground, background)|
+|disabled|set disable state for element (Default = False)|
+|tooltip|(str) text, that will appear when mouse hovers over the element|
+|font|specifies the font family, size, etc|
+|bind_return_key|(Default = True)|
+|focus|if focus should be set to this|
+|pad|Amount of padding to put around element|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|||
+| **return** | (Button) |
+
+## Debug Window Output
+
+```
+easy_print(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+easy_print_close()
+```
+
+```
+eprint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+sgprint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+sgprint_close()
+```
+
+```
+EasyPrint(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+EasyPrintClose()
+```
+
+```
+Print(args,
+    size=(None, None),
+    end=None,
+    sep=None,
+    location=(None, None),
+    font=None,
+    no_titlebar=False,
+    no_button=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    do_not_reroute_stdout=True,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args||
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
+|end||
+|sep||
+|location|Location on screen to display|
+|font|specifies the font family, size, etc|
+|no_titlebar|(Default = False)|
+|no_button|(Default = False)|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|do_not_reroute_stdout|(Default = True)|
+
+```
+PrintClose()
+```
+
 ## OneLineProgressMeter
 
 ```
@@ -15242,6 +15779,46 @@ Parameter Descriptions:
 
 ```
 OneLineProgressMeterCancel(key)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+
+```
+one_line_progress_meter(title,
+    current_value,
+    max_value,
+    key,
+    args,
+    orientation="v",
+    bar_color=(None, None),
+    button_color=None,
+    size=(20, 20),
+    border_width=None,
+    grab_anywhere=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|text to display|
+|current_value|current progressbar value|
+|max_value|max value of progressbar|
+|key|Used with window.FindElement and with return values to uniquely identify this element|
+|*args|stuff to output.|
+|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')|
+|bar_color||
+|button_color|button color (foreground, background)|
+|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
+|border_width|width of border around element|
+|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+
+```
+one_line_progress_meter_cancel(key)
 ```
 
 Parameter Descriptions:
@@ -16144,659 +16721,7 @@ Parameter Descriptions:
 |||
 | **return** | Union["Yes", "No", None] |
 
-```
-Print(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True,
-    text_color=None,
-    background_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-PrintClose()
-```
-
-```
-Quit(button_text="Quit",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    tooltip=None,
-    font=None,
-    bind_return_key=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Quit')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
-
-```
-RButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button|
-|image_filename|image filename if there is a button image|
-|image_data|in-RAM image to be displayed on button|
-|image_size|size of button image in pixels|
-|image_subsample|amount to reduce the size of the image|
-|border_width|width of border around element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = False)|
-|disabled|set disable state for element (Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-```
-ReadButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button|
-|image_filename|image filename if there is a button image|
-|image_data|in-RAM image to be displayed on button|
-|image_size|size of button image in pixels|
-|image_subsample|amount to reduce the size of the image|
-|border_width|width of border around element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = False)|
-|disabled|set disable state for element (Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-```
-RealtimeButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    disabled=False,
-    bind_return_key=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button|
-|image_filename|image filename if there is a button image|
-|image_data|in-RAM image to be displayed on button|
-|image_size|size of button image in pixels|
-|image_subsample|amount to reduce the size of the image|
-|border_width|width of border around element|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|size|(w,h) w=characters-wide, h=rows-high (Default = (None))|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|font|specifies the font family, size, etc|
-|disabled|set disable state for element (Default = False)|
-|bind_return_key|(Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-```
-Save(button_text="Save",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    bind_return_key=True,
-    disabled=False,
-    tooltip=None,
-    font=None,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Save')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|bind_return_key|(Default = True)|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
-
-```
-SaveAs(button_text="Save As...",
-    target=(555666777, -1),
-    file_types=(('ALL Files', '*.*'),),
-    initial_folder=None,
-    disabled=False,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    change_submits=False,
-    enable_events=False,
-    font=None,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Save As...')|
-|target|key or (row,col) target for the button (Default value = (ThisRow, -1))|
-|file_types|(Default value = (("ALL Files", "*.*")))|
-|initial_folder|starting path for folders and files|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|change_submits|If True, pressing Enter key submits window (Default = False)|
-|enable_events|Turns on the element specific events.(Default = False)|
-|font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-ScrolledTextBox(args,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    yes_no=False,
-    auto_close=False,
-    auto_close_duration=None,
-    size=(None, None),
-    location=(None, None),
-    non_blocking=False,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    font=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args|(Any) Variable number of items to display|
-|title|(str) Title to display in the window.|
-|button_color|Tuple[str, str] button color (foreground, background)|
-|yes_no|(bool) If True, displays Yes and No buttons instead of Ok|
-|auto_close|(bool) if True window will close itself|
-|auto_close_duration|Union[int, float] Older versions only accept int. Time in seconds until window will close|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|location|Tuple[int, int] Location on the screen to place the upper left corner of the window|
-|non_blocking|(bool) if True the call will immediately return rather than waiting on user input|
-|||
-| **return** | Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X |
-
-Sets the icon which will be used any time a window is created if an icon is not provided when the
-window is created.
-
-```
-SetGlobalIcon(icon)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|icon|Union[bytes, str] Either a Base64 byte string or a filename|
-
-```
-SetOptions(icon=None,
-    button_color=None,
-    element_size=(None, None),
-    button_element_size=(None, None),
-    margins=(None, None),
-    element_padding=(None, None),
-    auto_size_text=None,
-    auto_size_buttons=None,
-    font=None,
-    border_width=None,
-    slider_border_width=None,
-    slider_relief=None,
-    slider_orientation=None,
-    autoclose_time=None,
-    message_box_line_width=None,
-    progress_meter_border_depth=None,
-    progress_meter_style=None,
-    progress_meter_relief=None,
-    progress_meter_color=None,
-    progress_meter_size=None,
-    text_justification=None,
-    background_color=None,
-    element_background_color=None,
-    text_element_background_color=None,
-    input_elements_background_color=None,
-    input_text_color=None,
-    scrollbar_color=None,
-    text_color=None,
-    element_text_color=None,
-    debug_win_size=(None, None),
-    window_location=(None, None),
-    error_button_color=(None, None),
-    tooltip_time=None,
-    use_ttk_buttons=None,
-    ttk_theme=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|icon|filename of icon used for taskbar and title bar|
-|button_color|button color (foreground, background)|
-|element_size|Tuple[int, int] element size (width, height) in characters|
-|button_element_size|Tuple[int, int]|
-|margins|tkinter margins around outsize (Default = (None))|
-|element_padding|(Default = (None))|
-|auto_size_text|True if size should fit the text length|
-|auto_size_buttons||
-|font|specifies the font family, size, etc|
-|border_width|width of border around element|
-|slider_border_width||
-|slider_relief||
-|slider_orientation||
-|autoclose_time||
-|message_box_line_width||
-|progress_meter_border_depth||
-|progress_meter_style||
-|progress_meter_relief||
-|progress_meter_color||
-|progress_meter_size|Tuple[int, int]|
-|text_justification||
-|background_color|color of background|
-|element_background_color||
-|text_element_background_color||
-|input_elements_background_color||
-|input_text_color||
-|scrollbar_color||
-|text_color|color of the text|
-|element_text_color||
-|debug_win_size|Tuple[int, int] (Default = (None))|
-|window_location|(Default = (None))|
-|error_button_color|(Default = (None))|
-|tooltip_time|time in milliseconds to wait before showing a tooltip. Default is 400ms|
-|use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
-|ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
-
-```
-Submit(button_text="Submit",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    bind_return_key=True,
-    tooltip=None,
-    font=None,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Submit')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|bind_return_key|(Default = True)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
-
-Time your code easily.... start the timer.
-
-```
-TimerStart()
-```
-
-Time your code easily.... stop the timer and print the number of ms since the timer start
-
-```
-TimerStop()
-```
-
-```
-Yes(button_text="Yes",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    tooltip=None,
-    font=None,
-    bind_return_key=True,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|button_text|text in the button (Default value = 'Yes')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = True)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
-
-## PEP8 Function Bindings
-
-Change the "color scheme" of all future PySimpleGUI Windows.
-The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
-There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
-The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
-The original list was (prior to a major rework and renaming)... these names still work...
-In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
-The "Formula" is:
-["Dark" or "Light"] Color Number
-Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
-The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
-Default = The default settings (only button color is different than system default)
-Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
-
-```
-change_look_and_feel(index, force=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
-|force|(bool) no longer used|
-
-```
-easy_print(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True,
-    text_color=None,
-    background_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-easy_print_close()
-```
-
-```
-eprint(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True,
-    text_color=None,
-    background_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-Fills a window with values provided in a values dictionary { element_key : new_value }
-
-```
-fill_form_with_values(window, values_dict)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|window|(Window) The window object to fill|
-|values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
-
-Get a list of the valid values to pass into your call to change_look_and_feel
-
-```
-list_of_look_and_feel_values() -> List[str] - list of valid string values
-```
-
-The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
-
-```
-main()
-```
-
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-
-```
-obj_to_string(obj, extra="    ")
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|obj|(Any) The object to display|
-|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
-
-Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-Returns only the top-most object's variables instead of drilling down to dispolay more
-
-```
-obj_to_string_single_obj(obj)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|obj|(Any) The object to display returns (str) Formatted output of the object's values|
-
-```
-one_line_progress_meter(title,
-    current_value,
-    max_value,
-    key,
-    args,
-    orientation="v",
-    bar_color=(None, None),
-    button_color=None,
-    size=(20, 20),
-    border_width=None,
-    grab_anywhere=False)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|title|text to display|
-|current_value|current progressbar value|
-|max_value|max value of progressbar|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|*args|stuff to output.|
-|orientation|'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')|
-|bar_color||
-|button_color|button color (foreground, background)|
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
-|border_width|width of border around element|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-
-```
-one_line_progress_meter_cancel(key)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-
-## Popups
+## Popups PEP8 Versions
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -17690,51 +17615,52 @@ Parameter Descriptions:
 |||
 | **return** | Union["Yes", "No", None] |
 
-Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
-They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+## PEP8 Function Bindings
+
+Fills a window with values provided in a values dictionary { element_key : new_value }
 
 ```
-preview_all_look_and_feel_themes(columns=12)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|columns|(int) The number of themes to display per row|
-
-```
-quit(button_text="Quit",
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    disabled=False,
-    tooltip=None,
-    font=None,
-    bind_return_key=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
+fill_form_with_values(window, values_dict)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|button_text|text in the button (Default value = 'Quit')|
-|size|(w,h) w=characters-wide, h=rows-high|
-|auto_size_button|True if button size is determined by button text|
-|button_color|button color (foreground, background)|
-|disabled|set disable state for element (Default = False)|
-|tooltip|(str) text, that will appear when mouse hovers over the element|
-|font|specifies the font family, size, etc|
-|bind_return_key|(Default = False)|
-|focus|if focus should be set to this|
-|pad|Amount of padding to put around element|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
-|||
-| **return** | (Button) |
+|window|(Window) The window object to fill|
+|values_dict|(Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call|
+
+The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+
+```
+main()
+```
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+
+```
+obj_to_string(obj, extra="    ")
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj|(Any) The object to display|
+|extra|(Default value = ' ') returns (str) Formatted output of the object's values|
+
+Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
+Returns only the top-most object's variables instead of drilling down to dispolay more
+
+```
+obj_to_string_single_obj(obj)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|obj|(Any) The object to display returns (str) Formatted output of the object's values|
 
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
@@ -17827,41 +17753,6 @@ Parameter Descriptions:
 |use_ttk_buttons|(bool) if True will cause all buttons to be ttk buttons|
 |ttk_theme|(str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'|
 
-```
-sgprint(args,
-    size=(None, None),
-    end=None,
-    sep=None,
-    location=(None, None),
-    font=None,
-    no_titlebar=False,
-    no_button=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    do_not_reroute_stdout=True,
-    text_color=None,
-    background_color=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|*args||
-|size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high|
-|end||
-|sep||
-|location|Location on screen to display|
-|font|specifies the font family, size, etc|
-|no_titlebar|(Default = False)|
-|no_button|(Default = False)|
-|grab_anywhere|If True can grab anywhere to move the window (Default = False)|
-|do_not_reroute_stdout|(Default = True)|
-
-```
-sgprint_close()
-```
-
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
 ```
@@ -17930,6 +17821,146 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 ```
 test()
 ```
+
+## Themes
+
+Sets / Gets the current Theme.  If none is specified then returns the current theme.
+This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
+
+```
+theme(new_theme=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|new_theme|(str) the new theme name to use|
+|||
+| **return** | (str) the currently selected theme |
+
+Returns the background color specified by the current color theme
+
+```
+theme_background_color() -> (str) - color string of the background color defined by current theme
+```
+
+Returns the button color specified by the current color theme
+
+```
+theme_button_color() -> Tuple[str, str] - TUPLE with color strings of the button color defined by current theme (button text color, button background color)
+```
+
+Returns the input element background color specified by the current color theme
+
+```
+theme_input_background_color() -> (str) - color string of the input element background color defined by current theme
+```
+
+Returns the input element text color specified by the current color theme
+
+```
+theme_input_text_color() -> (str) - color string of the input element text color defined by current theme
+```
+
+Returns a sorted list of the currently available color themes
+
+```
+theme_list() -> List[str] - A sorted list of the currently available color themes
+```
+
+Show a window with all of the color themes - takes a while so be patient
+
+```
+theme_previewer(columns=12)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|columns|(int) number of themes in a single row|
+
+Returns the text color specified by the current color theme
+
+```
+theme_text_color() -> (str) - color string of the text color defined by current theme
+```
+
+## Old Themes (Look and Feel) - Replaced by theme()
+
+Change the "color scheme" of all future PySimpleGUI Windows.
+The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
+There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
+
+```
+ChangeLookAndFeel(index, force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
+
+Get a list of the valid values to pass into your call to change_look_and_feel
+
+```
+ListOfLookAndFeelValues() -> List[str] - list of valid string values
+```
+
+Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
+They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+
+```
+preview_all_look_and_feel_themes(columns=12)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|columns|(int) The number of themes to display per row|
+
+Get a list of the valid values to pass into your call to change_look_and_feel
+
+```
+list_of_look_and_feel_values() -> List[str] - list of valid string values
+```
+
+Change the "color scheme" of all future PySimpleGUI Windows.
+The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
+There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
+The look and feel table itself has these indexes into the dictionary LOOK_AND_FEEL_TABLE.
+The original list was (prior to a major rework and renaming)... these names still work...
+In Nov 2019 a new Theme Formula was devised to make choosing a theme easier:
+The "Formula" is:
+["Dark" or "Light"] Color Number
+Colors can be Blue Brown Grey Green Purple Red Teal Yellow Black
+The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
+Default = The default settings (only button color is different than system default)
+Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
+
+```
+change_look_and_feel(index, force=False)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|index|(str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")|
+|force|(bool) no longer used|
 
 ---
 
@@ -18135,11 +18166,11 @@ Macs and PySimpleGUI did not play well together up until Nov 2019 and the releas
 
 The problems were the normal tk.Button was not working correctly on the Mac.  You couldn't set the button color.  If you tried it appeared as if the text was missing.
 
-Users have recently reported the ability to install Python 3.7 from the Python.org website and NOT used (I think removed) the "Homebrew" version of Python.  This resolved all of the button color problems. 
+Users have recently reported the ability to install Python 3.7 from the Python.org website and not use the Homebrew version.  This resolved all of the button color problems. 
 
-Regardless, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
+Regardless of where you get your Python / tkinter, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
 
-Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, you should consider switching back.  One reason to return is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
 
 ## Multiple threads
 
@@ -18153,6 +18184,37 @@ Other than that, feel free to use threads with PySimpleGUI on all of the ports. 
 
 Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
 
+### The dreaded "Tcl_AsyncDelete: async handler deleted by the wrong thread" error
+
+This crash has plagued and mystified tkinter users for some time now.  It happens when the user is running multiple threads in their application.  Even if the user doesn't make any calls that are into tkinter, this problem can still cause your program to crash.
+
+I'm thrilled to say there's a solution and it's easy to implement.  If you're getting this error, then here is what is causing it.
+
+When you close a window and delete the layout, the tkinter widgets that were in use in the window are no longer needed.  Python marks them to be handled by the "Garbage Collector".  They're deleted but not quite gone from memory.  Then, later, while your thread is running, the Python Garbage Collect algorithm decides it's time to run garbage collect.  When it tells tkinter to free up the memory, the tkinter code looks to see what context it is running under.  It sees that it's a thread, not the main thread, and generates this exception.  
+
+The way around this is actually quite easy.
+
+When you are finished with a window, be sure to:
+
+* Close the Window
+* Set the `layout` variable to None
+* Set the `window` variable to None
+* Trigger Python's Garbage Collect to run immediately
+
+The sequence looks like this in code:
+
+```python
+    import gc
+
+    # Do all your windows stuff... make a layout... show your window... then when time to exit
+    window.close()
+    layout = None
+    window = None
+    gc.collect()
+```
+
+This will ensure that the tkinter widgets are all deleted in the context of the mainthread and another thread won't accidently run the Garbage Collect
+
 # Contributing
 
 ## Write Applications
@@ -18161,7 +18223,7 @@ The way for you to contribute to the PySimpleGUI is to create and share PySimple
 
 ## Pull Requests
 
-***PySimpleGUI code changes/pull requests are not being accepted at this time.***
+***PySimpleGUI changes/pull requests are not being accepted at this time.***
 
 ## GitHub Repos
 

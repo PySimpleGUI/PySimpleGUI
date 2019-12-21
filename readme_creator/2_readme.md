@@ -429,11 +429,13 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
 			[sg.OK(), sg.Cancel()] ]
 
-window sg.Window('Get filename example', layout)
+window = sg.Window('Get filename example', layout)
 event, values = window.read()
 window.close()
 
@@ -455,6 +457,9 @@ The input fields in your window will be returned to you as a dictionary (syntact
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
+
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 				 [sg.InputText(), sg.FileBrowse()],
 				 [sg.Submit(), sg.Cancel()]]
@@ -475,6 +480,8 @@ This code will present a window and will print values until the user clicks the 
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Persistent window')],
 		  [sg.Input()],
@@ -504,7 +511,9 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text('', size=(12,1), key='_OUTPUT_')],
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
@@ -541,6 +550,8 @@ Let's dissect this little program
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [[sg.Text('Rename files or folders')],
 			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
 			[sg.Text('Source for Files ', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
@@ -554,7 +565,16 @@ folder_path, file_path = values[0], values[1]       # get the data from the valu
 print(folder_path, file_path)
 ```
 
+#### Colors
+
+![image](https://user-images.githubusercontent.com/46163555/70470775-cd01ff00-1a99-11ea-8b9c-8b33c8880c99.png)
+
+The first line of code after the import is a call to `change_look_and_feel`.  This single line of code make the window look like the window above instead of the window below.  It will also stop PySimpleGUI from nagging you to put one of these calls into your program.
+
+
 ![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
+
+#### Window contents
 
 Let's agree the window has 4 rows.
 
@@ -578,6 +598,8 @@ And what about those return values?  Most people simply want to show a window, g
 For return values the window is scanned from top to bottom, left to right.  Each field that's an input field will occupy a spot in the return values.
 
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
+
+#### "Reading" the window's values (also displays the window)
 
 ```python
 event, values = window.read()
@@ -647,7 +669,7 @@ while True:
 	event, values = window.read()
 	if event is None:
 		break
-window.Close()
+window.close()
 ```
 
 You will very often see the examples and demo programs write this check as:
@@ -793,6 +815,8 @@ Let's take a look at your first dictionary-based window.
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
 			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
@@ -803,7 +827,7 @@ layout = [
 
 window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
-window.Close()
+window.close()
 
 sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
 ```
@@ -884,6 +908,7 @@ layout = [
 
 window = sg.Window('Everything bagel', layout, default_element_size=(40, 1), grab_anywhere=False)
 event, values = window.read()
+window.close()
 
 sg.Popup('Title',
          'The results of the window.',
@@ -1012,12 +1037,6 @@ You can get your window's size by access the `Size` property.  The window has to
 To finalize your window:
 
 ```python
-window = Window('My Title', layout).Finalize()
-```
-
-If using PySimpleGUI 4.2 and later:
-
-```python
 window = Window('My Title', layout, finalize=True)
 ```
 
@@ -1067,6 +1086,26 @@ To keep a window on top of all other windows on the screen, set keep_on_top = Tr
 
 PySimpleGUI will set a default focus location for you.  This generally means the first input field.  You can set the focus to a particular element.  If you are going to set the focus yourself, then you should turn off the automatic focus by setting `use_default_focus=False` in your Window call.
 
+### TTK Buttons
+
+Beginning in release 4.7.0 PySimpleGUI supports both "normal" tk Buttons and ttk Buttons.  This change was needed so that Mac users can use colors on their buttons.  There is a bug that causes tk Buttons to not show text when you attempt to change the button color.  Note that this problem goes away if you install Python from the official Python.org site rather than using Homebrew.  A number of users have switched and are quite happy since even tk Buttons work on the Mac after the switch.
+
+By default Mac users will get ttk Buttons when a Button Element is used.  All other platforms will get a normal tk Button.  There are ways to override this behavior.  One is by using the parameter `use_ttk_buttons` when you create your window.  If set to True, all buttons will be ttk Buttons in the window.  If set to False, all buttons will be normal tk Buttons.  If not set then the platform or the Button Element determines which is used.
+
+If a system-wide setting is desired, then the default can be set using `set_options`.  This will affect all windows such as popups and the debug window.
+
+### TTK Themes
+
+tkinter has a number of "Themes" that can be used with ttk widgets.  In PySimpleGUI these widgets include - Table, Tree, Combobox, Button, ProgressBar, Tabs & TabGroups.  Some elements have a 'theme' parameter but these are no longer used and should be ignored.  The initial release of PySimpleGUI attempted to mix themes in a single window but since have learned this is not possible so instead it is set at the Window or the system level.
+
+If a system-wide setting is desired, then the default can be set using `set_options`. This will affect all windows such as popups and the debug window.
+
+The ttk theme choices depend on the platform. Linux has a shorter number of selections than Windows.  These are the Windows choices:
+'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+
+There are constants defined to help you with code completion to determine what your choices are.  Theme constants start with `THEME_`.  For example, the "clam" theme is `THEME_CLAM`
+
+You're urged to experiment with this setting to determine which you like the most.  They change the ttk-based elements in subtle but still significant ways.
 
 ## Closing Windows
 
@@ -1098,8 +1137,8 @@ This is the "long form" as each method is called individually.
 
 ```python
 window = sg.Window('My Title')
-window.Layout(layout)
-window.Finalize()
+window.layout(layout)
+window.finalize()
 ```
 
 ### Chaining The Calls (the old method)
@@ -1107,7 +1146,7 @@ window.Finalize()
 The next level  of compression that was done was to chain the calls together into a single line of code.
 
 ```python
-window = sg.Window('My Title').Layout(layout).Finalize()
+window = sg.Window('My Title').Layout(layout).finalize()
 ```
 
 ### Using Parameters Instead of Calls (New Preferred Method)
@@ -1128,14 +1167,14 @@ Call to set the window layout.  Must be called prior to `Read`.  Most likely "ch
 window = sg.Window('My window title', layout)
 ```
 
-#### `Finalize()` or `Window` parameter `finalize=True`
+#### `finalize()` or `Window` parameter `finalize=True`
 
 Call to force a window to go through the final stages of initialization.  This will cause the tkinter resources to be allocated so that they can then be modified.  This also causes your window to appear.  If you do not want your window to appear when Finalize is called, then set the Alpha to 0 in your window's creation parameters.
 
 If you want to call an element's `Update` method or call a `Graph` element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
 
-#### Read(timeout=None, timeout_key=TIMEOUT_KEY)
+#### read(timeout=None, timeout_key=TIMEOUT_KEY)
 
 Read the Window's input values and button clicks in a blocking-fashion
 
@@ -1366,10 +1405,12 @@ The first part should look familiar since it was just discussed as being what bu
 
 ### Putting it all together
 
-Here is our final program that uses simple addition to add the headers onto the top of the input matrix.
+Here is our final program that uses simple addition to add the headers onto the top of the input matrix.  To make it more attractive, the color theme is set to 'Dark Brown 1'.
 
 ```python
 import PySimpleGUI as sg
+
+sg.change_look_and_feel('Dark Brown 1')
 
 headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
 header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
@@ -1381,6 +1422,8 @@ layout = header + input_rows
 window = sg.Window('Table Simulation', layout, font='Courier 12')
 event, values = window.read()
 ```
+
+![image](https://user-images.githubusercontent.com/46163555/70472374-f7a18700-1a9c-11ea-9cd1-27d386cd9066.png)
 
 
 ## User Defined Elements / Compound Elements
@@ -1946,8 +1989,6 @@ You can call the method without setting the `time_between_frames` value and it w
 
 ## Button Element
 
-**MAC USERS** - Macs suck when it comes to tkinter and button colors.  It sucks so badly with colors that the `LookAndFeel` call is disabled.  You cannot change button colors for Macs.  You're stuck with the system default color if you are using the tkinter version of PySimpleGUI.  The Qt version does not have this issue.
-
 Buttons are the most important element of all!  They cause the majority of the action to happen.  After all, it's a button press that will get you out of a window, whether it be Submit or Cancel, one way or another a button is involved in all windows.  The only exception is to this is when the user closes the window using the "X" in the upper corner which means no button was involved.
 
 The Types of buttons include:
@@ -2013,7 +2054,11 @@ layout =  [[sg.Ok(), sg.Cancel()]]
 
 In reality `Button` is in fact being called on your behalf.  Behind the scenes, `sg.Ok` and `sg.Cancel` call `Button` with the text set to `Ok` and `Cancel` and returning the results that then go into the layout.  If you were to print the layout it will look identical to the first layout shown that has `Button` shown specifically in the layout.
 
+### TTK Buttons & Macs
 
+In 2019 support for ttk Buttons was added.  This gets around the problem of not being able to change button colors on a Mac.  There are a number of places you can control whether or not ttk buttons are used, be it on MAc or other platform.
+
+TTK Buttons and TK Buttons operate slightly differently.  Button highlighting is one different.  How images and text are displayed at the same time is another.  You've got options now that weren't there previously.  It's nice to see that Mac users can finally use the color themes.
 
 ### Button Element Shortcuts
 These Pre-made buttons are some of the most important elements of all because they are used so much.  They all basically do the same thing, **set the button text to match the function name and set the parameters to commonly used values**. If you find yourself needing to create a custom button often because it's not on this list, please post a request on GitHub. . They include:
@@ -2266,10 +2311,10 @@ This element has limited usefulness and is being included more for completeness 
 
 It works best when placed between columns or elements that span multiple rows.  If on a "normal" row with elements that are only 1 row high, then it will only span that one row.
 
-
 ```python
 VerticalSeparator(pad=None)
 ```
+
 
 
 ![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
@@ -2343,14 +2388,11 @@ If you are looking for a way to quickly add the ability to show scrolling text w
 ***IMPORTANT***  You will NOT see what you `print` until you call either `window.Read` or `window.Refresh`.  If you want to immediately see what was printed, call `window.Refresh()` immediately after your print statement.
 
 
-
-
 ```python
 Output(size=(80,20))
 ```
 
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
-
 
 ----
 
@@ -3129,7 +3171,7 @@ while True:
 ```
 
 
-Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and yuou've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
+Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
 Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
 
@@ -3179,7 +3221,7 @@ sg.ChangeLookAndFeel('Black')
 sg.SetOptions(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
-         [sg.Text('', size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
+         [sg.Text(size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
          [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
           sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
@@ -3374,7 +3416,7 @@ import PySimpleGUI as sg
 # Recipe for getting keys, one at a time as they are released
 # If want to use the space bar, then be sure and disable the "default focus"
 
-text_elem = sg.Text("", size=(18, 1))
+text_elem = sg.Text(size=(18, 1))
 
 layout = [[sg.Text("Press a key or scroll mouse")],
           [text_elem],
@@ -3539,7 +3581,7 @@ import PySimpleGUI as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1), key='_OUTPUT_')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -3575,7 +3617,7 @@ import PySimpleGUIQt as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text('', key='_OUTPUT_')],
+          [sg.Text(size=(15,1),  key='_OUTPUT_')],
           [sg.Button('Launch 2')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -3978,56 +4020,58 @@ Watch this space in the future for the more standardized variable name for this 
 
 ## Binding tkiner "events"
 
-If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then there's a particular way at the moment to make this happen.  
+If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
 
-tkinter performs a callback into user code when an event happens, but that's not how PySimpleGUI works.  Instead of callbacks, a PySimpleGUI user's program simply returns an event via the `window.read()` call.  In order for your "event" to generate an event that will be returned to you via your read call, follow these instructions:
+Both the Elements and Window objects have a method called `bind`.  You specify 2 parameters to this function.  One is the string that is used to tell tkinter what events to bind.  The other is a "key modifier" for Elements and a "key" for Windows.
 
-1. Create a Button for each event you wish to receive
-2. Set visible=False when creating the buttons
-3. Make the Button text be the event you want to see returned to you or set the button's Key to that value
-4. After creating / finalizing the window, make the tkinter bind call, passing `element.ButtonReboundCallback` as the function to call.
+The `key_modifier` in the `Element.bind` call is something that is added to your key. If your key is a string, then this modifier will be appended to your key and the event will be a single string.
 
-This sample code binds not an element events but events from the window itself.  In this case, Focus events.
+If your element's key is not a string, then a tuple will be returned as the event
+(your_key, key_modifier)
+
+This will enable you to continue to use your weird, non-string keys. Just be aware that you'll be getting back a tuple instead of your key in these situations.
+
+The best example of when this can happen is in a Minesweeper game where each button is already a tuple of the (x,y) position of the button. Normal left clicks will return (x,y). A right click that was generated as a result of bind call will be ((x,y), key_modifier).
+
+It'll be tricky for the user to parse these events, but it's assumed you're an advanced user if you're using this capability and are also using non-string keys.
+
+There are 2 member variables that have also been added as shown in the documentation for the bind methods. This added variable contains the tkinter specific event information. In other words, the 'event' that tkinter normally sends back when a callback happens.
+
+Here is sample code that shows how to make these calls.
+
+Three events are being bound.
+
+1. Any button clicks in the window will return an event "Window Click" from window.read()
+2. Right clicking the "Go" buttons will return an event "Go+RIGHT CLICK+" from window.read()
+3. When the Input Element receives focus, an event "-IN-+FOCUS+" will be returned from window.read()
+
 
 ```python
 import PySimpleGUI as sg
 
+sg.change_look_and_feel('Dark Green 2')
+
 layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Exit'),
-             sg.Button('-FOCUS-IN-', visible=False), sg.Button('-FOCUS-OUT-', visible=False)]  ]
+            [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
+            [sg.Button('Go'), sg.Button('Exit')]
+              ]
 
 window = sg.Window('Window Title', layout, finalize=True)
 
-window.TKroot.bind("<FocusIn>", window['-FOCUS-IN-'].ButtonReboundCallback)
-window.TKroot.bind("<FocusOut>", window['-FOCUS-OUT-'].ButtonReboundCallback)
-```
+window['-IN-'].bind("<FocusIn>", '+FOCUS+')
+window.bind("<Button-1>", 'Window Click')
+window['Go'].bind("<Button-3>", '+RIGHT CLICK+')
 
-This code binds the right mouse button to a button so that you can right click a button and get a different event than if you left clicked it.
-
-```python
-import PySimpleGUI as sg
-
-layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text('', key='-OUT-')],
-            [sg.Button('Do Something'), sg.Button('Right Click Me')],
-            [sg.Button('-RIGHT-', visible=False)]
-            ]
-
-window = sg.Window('Window Title', layout, finalize=True)
-
-window['Right Click Me'].Widget.bind("<Button-3>", window['-RIGHT-'].ButtonReboundCallback)
-
-has_focus = True
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
     if event in (None, 'Exit'):
         break
-window.close()
+
+window.close(); del window
 ```
 
-
+There is no way to "unbind" and event at this time.  (sorry, didn't think of it before releasing)
 ---
 
 
@@ -4047,27 +4091,11 @@ This section of the documentation is generated directly from the source code.  A
 
 Without further delay... here are all of the Elements and the Window class
 
-
 ## Button Element
 
 <!-- <+Button.doc+> -->
 <!-- <+Button.__init__+> -->
 
-### ButtonCallBack
-
-<!-- <+Button.ButtonCallBack+> -->
-
-### ButtonPressCallBack
-
-<!-- <+Button.ButtonPressCallBack+> -->
-
-### ButtonReboundCallback
-
-<!-- <+Button.ButtonReboundCallback+> -->
-
-### ButtonReleaseCallBack
-
-<!-- <+Button.ButtonReleaseCallBack+> -->
 
 ### Click
 
@@ -4088,6 +4116,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+Button.Update+> -->
+
+### bind
+
+<!-- <+Button.bind+> -->
 
 ### button_rebound_callback
 
@@ -4158,6 +4190,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+ButtonMenu.Update+> -->
 
+### bind
+
+<!-- <+ButtonMenu.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+ButtonMenu.button_rebound_callback+> -->
@@ -4214,6 +4250,10 @@ Without further delay... here are all of the Elements and the Window class
 ### TKCanvas
 
 <!-- <+Canvas.TKCanvas+> -->
+
+### bind
+
+<!-- <+Canvas.bind+> -->
 
 ### button_rebound_callback
 
@@ -4276,6 +4316,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Checkbox.Update+> -->
 
+### bind
+
+<!-- <+Checkbox.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Checkbox.button_rebound_callback+> -->
@@ -4321,17 +4365,10 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+Column.doc+> -->
 <!-- <+Column.__init__+> -->
 
-### AddRow
-
-<!-- <+Column.AddRow+> -->
 
 ### ButtonReboundCallback
 
 <!-- <+Column.ButtonReboundCallback+> -->
-
-### Layout
-
-<!-- <+Column.Layout+> -->
 
 ### SetFocus
 
@@ -4348,6 +4385,10 @@ Without further delay... here are all of the Elements and the Window class
 ### add_row
 
 <!-- <+Column.add_row+> -->
+
+### bind
+
+<!-- <+Column.bind+> -->
 
 ### button_rebound_callback
 
@@ -4414,6 +4455,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Combo.Update+> -->
 
+### bind
+
+<!-- <+Combo.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Combo.button_rebound_callback+> -->
@@ -4459,17 +4504,11 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+Frame.doc+> -->
 <!-- <+Frame.__init__+> -->
 
-### AddRow
-
-<!-- <+Frame.AddRow+> -->
 
 ### ButtonReboundCallback
 
 <!-- <+Frame.ButtonReboundCallback+> -->
 
-### Layout
-
-<!-- <+Frame.Layout+> -->
 
 ### SetFocus
 
@@ -4483,9 +4522,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Frame.Update+> -->
 
-### add_row
 
-<!-- <+Frame.add_row+> -->
+### bind
+
+<!-- <+Frame.bind+> -->
 
 ### button_rebound_callback
 
@@ -4503,9 +4543,6 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Frame.hide_row+> -->
 
-### layout
-
-<!-- <+Frame.layout+> -->
 
 ### set_focus
 
@@ -4543,10 +4580,6 @@ Without further delay... here are all of the Elements and the Window class
 ### ButtonReboundCallback
 
 <!-- <+Graph.ButtonReboundCallback+> -->
-
-### ButtonReleaseCallBack
-
-<!-- <+Graph.ButtonReleaseCallBack+> -->
 
 ### DeleteFigure
 
@@ -4588,9 +4621,14 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Graph.Erase+> -->
 
-### MotionCallBack
 
-<!-- <+Graph.MotionCallBack+> -->
+### GetBoundingBox
+
+<!-- <+Graph.GetBoundingBox+> -->
+
+### GetFiguresAtLocation
+
+<!-- <+Graph.GetFiguresAtLocation+> -->
 
 ### Move
 
@@ -4624,6 +4662,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Graph.Update+> -->
 
+### bind
+
+<!-- <+Graph.bind+> -->
+
 ### bring_figure_to_front
 
 <!-- <+Graph.bring_figure_to_front+> -->
@@ -4636,9 +4678,6 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Graph.button_rebound_callback+> -->
 
-### button_release_call_back
-
-<!-- <+Graph.button_release_call_back+> -->
 
 ### delete_figure
 
@@ -4684,6 +4723,17 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Graph.expand+> -->
 
+
+
+### get_bounding_box
+
+<!-- <+Graph.get_bounding_box+> -->
+
+### get_figures_at_location
+
+<!-- <+Graph.get_figures_at_location+> -->
+
+
 ### get_size
 
 <!-- <+Graph.get_size+> -->
@@ -4691,10 +4741,6 @@ Without further delay... here are all of the Elements and the Window class
 ### hide_row
 
 <!-- <+Graph.hide_row+> -->
-
-### motion_call_back
-
-<!-- <+Graph.motion_call_back+> -->
 
 ### move
 
@@ -4761,6 +4807,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Image.UpdateAnimation+> -->
 
+### bind
+
+<!-- <+Image.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Image.button_rebound_callback+> -->
@@ -4825,6 +4875,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+InputText.Update+> -->
+
+### bind
+
+<!-- <+InputText.bind+> -->
 
 ### button_rebound_callback
 
@@ -4899,6 +4953,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Listbox.Update+> -->
 
+### bind
+
+<!-- <+Listbox.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Listbox.button_rebound_callback+> -->
@@ -4968,6 +5026,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Menu.Update+> -->
 
+### bind
+
+<!-- <+Menu.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Menu.button_rebound_callback+> -->
@@ -5029,6 +5091,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Multiline.Update+> -->
 
+### bind
+
+<!-- <+Multiline.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Multiline.button_rebound_callback+> -->
@@ -5089,6 +5155,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+OptionMenu.Update+> -->
+
+### bind
+
+<!-- <+OptionMenu.bind+> -->
 
 ### button_rebound_callback
 
@@ -5155,6 +5225,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Output.Update+> -->
 
+### bind
+
+<!-- <+Output.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Output.button_rebound_callback+> -->
@@ -5215,6 +5289,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+Pane.Update+> -->
+
+### bind
+
+<!-- <+Pane.bind+> -->
 
 ### button_rebound_callback
 
@@ -5277,6 +5355,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+ProgressBar.UpdateBar+> -->
 
+### bind
+
+<!-- <+ProgressBar.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+ProgressBar.button_rebound_callback+> -->
@@ -5317,6 +5399,7 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+ProgressBar.update_bar+> -->
 
+
 ## Radio Element
 
 <!-- <+Radio.doc+> -->
@@ -5345,6 +5428,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+Radio.Update+> -->
+
+### bind
+
+<!-- <+Radio.bind+> -->
 
 ### button_rebound_callback
 
@@ -5411,6 +5498,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Slider.Update+> -->
 
+### bind
+
+<!-- <+Slider.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Slider.button_rebound_callback+> -->
@@ -5471,6 +5562,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+Spin.Update+> -->
+
+### bind
+
+<!-- <+Spin.bind+> -->
 
 ### button_rebound_callback
 
@@ -5533,6 +5628,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+StatusBar.Update+> -->
 
+### bind
+
+<!-- <+StatusBar.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+StatusBar.button_rebound_callback+> -->
@@ -5574,17 +5673,11 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
 
-### AddRow
-
-<!-- <+Tab.AddRow+> -->
-
 ### ButtonReboundCallback
 
 <!-- <+Tab.ButtonReboundCallback+> -->
 
-### Layout
 
-<!-- <+Tab.Layout+> -->
 
 ### Select
 
@@ -5602,9 +5695,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Tab.Update+> -->
 
-### add_row
 
-<!-- <+Tab.add_row+> -->
+### bind
+
+<!-- <+Tab.bind+> -->
 
 ### button_rebound_callback
 
@@ -5622,9 +5716,6 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Tab.hide_row+> -->
 
-### layout
-
-<!-- <+Tab.layout+> -->
 
 ### select
 
@@ -5655,9 +5746,6 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+TabGroup.doc+> -->
 <!-- <+TabGroup.__init__+> -->
 
-### AddRow
-
-<!-- <+TabGroup.AddRow+> -->
 
 ### ButtonReboundCallback
 
@@ -5671,9 +5759,6 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+TabGroup.Get+> -->
 
-### Layout
-
-<!-- <+TabGroup.Layout+> -->
 
 ### SetFocus
 
@@ -5683,9 +5768,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+TabGroup.SetTooltip+> -->
 
-### add_row
 
-<!-- <+TabGroup.add_row+> -->
+### bind
+
+<!-- <+TabGroup.bind+> -->
 
 ### button_rebound_callback
 
@@ -5756,6 +5842,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Table.Update+> -->
 
+### bind
+
+<!-- <+Table.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+Table.button_rebound_callback+> -->
@@ -5788,13 +5878,6 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Table.set_tooltip+> -->
 
-### treeview_double_click
-
-<!-- <+Table.treeview_double_click+> -->
-
-### treeview_selected
-
-<!-- <+Table.treeview_selected+> -->
 
 ### unhide_row
 
@@ -5824,6 +5907,10 @@ Without further delay... here are all of the Elements and the Window class
 ### Update
 
 <!-- <+Text.Update+> -->
+
+### bind
+
+<!-- <+Text.bind+> -->
 
 ### button_rebound_callback
 
@@ -5861,6 +5948,34 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Text.update+> -->
 
+## ToolTip Element
+
+<!-- <+ToolTip.doc+> -->
+<!-- <+ToolTip.__init__+> -->
+
+### enter
+
+<!-- <+ToolTip.enter+> -->
+
+### hidetip
+
+<!-- <+ToolTip.hidetip+> -->
+
+### leave
+
+<!-- <+ToolTip.leave+> -->
+
+### schedule
+
+<!-- <+ToolTip.schedule+> -->
+
+### showtip
+
+<!-- <+ToolTip.showtip+> -->
+
+### unschedule
+
+<!-- <+ToolTip.unschedule+> -->
 
 ## Tree Element
 
@@ -5886,6 +6001,10 @@ Without further delay... here are all of the Elements and the Window class
 ### add_treeview_data
 
 <!-- <+Tree.add_treeview_data+> -->
+
+### bind
+
+<!-- <+Tree.bind+> -->
 
 ### button_rebound_callback
 
@@ -5961,6 +6080,10 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+VerticalSeparator.SetTooltip+> -->
 
+### bind
+
+<!-- <+VerticalSeparator.bind+> -->
+
 ### button_rebound_callback
 
 <!-- <+VerticalSeparator.button_rebound_callback+> -->
@@ -5993,7 +6116,7 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+VerticalSeparator.unhide_row+> -->
 
-## Window
+## Window Element
 
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
@@ -6018,9 +6141,11 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.Close+> -->
 
+
 ### CurrentLocation
 
 <!-- <+Window.CurrentLocation+> -->
+
 
 ### Disable
 
@@ -6070,6 +6195,7 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.FindElementWithFocus+> -->
 
+
 ### GetScreenDimensions
 
 <!-- <+Window.GetScreenDimensions+> -->
@@ -6090,6 +6216,7 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.Layout+> -->
 
+
 ### LoadFromDisk
 
 <!-- <+Window.LoadFromDisk+> -->
@@ -6109,6 +6236,7 @@ Without further delay... here are all of the Elements and the Window class
 ### Normal
 
 <!-- <+Window.Normal+> -->
+
 
 ### Read
 
@@ -6165,6 +6293,10 @@ Without further delay... here are all of the Elements and the Window class
 ### alpha_channel
 
 <!-- <+Window.alpha_channel+> -->
+
+### bind
+
+<!-- <+Window.bind+> -->
 
 ### bring_to_front
 
@@ -6242,6 +6374,7 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.grab_any_where_on+> -->
 
+
 ### hide
 
 <!-- <+Window.hide+> -->
@@ -6273,6 +6406,7 @@ Without further delay... here are all of the Elements and the Window class
 ### read
 
 <!-- <+Window.read+> -->
+
 
 ### reappear
 
@@ -6310,21 +6444,21 @@ Without further delay... here are all of the Elements and the Window class
 
 <!-- <+Window.un_hide+> -->
 
+
 ### visibility_changed
 
 <!-- <+Window.visibility_changed+> -->
 
 
+## Function Reference
+
 <!-- <+func.CButton+> -->
 <!-- <+func.CalendarButton+> -->
 <!-- <+func.Cancel+> -->
-<!-- <+func.ChangeLookAndFeel+> -->
 <!-- <+func.CloseButton+> -->
 <!-- <+func.ColorChooserButton+> -->
 <!-- <+func.Debug+> -->
 <!-- <+func.DummyButton+> -->
-<!-- <+func.EasyPrint+> -->
-<!-- <+func.EasyPrintClose+> -->
 <!-- <+func.Exit+> -->
 <!-- <+func.FileBrowse+> -->
 <!-- <+func.FileSaveAs+> -->
@@ -6332,22 +6466,12 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.FillFormWithValues+> -->
 <!-- <+func.FolderBrowse+> -->
 <!-- <+func.Help+> -->
-<!-- <+func.ListOfLookAndFeelValues+> -->
 <!-- <+func.No+> -->
 <!-- <+func.OK+> -->
 <!-- <+func.ObjToString+> -->
 <!-- <+func.ObjToStringSingleObj+> -->
 <!-- <+func.Ok+> -->
-<!-- <+func.OneLineProgressMeter+> -->
-<!-- <+func.OneLineProgressMeterCancel+> -->
 <!-- <+func.Open+> -->
-<!-- <+func.PopupQuick+> -->
-<!-- <+func.PopupQuickMessage+> -->
-<!-- <+func.PopupScrolled+> -->
-<!-- <+func.PopupTimed+> -->
-<!-- <+func.PopupYesNo+> -->
-<!-- <+func.Print+> -->
-<!-- <+func.PrintClose+> -->
 <!-- <+func.Quit+> -->
 <!-- <+func.RButton+> -->
 <!-- <+func.ReadButton+> -->
@@ -6358,20 +6482,58 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.SetGlobalIcon+> -->
 <!-- <+func.SetOptions+> -->
 <!-- <+func.Submit+> -->
-<!-- <+func.TimerStart+> -->
-<!-- <+func.TimerStop+> -->
 <!-- <+func.Yes+> -->
-<!-- <+func.change_look_and_feel+> -->
+
+
+## Debug Window Output
+
 <!-- <+func.easy_print+> -->
 <!-- <+func.easy_print_close+> -->
 <!-- <+func.eprint+> -->
-<!-- <+func.fill_form_with_values+> -->
-<!-- <+func.list_of_look_and_feel_values+> -->
-<!-- <+func.main+> -->
-<!-- <+func.obj_to_string+> -->
-<!-- <+func.obj_to_string_single_obj+> -->
+<!-- <+func.sgprint+> -->
+<!-- <+func.sgprint_close+> -->
+<!-- <+func.EasyPrint+> -->
+<!-- <+func.EasyPrintClose+> -->
+<!-- <+func.Print+> -->
+<!-- <+func.PrintClose+> -->
+
+
+## OneLineProgressMeter
+
+<!-- <+func.OneLineProgressMeter+> -->
+<!-- <+func.OneLineProgressMeterCancel+> -->
 <!-- <+func.one_line_progress_meter+> -->
 <!-- <+func.one_line_progress_meter_cancel+> -->
+
+
+## Popup Functions
+
+<!-- <+func.Popup+> -->
+<!-- <+func.PopupAnimated+> -->
+<!-- <+func.PopupAnnoying+> -->
+<!-- <+func.PopupAutoClose+> -->
+<!-- <+func.PopupCancel+> -->
+<!-- <+func.PopupError+> -->
+<!-- <+func.PopupGetFile+> -->
+<!-- <+func.PopupGetFolder+> -->
+<!-- <+func.PopupGetText+> -->
+<!-- <+func.PopupNoBorder+> -->
+<!-- <+func.PopupNoButtons+> -->
+<!-- <+func.PopupNoFrame+> -->
+<!-- <+func.PopupNoTitlebar+> -->
+<!-- <+func.PopupNoWait+> -->
+<!-- <+func.PopupNonBlocking+> -->
+<!-- <+func.PopupOK+> -->
+<!-- <+func.PopupOKCancel+> -->
+<!-- <+func.PopupQuick+> -->
+<!-- <+func.PopupQuickMessage+> -->
+<!-- <+func.PopupScrolled+> -->
+<!-- <+func.PopupTimed+> -->
+<!-- <+func.PopupYesNo+> -->
+
+
+## Popups PEP8 Versions
+
 <!-- <+func.popup+> -->
 <!-- <+func.popup_animated+> -->
 <!-- <+func.popup_annoying+> -->
@@ -6388,18 +6550,47 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.popup_no_wait+> -->
 <!-- <+func.popup_non_blocking+> -->
 <!-- <+func.popup_ok+> -->
+<!-- <+func.popup_ok_cancel+> -->
 <!-- <+func.popup_quick+> -->
 <!-- <+func.popup_quick_message+> -->
 <!-- <+func.popup_scrolled+> -->
 <!-- <+func.popup_timed+> -->
 <!-- <+func.popup_yes_no+> -->
-<!-- <+func.quit+> -->
+
+
+## PEP8 Function Bindings
+
+
+<!-- <+func.fill_form_with_values+> -->
+<!-- <+func.main+> -->
+<!-- <+func.obj_to_string+> -->
+<!-- <+func.obj_to_string_single_obj+> -->
 <!-- <+func.set_global_icon+> -->
 <!-- <+func.set_options+> -->
-<!-- <+func.sgprint+> -->
-<!-- <+func.sgprint_close+> -->
 <!-- <+func.show_debugger_popout_window+> -->
 <!-- <+func.show_debugger_window+> -->
 <!-- <+func.sprint+> -->
 <!-- <+func.test+> -->
-<!-- <+func.popup_ok_cancel+> -->
+
+
+
+
+## Themes
+
+<!-- <+func.theme+> -->
+<!-- <+func.theme_background_color+> -->
+<!-- <+func.theme_button_color+> -->
+<!-- <+func.theme_input_background_color+> -->
+<!-- <+func.theme_input_text_color+> -->
+<!-- <+func.theme_list+> -->
+<!-- <+func.theme_previewer+> -->
+<!-- <+func.theme_text_color+> -->
+
+## Old Themes (Look and Feel) - Replaced by theme()
+
+<!-- <+func.ChangeLookAndFeel+> -->
+<!-- <+func.ListOfLookAndFeelValues+> -->
+<!-- <+func.preview_all_look_and_feel_themes+> -->
+<!-- <+func.list_of_look_and_feel_values+> -->
+<!-- <+func.change_look_and_feel+> -->
+
