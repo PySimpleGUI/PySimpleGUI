@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.13.1.3  Unreleased - Element.set_cursor, NEW theme(), Combo.update allows any value,  table & tree header font defaults to window font, default theme now Dark Blue 3, Macs no longer default to colorless windows and buttons"
+version = __version__ = "4.14.0  Released 23-Dec-2019"
 
 port = 'PySimpleGUI'
 
@@ -9677,7 +9677,7 @@ def GetComplimentaryHex(color):
 
 # ========================  EasyPrint           =====#
 # ===================================================#
-class DebugWin():
+class _DebugWin():
     """ """
     debug_window = None
 
@@ -9781,11 +9781,11 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     :param do_not_reroute_stdout:  (Default = True)
 
     """
-    if DebugWin.debug_window is None:
-        DebugWin.debug_window = DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
-                                         no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                         do_not_reroute_stdout=do_not_reroute_stdout)
-    DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+    if _DebugWin.debug_window is None:
+        _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
+                                           no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
+                                           do_not_reroute_stdout=do_not_reroute_stdout)
+    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color, background_color=background_color)
 
 
 Print = EasyPrint
@@ -9794,9 +9794,9 @@ eprint = EasyPrint
 
 def EasyPrintClose():
     """ """
-    if DebugWin.debug_window is not None:
-        DebugWin.debug_window.Close()
-        DebugWin.debug_window = None
+    if _DebugWin.debug_window is not None:
+        _DebugWin.debug_window.Close()
+        _DebugWin.debug_window = None
 
 
 # ============================== SetGlobalIcon ======#
@@ -10011,6 +10011,19 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     return True
 
+# ----------------------------------------------------------------- #
+
+# .########.##.....##.########.##.....##.########..######.
+# ....##....##.....##.##.......###...###.##.......##....##
+# ....##....##.....##.##.......####.####.##.......##......
+# ....##....#########.######...##.###.##.######....######.
+# ....##....##.....##.##.......##.....##.##.............##
+# ....##....##.....##.##.......##.....##.##.......##....##
+# ....##....##.....##.########.##.....##.########..######.
+
+# ----------------------------------------------------------------- #
+
+# The official Theme code
 
 #################### ChangeLookAndFeel #######################
 # Predefined settings that will change the colors and styles #
@@ -10028,6 +10041,17 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                             'PROGRESS_DEPTH': 0},
 
                        'SystemDefaultForReal':
+                           {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
+                            'TEXT': COLOR_SYSTEM_DEFAULT,
+                            'INPUT': COLOR_SYSTEM_DEFAULT,
+                            'TEXT_INPUT': COLOR_SYSTEM_DEFAULT,
+                            'SCROLL': COLOR_SYSTEM_DEFAULT,
+                            'BUTTON': COLOR_SYSTEM_DEFAULT,
+                            'PROGRESS': COLOR_SYSTEM_DEFAULT,
+                            'BORDER': 1, 'SLIDER_DEPTH': 1,
+                            'PROGRESS_DEPTH': 0},
+
+                       'SystemDefault1':
                            {'BACKGROUND': COLOR_SYSTEM_DEFAULT,
                             'TEXT': COLOR_SYSTEM_DEFAULT,
                             'INPUT': COLOR_SYSTEM_DEFAULT,
@@ -11016,58 +11040,141 @@ def theme(new_theme=None):
     return CURRENT_LOOK_AND_FEEL
 
 
-def theme_background_color():
+def theme_background_color(color=None):
     """
-    Returns the background color specified by the current color theme
+    Sets/Returns the background color currently in use
+    Used for Windows and containers (Column, Frame, Tab) and tables
 
-    :return: (str) - color string of the background color defined by current theme
+    :return: (str) - color string of the background color currently in use
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['BACKGROUND']
+    if color is not None:
+        set_options(background_color=color)
+    return DEFAULT_BACKGROUND_COLOR
 
 
-def theme_text_color():
+def theme_element_background_color(color=None):
     """
-    Returns the text color specified by the current color theme
+    Sets/Returns the background color currently in use for all elements except containers
 
-    :return: (str) - color string of the text color defined by current theme
+    :return: (str) - color string of the element background color currently in use
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['TEXT']
+    if color is not None:
+        set_options(element_background_color=color)
+    return DEFAULT_ELEMENT_BACKGROUND_COLOR
 
 
-def theme_input_background_color():
+def theme_text_color(color=None):
     """
-    Returns the input element background color specified by the current color theme
+    Sets/Returns the text color currently in use
 
-    :return: (str) - color string of the input element background color defined by current theme
+    :return: (str) - color string of the text color currently in use
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['INPUT']
+    if color is not None:
+        set_options(text_color=color)
+    return DEFAULT_TEXT_COLOR
 
 
-def theme_input_text_color():
+
+def theme_input_background_color(color=None):
     """
-    Returns the input element text color specified by the current color theme
+    Sets/Returns the input element background color currently in use
 
-    :return: (str) - color string of the input element text color defined by current theme
+    :return: (str) - color string of the input element background color currently in use
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['TEXT_INPUT']
+    if color is not None:
+        set_options(input_elements_background_color=color)
+    return DEFAULT_INPUT_ELEMENTS_COLOR
 
 
-def theme_text_color():
+def theme_input_text_color(color=None):
     """
-    Returns the text color specified by the current color theme
+    Sets/Returns the input element entry color (not the text but the thing that's displaying the text)
 
-    :return: (str) - color string of the text color defined by current theme
+    :return: (str) - color string of the input element color currently in use
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['TEXT']
+    if color is not None:
+        set_options(input_text_color=color)
+    return DEFAULT_INPUT_TEXT_COLOR
 
 
-def theme_button_color():
+
+def theme_button_color(color=None):
     """
-    Returns the button color specified by the current color theme
+    Sets/Returns the button color currently in use
 
-    :return: Tuple[str, str] - TUPLE with color strings of the button color defined by current theme (button text color, button background color)
+    :return: Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
     """
-    return LOOK_AND_FEEL_TABLE[theme()]['BUTTON']
+    if color is not None:
+        set_options(button_color=color)
+    return DEFAULT_BUTTON_COLOR
+
+
+def theme_progress_bar_color(color=None):
+    """
+    Sets/Returns the progress bar colors by the current color theme
+
+    :return: Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
+    """
+    if color is not None:
+        set_options(progress_meter_color=color)
+    return DEFAULT_PROGRESS_BAR_COLOR
+
+
+def theme_slider_color(color=None):
+    """
+    Sets/Returns the slider color (used for sliders)
+
+    :return: (str) - color string of the slider color currently in use
+    """
+    if color is not None:
+        set_options(scrollbar_color=color)
+    return DEFAULT_SCROLLBAR_COLOR
+
+
+def theme_border_width(border_width=None):
+    """
+    Sets/Returns the border width currently in use
+    Used by non ttk elements at the moment
+
+    :return: (int) - border width currently in use
+    """
+    if border_width is not None:
+        set_options(border_width=border_width)
+    return DEFAULT_BORDER_WIDTH
+
+
+def theme_slider_border_width(border_width=None):
+    """
+    Sets/Returns the slider border width currently in use
+
+    :return: (int) - border width currently in use
+    """
+    if border_width is not None:
+        set_options(slider_border_width=border_width)
+    return DEFAULT_SLIDER_BORDER_WIDTH
+
+
+def theme_progress_bar_border_width(border_width=None):
+    """
+    Sets/Returns the progress meter border width currently in use
+
+    :return: (int) - border width currently in use
+    """
+    if border_width is not None:
+        set_options(progress_meter_border_depth=border_width)
+    return DEFAULT_PROGRESS_BAR_BORDER_WIDTH
+
+
+
+def theme_element_text_color(color=None):
+    """
+    Sets/Returns the text color used by elements that have text as part of their display (Tables, Trees and Sliders)
+
+    :return: (str) - color string currently in use
+    """
+    if color is not None:
+        set_options(element_text_color=color)
+    return DEFAULT_ELEMENT_TEXT_COLOR
 
 
 def theme_list():
@@ -11130,7 +11237,7 @@ def ChangeLookAndFeel(index, force=False):
         ix = lf_values.index(opt2)
     else:
         ix = randint(0, len(lf_values) - 1)
-        print('** Warning - {} Look and Feel value not valid. Change your ChangeLookAndFeel call. **'.format(index))
+        print('** Warning - {} Theme is not a valid theme. Change your theme call. **'.format(index))
         print('valid values are', list_of_look_and_feel_values())
         print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
 
@@ -11163,7 +11270,7 @@ def ChangeLookAndFeel(index, force=False):
                    element_text_color=colors['TEXT'],
                    input_text_color=colors['TEXT_INPUT'])
     except:  # most likely an index out of range
-        print('** Warning - Look and Feel value not valid. Change your ChangeLookAndFeel call. **')
+        print('** Warning - Theme value not valid. Change your theme call. **')
         print('valid values are', list_of_look_and_feel_values())
 
 
@@ -11179,13 +11286,13 @@ def preview_all_look_and_feel_themes(columns=12):
 
     web = False
 
-    WINDOW_BACKGROUND = 'lightblue'
+    win_bg = 'black'
 
     def sample_layout():
         return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
                 [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(5, 15))]]
 
-    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=WINDOW_BACKGROUND)]]
+    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
 
     names = list_of_look_and_feel_values()
     names.sort()
@@ -11199,10 +11306,9 @@ def preview_all_look_and_feel_themes(columns=12):
     if row:
         layout += [row]
 
-    window = Window('Preview of all Look and Feel choices', layout, background_color=WINDOW_BACKGROUND)
+    window = Window('Preview of all Look and Feel choices', layout, background_color=win_bg)
     window.read()
     window.close()
-    del window
 
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
@@ -11233,15 +11339,6 @@ def ObjToString(obj, extra='    '):
                   (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
                       obj.__dict__[item])))
          for item in sorted(obj.__dict__)))
-
-
-def test_func(parm):
-    """
-
-    :param parm:
-    :return:
-    """
-    return 'my return'
 
 
 ######
@@ -12670,9 +12767,10 @@ def main():
     :return:
     """
     from random import randint
-    # preview_all_look_and_feel_themes()
-    # look_and_feel = 'Hot Dog Stand'
-    # theme('Hot Dog Stand')
+
+    # theme('dark blue 4')
+
+
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -12757,7 +12855,7 @@ def main():
          Button('Exit', tooltip='Exit button')],
     ]
 
-    layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(50, 25), orientation='v', key='+PROGRESS+')]])]]
+    layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(45, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('Window Title', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
@@ -12802,7 +12900,7 @@ def main():
         elif event == 'About...':
             popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
         elif event.startswith('See'):
-            window.set_transparent_color(LOOK_AND_FEEL_TABLE[get_theme()]['BACKGROUND'])
+            window.set_transparent_color(theme_background_color())
     window.close()
 
 
@@ -12852,7 +12950,6 @@ test = main
 
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
 theme(CURRENT_LOOK_AND_FEEL)
-
 
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #

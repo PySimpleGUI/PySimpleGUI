@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.1-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.14.0-red.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
@@ -43,7 +43,7 @@ pip3 install pysimplegui
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('DarkAmber')	# Add a touch of color
+sg.theme('DarkAmber')	# Add a touch of color
 # All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -278,7 +278,7 @@ This makes the coding process extremely quick and the amount of code very small
 
 ```python
 import PySimpleGUI as sg
-sg.change_look_and_feel('DarkAmber')   # Add a little color to your windows
+sg.theme('DarkAmber')   # Add a little color to your windows
 # All the stuff inside your window. This is the PSG magic code compactor...
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -727,7 +727,7 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your creations colorful
+sg.theme('Dark Blue 3')  # please make your creations colorful
 
 layout = [	[sg.Text('Filename')],
           	[sg.Input(), sg.FileBrowse()], 
@@ -827,9 +827,9 @@ Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 wind
 
 ![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
 
-Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `change_look_and_feel` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
+Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `theme` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
 
-In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
+In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `theme('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `theme_previewer()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
 
 In release 4.9 another 32 Color Themes were added... here are the current choices
 
@@ -1942,7 +1942,7 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
@@ -1970,7 +1970,7 @@ The input fields in your window will be returned to you as a dictionary (syntact
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 				 [sg.InputText(), sg.FileBrowse()],
@@ -1993,7 +1993,7 @@ This code will present a window and will print values until the user clicks the 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Persistent window')],
 		  [sg.Input()],
@@ -2023,7 +2023,7 @@ This example introduces the concept of "keys".  Keys are super important in PySi
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
           [sg.Input(key='_IN_')],
@@ -2057,12 +2057,12 @@ While one goal was making it simple to create a GUI another just as important go
 
 The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.
 
-Let's dissect this little program
+### Let's dissect this little program
 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Rename files or folders')],
 			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
@@ -2077,15 +2077,15 @@ folder_path, file_path = values[0], values[1]       # get the data from the valu
 print(folder_path, file_path)
 ```
 
-#### Colors
+### Themes
 
 ![image](https://user-images.githubusercontent.com/46163555/70470775-cd01ff00-1a99-11ea-8b9c-8b33c8880c99.png)
 
-The first line of code after the import is a call to `change_look_and_feel`.  This single line of code make the window look like the window above instead of the window below.  It will also stop PySimpleGUI from nagging you to put one of these calls into your program.
+The first line of code after the import is a call to `theme`.  
 
-![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
+Until Dec 2019 the way a "theme" was specific in PySimpleGUI was to call `change_look_and_feel`.  That call has been replaced by the more simple function `theme`.  
 
-#### Window contents
+### Window contents (The Layout)
 
 Let's agree the window has 4 rows.
 
@@ -2110,7 +2110,7 @@ For return values the window is scanned from top to bottom, left to right.  Each
 
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
 
-#### "Reading" the window's values (also displays the window)
+### "Reading" the window's values (also displays the window)
 
 ```python
 event, values = window.read()
@@ -2318,7 +2318,7 @@ Let's take a look at your first dictionary-based window.
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
@@ -2503,6 +2503,76 @@ event, values = window.Read(timeout=100)
 ```
 
 You can learn more about these async / non-blocking windows toward the end of this document.
+
+# Themes - Automatic Coloring of Your Windows
+
+In Dec 2019 the function `change_look_and_feel` was replaced by `theme`.  The concept remains the same, but a new group of function alls makes it a lot easier to manage colors and other settings.
+
+By default the PySimpleGUI color theme is now `Dark Blue 3`.  Gone are the "system default" gray colors.  If you want your window to be devoid of all colors so that the system chooses the colors (gray) for you, then set the theme to 'SystemDefault1' or `Default1`.
+
+There are 130 themes available.  You can preview these themes by calling `theme_previewer()` which will create a LARGE window displaying all of the color themes available.
+
+As of this writing, these are your available themes.
+
+![SNAG-0620](https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg)
+
+## Default is `Dark Blue 3`
+
+![image](https://user-images.githubusercontent.com/46163555/71362356-cd070200-2563-11ea-9455-9315b9423d7e.png)
+
+In Dec 2019 the default for all PySimpleGUI windows changed from the system gray with blue buttons to a more complete theme using a grayish blue with white text.  Previouisly users were nagged into choosing  color theme other than gray.  Now it's done for you instead of nagging you.
+
+If you're struggling with this color theme, then add a call to `theme` to change it.
+
+## Theme Name Formula
+
+Themes names that you specify can be "fuzzy".  The text does not have to match exactly what you see printed.  For example "Dark Blue 3" and "DarkBlue3" and "dark blue 3" all work.
+
+One way to quickly determine the best setting for your window is to simply display your window using a lot of different themes.  Add the line of code to set the theme - `theme('Dark Green 1')`, run your code, see if you like it, if not, change the theme string to `'Dark Green 2'` and try again.  Repeat until you find something you like.
+
+The "Formula" for the string is:
+
+`Dark Color #`
+
+or
+
+`Light Color #`
+
+Color can be Blue, Green, Black, Gray, Purple, Brown, Teal, Red.   The # is optional or can be from 1 to XX.  Some colors have a lot of choices.  There are 13 "Light Brown" choices for example.
+
+### "System" Default - No Colors
+
+If you're bent on having no colors at all in your window, then choose `Default 1` or `System Default 1`.
+
+If you want the original PySimpleGUI color scheme of a blue button and everything else gray then you can get that with the theme `Default` or `System Default`.
+
+## Theme Functions
+
+The basic theme function call is `theme(theme_name)`.  This sets the theme.  Calling without a parameter, `theme()` will return the name of the current theme.
+
+If you want to get or modify any of the theme settings, you can do it with these functions that you will find detailed information about in the function definitions section at the bottom of the document.  Each will return the current value if no parameter is used.
+
+```python
+theme_background_color
+theme_border_width
+theme_button_color
+theme_element_background_color
+theme_element_text_color
+theme_input_background_color
+theme_input_text_color
+theme_progress_bar_border_width
+theme_progress_bar_color
+theme_slider_border_width
+theme_slider_color
+theme_text_color
+```
+
+These will help you get a list of available choices.
+
+```python
+theme_list
+theme_previewer
+```
 
 # Window Object - Beginning a window
 
@@ -2892,7 +2962,7 @@ Here is our final program that uses simple addition to add the headers onto the 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Brown 1')
+sg.theme('Dark Brown 1')
 
 headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
 header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
@@ -4229,11 +4299,11 @@ to this... with one function call...
 
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
 
-While you can do it on an element by element or window level basis, the easiest way, by far, is a call to `SetOptions`.
+While you can do it on an element by element or window level basis, the easier way is to use either the `theme` calls or `set_options`.  These calls will set colors for all window that are created.
 
-Be aware that once you change these options they are changed for the rest of your program's execution.  All of your windows will have that look and feel, until you change it to something else (which could be the system default colors.
+Be aware that once you change these options they are changed for the rest of your program's execution.  All of your windows will have that Theme, until you change it to something else.
 
-This call sets all of the different color options.
+This call sets a number of the different color options.
 
 ```python
 SetOptions(background_color='#9FB8AD',
@@ -5368,7 +5438,7 @@ Three events are being bound.
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Green 2')
+sg.theme('Dark Green 2')
 
 layout = [  [sg.Text('My Window')],
             [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
@@ -17839,28 +17909,48 @@ Parameter Descriptions:
 |||
 | **return** | (str) the currently selected theme |
 
-Returns the background color specified by the current color theme
+Sets/Returns the background color currently in use
+Used for Windows and containers (Column, Frame, Tab) and tables
 
 ```
-theme_background_color() -> (str) - color string of the background color defined by current theme
+theme_background_color(color=None) -> (str) - color string of the background color currently in use
 ```
 
-Returns the button color specified by the current color theme
+Sets/Returns the border width currently in use
+Used by non ttk elements at the moment
 
 ```
-theme_button_color() -> Tuple[str, str] - TUPLE with color strings of the button color defined by current theme (button text color, button background color)
+theme_border_width(border_width=None) -> (int) - border width currently in use
 ```
 
-Returns the input element background color specified by the current color theme
+Sets/Returns the button color currently in use
 
 ```
-theme_input_background_color() -> (str) - color string of the input element background color defined by current theme
+theme_button_color(color=None) -> Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
 ```
 
-Returns the input element text color specified by the current color theme
+Sets/Returns the background color currently in use for all elements except containers
 
 ```
-theme_input_text_color() -> (str) - color string of the input element text color defined by current theme
+theme_element_background_color(color=None) -> (str) - color string of the element background color currently in use
+```
+
+Sets/Returns the text color used by elements that have text as part of their display (Tables, Trees and Sliders)
+
+```
+theme_element_text_color(color=None) -> (str) - color string currently in use
+```
+
+Sets/Returns the input element background color currently in use
+
+```
+theme_input_background_color(color=None) -> (str) - color string of the input element background color currently in use
+```
+
+Sets/Returns the input element entry color (not the text but the thing that's displaying the text)
+
+```
+theme_input_text_color(color=None) -> (str) - color string of the input element color currently in use
 ```
 
 Returns a sorted list of the currently available color themes
@@ -17881,10 +17971,34 @@ Parameter Descriptions:
 |---|---|
 |columns|(int) number of themes in a single row|
 
-Returns the text color specified by the current color theme
+Sets/Returns the progress meter border width currently in use
 
 ```
-theme_text_color() -> (str) - color string of the text color defined by current theme
+theme_progress_bar_border_width(border_width=None) -> (int) - border width currently in use
+```
+
+Sets/Returns the progress bar colors by the current color theme
+
+```
+theme_progress_bar_color(color=None) -> Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
+```
+
+Sets/Returns the slider border width currently in use
+
+```
+theme_slider_border_width(border_width=None) -> (int) - border width currently in use
+```
+
+Sets/Returns the slider color (used for sliders)
+
+```
+theme_slider_color(color=None) -> (str) - color string of the slider color currently in use
+```
+
+Sets/Returns the text color currently in use
+
+```
+theme_text_color(color=None) -> (str) - color string of the text color currently in use
 ```
 
 ## Old Themes (Look and Feel) - Replaced by theme()
@@ -19247,6 +19361,22 @@ Table and Tree header colors, expanded Graph methods
 		* Uses similar algorithm as Tabs - Input Text background and text colors are used
 * Spin element - fixed bug that showed "None" if default value is "None"
 * Test Harness sets incorrect look and feel on purpose so a random one is chosen
+
+## 4.14.0 PySimpleGUI 23-Dec-2019
+
+THEMES!
+
+* theme is replacing change_look_and_feel. The old calls will still be usable however
+* LOTS of new theme functions.  Search for "theme_" to find them in this documentation.  There's a section discussing themes too
+* "Dark Blue 3" is the default theme now.  All windows will be colored using this theme unless the user sets another one
+* Removed the code that forced Macs to use gray
+* New element.set_cursor - can now set a cursor for any of the elements.  Pass in a cursor string and cursor will appear when mouse over widget
+* Combo - enable setting to any value, not just those in the list
+* Combo - changed how initial value is set
+* Can change the font on tabs by setting font parameter in TabGroup
+* Table heading font now defaults correctly
+* Tree heading font now defaults correctly
+* Renamed DebugWin to _DebugWin to discourage use
 
 ### Upcoming
 
