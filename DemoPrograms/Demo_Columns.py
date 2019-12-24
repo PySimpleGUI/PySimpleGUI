@@ -5,7 +5,7 @@ import PySimpleGUI as sg
     Usage of Column Element
 '''
 
-sg.change_look_and_feel('BlueMono')
+sg.theme('BlueMono')
 
 css = {'text_color': 'white', 'background_color': 'blue'}
 # Column layout

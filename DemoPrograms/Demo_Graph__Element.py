@@ -27,7 +27,7 @@ def main():
     thread = Thread(target=ping_thread, args=(None,))
     thread.start()
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(element_padding=(0, 0))
 
     layout = [[sg.Text('Ping times to Google.com', font='Any 12'),

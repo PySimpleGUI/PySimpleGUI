@@ -50,7 +50,7 @@ def GraphicButton(text, key, image_data, color=DEF_BUTTON_COLOR, size=(100, 50))
 
 def ShowMeTheButtons():
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
 
     frame_layout = [[sg.Text('Who says Windows have to be ugly when using tkinter?', size=(45, 3))],
                     [sg.Text(

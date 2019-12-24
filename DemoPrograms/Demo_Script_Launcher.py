@@ -41,7 +41,7 @@ def execute_command_nonblocking(command, *args):
 
 
 def Launcher2():
-    sg.change_look_and_feel('GreenTan')
+    sg.theme('GreenTan')
 
     filelist = glob.glob(LOCATION_OF_YOUR_SCRIPTS+'*.py')
     namesonly = []

@@ -8,7 +8,7 @@ import cv2
     in PySimpleGUIQt (yet).
 """
 
-sg.change_look_and_feel('Black')
+sg.theme('Black')
 
 # define the window layout
 layout = [[sg.Image(filename='', key='-IMAGE-', tooltip='Right click for exit menu')],]

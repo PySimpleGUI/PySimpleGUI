@@ -24,7 +24,7 @@ def main():
     num_frames = vidFile.get(cv.CAP_PROP_FRAME_COUNT)
     fps = vidFile.get(cv.CAP_PROP_FPS)
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
 
     # ---===--- define the window layout --- #
     layout = [[sg.Text('OpenCV Demo', size=(15, 1), font='Helvetica 20')],

@@ -33,7 +33,7 @@ def main():
     global g_exit, g_response_time
     # start ping measurement thread
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(element_padding=(0, 0))
 
     layout = [

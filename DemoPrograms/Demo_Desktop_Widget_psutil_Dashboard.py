@@ -56,7 +56,7 @@ def human_size(bytes, units=[' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']):
 
 def main():
     # ----------------  Create Window  ----------------
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(element_padding=(0, 0), margins=(1, 1), border_width=0)
 
     def GraphColumn(name, key):

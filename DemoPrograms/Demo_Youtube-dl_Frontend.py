@@ -13,7 +13,7 @@ youtube_executable = 'path/to/youtube-dl'
 
 
 def DownloadSubtitlesGUI():
-    sg.change_look_and_feel('Dark')
+    sg.theme('Dark')
 
     combobox = sg.Combo(values=['', ], size=(10, 1), key='lang')
     layout = [

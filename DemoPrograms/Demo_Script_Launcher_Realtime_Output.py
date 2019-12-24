@@ -8,11 +8,13 @@ import PySimpleGUI as sg
 		be displayed in realtime in the window.
 """
 
+sg.theme('Dark Blue 3')
+
 def main():
-	layout = [  [sg.Text('Enter the command you wish to run')],
-				[sg.Input(key='-IN-')],
-				[sg.Output(size=(60,15))],
-				[sg.Button('Run'), sg.Button('Exit')] ]
+	layout = [
+				[sg.Output(size=(110,30), background_color='black', text_color='white')],
+				[sg.T('Promt> '), sg.Input(key='-IN-', do_not_clear=False)],
+				[sg.Button('Run', bind_return_key=True), sg.Button('Exit')] ]
 
 	window = sg.Window('Realtime Shell Command Output', layout)
 
@@ -27,6 +29,7 @@ def main():
 
 
 def runCommand(cmd, timeout=None, window=None):
+	nop = None
 	""" run shell command
 	@param cmd: command to execute
 	@param timeout: timeout for command execution
@@ -39,7 +42,7 @@ def runCommand(cmd, timeout=None, window=None):
 		line = line.decode(errors='replace' if (sys.version_info) < (3, 5) else 'backslashreplace').rstrip()
 		output += line
 		print(line)
-		window.refresh() if window else None        # yes, a 1-line if, so shoot me
+		window.refresh() if window else nop        # yes, a 1-line if, so shoot me
 
 	retval = p.wait(timeout)
 	return (retval, output)

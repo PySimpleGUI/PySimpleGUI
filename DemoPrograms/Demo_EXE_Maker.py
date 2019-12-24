@@ -9,7 +9,7 @@ import os
 '''
 
 def Launcher():
-    sg.change_look_and_feel('LightGreen')
+    sg.theme('LightGreen')
 
     layout = [[sg.Text('PyInstaller EXE Creator', font='Any 15')],
               [sg.Text('Source Python File'), sg.Input(key='-sourcefile-', size=(45, 1)),

@@ -54,7 +54,7 @@ def main():
 
     num_cores = len(psutil.cpu_percent(percpu=True))        # get the number of cores in the CPU
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(element_padding=(0,0), margins=(1,1), border_width=0)
 
     # the clever Red X graphic

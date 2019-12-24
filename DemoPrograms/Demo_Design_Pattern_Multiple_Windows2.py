@@ -8,13 +8,14 @@ import PySimpleGUI as sg
 # Design pattern 2 - First window remains active
 
 layout = [[ sg.Text('Window 1'),],
-          [sg.Input('')],
+          [sg.Input()],
           [sg.Text('', size=(20,1), key='-OUTPUT-')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 window1 = sg.Window('Window 1', layout)
 
 window2_active = False
+
 while True:
     event1, values1 = window1.read(timeout=100)
     window1['-OUTPUT-'].update(values1[0])

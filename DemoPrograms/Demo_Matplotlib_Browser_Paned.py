@@ -865,7 +865,7 @@ fig_dict = {'Pyplot Simple': PyplotSimple, 'Pyplot Formatstr': PyplotFormatstr, 
             'Artist Customized Box Plots 2': ArtistBoxplot2, 'Pyplot Histogram': PyplotHistogram}
 
 
-sg.change_look_and_feel('LightGreen')
+sg.theme('LightGreen')
 figure_w, figure_h = 650, 650
 # define the form layout
 listbox_values = list(fig_dict)

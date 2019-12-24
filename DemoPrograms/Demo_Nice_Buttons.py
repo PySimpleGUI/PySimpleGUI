@@ -26,7 +26,7 @@ def ShowMeTheButtons():
     bcolor = ('black', 'black')
     wcolor = ('white', 'black')
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(auto_size_buttons=True, border_width=0,
                    button_color=sg.COLOR_SYSTEM_DEFAULT)
 

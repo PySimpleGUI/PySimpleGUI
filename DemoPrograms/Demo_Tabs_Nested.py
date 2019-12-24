@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 # Yet another example of TabGroup element
 
-sg.change_look_and_feel('GreenTan')
+sg.theme('GreenTan')
 tab2_layout = [[sg.Text('This is inside tab 2')],
                [sg.Text('Tabs can be anywhere now!')]]
 

@@ -20,7 +20,7 @@ MAX_EMAILS = 10
 
 
 def gui():
-    sg.change_look_and_feel('Topanga')
+    sg.theme('Topanga')
     sg.set_options(border_width=0, margins=(0, 0), element_padding=(4, 0))
     color = ('#282923', '#282923')
     layout = [[sg.Text('Email New Mail Notification' + 48 * ' '),

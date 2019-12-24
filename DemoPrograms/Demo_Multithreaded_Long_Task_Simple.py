@@ -50,7 +50,7 @@ def the_gui():
     """
     global thread_done, message, progress
 
-    sg.change_look_and_feel('Light Brown 3')
+    sg.theme('Light Brown 3')
 
     layout = [[sg.Text('Long task to perform example')],
               [sg.Output(size=(80, 12))],

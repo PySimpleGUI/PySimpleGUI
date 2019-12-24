@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 '''
 
 def main():
-    sg.change_look_and_feel('TanBlue')
+    sg.theme('TanBlue')
 
     column1 = [
         [sg.Text('Column 1', background_color=sg.DEFAULT_BACKGROUND_COLOR,

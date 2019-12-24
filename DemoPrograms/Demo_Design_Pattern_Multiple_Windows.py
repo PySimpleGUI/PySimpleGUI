@@ -8,10 +8,11 @@ import PySimpleGUI as sg
         3. There is a safeguard to stop from launching multiple copies of window2.  Only 1 window2 is visible at a time
 """
 
+sg.theme('Dark Blue 3')
 # Window 1 layout
 layout = [
             [sg.Text('This is the FIRST WINDOW'), sg.Text('      ', key='-OUTPUT-')],
-            [sg.Text('')],
+            [sg.Text()],
             [sg.Button('Launch 2nd Window'), sg.Button('Popup'), sg.Button('Exit')]
          ]
 
@@ -31,8 +32,8 @@ while True:             # Event Loop
         win2_active = True
         # window 2 layout - note - must be "new" every time a window is created
         layout2 = [
-            [sg.Text('The second window'), sg.Text('', key='-OUTPUT-')],
-            [sg.Input('', key='-IN-')],
+            [sg.Text('The second window')],
+            [sg.Input(key='-IN-')],
             [sg.Button('Show'), sg.Button('Exit')]
                 ]
         window2 = sg.Window('Second Window', layout2)

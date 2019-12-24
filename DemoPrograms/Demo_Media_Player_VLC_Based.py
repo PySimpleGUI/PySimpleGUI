@@ -13,10 +13,10 @@ from sys import platform as PLATFORM
 
 #------- GUI definition & setup --------#
 
-sg.change_look_and_feel('DarkBlue')
+sg.theme('DarkBlue')
 
 def btn(name):  # a PySimpleGUI "User Defined Element" (see docs)
-    return sg. Button(name, size=(6, 1), pad=(1, 1))
+    return sg.Button(name, size=(6, 1), pad=(1, 1))
 
 layout = [[sg.Input(default_text='Video URL or Local Path:', size=(30, 1), key='-VIDEO_LOCATION-'), sg.Button('load')],
           [sg.Image('', size=(300, 170), key='-VID_OUT-')],

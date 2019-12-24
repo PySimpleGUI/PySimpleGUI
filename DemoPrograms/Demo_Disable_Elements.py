@@ -5,7 +5,7 @@ import PySimpleGUI as sg
     Usage of Disable elements
 '''
 
-sg.change_look_and_feel('Dark')
+sg.theme('Dark')
 sg.set_options(element_padding=(0, 0))
 
 layout = [

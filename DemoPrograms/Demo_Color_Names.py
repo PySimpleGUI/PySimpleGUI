@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import PySimpleGUIQt as sg
+import PySimpleGUI as sg
 
 """
    
@@ -665,6 +665,7 @@ color_map = {
     'YellowGreen': '#9ACD32',
 }
 
+sg.popup_quick_message('Building your table... one moment please...', background_color='red', text_color='white', font='Any 14')
 
 sg.set_options(button_element_size=(12, 1),
                element_padding=(0, 0),
@@ -672,12 +673,8 @@ sg.set_options(button_element_size=(12, 1),
                border_width=1, tooltip_time=100)
 
 # start layout with the tittle
-layout = [
-    [sg.Text('Hover mouse to see RGB value, click for white & black text',
-          justification='center',
-          text_color='blue', background_color='light green',
-          size=(100, 1), pad=(0, (0, 20)))]
-]
+layout = [[sg.Text('Hover mouse to see RGB value, click for white & black text',
+          justification='center', text_color='blue', background_color='light green', size=(90, 1), font='Default 14', pad=(0, (0, 20)))]]
 
 # -- Create primary color viewer window --
 color_list = [key for key in color_map]
@@ -694,7 +691,7 @@ for rows in range(40):
     layout.append(row)
 
 
-window = sg.Window('Color Viewer', layout, grab_anywhere=False, font=('any 9'), element_padding=(0,0), border_depth=0)
+window = sg.Window('Color Viewer', layout, font='Any 9', element_padding=(0,0), border_depth=0)
 
 # -- Event loop --
 while True:

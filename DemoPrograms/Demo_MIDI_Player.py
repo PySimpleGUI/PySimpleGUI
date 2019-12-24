@@ -10,6 +10,8 @@ PLAYER_COMMAND_PAUSE = 2
 PLAYER_COMMAND_NEXT = 3
 PLAYER_COMMAND_RESTART_SONG = 4
 
+helv15 = 'Helvetica 15'
+
 # ---------------------------------------------------------------------- #
 #    PlayerGUI             CLASS                                         #
 # ---------------------------------------------------------------------- #

@@ -12,7 +12,7 @@ import PySimpleGUI as sg
     Second parameter for windows is an entire key, for elements is something added onto a key.  This key or modified key is what is returned when you read the window.
     If the key modifier is text and the key is text, then the key returned from the read will be the 2 concatenated together.  Otherwise your event will be a tuple containing the key_modifier value you pass in and the key belonging to the element the event happened to.
 """
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 layout = [  [sg.Text('Move mouse over me', key='-TEXT-')],
             [sg.In(key='-IN-')],

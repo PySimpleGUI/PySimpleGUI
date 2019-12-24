@@ -15,7 +15,7 @@ Special keyboard keys:
 def ChatBotWithHistory():
     # -------  Make a new Window  ------- #
     # give our form a spiffy set of colors
-    sg.change_look_and_feel('GreenTan')
+    sg.theme('GreenTan')
 
     layout = [[sg.Text('Your output will go here', size=(40, 1))],
               [sg.Output(size=(127, 30), font=('Helvetica 10'))],

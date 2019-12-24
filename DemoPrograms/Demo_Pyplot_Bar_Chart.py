@@ -44,7 +44,7 @@ def draw_figure(canvas, figure, loc=(0, 0)):
     return figure_canvas_agg
 
 # ------------------------------- Beginning of GUI CODE -------------------------------
-sg.change_look_and_feel('Light Brown 3')
+sg.theme('Light Brown 3')
 
 fig = plt.gcf()  # if using Pyplot then get the figure from the plot
 figure_x, figure_y, figure_w, figure_h = fig.bbox.bounds

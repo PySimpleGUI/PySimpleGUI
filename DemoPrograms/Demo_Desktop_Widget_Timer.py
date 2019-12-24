@@ -20,7 +20,7 @@ def time_as_int():
 
 
 # ----------------  Create Form  ----------------
-sg.change_look_and_feel('Black')
+sg.theme('Black')
 
 layout = [[sg.Text('')],
           [sg.Text('', size=(8, 2), font=('Helvetica', 20),

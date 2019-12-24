@@ -5,7 +5,7 @@ import PySimpleGUI as sg
     Simple "diff" in PySimpleGUI
 '''
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 def GetFilesToCompare():
     form_rows = [[sg.Text('Enter 2 files to comare')],

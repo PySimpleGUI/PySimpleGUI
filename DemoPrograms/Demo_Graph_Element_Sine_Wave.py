@@ -23,6 +23,7 @@ def draw_axis():
         if y != 0:
             graph.draw_text(str(y), (-10, y), color='blue')
 
+sg.theme('DarkAmber')
 
 # Create the graph that will be put into the window
 graph = sg.Graph(canvas_size=(400, 400),

@@ -43,7 +43,7 @@ def the_gui():
     Reads data from a Queue and displays the data to the window
     Returns when the user exits / closes the window
     """
-
+    sg.theme('Light Brown 3')
     gui_queue = queue.Queue()  # queue used to communicate between the gui and the threads
 
     layout = [[sg.Text('Long task to perform example')],

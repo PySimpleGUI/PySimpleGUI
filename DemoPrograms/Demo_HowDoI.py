@@ -21,7 +21,7 @@ def HowDoI():
     '''
     # -------  Make a new Window  ------- #
     # give our form a spiffy set of colors
-    sg.change_look_and_feel('GreenTan')
+    sg.theme('GreenTan')
 
     layout = [
         [sg.Text('Ask and your answer will appear here....', size=(40, 1))],
