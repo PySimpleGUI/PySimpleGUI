@@ -1,40 +1,48 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
+# Simple example of TabGroup element and the options available to it
 
-# Simple example of TabGroup element
+sg.theme('Dark Red')     # Please always add color to your window
 
-sg.change_look_and_feel('Dark Brown 1')
-
+# The tab 1, 2, 3 layouts - what goes inside the tab
 tab1_layout = [[sg.Text('Tab 1')],
                [sg.Text('Put your layout in here')],
-               [sg.Text('Input something'), sg.Input(size=(12,1), key='-IN0-')]]
+               [sg.Text('Input something'), sg.Input(size=(12,1), key='-IN-TAB1-')]]
 
 tab2_layout = [[sg.Text('Tab 2')]]
 tab3_layout = [[sg.Text('Tab 3')]]
+tab4_layout = [[sg.Text('Tab 3')]]
 
-
-tab_group_layout = [[sg.Tab('Tab 1', tab1_layout, key='-TAB1-'),
+# The TabgGroup layout - it must contain only Tabs
+tab_group_layout = [[sg.Tab('Tab 1', tab1_layout, font='Courier 15', key='-TAB1-'),
                      sg.Tab('Tab 2', tab2_layout, visible=False, key='-TAB2-'),
-                     sg.Tab('Tab 3', tab3_layout, key='-TAB3-')]]
+                     sg.Tab('Tab 3', tab3_layout, key='-TAB3-'),
+                     sg.Tab('Tab 4', tab3_layout, visible=False, key='-TAB4-'),
 
+                     ]]
+
+# The window layout - defines the entire window
 layout = [[sg.TabGroup(tab_group_layout,
-                       selected_title_color='blue',
-                       selected_background_color='red',
-                       tab_background_color='green',
+                       # selected_title_color='blue',
+                       # selected_background_color='red',
+                       # tab_background_color='green',
                        enable_events=True,
+                       # font='Courier 18',
                        key='-TABGROUP-')],
           [sg.Text('Make tab number'), sg.Input(key='-IN-', size=(3,1)), sg.Button('Invisible'), sg.Button('Visible')]]
 
-window = sg.Window('My window with tabs', layout)
+window = sg.Window('My window with tabs', layout, no_titlebar=False)
 
-tab_keys = ('-TAB1-','-TAB2-','-TAB3-')
+tab_keys = ('-TAB1-','-TAB2-','-TAB3-', '-TAB4-')         # map from an input value to a key
 while True:
-    event, values = window.read()               # type: str, dict
+    event, values = window.read()       # type: str, dict
     print(event, values)
     if event is None:
         break
+    # handle button clicks
     if event == 'Invisible':
         window[tab_keys[int(values['-IN-'])-1]].update(visible=False)
     if event == 'Visible':
         window[tab_keys[int(values['-IN-'])-1]].update(visible=True)
+
 window.close()

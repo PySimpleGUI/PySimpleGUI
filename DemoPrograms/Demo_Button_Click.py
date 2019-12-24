@@ -1,30 +1,31 @@
-#!/usr/bin/env python
-import winsound
-import sys
 import PySimpleGUI as sg
+from random import randint
 
-if not sys.platform.startswith('win'):
-    sg.popup_error('Sorry, you gotta be on Windows')
-    sys.exit(0)
+sg.theme('Dark Blue 3')
 
-# .WAV files that contain your click sounds. Put full path if not in your application's folder
-click_sound = r'ButtonClick.wav'
-click_sound1 = r'ButtonClick1.wav'
+layout = [  [sg.Text('Temperature'), sg.T(' '*30), sg.Text(size=(8,1), key='-TEMP OUT-')],
+            [sg.Text('Set Temp'), sg.T(' '*8), sg.Input(size=(8,1), key='-IN-'), sg.T(' '*10), sg.Button('Set')],
+            [sg.Button('Off'), sg.T(' '*13), sg.Button('Turn relay on', button_color=('white', 'red')),sg.T(' '*5), sg.Button('Quit')]  ]
 
-sg.change_look_and_feel('Dark Blue 3')      # because gray windows are boring
+window = sg.Window('Temperature Manager', layout, font='Default -24', return_keyboard_events=True, no_titlebar=True)
 
-# Your window's layout
-layout = [  [sg.Text('Click a button to hear a click')],
-            [sg.Button('Click'), sg.Button('Another Click')]]
-# Create your Window
-window = sg.Window("Button Click", layout)
-
-while True:             # The Event Loops
-    event, values = window.read()
-    if event is None:
+while True:             # Event Loop
+    event, values = window.read(timeout=500)    # returns every 500 ms
+    print(event, values) if event != sg.TIMEOUT_KEY else None       # a debug print
+    if event in (None, 'Quit'):
         break
-    if event == 'Click':
-        winsound.PlaySound(click_sound, 1)
-    elif event == 'Another Click':
-        winsound.PlaySound(click_sound1, 1)
+    if event == 'Set':
+        print('setting temperature to ', values['-IN-'])
+        window['-TEMP OUT-'].update(values['-IN-'] + ' C')
+    elif event.startswith('Turn'):
+        print('Turning on the relay')
+    elif event == 'Off':
+        print('Turning off sensor')
+    elif event.startswith('F11'):
+        window.maximize()
+    elif event.startswith('Escape'):
+        window.normal()
+
+    window['-TEMP OUT-'].update(str(randint(2,70)) + ' C')
+
 window.close()

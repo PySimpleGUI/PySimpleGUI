@@ -7,7 +7,7 @@ import operator
     the arrow keys. The tab key works automatically, but the arrow keys are done in the code below.
 """
 
-sg.change_look_and_feel('Dark Brown 2')  # No excuse for gray windows
+sg.theme('Dark Brown 2')  # No excuse for gray windows
 # Show a "splash" type message so the user doesn't give up waiting
 sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', auto_close=True, non_blocking=True)
 
@@ -63,4 +63,4 @@ while True:  # Event Loop
     # if clicked button to dump the table's values
     if event.startswith('Show Table'):
         table = [[values[(row, col)] for col in range(MAX_COLS)] for row in range(MAX_ROWS)]
-        sg.popup_scrolled('your_table = [ ', ',\n'.join([str(table[i]) for i in range(MAX_ROWS)]) + '  ]', title='Copy your data from here')
+        sg.popup_scrolled('your_table = [ ', ',\n'.join([str(table[i]) for i in range(MAX_ROWS)]) + '  ]', title='Copy your data from here', font='fixedsys', keep_on_top=True)

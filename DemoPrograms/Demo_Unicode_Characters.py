@@ -9,7 +9,7 @@ from random import randint as randint
     They're good for a quick status display / dashboard, for use on buttons (arrows), or as "simple clipart" to name a few uses
 """
 
-sg.change_look_and_feel('Light Brown 4')
+sg.theme('Light Brown 4')
 
 SQUARE = '█'
 CIRCLE = '⚫'
@@ -31,7 +31,7 @@ layout = [  [sg.Text('Unicode Characters Demo', font='Def 16')],
                     [sg.T('Enter a Char'), sg.In(size=(2,1), key='-CHAR-', font='Any 18'), sg.T('Unicode number: '), sg.T(size=(6,1), key='-OUT NUM-')]])],
             [sg.Frame('Display Unicode Characters In Range',
                       [[sg.T('Starting Number'), sg.In(size=(6, 1), key='-START-'), sg.T('Ending Number char: '), sg.I(size=(6, 1),  key='-END-')],
-                       [sg.B('Display Chars'), sg.T('Display Font Size'),  sg.Spin(list(range(10,25)), initial_value=18, font='Any 14', key='-FONTSIZE-')],
+                       [sg.B('Display Chars', bind_return_key=True), sg.T('Display Font Size'),  sg.Spin(list(range(10,25)), initial_value=18, font='Any 14', key='-FONTSIZE-')],
                       ])],
             [sg.Multiline(size=(30,10), font='Any 18',key='-MLINE-'+sg.WRITE_ONLY_KEY)],
             [sg.B(UP), sg.B(DOWN), sg.B(LEFT), sg.B(RIGHT), sg.B('Exit')]  ]
@@ -63,7 +63,7 @@ while True:
     elif event.startswith('Display'):               # process the dump range section
         try:
             for c in range(int(values['-START-']), int(values['-END-'])):
-                window['-MLINE-'+sg.WRITE_ONLY_KEY](chr(c), append=True)
+                window['-MLINE-'+sg.WRITE_ONLY_KEY](chr(c), append=True, text_color_for_value='red')
                 window.refresh()
                 sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, 'Writing chars to display', text_color='red', font='Any 20', time_between_frames=100)
         except: pass

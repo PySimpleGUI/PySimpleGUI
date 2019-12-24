@@ -5,7 +5,7 @@ import psutil
 # Yet another usage of CPU data
 
 # ----------------  Create Form  ----------------
-sg.change_look_and_feel('Black')
+sg.theme('Black')
 
 layout = [[sg.Text('CPU Utilization')],
           [sg.Text('', size=(8, 2), font=('Helvetica', 20),

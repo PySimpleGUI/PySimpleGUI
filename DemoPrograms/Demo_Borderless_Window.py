@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 # Turn off padding in order to get a really tight looking layout.
 
-sg.change_look_and_feel('Dark')
+sg.theme('Dark')
 sg.set_options(element_padding=(0, 0))
 
 layout = [[sg.Text('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)),

@@ -3,7 +3,7 @@ import PySimpleGUI as sg
 
 # Usage of Graph element.
 
-layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='red', key='graph')],
+layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(0, 0), graph_top_right=(400, 400), background_color='red', enable_events=True, key='graph')],
           [sg.Text('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]]
 
 window = sg.Window('Graph test', layout, finalize=True)
@@ -17,6 +17,7 @@ line = graph.draw_line((0, 0), (100, 100))
 arc = graph.draw_arc((0, 0), (400, 400), 160, 10, style='arc', arc_color='blue')
 while True:
     event, values = window.read()
+    print(event, values)
     if event is None:
         break
     if event in ('Blue', 'Red'):

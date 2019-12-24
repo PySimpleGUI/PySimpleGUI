@@ -3,6 +3,7 @@ import PySimpleGUI as sg
 import csv
 
 # Show CSV data in Table
+sg.theme('Dark Red')
 
 def table_example():
     filename = sg.popup_get_file('filename to open', no_window=True, file_types=(("CSV Files","*.csv"),))
@@ -31,7 +32,7 @@ def table_example():
                             max_col_width=25,
                             auto_size_columns=True,
                             justification='right',
-                            alternating_row_color='lightblue',
+                            # alternating_row_color='lightblue',
                             num_rows=min(len(data), 20))]]
 
 

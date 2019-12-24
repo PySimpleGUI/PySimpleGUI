@@ -13,14 +13,12 @@ def TableSimulation():
                 ['Edit', ['Paste', ['Special', 'Normal', ], 'Undo'], ],
                 ['Help', 'About...'], ]
 
-    columm_layout = [[]]
-
     MAX_ROWS = 20
     MAX_COL = 10
-    for i in range(MAX_ROWS):
-        inputs = [sg.Text(str(i), size=(4, 1), justification='right')] + [sg.Input(size=(10, 1), pad=(
-            1, 1), justification='right', key=(i, j)) for j in range(MAX_COL)]
-        columm_layout.append(inputs)
+
+    columm_layout =  [[sg.Text(str(i), size=(4, 1), justification='right')] + [sg.Input(size=(10, 1), pad=(
+            1, 1), justification='right', key=(i, j)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+
 
     layout = [[sg.Menu(menu_def)],
               [sg.Text('Table Using Combos and Input Elements', font='Any 18')],

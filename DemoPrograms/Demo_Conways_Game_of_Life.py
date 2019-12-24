@@ -142,7 +142,7 @@ class GameOfLife:
                                               line_color='black', fill_color='yellow')
         event, values = self.window.read(timeout=self.delay)
         if event in (None, '-DONE-'):
-            return
+            exit()
         self.delay = values['-SLIDER-']
         self.T = int(values['-SLIDER2-'])
         self.window['-S1-OUT-'].update(values['-SLIDER-'])

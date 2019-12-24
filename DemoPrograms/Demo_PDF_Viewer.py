@@ -37,7 +37,7 @@ import fitz
 import PySimpleGUI as sg
 from sys import exit
 
-sg.change_look_and_feel('GreenTan')
+sg.theme('GreenTan')
 
 if len(sys.argv) == 1:
     fname = sg.popup_get_file(

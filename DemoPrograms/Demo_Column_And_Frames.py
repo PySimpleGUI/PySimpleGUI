@@ -1,16 +1,6 @@
 # this one long import has the effect of making the code more compact as there is no 'sg.' prefix required for Elements
 import PySimpleGUI as sg
-from PySimpleGUI import InputCombo, Combo, Multiline, ML,
-                MLine, Checkbox, CB, Check,
-                Button, B, Btn, ButtonMenu,
-                Canvas, Column, Col, Combo,
-                Frame, Graph, Image, InputText,
-                Input, In, Listbox, LBox, Menu,
-                Multiline, ML, MLine, OptionMenu,
-                Output, Pane, ProgressBar, Radio,
-                Slider, Spin, StatusBar, Tab,
-                TabGroup, Table, Text, Txt, T,
-                Tree, TreeData,  VerticalSeparator, Window, Sizer
+from PySimpleGUI import InputCombo, Combo, Multiline, ML, MLine, Checkbox, CB, Check, Button, B, Btn, ButtonMenu, Canvas, Column, Col, Combo, Frame, Graph, Image, InputText, Input, In, Listbox, LBox, Menu, Multiline, ML, MLine, OptionMenu, Output, Pane, ProgressBar, Radio, Slider, Spin, StatusBar, Tab, TabGroup, Table, Text, Txt, T, Tree, TreeData,  VerticalSeparator, Window, Sizer
 
 """
     Demo Columns and Frames
@@ -22,7 +12,7 @@ from PySimpleGUI import InputCombo, Combo, Multiline, ML,
     There are 3 columns.  Two are side by side at the top and the third is along the bottom
 """
 
-sg.change_look_and_feel('GreenTan')
+sg.theme('GreenTan')
 
 col2 = Column([[Frame('Accounts:', [[Column([[Listbox(['Account '+str(i) for i in range(1, 16)],
                                                       key='-ACCT-LIST-', size=(15, 20)), ]], size=(150, 400))]])]], pad=(0, 0))

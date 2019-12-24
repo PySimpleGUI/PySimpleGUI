@@ -7,7 +7,7 @@ Shows how button states can be controlled by a user application.  The program ma
 states for buttons and changes the text color to show greyed-out (disabled) buttons
 """
 
-sg.change_look_and_feel('Dark')
+sg.theme('Dark')
 sg.set_options(element_padding=(0, 0))
 
 layout = [[sg.Text('User:', pad=((3, 0), 0)), sg.OptionMenu(values=('User 1', 'User 2'), size=(20, 1)), sg.Text('0', size=(8, 1))],

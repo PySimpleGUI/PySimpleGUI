@@ -4,7 +4,7 @@ import time
 # Basic timer in PSG
 
 def Timer():
-    sg.change_look_and_feel('Dark')
+    sg.theme('Dark')
     sg.set_options(element_padding=(0, 0))
     form_rows = [[sg.Text(size=(8, 2), font=('Helvetica', 20),
                        justification='center', key='text')],

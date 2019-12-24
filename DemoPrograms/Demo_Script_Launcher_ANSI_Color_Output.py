@@ -123,5 +123,5 @@ def runCommand(cmd, timeout=None, window=None):
     return retval
 
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 main()

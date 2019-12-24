@@ -54,7 +54,7 @@ def long_function_wrapper(work_id, gui_queue):
 
 ############################# Begin GUI code #############################
 def the_gui():
-    sg.change_look_and_feel('Light Brown 3')
+    sg.theme('Light Brown 3')
 
     # queue used to communicate between the gui and long-running code
     gui_queue = queue.Queue()

@@ -46,7 +46,7 @@ def show_list_by_name(window):
 def main():
 
     # ----------------  Create Form  ----------------
-    # sg.change_look_and_feel('Topanga')
+    # sg.theme('Topanga')
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15), text_color='red')],

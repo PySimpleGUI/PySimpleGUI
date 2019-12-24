@@ -40,7 +40,7 @@ def main():
     global g_interval,  g_procs, g_exit
 
     # ----------------  Create Form  ----------------
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     layout = [
         [sg.Text('', size=(8, 1), font=('Helvetica', 20),
               text_color=sg.YELLOWS[0], justification='center', key='text')],

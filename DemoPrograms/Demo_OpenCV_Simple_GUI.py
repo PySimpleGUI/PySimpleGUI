@@ -18,7 +18,7 @@ enhance:    applies local contrast enhancement on the luma channel to make the i
 
 
 def main():
-    sg.change_look_and_feel('LightGreen')
+    sg.theme('LightGreen')
 
     # define the window layout
     layout = [

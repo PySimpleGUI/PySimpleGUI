@@ -846,7 +846,7 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
             'Pyplot Scatter With Legend' :PyplotScatterWithLegend, 'Artist Customized Box Plots' : PyplotArtistBoxPlots,
             'Artist Customized Box Plots 2' : ArtistBoxplot2, 'Pyplot Histogram' : PyplotHistogram}
 
-sg.change_look_and_feel('LightGreen')
+sg.theme('LightGreen')
 
 figure_w, figure_h = 650, 650
 # define the form layout

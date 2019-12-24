@@ -11,7 +11,7 @@ These are the accepted design patterns that cover the two primary use cases
 # ---------------------------------#
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 layout = [[ sg.Text('My Oneshot') ],
           [ sg.Button('OK') ]]
@@ -26,7 +26,7 @@ window.close()
 # -------------------------------------#
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 layout = [[ sg.Text('My layout', text_color='red') ],
           [ sg.Input(key='-INPUT-')],
@@ -45,7 +45,7 @@ window.close()
 # ------------------------------------------------------------------#
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 layout = [[ sg.Text('My layout', key='-TEXT-KEY-') ],
           [ sg.Button('OK'), sg.Button('Cancel') ]]

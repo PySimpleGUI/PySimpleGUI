@@ -12,7 +12,7 @@ root.destroy()
     Showing fonts in PSG / tk
 '''
 
-sg.change_look_and_feel('Black')
+sg.theme('Black')
 
 layout = [[sg.Text('My Text Element',
                 size=(20, 1),

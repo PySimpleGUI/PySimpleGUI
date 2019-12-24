@@ -28,7 +28,7 @@ USING_QT = False
 chars = np.asarray(list(' .,:;irsXA253hMHGS#9B&@'))
 SC, GCF, WCF = .1, 1, 7/4
 
-sg.change_look_and_feel('Black')   # make it look cool
+sg.theme('Black')   # make it look cool
 
 # define the window layout
 # number of lines of text elements. Depends on cameras image size and the variable SC (scaller)

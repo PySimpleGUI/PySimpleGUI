@@ -2,6 +2,7 @@
 import PySimpleGUI as sg
 from time import sleep
 
+sg.theme('Dark Blue 3')
 
 """
     Demonstration of simple and multiple one_line_progress_meter's as well as the Progress Meter Element

@@ -25,7 +25,7 @@ EDGE_OFFSET = 3
 GRAPH_SIZE = (500,500)
 DATA_SIZE = (500,500)
 
-sg.change_look_and_feel('Light Brown 1')
+sg.theme('Light Brown 1')
 
 graph = sg.Graph(GRAPH_SIZE, (0,0), DATA_SIZE)
 

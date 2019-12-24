@@ -1,4 +1,6 @@
+from matplotlib import use
 import PySimpleGUI as sg
+# import PySimpleGUIQt as sg; use('qt5agg')
 import matplotlib.pyplot as plt
 
 """
@@ -8,8 +10,12 @@ import matplotlib.pyplot as plt
     It turns out to be a rather simple thing to do.  The secret is to add parameter block=False to plt.show()
 """
 
+def draw_plot():
+    plt.plot([0.1, 0.2, 0.5, 0.7])
+    plt.show(block=False)
 
 layout = [[sg.Button('Plot'), sg.Cancel(), sg.Button('Popup')]]
+
 window = sg.Window('Have some Matplotlib....', layout)
 
 while True:
@@ -17,9 +23,7 @@ while True:
     if event in (None, 'Cancel'):
         break
     elif event == 'Plot':
-        history = [0.1, 0.2, 0.5, 0.7]
-        plt.plot(history)
-        plt.show(block=False)
+        draw_plot()
     elif event == 'Popup':
         sg.popup('Yes, your application is still running')
 window.close()

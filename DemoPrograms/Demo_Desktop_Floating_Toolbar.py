@@ -19,7 +19,7 @@ ROOT_PATH = './'
 
 def Launcher():
 
-    sg.change_look_and_feel('Dark')
+    sg.theme('Dark')
 
     namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py')]
 

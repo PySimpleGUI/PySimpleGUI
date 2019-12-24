@@ -3,10 +3,12 @@ import sys
 import PySimpleGUI as sg
 
 # Usage of Tabs in PSG
+#
+# sg.set_options(background_color='cornsilk4',
+#         element_background_color='cornsilk2',
+#         input_elements_background_color='cornsilk2')
 
-sg.set_options(background_color='cornsilk4',
-        element_background_color='cornsilk2',
-        input_elements_background_color='cornsilk2')
+sg.theme('Light Green 5')
 
 tab1_layout = [[sg.Text('This is inside tab 1', background_color='darkslateblue', text_color='white')],
                [sg.Input(key='-in0-')]]

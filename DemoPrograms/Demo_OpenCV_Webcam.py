@@ -10,7 +10,7 @@ Demo program that displays a webcam using OpenCV
 
 def main():
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
 
     # define the window layout
     layout = [[sg.Text('OpenCV Demo', size=(40, 1), justification='center', font='Helvetica 20')],

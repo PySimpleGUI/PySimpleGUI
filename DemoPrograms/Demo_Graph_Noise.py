@@ -7,7 +7,7 @@ import sys
     Example of random line in Graph element.
 '''
 
-sg.change_look_and_feel('black')
+sg.theme('black')
 
 STEP_SIZE = 1
 SAMPLES = 300
@@ -32,7 +32,7 @@ def main():
 
     # start ping measurement thread
 
-    sg.change_look_and_feel('Black')
+    sg.theme('Black')
     sg.set_options(element_padding=(0, 0))
 
     layout = [[sg.Button('Quit', button_color=('white', 'black'))],
@@ -75,7 +75,6 @@ def main():
                 graph.move_figure(figure, -STEP_SIZE, 0)
             prev_x = prev_x - STEP_SIZE
 
-        # print(f'io={i} {prev_x,prev_y} to {new_x, new_y}')
         last_figure = graph.draw_line((prev_x, prev_y), (new_x, new_y), color='white')
         figures.append(last_figure)
         prev_x, prev_y = new_x, new_y

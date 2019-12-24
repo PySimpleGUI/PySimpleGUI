@@ -16,7 +16,7 @@ to collect user input that is sent to the chatbot.  The reply is displayed in th
 
 # Create the 'Trainer GUI'
 # The Trainer GUI consists of a lot of progress bars stacked on top of each other
-sg.change_look_and_feel('NeutralBlue')
+sg.theme('NeutralBlue')
 # sg.DebugWin()
 MAX_PROG_BARS = 20              # number of training sessions
 bars = []

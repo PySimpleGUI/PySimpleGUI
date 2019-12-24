@@ -30,7 +30,7 @@ def draw_bars(graph, items):
 
 
 def main():
-    sg.change_look_and_feel('LightGreen')
+    sg.theme('LightGreen')
     # Make list to sort
     num_bars = DATA_SIZE[0]//(BAR_WIDTH+1)
     list_to_sort = [DATA_SIZE[1]//num_bars*i for i in range(1, num_bars)]

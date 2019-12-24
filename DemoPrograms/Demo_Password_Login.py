@@ -59,14 +59,15 @@ def main():
     login_password_hash = '6adfb183a4a2c94a2f92dab5ade762a47889a5a1'  # helloworld
     password = sg.popup_get_text(
         'Password: (type gui for other window)', password_char='*')
-    if password and password == 'gui':                # Remove when pasting into your program
-        HashGeneratorGUI()               # Remove when pasting into your program
-        return                         # Remove when pasting into your program
-    if PasswordMatches(password, login_password_hash):
+    if password == 'gui':                  # Remove when pasting into your program
+        HashGeneratorGUI()                              # Remove when pasting into your program
+        return                                          # Remove when pasting into your program
+    if password and PasswordMatches(password, login_password_hash):
         print('Login SUCCESSFUL')
     else:
         print('Login FAILED!!')
 
 
 if __name__ == '__main__':
+    sg.theme('DarkAmber')
     main()

@@ -662,7 +662,7 @@ def popup_color_chooser(look_and_feel=None):
     old_look_and_feel = None
     if look_and_feel is not None:
         old_look_and_feel = sg.CURRENT_LOOK_AND_FEEL
-        sg.change_look_and_feel(look_and_feel)
+        sg.theme(look_and_feel)
 
     button_size = (1, 1)
 
@@ -697,12 +697,12 @@ def popup_color_chooser(look_and_feel=None):
         color_chosen = event[1]
     window.close()
     if old_look_and_feel is not None:
-        sg.change_look_and_feel(old_look_and_feel)
+        sg.theme(old_look_and_feel)
     return color_chosen
 
 
 if __name__ == '__main__':
-    sg.change_look_and_feel('Light Brown 4')
+    sg.theme('Light Brown 4')
     layout = [[sg.In(key='-CHOICE-'), sg.B('Color Picker')],
               [sg.Ok(), sg.Cancel()]]
     window = sg.Window('My application', layout)

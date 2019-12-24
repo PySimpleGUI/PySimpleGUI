@@ -6,7 +6,7 @@ A simple send/response chat window.  Add call to your send-routine and print the
 If async responses can come in, then will need to use a different design that uses PySimpleGUI async design pattern
 '''
 
-sg.change_look_and_feel('GreenTan') # give our window a spiffy set of colors
+sg.theme('GreenTan') # give our window a spiffy set of colors
 
 layout = [[sg.Text('Your output will go here', size=(40, 1))],
           [sg.Output(size=(110, 20), font=('Helvetica 10'))],

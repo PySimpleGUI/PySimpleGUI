@@ -5,13 +5,13 @@ import PySimpleGUI as sg
     Demonstration of how to work with multiple colors when outputting text to a multiline element
 """
 
-sg.change_look_and_feel('Dark Blue 3')
+sg.theme('Dark Blue 3')
 
 MLINE_KEY = '-MLINE-'+sg.WRITE_ONLY_KEY
 layout = [  [sg.Text('Demonstration of Multiline Element\'s ability to show multiple colors ')],
             [sg.Multiline(size=(60,20), key=MLINE_KEY)],
-            [sg.B('Plain'), sg.Button('Text Blue Line'), sg.Button('Text Green Line'),sg.Button('Background Blue Line'),sg.Button('Background Green Line'), sg.B('White on Green')
-             ]  ]
+            [sg.B('Plain'), sg.Button('Text Blue Line'), sg.Button('Text Green Line')],
+            [sg.Button('Background Blue Line'),sg.Button('Background Green Line'), sg.B('White on Green')]  ]
 
 window = sg.Window('Demonstration of Multicolored Multline Text', layout)
 

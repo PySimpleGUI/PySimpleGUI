@@ -6,7 +6,7 @@ import PySimpleGUI as sg
 """
 
 sg.set_options(element_padding=(0, 0))
-# sg.change_look_and_feel('Dark')
+# sg.theme('Dark')
 # --- Define our "Big-Button-Spinner" compound element. Has 2 buttons and an input field --- #
 NewSpinner = [sg.Button('-', size=(2, 1), font='Any 12'),
               sg.Input('0', size=(2, 1), font='Any 14',

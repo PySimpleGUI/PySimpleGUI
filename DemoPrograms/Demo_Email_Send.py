@@ -61,7 +61,7 @@ def send_an_email(from_address, to_address, subject, message_text, user, passwor
 '''
 
 def main():
-    sg.change_look_and_feel('Dark Blue 3')
+    sg.theme('Dark Blue 3')
     layout = [[sg.Text('Send an Email', font='Default 18')],
               [sg.T('From:', size=(8,1)), sg.Input(key='-EMAIL FROM-', size=(35,1))],
               [sg.T('To:', size=(8,1)), sg.Input(key='-EMAIL TO-', size=(35,1))],

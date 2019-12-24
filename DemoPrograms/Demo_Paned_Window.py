@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('GreenTan')
+sg.theme('GreenTan')
 
 col1 = sg.Col([[sg.Text('in pane1', text_color='blue')],
                [sg.Text('Pane1')],

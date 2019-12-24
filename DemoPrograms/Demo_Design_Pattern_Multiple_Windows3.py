@@ -5,7 +5,7 @@ import PySimpleGUI as sg
 '''
 
 layout = [[sg.Text('Window 1'), ],
-          [sg.Input('')],
+          [sg.Input()],
           [sg.Text('',size=(20,1),  key='-OUTPUT-')],
           [sg.Button('Next >'), sg.Button('Exit')]]
 
