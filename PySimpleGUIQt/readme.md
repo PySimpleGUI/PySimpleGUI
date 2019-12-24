@@ -16,7 +16,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.28.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)        
         
         
         
@@ -79,27 +79,27 @@ To install Pyside2:
 ```pip install PySide2```  
 
       
-**Nov 26th - There has been a number of problems found using PyQt5 recently.  Unclear how if it can be supported longer term**
+**PyQt5 is no longer supported.  Only PySide2 is supported**
 
-A couple of specific examples:
-    
-- the Keep on Top feature does not work
-- the no_titlebar feature does not work
+Too many differences were causing a lot of headaches.  Supporting just 1 Qt port is difficult enough.  Parsing out the differences between pyside2 and pyqt5 was simply getting to be too much
     
     
 
- ## Testing your installation        
- Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.        
+## Testing your installation        
+Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.        
 
-     python3
-     >>> import PySimpleGUIQt 
-     >>> PySimpleGUIQt.main()
+```
+  python3
+    >>> import PySimpleGUIQt 
+    >>> PySimpleGUIQt.main()
+```
 
- You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands        
+You will see a sample window in the center of your screen.  If it's not installed correctly you are likely to get an error message during one of those commands        
         
 Here is the window you should see:        
         
-![sample window](https://user-images.githubusercontent.com/13696193/46097669-79efa500-c190-11e8-885c-e5d4d5d09ea6.jpg)        
+![image](https://user-images.githubusercontent.com/46163555/71421852-7c6ad400-264b-11ea-9adc-15f6aa4248e8.png)
+       
         
         
         
@@ -169,13 +169,14 @@ These Elements are "complete" (a relative term... more are more complete than ot
   
 Notable MISSING features at the moment include:  
 * Graphs Element Methods - erasing, draw arc, etc  
+* Tree element - returns rows selected, but a little difficult to map those values to something meaningful for the user.
   
 # New PySimpleGUI Features only in Qt (or first introduced in Qt)
 
 There are a number of new features that are only available in PySimpleGUIQt.  These include:
 * ButtonMenu Element
 * Dial Element
-* Stretcher Element
+* Stretcher Element (used to "push elements around" within a widnow)
 * SystemTray feature
 * "Dynamic" windows that grow and shrink (uses invisible elements)
 
@@ -265,6 +266,14 @@ If you want a separator between 2 items, add the entry `'---'` and it will add a
 
 If you want to disable a menu entry, place a `!` before the menu entry
 
+
+## Stretch Element for Justifying Elements
+
+Use the `Stretch` Element to left justify, right justify or center justify one or more elements within their container.
+
+If a single `Stretch` Element is on a row, then it will push the other elements on the row to either the left or right.  If `Stretch` is on the left, then the elements to the rigth will be pushed to the right.
+
+To center elements, place a `Stretch` Element on each side of them (2 `Stretch` Elements will be on the same row)
 
 ## SystemTray Methods
 
@@ -746,6 +755,29 @@ It's been a LONG LONG LONG time coming
 * Range is now properly set in Slider.Update
 * Background color supported for MenuBars now
 * Added 5 extra pixels to window size. Now adding a total of 10 so things don't get cut off
+
+
+## 0.31.0 PySimpleGUIQt 23-Dec-2019
+
+Themes and more!
+
+* Added port string so can identify which port is being used (PySimpleGUIQt)
+* Removed the Mac speific button and system color settings. Not sure why they existed at all since it's Qt, not tkinter
+* Like all PySimpleGUI ports, the default theme is now "DarkBlue3"
+* TRANSPARENT_BUTTON redefined as an a string explaining that if you're using it, you're not getting what you thought you were
+* BROWSE_FILES_DELIMETER so that it can be changed to something other than ';' for systems that ';' is a valid char for filenames
+* Can drag and drop into a Multiline Input Element!
+* Colored text output for Multiline (hmmm...but not MultilineOutput.. may have to add it)
+* Tree Element
+	* Support for enable_events
+	* Returns selected rows when reading
+* Window - better error checking and warnings for window layouts
+* Button - changes to help with getting animations back
+* TabGroup - Tab positions now supporrted
+	* left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
+* Tables & Trees - text color and background color now work.  Don't appear to have worked before
+
+
 
 # Design        
  ## Author 
