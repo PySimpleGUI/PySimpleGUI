@@ -7,7 +7,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.13.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.15.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -63,6 +63,7 @@ Remember, these are Engineering Releases.  Not all features are complete, but ge
 * Output multiline
 * Output
 * Columns
+* Frames - except cannot set colors yet
 * Progress Meters
 * Checkbox
 * Radio Button
@@ -397,6 +398,24 @@ Starting with release 0.4.0, most of the Popup functions work.  This means you c
 * PopupGetFile changed to use keys, normal buttons, new window design patterns
 * PopupGetText changed to use keys, normal buttons, new window design patterns
 * Default application (PySimpleGUI.main) now shows the version number like other PySimpleGUI ports
+
+## 0.13.0 17-Nov-2019 PySimpleGUIWx
+
+* 105 Look and Feel Themes to choose from!
+* New "Fuzzy" look and feel selection
+* Preview all look and feels not yet supported due to lack of Frame support
+
+## 0.15.0 PySimpleGUIWx 24-Dec-2019
+
+Themes!
+
+* Picked up the new "theme" APIs like all 4 ports got
+* Dark Blue 3 is the new official color theme for PySimpleGUI
+* Added "port" string so that your code can detect which port of PySimpleGUI is being executed
+* Removed restriction on Macs (totally didn't make sense that it was there as it blocked a tkinter problem, not a Wx one)
+* Depricated the TRANSPARENT_BUTTON variable as it was being misunderstood by users and was misleading
+* BROWSE_FILES_DELIMITER can be changed to change the default ';' delimeter between filenames in FilesBrowse button
+* Frame Element!  BUT, it's only a partial solution as I am unable to set the background color (need to understand how panels work). It's better than nothing
 
 
 # Design        
