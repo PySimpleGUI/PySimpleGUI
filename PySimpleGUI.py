@@ -5666,9 +5666,9 @@ class Window:
             self.WindowIcon = wicon
             return
 
+        wicon = icon
         try:
             self.TKroot.iconbitmap(icon)
-            wicon = icon
         except:
             try:
                 wicon = tkinter.PhotoImage(file=icon)
@@ -9272,7 +9272,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         # row_should_expand = False
 
-        tk_row_frame.pack(side=tk.TOP, anchor=anchor, expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
+                          expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
