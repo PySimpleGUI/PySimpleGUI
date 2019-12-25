@@ -14,15 +14,14 @@ close64 = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEQ0lEQVR42r2XW2wbRRSG/
 
 
 def main():
-    btn_css = {
-        'button_color': ('white', 'black'),
-        'pad': (0, 0),
-    }
 
-    toolbar_buttons = [[sg.Button(image_data=close64, **btn_css, key='-CLOSE-'),
-                        sg.Button(image_data=timer64, **btn_css, key='-TIMER-'),
-                        sg.Button(image_data=house64, **btn_css, key='-HOUSE-'),
-                        sg.Button(image_data=cpu64, **btn_css,   key='-CPU-'), ]]
+    def tbutton(image_data, key):
+        return sg.Button(image_data=image_data, button_color=('white', 'black'), pad=(0,0), key=key)
+
+    toolbar_buttons = [[tbutton(close64, '-CLOSE-'),
+                        tbutton(timer64, '-TIMER-'),
+                        tbutton(house64, '-HOUSE-'),
+                        tbutton(cpu64, '-CPU-') ]]
 
     # layout = toolbar_buttons
     layout = [[sg.Col(toolbar_buttons, background_color='black')]]
