@@ -7,11 +7,10 @@ import PySimpleGUI as sg
 
 sg.theme('BlueMono')
 
-css = {'text_color': 'white', 'background_color': 'blue'}
 # Column layout
-col = [[sg.Text('col Row 1', **css)],
-       [sg.Text('col Row 2', **css), sg.Input('col input 1')],
-       [sg.Text('col Row 3', **css), sg.Input('col input 2')]]
+col = [[sg.Text('col Row 1', text_color='white', background_color='blue')],
+       [sg.Text('col Row 2', text_color='white', background_color='blue'), sg.Input('col input 1')],
+       [sg.Text('col Row 3', text_color='white', background_color='blue'), sg.Input('col input 2')]]
 # Window layout
 layout = [[sg.Listbox(values=('Listbox Item 1', 'Listbox Item 2', 'Listbox Item 3'),
                       select_mode=sg.LISTBOX_SELECT_MODE_MULTIPLE, size=(20, 3)),
