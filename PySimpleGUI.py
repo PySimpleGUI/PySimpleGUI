@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.0  Released 23-Dec-2019"
+version = __version__ = "4.14.0.1  Unreleased - blank Text element sized to default element size, removed X-margin for row frames, added events for Calendar button but may remove"
 
 port = 'PySimpleGUI'
 
@@ -1874,6 +1874,8 @@ class Text(Element):
         self.RightClickMenu = right_click_menu
         self.TKRightClickMenu = None
         self.BorderWidth = border_width
+        if text == '' and size == (None, None):
+            size = DEFAULT_ELEMENT_SIZE
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -7215,7 +7217,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
-                   image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                   image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None, enable_events=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                    key=None, locale=None, format=None, metadata=None):
     """
@@ -7246,7 +7248,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
-                    image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                    image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, enable_events=enable_events,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
     button.CalendarCloseWhenChosen = close_when_date_chosen
@@ -8001,7 +8003,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = DEFAULT_TEXT_JUSTIFICATION
                 justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
                 anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
-
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
                                                          height=height, justify=justify, bd=bd, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
@@ -8504,8 +8505,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
-                if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):
-                    element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
+                # if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):               # only works on Linux so not including it
+                #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKText.pack_forget()
@@ -9271,8 +9272,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         # row_should_expand = False
 
-        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
-                          expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
         toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
@@ -12769,7 +12769,7 @@ def main():
     from random import randint
 
     # theme('dark blue 4')
-
+    theme('dark red')
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
