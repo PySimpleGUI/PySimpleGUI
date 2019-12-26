@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.0.1  Unreleased - blank Text element sized to default element size, removed X-margin for row frames, added events for Calendar button but may remove"
+version = __version__ = "4.14.1.3  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix"
 
 port = 'PySimpleGUI'
 
@@ -6351,10 +6351,19 @@ class Window:
         Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
         """
-        try:
-            self.TKroot.lift()
-        except:
-            pass
+        if sys.platform.startswith('win'):
+            try:
+                self.TKroot.wm_attributes("-topmost", 0)
+                self.TKroot.wm_attributes("-topmost", 1)
+                if not self.KeepOnTop:
+                    self.TKroot.wm_attributes("-topmost", 0)
+            except:
+                pass
+        else:
+            try:
+                self.TKroot.lift()
+            except:
+                pass
 
     def SendToBack(self):
         """
