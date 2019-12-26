@@ -1874,8 +1874,8 @@ class Text(Element):
         self.RightClickMenu = right_click_menu
         self.TKRightClickMenu = None
         self.BorderWidth = border_width
-        if text == '' and size == (None, None):
-            size = DEFAULT_ELEMENT_SIZE
+        # if text == '' and size == (None, None):
+        #     size = DEFAULT_ELEMENT_SIZE
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -3418,6 +3418,19 @@ class Graph(Element):
         top_left = self._convert_canvas_xy_to_xy(box[0], box[1])
         bottom_right = self._convert_canvas_xy_to_xy(box[2], box[3])
         return top_left,bottom_right
+
+
+    def change_coordinates(self, graph_bottom_left, graph_top_right):
+        """
+        Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+        system - the bottom left and the top right values of your graph.
+
+        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
+        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
+        """
+        self.BottomLeft = graph_bottom_left
+        self.TopRight = graph_top_right
+
 
     @property
     def TKCanvas(self):
@@ -9636,6 +9649,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     :param size:  Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
     :param border_width:  width of border around element
     :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
+    :return: (bool) True if updated successfully. False if user closed the meter with the X or Cancel button
 
     """
     if key not in QuickMeter.active_meters:
@@ -9652,9 +9666,9 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
 
 def OneLineProgressMeterCancel(key):
     """
+    Cancels and closes a previously created One Line Progress Meter window
 
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-
+    :param key:  Key used when meter was created
     """
     try:
         meter = QuickMeter.active_meters[key]
@@ -11410,6 +11424,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         message = str(message)
         if message.count('\n'):
             message_wrapped = message
+            if len(message_wrapped) > local_line_width:
+                message_wrapped = textwrap.fill(message, local_line_width)
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
         message_wrapped_lines = message_wrapped.count('\n') + 1
