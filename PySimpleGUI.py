@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.1.3  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix"
+version = __version__ = "4.14.1.4  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update"
 
 port = 'PySimpleGUI'
 
@@ -3165,7 +3165,7 @@ class Graph(Element):
 
         return id
 
-    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black'):
+    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1):
         """
         Draws different types of arcs.  Uses a "bounding box" to define location
 
@@ -3188,7 +3188,7 @@ class Graph(Element):
         try:  # in case closed with X
             id = self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                             converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle,
-                                            outline=arc_color)
+                                            outline=arc_color, width=line_width)
         except:
             id = None
         return id
@@ -6249,6 +6249,10 @@ class Window:
         Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
         """
+        try:
+            self.TKroot.update()    # On Linux must call update if the user closed with X or else won't actually close the window
+        except:
+            pass
         if self.TKrootDestroyed:
             return
         try:
