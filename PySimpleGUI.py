@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.1.4  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update"
+version = __version__ = "4.14.1.5  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max"
 
 port = 'PySimpleGUI'
 
@@ -124,6 +124,7 @@ import inspect
 from random import randint
 import warnings
 from math import floor
+from math import fabs
 
 warnings.simplefilter('always', UserWarning)
 
@@ -341,7 +342,7 @@ def RGB(red, green, blue):
     :param  blue: (int) Blue portion from 0 to 255
     :return: (str) A single RGB String in the format "#RRGGBB" where each pair is a hex number.
     """
-    return '#%02x%02x%02x' % (red, green, blue)
+    return '#%02x%02x%02x' % (int(red), int(green), int(blue))
 
 
 # ====================================================================== #
@@ -1533,7 +1534,25 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbutton = self.Widget = None  # type: tk.Checkbutton
         self.Disabled = disabled
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color if text_color else theme_text_color()
+        # print(f'text color = {self.TextColor}')
+        # text_hsl = _hex_to_hsl(self.TextColor)
+        # background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
+        # background_hsv = _hsl_to_hsv(*background_hsl)
+        # background_rgb = _hsl_to_rgb(*background_hsl)
+        # print(f'backgroundHSL = {background_hsl} HSV = {background_hsv}')
+        # if text_hsl[2]> background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+        #     print('Making Darker')
+        #     l_delta = (text_hsl[2] - background_hsl[2])/6
+        #     bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2])
+        # else:
+        #     print('Making Lighter')
+        #     l_delta = (background_hsl[2]-text_hsl[2])/6
+        #     print(f'background V = {background_hsv[2]} delta = {l_delta}')
+        #     bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2])
+        # checkbox_background_color = RGB(*bg_rbg)
+        # self.CheckboxBackgrounColor = checkbox_background_color
+        self.CheckboxBackgrounColor = background_color if background_color else theme_background_color()
         self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
@@ -2069,7 +2088,6 @@ class TKProgressBar():
                 self.TKProgressBarForReal.config(maximum=max)
             except:
                 return False
-        if count is not None and count > self.Max: return False
         if count is not None:
             try:
                 self.TKProgressBarForReal['value'] = count
@@ -8558,6 +8576,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # row_should_expand = True
             # -------------------------  CHECKBOX element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
+                element = element           # type: Checkbox
                 width = 0 if auto_size_text else element_size[0]
                 default_value = element.InitialState
                 element.TKIntVar = tk.IntVar()
@@ -8577,7 +8596,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
-                    element.TKCheckbutton.configure(selectcolor=element.BackgroundColor)
+                    element.TKCheckbutton.configure(selectcolor=element.CheckboxBackgrounColor)    # The background of the checkbox
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
@@ -11339,6 +11358,70 @@ def preview_all_look_and_feel_themes(columns=12):
     window.close()
 
 
+# ------------------------ Color processing functions ------------------------
+
+def _hex_to_hsl(hex):
+    r,g,b = _hex_to_rgb(hex)
+    return _rgb_to_hsl(r,g,b)
+
+def _hex_to_rgb(hex):
+    hex = hex.lstrip('#')
+    hlen = len(hex)
+    return tuple(int(hex[i:i + hlen // 3], 16) for i in range(0, hlen, hlen // 3))
+
+
+def _rgb_to_hsl(r, g, b):
+    r = float(r)
+    g = float(g)
+    b = float(b)
+    high = max(r, g, b)
+    low = min(r, g, b)
+    h, s, v = ((high + low) / 2,)*3
+    if high == low:
+        h = s = 0.0
+    else:
+        d = high - low
+        l = (high + low) / 2
+        s = d / (2 - high - low) if l > 0.5 else d / (high + low)
+        h = {
+            r: (g - b) / d + (6 if g < b else 0),
+            g: (b - r) / d + 2,
+            b: (r - g) / d + 4,
+        }[high]
+        h /= 6
+    return h, s, v
+
+
+def _hsl_to_rgb(h, s, l):
+    def hue_to_rgb(p, q, t):
+        t += 1 if t < 0 else 0
+        t -= 1 if t > 1 else 0
+        if t < 1/6: return p + (q - p) * 6 * t
+        if t < 1/2: return q
+        if t < 2/3: p + (q - p) * (2/3 - t) * 6
+        return p
+
+    if s == 0:
+        r, g, b = l, l, l
+    else:
+        q = l * (1 + s) if l < 0.5 else l + s - l * s
+        p = 2 * l - q
+        r = hue_to_rgb(p, q, h + 1/3)
+        g = hue_to_rgb(p, q, h)
+        b = hue_to_rgb(p, q, h - 1/3)
+
+    return r, g, b
+
+def _hsv_to_hsl(h, s, v):
+    l = 0.5 * v  * (2 - s)
+    s = v * s / (1 - fabs(2*l-1))
+    return h, s, l
+
+def _hsl_to_hsv(h, s, l):
+    v = (2*l + s*(1- fabs(2*l-1)))/2
+    s = 2*(v-l)/v
+    return h, s, v
+
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
 def ObjToStringSingleObj(obj):
     """
@@ -12800,6 +12883,7 @@ def main():
 
     # theme('dark blue 4')
     theme('dark red')
+    # theme('Light Green 6')
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
