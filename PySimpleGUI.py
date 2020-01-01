@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.1.5  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max"
+version = __version__ = "4.14.1.6  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max, checkbox & radio color computation"
 
 port = 'PySimpleGUI'
 
@@ -342,7 +342,7 @@ def RGB(red, green, blue):
     :param  blue: (int) Blue portion from 0 to 255
     :return: (str) A single RGB String in the format "#RRGGBB" where each pair is a hex number.
     """
-    return '#%02x%02x%02x' % (int(red), int(green), int(blue))
+    return '#%02x%02x%02x' % (min(int(red), 255), min(int(green),255), min(int(blue), 255))
 
 
 # ====================================================================== #
@@ -1439,7 +1439,19 @@ class Radio(Element):
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
-        self.TextColor = text_color or DEFAULT_TEXT_COLOR
+        self.TextColor = text_color if text_color else theme_text_color()
+        # ---- compute color of circle background ---
+        try:          # something in here will fail if a color is not specified in Hex
+            text_hsl = _hex_to_hsl(self.TextColor)
+            background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
+            l_delta = abs(text_hsl[2] - background_hsl[2])/6
+            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+            else:
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+            self.CircleBackgroundColor = RGB(*bg_rbg)
+        except:
+            self.CircleBackgroundColor = background_color if background_color else theme_background_color()
         self.ChangeSubmits = change_submits or enable_events
         self.EncodedRadioValue = None
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
@@ -1535,24 +1547,19 @@ class Checkbox(Element):
         self.TKCheckbutton = self.Widget = None  # type: tk.Checkbutton
         self.Disabled = disabled
         self.TextColor = text_color if text_color else theme_text_color()
-        # print(f'text color = {self.TextColor}')
-        # text_hsl = _hex_to_hsl(self.TextColor)
-        # background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
-        # background_hsv = _hsl_to_hsv(*background_hsl)
-        # background_rgb = _hsl_to_rgb(*background_hsl)
-        # print(f'backgroundHSL = {background_hsl} HSV = {background_hsv}')
-        # if text_hsl[2]> background_hsl[2]:      # if the text is "lighter" than the background then make background darker
-        #     print('Making Darker')
-        #     l_delta = (text_hsl[2] - background_hsl[2])/6
-        #     bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2])
-        # else:
-        #     print('Making Lighter')
-        #     l_delta = (background_hsl[2]-text_hsl[2])/6
-        #     print(f'background V = {background_hsv[2]} delta = {l_delta}')
-        #     bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2])
-        # checkbox_background_color = RGB(*bg_rbg)
-        # self.CheckboxBackgrounColor = checkbox_background_color
-        self.CheckboxBackgrounColor = background_color if background_color else theme_background_color()
+        # ---- compute color of circle background ---
+        try:        # something in here will fail if a color is not specified in Hex
+            text_hsl = _hex_to_hsl(self.TextColor)
+            background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
+            # print(f'backgroundHSL = {background_hsl}')
+            l_delta = abs(text_hsl[2] - background_hsl[2])/6
+            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+            else:
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+            self.CheckboxBackgroundColor = RGB(*bg_rbg)
+        except:
+            self.CheckboxBackgroundColor = background_color if background_color else theme_background_color()
         self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
@@ -8596,7 +8603,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(state='disable')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(background=element.BackgroundColor)
-                    element.TKCheckbutton.configure(selectcolor=element.CheckboxBackgrounColor)    # The background of the checkbox
+                    element.TKCheckbutton.configure(selectcolor=element.CheckboxBackgroundColor)    # The background of the checkbox
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
@@ -8660,7 +8667,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                                       bd=border_depth, font=font)
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.TKRadio.configure(background=element.BackgroundColor)
-                    element.TKRadio.configure(selectcolor=element.BackgroundColor)
+                    element.TKRadio.configure(selectcolor=element.CircleBackgroundColor)
                     element.TKRadio.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
