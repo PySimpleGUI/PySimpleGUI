@@ -125,6 +125,7 @@ from random import randint
 import warnings
 from math import floor
 from math import fabs
+from functools import wraps
 
 warnings.simplefilter('always', UserWarning)
 
@@ -149,6 +150,23 @@ def TimerStop():
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
     print((g_time_delta * 1000))
+
+
+def _timeit(func):
+    """
+    :param func: Decorated function
+    :return: Execution time for the decorated function
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f'{func.__name__} executed in {end - start:.4f} seconds')
+        return result
+
+    return wrapper
 
 
 """
@@ -5623,6 +5641,26 @@ class Window:
         self._BuildKeyDict()
         return self
 
+
+    def extend_layout(self, container,  rows):
+        """
+        Adds new rows to an existing container element inside of this window
+
+        :param container: (Union[Frame, Column, Tab]) - The container Element the layout will be placed inside of
+        :param rows: (List[List[Element]]) - The layout to be added
+        :return: (Window) self so could be chained
+        """
+        column = Column(rows, pad=(0,0))
+        if self == container:
+            frame = self.TKroot
+        else:
+            frame = container.Widget
+        PackFormIntoFrame(column, frame, self)
+        # sg.PackFormIntoFrame(col, window.TKroot, window)
+        self.AddRow(column)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self, column, self.AllKeysDict)
+        return self
+
     def LayoutAndRead(self, rows, non_blocking=False):
         """
         Deprecated!!  Now your layout your window's rows (layout) and then separately call Read.
@@ -5779,6 +5817,7 @@ class Window:
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
+    # @_timeit
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         # type: (int, Any) -> Tuple[Any, Union[Dict, List]]
         """
@@ -7863,7 +7902,7 @@ else:
 
 
 # ========================   TK CODE STARTS HERE ========================================= #
-
+# @_timeit
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     """
 
@@ -12933,7 +12972,7 @@ def main():
     ]
 
     frame3 = [
-        [Checkbox('Checkbox1', True), Checkbox('Checkbox1')],
+        [Checkbox('Checkbox1', True, ), Checkbox('Checkbox1')],
         [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True, tooltip='Radio 2')],
         [T('', size=(1, 4))],
     ]
