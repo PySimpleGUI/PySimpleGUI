@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.1.7  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max, checkbox & radio color computation, changed all 'white' and 'black' in themes to hex"
+version = __version__ = "4.14.1.8  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max, checkbox & radio color computation, changed all 'white' and 'black' in themes to hex, extend_layout"
 
 port = 'PySimpleGUI'
 
@@ -12972,7 +12972,7 @@ def main():
     ]
 
     frame3 = [
-        [Checkbox('Checkbox1', True, ), Checkbox('Checkbox1')],
+        [Checkbox('Checkbox1', True), Checkbox('Checkbox1')],
         [Radio('Radio Button1', 1), Radio('Radio Button2', 1, default=True, tooltip='Radio 2')],
         [T('', size=(1, 4))],
     ]
