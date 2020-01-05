@@ -2289,6 +2289,13 @@ class Output(Element):
         self._TKOut.frame.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=True, fill=fill)
 
+    def __del__(self):
+        """
+        Delete this element. Normally Elements do not have their delete method specified, but for this one
+        it's important that the underlying TKOut object get deleted so that the stdout will get restored properly
+        """
+        self._TKOut.__del__()
+
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     tk_out = TKOut
@@ -5589,7 +5596,7 @@ class Window:
                            'This item will be stripped from your layout')
                 continue
             if element.ParentContainer is not None:
-                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE A LAYOUT! You must not attempt this kind of re-use ***', UserWarning)
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
                 PopupError('Error creating layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
@@ -9371,17 +9378,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
-        toplevel_form.TKroot.configure(padx=toplevel_form.Margins[0], pady=toplevel_form.Margins[1])
     return
 
 
 def ConvertFlexToTK(MyFlexForm):
     """
 
-    :param MyFlexForm:
+    :param MyFlexForm: (Window)
 
     """
-    MyFlexForm  # type: Window
     master = MyFlexForm.TKroot
     master.title(MyFlexForm.Title)
     InitializeResults(MyFlexForm)
@@ -9393,7 +9398,11 @@ def ConvertFlexToTK(MyFlexForm):
                 MyFlexForm.TKroot.wm_overrideredirect(True)
     except:
         pass
+
     PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
+
+    MyFlexForm.TKroot.configure(padx=MyFlexForm.Margins[0], pady=MyFlexForm.Margins[1])
+
     # ....................................... DONE creating and laying out window ..........................#
     if MyFlexForm._Size != (None, None):
         master.geometry("%sx%s" % (MyFlexForm._Size[0], MyFlexForm._Size[1]))
@@ -13040,7 +13049,7 @@ def main():
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
             print(event, values)
-            Print(event, text_color='green', background_color='white', end='')
+            Print(event, text_color='white', background_color='red', end='')
             Print(values)
         if event is None or event == 'Exit':
             break
