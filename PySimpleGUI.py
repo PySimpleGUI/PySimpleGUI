@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.14.1.8  Unreleased - blank Text element sized to default element size, added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max, checkbox & radio color computation, changed all 'white' and 'black' in themes to hex, extend_layout"
+version = __version__ = "4.14.1.11  Unreleased - added events for Calendar button but may remove, changed how bring_to_front works on Windows, SetIcon bug fix, Fix for closing window with X on Linux - requires update, allow progress bar values > max, checkbox & radio color computation, changed all 'white' and 'black' in themes to hex, extend_layout, added delete method for Output element, fix for closing debug window with an X in some circumstances, theme text elem background color"
 
 port = 'PySimpleGUI'
 
@@ -154,6 +154,8 @@ def TimerStop():
 
 def _timeit(func):
     """
+    Put @_timeit as a decorator to a function to get the time spent in that function printed out
+
     :param func: Decorated function
     :return: Execution time for the decorated function
     """
@@ -5348,11 +5350,13 @@ class ErrorElement(Element):
         :return: (ErrorElement) returns 'self' so call can be chained
         """
         if not silent_on_error:
-            PopupError('Keyword error in Update',
+            PopupError('Key error in Update',
                        'You need to stop this madness and check your spelling',
                        'Bad key = {}'.format(self.Key),
                        'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(self.Key))
+                       'window.FindElement("{}")'.format(self.Key),
+                       'or window["{}"]'.format(self.Key), keep_on_top=True
+                       )
         return self
 
     def Get(self):
@@ -5584,16 +5588,16 @@ class Window:
                            'This means you have a badly placed ]',
                            'The offensive list is:',
                            element,
-                           'This list will be stripped from your layout'
+                           'This list will be stripped from your layout' , keep_on_top=True
                            )
                 continue
             elif callable(element) and not isinstance(element, Element):
                 PopupError('Error creating layout',
                            'Layout has a FUNCTION instead of an ELEMENT',
-                           'This means you are missing () from your layout',
+                           'This likely means you are missing () from your layout',
                            'The offensive list is:',
                            element,
-                           'This item will be stripped from your layout')
+                           'This item will be stripped from your layout', keep_on_top=True)
                 continue
             if element.ParentContainer is not None:
                 warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
@@ -5603,7 +5607,8 @@ class Window:
                            'The offensive Element = ',
                            element,
                            'and has a key = ', element.Key,
-                           'This item will be stripped from your layout')
+                           'This item will be stripped from your layout',
+                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True)
                 continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
@@ -5630,7 +5635,7 @@ class Window:
                            'Instead of a list, the type found was {}'.format(type(row)),
                            'The offensive row = ',
                            row,
-                           'This item will be stripped from your layout')
+                           'This item will be stripped from your layout', keep_on_top=True)
                 continue
             self.AddRow(*row)
 
@@ -6069,11 +6074,13 @@ class Window:
             element = None
             if not silent_on_error:
                 warnings.warn(
-                    '*** WARNING = FindElement did not find the key. Please check your key\'s spelling key = %s ***' % key, UserWarning)
-                PopupError('Keyword error in FindElement Call',
+                    "*** WARNING = FindElement did not find the key. Please check your key's spelling. key = %s ***" % key, UserWarning)
+                PopupError('Key error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
-                           'window.FindElement("{}")'.format(key))
+                           'window.FindElement("{}")'.format(key),
+                           'or window["{}"]'.format(key), keep_on_top=True
+                           )
                 element = ErrorElement(key=key)
         return element
 
@@ -9812,11 +9819,8 @@ class _DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.window = Window('Debug Window', no_titlebar=no_titlebar, auto_size_text=True, location=location,
-                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
         self.output_element = Multiline(size=win_size, autoscroll=True,
                                         key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
-
         if no_button:
             self.layout = [[self.output_element]]
         else:
@@ -9824,8 +9828,10 @@ class _DebugWin():
                 [self.output_element],
                 [DummyButton('Quit'), Stretch()]
             ]
-        self.window.AddRows(self.layout)
-        self.window.Read(timeout=0)  # Show a non-blocking form, returns immediately
+
+        self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True)
+
         return
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None):
@@ -9860,8 +9866,9 @@ class _DebugWin():
 
     def Close(self):
         """ """
+        if self.window.XFound:             # increment the number of open windows to get around a bug with debug windows
+            Window.IncrementOpenCount()
         self.window.Close()
-        del self.window
         self.window = None
 
 
@@ -11180,6 +11187,15 @@ def theme_text_color(color=None):
     return DEFAULT_TEXT_COLOR
 
 
+def theme_text_element_background_color(color=None):
+    """
+    Sets/Returns the background color for text elements
+
+    :return: (str) - color string of the text background color currently in use
+    """
+    if color is not None:
+        set_options(text_element_background_color=color)
+    return DEFAULT_TEXT_ELEMENT_BACKGROUND_COLOR
 
 def theme_input_background_color(color=None):
     """
@@ -13044,7 +13060,7 @@ def main():
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
-    Print('', location=(0, 0), font='Courier 12', size=(60, 15), grab_anywhere=True)
+    Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     while True:  # Event Loop
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
