@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0. Released   24-Dec-2019"
+version = __version__ = "0.31.0.1 Unreleased - fix for Listbox.update, Graph.change_coordinates"
 
 port = 'PySimpleGUIQt'
 
@@ -689,7 +689,8 @@ class Listbox(Element):
             self.Values = values
             for i in range(self.QT_ListWidget.count()):
                 self.QT_ListWidget.takeItem(0)
-            self.QT_ListWidget.addItems(values)
+            items = [str(v) for v in self.Values]
+            self.QT_ListWidget.addItems(items)
         if disabled == True:
             self.QT_ListWidget.setDisabled(True)
         elif disabled == False:
@@ -1889,6 +1890,19 @@ class Graph(Element):
             print('Call Window.Finalize() prior to all graph operations')
             return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
+
+
+    def change_coordinates(self, graph_bottom_left, graph_top_right):
+        """
+        Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+        system - the bottom left and the top right values of your graph.
+
+        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
+        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
+        """
+        self.BottomLeft = graph_bottom_left
+        self.TopRight = graph_top_right
+
 
     @property
     def TKCanvas(self):
