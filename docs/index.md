@@ -2,7 +2,7 @@
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
 
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
 
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
 
@@ -14,8 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.14.0-red.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.15.0-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
@@ -7391,7 +7390,8 @@ DrawArc(top_left,
     extent,
     start_angle,
     style=None,
-    arc_color="black")
+    arc_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -7784,6 +7784,22 @@ Parameter Descriptions:
 |---|---|
 |event|(unknown) Not used in this function.|
 
+### change_coordinates
+
+Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+system - the bottom left and the top right values of your graph.
+
+```
+change_coordinates(graph_bottom_left, graph_top_right)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|graph_bottom_left|Tuple[int, int] (x,y) The bottoms left corner of your coordinate system|
+|graph_top_right|Tuple[int, int] (x,y) The top right corner of your coordinate system|
+
 ### delete_figure
 
 Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
@@ -7808,7 +7824,8 @@ draw_arc(top_left,
     extent,
     start_angle,
     style=None,
-    arc_color="black")
+    arc_color="black",
+    line_width=1)
 ```
 
 Parameter Descriptions:
@@ -14177,6 +14194,23 @@ Enables the internal debugger. By default, the debugger IS enabled
 enable_debugger()
 ```
 
+### extend_layout
+
+Adds new rows to an existing container element inside of this window
+
+```
+extend_layout(container, rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|container|(Union[Frame, Column, Tab]) - The container Element the layout will be placed inside of|
+|rows|(List[List[Element]]) - The layout to be added|
+|||
+| **return** | (Window) self so could be chained |
+
 ### fill
 
 Fill in elements that are input fields with data based on a 'values dictionary'
@@ -15846,6 +15880,10 @@ Parameter Descriptions:
 |size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
 |border_width|width of border around element|
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|||
+| **return** | (bool) True if updated successfully. False if user closed the meter with the X or Cancel button |
+
+Cancels and closes a previously created One Line Progress Meter window
 
 ```
 OneLineProgressMeterCancel(key)
@@ -15855,7 +15893,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
+|key|Key used when meter was created|
 
 ```
 one_line_progress_meter(title,
@@ -15886,6 +15924,10 @@ Parameter Descriptions:
 |size|Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)|
 |border_width|width of border around element|
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
+|||
+| **return** | (bool) True if updated successfully. False if user closed the meter with the X or Cancel button |
+
+Cancels and closes a previously created One Line Progress Meter window
 
 ```
 one_line_progress_meter_cancel(key)
@@ -15895,7 +15937,7 @@ Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|key|Used with window.FindElement and with return values to uniquely identify this element|
+|key|Key used when meter was created|
 
 ## Popup Functions
 
@@ -18001,6 +18043,12 @@ Sets/Returns the text color currently in use
 theme_text_color(color=None) -> (str) - color string of the text color currently in use
 ```
 
+Sets/Returns the background color for text elements
+
+```
+theme_text_element_background_color(color=None) -> (str) - color string of the text background color currently in use
+```
+
 ## Old Themes (Look and Feel) - Replaced by theme()
 
 Change the "color scheme" of all future PySimpleGUI Windows.
@@ -19377,6 +19425,33 @@ THEMES!
 * Table heading font now defaults correctly
 * Tree heading font now defaults correctly
 * Renamed DebugWin to _DebugWin to discourage use
+
+## 4.15.0 PySimpleGUI 08-Jan-2020
+
+Dynamic Window Layouts!  Extend your layouts with `Window.extend_layout`
+Lots of fixes
+
+* Window.extend_layout
+* Graph.change_coordinates - realtime change of coordinate systems for the Graph element
+* theme_text_element_background_color - new function to expose this setting
+* Radio & Checkbox colors changed to be ligher/darker than background
+* Progress bar - allow updates of value > max value
+* Output element does deletes now so that cleanup works. Can use in multiple windows as a result
+* DrawArc (draw_arc) - New width / line width parameter
+* RGB does more error checking, converts types
+* More descriptive errors for find element	
+* popup_error used interally now sets keep on top
+* Element Re-use wording changed so that it's clear the element is the problem not the layout when re-use detected
+* Window.Close (Window.close) - fix for not immediately seeing the window disappear on Linux when clicking "X"
+* Window.BringToFront (bring_to_front) - on Windows needed to use topmost to bring window to front insteade of lift
+* Multiline Scrollbar - removed the scrollbar color. It doesn't work on Windows so keeping consistent
+* Changed how Debug Windows are created.  Uses finalize now instead of the read non-blocking
+* Fix for Debug Window being closed by X causing main window to also close
+* Changed all "black" and "white" in the Look and Feel table to #000000 and #FFFFFF
+* Added new color processing functions for internal use (hsl and hsv related)
+* popup - extended the automatic wrapping capabilities to messages containing \n
+* Test harness uses a nicer colors for event, value print outs.
+* _timeit decorator for timing functions
 
 ### Upcoming
 
