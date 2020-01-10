@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.0  Released 08-Jan-2020"
+version = __version__ = "4.15.1  Released 09-Jan-2020"
 
 port = 'PySimpleGUI'
 
@@ -11584,8 +11584,6 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         message = str(message)
         if message.count('\n'):
             message_wrapped = message
-            if len(message_wrapped) > local_line_width:
-                message_wrapped = textwrap.fill(message, local_line_width)
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
         message_wrapped_lines = message_wrapped.count('\n') + 1
