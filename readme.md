@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.15.0-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.15.1-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
@@ -19452,6 +19452,12 @@ Lots of fixes
 * popup - extended the automatic wrapping capabilities to messages containing \n
 * Test harness uses a nicer colors for event, value print outs.
 * _timeit decorator for timing functions
+
+
+## 4.15.1 PySimpleGUI 09-Jan-2020
+
+Quick patch to remove change to popup
+
 
 ### Upcoming
 
