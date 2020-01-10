@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1  Released 09-Jan-2020"
+version = __version__ = "4.15.1.1  Unreleased - Fix for draw_pixel"
 
 port = 'PySimpleGUI'
 
@@ -3155,8 +3155,13 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         try:  # needed in case window was closed with an X
-            id = self._TKCanvas2.create_oval(converted_point[0] - size, converted_point[1] - size,
-                                             converted_point[0] + size, converted_point[1] + size, fill=color,
+            point1 = converted_point[0] - size // 2, converted_point[1] - size // 2
+            point2 = converted_point[0] + size // 2, converted_point[1] + size // 2
+            # print(f'point size = {size} points = {point1} and {point2}')
+            id = self._TKCanvas2.create_oval(point1[0], point1[1],
+                                             point2[0], point2[1],
+                                             width=0,
+                                             fill=color,
                                              outline=color)
         except:
             id = None
