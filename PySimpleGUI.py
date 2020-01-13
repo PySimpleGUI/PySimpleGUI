@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.1  Unreleased - Fix for draw_pixel"
+version = __version__ = "4.15.1.2  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified"
 
 port = 'PySimpleGUI'
 
@@ -1817,7 +1817,6 @@ class Multiline(Element):
         :param visible: (bool) set visibility state of the element
         :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
         """
-        value = str(value)
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
@@ -1830,6 +1829,7 @@ class Multiline(Element):
             self.TKText.tag_configure(str(self.TagCounter), background=background_color_for_value)
 
         if value is not None:
+            value = str(value)
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
