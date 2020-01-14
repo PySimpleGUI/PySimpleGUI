@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.34.0 Released 24-Dec-2019 Themes"
+version = __version__ = "0.34.0.1 Unreleased - Fixed sliders that Remi broke, Removed Image update check for no image, new Graph.change_coordinates method"
 
 port = 'PySimpleGUIWeb'
 
@@ -1801,7 +1801,16 @@ class Graph(Element):
         self.SvgGroup.remove_child(figure)
         del figure
 
+    def change_coordinates(self, graph_bottom_left, graph_top_right):
+        """
+        Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+        system - the bottom left and the top right values of your graph.
 
+        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
+        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
+        """
+        self.BottomLeft = graph_bottom_left
+        self.TopRight = graph_top_right
 
 
     def _MouseDownCallback(self, widget, x,y, *args):
@@ -4815,12 +4824,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  SLIDER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
-                orient = remi.gui.Widget.LAYOUT_HORIZONTAL if element.Orientation.lower().startswith('h') else remi.gui.Widget.LAYOUT_VERTICAL
+                orient = remi.gui.Container.LAYOUT_HORIZONTAL if element.Orientation.lower().startswith('h') else remi.gui.Container.LAYOUT_VERTICAL
+                print(f'slider orient = {orient}')
                 element.Widget = remi.gui.Slider(layout_orientation=orient, default_value=element.DefaultValue, min=element.Range[0], max=element.Range[1],step=element.Resolution)
                 if element.DefaultValue:
                     element.Widget.set_value(element.DefaultValue)
                 # if element.Orientation.startswith('v'):
-                #     element.Widget.layout_orientation = remi.gui.Widget.LAYOUT_VERTICAL
+                #     element.Container.LAYOUT_orientation = remi.gui.Container.LAYOUT_VERTICAL
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
                     element.Widget.onchange.connect(element._SliderCallback)
@@ -7818,21 +7828,22 @@ def main():
         # [OptionMenu([])],
         [T('System platform = %s'%sys.platform)],
         [Image(data=DEFAULT_BASE64_ICON, enable_events=False)],
-        [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png', key='-IMAGE-')],
+        # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png', key='-IMAGE-')],
         [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
-        [Output(size=(60,10))],
+        # [Output(size=(60,10))],
         [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
-        [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=False,
+        [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
         [Listbox(values=('Listbox 1', 'Listbox 2', 'Listbox 3'), enable_events =True, size=(10, 3), key='_LIST_')],
         # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo200.png', enable_events=False)],
-        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=False, orientation='v')],
-        [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=False)],
+        [Slider((1, 100), default_value=80, key='_SLIDER_', visible=True, enable_events=True, orientation='v')],
+        [Slider((1, 100), default_value=80, key='_SLIDER2_', visible=True, enable_events=False, orientation='h')],
+        [Spin(values=(1, 2, 3), initial_value='2', size=(4, 1), key='_SPIN_', enable_events=True)],
         [OK(), Button('Hidden', visible=False, key='_HIDDEN_'), Button('Values'), Button('Exit', button_color=('white', 'red')), Button('UnHide'), B('Popup')]
     ]
 
@@ -7846,7 +7857,6 @@ def main():
     while True:
         event, values = window.Read(timeout=None)
         window.Element('_TEXT_').Update(str(datetime.datetime.now()))
-        window['-IMAGE-'].Update(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png')
         window.Element('_TEXT_UPTIME_').Update(str(datetime.datetime.now()-start_time))
         print(event, values) if event != TIMEOUT_KEY else None
         if event in (None, 'Exit'):
