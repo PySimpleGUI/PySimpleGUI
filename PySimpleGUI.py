@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.2  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified"
+version = __version__ = "4.15.1.4  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button"
 
 port = 'PySimpleGUI'
 
@@ -1352,7 +1352,7 @@ class Listbox(Element):
             self.TKListbox.delete(0, 'end')
             for item in values:
                 self.TKListbox.insert(tk.END, item)
-            self.TKListbox.selection_set(0, 0)
+            # self.TKListbox.selection_set(0, 0)
             self.Values = values
         if set_to_index is not None:
             self.TKListbox.selection_clear(0, len(self.Values))  # clear all listbox selections
@@ -2078,7 +2078,7 @@ class TKProgressBar():
         self.Count = None
         self.PriorCount = 0
 
-        if orientation[0].lower() == 'h':
+        if orientation.lower().startswith('h'):
             s = ttk.Style()
             s.theme_use(style)
             if BarColor != COLOR_SYSTEM_DEFAULT:
@@ -8112,8 +8112,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = toplevel_form.TextJustification
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
-                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
-                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                justify = tk.LEFT if justification.startswith('l') else tk.CENTER if justification.startswith('c') else tk.RIGHT
+                anchor = tk.NW if justification.startswith('l') else tk.N if justification.startswith('c') else tk.NE
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
                                                          height=height, justify=justify, bd=bd, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
@@ -8418,7 +8418,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = element.Justification
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
-                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
+                justify = tk.LEFT if justification.startswith('l') else tk.CENTER if justification.startswith('c') else tk.RIGHT
                 # anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
                 element.TKEntry = element.Widget = tk.Entry(tk_row_frame, width=element_size[0],
                                                             textvariable=element.TKStringVar, bd=bd,
@@ -9024,7 +9024,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 slider_width = element_size[1]
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(element.DefaultValue)
-                if element.Orientation[0] == 'v':
+                if element.Orientation.startswith('v'):
                     range_from = element.Range[1]
                     range_to = element.Range[0]
                     slider_length += DEFAULT_MARGINS[1] * (element_size[0] * 2)  # add in the padding
@@ -9071,9 +9071,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 frame = tk.Frame(tk_row_frame)
                 element.table_frame = frame
                 height = element.NumRows
-                if element.Justification == 'left':
+                if element.Justification.startswith('l'):
                     anchor = tk.W
-                elif element.Justification == 'right':
+                elif element.Justification.startswith('r'):
                     anchor = tk.E
                 else:
                     anchor = tk.CENTER
@@ -9199,9 +9199,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
-                if element.Justification == 'left':  # justification
+                if element.Justification.startswith('l'):  # justification
                     anchor = tk.W
-                elif element.Justification == 'right':
+                elif element.Justification.startswith('r'):
                     anchor = tk.E
                 else:
                     anchor = tk.CENTER
@@ -9331,8 +9331,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     justification = toplevel_form.TextJustification
                 else:
                     justification = DEFAULT_TEXT_JUSTIFICATION
-                justify = tk.LEFT if justification == 'left' else tk.CENTER if justification == 'center' else tk.RIGHT
-                anchor = tk.NW if justification == 'left' else tk.N if justification == 'center' else tk.NE
+                justify = tk.LEFT if justification.startswith('l') else tk.CENTER if justification.startswith('c') else tk.RIGHT
+                anchor = tk.NW if justification.startswith('l') else tk.N if justification.startswith('c') else tk.NE
                 # tktext_label = tk.Label(tk_row_frame, textvariable=stringvar, width=width, height=height,
                 #                         justify=justify, bd=border_depth, font=font)
                 tktext_label = element.Widget = tk.Label(tk_row_frame, textvariable=stringvar, width=width,
@@ -9827,14 +9827,12 @@ class _DebugWin():
         if no_button:
             self.layout = [[self.output_element]]
         else:
-            self.layout = [
-                [self.output_element],
-                [DummyButton('Quit'), Stretch()]
-            ]
+            self.layout = [ [self.output_element],
+                            [DummyButton('Quit'), Stretch()]]
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
-                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=True)
-
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False)
+        # self.window.NonBlocking = True        # if finalizing this window, then need to uncommment this line
         return
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None):
@@ -9858,6 +9856,8 @@ class _DebugWin():
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
+            event, values = self.window.Read(timeout=0)
+        # print(f'Printing {ObjToStringSingleObj(self.output_element)}')
         if self.do_not_reroute_stdout:
             outstring = ''
             for arg in args:
