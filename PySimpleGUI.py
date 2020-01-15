@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.4  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button"
+version = __version__ = "4.15.1.5  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string"
 
 port = 'PySimpleGUI'
 
@@ -165,7 +165,7 @@ def _timeit(func):
         start = time.time()
         result = func(*args, **kwargs)
         end = time.time()
-        print(f'{func.__name__} executed in {end - start:.4f} seconds')
+        print('{} executed in {:.4f} seconds'.format( func.__name__, end - start))
         return result
 
     return wrapper
@@ -3648,6 +3648,37 @@ class Frame(Element):
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
+            if type(element) == list:
+                PopupError('Error creating Frame layout',
+                           'Layout has a LIST instead of an ELEMENT',
+                           'This means you have a badly placed ]',
+                           'The offensive list is:',
+                           element,
+                           'This list will be stripped from your layout',
+                            keep_on_top=True
+                           )
+                continue
+            elif callable(element) and not isinstance(element, Element):
+                PopupError('Error creating Frame layout',
+                           'Layout has a FUNCTION instead of an ELEMENT',
+                           'This likely means you are missing () from your layout',
+                           'The offensive list is:',
+                           element,
+                           'This item will be stripped from your layout',
+                           keep_on_top=True)
+                continue
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                PopupError('Error creating Frame layout',
+                           'The layout specified has already been used',
+                           'You MUST start witha "clean", unused layout every time you create a window',
+                           'The offensive Element = ',
+                           element,
+                           'and has a key = ', element.Key,
+                           'This item will be stripped from your layout',
+                           'Hint - try printing your layout and matching the IDs "print(layout)"',
+                           obj_to_string_single_obj(element), keep_on_top=True)
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -3665,6 +3696,16 @@ class Frame(Element):
         """
 
         for row in rows:
+            try:
+                iter(row)
+            except TypeError:
+                PopupError('Error creating Frame layout',
+                           'Your row is not an iterable (e.g. a list)',
+                           'Instead of a list, the type found was {}'.format(type(row)),
+                           'The offensive row = ',
+                           row,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
             self.AddRow(*row)
         return self
 
@@ -3794,6 +3835,34 @@ class Tab(Element):
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
+            if type(element) == list:
+                PopupError('Error creating Tab layout',
+                           'Layout has a LIST instead of an ELEMENT',
+                           'This means you have a badly placed ]',
+                           'The offensive list is:',
+                           element,
+                           'This list will be stripped from your layout' , keep_on_top=True
+                           )
+                continue
+            elif callable(element) and not isinstance(element, Element):
+                PopupError('Error creating Tab layout',
+                           'Layout has a FUNCTION instead of an ELEMENT',
+                           'This likely means you are missing () from your layout',
+                           'The offensive list is:',
+                           element,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                PopupError('Error creating Tab layout',
+                           'The layout specified has already been used',
+                           'You MUST start witha "clean", unused layout every time you create a window',
+                           'The offensive Element = ',
+                           element,
+                           'and has a key = ', element.Key,
+                           'This item will be stripped from your layout',
+                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True)
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -3811,8 +3880,19 @@ class Tab(Element):
         """
 
         for row in rows:
+            try:
+                iter(row)
+            except TypeError:
+                PopupError('Error creating Tab layout',
+                           'Your row is not an iterable (e.g. a list)',
+                           'Instead of a list, the type found was {}'.format(type(row)),
+                           'The offensive row = ',
+                           row,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
             self.AddRow(*row)
         return self
+
 
     def Update(self, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
         """
@@ -3941,6 +4021,34 @@ class TabGroup(Element):
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
+            if type(element) == list:
+                PopupError('Error creating Tab layout',
+                           'Layout has a LIST instead of an ELEMENT',
+                           'This means you have a badly placed ]',
+                           'The offensive list is:',
+                           element,
+                           'This list will be stripped from your layout' , keep_on_top=True
+                           )
+                continue
+            elif callable(element) and not isinstance(element, Element):
+                PopupError('Error creating Tab layout',
+                           'Layout has a FUNCTION instead of an ELEMENT',
+                           'This likely means you are missing () from your layout',
+                           'The offensive list is:',
+                           element,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                PopupError('Error creating Tab layout',
+                           'The layout specified has already been used',
+                           'You MUST start witha "clean", unused layout every time you create a window',
+                           'The offensive Element = ',
+                           element,
+                           'and has a key = ', element.Key,
+                           'This item will be stripped from your layout',
+                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True)
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -3957,8 +4065,19 @@ class TabGroup(Element):
         :return: (Frame) Used for chaining
         """
         for row in rows:
+            try:
+                iter(row)
+            except TypeError:
+                PopupError('Error creating Tab layout',
+                           'Your row is not an iterable (e.g. a list)',
+                           'Instead of a list, the type found was {}'.format(type(row)),
+                           'The offensive row = ',
+                           row,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
             self.AddRow(*row)
         return self
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -4333,6 +4452,34 @@ class Column(Element):
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
+            if type(element) == list:
+                PopupError('Error creating Column layout',
+                           'Layout has a LIST instead of an ELEMENT',
+                           'This means you have a badly placed ]',
+                           'The offensive list is:',
+                           element,
+                           'This list will be stripped from your layout' , keep_on_top=True
+                           )
+                continue
+            elif callable(element) and not isinstance(element, Element):
+                PopupError('Error creating Column layout',
+                           'Layout has a FUNCTION instead of an ELEMENT',
+                           'This likely means you are missing () from your layout',
+                           'The offensive list is:',
+                           element,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
+            if element.ParentContainer is not None:
+                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                PopupError('Error creating Column layout',
+                           'The layout specified has already been used',
+                           'You MUST start witha "clean", unused layout every time you create a window',
+                           'The offensive Element = ',
+                           element,
+                           'and has a key = ', element.Key,
+                           'This item will be stripped from your layout',
+                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True)
+                continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
             CurrentRow.append(element)
@@ -4350,8 +4497,19 @@ class Column(Element):
         """
 
         for row in rows:
+            try:
+                iter(row)
+            except TypeError:
+                PopupError('Error creating Column layout',
+                           'Your row is not an iterable (e.g. a list)',
+                           'Instead of a list, the type found was {}'.format(type(row)),
+                           'The offensive row = ',
+                           row,
+                           'This item will be stripped from your layout', keep_on_top=True)
+                continue
             self.AddRow(*row)
         return self
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -5586,7 +5744,7 @@ class Window:
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             if type(element) == list:
-                PopupError('Error creating layout',
+                PopupError('Error creating Window layout',
                            'Layout has a LIST instead of an ELEMENT',
                            'This means you have a badly placed ]',
                            'The offensive list is:',
@@ -5595,7 +5753,7 @@ class Window:
                            )
                 continue
             elif callable(element) and not isinstance(element, Element):
-                PopupError('Error creating layout',
+                PopupError('Error creating Window layout',
                            'Layout has a FUNCTION instead of an ELEMENT',
                            'This likely means you are missing () from your layout',
                            'The offensive list is:',
@@ -5604,7 +5762,7 @@ class Window:
                 continue
             if element.ParentContainer is not None:
                 warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
-                PopupError('Error creating layout',
+                PopupError('Error creating Window layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
                            'The offensive Element = ',
@@ -5633,7 +5791,7 @@ class Window:
             try:
                 iter(row)
             except TypeError:
-                PopupError('Error creating layout',
+                PopupError('Error creating Window layout',
                            'Your row is not an iterable (e.g. a list)',
                            'Instead of a list, the type found was {}'.format(type(row)),
                            'The offensive row = ',
