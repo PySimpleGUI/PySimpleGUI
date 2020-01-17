@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 import textwrap
-import time
 
 '''
     Notification Window Demo Program
@@ -8,12 +7,14 @@ import time
 
     Displays a small informational window with an Icon and a message in the lower right corner of the display
     Option to fade in/out or immediatealy display.
+    
+    You can click on the notification window to speed things along.  The idea is that if you click while fading in, you should immediately see the info. If
+    you click while info is displaying or while fading out, the window closes immediately.
 '''
 
 # -------------------------------------------------------------------
 # Constants, defaults, Base64 icons
 USE_FADE_IN = True
-WINDOW_ALPHA = 0.9
 WIN_MARGIN = 60
 
 # colors
@@ -28,7 +29,7 @@ img_success = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/g
 
 # -------------------------------------------------------------------
 
-def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DISPLAY_DURATION_IN_MILLISECONDS, use_fade_in=True, location=None):
+def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DISPLAY_DURATION_IN_MILLISECONDS, use_fade_in=True, alpha=0.9, location=None):
     """
     Function that will create, fade in and out, a small window that displays a message with an icon
     The graphic design is similar to other system/program notification windows seen in Windows / Linux
@@ -37,7 +38,8 @@ def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DI
     :param icon: (str) Base64 icon to use. 2 are supplied by default
     :param display_duration_in_ms: (int) duration for the window to be shown
     :param use_fade_in: (bool) if True, the window will fade in and fade out
-    :param location: Tuple[int, int] locationi of the upper left corner of window. Default is lower right corner of screen
+    :param alpha: (float) Amount of Alpha Channel to use.  0 = invisible, 1 = fully visible
+    :param location: Tuple[int, int] location of the upper left corner of window. Default is lower right corner of screen
     """
 
     # Compute location and size of the window
@@ -61,21 +63,25 @@ def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DI
     window["-GRAPH-"].draw_text(title, location=(64, 20), color=TEXT_COLOR, font=("Arial", 12, "bold"), text_location=sg.TEXT_LOCATION_TOP_LEFT)
     window["-GRAPH-"].draw_text(message, location=(64, 44), color=TEXT_COLOR, font=("Arial", 9), text_location=sg.TEXT_LOCATION_TOP_LEFT)
 
-    # change the cursor into a "hand" when hovering over the window. This is a direct call into tkinter, going around PySimpleGUI
-    window["-GRAPH-"].Widget.config(cursor="hand2")
+    # change the cursor into a "hand" when hovering over the window to give user hint that clicking does something
+    window['-GRAPH-'].set_cursor('hand2')
 
     if use_fade_in == True:
-        for i in range(1, int(WINDOW_ALPHA * 100)):  # fade in
-            window.set_alpha(i / 100)
-            window.refresh()
-            time.sleep(.02)
+        for i in range(1,int(alpha*100)):               # fade in
+            window.set_alpha(i/100)
+            event, values = window.read(timeout=20)
+            if event != sg.TIMEOUT_KEY:
+                window.set_alpha(1)
+                break
         event, values = window(timeout=display_duration_in_ms)
-        for i in range(int(WINDOW_ALPHA * 100), 1, -1):  # fade out
-            window.set_alpha(i / 100)
-            window.refresh()
-            time.sleep(.02)
+        if event == sg.TIMEOUT_KEY:
+            for i in range(int(alpha*100),1,-1):       # fade out
+                window.set_alpha(i/100)
+                event, values = window.read(timeout=20)
+                if event != sg.TIMEOUT_KEY:
+                    break
     else:
-        window.set_alpha(WINDOW_ALPHA)
+        window.set_alpha(alpha)
         event, values = window(timeout=display_duration_in_ms)
 
     window.close()
@@ -83,4 +89,4 @@ def display_notification(title, message, icon, display_duration_in_ms=DEFAULT_DI
 if __name__ == '__main__':
     title = "Action completed successfully"
     message = "This message is intended to inform you that the action you have performed has been successful. There is no need for further action."
-    display_notification(title, message, img_success, 4000, use_fade_in=True)
+    display_notification(title, message, img_success, 10000, use_fade_in=True)
