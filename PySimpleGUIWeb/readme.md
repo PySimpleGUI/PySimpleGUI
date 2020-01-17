@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.31.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.35.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -413,6 +413,38 @@ One-time patch to remove a debug print
 * Made return values computation easier
 * Two new look and feel color settings - Material1, Material2
 
+## 0.32.0 PySimpleGUIWeb 08-Nov-2019
+
+* Fix for Output Element scrolling. Now cursor stays at end
+* Fix for Multiline Output scrolling. Appends correctly and autoscrolls if enabled
+
+## 0.33.0 PySimpleGUIWeb 17-Nov-2019
+
+* Added autoscroll parameter to the MultilineOutput.update method
+* TONS of new Look and Feel Themes
+* Fuzzy name matcher for change_loo_and_feel call - string doesn't have to perfectly match now
+* New preview_all_look_and_feel_themes function displays all of the colors for the Themes
+
+## 0.34.0 PySimpleGUIWeb 24-Dec-2019
+
+Themes +
+
+* New theme apis that replace the change_look_and_feel call (see primary PySimpleGUI port for more info)
+* New default theme is Dark Blue 3
+* Added ported string so can tell this is the "PySimpleGUIWeb" port
+* Removed platform specific code that was barring Macs from using colors, even for the web
+* Changed "TRANSPARENT_BUTTON" string to invalidate it. It was misunderstood and should not bave been inlucded in anything
+* Ability to change the files delimeter for browse files to filenames can have ; in them
+
+
+## 0.35.0  PySimpleGUIWeb  16-Jan-2020
+
+* Fixed Slider crash caused by latest Remi releaese
+* Brought over latest Theme code from PySimpleGUI-tk (text background color, changed all black and white refs to hex)
+* New Graph.change_coordinates method
+* Removed check for no image specified in Image.update (so cal specify visibilty without changing image for example)
+
+
 
 # Design        
 # Author 
@@ -423,7 +455,3 @@ One-time patch to remove a debug print
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjY3MTk5MTcsNDc1ODY1Njc2LC0xMD
-U3MTAzNjQzLDEyMTMzNTI2MzYsLTExNjA2ODQzMzldfQ==
--->
