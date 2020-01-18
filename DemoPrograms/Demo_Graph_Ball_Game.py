@@ -37,7 +37,7 @@ class Playfield():
         self.add_wall((0, 400), (600, 400))  # ground
         self.add_wall((0, 0), (0, 600))  # Left side
         self.add_wall((600, 0), (600, 400))  # right side
-        self.arena_balls = []               # type: [] Ball
+        self.arena_balls = []               # type: List[Ball]
         self.graph_elem = graph_elem        # type: sg.Graph
 
     def add_wall(self, pt_from, pt_to):
@@ -45,6 +45,7 @@ class Playfield():
         ground_shape = pymunk.Segment(body, pt_from, pt_to, 0.0)
         ground_shape.friction = 0.8
         ground_shape.elasticity = .99
+        ground_shape.mass = pymunk.inf
         self.space.add(ground_shape)
 
     def add_random_balls(self):
@@ -82,9 +83,11 @@ layout = [[sg.Text('Ball Test'), sg.Text('My IP {}'.format(hostname))],
            sg.Button('Player 2 Shoot', size=(15, 2)), sg.Button('Exit')]
           ]
 
-window = sg.Window('Window Title', layout, disable_close=True)
+window = sg.Window('Window Title', layout, disable_close=True, finalize=True)
 
 area = Playfield(graph_elem)
+area.add_wall((0,300), (300,300))
+graph_elem.draw_line((0,300),(300,300))
 # area.add_random_balls()
 
 # ------------------- GUI Event Loop -------------------
