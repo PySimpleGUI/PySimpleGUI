@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.5  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string"
+version = __version__ = "4.15.1.5  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added"
 
 port = 'PySimpleGUI'
 
@@ -3260,6 +3260,7 @@ class Graph(Element):
         :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle
         :param fill_color: (str) color of the interior
         :param line_color: (str) color of outline
+        :param line_width: (int) width of the line in pixels
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
         """
 
@@ -3278,6 +3279,31 @@ class Graph(Element):
         except:
             id = None
         return id
+
+
+    def DrawPolygon(self, points, fill_color=None, line_color=None, line_width=None):
+        """
+        Draw a rectangle given 2 points. Can control the line and fill colors
+
+        :param points: List[Union[Tuple[int, int], Tuple[float, float]]] list of points that define the polygon
+        :param fill_color: (str) color of the interior
+        :param line_color: (str) color of outline
+        :param line_width: (int) width of the line in pixels
+        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
+        """
+
+        converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
+        if self._TKCanvas2 is None:
+            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+            print('Call Window.Finalize() prior to this operation')
+            return None
+        try:  # in case closed with X
+            id = self._TKCanvas2.create_polygon(converted_points, fill=fill_color, outline=line_color, width=line_width)
+        except:
+            id = None
+        return id
+
+
 
     def DrawText(self, text, location, color='black', font=None, angle=0, text_location=TEXT_LOCATION_CENTER):
         """
@@ -3567,6 +3593,7 @@ class Graph(Element):
     draw_line = DrawLine
     draw_oval = DrawOval
     draw_point = DrawPoint
+    draw_polygon = DrawPolygon
     draw_rectangle = DrawRectangle
     draw_text = DrawText
     get_figures_at_location = GetFiguresAtLocation
