@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.5  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added"
+version = __version__ = "4.15.1.6  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added"
 
 port = 'PySimpleGUI'
 
@@ -10098,6 +10098,30 @@ def EasyPrintClose():
     if _DebugWin.debug_window is not None:
         _DebugWin.debug_window.Close()
         _DebugWin.debug_window = None
+
+# ------------------------------------------------------------------------------------------------ #
+# A print-like call that can be used to output to a multiline element as if it's an Output element #
+# ------------------------------------------------------------------------------------------------ #
+
+def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+    """
+    Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+    :param multiline_element: (Multiline) The multiline element to be output to
+    :param args: List[Any] The arguments to print
+    :param end: (str) The end char to use just like print uses
+    :param sep: (str) The separation character like print uses
+    :param text_color: The color of the text
+    :param background_color: The background color of the line
+    """
+    sepchar = sep if sep is not None else ' '
+    endchar = end if end is not None else '\n'
+
+    outstring = ''
+    for arg in args:
+        outstring += str(arg) + sepchar
+    outstring += endchar
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
 
 
 # ============================== SetGlobalIcon ======#
