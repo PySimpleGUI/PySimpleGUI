@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.2 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry"
+version = __version__ = "0.31.0.3 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element"
 
 port = 'PySimpleGUIQt'
 
@@ -6239,6 +6239,32 @@ def EasyPrintClose():
     if DebugWin.debug_window is not None:
         DebugWin.debug_window.Close()
         DebugWin.debug_window = None
+
+
+# ------------------------------------------------------------------------------------------------ #
+# A print-like call that can be used to output to a multiline element as if it's an Output element #
+# ------------------------------------------------------------------------------------------------ #
+
+def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+    """
+    Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+    :param multiline_element: (Multiline) The multiline element to be output to
+    :param args: List[Any] The arguments to print
+    :param end: (str) The end char to use just like print uses
+    :param sep: (str) The separation character like print uses
+    :param text_color: The color of the text
+    :param background_color: The background color of the line
+    """
+    sepchar = sep if sep is not None else ' '
+    endchar = end if end is not None else '\n'
+
+    outstring = ''
+    for arg in args:
+        outstring += str(arg) + sepchar
+    outstring += endchar
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+
 
 
 # ========================  Scrolled Text Box   =====#
