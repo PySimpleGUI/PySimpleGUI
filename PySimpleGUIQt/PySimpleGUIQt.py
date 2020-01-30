@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.3 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element"
+version = __version__ = "0.31.0.4 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end"
 
 port = 'PySimpleGUIQt'
 
@@ -1026,6 +1026,7 @@ class Multiline(Element):
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
             self.QT_TextEdit.insertPlainText(str(value))
+            self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
             if text_color_for_value is not None:
                 self.QT_TextEdit.setTextColor(self.TextColor)
             if background_color_for_value is not None:
