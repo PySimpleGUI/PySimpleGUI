@@ -1026,7 +1026,8 @@ class Multiline(Element):
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
             self.QT_TextEdit.insertPlainText(str(value))
-            self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
+            if self.Autoscroll:
+                self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
             if text_color_for_value is not None:
                 self.QT_TextEdit.setTextColor(self.TextColor)
             if background_color_for_value is not None:
