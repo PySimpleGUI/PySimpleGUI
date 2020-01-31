@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.4 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end"
+version = __version__ = "0.31.0.5 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns"
 
 port = 'PySimpleGUIQt'
 
@@ -4769,6 +4769,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
 
             # -------------------------  COLUMN placement element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
+                element = element           # type: Column
                 # column_widget = QWidget()
                 column_widget = QGroupBox()
                 element.Widget = element.QT_QGroupBox = column_widget
@@ -4776,20 +4777,25 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 style = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style = style_entry(background_color=element.BackgroundColor)
-                    style += 'background-color: %s;' % element.BackgroundColor
+                    # style += 'background-color: %s;' % element.BackgroundColor
                 style += style_entry(border='0px solid gray')
                 # style += 'border: 0px solid gray; '
                 style = style_generate('QGroupBox', style)
                 column_widget.setStyleSheet(style)
 
-                # if element_size[0] is not None:
-                #     column_widget.setFixedWidth(element_size[0])
-                # if element_size[1] is not None:
-                #     column_widget.setFixedHeight(element_size[1])
-
                 column_layout = QFormLayout()
                 column_vbox = QVBoxLayout()
                 PackFormIntoFrame(element, column_layout, toplevel_win)
+
+                scroll = None
+                if element.Scrollable and (element_size[0] is not None or element_size[1] is not None):
+                    scroll = QtWidgets.QScrollArea()
+                    scroll.setWidget(column_widget)
+                    if element_size[0] is not None:
+                        scroll.setFixedWidth(element_size[0])
+                    if element_size[1] is not None:
+                        scroll.setFixedHeight(element_size[1])
+                    scroll.setWidgetResizable(True)
 
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
@@ -4798,7 +4804,10 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 if not element.Visible:
                     column_widget.setVisible(False)
 
-                qt_row_layout.addWidget(column_widget)
+                if scroll:
+                    qt_row_layout.addWidget(scroll)
+                else:
+                    qt_row_layout.addWidget(column_widget)
             # -------------------------  TEXT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element.Widget = element.QT_Label = qlabel = QLabel(element.DisplayText, toplevel_win.QTWindow)
