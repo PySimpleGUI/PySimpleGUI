@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.6  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added"
+version = __version__ = "4.15.1.7  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get"
 
 port = 'PySimpleGUI'
 
@@ -1411,6 +1411,23 @@ class Listbox(Element):
         :return: List[int] A list of offsets into values that is currently selected
         """
         return self.TKListbox.curselection()
+
+
+    def get(self):
+        """
+        Returns the list of items currently selected in this listbox.  It should be identical
+        to the value you would receive when performing a window.read() call.
+
+        :return: (List[Any]) The list of currently selected items. The actual items are returned, not the indexes
+        """
+        try:
+            items = self.TKListbox.curselection()
+            value = [self.Values[int(item)] for item in items]
+        except:
+            value = []
+        return value
+
+
 
     get_indexes = GetIndexes
     get_list_values = GetListValues
