@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.7  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get"
+version = __version__ = "4.15.1.8  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode"
 
 port = 'PySimpleGUI'
 
@@ -1330,7 +1330,7 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, visible=None):
+    def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1377,6 +1377,11 @@ class Listbox(Element):
                 self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
             self.TKListbox.yview_moveto(scroll_to_index / len(self.Values))
+        if select_mode is not None:
+            try:
+                self.TKListbox.config(selectmode=select_mode)
+            except:
+                print('Listbox.update error trying to change mode to: ', select_mode)
 
     def SetValue(self, values):
         """
@@ -1418,7 +1423,7 @@ class Listbox(Element):
         Returns the list of items currently selected in this listbox.  It should be identical
         to the value you would receive when performing a window.read() call.
 
-        :return: (List[Any]) The list of currently selected items. The actual items are returned, not the indexes
+        :return: List[Any] The list of currently selected items. The actual items are returned, not the indexes
         """
         try:
             items = self.TKListbox.curselection()
