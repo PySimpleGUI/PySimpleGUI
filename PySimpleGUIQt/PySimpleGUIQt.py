@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.5 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns"
+version = __version__ = "0.31.0.6 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get"
 
 port = 'PySimpleGUIQt'
 
@@ -712,6 +712,21 @@ class Listbox(Element):
     def GetListValues(self):
         return self.Values
 
+
+    def get(self):
+        """
+        Gets the current value of the Element as it would be represented in the results dictionary.
+        Normally you would NOT be using this method, but instead using the return values dictionary
+        that is returned from reading your window
+
+        :return: (List[Any]) The currently selected items in the listbox
+        """
+        value = []
+        selected_items = [item.text() for item in self.QT_ListWidget.selectedItems()]
+        for v in self.Values:
+            if str(v) in selected_items:
+                value.append(v)
+        return value
 
     get_list_values = GetListValues
     set_value = SetValue
