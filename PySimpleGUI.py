@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.8  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode"
+version = __version__ = "4.15.1.10  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind"
 
 port = 'PySimpleGUI'
 
@@ -799,6 +799,17 @@ class Element():
         """
         self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
         self.user_bind_dict[bind_string] = key_modifier
+
+
+    def unbind(self, bind_string):
+        """
+        Removes a previously bound tkinter event from an Element.
+        :param bind_string: The string tkinter expected in its bind function
+        """
+        self.Widget.unbind(bind_string)
+        self.user_bind_dict.pop(bind_string, None)
+
+
 
     def ButtonReboundCallback(self, event):
         """
@@ -1965,9 +1976,8 @@ class Text(Element):
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
         if value is not None:
-            self.DisplayText = value
-            stringvar = self.TKStringVar
-            stringvar.set(value)
+            self.DisplayText = str(value)
+            self.TKStringVar.set(str(value))
         if background_color is not None:
             self.TKText.configure(background=background_color)
         if text_color is not None:
@@ -8813,13 +8823,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element  # type: Multiline
-                default_text = element.DefaultText
                 width, height = element_size
                 bd = element.BorderWidth
                 element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height,
                                                                                wrap='word', bd=bd, font=font,
                                                                                relief=RELIEF_SUNKEN)
-                element.TKText.insert(1.0, default_text)  # set the default text
+                if element.DefaultText:
+                    element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
