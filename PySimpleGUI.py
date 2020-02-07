@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.10  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind"
+version = __version__ = "4.15.1.11  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list()"
 
 port = 'PySimpleGUI'
 
@@ -2908,7 +2908,7 @@ class Image(Element):
         self.tktext_label = None
         self.BackgroundColor = background_color
         if data is None and filename is None:
-            print('* Warning... no image specified in Image Element! *')
+            self.Filename = ''
         self.EnableEvents = enable_events
         self.RightClickMenu = right_click_menu
         self.AnimatedFrames = None
@@ -6370,6 +6370,44 @@ class Window:
                     key_dict[element.Key] = element
         return key_dict
 
+
+    def element_list(self):
+        """
+        Returns a list of all elements in the window
+
+        :return: List[Element] - List of all elements in the window and container elements in the window
+        """
+        return self._build_element_list()
+
+
+    def _build_element_list(self):
+        """
+        Used internally only! Not user callable
+        Builds a dictionary containing all elements with keys for this window.
+        """
+        elem_list = []
+        elem_list = self._build_element_list_for_form(self, self, elem_list)
+        return elem_list
+
+    def _build_element_list_for_form(self, top_window, window, elem_list):
+        """
+        Loop through all Rows and all Container Elements for this window and create a list
+        Note that the calls are recursive as all pathes must be walked
+
+        :param top_window: (Window) The highest level of the window
+        :param window: Union[Column, Frame, TabGroup, Pane, Tab] The "sub-window" (container element) to be searched
+        :param elem_list: The element list as it currently stands.... used as part of recursive call
+        :return: List[Element] List of all elements in this sub-window
+        """
+        for row_num, row in enumerate(window.Rows):
+            for col_num, element in enumerate(row):
+                elem_list.append(element)
+                if element.Type in (ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME, ELEM_TYPE_TAB_GROUP, ELEM_TYPE_PANE, ELEM_TYPE_TAB):
+                    elem_list = self._build_element_list_for_form(top_window, element, elem_list)
+        return elem_list
+
+
+
     def SaveToDisk(self, filename):
         """
         Saves the values contained in each of the input areas of the form. Basically saves what would be returned
@@ -6933,11 +6971,227 @@ Window.CloseNonBlockingForm = Window.Close
 Window.CloseNonBlocking = Window.Close
 
 
+
+
+# -------------------------------- System Tray Begins Here -------------------------------- #
+# Feb 2020 - Just starting on this so code commented out for now. Basing on PySimpleGUIQt's implementation / call format
+
+# ------------------------------------------------------------------------- #
+#                       SystemTray - class for implementing a psyeudo tray  #
+# ------------------------------------------------------------------------- #
+# class SystemTray:
+#     def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
+#         '''
+#         SystemTray - create an icon in the system tray
+#         :param menu: Menu definition
+#         :param filename: filename for icon
+#         :param data: in-ram image for icon
+#         :param data_base64: basee-64 data for icon
+#         :param tooltip: tooltip string
+#         '''
+#         self.Menu = menu
+#         self.TrayIcon = None
+#         self.Shown = False
+#         self.MenuItemChosen = TIMEOUT_KEY
+#         self.LastMessage = None
+#         self.LastTitle = None
+#         self.metadata = metadata
+#
+#         if Window.QTApplication is None:
+#             Window.QTApplication = QApplication(sys.argv)
+#         self.App = Window.QTApplication
+#         self.Widget = self.QWidget = QWidget()              # type: QWidget
+#
+#         if filename is None and data is None and data_base64 is None:
+#             data_base64 = DEFAULT_BASE64_ICON
+#         qicon = None
+#         if filename is not None:
+#             qicon = QIcon(filename)
+#         elif data is not None:
+#             ba = QtCore.QByteArray.fromRawData(data)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#         elif data_base64 is not None:
+#             ba = QtCore.QByteArray.fromBase64(data_base64)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#         if qicon is None:
+#             PopupError('ERROR - Tray must have one form of Icon specified')
+#             return
+#         self.TrayIcon = QSystemTrayIcon(qicon)
+#
+#         if self.Menu is not None:
+#             qmenu = QMenu()
+#             qmenu.setTitle(self.Menu[0])
+#             AddTrayMenuItem(qmenu, self.Menu[1], self)
+#             self.TrayIcon.setContextMenu(qmenu)
+#
+#         if tooltip is not None:
+#             self.TrayIcon.setToolTip(str(tooltip))
+#
+#         self.TrayIcon.messageClicked.connect(self._message_clicked)
+#         self.TrayIcon.activated.connect(self._double_clicked)
+#
+#         self.TrayIcon.show()
+#
+#     def _QT_MenuItemChosenCallback(self, item_chosen):
+#         self.MenuItemChosen = item_chosen.replace('&','')
+#         self.App.exit()                         # kick the users out of the mainloop
+#
+#     # callback function when message is clicked
+#     def _message_clicked(self):
+#         self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
+#         self.App.exit()
+#
+#
+#     def _double_clicked(self, reason):
+#         # print(reason)
+#         if reason == QSystemTrayIcon.DoubleClick:
+#             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
+#             self.App.exit()
+#         if reason == QSystemTrayIcon.Trigger:
+#             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
+#             self.App.exit()
+#
+#
+#     def Read(self, timeout=None):
+#         '''
+#         Reads the context menu
+#         :param timeout: Optional.  Any value other than None indicates a non-blocking read
+#         :return:
+#         '''
+#         if not self.Shown:
+#             self.Shown = True
+#             self.TrayIcon.show()
+#         if timeout is None:
+#             self.App.exec_()
+#         elif timeout == 0:
+#             self.App.processEvents()
+#         else:
+#             self.timer = start_systray_read_timer(self, timeout)
+#             self.App.exec_()
+#
+#             if self.timer:
+#                 stop_timer(self.timer)
+#
+#         item = self.MenuItemChosen
+#         self.MenuItemChosen = TIMEOUT_KEY
+#         return item
+#
+#     def _timer_timeout(self):
+#         self.App.exit()  # kick the users out of the mainloop
+#
+#     def Hide(self):
+#         self.TrayIcon.hide()
+#
+#
+#     def UnHide(self):
+#         self.TrayIcon.show()
+#
+#
+#     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
+#         '''
+#         Shows a balloon above icon in system tray
+#         :param title:  Title shown in balloon
+#         :param message: Message to be displayed
+#         :param filename: Optional icon filename
+#         :param data: Optional in-ram icon
+#         :param data_base64: Optional base64 icon
+#         :param time: How long to display message in milliseconds
+#         :return:
+#         '''
+#         qicon = None
+#         if filename is not None:
+#             qicon = QIcon(filename)
+#         elif data is not None:
+#             ba = QtCore.QByteArray.fromRawData(data)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#         elif data_base64 is not None:
+#             ba = QtCore.QByteArray.fromBase64(data_base64)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#
+#         if qicon is not None:
+#             self.TrayIcon.showMessage(title, message, qicon, time)
+#         elif messageicon is not None:
+#             self.TrayIcon.showMessage(title, message, messageicon, time)
+#         else:
+#             self.TrayIcon.showMessage(title, message, QIcon(), time)
+#
+#         self.LastMessage = message
+#         self.LastTitle = title
+#         return self
+#
+#     def Close(self):
+#         '''
+#
+#         :return:
+#         '''
+#         self.Hide()
+#         # Don't close app because windows could be depending on it
+#         # self.App.quit()
+#
+#
+#     def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+#         '''
+#         Updates the menu, tooltip or icon
+#         :param menu: menu defintion
+#         :param tooltip: string representing tooltip
+#         :param filename:  icon filename
+#         :param data:  icon raw image
+#         :param data_base64: icon base 64 image
+#         :return:
+#         '''
+#         # Menu
+#         if menu is not None:
+#             self.Menu = menu
+#             qmenu = QMenu()
+#             qmenu.setTitle(self.Menu[0])
+#             AddTrayMenuItem(qmenu, self.Menu[1], self)
+#             self.TrayIcon.setContextMenu(qmenu)
+#         # Tooltip
+#         if tooltip is not None:
+#             self.TrayIcon.setToolTip(str(tooltip))
+#         # Icon
+#         qicon = None
+#         if filename is not None:
+#             qicon = QIcon(filename)
+#         elif data is not None:
+#             ba = QtCore.QByteArray.fromRawData(data)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#         elif data_base64 is not None:
+#             ba = QtCore.QByteArray.fromBase64(data_base64)
+#             pixmap = QtGui.QPixmap()
+#             pixmap.loadFromData(ba)
+#             qicon = QIcon(pixmap)
+#         if qicon is not None:
+#             self.TrayIcon.setIcon(qicon)
+#
+#     close = Close
+#     hide = Hide
+#     read = Read
+#     show_message = ShowMessage
+#     un_hide = UnHide
+#     update = Update
+
+
+
 # ################################################################################
 # ################################################################################
 #  END OF ELEMENT DEFINITIONS
 # ################################################################################
 # ################################################################################
+
+
+
+
 
 
 # =========================================================================== #
@@ -13303,6 +13557,7 @@ def main():
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
+    print(window.element_list())
     while True:  # Event Loop
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
