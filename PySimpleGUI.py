@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.12  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read"
+version = __version__ = "4.15.1.13  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented"
 
 port = 'PySimpleGUI'
 
@@ -7002,215 +7002,254 @@ Window.CloseNonBlockingForm = Window.Close
 Window.CloseNonBlocking = Window.Close
 
 
-
+# ------------------------------------------------------------------------- #
+#                       SystemTray - class for implementing a psyeudo tray  #
+# ------------------------------------------------------------------------- #
 
 # -------------------------------- System Tray Begins Here -------------------------------- #
 # Feb 2020 - Just starting on this so code commented out for now. Basing on PySimpleGUIQt's implementation / call format
 
+
+# -------------------------------------------------------------------
+# fade in/out info and default window alpha
+SYSTEM_TRAY_WIN_MARGINS = 160, 60        # from right edge of screen, from bottom of screen
+SYSTEM_TRAY_MESSAGE_MAX_LINE_LENGTH = 50
+# colors
+SYSTEM_TRAY_MESSAGE_WIN_COLOR = "#282828"
+SYSTEM_TRAY_MESSAGE_TEXT_COLOR = "#ffffff"
+
+SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS = 3000  # how long to display the window
+SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION = 1000  # how long to fade in / fade out the window
+
+EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
+EVENT_SYSTEM_TRAY_ICON_ACTIVATED = '__ACTIVATED__'
+EVENT_SYSTEM_TRAY_MESSAGE_CLICKED = '__MESSAGE_CLICKED__'
+
+
+
+# Base64 Images to use as icons in the window
+_tray_icon_error = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAADlAAAA5QGP5Zs8AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAIpQTFRF////20lt30Bg30pg4FJc409g4FBe4E9f4U9f4U9g4U9f4E9g31Bf4E9f4E9f4E9f4E9f4E9f4FFh4Vdm4lhn42Bv5GNx5W575nJ/6HqH6HyI6YCM6YGM6YGN6oaR8Kev9MPI9cbM9snO9s3R+Nfb+dzg+d/i++vt/O7v/fb3/vj5//z8//7+////KofnuQAAABF0Uk5TAAcIGBktSYSXmMHI2uPy8/XVqDFbAAAA8UlEQVQ4y4VT15LCMBBTQkgPYem9d9D//x4P2I7vILN68kj2WtsAhyDO8rKuyzyLA3wjSnvi0Eujf3KY9OUP+kno651CvlB0Gr1byQ9UXff+py5SmRhhIS0oPj4SaUUCAJHxP9+tLb/ezU0uEYDUsCc+l5/T8smTIVMgsPXZkvepiMj0Tm5txQLENu7gSF7HIuMreRxYNkbmHI0u5Hk4PJOXkSMz5I3nyY08HMjbpOFylF5WswdJPmYeVaL28968yNfGZ2r9gvqFalJNUy2UWmq1Wa7di/3Kxl3tF1671YHRR04dWn3s9cXRV09f3vb1fwPD7z9j1WgeRgAAAABJRU5ErkJggg=='
+_tray_icon_success = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAEKAAABCgEWpLzLAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAHJQTFRF////ZsxmbbZJYL9gZrtVar9VZsJcbMRYaMZVasFYaL9XbMFbasRZaMFZacRXa8NYasFaasJaasFZasJaasNZasNYasJYasJZasJZasJZasJZasJZasJYasJZasJZasJZasJZasJaasJZasJZasJZasJZ2IAizQAAACV0Uk5TAAUHCA8YGRobHSwtPEJJUVtghJeYrbDByNjZ2tvj6vLz9fb3/CyrN0oAAADnSURBVDjLjZPbWoUgFIQnbNPBIgNKiwwo5v1fsQvMvUXI5oqPf4DFOgCrhLKjC8GNVgnsJY3nKm9kgTsduVHU3SU/TdxpOp15P7OiuV/PVzk5L3d0ExuachyaTWkAkLFtiBKAqZHPh/yuAYSv8R7XE0l6AVXnwBNJUsE2+GMOzWL8k3OEW7a/q5wOIS9e7t5qnGExvF5Bvlc4w/LEM4Abt+d0S5BpAHD7seMcf7+ZHfclp10TlYZc2y2nOqc6OwruxUWx0rDjNJtyp6HkUW4bJn0VWdf/a7nDpj1u++PBOR694+Ftj/8PKNdnDLn/V8YAAAAASUVORK5CYII='
+_tray_icon_halt = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAANswNuMPDO8HBO8FCe0HCu4IBu4IB+oLDeoLDu8JC+wKCu4JDO4LDOwKEe4OEO4OEeUQDewQDe0QDucVEuYcG+ccHOsQFuwWHe4fH/EGAvMEBfMFBvAHBPMGBfEGBvYCAfYDAvcDA/cDBPcDBfUDBvYEAPYEAfYEAvYEA/QGAPQGAfQGAvYEBPUEBvYFB/QGBPQGBfQHB/EFCvIHCPMHCfIHC/IFDfMHDPQGCPQGCfQGCvEIBPIIBfAIB/UIB/QICPYICfoBAPoBAfoBAvsBA/kCAPkCAfkCAvkCA/oBBPkCBPkCBfkCBvgCB/gEAPkEAfgEAvkEA/gGAfkGAvkEBPgEBfkEBv0AAP0AAfwAAvwAA/wCAPwCAfwCAvwCA/wABP0ABfwCBfwEAPwFA/ASD/ESFPAUEvAUE/EXFvAdH+kbIOobIeofIfEfIOcmKOohIukgJOggJesiKuwiKewoLe0tLO0oMOQ3OO43Oew4OfAhIPAhIfAiIPEiI+dDRe9ES+lQTOdSWupSUOhTUehSV+hUVu1QUO1RUe1SV+tTWe5SWOxXWOpYV+pZWelYXexaW+xaXO9aX+lZYeNhYOxjZ+lna+psbOttbehsbupscepucuxtcuxucep3fet7e+p/ffB6gOmKiu2Iie2Sk+2Qle2QluySlOyTleuYmvKFivCOjgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIxGNZsAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAACVElEQVQ4T22S93PTMBhADQdl791SSsuRARTKKHsn+STZBptAi6zIacous+w9yyxl7z1T1h8ptHLhrrzLD5+/987R2XZElZ/39tZsbGg42NdvF4pqcGMs4XEcozAB/oQeu6wGr5fkAZcKOUIIRgQXR723wgaXt/NSgcwlO1r3oARkATfhbmNMMCnlMZdz5J8RN9fVhglS5JA/pJUOJiYXoShCkz/flheDvpzlBCBmya5KcDG1sMSB+r/VQtG+YoFXlwN0Us4yeBXujPmWCOqNlVwX5zHntLH5iQ420YiqX9pqTZFSCrBGBc+InBUDAsbwLRlMC40fGJT8YLRwfnhY3v6/AUtDc9m5z0tRJBOAvHUaFchdY6+zDzEghHv1tUnrNCaIOw84Q2WQmkeO/Xopj1xFBREFr8ZZjuRhA++PEB+t05ggwBucpbH8i/n5C1ZU0EEEmRZnSMxoIYcarKigA0Cb1zpHAyZnGj21xqICAA9dcvo4UgEdZ41FBZSTzEOn30f6QeE3Vhl0gLN+2RGDzZPMHLHKoAO3MFy+ix4sDxFlvMXfrdNgFezy7qrXPaaJg0u27j5nneKrCjJ4pf4e3m4DVMcjNNNKxWnpo6jtnfnkunExB4GbuGKk5FNanpB1nJCjCsThJPAAJ8lVdSF5sSrklM2ZqmYdiC40G7Dfnhp57ZsQz6c3hylEO6ZoZQJxqiVgbhoQK3T6AIgU4rbjxthAPF6NAwAOAcS+ixlp/WBFJRDi0fj2RtcjWRwif8Qdu/w3EKLcu3/YslnrZzwo24UQQvwFCrp/iM1NnHwAAAAASUVORK5CYII='
+_tray_icon_notallowed = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAAPcICPcLC/cMDPcQEPcSEvcXF/cYGPcaGvcbG/ccHPgxMfgyMvg0NPg5Ofg6Ovg7O/hBQfhCQvlFRflGRvljY/pkZPplZfpnZ/p2dgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMgEwNYAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABE0lEQVQ4T4WT65bDIAiExWbbtN0m3Uua+P4P6g4jGtN4NvNL4DuCCC5WWobe++uwmEmtwNxJUTebcwWCt5jJBwsYcKf3NE4hTOOJxj1FEnBTz4NH6qH2jUcCGr/QLLpkQgHe/6VWJXVqFgBB4yI/KVCkBCoFgPrPHw0CWbwCL8RibBFwzQDQH62/QeAtHQBeADUIDbkF/UnmnkB1ixtERrN3xCgyuF5kMntHTCJXh2vyv+wIdMhvgTeCQJ0C2hBMgSKfZlM1wSLXZ5oqgs8sjSpaCQ2VVlfKhLU6fdZGSvyWz9JMb+NE4jt/Nwfm0yJZSkBpYDg7TcJGrjm0Z7jK0B6P/fHiHK8e9Pp/eSmuf1+vf4x/ralnCN9IrncAAAAASUVORK5CYII='
+_tray_icon_stop = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAANsAANsBAdsCAtwEBNwFBdwHB9wICNwLC90MDN0NDd0PD90REd0SEt4TE94UFN4WFt4XF94ZGeAjI+AlJeEnJ+EpKeEqKuErK+EsLOEuLuIvL+IyMuIzM+M1NeM2NuM3N+M6OuM8POQ9PeQ+PuQ/P+RAQOVISOVJSeVKSuZLS+ZOTuZQUOZRUedSUudVVehbW+lhYeljY+poaOtvb+twcOtxcetzc+t0dOx3d+x4eOx6eu19fe1+fu2AgO2Cgu6EhO6Ghu6Hh+6IiO6Jie+Kiu+Li++MjO+Nje+Oju+QkPCUlPCVlfKgoPKkpPKlpfKmpvOrq/SurvSxsfSysvW4uPW6uvW7u/W8vPa9vfa+vvbAwPbCwvfExPfFxffGxvfHx/fIyPfJyffKyvjLy/jNzfjQ0PjR0fnS0vnU1PnY2Pvg4Pvi4vvj4/vl5fvm5vzo6Pzr6/3u7v3v7/3x8f3z8/309P719f729v739/74+P75+f76+v77+//8/P/9/f/+/v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPHCyoUAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABnUlEQVQ4T33S50PTQBgG8D6lzLbsIUv2kD0FFWTvPWTvISDIUBGV1ecvj+8luZTR9P1wSe755XK5O4+hK4gn5bc7DcMBz/InQoMXeVjY4FXuCAtEyLUwQcTcFgq45JYQ4JqbwhMtV8IjeUJDjQ+5paqCyG9srEsGgoUlpeXpIjxA1nfyi2+Jqmo7Q9JeV+ODerpvBQTM8/ySzQ3t+xxoL7h7nJve5jd85M7wJq9McHaT8o6TwBTfIIfHQGzoAZ/YiSTSq8D5dSDQVqFADrJ5KFMLPaKLHQiQMQoscClezdgCB4CXD/jM90izR8g85UaKA3YAn4AejhV189acA5LX+DVOg00gnvfoVX/BRQsgbplNGqzLusgIffx1tDchiyRgdRbVHNdgRRZHQD9H1asm+PMzYyYMtoBU/sYgRxxgrmGtBRL/cnf5RL4zzCEHZF2QE14LoOWf6B9vMcJBG/iBxKo8dVtYnyStv6yuUq7FLfmqTzbLEOFest1GNGEemCjCPnKuwjm0LsLMbRBJWLkGr4WdO+Cl0HkYPBc6N4z//HcQqVwcOuIAAAAASUVORK5CYII='
+_tray_icon_exclamation = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAAN0zM900NN01Nd02Nt03N944ON45Od46Ot47O98/P99BQd9CQt9DQ+FPT+JSUuJTU+JUVOJVVeJWVuNbW+ReXuVjY+Zra+dxceh4eOl7e+l8fOl+ful/f+qBgeqCguqDg+qFheuJieuLi+yPj+yQkO2Wlu+cnO+hofGqqvGtrfre3vrf3/ri4vvn5/75+f76+v/+/v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMQ8SQkAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABJElEQVQ4T4WS63KCMBBGsyBai62X0otY0aq90ZZa3v/dtpvsJwTijOfXt7tnILOJYY9tNonjNCtQOlqhuKKG0RrNVjgkmIHBHgMId+h7zHSiwg2a9FNVVYScupETmjkd67o+CWpYwft+R6CpCgeUlq5AOyf45+8JsRUKFI6eQLkI3n5CIREBUekLxGaLpATCymRISiAszARJCYSxiZGUQKDLQoqgnPnFhUPOTWeRoZD3FvVZlmVHkE2OEM9iV71GVoZDBGUpAg9QWN5/jx+Ilsi9hz0q4VHOWD+hEF70yc1QEr1a4Q0F0S3eJDfLuv8T4QEFXduZE1rj+et7g6hzCDxF08N+X4DAu+6lUSTnc5wE5tx73ckSTV8QVoux3N88Rykw/wP3i+vwPKk17AAAAABJRU5ErkJggg=='
+_tray_icon_none = None
+
+
+SYSTEM_TRAY_MESSAGE_ICON_INFORMATION = _tray_icon_success
+SYSTEM_TRAY_MESSAGE_ICON_WARNING = _tray_icon_exclamation
+SYSTEM_TRAY_MESSAGE_ICON_CRITICAL = _tray_icon_stop
+SYSTEM_TRAY_MESSAGE_ICON_NOICON = _tray_icon_none
+
+
 # ------------------------------------------------------------------------- #
-#                       SystemTray - class for implementing a psyeudo tray  #
+#                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
-# class SystemTray:
-#     def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
-#         '''
-#         SystemTray - create an icon in the system tray
-#         :param menu: Menu definition
-#         :param filename: filename for icon
-#         :param data: in-ram image for icon
-#         :param data_base64: basee-64 data for icon
-#         :param tooltip: tooltip string
-#         '''
-#         self.Menu = menu
-#         self.TrayIcon = None
-#         self.Shown = False
-#         self.MenuItemChosen = TIMEOUT_KEY
-#         self.LastMessage = None
-#         self.LastTitle = None
-#         self.metadata = metadata
-#
-#         if Window.QTApplication is None:
-#             Window.QTApplication = QApplication(sys.argv)
-#         self.App = Window.QTApplication
-#         self.Widget = self.QWidget = QWidget()              # type: QWidget
-#
-#         if filename is None and data is None and data_base64 is None:
-#             data_base64 = DEFAULT_BASE64_ICON
-#         qicon = None
-#         if filename is not None:
-#             qicon = QIcon(filename)
-#         elif data is not None:
-#             ba = QtCore.QByteArray.fromRawData(data)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#         elif data_base64 is not None:
-#             ba = QtCore.QByteArray.fromBase64(data_base64)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#         if qicon is None:
-#             PopupError('ERROR - Tray must have one form of Icon specified')
-#             return
-#         self.TrayIcon = QSystemTrayIcon(qicon)
-#
-#         if self.Menu is not None:
-#             qmenu = QMenu()
-#             qmenu.setTitle(self.Menu[0])
-#             AddTrayMenuItem(qmenu, self.Menu[1], self)
-#             self.TrayIcon.setContextMenu(qmenu)
-#
-#         if tooltip is not None:
-#             self.TrayIcon.setToolTip(str(tooltip))
-#
-#         self.TrayIcon.messageClicked.connect(self._message_clicked)
-#         self.TrayIcon.activated.connect(self._double_clicked)
-#
-#         self.TrayIcon.show()
-#
-#     def _QT_MenuItemChosenCallback(self, item_chosen):
-#         self.MenuItemChosen = item_chosen.replace('&','')
-#         self.App.exit()                         # kick the users out of the mainloop
-#
-#     # callback function when message is clicked
-#     def _message_clicked(self):
-#         self.MenuItemChosen = EVENT_SYSTEM_TRAY_MESSAGE_CLICKED
-#         self.App.exit()
-#
-#
-#     def _double_clicked(self, reason):
-#         # print(reason)
-#         if reason == QSystemTrayIcon.DoubleClick:
-#             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
-#             self.App.exit()
-#         if reason == QSystemTrayIcon.Trigger:
-#             self.MenuItemChosen = EVENT_SYSTEM_TRAY_ICON_ACTIVATED
-#             self.App.exit()
-#
-#
-#     def Read(self, timeout=None):
-#         '''
-#         Reads the context menu
-#         :param timeout: Optional.  Any value other than None indicates a non-blocking read
-#         :return:
-#         '''
-#         if not self.Shown:
-#             self.Shown = True
-#             self.TrayIcon.show()
-#         if timeout is None:
-#             self.App.exec_()
-#         elif timeout == 0:
-#             self.App.processEvents()
-#         else:
-#             self.timer = start_systray_read_timer(self, timeout)
-#             self.App.exec_()
-#
-#             if self.timer:
-#                 stop_timer(self.timer)
-#
-#         item = self.MenuItemChosen
-#         self.MenuItemChosen = TIMEOUT_KEY
-#         return item
-#
-#     def _timer_timeout(self):
-#         self.App.exit()  # kick the users out of the mainloop
-#
-#     def Hide(self):
-#         self.TrayIcon.hide()
-#
-#
-#     def UnHide(self):
-#         self.TrayIcon.show()
-#
-#
-#     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=10000):
-#         '''
-#         Shows a balloon above icon in system tray
-#         :param title:  Title shown in balloon
-#         :param message: Message to be displayed
-#         :param filename: Optional icon filename
-#         :param data: Optional in-ram icon
-#         :param data_base64: Optional base64 icon
-#         :param time: How long to display message in milliseconds
-#         :return:
-#         '''
-#         qicon = None
-#         if filename is not None:
-#             qicon = QIcon(filename)
-#         elif data is not None:
-#             ba = QtCore.QByteArray.fromRawData(data)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#         elif data_base64 is not None:
-#             ba = QtCore.QByteArray.fromBase64(data_base64)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#
-#         if qicon is not None:
-#             self.TrayIcon.showMessage(title, message, qicon, time)
-#         elif messageicon is not None:
-#             self.TrayIcon.showMessage(title, message, messageicon, time)
-#         else:
-#             self.TrayIcon.showMessage(title, message, QIcon(), time)
-#
-#         self.LastMessage = message
-#         self.LastTitle = title
-#         return self
-#
-#     def Close(self):
-#         '''
-#
-#         :return:
-#         '''
-#         self.Hide()
-#         # Don't close app because windows could be depending on it
-#         # self.App.quit()
-#
-#
-#     def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
-#         '''
-#         Updates the menu, tooltip or icon
-#         :param menu: menu defintion
-#         :param tooltip: string representing tooltip
-#         :param filename:  icon filename
-#         :param data:  icon raw image
-#         :param data_base64: icon base 64 image
-#         :return:
-#         '''
-#         # Menu
-#         if menu is not None:
-#             self.Menu = menu
-#             qmenu = QMenu()
-#             qmenu.setTitle(self.Menu[0])
-#             AddTrayMenuItem(qmenu, self.Menu[1], self)
-#             self.TrayIcon.setContextMenu(qmenu)
-#         # Tooltip
-#         if tooltip is not None:
-#             self.TrayIcon.setToolTip(str(tooltip))
-#         # Icon
-#         qicon = None
-#         if filename is not None:
-#             qicon = QIcon(filename)
-#         elif data is not None:
-#             ba = QtCore.QByteArray.fromRawData(data)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#         elif data_base64 is not None:
-#             ba = QtCore.QByteArray.fromBase64(data_base64)
-#             pixmap = QtGui.QPixmap()
-#             pixmap.loadFromData(ba)
-#             qicon = QIcon(pixmap)
-#         if qicon is not None:
-#             self.TrayIcon.setIcon(qicon)
-#
-#     close = Close
-#     hide = Hide
-#     read = Read
-#     show_message = ShowMessage
-#     un_hide = UnHide
-#     update = Update
+class SystemTray:
+    def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
+        '''
+        SystemTray - create an icon in the system tray
+        :param menu: Menu definition
+        :param filename: filename for icon
+        :param data: in-ram image for icon
+        :param data_base64: basee-64 data for icon
+        :param tooltip: tooltip string
+        '''
+        self.Menu = menu
+        self.TrayIcon = None
+        self.Shown = False
+        self.MenuItemChosen = TIMEOUT_KEY
+        self.metadata = metadata
+        self.last_message_event = None
+
+        screen_size = Window.get_screen_size()
+
+        if filename:
+            image_elem = Image(filename=filename, background_color='red', enable_events=True, tooltip=tooltip, key='-IMAGE-')
+        elif data_base64:
+            image_elem = Image(data=data_base64, background_color='red', enable_events=True, tooltip=tooltip, key='-IMAGE-')
+        elif data:
+            image_elem = Image(data=data, background_color='red', enable_events=True, tooltip=tooltip, key='-IMAGE-')
+        else:
+            image_elem = Image(background_color='red', enable_events=True, tooltip=tooltip, key='-IMAGE-')
+        layout = [
+                    [image_elem],
+                 ]
+        self.window = Window('Window Title', layout, element_padding=(0, 0), margins=(0, 0), grab_anywhere=True, no_titlebar=True, transparent_color='red', keep_on_top=True, right_click_menu=menu, location=(screen_size[0] - 100, screen_size[1] - 100),  finalize=True)
+
+        self.window['-IMAGE-'].bind('<Double-Button-1>', '+DOUBLE_CLICK')
+
+
+    def Read(self, timeout=None):
+        '''
+        Reads the context menu
+        :param timeout: Optional.  Any value other than None indicates a non-blocking read
+        :return:
+        '''
+        if self.last_message_event != TIMEOUT_KEY and self.last_message_event is not None:
+            event = self.last_message_event
+            self.last_message_event = None
+            return event
+        event, values = self.window.read(timeout=timeout)
+        if event.endswith('DOUBLE_CLICK'):
+            return EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED
+        elif event == '-IMAGE-':
+            return EVENT_SYSTEM_TRAY_ICON_ACTIVATED
+
+        return event
+
+
+    def Hide(self):
+        self.window.hide()
+
+
+    def UnHide(self):
+        self.window.un_hide()
+
+
+    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=(SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS)):
+        '''
+        Shows a balloon above icon in system tray
+        :param title:  Title shown in balloon
+        :param message: Message to be displayed
+        :param filename: Optional icon filename
+        :param data: Optional in-ram icon
+        :param data_base64: Optional base64 icon
+        :param time: Union[int, Tuple[int, int]] Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration
+        :return: (Any)  The event that happened during the display such as user clicked on message
+        '''
+
+        if isinstance(time, tuple):
+            fade_duraction, display_duration = time
+        else:
+            fade_duration = SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION
+            display_duration = time
+
+        user_icon = data_base64 or filename or data or messageicon
+
+        event = self.notify(title, message, icon=user_icon, fade_in_duration=fade_duraction, display_duration_in_ms=display_duration)
+        self.last_message_event = event
+        return event
+
+    def Close(self):
+        '''
+        Close the system tray window
+        '''
+        self.window.close()
+
+
+    def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+        '''
+        Updates the menu, tooltip or icon
+        :param menu: menu defintion
+        :param tooltip: string representing tooltip
+        :param filename:  icon filename
+        :param data:  icon raw image
+        :param data_base64: icon base 64 image
+        :return:
+        '''
+        # Menu
+        if menu is not None:
+            top_menu = tk.Menu(self.window.TKroot, tearoff=False)
+            AddMenuItem(top_menu, menu[1], self.window['-IMAGE-'])
+            self.window['-IMAGE-'].TKRightClickMenu = top_menu
+
+        if filename:
+            self.window['-IMAGE-'].update(filename=filename)
+        elif data_base64:
+            self.window['-IMAGE-'].update(data=data_base64)
+        elif data:
+            self.window['-IMAGE-'].update(data=data)
+
+        if tooltip:
+            self.window['-IMAGE-'].set_tooltip(tooltip)
+
+
+    @classmethod
+    def notify(cls, title, message, icon=_tray_icon_success, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
+               fade_in_duration=SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, alpha=0.9, location=None):
+        """
+        The PROCESS that is started when a toaster message is to be displayed.
+        Note that this is not a user callable function.
+        It does the actual work of creating and showing the window on the screen
+
+        Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
+        The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
+        :param title: (str) Text to be shown at the top of the window in a larger font
+        :param message: (str) Text message that makes up the majority of the window
+        :param icon: Union[bytes, str) A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+        :param display_duration_in_ms: (int) Number of milliseconds to show the window
+        :param fade_in_duration: (int) Number of milliseconds to fade window in and out
+        :param alpha: (float) Alpha channel. 0 - invisible 1 - fully visible
+        :param location: Tuple[int, int] Location on the screen to display the window
+        :return: (int) reason for returning
+        """
+
+        messages = message.split('\n')
+        full_msg = ''
+        for m in messages:
+            m_wrap = textwrap.fill(m, SYSTEM_TRAY_MESSAGE_MAX_LINE_LENGTH)
+            full_msg += m_wrap + '\n'
+        message = full_msg[:-1]
+
+        win_msg_lines = message.count("\n") + 1
+        max_line = max(message.split('\n'))
+
+        screen_res_x, screen_res_y = Window.get_screen_size()
+        win_margin = SYSTEM_TRAY_WIN_MARGINS  # distance from screen edges
+        win_width, win_height = 364, 66 + (14.8 * win_msg_lines)
+
+        layout = [[Graph(canvas_size=(win_width, win_height), graph_bottom_left=(0, win_height), graph_top_right=(win_width, 0), key="-GRAPH-",
+                         background_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR, enable_events=True)]]
+
+        win_location = location if location is not None else (screen_res_x - win_width - win_margin[0], screen_res_y - win_height - win_margin[1])
+        window = Window(title, layout, background_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR, no_titlebar=True,
+                        location=win_location, keep_on_top=True, alpha_channel=0, margins=(0, 0), element_padding=(0, 0), grab_anywhere=True, finalize=True)
+
+        window["-GRAPH-"].draw_rectangle((win_width, win_height), (-win_width, -win_height), fill_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR, line_color=SYSTEM_TRAY_MESSAGE_WIN_COLOR)
+        if type(icon) is bytes:
+            window["-GRAPH-"].draw_image(data=icon, location=(20, 20))
+        elif icon is not None:
+            window["-GRAPH-"].draw_image(filename=icon, location=(20, 20))
+        window["-GRAPH-"].draw_text(title, location=(64, 20), color=SYSTEM_TRAY_MESSAGE_TEXT_COLOR, font=("Helvetica", 12, "bold"), text_location=TEXT_LOCATION_TOP_LEFT)
+        window["-GRAPH-"].draw_text(message, location=(64, 44), color=SYSTEM_TRAY_MESSAGE_TEXT_COLOR, font=("Helvetica", 9), text_location=TEXT_LOCATION_TOP_LEFT)
+        window["-GRAPH-"].set_cursor('hand2')
+
+        if fade_in_duration:
+            for i in range(1, int(alpha * 100)):  # fade in
+                window.set_alpha(i / 100)
+                event, values = window.read(timeout=fade_in_duration // 100)
+                if event != TIMEOUT_KEY:
+                    window.set_alpha(1)
+                    break
+            if event != TIMEOUT_KEY:
+                window.close()
+                return EVENT_SYSTEM_TRAY_MESSAGE_CLICKED if event == '-GRAPH-' else event
+            event, values = window(timeout=display_duration_in_ms)
+            if event == TIMEOUT_KEY:
+                for i in range(int(alpha * 100), 1, -1):  # fade out
+                    window.set_alpha(i / 100)
+                    event, values = window.read(timeout=fade_in_duration // 100)
+                    if event != TIMEOUT_KEY:
+                        break
+        else:
+            window.set_alpha(alpha)
+            event, values = window(timeout=display_duration_in_ms)
+        window.close()
+
+        return EVENT_SYSTEM_TRAY_MESSAGE_CLICKED if event == '-GRAPH-' else event
+
+    close = Close
+    hide = Hide
+    read = Read
+    show_message = ShowMessage
+    un_hide = UnHide
+    update = Update
+
+
+
+
 
 
 
@@ -9288,7 +9327,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     element._TKOut.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand = True
-                # -------------------------  IMAGE element  ------------------------- #
+                # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
                 if element.Filename is not None:
