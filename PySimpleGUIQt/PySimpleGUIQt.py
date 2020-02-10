@@ -1161,7 +1161,7 @@ class Text(Element):
         self.Visible = visible
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, metadata=metadata)
+                         text_color=self.TextColor, pad=pad, key=key, visible=visible, tooltip=tooltip, size_px=size_px, metadata=metadata)
         return
 
     def _QtCallbackTextClicked(self, event):
