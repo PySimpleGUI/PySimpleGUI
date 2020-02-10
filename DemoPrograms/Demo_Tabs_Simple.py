@@ -17,19 +17,14 @@ tab4_layout = [[sg.Text('Tab 3')]]
 tab_group_layout = [[sg.Tab('Tab 1', tab1_layout, font='Courier 15', key='-TAB1-'),
                      sg.Tab('Tab 2', tab2_layout, visible=False, key='-TAB2-'),
                      sg.Tab('Tab 3', tab3_layout, key='-TAB3-'),
-                     sg.Tab('Tab 4', tab3_layout, visible=False, key='-TAB4-'),
-
+                     sg.Tab('Tab 4', tab4_layout, visible=False, key='-TAB4-'),
                      ]]
 
 # The window layout - defines the entire window
 layout = [[sg.TabGroup(tab_group_layout,
-                       # selected_title_color='blue',
-                       # selected_background_color='red',
-                       # tab_background_color='green',
                        enable_events=True,
-                       # font='Courier 18',
                        key='-TABGROUP-')],
-          [sg.Text('Make tab number'), sg.Input(key='-IN-', size=(3,1)), sg.Button('Invisible'), sg.Button('Visible')]]
+          [sg.Text('Make tab number'), sg.Input(key='-IN-', size=(3,1)), sg.Button('Invisible'), sg.Button('Visible'), sg.Button('Select')]]
 
 window = sg.Window('My window with tabs', layout, no_titlebar=False)
 
@@ -44,5 +39,7 @@ while True:
         window[tab_keys[int(values['-IN-'])-1]].update(visible=False)
     if event == 'Visible':
         window[tab_keys[int(values['-IN-'])-1]].update(visible=True)
+    if event == 'Select':
+        window[tab_keys[int(values['-IN-'])-1]].select()
 
 window.close()
