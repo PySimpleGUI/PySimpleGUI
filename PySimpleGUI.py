@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.13  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented"
+version = __version__ = "4.15.1.14  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter"
 
 port = 'PySimpleGUI'
 
@@ -4978,7 +4978,7 @@ class Menu(Element):
     menu is shown.  The key portion is returned as part of the event.
     """
 
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, pad=None, key=None,
+    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None,
                  visible=True, metadata=None):
         """
         :param menu_definition: List[List[Tuple[str, List[str]]]
@@ -4998,7 +4998,7 @@ class Menu(Element):
         self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key,
-                         visible=visible, metadata=metadata)
+                         visible=visible, font=font, metadata=metadata)
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
@@ -7170,10 +7170,6 @@ class SystemTray:
     def notify(cls, title, message, icon=_tray_icon_success, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
                fade_in_duration=SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, alpha=0.9, location=None):
         """
-        The PROCESS that is started when a toaster message is to be displayed.
-        Note that this is not a user callable function.
-        It does the actual work of creating and showing the window on the screen
-
         Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
         The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
         :param title: (str) Text to be shown at the top of the window in a larger font
@@ -8359,6 +8355,8 @@ if sys.version_info[0] >= 3:
                 if i != len(sub_menu_info) - 1:
                     if type(sub_menu_info[i + 1]) == list:
                         new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                        if element.Font is not None:
+                            new_menu.config(font=element.Font)
                         return_val = new_menu
                         pos = sub_menu_info[i].find('&')
                         if pos != -1:
@@ -9437,6 +9435,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
+                    if element.Font is not None:
+                        baritem.config(font=element.Font)
                     pos = menu_entry[0].find('&')
                     # print(pos)
                     if pos != -1:
@@ -13611,7 +13611,7 @@ def main():
          Button('Exit', tooltip='Exit button')],
     ]
 
-    layout = [[Column([[Menu(menu_def, key='_MENU_')]] + layout1), Column([[ProgressBar(max_value=800, size=(45, 25), orientation='v', key='+PROGRESS+')]])]]
+    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(45, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('Window Title', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
