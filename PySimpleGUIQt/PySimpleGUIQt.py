@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.6 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get"
+version = __version__ = "0.31.0.7 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element"
 
 port = 'PySimpleGUIQt'
 
@@ -1158,10 +1158,9 @@ class Text(Element):
         else:
             bg = background_color
         self.Widget = self.QT_Label = None              # type: QLabel
-        self.Visible = visible
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, metadata=metadata)
+                         text_color=self.TextColor, visible=visible, pad=pad, key=key, tooltip=tooltip, size_px=size_px, metadata=metadata)
         return
 
     def _QtCallbackTextClicked(self, event):
@@ -8444,6 +8443,8 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
+    theme('SystemDefaultForReal')
+
     # preview_all_look_and_feel_themes()
     # ChangeLookAndFeel('Dark Red')
     # theme('Dark Red')
