@@ -1746,7 +1746,7 @@ class Graph(Element):
         return self._TKCanvas2.create_rectangle(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                                 converted_bottom_right[1], fill=fill_color, outline=line_color)
 
-    def DrawText(self, text, location, color='black', font=None, angle=0):
+    def DrawText(self, text, location, color='black', font=None):
         if location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
@@ -1754,8 +1754,7 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
-                                              angle=angle)
+        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color)
         return text_id
 
     def Erase(self):

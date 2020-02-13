@@ -3338,7 +3338,7 @@ class Graph(Element):
 
 
 
-    def DrawText(self, text, location, color='black', font=None, angle=0, text_location=TEXT_LOCATION_CENTER):
+    def DrawText(self, text, location, color='black', font=None, text_location=TEXT_LOCATION_CENTER):
         """
         Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -3346,7 +3346,6 @@ class Graph(Element):
         :param location: Union[Tuple[int, int], Tuple[float, float]] location to place first letter
         :param color: (str) text color
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
         :param text_location: (enum) "anchor" location for the text. Values start with TEXT_LOCATION_
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
         """
@@ -3358,7 +3357,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         try:  # in case closed with X
-            id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color, angle=angle, anchor=text_location)
+            id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color, anchor=text_location)
         except:
             id = None
         return id
