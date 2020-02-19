@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.35.0  Released  16-Jan-2020"
+version = __version__ = "0.35.1  Unreleased fix for Text element after Remi update"
 
 port = 'PySimpleGUIWeb'
 
@@ -19,7 +19,7 @@ import base64, binascii
 import mimetypes
 from random import randint
 
-from typing import List, Any, Union, Tuple, Dict    # For doing types in comments
+# from typing import List, Any, Union, Tuple, Dict    # For doing types in comments
 
 
 try:
@@ -4203,7 +4203,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TEXT:
                 element = element   # type: Text
                 element.Widget = remi.gui.Label(element.DisplayText)
-                element.Widget.set_layout_orientation(True)
                 do_font_and_color(element.Widget)
                 if auto_size_text and element.Size == (None, None):
                     del(element.Widget.style['width'])
