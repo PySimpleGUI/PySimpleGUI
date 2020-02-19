@@ -1633,12 +1633,14 @@ class Checkbox(Element):
         """
         return self.TKIntVar.get()
 
-    def Update(self, value=None, disabled=None, visible=None):
+    def Update(self, value=None, background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
 
         :param value: (bool) if True checks the checkbox, False clears it
+        :param background_color: (str) color of background
+        :param text_color: (str) color of the text. Note this also changes the color of the checkmark
         :param disabled: (bool) disable or enable element
         :param visible: (bool) control visibility of element
         """
@@ -1656,6 +1658,30 @@ class Checkbox(Element):
             self.TKCheckbutton.configure(state='disabled')
         elif disabled == False:
             self.TKCheckbutton.configure(state='normal')
+        if background_color is not None:
+            self.TKCheckbutton.configure(background=background_color)
+            self.BackgroundColor = background_color
+        if text_color is not None:
+            self.TKCheckbutton.configure(fg=text_color)
+            self.TextColor = text_color
+        if self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
+            # ---- compute color of circle background ---
+            # try:        # something in here will fail if a color is not specified in Hex
+            text_hsl = _hex_to_hsl(self.TextColor)
+            background_hsl = _hex_to_hsl(self.BackgroundColor if self.BackgroundColor else theme_background_color())
+            # print(f'backgroundHSL = {background_hsl}')
+            l_delta = abs(text_hsl[2] - background_hsl[2])/10
+            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+            else:
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+            self.CheckboxBackgroundColor = RGB(*bg_rbg)
+            # except Exception as e:
+            #     self.CheckboxBackgroundColor = self.BackgroundColor if self.BackgroundColor else theme_background_color()
+            #     print(f'Update exception {e}')
+            print(f'Setting checkbox background = {self.CheckboxBackgroundColor}')
+            self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
+
         if visible is False:
             self.TKCheckbutton.pack_forget()
         elif visible is True:
@@ -9180,7 +9206,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     element.TKText.bind('<Button-3>', element._RightClickMenuCallback)
                 # row_should_expand = True
-            # -------------------------  CHECKBOX element  ------------------------- #
+            # -------------------------  CHECKBOX pleacement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element           # type: Checkbox
                 width = 0 if auto_size_text else element_size[0]
