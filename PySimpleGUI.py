@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.14  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter"
+version = __version__ = "4.15.1.15  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter, fix for window.read"
 
 port = 'PySimpleGUI'
 
@@ -6076,7 +6076,7 @@ class Window:
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
-    # @_timeit
+
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
         # type: (int, Any, bool) -> Tuple[Any, Union[Dict, List]]
         """
@@ -6087,6 +6087,25 @@ class Window:
         :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
         :param timeout_key: (Any) The value that will be returned from the call if the timer expired
         :param close: (bool) if True the window will be closed prior to returning
+        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+        """
+        results = self._read(timeout=timeout, timeout_key=timeout_key)
+        if close:
+            self.close()
+
+        return results
+
+
+    # @_timeit
+    def _read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+        # type: (int, Any) -> Tuple[Any, Union[Dict, List]]
+        """
+        THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+            Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+            if no other GUI events happen first.
+
+        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
         :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
                  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
         """
@@ -6100,13 +6119,7 @@ class Window:
                 event = timeout_key
             if values is None:
                 event = None
-            if not close:
-                return event, values  # make event None if values was None and return
-            else:
-                results = deepcopy((event, values))  # make a copy of the results
-                self.Close()
-                return results
-
+            return event, values  # make event None if values was None and return
         # Read with a timeout
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
@@ -6121,12 +6134,7 @@ class Window:
                 # print(f'*** Found previous clicked saved {self.LastButtonClicked}')
                 results = _BuildResults(self, False, self)
                 self.LastButtonClicked = None
-                if not close:
-                    return results
-                else:
-                    results = deepcopy(results)
-                    self.Close()
-                    return results
+                return results
             InitializeResults(self)
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
@@ -6143,12 +6151,7 @@ class Window:
                     # print('ROOT Destroyed')
                 results = _BuildResults(self, False, self)
                 if results[0] != None and results[0] != timeout_key:
-                    if not close:
-                        return results
-                    else:
-                        results = deepcopy(results)
-                        self.Close()
-                        return results
+                    return results
                 else:
                     pass
 
@@ -6204,28 +6207,15 @@ class Window:
             results = _BuildResults(self, False, self)
             if not self.LastButtonClickedWasRealtime:
                 self.LastButtonClicked = None
-            if not close:
-                return results
-            else:
-                results = deepcopy(results)
-                self.Close()
-                return results
+            return results
         else:
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
                 0] is None:  # Special Qt case because returning for no reason so fake timeout
-                results = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
                 # print("*** Faking timeout ***")
-                results = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
-            else:
-                results = self.ReturnValues
-
-            if not close:
-                return results
-            else:
-                results = deepcopy(results)
-                self.Close()
-                return results
+                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
+            return self.ReturnValues
 
     def _ReadNonBlocking(self):
         """
