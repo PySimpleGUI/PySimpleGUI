@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.15  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter, fix for window.read"
+version = __version__ = "4.15.1.16  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter, fix for window.read, set_size retry using length"
 
 port = 'PySimpleGUI'
 
@@ -864,7 +864,10 @@ class Element():
             if size[1] != None:
                 self.Widget.config(height=size[1])
         except:
-            print('Warning, error setting height on element with key=', self.Key)
+            try:
+                self.Widget.config(length=size[1])
+            except:
+                print('Warning, error setting height on element with key=', self.Key)
 
     def get_size(self):
         """
