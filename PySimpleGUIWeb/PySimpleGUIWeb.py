@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.35.1  Unreleased fix for Text element after Remi update"
+version = __version__ = "0.35.2  Unreleased fix for Text element after Remi update, Image element not loading fixed"
 
 port = 'PySimpleGUIWeb'
 
@@ -1425,8 +1425,8 @@ class Image(Element):
         self.EnableEvents = enable_events
         sz = (0,0) if size == (None, None) else size
         self.Widget = None          #type: SuperImage
-        if data is None and filename is None:
-            print('* Warning... no image specified in Image Element! *')
+        # if data is None and filename is None:                 # it is OK to have no image specified when intially creating
+        #     print('* Warning... no image specified in Image Element! *')
         super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible)
         return
@@ -1507,19 +1507,14 @@ class SuperImage(remi.gui.Image):
             try:
                 #here a base64 image is received
                 self.imagedata = base64.b64decode(file_path_name, validate=True)
-                self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
             except binascii.Error:
-                #here an image data is received (opencv image)
+                #here an image data is received (opencv / PIL / other image)
                 self.imagedata = file_path_name
-                self.refresh()
+            self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
             self.refresh()
         else:
             #here a filename is received
             self.attributes['src'] = remi.gui.load_resource(file_path_name)
-            """print(f'***** Loading file = {file_path_name}')
-            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
-            with open(file_path_name, 'rb') as f:
-                self.imagedata = f.read()"""
             self.refresh()
 
     def refresh(self):
