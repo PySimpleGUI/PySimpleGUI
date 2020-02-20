@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.15.1.16  Unreleased - Fix for draw_pixel, fix Multline.update with no value specified, listbox update no longer selects a default, all justifications can be shortened to single letter, fix for debug window closed with Quit button, removed f-string, draw_polygon added, print_to_element added, Listbox.get, Listbox update parm select_mode, check for None when creating Multiline, Element.unbind, Image now defaults to filename='', added Window.element_list(), close parameter for Window.read, SystemTray implemented, Menu font parameter, fix for window.read, set_size retry using length"
+version = __version__ = "4.16.0  Released 20 Feb 2020"
 
 port = 'PySimpleGUI'
 
@@ -126,7 +126,6 @@ import warnings
 from math import floor
 from math import fabs
 from functools import wraps
-from copy import deepcopy
 
 warnings.simplefilter('always', UserWarning)
 
@@ -1353,6 +1352,7 @@ class Listbox(Element):
         :param disabled: (bool) disable or enable state of the element
         :param set_to_index: Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted
         :param scroll_to_index: (int) scroll the listbox so that this index is the first shown
+        :param mode: (str) changes the select mode according to tkinter's listbox widget
         :param visible: (bool) control visibility of element
         """
 
@@ -1682,7 +1682,7 @@ class Checkbox(Element):
             # except Exception as e:
             #     self.CheckboxBackgroundColor = self.BackgroundColor if self.BackgroundColor else theme_background_color()
             #     print(f'Update exception {e}')
-            print(f'Setting checkbox background = {self.CheckboxBackgroundColor}')
+            # print(f'Setting checkbox background = {self.CheckboxBackgroundColor}')
             self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
 
         if visible is False:
@@ -1836,7 +1836,7 @@ class Multiline(Element):
         :param auto_size_text: (bool) if True will size the element to match the length of the text
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :param chfange_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :param enable_events: (bool) Turns on the element specific events. Spin events happen when an item changes
         :param do_not_clear: if False the element will be cleared any time the Window.Read call returns
         :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
@@ -2558,7 +2558,7 @@ class Button(Element):
                 self.ParentForm.TKroot.quit()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_READ_FORM:  # LEAVE THE WINDOW OPEN!! DO NOT CLOSE
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -2573,7 +2573,7 @@ class Button(Element):
             self.ParentForm._Close()
             if self.ParentForm.NonBlocking:
                 self.ParentForm.TKroot.destroy()
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             should_submit_window = False
             root = tk.Toplevel()
@@ -2585,8 +2585,8 @@ class Button(Element):
             self.TKCal.pack(expand=1, fill='both')
             root.update()
 
-            if type(Window.user_defined_icon) is bytes:
-                calendar_icon = tkinter.PhotoImage(data=Window.user_defined_icon)
+            if type(Window._user_defined_icon) is bytes:
+                calendar_icon = tkinter.PhotoImage(data=Window._user_defined_icon)
             else:
                 calendar_icon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
             try:
@@ -2880,7 +2880,7 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
             # _my_windows.Decrement()
             return False
         return True
@@ -3718,7 +3718,7 @@ class Frame(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
-        self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         self.Layout(layout)
 
@@ -3904,7 +3904,7 @@ class Tab(Element):
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.RightClickMenu = right_click_menu
-        self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
 
         self.Layout(layout)
@@ -4521,7 +4521,7 @@ class Column(Element):
         self.VerticalScrollOnly = vertical_scroll_only
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         self.Justification = justification
         self.Layout(layout)
@@ -5239,7 +5239,7 @@ class Table(Element):
                 else:
                     self.TKTreeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
 
-    def treeview_selected(self, event):
+    def _treeview_selected(self, event):
         """
         Not user callable.  Callback function that is called when something is selected from Table.
         Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
@@ -5257,7 +5257,7 @@ class Table(Element):
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
 
-    def treeview_double_click(self, event):
+    def _treeview_double_click(self, event):
         """
         Not user callable.  Callback function that is called when something is selected from Table.
         Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
@@ -5370,7 +5370,7 @@ class Tree(Element):
                          key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def treeview_selected(self, event):
+    def _treeview_selected(self, event):
         """
         Not a user function.  Callback function that happens when an item is selected from the tree.  In this
         method, it saves away the reported selections so they can be properly returned.
@@ -5638,11 +5638,11 @@ class Window:
     Represents a single Window
     """
     NumOpenWindows = 0
-    user_defined_icon = None
+    _user_defined_icon = None
     hidden_master_root = None
-    animated_popup_dict = {}
-    container_element_counter = 0  # used to get a number of Container Elements (Frame, Column, Tab)
-    read_call_from_debugger = False
+    _animated_popup_dict = {}
+    _container_element_counter = 0  # used to get a number of Container Elements (Frame, Column, Tab)
+    _read_call_from_debugger = False
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE,
                  default_button_element_size=(None, None),
@@ -5672,7 +5672,7 @@ class Window:
         :param border_depth: (int) Default border depth (width) for all elements in the window
         :param auto_close: (bool) If True, the window will automatically close itself
         :param auto_close_duration: (int) Number of seconds to wait before closing the window
-        :param icon: Union[str, str] Can be either a filename or Base64 value.
+        :param icon: Union[str, str] Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
         :param force_toplevel: (bool) If True will cause this window to skip the normal use of a hidden master window
         :param alpha_channel: (float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
         :param return_keyboard_events: (bool) if True key presses on the keyboard will be returned as Events from Read calls
@@ -5710,8 +5710,8 @@ class Window:
         self.BorderDepth = border_depth
         if icon:
             self.WindowIcon = icon
-        elif Window.user_defined_icon is not None:
-            self.WindowIcon = Window.user_defined_icon
+        elif Window._user_defined_icon is not None:
+            self.WindowIcon = Window._user_defined_icon
         else:
             self.WindowIcon = DEFAULT_WINDOW_ICON
         self.AutoClose = auto_close
@@ -5753,7 +5753,7 @@ class Window:
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
-        self.ContainerElemementNumber = Window.GetAContainerNumber()
+        self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.AllKeysDict = {}
         self.TransparentColor = transparent_color
         self.UniqueKeyCounter = 0
@@ -5780,16 +5780,16 @@ class Window:
                   "If you seriously want this gray window and no more nagging, add  change_look_and_feel('DefaultNoMoreNagging') ")
 
     @classmethod
-    def GetAContainerNumber(cls):
+    def _GetAContainerNumber(cls):
         """
         Not user callable!
         :return: A simple counter that makes each container element unique
         """
-        cls.container_element_counter += 1
-        return cls.container_element_counter
+        cls._container_element_counter += 1
+        return cls._container_element_counter
 
     @classmethod
-    def IncrementOpenCount(self):
+    def _IncrementOpenCount(self):
         """
         Not user callable!  Increments the number of open windows
         Note - there is a bug where this count easily gets out of sync. Issue has been opened already. No ill effects
@@ -5798,7 +5798,7 @@ class Window:
         # print('+++++ INCREMENTING Num Open Windows = {} ---'.format(Window.NumOpenWindows))
 
     @classmethod
-    def DecrementOpenCount(self):
+    def _DecrementOpenCount(self):
         """
         Not user callable!  Decrements the number of open windows
         """
@@ -5987,13 +5987,15 @@ class Window:
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
     def SetIcon(self, icon=None, pngbase64=None):
         """
-        Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
-        * a filename which must be a .ICO icon file for windows
-        * a bytes object
-        * a BASE64 encoded file held in a variable
+        Changes the icon that is shown on the title bar and on the task bar.
+        NOTE - The file type is IMPORTANT and depends on the OS!
+        Can pass in:
+        * filename which must be a .ICO icon file for windows, PNG file for Linux
+        * bytes object
+        * BASE64 encoded file held in a variable
 
         :param icon: (str) Filename or bytes object
-        :param pngbase64: (str) Base64 encoded GIF or PNG file
+        :param pngbase64: (str) Base64 encoded image
         """
         if type(icon) is bytes or pngbase64 is not None:
             wicon = tkinter.PhotoImage(data=icon if icon is not None else pngbase64)
@@ -6113,7 +6115,7 @@ class Window:
                  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
         """
         # ensure called only 1 time through a single read cycle
-        if not Window.read_call_from_debugger:
+        if not Window._read_call_from_debugger:
             _refresh_debugger()
         timeout = int(timeout) if timeout is not None else None
         if timeout == 0:  # timeout of zero runs the old readnonblocking
@@ -6149,7 +6151,7 @@ class Window:
                     rc = self.TKroot.update()
                 except:
                     self.TKrootDestroyed = True
-                    Window.DecrementOpenCount()
+                    Window._DecrementOpenCount()
                     # _my_windows.Decrement()
                     # print('ROOT Destroyed')
                 results = _BuildResults(self, False, self)
@@ -6197,13 +6199,13 @@ class Window:
                     self.TKroot.destroy()
                 except:
                     pass
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
                 # _my_windows.Decrement()
                 self.LastButtonClicked = None
                 return None, None
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
-                Window.DecrementOpenCount()
+                Window._DecrementOpenCount()
                 # _my_windows.Decrement()
         # Determine return values
         if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
@@ -6241,14 +6243,14 @@ class Window:
             rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
             # _my_windows.Decrement()
             # print("read failed")
             # return None, None
         if self.RootNeedsDestroying:
             # print('*** DESTROYING LATE ***', self.ReturnValues)
             self.TKroot.destroy()
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
             # _my_windows.Decrement()
             self.Values = None
             self.LastButtonClicked = None
@@ -6275,7 +6277,7 @@ class Window:
             rc = self.TKroot.update()
         except:
             self.TKrootDestroyed = True
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
             print('** Finalize failed **')
             # _my_windows.Decrement()
             # return None, None
@@ -6647,7 +6649,7 @@ class Window:
             return
         try:
             self.TKroot.destroy()
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
         except:
             pass
         # if down to 1 window, try and destroy the hidden window, if there is one
@@ -7066,15 +7068,22 @@ SYSTEM_TRAY_MESSAGE_ICON_NOICON = _tray_icon_none
 #                       Tray CLASS                                      #
 # ------------------------------------------------------------------------- #
 class SystemTray:
+    """
+    A "Simulated System Tray" that duplicates the API calls available to PySimpleGUIWx and PySimpleGUIQt users.
+
+    All of the functionality works. The icon is displayed ABOVE the system tray rather than inside of it.
+    """
+
     def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
-        '''
+        """
         SystemTray - create an icon in the system tray
         :param menu: Menu definition
         :param filename: filename for icon
         :param data: in-ram image for icon
         :param data_base64: basee-64 data for icon
         :param tooltip: tooltip string
-        '''
+        :param metadata: (Any) User metadata that can be set to ANYTHING
+        """
         self.Menu = menu
         self.TrayIcon = None
         self.Shown = False
@@ -7101,11 +7110,11 @@ class SystemTray:
 
 
     def Read(self, timeout=None):
-        '''
+        """
         Reads the context menu
         :param timeout: Optional.  Any value other than None indicates a non-blocking read
         :return:
-        '''
+        """
         if self.last_message_event != TIMEOUT_KEY and self.last_message_event is not None:
             event = self.last_message_event
             self.last_message_event = None
@@ -7120,15 +7129,21 @@ class SystemTray:
 
 
     def Hide(self):
+        """
+        Hides the icon
+        """
         self.window.hide()
 
 
     def UnHide(self):
+        """
+        Restores a previously hidden icon
+        """
         self.window.un_hide()
 
 
     def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=(SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS)):
-        '''
+        """
         Shows a balloon above icon in system tray
         :param title:  Title shown in balloon
         :param message: Message to be displayed
@@ -7137,7 +7152,7 @@ class SystemTray:
         :param data_base64: Optional base64 icon
         :param time: Union[int, Tuple[int, int]] Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration
         :return: (Any)  The event that happened during the display such as user clicked on message
-        '''
+        """
 
         if isinstance(time, tuple):
             fade_duraction, display_duration = time
@@ -7152,14 +7167,14 @@ class SystemTray:
         return event
 
     def Close(self):
-        '''
+        """
         Close the system tray window
-        '''
+        """
         self.window.close()
 
 
     def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
-        '''
+        """
         Updates the menu, tooltip or icon
         :param menu: menu defintion
         :param tooltip: string representing tooltip
@@ -7167,7 +7182,7 @@ class SystemTray:
         :param data:  icon raw image
         :param data_base64: icon base 64 image
         :return:
-        '''
+        """
         # Menu
         if menu is not None:
             top_menu = tk.Menu(self.window.TKroot, tearoff=False)
@@ -9723,10 +9738,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview.configure(style=style_name)
 
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
-                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
+                treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.BindReturnKey:
-                    treeview.bind('<Return>', element.treeview_double_click)
-                    treeview.bind('<Double-Button-1>', element.treeview_double_click)
+                    treeview.bind('<Return>', element._treeview_double_click)
+                    treeview.bind('<Double-Button-1>', element._treeview_double_click)
 
                 if not element.HideVerticalScroll:
                     scrollbar = tk.Scrollbar(frame)
@@ -9849,7 +9864,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Visible is False:
                     element.TKTreeview.pack_forget()
                 frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
-                treeview.bind("<<TreeviewSelect>>", element.treeview_selected)
+                treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -10022,7 +10037,7 @@ def StartupTK(my_flex_form):
         # if first window being created, make a throwaway, hidden master root.  This stops one user
         # window from becoming the child of another user window. All windows are children of this
         # hidden window
-        Window.IncrementOpenCount()
+        Window._IncrementOpenCount()
         Window.hidden_master_root = tk.Tk()
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
         Window.hidden_master_root.wm_overrideredirect(True)
@@ -10043,7 +10058,7 @@ def StartupTK(my_flex_form):
         pass
     if my_flex_form.BackgroundColor is not None and my_flex_form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         root.configure(background=my_flex_form.BackgroundColor)
-    Window.IncrementOpenCount()
+    Window._IncrementOpenCount()
 
     my_flex_form.TKroot = root
     # Make moveable window
@@ -10103,7 +10118,7 @@ def StartupTK(my_flex_form):
         my_flex_form.TimerCancelled = True
         # print('..... BACK from MainLoop')
         if not my_flex_form.FormRemainedOpen:
-            Window.DecrementOpenCount()
+            Window._DecrementOpenCount()
             # _my_windows.Decrement()
         if my_flex_form.RootNeedsDestroying:
             try:
@@ -10430,7 +10445,7 @@ class _DebugWin():
     def Close(self):
         """ """
         if self.window.XFound:             # increment the number of open windows to get around a bug with debug windows
-            Window.IncrementOpenCount()
+            Window._IncrementOpenCount()
         self.window.Close()
         self.window = None
 
@@ -10510,7 +10525,7 @@ def SetGlobalIcon(icon):
     :param icon: Union[bytes, str] Either a Base64 byte string or a filename
     """
 
-    Window.user_defined_icon = icon
+    Window._user_defined_icon = icon
 
 
 # ============================== SetOptions =========#
@@ -10603,8 +10618,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     # global _my_windows
 
     if icon:
-        Window.user_defined_icon = icon
-        # _my_windows.user_defined_icon = icon
+        Window._user_defined_icon = icon
+        # _my_windows._user_defined_icon = icon
 
     if button_color != None:
         DEFAULT_BUTTON_COLOR = button_color
@@ -12710,7 +12725,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
             # if first window being created, make a throwaway, hidden master root.  This stops one user
             # window from becoming the child of another user window. All windows are children of this
             # hidden window
-            Window.IncrementOpenCount()
+            Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
             Window.hidden_master_root.wm_overrideredirect(True)
@@ -12788,7 +12803,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             # if first window being created, make a throwaway, hidden master root.  This stops one user
             # window from becoming the child of another user window. All windows are children of this
             # hidden window
-            Window.IncrementOpenCount()
+            Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
             Window.hidden_master_root.wm_overrideredirect(True)
@@ -12918,13 +12933,13 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
     """
     if image_source is None:
-        for image in Window.animated_popup_dict:
-            window = Window.animated_popup_dict[image]
+        for image in Window._animated_popup_dict:
+            window = Window._animated_popup_dict[image]
             window.Close()
-        Window.animated_popup_dict = {}
+        Window._animated_popup_dict = {}
         return
 
-    if image_source not in Window.animated_popup_dict:
+    if image_source not in Window._animated_popup_dict:
         if type(image_source) is bytes or len(image_source) > 300:
             layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_', )], ]
         else:
@@ -12936,9 +12951,9 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
                         transparent_color=transparent_color).Finalize()
-        Window.animated_popup_dict[image_source] = window
+        Window._animated_popup_dict[image_source] = window
     else:
-        window = Window.animated_popup_dict[image_source]
+        window = Window._animated_popup_dict[image_source]
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
 
     window.refresh() # call refresh instead of Read to save significant CPU time
@@ -13054,9 +13069,9 @@ class _Debugger():
         # ------------------------------- Create main window -------------------------------
         window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location)
 
-        Window.read_call_from_debugger = True
+        Window._read_call_from_debugger = True
         window.finalize()
-        Window.read_call_from_debugger = False
+        Window._read_call_from_debugger = False
 
         window.Element('_VAR1_').SetFocus()
         self.watcher_window = window
@@ -13380,9 +13395,9 @@ class _Debugger():
                                     element_padding=(0, 0), margins=(0, 0), keep_on_top=True,
                                     right_click_menu=['&Right', ['Debugger::RightClick', 'Exit::RightClick']], location=location, finalize=False)
 
-        Window.read_call_from_debugger = True
+        Window._read_call_from_debugger = True
         self.popout_window.Finalize()
-        Window.read_call_from_debugger = False
+        Window._read_call_from_debugger = False
 
         if location == (None, None):
             screen_size = self.popout_window.GetScreenDimensions()
@@ -13508,10 +13523,10 @@ def _refresh_debugger():
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
     debugger = _Debugger.debugger
-    Window.read_call_from_debugger = True
+    Window._read_call_from_debugger = True
     # frame = inspect.currentframe()
-    frame = inspect.currentframe().f_back
-    # frame, *others = inspect.stack()[1]
+    # frame = inspect.currentframe().f_back
+    frame, *others = inspect.stack()[1]
     try:
         debugger.locals = frame.f_back.f_locals
         debugger.globals = frame.f_back.f_globals
@@ -13519,7 +13534,7 @@ def _refresh_debugger():
         del frame
     debugger._refresh_floating_window() if debugger.popout_window else None
     rc = debugger._refresh_main_debugger_window(debugger.locals, debugger.globals) if debugger.watcher_window else False
-    Window.read_call_from_debugger = False
+    Window._read_call_from_debugger = False
     return rc
 
 
@@ -13646,7 +13661,7 @@ def main():
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
     i = 0
     Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
-    print(window.element_list())
+    # print(window.element_list())
     while True:  # Event Loop
         event, values = window.Read(timeout=5)
         if event != TIMEOUT_KEY:
