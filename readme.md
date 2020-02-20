@@ -14,7 +14,7 @@
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.15.1-red.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.16.0-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
@@ -1376,7 +1376,7 @@ Popup - Display a popup Window with as many parms as you wish to include.  This 
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
 ```
-Popup(args,
+Popup(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -1441,7 +1441,7 @@ Show a scrolled Popup window containing the user's text that was supplied.  Use 
 want, just like a print statement.
 
 ```
-PopupScrolled(args,
+PopupScrolled(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -1500,7 +1500,7 @@ If `non_blocking` parameter is set, then  the call will not blocking waiting for
 Show Popup window and immediately return (does not block)
 
 ```
-PopupNoWait(args,
+PopupNoWait(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -1960,7 +1960,7 @@ Read on for detailed instructions on the calls that show the window and return y
 
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.
 
-## Pattern 1 - "One-shot Window" - Read a window one time then close it
+## Pattern 1 A - "One-shot Window" - Read a window one time then close it
 
 This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closed.
 
@@ -1979,6 +1979,22 @@ window = sg.Window('SHA-1 & 256 Hash', layout)
 
 event, values = window.read()
 window.close()
+
+source_filename = values[0]     # the first input element is values[0]
+```
+
+## Pattern 1 B - "One-shot Window" - Read a window one time then close it (compact format)
+
+Same as Pattern 1, but done in a highly compact way.  This example uses the `close` parameter in `window.read` to automatically close the window as part of the read operation (new in version 4.16.0).  This enables you to write a single line of code that will create, display, gather input and close a window.  It's really powerful stuff!
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 3')  # please make your windows colorful
+
+event, values  = sg.Window('SHA-1 & 256 Hash', [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+				        [sg.InputText(), sg.FileBrowse()],
+				        [sg.Submit(), sg.Cancel()]]).read(close=True)
 
 source_filename = values[0]     # the first input element is values[0]
 ```
@@ -2017,15 +2033,15 @@ Do not worry yet what all of these statements mean.   Just copy it so you can be
 
 A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False. The default is to NOT clear the input element (`do_not_clear=True`).
 
-This example introduces the concept of "keys".  Keys are super important in PySimpleGUI as they enable you to identify and work with Elements using names you want to use.  Keys can be ANYTHING, except `None`.  To access an input element's data that is read in the example below, you will use `values['_IN_']` instead of `values[0]` like before.  
+This example introduces the concept of "keys".  Keys are super important in PySimpleGUI as they enable you to identify and work with Elements using names you want to use.  Keys can be ANYTHING, except `None`.  To access an input element's data that is read in the example below, you will use `values['-IN-']` instead of `values[0]` like before.  
 
 ```python
 import PySimpleGUI as sg
 
 sg.theme('Dark Blue 3')  # please make your windows colorful
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
-          [sg.Input(key='_IN_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='-OUTPUT-')],
+          [sg.Input(key='-IN-')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
@@ -2037,9 +2053,9 @@ while True:  # Event Loop
         break
     if event == 'Show':
         # change the "output" element to be the value of "input" element
-        window['_OUTPUT_'].update(values['_IN_'])
+        window['-OUTPUT-'].update(values['-IN-'])
         # above line can also be written without the update specified
-        window['_OUTPUT_'](values['_IN_'])
+        window['-OUTPUT-'](values['-IN-'])
 
 window.close()
 ```
@@ -2321,9 +2337,9 @@ sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
-			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
-			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='_ADDRESS_')],
-			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='_PHONE_')],
+			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='-NAME-')],
+			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='-ADDRESS-')],
+			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='-PHONE-')],
 			[sg.Submit(), sg.Cancel()]
 			]
 
@@ -2331,22 +2347,22 @@ window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
 window.close()
 
-sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
+sg.Popup(event, values, values['-NAME-'], values['-ADDRESS-'], values['-PHONE-'])
 ```
 
 To get the value of an input field, you use whatever value used as the `key` value as the index value.  Thus to get the value of the name field, it is written as
 
-	values['_NAME_']
+	values['-NAME-']
 
-Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['_NAME_']`.
+Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['-NAME-']`.
 
 You will find the key field used quite heavily in most PySimpleGUI windows unless the window is very simple.
 
 One convention you'll see in many of the demo programs is keys being named in all caps with an underscores at the beginning and the end.  You don't HAVE to do this... your key value may look like this:
-`key = '_NAME__'`
+`key = '-NAME-'`
 
 The reason for this naming convention is that when you are scanning the code, these key values jump out at you.   You instantly know it's a key.  Try scanning the code above and see if those keys pop out.
-`key = '_NAME__'`
+`key = '-NAME-'`
 
 ## The Event Loop / Callback Functions
 
@@ -3124,11 +3140,73 @@ You will find information on Elements and all other classes and functions are lo
 - Stretch (Qt only)
 - Sizer (plain PySimpleGUI only)
 
+## Keys
+
+***Keys are a super important concept to understand in PySimpleGUI.*** 
+
+If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
+
+You can think of a "key" as a "name" for an element. Or an "identifier".  It's a way for you to identify and talk about an element with the PySimpleGUI library.  It's the exact same kind of key as a dictionary key.  They must be unique to a window.
+
+Keys are specified when the Element is created using the `key` parameter.
+
+Keys are used in these ways:
+* Specified when creating the element
+* Returned as events. If an element causes an event, its key will be used
+* In the `values` dictionary that is returned from `window.read()`
+* To make updates (changes), to an element that's in the window
+
+After you put a key in an element's definition, the values returned from `window.read` will use that key to tell you the value.  For example, if you have an input element in your layout:
+
+`Input(key='mykey')`
+
+And your read looks like this: `event, values = Read()`
+
+Then to get the input value from the read it would be: `values['mykey']`
+
+You also use the same key if you want to call Update on an element.  Please see the section Updating Elements to understand that usage.  To get find an element object given the element's key, you can call the window method `find_element` (also written `FindElement`, `element`), or you can use the more common lookup mechanism:
+
+```python
+window['key']
+```
+
+While you'll often see keys written as strings in examples in this document, know that keys can be ***ANYTHING***.  
+
+Let's say you have a window with a grid of input elements.  You could use their row and column location as a key (a tuple)
+
+`key=(row, col)`
+
+Then when you read the `values` variable that's returned to you from calling `Window.read()`, the key in the `values` variable will be whatever you used to create the element. In this case you would read the values as:
+`values[(row, col)]`
+
+Most of the time they are simple text strings.  In the Demo Programs, keys are written with this convention:
+`_KEY_NAME_` (underscore at beginning and end with all caps letters) or the most recent convention is to use a dash at the beginning and end (e.g. `'-KEY_NAME-'`).  You don't have to follow the convention, but it's not a bad one to follow as other users are used to seeing this format and it's easy to spot when element keys are being used.
+
+If you have an element object, to find its key, access the member variable `.Key` for the element.  This assumes you've got the element in a variable already. 
+
+```python
+text_elem = sg.Text('', key='-TEXT-')
+
+the_key = text_elem.Key
+```
+
+### Default Keys
+
+If you fail to place a key on an Element, then one will be created for you automatically.  
+
+For `Buttons`, the text on the button is that button's key. `Text` elements will default to the text's string (for when events are enabled and the text is clicked) 
+
+If the element is one of the input elements (one that will cause an generate an entry in the return values dictionary) and you fail to specify one, then a number will be assigned to it beginning with the number 0.  The effect will be as if the values are represented as a list even if a dictionary is used.
+
+### Menu Keys
+
+Menu items can have keys associated with them as well.  See the section on Menus for more information about these special keys. They aren't the same as Element keys.  Like all elements, Menu Element have one of these Element keys.  The individual menu item keys are different.
+
 ## Common Element Parameters
 
 Some parameters that you  will see on almost all Element creation calls include:
 
-- key   -  Used with window.FindElement and with return values
+- key   -  Used with window[key], events, and in return value dictionary
 - tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
 - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
 - font - specifies the font family, size, etc
@@ -3204,34 +3282,7 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 
 #### Key
 
-If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
-Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:
-
-`Input(key='mykey')`
-
-And your read looks like this: `event, values = Read()`
-
-Then to get the input value from the read it would be: `values['mykey']`
-
-You also use the same key if you want to call Update on an element.  Please see the section below on Updates to understand that usage.
-
-Keys can be ANYTHING.  Let's say you have a window with a grid of input elements.  You could use their row and column location as a key (a tuple)
-
-`key=(row, col)`
-
-Then when you read the `values` variable that's returned to you from calling `Window.Read()`, the key in the `values` variable will be whatever you used to create the element. In this case you would read the values as:
-`values[(row, col)]`
-
-Most of the time they are simple text strings.  In the Demo Programs, keys are written with this convention:
-`_KEY_NAME_` (underscore at beginning and end with all caps letters) or '-KEY_NAME-.  You don't have to follow that convention.  It's used so that you can quickly spot when a key is being used.
-
-To find an element's key, access the member variable `.Key` for the element.  This assumes you've got the element in a variable already. 
-
-```python
-text_elem = sg.Text('', key='-TEXT-')
-
-the_key = text_elem.Key
-```
+See the section above that has full information about keys.
 
 #### Visible
 
@@ -3263,7 +3314,7 @@ In other words, I am lazy and don't like to type. The result is multiple ways to
 
 This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  
 
-The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  BUT,even that has now been shortened.  
+The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  BUT, even that has now been shortened to `window[key]`
 
 It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut in the code.  For examples Replace sg.T with sg.Text if your version doesn't have sg.T in it.
 
@@ -3285,26 +3336,26 @@ With proportional spaced fonts (normally the default) the pixel size of one set 
 
 ---
 
-## `Window.FindElement(key)` Shortcut `Window[key]`
+## `Window.FindElement(key)` shortened to `Window[key]`
 
 There's been a fantastic leap forward in making PySimpleGUI code more compact.  
 
 Instead of writing:
 ```python
-window.FindElement(key).Update(new_value)
+window.FindElement(key).update(new_value)
  ```
 
 You can now write it as:
 
 ```python
-window[key].Update(new_value)
+window[key].update(new_value)
  ```
 
 This change has been released to PyPI for PySimpleGUI
 
-MANY Thanks is owed to the person that suggested and showed me how to do this.  It's an incredible find.
+MANY Thanks is owed to the nngogol that suggested and showed me how to do this.  It's an incredible find as have been many of his suggestions.
 
-## `Element.Update()` ->  `Element()` shortcut
+## `Element.update()` ->  `Element()` shortcut
 
 This has to be one of the strangest syntactical contructs I've ever written.  
 
@@ -3355,7 +3406,7 @@ layout = [[graph_element]]
 .
 .
 .
-graph_element(background_color='blue')      # this calls Graph.Update for the previously defined element
+graph_element(background_color='blue')      # this calls Graph.update for the previously defined element
 ```
 
 Hopefully this isn't too confusing.  Note that the methods these shortcuts replace will not be removed.  You can continue to use the old constructs without changes.
@@ -3375,9 +3426,9 @@ Individual colors are specified using either the color names as defined in tkint
 ### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
 
-`Text('', key='_TXTOUT_)` will create a `Text` Element that has 0 length.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
+`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
 
-`Text('', size=(15,1), key='_TXTOUT_)` creates a `Text` Element that can hold 15 characters.
+`Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
 
 ### Chortcut functions
 The shorthand functions for `Text` are `Txt` and `T`
@@ -4046,7 +4097,7 @@ The order of operations to obtain a tkinter Canvas Widget is:
     window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout).Finalize()
 
     # add the plot to the window
-    fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
+    fig_photo = draw_figure(window['canvas'].TKCanvas, fig)
 
     # show it all again and get buttons
     event, values = window.read()
@@ -4316,21 +4367,31 @@ SetOptions(background_color='#9FB8AD',
 
 # SystemTray
 
-This is a PySimpleGUIQt and PySimpleGUIWx only feature.  Don't know of a way to do it using tkinter.  Your source code for SystemTray is identical for the Qt and Wx implementations.  You can switch frameworks by simply changing your import statement.
+In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then you perform Reads in order to get events.
 
-In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then  you perform Reads in order to get events.
+## Tkinter version
+
+While only PySimpleGUIQt and PySimpleGUIWx offer a true "system tray" feature, there is a simulated system tray feature that became available in 2020 for the tkinter version of PySimpleGUI.  All of the same objects and method calls are the same and the effect is very similar to what you see with the Wx and Qt versions.  The icon is placed in the bottom right corner of the window.  Setting the location of it has not yet been exposed, but you can drag it to another location on your screen.
+
+The idea of supporting Wx, Qt, and tkinter with the exact same source code is very appealing and is one of the reasons a tkinter version was developed.  You can switch frameworks by simply changing your import statement to any of those 3 ports.
+
+The balloons shown for the tkinter version is different than the message balloons shown by real system tray icons.  Instead a nice semi-transparent window is shown.  This window will fade in / out and is the same design as the one found in the [ptoaster package](https://github.com/PySimpleGUI/ptoaster).
+
+## SystemTray Object
 
 Here is the definition of the SystemTray object.
 
 ```python
-SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None):
+SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None,  metadata=None):
         '''
  SystemTray - create an icon in the system tray
  :param menu: Menu definition
  :param filename: filename for icon
  :param data: in-ram image for icon
  :param data_base64: basee-64 data for icon
- :param tooltip: tooltip string '''
+ :param tooltip: tooltip string 
+ :param metadata: (Any) User metadata that can be set to ANYTHING
+'''
 ```
 
 You'll notice that there are 3 different ways to specify the icon image.  The base-64 parameter allows you to define a variable in your .py code that is the encoded image so that you do not need any additional files.  Very handy feature.
@@ -4341,26 +4402,31 @@ Here is a design pattern you can use to get a jump-start.
 
 This program will create a system tray icon and perform a blocking Read.  If the item "Open" is chosen from the system tray, then a popup is shown.
 
+The same code can be executed on any of the Desktop versions of PySimpleGUI (tkinter, Qt, WxPython)
 ```python
 import PySimpleGUIQt as sg
+# import PySimpleGUIWx as sg
+# import PySimpleGUI as sg
 
 menu_def = ['BLANK', ['&Open', '---', '&Save', ['1', '2', ['a', 'b']], '&Properties', 'E&xit']]
 
 tray = sg.SystemTray(menu=menu_def, filename=r'default_icon.ico')
 
 while True:  # The event loop
-  menu_item = tray.Read()
+    menu_item = tray.read()
     print(menu_item)
     if menu_item == 'Exit':
         break
     elif menu_item == 'Open':
-        sg.Popup('Menu item chosen', menu_item)
+        sg.popup('Menu item chosen', menu_item)
 
 ```
 The design pattern creates an icon that will display this menu:
 ![snag-0293](https://user-images.githubusercontent.com/13696193/49057441-8bbfe980-f1cd-11e8-93e7-1aeda9ccd173.jpg)
 
-### Icons
+### Icons for System Trays
+
+System Tray Icons are in PNG & GIF format when running on PySimpleGUI (tkinter version).  PNG, GIF, and ICO formats will work for the Wx and Qt ports.
 
 When specifying "icons", you can use 3 different formats.
 * `filename`- filename
@@ -4368,6 +4434,12 @@ When specifying "icons", you can use 3 different formats.
 * '`data` - in-ram bitmap or other "raw" image
 
 You will find 3 parameters used to specify these 3 options on both the initialize statement and on the Update method.
+
+For testing you may find using the built-in PySimpleGUI icon is a good place to start to make sure you've got everything coded correctly before bringing in outside image assets. It'll tell you quickly if you've got a problem with your icon file.  To run using the default icon, use something like this to create the System Tray:
+
+```python
+tray = sg.SystemTray(menu=menu_def, data_base64=sg.DEFAULT_BASE64_ICON)
+```
 
 ## Menu Definition
 ```python
@@ -4488,6 +4560,24 @@ You can update any of these items within a SystemTray object
 
  Change them all or just 1.
 
+### Notify Class Method
+
+In addition to being able to show messages via the system tray, the tkinter port has the added capability of being able to display the system tray messages without having a system tray object defined.  You can simply show a notification window.  This perhaps removes the need for using the ptoaster package?
+
+The method is a "class method" which means you can call it directly without first creating an instanciation of the object.  To show a notification window, call `SystemTray.notify`.
+
+This line of code
+
+```python
+sg.SystemTray.notify('Notification Title', 'This is the notification message')
+```
+
+Will show this window, fading it in and out:
+
+![image](https://user-images.githubusercontent.com/46163555/74970862-2321e580-53ed-11ea-99ba-1581a05575f0.png)
+
+This is a blocking call so expect it to take a few seconds if you're fading the window in and out.  There are options to control the fade, how long things are displayed, the alpha channel, etc.  See the call signature at the end of this document.
+
 # Global Settings
 
 There are multiple ways to customize PySimpleGUI.  The call with the most granularity (allows access to specific and precise settings).  The `ChangeLookAndFeel` call is in reality a single call to `SetOptions` where it changes 13 different settings.  
@@ -4506,15 +4596,14 @@ Each lower level overrides the settings of the higher level.  Once settings have
 
 # Persistent windows (Window stays open after button click)
 
-Apologies that the next few pages are perhaps confusing.  There have been a number of changes recently in PySimpleGUI's Read calls that added some really cool stuff, but at the expense of being not so simple.  Part of the issue is an attempt to make sure existing code doesn't break.  These changes are all in the area of non-blocking reads and reads with timeouts.
+Early versions of PySimpleGUI did not have a concept of "persisent window". Once a user clicked a button, the window would close.  After some time, the functionality was expanded so that windows remained open by default.
 
-There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.
-
-The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
-
-Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `Read`.  If you do not want your input field to be cleared after a `Read` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.
+## Input Fields that Auto-clear
+Note that `InputText` and `MultiLine` Elements can be **cleared** when performing a `read`.  If you want your input field to be cleared after a `window.read` then you can set the `do_not_clear` parameter to False when creating those elements. The clear is turned on and off on an element by element basis.
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
+
+## Basic Persistent Window Design Pattern
 
 The design pattern for Persistent Windows was already shown to you earlier in the document... here it is for your convenience.
 
@@ -4529,16 +4618,18 @@ window = sg.Window('Window that stays open', layout)
 
 while True:
     event, values = window.read()
-    if event is None or event == 'Exit':
-        break
     print(event, values)
+    if event in (None, 'Exit'):
+        break
 
-window.Close()
+window.close()
 ```
 
-## Read(timeout = t, timeout_key=TIMEOUT_KEY)
+## Read(timeout = t, timeout_key=TIMEOUT_KEY, close=False)
 
-Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
+Read with a timeout is a very good thing for your GUIs to use in a non-blocking read situation.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.  
+
+The idea to wait for some number of milliseconds before returning.  It's a trivial way to make a window that runs on a periodic basis.
 
 One way of thinking of reads with timeouts:
 > During the timeout time, you are "yielding" the processor to do other tasks.
@@ -4552,47 +4643,31 @@ Let's say you had a device that you want to "poll" every 100ms.   The "easy way 
 while True:             # Event Loop
     event, values = window.ReadNonBlocking()   # DO NOT USE THIS CALL ANYMORE
     read_my_hardware() # process my device here
-    time.sleep(.1)     # sleep 1/10 second
+    time.sleep(.1)     # sleep 1/10 second  DO NOT PUT SLEEPS IN YOUR EVENT LOOP!
 ```
 
-This program will quickly test for user input, then deal with the hardware.  Then it'll sleep for 100ms, while your gui is non-responsive, then it'll check in with your GUI again.  I fully realize this is a crude way of doing things.  We're talking dirt simple stuff without trying to use threads, etc to 'get it right'.  It's for demonstration purposes.
+This program will quickly test for user input, then deal with the hardware.  Then it'll sleep for 100ms, while your gui is non-responsive, then it'll check in with your GUI again.  
 
-The new and better way....
-using the Read Timeout mechanism, the sleep goes away.
+The better way using PySimpleGUI... using the Read Timeout mechanism, the sleep goes away.
 
 ```python
 # This is the right way to poll for hardware
 while True:             # Event Loop
-    event, values = window.Read(timeout = 100)
+    event, values = window.read(timeout = 100)
     read_my_hardware() # process my device here
 ```
 
-This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
-
-## Non-Blocking Windows   (Asynchronous reads, timeouts)
-
-You can easily spot a non-blocking call in PySimpleGUI.  If you see a call to `Window.Read()` with a timeout parameter set to a value other than `None`, then it is a non-blocking call.
-
-This call to read is asynchronous as it has a timeout value:
-
-```
-The new way
-```python
-event, values = sg.Read(timeout=20)
-```
-You should use the new way if you're reading this for the first time.
-
-The difference in the 2 calls is in the value of event.  For ReadNonBlocking, event will be `None` if there are no other events to report.  There is a "problem" with this however.  With normal Read calls, an event value of None signified the window was closed.  For ReadNonBlocking, the way a closed window is returned is via the values variable being set to None.
+This event loop will run every 100 ms.  You're making a `read` call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
 ## sg.TIMEOUT_KEY
 
-If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
+If you're using a read with a timeout value, then an event value of None signifies that the window was closed, just like a normal `window.read`.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `TIMEOUT_KEY`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
 `TIMEOUT_KEY = __timeout__`
 
 If you wanted to test for "no event" in your loop, it would be written like this:
 ```python
 while True:
-    event, value = window.Read(timeout=0)
+    event, value = window.Read(timeout=10)
     if event is None:
         break # the use has closed the window
     if event == sg.TIMEOUT_KEY:
@@ -4601,7 +4676,15 @@ while True:
 
 Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
-Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+### `read(timeout=0)`
+
+You may find some PySimpleGUI programs that set the timeout value to zero.  This is a very dangerous thing to do.  If you do not pend on something else in your event loop, then your program will consume 100% of your CPU.  Remember that today's CPUs are multi-cored.  You may see only 7% of your CPU is busy when you're running with timeout of 0.  This is because task manager is reporting a system-wide CPU usage.  The single core your program is running on is likely at 100%.
+
+A true non-blocking (timeout=0) read is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine or a read with a timeout would work.
+
+It's valid to use a timeout value of zero if you're in need of every bit of CPU horsepower in your application.  Maybe your loop is doing something super-CPU intensive and you can't afford for the GUI to use any CPU time. This is the kind of situation where a timeout of zero is appropriate.  
+
+Be a good computing citizen.  Run with a non-zero timeout so that other programs on your CPU will have time to run.
 
 ### Small Timeout Values (under 10ms)
 
@@ -4627,11 +4710,36 @@ There are 2 methods of interacting with non-blocking windows.
 
  ## Exiting (Closing) a Persistent Window
 
-If your window has a button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are ReadButtons, then it'll be up to you to close the window when done.
-To close a window, call the `Close` method.
+If your window has a special button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are normal `Button` elements, then it'll be up to you to close the window when done.
+
+To close a window, call the `close` method.
 ```python
-window.Close()
+window.close()
 ```
+
+Beginning in version 4.16.0 you can use a `close` parameter in the `window.read` call to indicate that the window should be closed before returning from the read.  This capability to an excellent way to make a single line Window to quickly get information.
+
+This single line of code will display a window, get the user's input, close the window, and return the values as an event and a values dictionary.
+
+```python
+event, values = sg.Window('Login Window',
+                  [[sg.T('Enter your Login ID'), sg.In(key='-ID-')],
+                  [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
+
+login_id = values['-ID-']
+```
+
+You can also make a custom popup quite easily:
+
+```python
+long_string = '123456789 '* 40
+
+event, values = sg.Window('This is my customn popup',
+                  [[sg.Text(long_string, size=(40,None))],
+                  [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
+```
+
+Notice the height parameter of size is `None` in this case.  For the tkinter port of PySimpleGUI this will cause the number of rows to "fit" the contents of the string to be displayed.
 
 ## Persistent Window Example - Running timer that updates
 
@@ -4662,7 +4770,7 @@ while (True):
     event, values = window.Read(timeout=10)
     current_time = int(round(time.time() * 100)) - start_time
     # --------- Display timer in window --------
-    window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+    window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                                   (current_time // 100) % 60,
                                                                   current_time % 100))
 ```
@@ -4685,14 +4793,14 @@ One example is you have an input field that changes as you press buttons on an o
 
 If you want to change an Element's settings in your window after the window has been created, then you will call the Element's Update method.
 
-**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  Also, not all settings available to you when you created the Element are available to you via its `Update` method.
+**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  Also, not all settings available to you when you created the Element are available to you via its `update` method.
 
 Here is an example of updating a Text Element
 
 ```python
 import PySimpleGUI as sg
 
-layout = [ [sg.Text('My layout', key='_TEXT_')],
+layout = [ [sg.Text('My layout', key='-TEXT-')],
            [sg.Button('Read')]]
 
 window = sg.Window('My new window', layout)
@@ -4701,7 +4809,7 @@ while True:             # Event Loop
     event, values = window.read()
     if event is None:
         break
-    window.Element('_TEXT_').Update('My new text value')
+    window['-TEXT-'].update('My new text value')
 ```
 
 Notice the placement of the Update call.  If you wanted to Update the Text Element *prior* to the Read call, outside of the event loop, then you must call Finalize on the window first.
@@ -4710,13 +4818,12 @@ In this example, the Update is done prior the Read.  Because of this, the Finali
 ```python
 import PySimpleGUI as sg
 
-layout = [ [sg.Text('My layout', key='_TEXT_')],
-           [sg.Button('Read')]
-         ]
+layout = [ [sg.Text('My layout', key='-TEXT-')],
+           [sg.Button('Read')]]
 
-window = sg.Window('My new window', layout).Finalize()
+window = sg.Window('My new window', layout, finalize=True)
 
-window.Element('_TEXT_').Update('My new text value')
+window['-TEXT-'].update('My new text value')
 
 while True:             # Event Loop
   event, values = window.read()
@@ -4765,9 +4872,9 @@ while True:
     if sz != fontSize:
         fontSize = sz
         font = "Helvetica "  + str(fontSize)
-        window.FindElement('text').Update(font=font)
-        window.FindElement('slider').Update(sz)
-        window.FindElement('spin').Update(sz)
+        window['text'].update(font=font)
+        window['slider'].update(sz)
+        window['spin'].update(sz)
 
 print("Done.")
 ```
@@ -4778,21 +4885,21 @@ For example, `values['slider']` is the value of the Slider Element.
 This program changes all 3 elements if either the Slider or the Spinner changes.  This is done with these statements:
 
 ```python
-window.FindElement('text').Update(font=font)
-window.FindElement('slider').Update(sz)
-window.FindElement('spin').Update(sz)
+window['text'].update(font=font)
+window['slider'].update(sz)
+window['spin'].update(sz)
 ```
 
 Remember this design pattern because you will use it OFTEN if you use persistent windows.
 
-It works as follows.  The call to `window.FindElement` returns the Element object represented by they provided `key`.  This element is then updated by calling it's `Update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
+It works as follows.  The expresion `window[key]` returns the Element object represented by the provided `key`.  This element is then updated by calling it's `update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
 
-    text_element = window.FindElement('text')
-    text_element.Update(font=font)
+    text_element = window['text']
+    text_element.update(font=font)
 
-The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.
+The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used in a wide variety of places.
 
-### Locating Elements (FindElement == Element == Elem)
+### Locating Elements (FindElement == Element == Elem == [ ])
 
 The Window method call that's used to find an element is:
 `FindElement`
@@ -4801,11 +4908,14 @@ or the shortened version
 or even shorter (version 4.1+)
 `Elem`
 
-When you see a call to window.FindElement or window.Element, then you know an element is being addressed.  Normally this is done so you can call the element's Update method.
+And now it's finally shortened down to:
+window[key]
+
+You'll find the pattern - `window.Element(key)` in older code.  All of code after about 4.0 uses the shortened `window[key]` notation.
 
 ### ProgressBar / Progress Meters
 
-Note that to change a progress meter's progress, you call `UpdateBar`, not `Update`.
+Note that to change a progress meter's progress, you call `update_bar`, not `update`.  A change to this is being considered for a future release.
 
 # Keyboard & Mouse Capture
 
@@ -4844,7 +4954,7 @@ while True:
     if event == "OK" or event is None:
         print(event, "exiting")
         break
-    text_elem.Update(event)
+    text_elem.update(event)
 ```
 
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.
@@ -4988,7 +5098,7 @@ import PySimpleGUI as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text(size=(15,1), key='_OUTPUT_')],
+          [sg.Text(size=(15,1), key='-OUTPUT-')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -4996,7 +5106,7 @@ win1 = sg.Window('Window 1', layout)
 win2_active = False
 while True:
     ev1, vals1 = win1.Read(timeout=100)
-    win1.FindElement('_OUTPUT_').Update(vals1[0])
+    win1['-OUTPUT-'].update(vals1[0])
     if ev1 is None or ev1 == 'Exit':
         break
 
@@ -5023,7 +5133,7 @@ import PySimpleGUIQt as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text(size=(15,1),  key='_OUTPUT_')],
+          [sg.Text(size=(15,1),  key='-OUTPUT-')],
           [sg.Button('Launch 2')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -5032,7 +5142,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)
     if ev1 is None:
         break
-    win1.FindElement('_OUTPUT_').Update(vals1[0])
+    win1.FindElement('-OUTPUT-').update(vals1[0])
 
     if ev1 == 'Launch 2'  and not win2_active:
         win2_active = True
@@ -5635,21 +5745,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### click
 
 Generates a click of the button as if the user clicked the button
@@ -5706,6 +5801,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -5748,6 +5857,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -5836,21 +5959,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### Click
 
 Generates a click of the button as if the user clicked the button
@@ -5919,21 +6027,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5970,6 +6063,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -6013,6 +6120,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -6066,21 +6187,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -6129,21 +6235,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6180,6 +6271,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -6227,6 +6332,20 @@ Parameter Descriptions:
 ### tk_canvas
 
 #### property: tk_canvas
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -6279,21 +6398,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### Get
 
 Return the current state of this checkbox
@@ -6339,6 +6443,8 @@ Note that changing visibility may cause element to change locations when made vi
 
 ```
 Update(value=None,
+    background_color=None,
+    text_color=None,
     disabled=None,
     visible=None)
 ```
@@ -6348,6 +6454,8 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |value|(bool) if True checks the checkbox, False clears it|
+|background_color|(str) color of background|
+|text_color|(str) color of the text. Note this also changes the color of the checkmark|
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
@@ -6366,21 +6474,6 @@ Parameter Descriptions:
 |---|---|
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
-
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### expand
 
@@ -6429,6 +6522,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -6472,6 +6579,20 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -6488,6 +6609,8 @@ Note that changing visibility may cause element to change locations when made vi
 
 ```
 update(value=None,
+    background_color=None,
+    text_color=None,
     disabled=None,
     visible=None)
 ```
@@ -6497,6 +6620,8 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |value|(bool) if True checks the checkbox, False clears it|
+|background_color|(str) color of background|
+|text_color|(str) color of the text. Note this also changes the color of the checkmark|
 |disabled|(bool) disable or enable element|
 |visible|(bool) control visibility of element|
 
@@ -6536,20 +6661,35 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
+### AddRow
 
-*** DEPRICATED ***
-Use Element.bind instead
+Not recommended user call.  Used to add rows of Elements to the Column Element.
 
 ```
-ButtonReboundCallback(event)
+AddRow(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(unknown) Not used in this function.|
+|*args|List[Element] The list of elements for this row|
+
+### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Column) Used for chaining |
 
 ### SetFocus
 
@@ -6598,7 +6738,7 @@ Parameter Descriptions:
 Not recommended user call.  Used to add rows of Elements to the Column Element.
 
 ```
-add_row(args)
+add_row(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
@@ -6622,21 +6762,6 @@ Parameter Descriptions:
 |---|---|
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
-
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### expand
 
@@ -6691,6 +6816,20 @@ Parameter Descriptions:
 |||
 | **return** | (Column) Used for chaining |
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -6733,6 +6872,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -6800,21 +6953,6 @@ Parameter Descriptions:
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### Get
 
@@ -6897,21 +7035,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6960,6 +7083,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -7002,6 +7139,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -7082,20 +7233,35 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
+### AddRow
 
-*** DEPRICATED ***
-Use Element.bind instead
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
 ```
-ButtonReboundCallback(event)
+AddRow(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(unknown) Not used in this function.|
+|*args|List[Element] The list of elements for this row|
+
+### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Frame) Used for chaining |
 
 ### SetFocus
 
@@ -7140,6 +7306,20 @@ Parameter Descriptions:
 |value|(Any) New text value to show on frame|
 |visible|(bool) control visibility of element|
 
+### add_row
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+add_row(args=*<1 or N object>)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
 ### bind
 
 Used to add tkinter events to an Element.
@@ -7155,21 +7335,6 @@ Parameter Descriptions:
 |---|---|
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
-
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### expand
 
@@ -7207,6 +7372,36 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The rows of Elements|
+|||
+| **return** | (Frame) Used for chaining |
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -7250,6 +7445,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -7350,21 +7559,6 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |event|(event) event info from tkinter. Contains the x and y coordinates of a click|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### DeleteFigure
 
@@ -7477,7 +7671,7 @@ Parameter Descriptions:
 |color|(str) Color of the line|
 |width|(int) width of line in pixels|
 |||
-| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
+| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br>         want to manipulate the line |
 
 ### DrawOval
 
@@ -7523,6 +7717,28 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
 
+### DrawPolygon
+
+Draw a rectangle given 2 points. Can control the line and fill colors
+
+```
+DrawPolygon(points,
+    fill_color=None,
+    line_color=None,
+    line_width=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|points|List[Union[Tuple[int, int], Tuple[float, float]]] list of points that define the polygon|
+|fill_color|(str) color of the interior|
+|line_color|(str) color of outline|
+|line_width|(int) width of the line in pixels|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
+
 ### DrawRectangle
 
 Draw a rectangle given 2 points. Can control the line and fill colors
@@ -7543,6 +7759,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle|
 |fill_color|(str) color of the interior|
 |line_color|(str) color of outline|
+|line_width|(int) width of the line in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
 
@@ -7611,6 +7828,20 @@ Parameter Descriptions:
 |location|Union[Tuple[int, int], Tuple[float, float]] point to check|
 |||
 | **return** | List[int] a list of previously drawn "Figures" (returned from the drawing primitives) |
+
+### MotionCallBack
+
+Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
+
+```
+MotionCallBack(event)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|event|(event) event info from tkinter. Contains the x and y coordinates of a mouse|
 
 ### Move
 
@@ -7769,21 +8000,6 @@ Parameter Descriptions:
 |---|---|
 |event|(event) event info from tkinter. Contains the x and y coordinates of a click|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### change_coordinates
 
 Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
@@ -7911,7 +8127,7 @@ Parameter Descriptions:
 |color|(str) Color of the line|
 |width|(int) width of line in pixels|
 |||
-| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br> want to manipulate the line |
+| **return** | Union[int, None] id returned from tktiner or None if user closed the window. id is used when you <br>         want to manipulate the line |
 
 ### draw_oval
 
@@ -7957,6 +8173,28 @@ Parameter Descriptions:
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point |
 
+### draw_polygon
+
+Draw a rectangle given 2 points. Can control the line and fill colors
+
+```
+draw_polygon(points,
+    fill_color=None,
+    line_color=None,
+    line_width=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|points|List[Union[Tuple[int, int], Tuple[float, float]]] list of points that define the polygon|
+|fill_color|(str) color of the interior|
+|line_color|(str) color of outline|
+|line_width|(int) width of the line in pixels|
+|||
+| **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
+
 ### draw_rectangle
 
 Draw a rectangle given 2 points. Can control the line and fill colors
@@ -7977,6 +8215,7 @@ Parameter Descriptions:
 |bottom_right|Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle|
 |fill_color|(str) color of the interior|
 |line_color|(str) color of outline|
+|line_width|(int) width of the line in pixels|
 |||
 | **return** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle |
 
@@ -8149,6 +8388,20 @@ Parameter Descriptions:
 |---|---|
 |figure|(int) value returned by tkinter when creating the figure / drawing|
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -8195,6 +8448,20 @@ Parameter Descriptions:
 ### tk_canvas
 
 #### property: tk_canvas
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -8253,21 +8520,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |enable_events|(bool) Turns on the element specific events. For an Image element, the event is "image clicked"|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### SetFocus
 
@@ -8349,21 +8601,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8400,6 +8637,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -8443,6 +8694,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -8539,21 +8804,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element (Default = True)|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### Get
 
 Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
@@ -8634,21 +8884,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8696,6 +8931,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -8738,6 +8987,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -8824,21 +9087,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### GetIndexes
 
 Returns the items currently selected as a list of indexes
@@ -8910,6 +9158,7 @@ Update(values=None,
     disabled=None,
     set_to_index=None,
     scroll_to_index=None,
+    select_mode=None,
     visible=None)
 ```
 
@@ -8921,6 +9170,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |set_to_index|Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted|
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
+|mode|(str) changes the select mode according to tkinter's listbox widget|
 |visible|(bool) control visibility of element|
 
 ### bind
@@ -8939,21 +9189,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -8971,6 +9206,17 @@ Parameter Descriptions:
 |expand_x|(Bool) If True Element will expand in the Horizontal directions|
 |expand_y|(Bool) If True Element will expand in the Vertical directions|
 |expand_row|(Bool) If True the row containing the element will also expand. Without this your element is "trapped" within the row|
+
+### get
+
+Returns the list of items currently selected in this listbox.  It should be identical
+to the value you would receive when performing a window.read() call.
+
+`get()`
+
+|Name|Meaning|
+|---|---|
+| **return** | List[Any] The list of currently selected items. The actual items are returned, not the indexes |
 
 ### get_indexes
 
@@ -9010,6 +9256,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -9068,6 +9328,20 @@ Parameter Descriptions:
 |---|---|
 |values|List[Any] new values to choose based on previously set values|
 
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -9086,6 +9360,7 @@ update(values=None,
     disabled=None,
     set_to_index=None,
     scroll_to_index=None,
+    select_mode=None,
     visible=None)
 ```
 
@@ -9097,6 +9372,7 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |set_to_index|Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted|
 |scroll_to_index|(int) scroll the listbox so that this index is the first shown|
+|mode|(str) changes the select mode according to tkinter's listbox widget|
 |visible|(bool) control visibility of element|
 
 ## Menu Element
@@ -9121,6 +9397,7 @@ Menu(menu_definition,
     background_color=None,
     size=(None, None),
     tearoff=False,
+    font=None,
     pad=None,
     key=None,
     visible=True,
@@ -9139,21 +9416,6 @@ Parameter Descriptions:
 |key|(any) Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### SetFocus
 
@@ -9214,21 +9476,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9265,6 +9512,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -9308,6 +9569,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -9375,7 +9650,7 @@ Parameter Descriptions:
 |auto_size_text|(bool) if True will size the element to match the length of the text|
 |background_color|(str) color of background|
 |text_color|(str) color of the text|
-|change_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
+|chfange_submits|(bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead|
 |enable_events|(bool) Turns on the element specific events. Spin events happen when an item changes|
 |do_not_clear|if False the element will be cleared any time the Window.Read call returns|
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element|
@@ -9386,21 +9661,6 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### Get
 
@@ -9486,21 +9746,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9548,6 +9793,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -9590,6 +9849,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -9669,21 +9942,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -9748,21 +10006,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9799,6 +10042,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -9842,6 +10099,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -9903,21 +10174,6 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### Get
 
@@ -9992,21 +10248,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -10040,6 +10281,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -10087,6 +10342,20 @@ Parameter Descriptions:
 ### tk_out
 
 #### property: tk_out
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -10148,21 +10417,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -10221,21 +10475,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -10272,6 +10511,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -10315,6 +10568,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -10374,21 +10641,6 @@ Parameter Descriptions:
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### SetFocus
 
@@ -10463,21 +10715,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -10514,6 +10751,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -10557,6 +10808,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -10641,21 +10906,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### Get
 
 A snapshot of the value of Radio Button -> (bool)
@@ -10736,21 +10986,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -10806,6 +11041,20 @@ Sets all Radio Buttons in the group to not selected
 reset_group()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -10848,6 +11097,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -10928,21 +11191,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -11007,21 +11255,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -11058,6 +11291,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -11101,6 +11348,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -11172,21 +11433,6 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### Get
 
@@ -11264,21 +11510,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -11328,6 +11559,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -11370,6 +11615,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -11442,21 +11701,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -11523,21 +11767,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -11574,6 +11803,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -11618,6 +11861,20 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -11648,6 +11905,237 @@ Parameter Descriptions:
 |text_color|(str) color of the text|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
+
+## SystemTray Element
+
+    A "Simulated System Tray" that duplicates the API calls available to PySimpleGUIWx and PySimpleGUIQt users.
+
+    All of the functionality works. The icon is displayed ABOVE the system tray rather than inside of it.
+
+SystemTray - create an icon in the system tray
+
+```
+SystemTray(menu=None,
+    filename=None,
+    data=None,
+    data_base64=None,
+    tooltip=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu|Menu definition|
+|filename|filename for icon|
+|data|in-ram image for icon|
+|data_base64|basee-64 data for icon|
+|tooltip|tooltip string|
+|metadata|(Any) User metadata that can be set to ANYTHING|
+
+### Close
+
+Close the system tray window
+
+```python
+Close()
+```
+
+### Hide
+
+Hides the icon
+
+```python
+Hide()
+```
+
+### Read
+
+Reads the context menu
+
+```
+Read(timeout=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|timeout|Optional. Any value other than None indicates a non-blocking read|
+
+### ShowMessage
+
+Shows a balloon above icon in system tray
+
+```
+ShowMessage(title,
+    message,
+    filename=None,
+    data=None,
+    data_base64=None,
+    messageicon=None,
+    time=(1000, 3000))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|Title shown in balloon|
+|message|Message to be displayed|
+|filename|Optional icon filename|
+|data|Optional in-ram icon|
+|data_base64|Optional base64 icon|
+|time|Union[int, Tuple[int, int]] Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration|
+|||
+| **return** | (Any)  The event that happened during the display such as user clicked on message |
+
+### UnHide
+
+Restores a previously hidden icon
+
+```python
+UnHide()
+```
+
+### Update
+
+Updates the menu, tooltip or icon
+
+```
+Update(menu=None,
+    tooltip=None,
+    filename=None,
+    data=None,
+    data_base64=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu|menu defintion|
+|tooltip|string representing tooltip|
+|filename|icon filename|
+|data|icon raw image|
+|data_base64|icon base 64 image|
+
+### close
+
+Close the system tray window
+
+```python
+close()
+```
+
+### hide
+
+Hides the icon
+
+```python
+hide()
+```
+
+### notify
+
+Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
+The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
+
+```
+notify(title,
+    message,
+    icon=...,
+    display_duration_in_ms=3000,
+    fade_in_duration=1000,
+    alpha=0.9,
+    location=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|(str) Text to be shown at the top of the window in a larger font|
+|message|(str) Text message that makes up the majority of the window|
+|icon|Union[bytes, str) A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window|
+|display_duration_in_ms|(int) Number of milliseconds to show the window|
+|fade_in_duration|(int) Number of milliseconds to fade window in and out|
+|alpha|(float) Alpha channel. 0 - invisible 1 - fully visible|
+|location|Tuple[int, int] Location on the screen to display the window|
+|||
+| **return** | (int) reason for returning |
+
+### read
+
+Reads the context menu
+
+```
+read(timeout=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|timeout|Optional. Any value other than None indicates a non-blocking read|
+
+### show_message
+
+Shows a balloon above icon in system tray
+
+```
+show_message(title,
+    message,
+    filename=None,
+    data=None,
+    data_base64=None,
+    messageicon=None,
+    time=(1000, 3000))
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|title|Title shown in balloon|
+|message|Message to be displayed|
+|filename|Optional icon filename|
+|data|Optional in-ram icon|
+|data_base64|Optional base64 icon|
+|time|Union[int, Tuple[int, int]] Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration|
+|||
+| **return** | (Any)  The event that happened during the display such as user clicked on message |
+
+### un_hide
+
+Restores a previously hidden icon
+
+```python
+un_hide()
+```
+
+### update
+
+Updates the menu, tooltip or icon
+
+```
+update(menu=None,
+    tooltip=None,
+    filename=None,
+    data=None,
+    data_base64=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|menu|menu defintion|
+|tooltip|string representing tooltip|
+|filename|icon filename|
+|data|icon raw image|
+|data_base64|icon base 64 image|
 
 ## Tab Element
 
@@ -11690,20 +12178,35 @@ Parameter Descriptions:
 |element_justification|(str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
+### AddRow
 
-*** DEPRICATED ***
-Use Element.bind instead
+Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
 ```
-ButtonReboundCallback(event)
+AddRow(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(unknown) Not used in this function.|
+|*args|List[Element] The list of elements for this row|
+
+### Layout
+
+Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The list of rows|
+|||
+| **return** | (Tab) used for chaining |
 
 ### Select
 
@@ -11756,6 +12259,20 @@ Parameter Descriptions:
 |disabled|(bool) disable or enable state of the element|
 |visible|(bool) control visibility of element|
 
+### add_row
+
+Not recommended use call.  Used to add rows of Elements to the Frame Element.
+
+```
+add_row(args=*<1 or N object>)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|*args|List[Element] The list of elements for this row|
+
 ### bind
 
 Used to add tkinter events to an Element.
@@ -11771,21 +12288,6 @@ Parameter Descriptions:
 |---|---|
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
-
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### expand
 
@@ -11824,6 +12326,22 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### layout
+
+Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
+
+```
+layout(rows)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|rows|List[List[Element]] The list of rows|
+|||
+| **return** | (Tab) used for chaining |
+
 ### select
 
 Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
@@ -11831,6 +12349,20 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 ```python
 select()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -11874,6 +12406,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -11944,21 +12490,6 @@ Parameter Descriptions:
 |tooltip|(str) text, that will appear when mouse hovers over the element|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### FindKeyFromTabName
 
@@ -12033,21 +12564,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -12114,21 +12630,19 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-### layout
+### set_cursor
 
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+Sets the cursor for the current Element.
 
 ```
-layout(rows)
+set_cursor(cursor)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|rows|List[List[Element]] The rows of Elements|
-|||
-| **return** | (Frame) Used for chaining |
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -12172,6 +12686,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -12256,21 +12784,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### Get
 
 Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
@@ -12351,21 +12864,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -12415,6 +12913,20 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -12457,6 +12969,20 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -12537,21 +13063,6 @@ Parameter Descriptions:
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -12618,21 +13129,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -12669,6 +13165,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -12713,6 +13223,20 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -12743,86 +13267,6 @@ Parameter Descriptions:
 |text_color|(str) color of the text|
 |font|Union[str, Tuple[str, int]] specifies the font family, size, etc|
 |visible|(bool) set visibility state of the element|
-
-## ToolTip Element
-
-    Create a tooltip for a given widget
-    (inspired by https://stackoverflow.com/a/36221216)
-    This is an INTERNALLY USED only class.  Users should not refer to this class at all.
-
-```
-ToolTip(widget,
-    text,
-    timeout=400)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|widget|(widget type varies) The tkinter widget|
-|text|(str) text for the tooltip. It can inslude|
-|timeout|(int) Time in milliseconds that mouse must remain still before tip is shown|
-
-### enter
-
-Called by tkinter when mouse enters a widget
-
-```
-enter(event=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|from tkinter. Has x,y coordinates of mouse|
-
-### hidetip
-
-Destroy the tooltip window
-
-```python
-hidetip()
-```
-
-### leave
-
-Called by tktiner when mouse exits a widget
-
-```
-leave(event=None)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|from tkinter. Event info that's not used by function.|
-
-### schedule
-
-Schedule a timer to time how long mouse is hovering
-
-```python
-schedule()
-```
-
-### showtip
-
-Creates a topoltip window with the tooltip text inside of it
-
-```python
-showtip()
-```
-
-### unschedule
-
-Cancel timer used to time mouse hover
-
-```python
-unschedule()
-```
 
 ## Tree Element
 
@@ -12890,21 +13334,6 @@ Parameter Descriptions:
 |right_click_menu|List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.|
 |visible|(bool) set visibility state of the element|
 |metadata|(Any) User metadata that can be set to ANYTHING|
-
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
 
 ### SetFocus
 
@@ -12988,21 +13417,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -13039,6 +13453,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -13083,20 +13511,19 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
-### treeview_selected
+### unbind
 
-Not a user function.  Callback function that happens when an item is selected from the tree.  In this
-method, it saves away the reported selections so they can be properly returned.
+Removes a previously bound tkinter event from an Element.
 
 ```
-treeview_selected(event)
+unbind(bind_string)
 ```
 
 Parameter Descriptions:
 
 |Name|Meaning|
 |---|---|
-|event|(Any) An event parameter passed in by tkinter. Not used|
+|bind_string|The string tkinter expected in its bind function|
 
 ### unhide_row
 
@@ -13216,21 +13643,6 @@ Parameter Descriptions:
 |---|---|
 |pad|(int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))|
 
-### ButtonReboundCallback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-ButtonReboundCallback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### SetFocus
 
 Sets the current focus to be on this element
@@ -13275,21 +13687,6 @@ Parameter Descriptions:
 |bind_string|The string tkinter expected in its bind function|
 |key_modifier|Additional data to be added to the element's key when event is returned|
 
-### button_rebound_callback
-
-*** DEPRICATED ***
-Use Element.bind instead
-
-```
-button_rebound_callback(event)
-```
-
-Parameter Descriptions:
-
-|Name|Meaning|
-|---|---|
-|event|(unknown) Not used in this function.|
-
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -13326,6 +13723,20 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|cursor|(str) The tkinter cursor name|
 
 ### set_focus
 
@@ -13370,6 +13781,20 @@ Parameter Descriptions:
 |---|---|
 |tooltip_text|(str) the text to show in tooltip.|
 
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|bind_string|The string tkinter expected in its bind function|
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -13379,7 +13804,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-## Window Element
+## Window
 
     Represents a single Window
 
@@ -13444,7 +13869,7 @@ Parameter Descriptions:
 |border_depth|(int) Default border depth (width) for all elements in the window|
 |auto_close|(bool) If True, the window will automatically close itself|
 |auto_close_duration|(int) Number of seconds to wait before closing the window|
-|icon|Union[str, str] Can be either a filename or Base64 value.|
+|icon|Union[str, str] Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO|
 |force_toplevel|(bool) If True will cause this window to skip the normal use of a hidden master window|
 |alpha_channel|(float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.|
 |return_keyboard_events|(bool) if True key presses on the keyboard will be returned as Events from Read calls|
@@ -13472,7 +13897,7 @@ Generally speaking this is NOT how users should be building Window layouts.
 Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
 
 ```
-AddRow(args)
+AddRow(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
@@ -13593,7 +14018,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### Element
 
@@ -13627,7 +14052,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### Enable
 
@@ -13705,7 +14130,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### FindElement
 
@@ -13739,7 +14164,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### FindElementWithFocus
 
@@ -13868,7 +14293,9 @@ Pass in a timeout (in milliseconds) to wait for a maximum of timeout millisecond
 if no other GUI events happen first.
 
 ```
-Read(timeout=None, timeout_key="__TIMEOUT__")
+Read(timeout=None,
+    timeout_key="__TIMEOUT__",
+    close=False)
 ```
 
 Parameter Descriptions:
@@ -13877,8 +14304,9 @@ Parameter Descriptions:
 |---|---|
 |timeout|(int) Milliseconds to wait until the Read will return IF no other GUI events happen first|
 |timeout_key|(Any) The value that will be returned from the call if the timer expired|
+|close|(bool) if True the window will be closed prior to returning|
 |||
-| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
+| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) |
 
 ### Reappear
 
@@ -13939,10 +14367,12 @@ Parameter Descriptions:
 
 ### SetIcon
 
-Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
-* a filename which must be a .ICO icon file for windows
-* a bytes object
-* a BASE64 encoded file held in a variable
+Changes the icon that is shown on the title bar and on the task bar.
+NOTE - The file type is IMPORTANT and depends on the OS!
+Can pass in:
+* filename which must be a .ICO icon file for windows, PNG file for Linux
+* bytes object
+* BASE64 encoded file held in a variable
 
 ```
 SetIcon(icon=None, pngbase64=None)
@@ -13953,7 +14383,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |icon|(str) Filename or bytes object|
-|pngbase64|(str) Base64 encoded GIF or PNG file|
+|pngbase64|(str) Base64 encoded image|
 
 ### SetTransparentColor
 
@@ -14005,7 +14435,7 @@ Generally speaking this is NOT how users should be building Window layouts.
 Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
 
 ```
-add_row(args)
+add_row(args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
@@ -14142,7 +14572,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### element
 
@@ -14176,7 +14606,17 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
+
+### element_list
+
+Returns a list of all elements in the window
+
+`element_list()`
+
+|Name|Meaning|
+|---|---|
+| **return** | List[Element] - List of all elements in the window and container elements in the window |
 
 ### enable
 
@@ -14271,7 +14711,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### find_element
 
@@ -14305,7 +14745,7 @@ Parameter Descriptions:
 |key|(Any) Used with window.FindElement and with return values to uniquely identify this element|
 |silent_on_error|(bool) If True do not display popup nor print warning of key errors|
 |||
-| **return** | Union[Element, Error Element, None] Return value can be: <br>   * the Element that matches the supplied key if found <br>   * an Error Element if silent_on_error is False <br>   * None if silent_on_error True |
+| **return** | Union[Element, Error Element, None] Return value can be: <br>                   * the Element that matches the supplied key if found <br>                   * an Error Element if silent_on_error is False <br>                   * None if silent_on_error True |
 
 ### find_element_with_focus
 
@@ -14442,7 +14882,9 @@ Pass in a timeout (in milliseconds) to wait for a maximum of timeout millisecond
 if no other GUI events happen first.
 
 ```
-read(timeout=None, timeout_key="__TIMEOUT__")
+read(timeout=None,
+    timeout_key="__TIMEOUT__",
+    close=False)
 ```
 
 Parameter Descriptions:
@@ -14451,8 +14893,9 @@ Parameter Descriptions:
 |---|---|
 |timeout|(int) Milliseconds to wait until the Read will return IF no other GUI events happen first|
 |timeout_key|(Any) The value that will be returned from the call if the timer expired|
+|close|(bool) if True the window will be closed prior to returning|
 |||
-| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) <br>  (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window) |
+| **return** | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values) |
 
 ### reappear
 
@@ -14513,10 +14956,12 @@ Parameter Descriptions:
 
 ### set_icon
 
-Sets the icon that is shown on the title bar and on the task bar.  Can pass in:
-* a filename which must be a .ICO icon file for windows
-* a bytes object
-* a BASE64 encoded file held in a variable
+Changes the icon that is shown on the title bar and on the task bar.
+NOTE - The file type is IMPORTANT and depends on the OS!
+Can pass in:
+* filename which must be a .ICO icon file for windows, PNG file for Linux
+* bytes object
+* BASE64 encoded file held in a variable
 
 ```
 set_icon(icon=None, pngbase64=None)
@@ -14527,7 +14972,7 @@ Parameter Descriptions:
 |Name|Meaning|
 |---|---|
 |icon|(str) Filename or bytes object|
-|pngbase64|(str) Base64 encoded GIF or PNG file|
+|pngbase64|(str) Base64 encoded image|
 
 ### set_transparent_color
 
@@ -15486,7 +15931,7 @@ Show a scrolled Popup window containing the user's text that was supplied.  Use 
 want, just like a print statement.
 
 ```
-ScrolledTextBox(args,
+ScrolledTextBox(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -15679,7 +16124,7 @@ Parameter Descriptions:
 ## Debug Window Output
 
 ```
-easy_print(args,
+easy_print(args=*<1 or N object>,
     size=(None, None),
     end=None,
     sep=None,
@@ -15714,7 +16159,7 @@ easy_print_close()
 ```
 
 ```
-eprint(args,
+eprint(args=*<1 or N object>,
     size=(None, None),
     end=None,
     sep=None,
@@ -15744,8 +16189,30 @@ Parameter Descriptions:
 |grab_anywhere|If True can grab anywhere to move the window (Default = False)|
 |do_not_reroute_stdout|(Default = True)|
 
+Print like Python normally prints except route the output to a multline element and also add colors if desired
+
 ```
-sgprint(args,
+print_to_element(multiline_element,
+    args=*<1 or N object>,
+    end=None,
+    sep=None,
+    text_color=None,
+    background_color=None)
+```
+
+Parameter Descriptions:
+
+|Name|Meaning|
+|---|---|
+|multiline_element|(Multiline) The multiline element to be output to|
+|args|List[Any] The arguments to print|
+|end|(str) The end char to use just like print uses|
+|sep|(str) The separation character like print uses|
+|text_color|The color of the text|
+|background_color|The background color of the line|
+
+```
+sgprint(args=*<1 or N object>,
     size=(None, None),
     end=None,
     sep=None,
@@ -15780,7 +16247,7 @@ sgprint_close()
 ```
 
 ```
-EasyPrint(args,
+EasyPrint(args=*<1 or N object>,
     size=(None, None),
     end=None,
     sep=None,
@@ -15815,7 +16282,7 @@ EasyPrintClose()
 ```
 
 ```
-Print(args,
+Print(args=*<1 or N object>,
     size=(None, None),
     end=None,
     sep=None,
@@ -15856,7 +16323,7 @@ OneLineProgressMeter(title,
     current_value,
     max_value,
     key,
-    args,
+    args=*<1 or N object>,
     orientation="v",
     bar_color=(None, None),
     button_color=None,
@@ -15900,7 +16367,7 @@ one_line_progress_meter(title,
     current_value,
     max_value,
     key,
-    args,
+    args=*<1 or N object>,
     orientation="v",
     bar_color=(None, None),
     button_color=None,
@@ -15945,7 +16412,7 @@ Popup - Display a popup Window with as many parms as you wish to include.  This 
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
 ```
-Popup(args,
+Popup(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16027,7 +16494,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-PopupAnnoying(args,
+PopupAnnoying(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16066,7 +16533,7 @@ Parameter Descriptions:
 Popup that closes itself after some time period
 
 ```
-PopupAutoClose(args,
+PopupAutoClose(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16107,7 +16574,7 @@ Parameter Descriptions:
 Display Popup with "cancelled" button text
 
 ```
-PopupCancel(args,
+PopupCancel(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16146,7 +16613,7 @@ Parameter Descriptions:
 Popup with colored button and 'Error' as button text
 
 ```
-PopupError(args,
+PopupError(args=*<1 or N object>,
     title=None,
     button_color=(None, None),
     background_color=None,
@@ -16317,7 +16784,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-PopupNoBorder(args,
+PopupNoBorder(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16356,7 +16823,7 @@ Parameter Descriptions:
 Show a Popup but without any buttons
 
 ```
-PopupNoButtons(args,
+PopupNoButtons(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16395,7 +16862,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-PopupNoFrame(args,
+PopupNoFrame(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16434,7 +16901,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-PopupNoTitlebar(args,
+PopupNoTitlebar(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16473,7 +16940,7 @@ Parameter Descriptions:
 Show Popup window and immediately return (does not block)
 
 ```
-PopupNoWait(args,
+PopupNoWait(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16514,7 +16981,7 @@ Parameter Descriptions:
 Show Popup window and immediately return (does not block)
 
 ```
-PopupNonBlocking(args,
+PopupNonBlocking(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16555,7 +17022,7 @@ Parameter Descriptions:
 Display Popup with OK button only
 
 ```
-PopupOK(args,
+PopupOK(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16594,7 +17061,7 @@ Parameter Descriptions:
 Display popup with OK and Cancel buttons
 
 ```
-PopupOKCancel(args,
+PopupOKCancel(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16635,7 +17102,7 @@ Parameter Descriptions:
 Show Popup box that doesn't block and closes itself
 
 ```
-PopupQuick(args,
+PopupQuick(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16676,7 +17143,7 @@ Parameter Descriptions:
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
 ```
-PopupQuickMessage(args,
+PopupQuickMessage(args=*<1 or N object>,
     title=None,
     button_type=5,
     button_color=None,
@@ -16718,7 +17185,7 @@ Show a scrolled Popup window containing the user's text that was supplied.  Use 
 want, just like a print statement.
 
 ```
-PopupScrolled(args,
+PopupScrolled(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16754,7 +17221,7 @@ Parameter Descriptions:
 Popup that closes itself after some time period
 
 ```
-PopupTimed(args,
+PopupTimed(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16795,7 +17262,7 @@ Parameter Descriptions:
 Display Popup with Yes and No buttons
 
 ```
-PopupYesNo(args,
+PopupYesNo(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16839,7 +17306,7 @@ Popup - Display a popup Window with as many parms as you wish to include.  This 
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
 ```
-popup(args,
+popup(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -16921,7 +17388,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-popup_annoying(args,
+popup_annoying(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -16960,7 +17427,7 @@ Parameter Descriptions:
 Popup that closes itself after some time period
 
 ```
-popup_auto_close(args,
+popup_auto_close(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17001,7 +17468,7 @@ Parameter Descriptions:
 Display Popup with "cancelled" button text
 
 ```
-popup_cancel(args,
+popup_cancel(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17040,7 +17507,7 @@ Parameter Descriptions:
 Popup with colored button and 'Error' as button text
 
 ```
-popup_error(args,
+popup_error(args=*<1 or N object>,
     title=None,
     button_color=(None, None),
     background_color=None,
@@ -17211,7 +17678,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-popup_no_border(args,
+popup_no_border(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17250,7 +17717,7 @@ Parameter Descriptions:
 Show a Popup but without any buttons
 
 ```
-popup_no_buttons(args,
+popup_no_buttons(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17289,7 +17756,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-popup_no_frame(args,
+popup_no_frame(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17328,7 +17795,7 @@ Parameter Descriptions:
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
-popup_no_titlebar(args,
+popup_no_titlebar(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17367,7 +17834,7 @@ Parameter Descriptions:
 Show Popup window and immediately return (does not block)
 
 ```
-popup_no_wait(args,
+popup_no_wait(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17408,7 +17875,7 @@ Parameter Descriptions:
 Show Popup window and immediately return (does not block)
 
 ```
-popup_non_blocking(args,
+popup_non_blocking(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17449,7 +17916,7 @@ Parameter Descriptions:
 Display Popup with OK button only
 
 ```
-popup_ok(args,
+popup_ok(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17488,7 +17955,7 @@ Parameter Descriptions:
 Display popup with OK and Cancel buttons
 
 ```
-popup_ok_cancel(args,
+popup_ok_cancel(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17529,7 +17996,7 @@ Parameter Descriptions:
 Show Popup box that doesn't block and closes itself
 
 ```
-popup_quick(args,
+popup_quick(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17570,7 +18037,7 @@ Parameter Descriptions:
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
 ```
-popup_quick_message(args,
+popup_quick_message(args=*<1 or N object>,
     title=None,
     button_type=5,
     button_color=None,
@@ -17612,7 +18079,7 @@ Show a scrolled Popup window containing the user's text that was supplied.  Use 
 want, just like a print statement.
 
 ```
-popup_scrolled(args,
+popup_scrolled(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17648,7 +18115,7 @@ Parameter Descriptions:
 Popup that closes itself after some time period
 
 ```
-popup_timed(args,
+popup_timed(args=*<1 or N object>,
     title=None,
     button_type=0,
     button_color=None,
@@ -17689,7 +18156,7 @@ Parameter Descriptions:
 Display Popup with Yes and No buttons
 
 ```
-popup_yes_no(args,
+popup_yes_no(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -17868,7 +18335,7 @@ Parameter Descriptions:
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
 ```
-show_debugger_popout_window(location=(None, None), args)
+show_debugger_popout_window(location=(None, None), args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
@@ -17881,7 +18348,7 @@ Parameter Descriptions:
 Shows the large main debugger window
 
 ```
-show_debugger_window(location=(None, None), args)
+show_debugger_window(location=(None, None), args=*<1 or N object>)
 ```
 
 Parameter Descriptions:
@@ -17895,7 +18362,7 @@ Show a scrolled Popup window containing the user's text that was supplied.  Use 
 want, just like a print statement.
 
 ```
-sprint(args,
+sprint(args=*<1 or N object>,
     title=None,
     button_color=None,
     background_color=None,
@@ -19453,11 +19920,43 @@ Lots of fixes
 * Test harness uses a nicer colors for event, value print outs.
 * _timeit decorator for timing functions
 
-
 ## 4.15.1 PySimpleGUI 09-Jan-2020
 
 Quick patch to remove change to popup
 
+## 4.15.2 PySimpleGUI 15-Jan-2020
+
+Quick patch to remove f-string for 3.5 compat.
+
+## 4.16.0 PySimpleGUI 08-Jan-2020
+
+The "LONG time coming" release.  System Tray, Read with close + loads more changes
+Note - there is a known problem with the built-in debugger created when the new read with close was added
+
+* System Tray - Simulates the System Tray feature currently in PySimpleGUIWx and PySimpleGUIQt. All calls are the same. The icon is located just above the system tray (bottom right corner)
+* Window.read - NEW close parameter will close the window for you after the read completes. Can make a single line window using this
+* Window.element_list - Returns a list of all elements in the window
+* Element.unbind - can remove a previously created binding
+* Element.set_size - retries using "length" if "height" setting fails
+* Listbox.update - select_mode parameter added
+* Listbox.update - no longer selects the first entry when all values are changed
+* Listbox.get - new. use to get the current values.  Will be the same as the read return dictionary
+* Checkbox.update - added ability to change background and text colors.  Uses the same combuted checkbox background color (may remove)
+* Multiline.update - fix for when no value is specified
+* Multiline - Check for None when creating. Ignores None rather than converting to string
+* Text.update - added changing value to string. Assumed caller was passing in string previously.
+* Text Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Input Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* StatusBar Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Image Element - can specify no image when creating.  Previously gave a warning and required filename = '' to indicate nothing set
+* Table Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Tree Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Graph.draw_point - changed to using 1/2 the size rather than size. Set width = 0 so no outline will be drawn
+* Graph.draw_polygon - new drawing method!  Can now draw polygons that fill
+* Layout error checking and reporting added for - Frame, Tab, TabGroup, Column, Window
+* Menu - Ability to set the font for the menu items
+* Debug window - fix for problem closing using the "Quit" button
+* print_to_element - print-like call that can be used to output to a Multiline element as if it is an Output element
 
 ### Upcoming
 
