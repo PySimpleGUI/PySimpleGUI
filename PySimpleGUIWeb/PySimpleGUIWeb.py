@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.36.0  Released 20-Feb-2020 Works with Remi 2020.2.5"
+version = __version__ = "0.36.1  Unreleased Fix for MultilineOutput not autoscrolling"
 
 port = 'PySimpleGUIWeb'
 
@@ -938,7 +938,9 @@ class Multiline(Element):
 #                           Multiline Output                             #
 # ---------------------------------------------------------------------- #
 class MultilineOutput(Element):
-    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None), auto_size_text=None, background_color=None,
+                 text_color=None, change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
+                 visible=True, size_px=(None, None)):
         '''
         Multiline Element
         :param default_text:
@@ -965,35 +967,35 @@ class MultilineOutput(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
-        tsize = size                # convert tkinter size to pixels
+        tsize = size  # convert tkinter size to pixels
         if size[0] is not None and size[0] < 100:
-            tsize = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
-        self.Widget = None      # type: remi.gui.TextInput
+            tsize = size[0] * DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1] * DEFAULT_PIXELS_TO_CHARS_SCALING[1]
+        self.Widget = None  # type: remi.gui.TextInput
         self.CurrentValue = ''
 
         super().__init__(ELEM_TYPE_MULTILINE_OUTPUT, size=tsize, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, size_px=size_px)
         return
 
-
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None, autoscroll=None):
-        self.Autoscroll = autoscroll is True            # convert to bool and save the autoscroll setting
+        autoscroll = self.Autoscroll if autoscroll is None else autoscroll
         if value is not None and not append:
             self.Widget.set_value(str(value))
+            self.CurrentValue = str(value)
         elif value is not None and append:
             self.CurrentValue = self.CurrentValue + '\n' + str(value)
             self.Widget.set_value(self.CurrentValue)
-            self.Widget._set_updated()
-            app = self.ParentForm.App
-            if hasattr(app, "websockets"):
-                app.execute_javascript('element=document.getElementById("%(id)s"); element.innerHTML=`%(content)s`; if(%(autoscroll)s){element.scrollTop=999999;} ' % {
-                    "id":self.Widget.identifier, "content":self.Widget.get_value(), "autoscroll":'true' if self.Autoscroll else 'false'})
+        self.Widget._set_updated()
+        app = self.ParentForm.App
+
+        if hasattr(app, "websockets"):
+            app.execute_javascript(
+                'element=document.getElementById("%(id)s"); element.innerHTML=`%(content)s`; if(%(autoscroll)s){element.scrollTop=999999;} ' % {
+                    "id": self.Widget.identifier, "content": self.Widget.get_value(), "autoscroll": 'true' if autoscroll else 'false'})
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
-
     update = Update
-
 
 
 # ---------------------------------------------------------------------- #
@@ -5588,6 +5590,32 @@ def EasyPrintClose():
         _easy_print_data = None
 
 
+# ------------------------------------------------------------------------------------------------ #
+# A print-like call that can be used to output to a multiline element as if it's an Output element #
+# ------------------------------------------------------------------------------------------------ #
+
+def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+    """
+    Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+    :param multiline_element: (Multiline) The multiline element to be output to
+    :param args: List[Any] The arguments to print
+    :param end: (str) The end char to use just like print uses
+    :param sep: (str) The separation character like print uses
+    :param text_color: The color of the text
+    :param background_color: The background color of the line
+    """
+    sepchar = sep if sep is not None else ' '
+    endchar = end if end is not None else '\n'
+
+    outstring = ''
+    for arg in args:
+        outstring += str(arg) + sepchar
+    outstring += endchar
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+
+
+
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
@@ -7837,7 +7865,7 @@ def main():
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
         # [Output(size=(60,10))],
-        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=False)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
@@ -7863,11 +7891,11 @@ def main():
         if event in (None, 'Exit'):
             break
         elif event == 'OK':
-            window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True)
+            window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True, autoscroll=True)
             window.Element('_PySimpleGUIWeb_').Widget.style['background-image'] = "url('/my_resources:mine.png')"
 
         elif event == 'Values':
-            window.Element('_MULTIOUT_').Update(str(values), append=True, autoscroll=True)
+            window.Element('_MULTIOUT_').Update(str(values), append=True)
             nav = remi.gui.FileFolderNavigator(False,r'a:\TEMP', True, False)
             # here is returned the Input Dialog widget, and it will be shown
             # fileselectionDialog.show(window.Element('_IN_').Widget)
