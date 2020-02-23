@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.0  Released 20 Feb 2020"
+version = __version__ = "4.16.1  Unreleased - update_animation_no_buffering"
 
 port = 'PySimpleGUI'
 
@@ -3035,6 +3035,56 @@ class Image(Element):
             self.tktext_label.configure(image=image, width=image.width(), heigh=image.height())
         except:
             pass
+
+
+
+    def update_animation_no_buffering(self, source, time_between_frames=0):
+        """
+        Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
+        NOTE - does NOT perform a sleep call to delay
+
+        :param source: Union[str,bytes] Filename or Base64 encoded string containing Animated GIF
+        :param time_between_frames: (int) Number of milliseconds to wait between showing frames
+        """
+
+        if self.Source != source:
+            self.AnimatedFrames = None
+            self.Source = source
+            self.frame_num = 0
+
+        # read a frame
+        while True:
+            if type(source) is not bytes:
+                try:
+                    self.image = tk.PhotoImage(file=source, format='gif -index %i' % (self.frame_num))
+                    self.frame_num += 1
+                except:
+                    self.frame_num = 0
+            else:
+                try:
+                    self.image = tk.PhotoImage(data=source, format='gif -index %i' % (self.frame_num))
+                    self.frame_num += 1
+                except:
+                    self.frame_num = 0
+            if self.frame_num:
+                break
+
+        now = time.time()
+
+        if time_between_frames:
+            if (now - self.LastFrameTime) * 1000 > time_between_frames:
+                self.LastFrameTime = now
+            else:  # don't reshow the frame again if not time for new frame
+                return
+
+        try:  # needed in case the window was closed with an "X"
+            self.tktext_label.configure(image=self.image, width=self.image.width(), heigh=self.image.height())
+
+        except:
+            pass
+
+
+
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -9959,7 +10009,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         # row_should_expand = False
 
-        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=toplevel_form.Margins[0],
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0,
                           expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
@@ -13560,6 +13610,8 @@ def main():
     # theme('dark brown 2')
     # theme('dark red')
     # theme('Light Green 6')
+
+    SystemTray.notify('Starting up!', 'Starting up PySimpleGUI Test Harness\n'+version)
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
