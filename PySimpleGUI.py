@@ -126,6 +126,9 @@ import warnings
 from math import floor
 from math import fabs
 from functools import wraps
+from subprocess import run, PIPE
+from threading import Thread
+
 
 warnings.simplefilter('always', UserWarning)
 
@@ -12961,8 +12964,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True,
-                  grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
                   time_between_frames=0, transparent_color=None):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -13001,7 +13003,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window = Window('Animated GIF', layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
-                        transparent_color=transparent_color).Finalize()
+                        transparent_color=transparent_color, finalize=True, element_justification='c')
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
@@ -13011,7 +13013,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
 
 
 # Popup Notify
-def popup_notify(*args, title='', icon=_tray_icon_success, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
+def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
                fade_in_duration=SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, alpha=0.9, location=None):
     """
     Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
@@ -13055,6 +13057,65 @@ def popup_notify(*args, title='', icon=_tray_icon_success, display_duration_in_m
 
     message = output
     return SystemTray.notify(title=title, message=message, icon=icon, display_duration_in_ms=display_duration_in_ms, fade_in_duration=fade_in_duration, alpha=alpha, location=location)
+
+
+
+#####################################################################
+# Animated window while shell command is executed
+#####################################################################
+
+def _process_thread(*args):
+    global __shell_process__
+
+    # start running the command with arugments
+    try:
+        __shell_process__ = run(args, shell=True, stdout=PIPE)
+    except:
+        __shell_process__ = None
+
+
+def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING_GIF, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=100, transparent_color=None):
+    """
+    Execute a "shell command" (anything capable of being launched using subprocess.run) and
+    while the command is running, show an animated popup so that the user knows that a long-running
+    command is being executed.  Without this mechanism, the GUI appears locked up.
+
+    :param command: (str) The command to run
+    :param args: List[str] List of arguments
+    :param image_source: Union[str, bytes] Either a filename or a base64 string.
+    :param message: (str) An optional message to be shown with the animation
+    :param background_color: (str) color of background
+    :param text_color: (str) color of the text
+    :param font: Union[str, tuple) specifies the font family, size, etc
+    :param no_titlebar: (bool)  If True then the titlebar and window frame will not be shown
+    :param grab_anywhere: (bool) If True then you can move the window just clicking anywhere on window, hold and drag
+    :param keep_on_top:  (bool) If True then Window will remain on top of all other windows currently shownn
+    :param location:  (int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
+    :param alpha_channel: (float) Window transparency 0 = invisible 1 = completely visible. Values between are see through
+    :param time_between_frames: (int) Amount of time in milliseconds between each frame
+    :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
+    :return: (str) The resulting string output from stdout
+    """
+
+    global __shell_process__
+
+    real_args = [command]
+    if args is not None:
+        real_args.append(args)
+    thread = Thread(target=_process_thread, args=real_args, daemon=True)
+    thread.start()
+
+    # Poll to see if the thread is still running.  If so, then continue showing the animation
+    while True:
+        popup_animated(image_source=image_source, message=message, time_between_frames=time_between_frames, transparent_color=transparent_color, text_color=text_color, background_color=background_color, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, alpha_channel=alpha_channel)
+        thread.join(timeout=time_between_frames/1000)
+        if not thread.is_alive():
+            break
+    popup_animated(None)    # stop running the animation
+
+    output = __shell_process__.__str__().replace('\\r\\n', '\n')    # fix up the output string
+    return output
+
 
 
 #####################################################################################################
