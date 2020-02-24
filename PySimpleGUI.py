@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.1  Unreleased - update_animation_no_buffering"
+version = __version__ = "4.16.2  Unreleased - update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON"
 
 port = 'PySimpleGUI'
 
@@ -262,7 +262,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
 
 # A transparent button is simply one that matches the background
-TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
+# TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
@@ -3082,6 +3082,7 @@ class Image(Element):
 
         except:
             pass
+
 
 
 
@@ -13007,6 +13008,53 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
 
     window.refresh() # call refresh instead of Read to save significant CPU time
+
+
+# Popup Notify
+def popup_notify(*args, title='', icon=_tray_icon_success, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
+               fade_in_duration=SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, alpha=0.9, location=None):
+    """
+    Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
+
+    The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
+
+    The return code specifies why the call is returning (e.g. did the user click the message to dismiss it)
+
+    :param title: (str) Text to be shown at the top of the window in a larger font
+    :param message: (str) Text message that makes up the majority of the window
+    :param icon: Union[bytes, str) A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+    :param display_duration_in_ms: (int) Number of milliseconds to show the window
+    :param fade_in_duration: (int) Number of milliseconds to fade window in and out
+    :param alpha: (float) Alpha channel. 0 - invisible 1 - fully visible
+    :param location: Tuple[int, int] Location on the screen to display the window
+    :return: (int) reason for returning
+    """
+
+    if not args:
+        args_to_print = ['']
+    else:
+        args_to_print = args
+    output = ''
+    max_line_total, total_lines, local_line_width = 0, 0, SYSTEM_TRAY_MESSAGE_MAX_LINE_LENGTH
+    for message in args_to_print:
+        # fancy code to check if string and convert if not is not need. Just always convert to string :-)
+        # if not isinstance(message, str): message = str(message)
+        message = str(message)
+        if message.count('\n'):
+            message_wrapped = message
+        else:
+            message_wrapped = textwrap.fill(message, local_line_width)
+        message_wrapped_lines = message_wrapped.count('\n') + 1
+        longest_line_len = max([len(l) for l in message.split('\n')])
+        width_used = min(longest_line_len, local_line_width)
+        max_line_total = max(max_line_total, width_used)
+        # height = _GetNumLinesNeeded(message, width_used)
+        height = message_wrapped_lines
+        output += message_wrapped+'\n'
+        total_lines += height
+
+    message = output
+    return SystemTray.notify(title=title, message=message, icon=icon, display_duration_in_ms=display_duration_in_ms, fade_in_duration=fade_in_duration, alpha=alpha, location=location)
 
 
 #####################################################################################################
