@@ -13068,9 +13068,11 @@ def _process_thread(*args):
     global __shell_process__
 
     # start running the command with arugments
+    print(f'running args = {args}')
     try:
         __shell_process__ = run(args, shell=True, stdout=PIPE)
-    except:
+    except Exception as e:
+        print(f'Exception running process args = {args}')
         __shell_process__ = None
 
 
@@ -13101,7 +13103,9 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
 
     real_args = [command]
     if args is not None:
-        real_args.append(args)
+        for arg in args:
+            real_args.append(arg)
+        # real_args.append(args)
     thread = Thread(target=_process_thread, args=real_args, daemon=True)
     thread.start()
 
