@@ -13068,7 +13068,7 @@ def _process_thread(*args):
     global __shell_process__
 
     # start running the command with arugments
-    print(f'running args = {args}')
+    # print(f'running args = {args}')
     try:
         __shell_process__ = run(args, shell=True, stdout=PIPE)
     except Exception as e:
@@ -13118,6 +13118,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     popup_animated(None)    # stop running the animation
 
     output = __shell_process__.__str__().replace('\\r\\n', '\n')    # fix up the output string
+    output = output[output.index("stdout=b'")+9:-2]
     return output
 
 
