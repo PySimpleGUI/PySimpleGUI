@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.7 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element"
+version = __version__ = "0.31.0.8 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm"
 
 port = 'PySimpleGUIQt'
 
@@ -3387,7 +3387,27 @@ class Window:
             # print("quitting window")
             self.QTApplication.exit()  # kick the users out of the mainloop
 
-    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
+        """
+        THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+            Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+            if no other GUI events happen first.
+        Use the close parameter to close the window after reading
+
+        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
+        :param close: (bool) if True the window will be closed prior to returning
+        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+        """
+        results = self._read(timeout=timeout, timeout_key=timeout_key)
+        if close:
+            self.close()
+
+        return results
+
+
+
+    def _read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
             event, values = self._ReadNonBlocking()
             if event is None:
@@ -8443,7 +8463,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 def main():
-    theme('SystemDefaultForReal')
+    # theme('SystemDefaultForReal')
 
     # preview_all_look_and_feel_themes()
     # ChangeLookAndFeel('Dark Red')
@@ -8473,7 +8493,7 @@ def main():
     frame1 = [
         [Input('Input Text', do_not_clear=True, size=(250, 35), tooltip='Input'), FileBrowse(), Stretch()],
         [Multiline(size=(250, 75), do_not_clear=True, default_text='Multiline Input', tooltip='Multiline input'),
-         MultilineOutput(size=(250, 75), default_text='Multiline Output', tooltip='Multiline output')],
+         MultilineOutput(size=(250, 75), default_text='Multiline Output', tooltip='Multiline output', key='-MLINE-')],
     ]
 
     frame2 = [
@@ -8552,6 +8572,7 @@ def main():
         # TimerStart()
         event, values = window.Read(timeout=10)
         print(event, values) if event != TIMEOUT_KEY else None
+        window['-MLINE-'].update(value=str(values), append=True) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
             break
         if values['_MENU_'] == 'Pause Graph':
