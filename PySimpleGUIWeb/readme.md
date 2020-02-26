@@ -8,7 +8,7 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.35.0-orange.svg?longCache=true&style=for-the-badge)        
+![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.36.0-orange.svg?longCache=true&style=for-the-badge)        
         
                 
         
@@ -444,7 +444,12 @@ Themes +
 * New Graph.change_coordinates method
 * Removed check for no image specified in Image.update (so cal specify visibilty without changing image for example)
 
+## 0.36.0 PySimpleGUIWeb 20-Feb-2020
 
+* Allow empty value to be specified when creating Image element
+* Fix for Text element crashing following the Remi 2020.2.5 release
+	* Crash will show trying to use method "set_layout_orientation"
+	
 
 # Design        
 # Author 
