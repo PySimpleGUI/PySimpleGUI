@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.3  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys"
+version = __version__ = "4.16.4  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font"
 
 port = 'PySimpleGUI'
 
@@ -8589,9 +8589,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     """
 
-    def CharWidthInPixels():
+    def _char_width_in_pixels(font):
         """ """
-        return tkinter.font.Font().measure('A')  # single character width
+        return tkinter.font.Font(font=font).measure('A')  # single character width
+
+    def _string_width_in_pixels(font, string):
+        """ """
+        return tkinter.font.Font(font=font).measure(string)  # single character width
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -8941,7 +8945,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.DisabledButtonColor[1] is not None:
                         button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
                 if height > 1:
-                    button_style.configure(style_name, padding=height * CharWidthInPixels())
+                    button_style.configure(style_name, padding=height * _char_width_in_pixels(font))
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if width != 0:
                     button_style.configure(style_name, wraplength=wraplen)  # set wrap to width of widget
@@ -9682,7 +9686,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
-                slider_length = element_size[0] * CharWidthInPixels()
+                slider_length = element_size[0] * _char_width_in_pixels(font)
                 slider_width = element_size[1]
                 element.TKIntVar = tk.IntVar()
                 element.TKIntVar.set(element.DefaultValue)
@@ -9774,19 +9778,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 treeview = element.TKTreeview
                 if element.DisplayRowNumbers:
                     treeview.heading(element.RowHeaderText, text=element.RowHeaderText)  # make a dummy heading
-                    treeview.column(element.RowHeaderText, width=50, minwidth=10, anchor=anchor, stretch=0)
+                    treeview.column(element.RowHeaderText, width=_string_width_in_pixels(font, element.RowHeaderText)+10, minwidth=10, anchor=anchor, stretch=0)
 
                 headings = element.ColumnHeadings if element.ColumnHeadings is not None else element.Values[0]
                 for i, heading in enumerate(headings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = max(column_widths[i], len(heading))
+                        width = max(column_widths[i], _string_width_in_pixels(font, heading) + 10)
                     else:
                         try:
-                            width = element.ColumnWidths[i]
+                            width = element.ColumnWidths[i] * _char_width_in_pixels(font)
                         except:
-                            width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * CharWidthInPixels(), minwidth=10, anchor=anchor, stretch=0)
+                            width = element.DefaultColumnWidth * _char_width_in_pixels(font)
+                    treeview.column(heading, width=width, minwidth=10, anchor=anchor, stretch=0)
 
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
@@ -9891,7 +9895,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * CharWidthInPixels(), anchor=anchor)
+                    treeview.column(heading, width=width * _char_width_in_pixels(font), anchor=anchor)
 
                 def add_treeview_data(node):
                     """
@@ -9921,7 +9925,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         add_treeview_data(node)
 
                 add_treeview_data(element.TreeData.root_node)
-                treeview.column('#0', width=element.Col0Width * CharWidthInPixels(), anchor=anchor)
+                treeview.column('#0', width=element.Col0Width * _char_width_in_pixels(font), anchor=anchor)
                 # ----- configure colors -----
                 style_name = str(element.Key) + '.Treeview'
                 tree_style = ttk.Style()
