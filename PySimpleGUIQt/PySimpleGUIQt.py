@@ -1040,6 +1040,7 @@ class Multiline(Element):
                 self.QT_TextEdit.setTextColor(text_color_for_value)
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
+            self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
             self.QT_TextEdit.insertPlainText(str(value))
             if self.Autoscroll:
                 self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
@@ -5146,7 +5147,6 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     toplevel_win.FocusElement = element.QT_TextEdit
 
                 element.QT_TextEdit.setText(str(default_text))
-                element.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
                 if element.Tooltip:
                     element.QT_TextEdit.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
