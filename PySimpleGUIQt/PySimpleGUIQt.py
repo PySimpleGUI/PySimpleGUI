@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.8 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm"
+version = __version__ = "0.31.0.9 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline"
 
 port = 'PySimpleGUIQt'
 
@@ -5146,6 +5146,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     toplevel_win.FocusElement = element.QT_TextEdit
 
                 element.QT_TextEdit.setText(str(default_text))
+                element.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
                 if element.Tooltip:
                     element.QT_TextEdit.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
