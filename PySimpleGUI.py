@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.2  Unreleased - update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON"
+version = __version__ = "4.16.3  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys"
 
 port = 'PySimpleGUI'
 
@@ -155,6 +155,7 @@ def TimerStop():
     print((g_time_delta * 1000))
 
 
+
 def _timeit(func):
     """
     Put @_timeit as a decorator to a function to get the time spent in that function printed out
@@ -169,6 +170,36 @@ def _timeit(func):
         result = func(*args, **kwargs)
         end = time.time()
         print('{} executed in {:.4f} seconds'.format( func.__name__, end - start))
+        return result
+
+    return wrapper
+
+_timeit_counter = 0
+MAX_TIMEIT_COUNT = 1000
+_timeit_total = 0
+
+def _timeit_summary(func):
+    """
+    Same as the timeit decorator except that the value is shown as an averave
+    Put @_timeit_summary as a decorator to a function to get the time spent in that function printed out
+
+    :param func: Decorated function
+    :return: Execution time for the decorated function
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        global _timeit_counter, _timeit_total
+
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        _timeit_counter += 1
+        _timeit_total += end - start
+        if _timeit_counter > MAX_TIMEIT_COUNT:
+            print('{} executed in {:.4f} seconds'.format( func.__name__, _timeit_total/MAX_TIMEIT_COUNT))
+            _timeit_counter = 0
+            _timeit_total = 0
         return result
 
     return wrapper
@@ -3433,6 +3464,7 @@ class Graph(Element):
         :param text_location: (enum) "anchor" location for the text. Values start with TEXT_LOCATION_
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
         """
+        text = str(text)
         if location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
@@ -6135,7 +6167,7 @@ class Window:
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
-
+    # @_timeit_summary
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
         # type: (int, Any, bool) -> Tuple[Any, Union[Dict, List]]
         """
@@ -6462,7 +6494,8 @@ class Window:
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
                                         ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
-                                        ELEM_TYPE_INPUT_RADIO, ELEM_TYPE_INPUT_TEXT, ELEM_TYPE_PROGRESS_BAR):
+                                        ELEM_TYPE_INPUT_RADIO, ELEM_TYPE_INPUT_TEXT, ELEM_TYPE_PROGRESS_BAR,
+                                        ELEM_TYPE_TAB_GROUP):
                         element.Key = top_window.DictionaryKeyCounter
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
@@ -9608,7 +9641,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element  # type: TabGroup
                 custom_style = str(element.Key) + 'customtab.TNotebook'
-                style = ttk.Style(tk_row_frame)
+                style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
                 if element.TabLocation is not None:
                     position_dict = {'left': 'w', 'right': 'e', 'top': 'n', 'bottom': 's', 'lefttop': 'wn',
@@ -13024,7 +13057,7 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
 
     :param title: (str) Text to be shown at the top of the window in a larger font
     :param message: (str) Text message that makes up the majority of the window
-    :param icon: Union[bytes, str) A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+    :param icon: Union[bytes, str] A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
     :param display_duration_in_ms: (int) Number of milliseconds to show the window
     :param fade_in_duration: (int) Number of milliseconds to fade window in and out
     :param alpha: (float) Alpha channel. 0 - invisible 1 - fully visible
@@ -13690,7 +13723,7 @@ def _refresh_debugger():
     Window._read_call_from_debugger = True
     # frame = inspect.currentframe()
     # frame = inspect.currentframe().f_back
-    frame, *others = inspect.stack()[1]
+    frame, *others = inspect.stack()[0]
     try:
         debugger.locals = frame.f_back.f_locals
         debugger.globals = frame.f_back.f_globals
@@ -13724,8 +13757,8 @@ def main():
     # theme('dark brown 2')
     # theme('dark red')
     # theme('Light Green 6')
-
-    SystemTray.notify('Starting up!', 'Starting up PySimpleGUI Test Harness\n'+version)
+    ver = version[:version.index('\n')]
+    popup_notify('Starting up PySimpleGUI Test Harness\n'+ver, f'tcl ver = {tkinter.TclVersion}', f'tkinter version = {tkinter.TkVersion}', f'{sys.version} Python Version', title='Starting up!'+ver)
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
@@ -13801,9 +13834,10 @@ def main():
         [Image(data=DEFAULT_BASE64_ICON), Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
          Text('You are running the PySimpleGUI.py file instead of importing it.\nAnd are thus seeing a test harness instead of your code', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
-        [Frame('Input Text Group', frame1, title_color='red'),
-         Text('VERSION\n{}'.format(__version__), size=(25, 4), font='ANY 20'),
-         ],
+        [Frame('Input Text Group', frame1, title_color='red')],
+         [Text('PySimpleGUI Version {}'.format(ver), size=(50, None), font='ANY 12')],
+         [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
+         [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
         [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', )],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
@@ -13858,6 +13892,8 @@ def main():
             popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
+        i += 1
+        # _refresh_debugger()
     window.close()
 
 
