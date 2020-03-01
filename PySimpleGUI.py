@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.4  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font"
+version = __version__ = "4.16.4  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height"
 
 port = 'PySimpleGUI'
 
@@ -8593,6 +8593,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         """ """
         return tkinter.font.Font(font=font).measure('A')  # single character width
 
+    def _char_height_in_pixels(font):
+        """ """
+        return tkinter.font.Font(font=font).metrics('linespace')
+
     def _string_width_in_pixels(font, string):
         """ """
         return tkinter.font.Font(font=font).measure(string)  # single character width
@@ -9817,6 +9821,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     table_style.configure(style_name, foreground=element.TextColor)
                 if element.RowHeight is not None:
                     table_style.configure(style_name, rowheight=element.RowHeight)
+                else:
+                    table_style.configure(style_name, rowheight=_char_height_in_pixels(font))
                 if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
                 if element.HeaderBackgroundColor is not None and element.HeaderBackgroundColor != COLOR_SYSTEM_DEFAULT:
