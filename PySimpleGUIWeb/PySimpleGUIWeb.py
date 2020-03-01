@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.36.1  Unreleased Fix for MultilineOutput not autoscrolling"
+version = __version__ = "0.36.2  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix"
 
 port = 'PySimpleGUIWeb'
 
@@ -1509,14 +1509,19 @@ class SuperImage(remi.gui.Image):
             try:
                 #here a base64 image is received
                 self.imagedata = base64.b64decode(file_path_name, validate=True)
+                self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
             except binascii.Error:
-                #here an image data is received (opencv / PIL / other image)
+                #here an image data is received (opencv image)
                 self.imagedata = file_path_name
-            self.attributes['src'] = "/%s/get_image_data?update_index=%s" % (id(self), str(time.time()))
+                self.refresh()
             self.refresh()
         else:
             #here a filename is received
             self.attributes['src'] = remi.gui.load_resource(file_path_name)
+            """print(f'***** Loading file = {file_path_name}')
+            self.mimetype, self.encoding = mimetypes.guess_type(file_path_name)
+            with open(file_path_name, 'rb') as f:
+                self.imagedata = f.read()"""
             self.refresh()
 
     def refresh(self):
@@ -1673,6 +1678,7 @@ class Graph(Element):
 
 
     def DrawText(self, text, location, color='black', font=None, angle=0):
+        text = str(text)
         if location == (None, None):
             return
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
