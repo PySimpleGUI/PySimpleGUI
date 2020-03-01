@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.4  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height"
+version = __version__ = "4.16.6  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility"
 
 port = 'PySimpleGUI'
 
@@ -13754,21 +13754,20 @@ def _refresh_debugger():
 # 888  888  888 888  888 888 888  888
 # 888  888  888 "Y888888 888 888  888
 
-import shutil
-import glob
 import sys
 import site
-import fnmatch
 import os
 import requests
 
-files = "PySimpleGUI.py ".split()
-url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
 
-Pythonista = sys.platform == "ios"
 
 
 def _upgrade_from_github():
+    files = "PySimpleGUI.py ".split()
+    url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
+
+    Pythonista = sys.platform == "ios"
+
     package = files[0].split('.py')[0]
     contents = {}
     for file in files:
