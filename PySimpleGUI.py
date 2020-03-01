@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.4  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height"
+version = __version__ = "4.16.6  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility"
 
 port = 'PySimpleGUI'
 
@@ -13754,6 +13754,63 @@ def _refresh_debugger():
 # 888  888  888 888  888 888 888  888
 # 888  888  888 "Y888888 888 888  888
 
+import sys
+import site
+import os
+import requests
+
+
+
+
+def _upgrade_from_github():
+    files = "PySimpleGUI.py ".split()
+    url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
+
+    Pythonista = sys.platform == "ios"
+
+    package = files[0].split('.py')[0]
+    contents = {}
+    for file in files:
+        page = requests.get(url + file)
+        if page.status_code != 200:
+            raise FileNotFoundError(file + ' not found on github. Nothing installed.')
+        contents[file] = page.text
+
+    sourcefile = files[0]
+
+    version = None
+    for line in contents[sourcefile].split('\n'):
+        line_split = line.split("__version__ =")
+        if len(line_split) > 1:
+            version = line_split[-1].strip(" '\"")
+            break
+
+    if Pythonista:
+        documents = os.sep + "Documents"
+        sp = os.getcwd().split(documents)
+        if len(sp) != 2:
+            print("unable to install")
+            exit()
+        path = sp[0] + documents + os.sep + "site-packages" + os.sep + package
+
+    else:
+        path = site.getsitepackages()[-1] + os.sep + package
+
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+    for file in files:
+        with open(path + os.sep + file, 'w') as f:
+            f.write(contents[sourcefile])
+
+        print("copy", file)
+
+    with open(path + os.sep + "__init__.py", "w") as initfile:
+        initfile.write("from ." + package + " import *\n")
+        if version is not None:
+            initfile.write("from ." + package + " import __version__\n")
+    print(package + " " + ("?" if version is None else version) + " successfully installed in " + path)
+
 
 def main():
     """
@@ -13768,7 +13825,7 @@ def main():
     # theme('dark red')
     # theme('Light Green 6')
     ver = version[:version.index('\n')]
-    popup_notify('Starting up PySimpleGUI Test Harness\n'+ver, f'tcl ver = {tkinter.TclVersion}', f'tkinter version = {tkinter.TkVersion}', f'{sys.version} Python Version', title='Starting up!'+ver)
+    popup_notify('Starting up PySimpleGUI Test Harness\n'+ver, f'tcl ver = {tkinter.TclVersion}', f'tkinter version = {tkinter.TkVersion}', f'{sys.version} Python Version', title=ver)
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
@@ -13846,12 +13903,14 @@ def main():
               tooltip='My tooltip', key='_TEXT1_')],
         [Frame('Input Text Group', frame1, title_color='red')],
          [Text('PySimpleGUI Version {}'.format(ver), size=(50, None), font='ANY 12')],
+         [Text('PySimpleGUI Location {}'.format(os.path.dirname(os.path.abspath(__file__))), size=(50, None), font='ANY 12')],
          [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
          [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
         [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', )],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
+         Button('Install PySimpleGUI from GitHub', key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -13902,6 +13961,12 @@ def main():
             popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
+        elif event == '-INSTALL-':
+            if popup_yes_no('This will upgrade your PySimpleGUI pacakge from GitHub.  Are you sure?', title='Are you sure you want to overwrite?', keep_on_top=True) == 'Yes':
+                _upgrade_from_github()
+            else:
+                popup_quick_message('Cancelled upgrade', background_color='red', text_color='white', keep_on_top=True)
+
         i += 1
         # _refresh_debugger()
     window.close()
