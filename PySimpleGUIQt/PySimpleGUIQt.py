@@ -1052,7 +1052,7 @@ class Multiline(Element):
             self.QT_TextEdit.setDisabled(True)
         elif disabled is False:
             self.QT_TextEdit.setDisabled(False)
-        if readony is True:
+        if readonly is True:
             self.QT_TextEdit.setReadOnly(True)
         elif readonly is False:
             self.QT_TextEdit.setReadOnly(False)
