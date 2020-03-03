@@ -45,4 +45,17 @@ _________ Have used another Python GUI Framework (tkiner, Qt, etc) previously (y
 
 ### Code To Duplicate
 
-A short program that isolates and demonstrates the problem (i.e. please don't paste a link to your 400 line program.... instead paste your 10 line program in full).  Help me help you.
+A short program that isolates and demonstrates the problem (i.e. please don't paste a link to your 400 line program.... instead paste your 10 line program in full).  
+
+Yes, it is a pain to narrow down problems, but it's part of the debugging process.  Help me help you by providing something that can be executed so that work on getting you a fix or a workaround can immediately begin.
+
+This pre-formatted code block is all set for you to paste in your bit of code:
+
+```python
+import PySimpleGUI as sg
+print(sg)
+print(sg.version)
+
+## Paste your code here
+
+```
