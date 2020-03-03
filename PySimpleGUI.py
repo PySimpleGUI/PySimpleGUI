@@ -13754,62 +13754,48 @@ def _refresh_debugger():
 # 888  888  888 888  888 888 888  888
 # 888  888  888 "Y888888 888 888  888
 
-import sys
 import site
-import os
-import requests
-
-
-
+import requests, os, sys, platform
 
 def _upgrade_from_github():
-    files = "PySimpleGUI.py ".split()
-    url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
+    psg_py     = "PySimpleGUI.py"
+    github_psg = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/" + psg_py
 
-    Pythonista = sys.platform == "ios"
+    # ===  Get source code from github  ===
+    page = requests.get(github_psg)
+    if page.status_code != 200:
+        raise FileNotFoundError(psg_py + ' not found on github. Nothing installed.')
+    psg_code = page.text
 
-    package = files[0].split('.py')[0]
-    contents = {}
-    for file in files:
-        page = requests.get(url + file)
-        if page.status_code != 200:
-            raise FileNotFoundError(file + ' not found on github. Nothing installed.')
-        contents[file] = page.text
-
-    sourcefile = files[0]
-
-    version = None
-    for line in contents[sourcefile].split('\n'):
-        line_split = line.split("__version__ =")
-        if len(line_split) > 1:
-            version = line_split[-1].strip(" '\"")
+    # ===  Get version  ===
+    version_num = ''
+    for line in psg_code.split('\n')[:10]:
+        if '__version__ =' in line:
+            version_num = eval('='.join(line.split('=')[2:]))
             break
 
-    if Pythonista:
-        documents = os.sep + "Documents"
-        sp = os.getcwd().split(documents)
-        if len(sp) != 2:
-            print("unable to install")
-            exit()
-        path = sp[0] + documents + os.sep + "site-packages" + os.sep + package
+    # ===  Update source-code files  ===
 
-    else:
-        path = site.getsitepackages()[-1] + os.sep + package
+    my_os = platform.system()
+    if 'Windows' in my_os or 'Linux' in my_os:
+        libs_dir = [ i for i in dict(sys.path_importer_cache).keys() if 'site-package' in i and type(i) ==  str][0]
+    elif 'Darwin' in my_os:
+        pass
 
-    if not os.path.isdir(path):
-        os.makedirs(path)
+    libs_dir = os.path.join(libs_dir, "PySimpleGUI")
 
-    for file in files:
-        with open(path + os.sep + file, 'w') as f:
-            f.write(contents[sourcefile])
+    if not os.path.isdir(libs_dir):
+        os.makedirs(libs_dir)
 
-        print("copy", file)
+    def writefile(fpath, content):
+        with open(fpath, 'w', encoding='utf-8') as ff: ff.write(content)
 
-    with open(path + os.sep + "__init__.py", "w") as initfile:
-        initfile.write("from ." + package + " import *\n")
-        if version is not None:
-            initfile.write("from ." + package + " import __version__\n")
-    print(package + " " + ("?" if version is None else version) + " successfully installed in " + path)
+    # write files
+    writefile(os.path.join(libs_dir, psg_py), psg_code)
+    writefile(os.path.join(libs_dir, "__init__.py"), 'name = "PySimpleGUI"\nfrom .PySimpleGUI import *\n')
+
+    print(psg_py + " " + ("?" if version_num is None else version_num) + " successfully installed in " + libs_dir)
+
 
 
 def main():
