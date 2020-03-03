@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.9 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline"
+version = __version__ = "0.31.0.10 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline, Multiline readonly parm"
 
 port = 'PySimpleGUIQt'
 
@@ -1014,7 +1014,7 @@ class Multiline(Element):
 
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None, readonly=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or `Window.finalize` or "finalize" the window using finalize parameter prior
 
@@ -1048,10 +1048,14 @@ class Multiline(Element):
                 self.QT_TextEdit.setTextColor(self.TextColor)
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(self.BackgroundColor)
-        if disabled == True:
+        if disabled is True:
             self.QT_TextEdit.setDisabled(True)
-        elif disabled == False:
+        elif disabled is False:
             self.QT_TextEdit.setDisabled(False)
+        if readony is True:
+            self.QT_TextEdit.setReadOnly(True)
+        elif readonly is False:
+            self.QT_TextEdit.setReadOnly(False)
         super().Update(self.QT_TextEdit, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
