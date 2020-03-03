@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.6  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility"
+version = __version__ = "4.16.7  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print"
 
 port = 'PySimpleGUI'
 
@@ -1967,6 +1967,22 @@ class Multiline(Element):
         """
 
         return self.TKText.get(1.0, tk.END)
+
+
+
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+        """
+        Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+        :param args: List[Any] The arguments to print
+        :param end: (str) The end char to use just like print uses
+        :param sep: (str) The separation character like print uses
+        :param text_color: The color of the text
+        :param background_color: The background color of the line
+        """
+        print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+
+
 
     get = Get
     set_focus = Element.SetFocus
@@ -13758,6 +13774,10 @@ import sys
 import site
 import os
 import requests
+import shutil
+import hashlib
+import base64
+
 
 
 
@@ -13767,22 +13787,30 @@ def _upgrade_from_github():
     url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
 
     Pythonista = sys.platform == "ios"
+    debug = False
 
-    package = files[0].split('.py')[0]
+    package = files[0].split(".py")[0]
     contents = {}
     for file in files:
         page = requests.get(url + file)
+
         if page.status_code != 200:
-            raise FileNotFoundError(file + ' not found on github. Nothing installed.')
-        contents[file] = page.text
+            raise FileNotFoundError(file + " not found on github. Nothing installed.")
+        contents[file] = page.content
 
     sourcefile = files[0]
 
-    version = None
-    for line in contents[sourcefile].split('\n'):
+    version = "-"
+    for line in contents[sourcefile].decode("utf-8").split("\n"):
         line_split = line.split("__version__ =")
         if len(line_split) > 1:
-            version = line_split[-1].strip(" '\"")
+            raw_version = line_split[-1].strip(" '\"")
+            version = ""
+            for c in raw_version:
+                if c in "0123456789-.":
+                    version += c
+                else:
+                    break
             break
 
     if Pythonista:
@@ -13791,25 +13819,70 @@ def _upgrade_from_github():
         if len(sp) != 2:
             print("unable to install")
             exit()
-        path = sp[0] + documents + os.sep + "site-packages" + os.sep + package
-
+        sitepackages_path = sp[0] + documents + os.sep + "site-packages"
     else:
-        path = site.getsitepackages()[-1] + os.sep + package
+        sitepackages_path = site.getsitepackages()[-1] + os.sep
+
+    path = os.path.join(site.getsitepackages()[-1], package)
 
     if not os.path.isdir(path):
         os.makedirs(path)
 
     for file in files:
-        with open(path + os.sep + file, 'w') as f:
-            f.write(contents[sourcefile])
+        with open(os.path.join(path, file), "wb") as f:
+            f.write(contents[file])
+        if debug:
+            print("copy", file)
 
-        print("copy", file)
+    if "__init__.py" not in files:
+        with open(os.path.join(path, "__init__.py"), "w") as f:
+            f.write("from ." + package + " import *\n")
+            if version is not None:
+                f.write("from ." + package + " import __version__\n")
 
-    with open(path + os.sep + "__init__.py", "w") as initfile:
-        initfile.write("from ." + package + " import *\n")
-        if version is not None:
-            initfile.write("from ." + package + " import __version__\n")
-    print(package + " " + ("?" if version is None else version) + " successfully installed in " + path)
+    if not Pythonista:
+        for entry in os.listdir(sitepackages_path):
+            if os.path.isdir(sitepackages_path + entry):
+                if entry.startswith(package) and entry.endswith(".dist-info"):
+                    shutil.rmtree(sitepackages_path + entry)
+        path_distinfo = path + "-" + ("unknown" if version is None else version) + ".dist-info"
+        if not os.path.isdir(path_distinfo):
+            os.makedirs(path_distinfo)
+        with open(os.path.join(path_distinfo, "METADATA"), "w") as f:  # make a dummy METADATA file
+            f.write("Name: " + package + "\n")
+            f.write("Version: " + version + "\n")
+
+        with open(os.path.join(path_distinfo, "INSTALLER"), "w") as f:  # make a dummy METADATA file
+            f.write("github\n")
+        with open(os.path.join(path_distinfo, "RECORD"), "w") as f:
+            pass  # just to create the file to be recorded
+
+        with open(os.path.join(path_distinfo, "RECORD"), "w") as record_file:
+
+            for p in (path, path_distinfo):
+                for file in os.listdir(p):
+                    full = os.path.join(p, file)
+                    name = full[len(sitepackages_path) :].replace("\\", "/")
+                    record_file.write(name + ",")
+                    if file == "RECORD" and p == path_distinfo:
+                        record_file.write(",")
+                    else:
+                        with open(os.path.join(p, file), "rb") as f:
+                            contents = f.read()
+                            hash = "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(contents).digest()).decode(
+                                "latin1"
+                            ).rstrip("=")
+                            # hash calculation derived from wheel.py in pip
+
+                            length = str(len(contents))
+                            record_file.write(hash + "," + length)
+
+                    record_file.write("\n")
+
+
+    # print(package + " " + ("?" if version is None else version) + " successfully installed in " + path)
+
+    popup(package, 'SUCCESSFULLY installed', 'Version ' + ("?" if version is None else version), 'Location installed:', path, keep_on_top=True, background_color='red', text_color='white')
 
 
 def main():
