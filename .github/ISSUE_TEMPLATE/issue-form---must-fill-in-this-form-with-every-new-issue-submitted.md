@@ -15,6 +15,15 @@ assignees: ''
 
 ### PySimpleGUI Port and Version
 
+This is critical to know.  Knowing where your PySimpleGUI.py file is located is just as important.  You can get these by adding this to the top of your file and running it:
+
+```python
+import PySimpleGUI as sg
+print(sg)
+print(sg.version)
+```
+
+
 ### Your Experience Levels In Months or Years
 
 _________ Python programming experience
@@ -32,4 +41,8 @@ _________ Have used another Python GUI Framework (tkiner, Qt, etc) previously (y
 - [ ] Searched through Issues (open and closed) to see if already reported
 
 
-### Code or partial code causing the problem
+### Description of Problem / Question / Details
+
+### Code To Duplicate
+
+A short program that isolates and demonstrates the problem (i.e. please don't paste a link to your 400 line program.... instead paste your 10 line program in full).  Help me help you.
