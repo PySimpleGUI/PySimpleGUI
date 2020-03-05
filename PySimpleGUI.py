@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.8  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility"
+version = __version__ = "4.16.9  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
 
 port = 'PySimpleGUI'
 
@@ -128,7 +128,7 @@ from math import fabs
 from functools import wraps
 from subprocess import run, PIPE
 from threading import Thread
-
+import os
 
 warnings.simplefilter('always', UserWarning)
 
@@ -1996,7 +1996,8 @@ class Spin(Element):
         This value will be the same as what was provided as list of choices.  If list items are ints, then the
         item returned will be an int (not a string)
 
-        :return: (Any) The currently visible entry
+        :return: The currently visible entry
+        :rtype: (Any)
         """
         return self.TKStringVar.get()
 
@@ -2021,27 +2022,46 @@ class Multiline(Element):
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
-
-        :param default_text: (str) Initial text to show
-        :param enter_submits: (bool) if True, the Window.Read call will return is enter key is pressed in this element
-        :param disabled: (bool) set disable state
-        :param autoscroll: (bool) If True the contents of the element will automatically scroll as more data added to the end
-        :param border_width: (int)  width of border around element in pixels
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param chfange_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Spin events happen when an item changes
+        :param default_text: Initial text to show
+        :type default_text: (str)
+        :param enter_submits: if True, the Window.Read call will return is enter key is pressed in this element
+        :type enter_submits: (bool)
+        :param disabled: set disable state
+        :type disabled: (bool)
+        :param autoscroll: If True the contents of the element will automatically scroll as more data added to the end
+        :type autoscroll: (bool)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param size: int] (width, height) width = characters-wide, height = rows-high
+        :type size: Tuple[int,
+        :param auto_size_text: if True will size the element to match the length of the text
+        :type auto_size_text: (bool)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param chfange_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type chfange_submits: (bool)
+        :param enable_events: Turns on the element specific events. Spin events happen when an item changes
+        :type enable_events: (bool)
         :param do_not_clear: if False the element will be cleared any time the Window.Read call returns
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param focus: (bool) if True initial focus will go to this element
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :type do_not_clear: bool
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param focus: if True initial focus will go to this element
+        :type focus: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.DefaultText = default_text
@@ -2065,15 +2085,22 @@ class Multiline(Element):
                background_color_for_value=None, visible=None, autoscroll=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value: (str) new text to display
-        :param disabled: (bool) disable or enable state of the element
-        :param append: (bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param text_color: (str) color of the text
-        :param background_color: (str) color of background
-        :param visible: (bool) set visibility state of the element
-        :param autoscroll: (bool) if True then contents of element are scrolled down when new text is added to the end
+        :param value: new text to display
+        :type value: (str)
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param append: if True then new value will be added onto the end of the current value. if False then contents will be replaced.
+        :type append: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param autoscroll: if True then contents of element are scrolled down when new text is added to the end
+        :type autoscroll: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -2124,7 +2151,8 @@ class Multiline(Element):
         """
         Return current contents of the Multiline Element
 
-        :return: (str) current contents of the Multiline Element (used as an input type of Multiline
+        :return: current contents of the Multiline Element (used as an input type of Multiline
+        :rtype: (str)
         """
 
         return self.TKText.get(1.0, tk.END)
@@ -2167,23 +2195,40 @@ class Text(Element):
                  relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
-        :param text: (str) The text to display. Can include /n to achieve multiple lines
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) if True size of the Text Element will be sized to fit the string provided in 'text' parm
-        :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Text events happen when the text is clicked
-        :param relief:  (str/enum) relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param text_color: (str) color of the text
-        :param background_color: (str) color of background
-        :param border_width: (int) number of pixels for the border (if using a relief)
-        :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param text: The text to display. Can include /n to achieve multiple lines
+        :type text: (str)
+        :param size: (width, height) width = characters-wide, height = rows-high
+        :type size: Tuple[int, int]
+        :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
+        :type auto_size_text: (bool)
+        :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type click_submits: (bool)
+        :param enable_events: Turns on the element specific events. Text events happen when the text is clicked
+        :type enable_events: (bool)
+        :param relief: relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
+        :type relief: (str/enum)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param border_width: number of pixels for the border (if using a relief)
+        :type border_width: (int)
+        :param justification: how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
+        :type justification: (str)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.DisplayText = str(text)
@@ -2205,12 +2250,16 @@ class Text(Element):
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value: (str) new text to show
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param visible: (bool) set visibility state of the element
+        :param value: new text to show
+        :type value: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -2253,22 +2302,36 @@ class StatusBar(Element):
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
                  key=None, tooltip=None, visible=True, metadata=None):
         """
-
-        :param text: (str) Text that is to be displayed in the widget
-        :param size: Tuple[(int), (int)]  (w,h) w=characters-wide, h=rows-high
-        :param auto_size_text: (bool)  True if size should fit the text length
-        :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. StatusBar events occur when the bar is clicked
-        :param relief: (enum) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param text_color: (str) color of the text
-        :param background_color: (str) color of background
-        :param justification: (str) how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param text: Text that is to be displayed in the widget
+        :type text: (str)
+        :param size: (w,h) w=characters-wide, h=rows-high
+        :type size: Tuple[(int), (int)]
+        :param auto_size_text: True if size should fit the text length
+        :type auto_size_text: (bool)
+        :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type click_submits: (bool)
+        :param enable_events: Turns on the element specific events. StatusBar events occur when the bar is clicked
+        :type enable_events: (bool)
+        :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
+        :type relief: (enum)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param justification: how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
+        :type justification: (str)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.DisplayText = text
@@ -2289,11 +2352,16 @@ class StatusBar(Element):
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
-        :param value: (str) new text to show
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param visible: (bool) set visibility state of the element
+        :param value: new text to show
+        :type value: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -2331,17 +2399,26 @@ class TKProgressBar():
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
         """
-
-        :param root: Union[tk.Tk, tk.TopLevel] The root window bar is to be shown in
-        :param max: (int) Maximum value the bar will be measuring
-        :param length: (int) length in pixels of the bar
-        :param width:  (int) width in pixels of the bar
-        :param style:  (str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
-        :param relief: (str) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
-        :param border_width: (int) The amount of pixels that go around the outside of the bar
-        :param orientation: (str) 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
-        :param BarColor:  Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param root: The root window bar is to be shown in
+        :type root: Union[tk.Tk, tk.TopLevel]
+        :param max: Maximum value the bar will be measuring
+        :type max: (int)
+        :param length: length in pixels of the bar
+        :type length: (int)
+        :param width: width in pixels of the bar
+        :type width: (int)
+        :param style: Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+        :type style: (str)
+        :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
+        :type relief: (str)
+        :param border_width: The amount of pixels that go around the outside of the bar
+        :type border_width: (int)
+        :param orientation: 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
+        :type orientation: (str)
+        :param BarColor: The 2 colors that make up a progress bar. One is the background, the other is the bar
+        :type BarColor: Tuple[str, str]
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
         """
 
         self.Length = length
@@ -2380,9 +2457,10 @@ class TKProgressBar():
     def Update(self, count=None, max=None):
         """
         Update the current value of the bar and/or update the maximum value the bar can reach
-
-        :param count:  (int) current value
-        :param max:  (int) the maximum value
+        :param count: current value
+        :type count: (int)
+        :param max: the maximum value
+        :type max: (int)
         """
         if max is not None:
             self.Max = max
@@ -2413,14 +2491,22 @@ class TKOutput(tk.Frame):
 
     def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
         """
-        :param parent: Union[tk.Tk, tk.Toplevel] The "Root" that the Widget will be in
-        :param width: (int) Width in characters
-        :param height: (int) height in rows
-        :param bd: (int) Border Depth.  How many pixels of border to show
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param parent: The "Root" that the Widget will be in
+        :type parent: Union[tk.Tk, tk.Toplevel]
+        :param width: Width in characters
+        :type width: (int)
+        :param height: height in rows
+        :type height: (int)
+        :param bd: Border Depth.  How many pixels of border to show
+        :type bd: (int)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
         """
         self.frame = tk.Frame(parent)
         tk.Frame.__init__(self, self.frame)
@@ -2446,7 +2532,8 @@ class TKOutput(tk.Frame):
         """
         Called by Python (not tkinter?) when stdout or stderr wants to write
 
-        :param txt: (str) text of output
+        :param txt: text of output
+        :type txt: (str)
         """
         try:
             self.output.insert(tk.END, str(txt))
@@ -2488,16 +2575,26 @@ class Output(Element):
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
                  key=None, right_click_menu=None, visible=True, metadata=None):
         """
-        :param size: Tuple[int, int]  (w,h) w=characters-wide, h=rows-high
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param size: (width, height) w=characters-wide, h=rows-high
+        :type size: Tuple[int, int]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self._TKOut = self.Widget = None  # type: TKOutput
@@ -2520,8 +2617,10 @@ class Output(Element):
         """
         Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value: (str) string that will replace current contents of the output area
-        :param visible: (bool) control visibility of element
+        :param value: string that will replace current contents of the output area
+        :type value: (str)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -2537,7 +2636,8 @@ class Output(Element):
     def Get(self):
         """
         Returns the current contents of the output.  Similar to Get method other Elements
-        :return: (str) the current value of the output
+        :return: the current value of the output
+        :rtype: (str)
         """
         return self._TKOut.output.get(1.0, tk.END)
 
@@ -2545,8 +2645,10 @@ class Output(Element):
         """
         Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
-        :param expand_x: (Bool) If True Element will expand in the Horizontal directions
-        :param expand_y:  (Bool) If True Element will expand in the Vertical directions
+        :param expand_x: If True Element will expand in the Horizontal directions
+        :type expand_x: (Bool)
+        :param expand_y: If True Element will expand in the Vertical directions
+        :type expand_y: (Bool)
         """
 
         if expand_x and expand_y:
@@ -2590,32 +2692,58 @@ class Button(Element):
                  use_ttk_buttons=None,
                  font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
         """
-        :param button_text: (str) Text to be displayed on the button
-        :param button_type: (int) You  should NOT be setting this directly. ONLY the shortcut functions set this
-        :param target: Union[str, Tuple[int, int]]  key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param file_types: Tuple[Tuple[str, str], ...] the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),).  Note - NOT SUPPORTED ON MAC
-        :param initial_folder: (str) starting path for folders and files
-        :param disabled: (bool) If True button will be created disabled
-        :param click_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. If this button is a target, should it generate an event when filled in
-        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
-        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
-        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
-        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :param border_width: (int) width of border around button in pixels
-        :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
-        :param auto_size_button: (bool) if True the button size is sized to fit the text
-        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
-        :param disabled_button_color: Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
-        :param use_ttk_buttons: (bool) True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param bind_return_key: (bool) If True the return key will cause this button to be pressed
-        :param focus: (bool) if True, initial focus will be put on this button
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param button_text: Text to be displayed on the button
+        :type button_text: (str)
+        :param button_type: You  should NOT be setting this directly. ONLY the shortcut functions set this
+        :type button_type: (int)
+        :param target: key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
+        :type target: Union[str, Tuple[int, int]]
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param file_types: the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),).  Note - NOT SUPPORTED ON MAC
+        :type file_types: Tuple[Tuple[str, str], ...]
+        :param initial_folder: starting path for folders and files
+        :type initial_folder: (str)
+        :param disabled: If True button will be created disabled
+        :type disabled: (bool)
+        :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type click_submits: (bool)
+        :param enable_events: Turns on the element specific events. If this button is a target, should it generate an event when filled in
+        :type enable_events: (bool)
+        :param image_filename: image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename: (str)
+        :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data: Union[bytes, str]
+        :param image_size: Size of the image in pixels (width, height)
+        :type image_size: Tuple[int, int]
+        :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample: (int)
+        :param border_width: width of border around button in pixels
+        :type border_width: (int)
+        :param size: (width, height) of the button in characters wide, rows high
+        :type size: Tuple[int, int]
+        :param auto_size_button: if True the button size is sized to fit the text
+        :type auto_size_button: (bool)
+        :param button_color: (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :type button_color: Tuple[str, str]
+        :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
+        :type disabled_button_color: Tuple[str, str]
+        :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
+        :type use_ttk_buttons: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param bind_return_key: If True the return key will cause this button to be pressed
+        :type bind_return_key: (bool)
+        :param focus: if True, initial focus will be put on this button
+        :type focus: (bool)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.AutoSizeButton = auto_size_button
@@ -2821,16 +2949,24 @@ class Button(Element):
                visible=None, image_subsample=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param text: (str) sets button text
-        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :param disabled: (bool) disable or enable state of the element
-        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
-        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
-        :param disabled_button_color: Tuple[str, str] colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
-        :param visible: (bool) control visibility of element
-        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
+        :param text: sets button text
+        :type text: (str)
+        :param button_color: (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :type button_color: Tuple[str, str]
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data: Union[bytes, str]
+        :param image_filename: image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename: (str)
+        :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
+        :type disabled_button_color: Tuple[str, str]
+        :param visible: control visibility of element
+        :type visible: (bool)
+        :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample: (int)
+        :param image_size: Size of the image in pixels (width, height)
+        :type image_size: Tuple[int, int]
         """
 
         if self.Widget is None:
@@ -2904,7 +3040,8 @@ class Button(Element):
         """
         Returns the current text shown on a button
 
-        :return: (str) The text currently displayed on the button
+        :return: The text currently displayed on the button
+        :rtype: (str)
         """
         return self.ButtonText
 
@@ -2943,24 +3080,42 @@ class ButtonMenu(Element):
                  size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
                  tearoff=False, visible=True, metadata=None):
         """
-        :param button_text: (str) Text to be displayed on the button
-        :param menu_def: List[List[str]] A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param disabled: (bool) If True button will be created disabled
-        :param image_filename: (str) image filename if there is a button image. GIFs and PNGs only.
-        :param image_data: Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
-        :param image_size: Tuple[int, int] Size of the image in pixels (width, height)
-        :param image_subsample: (int) amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
-        :param border_width: (int) width of border around button in pixels
-        :param size: Tuple[int, int] (width, height) of the button in characters wide, rows high
-        :param auto_size_button: (bool) if True the button size is sized to fit the text
-        :param button_color: Tuple[str, str] (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tearoff: (bool) Determines if menus should allow them to be torn off
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param button_text: Text to be displayed on the button
+        :type button_text: (str)
+        :param menu_def: A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types
+        :type menu_def: List[List[str]]
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param disabled: If True button will be created disabled
+        :type disabled: (bool)
+        :param image_filename: image filename if there is a button image. GIFs and PNGs only.
+        :type image_filename: (str)
+        :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type image_data: Union[bytes, str]
+        :param image_size: Size of the image in pixels (width, height)
+        :type image_size: Tuple[int, int]
+        :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
+        :type image_subsample: (int)
+        :param border_width: width of border around button in pixels
+        :type border_width: (int)
+        :param size:(width, height) of the button in characters wide, rows high
+        :type size: Tuple[int, int]
+        :param auto_size_button: if True the button size is sized to fit the text
+        :type auto_size_button: (bool)
+        :param button_color: (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
+        :type button_color: Tuple[str, str]
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param tearoff: Determines if menus should allow them to be torn off
+        :type tearoff: (bool)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.MenuDefinition = menu_def
@@ -2990,7 +3145,8 @@ class ButtonMenu(Element):
         """
         Not a user callable function.  Called by tkinter when an item is chosen from the menu.
 
-        :param item_chosen: (str) The menu item chosen.
+        :param item_chosen: The menu item chosen.
+        :type item_chosen: (str)
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen.replace('&', '')
@@ -3003,8 +3159,10 @@ class ButtonMenu(Element):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param menu_definition: (List[List]) New menu definition (in menu definition format)
-        :param visible: (bool) control visibility of element
+        :param menu_definition: (New menu definition (in menu definition format)
+        :type menu_definition: List[List]
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -3049,18 +3207,30 @@ class ProgressBar(Element):
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None,
                  key=None, pad=None, visible=True, metadata=None):
         """
-        :param max_value: (int) max value of progressbar
-        :param orientation: (str) 'horizontal' or 'vertical'
-        :param size: Tuple[int, int] Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
-        :param auto_size_text: (bool) Not sure why this is here
-        :param bar_color:  Tuple[str, str] The 2 colors that make up a progress bar. One is the background, the other is the bar
-        :param style:  (str) Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
-        :param border_width: (int) The amount of pixels that go around the outside of the bar
-        :param relief: (str) relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param visible: (bool)  set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param max_value: max value of progressbar
+        :type max_value: (int)
+        :param orientation: 'horizontal' or 'vertical'
+        :type orientation: (str)
+        :param size: Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
+        :type size: Tuple[int, int]
+        :param auto_size_text: Not sure why this is here
+        :type auto_size_text: (bool)
+        :param bar_color: The 2 colors that make up a progress bar. One is the background, the other is the bar
+        :type bar_color: Tuple[str, str]
+        :param style: Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
+        :type style: (str)
+        :param border_width: The amount of pixels that go around the outside of the bar
+        :type border_width: (int)
+        :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
+        :type relief: (str)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.MaxValue = max_value
@@ -3081,8 +3251,10 @@ class ProgressBar(Element):
         """
         Change what the bar shows by changing the current count and optionally the max count
 
-        :param current_count: (int) sets the current value
-        :param max: (int) changes the max value
+        :param current_count: sets the current value
+        :type current_count: (int)
+        :param max: changes the max value
+        :type max: (int)
         """
 
         if self.ParentForm.TKrootDestroyed:
@@ -3100,7 +3272,8 @@ class ProgressBar(Element):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param visible: (bool) control visibility of element
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -3131,17 +3304,28 @@ class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
         """
-        :param filename:  (str) image filename if there is a button image. GIFs and PNGs only.
-        :param data:  Union[bytes, str] Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :param filename: image filename if there is a button image. GIFs and PNGs only.
+        :type filename: (str)
+        :param data: Raw or Base64 representation of the image to put on button. Choose either filename or data
+        :type data: Union[bytes, str]
         :param background_color: color of background
-        :param size: Tuple[int, int] (width, height) size of image in pixels
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param enable_events: (bool) Turns on the element specific events. For an Image element, the event is "image clicked"
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :type background_color:
+        :param size: (width, height) size of image in pixels
+        :type size: Tuple[int, int]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param enable_events: Turns on the element specific events. For an Image element, the event is "image clicked"
+        :type enable_events: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.Filename = filename
@@ -3165,11 +3349,14 @@ class Image(Element):
     def Update(self, filename=None, data=None, size=(None, None), visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param filename: (str) filename to the new image to display.
-        :param data: Union[str, tkPhotoImage] Base64 encoded string OR a tk.PhotoImage object
-        :param size: Tuple[int,int] size of a image (w,h) w=characters-wide, h=rows-high
-        :param visible: (bool) control visibility of element
+        :param filename: filename to the new image to display.
+        :type filename: (str)
+        :param data: Base64 encoded string OR a tk.PhotoImage object
+        :type data: Union[str, tkPhotoImage]
+        :param size: size of a image (w,h) w=characters-wide, h=rows-high
+        :type size: Tuple[int,int]
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         image = None
@@ -3203,9 +3390,10 @@ class Image(Element):
         """
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
         NOTE - does NOT perform a sleep call to delay
-
-        :param source: Union[str,bytes] Filename or Base64 encoded string containing Animated GIF
-        :param time_between_frames: (int) Number of milliseconds to wait between showing frames
+        :param source: Filename or Base64 encoded string containing Animated GIF
+        :type source: Union[str,bytes]
+        :param time_between_frames: Number of milliseconds to wait between showing frames
+        :type time_between_frames: (int)
         """
 
         if self.Source != source:
@@ -3253,9 +3441,10 @@ class Image(Element):
         """
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
         NOTE - does NOT perform a sleep call to delay
-
-        :param source: Union[str,bytes] Filename or Base64 encoded string containing Animated GIF
-        :param time_between_frames: (int) Number of milliseconds to wait between showing frames
+        :param source: Filename or Base64 encoded string containing Animated GIF
+        :type source: Union[str,bytes]
+        :param time_between_frames: Number of milliseconds to wait between showing frames
+        :type time_between_frames: (int)
         """
 
         if self.Source != source:
@@ -3313,16 +3502,24 @@ class Canvas(Element):
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
-
-        :param canvas: (tk.Canvas) Your own tk.Canvas if you already created it. Leave blank to create a Canvas
-        :param background_color: (str) color of background
-        :param size: Tuple[int,int]  (width in char, height in rows) size in pixels to make canvas
+        :param canvas: Your own tk.Canvas if you already created it. Leave blank to create a Canvas
+        :type canvas: (tk.Canvas)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param size: (width in char, height in rows) size in pixels to make canvas
+        :type size: Tuple[int,int]
         :param pad:  Amount of padding to put around element
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :type pad: int
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -3366,20 +3563,34 @@ class Graph(Element):
                  change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
                  right_click_menu=None, visible=True, float_values=False, metadata=None):
         """
-        :param canvas_size: Tuple[int, int] (width, height) size of the canvas area in pixels
-        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
-        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
-        :param background_color: (str) background color of the drawing area
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
-        :param drag_submits:  (bool) if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
-        :param enable_events: (bool) If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element (Default = True)
-        :param float_values: (bool) If True x,y coordinates are returned as floats, not ints
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param canvas_size: (width, height) size of the canvas area in pixels
+        :type canvas_size: Tuple[int, int]
+        :param graph_bottom_left: (x,y) The bottoms left corner of your coordinate system
+        :type graph_bottom_left: Tuple[int, int]
+        :param graph_top_right: (x,y) The top right corner of  your coordinate system
+        :type graph_top_right: Tuple[int, int]
+        :param background_color: background color of the drawing area
+        :type background_color: (str)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param change_submits: * DEPRICATED DO NOT USE! Same as enable_events
+        :type change_submits: (bool)
+        :param drag_submits: if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
+        :type drag_submits: (bool)
+        :param enable_events: If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
+        :type enable_events: (bool)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element (Default = True)
+        :type visible: (bool)
+        :param float_values: If True x,y coordinates are returned as floats, not ints
+        :type float_values: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.CanvasSize = canvas_size
@@ -3402,10 +3613,12 @@ class Graph(Element):
     def _convert_xy_to_canvas_xy(self, x_in, y_in):
         """
         Not user callable.  Used to convert user's coordinates into the ones used by tkinter
-
-        :param x_in: Union[int, float] The x coordinate to convert
-        :param y_in: Union[int, float] The y coordinate to convert
+        :param x_in: The x coordinate to convert
+        :type x_in: Union[int, float]
+        :param y_in: The y coordinate to convert
+        :type y_in: Union[int, float]
         :return: Tuple[int, int] The converted canvas coordinates
+        :rtype: Tuple[int, int]
         """
         if None in (x_in, y_in):
             return None, None
@@ -3438,13 +3651,16 @@ class Graph(Element):
     def DrawLine(self, point_from, point_to, color='black', width=1):
         """
         Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
-
-        :param point_from: Union[Tuple[int, int], Tuple[float, float]] Starting point for line
-        :param point_to: Union[Tuple[int, int], Tuple[float, float]] Ending point for line
-        :param color: (str) Color of the line
-        :param width: (int) width of line in pixels
-        :return: Union[int, None] id returned from tktiner or None if user closed the window. id is used when you
-        want to manipulate the line
+        :param point_from: Starting point for line
+        :type point_from: Union[Tuple[int, int], Tuple[float, float]]
+        :param point_to: Ending point for line
+        :type point_to: Union[Tuple[int, int], Tuple[float, float]]
+        :param color: Color of the line
+        :type color: (str)
+        :param width: width of line in pixels
+        :type width: (int)
+        :return: id returned from tktiner or None if user closed the window. id is used when you
+        :rtype: Union[int, None]
         """
         if point_from == (None, None):
             return
@@ -3463,11 +3679,14 @@ class Graph(Element):
     def DrawPoint(self, point, size=2, color='black'):
         """
         Draws a "dot" at the point you specify using the USER'S coordinate system
-
-        :param point: Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system
-        :param size: Union[int, float] Radius? (Or is it the diameter?) in user's coordinate values.
-        :param color: (str) color of the point to draw
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the point
+        :param point: Center location using USER'S coordinate system
+        :type point: Union [Tuple[int, int], Tuple[float, float]]
+        :param size: Radius? (Or is it the diameter?) in user's coordinate values.
+        :type size: Union[int, float]
+        :param color: color of the point to draw
+        :type color: (str)
+        :return: id returned from tkinter that you'll need if you want to manipulate the point
+        :rtype: Union[int, None]
         """
         if point == (None, None):
             return
@@ -3494,13 +3713,18 @@ class Graph(Element):
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black', line_width=1):
         """
         Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
-
-        :param center_location: Union [Tuple[int, int], Tuple[float, float]] Center location using USER'S coordinate system
-        :param radius: Union[int, float] Radius in user's coordinate values.
-        :param fill_color: (str) color of the point to draw
-        :param line_color:  (str) color of the outer line that goes around the circle (sorry, can't set thickness)
-        :param line_width:  (int) width of the line around the circle, the outline, in pixels
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the circle
+        :param center_location: Center location using USER'S coordinate system
+        :type center_location: Union [Tuple[int, int], Tuple[float, float]]
+        :param radius: Radius in user's coordinate values.
+        :type radius: Union[int, float]
+        :param fill_color: color of the point to draw
+        :type fill_color: (str)
+        :param line_color: color of the outer line that goes around the circle (sorry, can't set thickness)
+        :type line_color: (str)
+        :param line_width: width of the line around the circle, the outline, in pixels
+        :type line_width: (int)
+        :return: id returned from tkinter that you'll need if you want to manipulate the circle
+        :rtype: Union[int, None]
         """
         if center_location == (None, None):
             return
@@ -3526,13 +3750,18 @@ class Graph(Element):
     def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=1):
         """
         Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
-
-        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle
-        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle
-        :param fill_color: (str) color of the interrior
-        :param line_color: (str) color of outline of oval
-        :param line_width:  (int) width of the line around the oval, the outline, in pixels
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the oval
+        :param top_left: the top left point of bounding rectangle
+        :type top_left: Union[Tuple[int, int], Tuple[float, float]]
+        :param bottom_right: the bottom right point of bounding rectangle
+        :type bottom_right: Union[Tuple[int, int], Tuple[float, float]]
+        :param fill_color: color of the interrior
+        :type fill_color: (str)
+        :param line_color: color of outline of oval
+        :type line_color: (str)
+        :param line_width: width of the line around the oval, the outline, in pixels
+        :type line_width: (int)
+        :return: id returned from tkinter that you'll need if you want to manipulate the oval
+        :rtype: Union[int, None]
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
@@ -3551,15 +3780,20 @@ class Graph(Element):
     def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1):
         """
         Draws different types of arcs.  Uses a "bounding box" to define location
-
-        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of bounding rectangle
-        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of bounding rectangle
-        :param extent: (float) Andle to end drawing. Used in conjunction with start_angle
-        :param start_angle: (float) Angle to begin drawing. Used in conjunction with extent
-        :param style: (str) Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last',
-                        'butt', 'projecting', 'round', 'bevel', 'miter'
-        :param arc_color: (str) color to draw arc with
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the arc
+        :param top_left: the top left point of bounding rectangle
+        :type top_left: Union[Tuple[int, int], Tuple[float, float]]
+        :param bottom_right: the bottom right point of bounding rectangle
+        :type bottom_right: Union[Tuple[int, int], Tuple[float, float]]
+        :param extent: Andle to end drawing. Used in conjunction with start_angle
+        :type extent: (float)
+        :param start_angle: Angle to begin drawing. Used in conjunction with extent
+        :type start_angle: (float)
+        :param style: Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter'
+        :type style: (str)
+        :param arc_color: color to draw arc with
+        :type arc_color: (str)
+        :return: id returned from tkinter that you'll need if you want to manipulate the arc
+        :rtype: Union[int, None]
         """
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
         converted_bottom_right = self._convert_xy_to_canvas_xy(bottom_right[0], bottom_right[1])
@@ -3580,12 +3814,18 @@ class Graph(Element):
         """
         Draw a rectangle given 2 points. Can control the line and fill colors
 
-        :param top_left: Union[Tuple[int, int], Tuple[float, float]] the top left point of rectangle
-        :param bottom_right: Union[Tuple[int, int], Tuple[float, float]] the bottom right point of rectangle
-        :param fill_color: (str) color of the interior
-        :param line_color: (str) color of outline
-        :param line_width: (int) width of the line in pixels
+        :param top_left: the top left point of rectangle
+        :type top_left: Union[Tuple[int, int], Tuple[float, float]]
+        :param bottom_right: the bottom right point of rectangle
+        :type bottom_right: Union[Tuple[int, int], Tuple[float, float]]
+        :param fill_color: color of the interior
+        :type fill_color: (str)
+        :param line_color: color of outline
+        :type line_color: (str)
+        :param line_width: width of the line in pixels
+        :type line_width: (int)
         :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
+        :rtype: Union[int, None]
         """
 
         converted_top_left = self._convert_xy_to_canvas_xy(top_left[0], top_left[1])
@@ -3609,11 +3849,16 @@ class Graph(Element):
         """
         Draw a rectangle given 2 points. Can control the line and fill colors
 
-        :param points: List[Union[Tuple[int, int], Tuple[float, float]]] list of points that define the polygon
-        :param fill_color: (str) color of the interior
-        :param line_color: (str) color of outline
-        :param line_width: (int) width of the line in pixels
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
+        :param points: list of points that define the polygon
+        :type points: List[Union[Tuple[int, int], Tuple[float, float]]]
+        :param fill_color: color of the interior
+        :type fill_color: (str)
+        :param line_color: color of outline
+        :type line_color: (str)
+        :param line_width: width of the line in pixels
+        :type line_width: (int)
+        :return: id returned from tkinter that you'll need if you want to manipulate the rectangle
+        :rtype: Union[int, None]
         """
 
         converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
@@ -3633,13 +3878,20 @@ class Graph(Element):
         """
         Draw some text on your graph.  This is how you label graph number lines for example
 
-        :param text: (str) text to display
-        :param location: Union[Tuple[int, int], Tuple[float, float]] location to place first letter
-        :param color: (str) text color
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
-        :param text_location: (enum) "anchor" location for the text. Values start with TEXT_LOCATION_
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the text
+        :param text: text to display
+        :type text: (str)
+        :param location: location to place first letter
+        :type location: Union[Tuple[int, int], Tuple[float, float]]
+        :param color: text color
+        :type color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param angle: Angle 0 to 360 to draw the text.  Zero represents horizontal text
+        :type angle: (float)
+        :param text_location: "anchor" location for the text. Values start with TEXT_LOCATION_
+        :type text_location: (enum)
+        :return: id returned from tkinter that you'll need if you want to manipulate the text
+        :rtype: Union[int, None]
         """
         text = str(text)
         if location == (None, None):
@@ -3659,13 +3911,20 @@ class Graph(Element):
         """
         Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
-        :param filename: (str) if image is in a file, path and filename for the image. (GIF and PNG only!)
-        :param data: Union[str, bytes] if image is in Base64 format or raw? format then use instead of filename
-        :param location: Union[Tuple[int, int], Tuple[float, float]] the (x,y) location to place image's top left corner
-        :param color: (str) text color
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param angle: (float) Angle 0 to 360 to draw the text.  Zero represents horizontal text
-        :return: Union[int, None] id returned from tkinter that you'll need if you want to manipulate the image
+        :param filename: if image is in a file, path and filename for the image. (GIF and PNG only!)
+        :type filename: (str)
+        :param data: if image is in Base64 format or raw? format then use instead of filename
+        :type data: Union[str, bytes]
+        :param location: the (x,y) location to place image's top left corner
+        :type location: Union[Tuple[int, int], Tuple[float, float]]
+        :param color: text color
+        :type color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param angle: Angle 0 to 360 to draw the text.  Zero represents horizontal text
+        :type angle: (float)
+        :return: id returned from tkinter that you'll need if you want to manipulate the image
+        :rtype: Union[int, None]
         """
         if location == (None, None):
             return
@@ -3707,7 +3966,8 @@ class Graph(Element):
         """
         Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
-        :param id: (int) the id returned to you when calling one of the drawing methods
+        :param id: the id returned to you when calling one of the drawing methods
+        :type id: (int)
         """
         try:
             self._TKCanvas2.delete(id)
@@ -3723,7 +3983,9 @@ class Graph(Element):
         Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
         :param background_color: color of background
-        :param visible: (bool) control visibility of element
+        :type background_color: ???
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self._TKCanvas2 is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -3740,8 +4002,10 @@ class Graph(Element):
         """
         Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
-        :param x_direction: Union[int, float] how far to move in the "X" direction in your coordinates
-        :param y_direction: Union[int, float] how far to move in the "Y" direction in your coordinates
+        :param x_direction: how far to move in the "X" direction in your coordinates
+        :type x_direction: Union[int, float]
+        :param y_direction: how far to move in the "Y" direction in your coordinates
+        :type y_direction: Union[int, float]
         """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
@@ -3756,9 +4020,12 @@ class Graph(Element):
         """
         Moves a previously drawn figure using a "delta" from current position
 
-        :param figure: (id) Previously obtained figure-id. These are returned from all Draw methods
-        :param x_direction: Union[int, float] delta to apply to position in the X direction
-        :param y_direction: Union[int, float] delta to apply to position in the Y direction
+        :param figure: Previously obtained figure-id. These are returned from all Draw methods
+        :type figure: (id)
+        :param x_direction: delta to apply to position in the X direction
+        :type x_direction: Union[int, float]
+        :param y_direction: delta to apply to position in the Y direction
+        :type y_direction: Union[int, float]
         """
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
@@ -3774,9 +4041,12 @@ class Graph(Element):
         Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
         uses absolute coordinates versus relative for Move
 
-        :param figure: (id) Previously obtained figure-id. These are returned from all Draw methods
-        :param x: Union[int, float] location on X axis (in user coords) to move the upper left corner of the figure
-        :param y: Union[int, float] location on Y axis (in user coords) to move the upper left corner of the figure
+        :param figure: Previously obtained figure-id. These are returned from all Draw methods
+        :type figure: (id)
+        :param x: location on X axis (in user coords) to move the upper left corner of the figure
+        :type x: Union[int, float]
+        :param y: location on Y axis (in user coords) to move the upper left corner of the figure
+        :type y: Union[int, float]
         """
 
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
@@ -3793,7 +4063,8 @@ class Graph(Element):
         """
         Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
 
-        :param figure: (int) value returned by tkinter when creating the figure / drawing
+        :param figure: value returned by tkinter when creating the figure / drawing
+        :type figure: (int)
         """
         self.TKCanvas.tag_lower(figure)  # move figure to the "bottom" of all other figure
 
@@ -3801,7 +4072,8 @@ class Graph(Element):
         """
         Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
-        :param figure: (int) value returned by tkinter when creating the figure / drawing
+        :param figure: value returned by tkinter when creating the figure / drawing
+        :type figure: (int)
         """
         self.TKCanvas.tag_raise(figure)  # move figure to the "top" of all other figures
 
@@ -3810,8 +4082,10 @@ class Graph(Element):
         """
         Returns a list of figures located at a particular x,y location within the Graph
 
-        :param location:  Union[Tuple[int, int], Tuple[float, float]] point to check
-        :return: List[int] a list of previously drawn "Figures" (returned from the drawing primitives)
+        :param location: point to check
+        :type location: Union[Tuple[int, int], Tuple[float, float]]
+        :return: a list of previously drawn "Figures" (returned from the drawing primitives)
+        :rtype: List[int]
         """
         x, y = self._convert_xy_to_canvas_xy(location[0], location[1])
         ids = self.TKCanvas.find_overlapping(x,y,x,y)
@@ -3822,7 +4096,9 @@ class Graph(Element):
         Given a figure, returns the upper left and lower right bounding box coordinates
 
         :param figure: a previously drawing figure
-        :return: Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] (upper left x, upper left y, lower right x, lower right y
+        :type figure: object
+        :return: upper left x, upper left y, lower right x, lower right y
+        :rtype: Union[Tuple[int, int, int, int], Tuple[float, float, float, float]]
         """
         box = self.TKCanvas.bbox(figure)
         top_left = self._convert_canvas_xy_to_xy(box[0], box[1])
@@ -3835,8 +4111,10 @@ class Graph(Element):
         Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
         system - the bottom left and the top right values of your graph.
 
-        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
-        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
+        :param graph_bottom_left: The bottoms left corner of your coordinate system
+        :type graph_bottom_left: Tuple[int, int] (x,y)
+        :param graph_top_right: The top right corner of  your coordinate system
+        :type graph_top_right: Tuple[int, int]  (x,y)
         """
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
@@ -3947,23 +4225,38 @@ class Frame(Element):
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
-        :param title: (str) text that is displayed as the Frame's "label" or title
-        :param layout: List[List[Elements]] The layout to put inside the Frame
-        :param title_color: (str) color of the title text
-        :param background_color: (str) background color of the Frame
-        :param title_location: (enum) location to place the text title.  Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT
-        :param relief: (enum) relief style. Values are same as other elements with reliefs.
-                        Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
-        :param size: Tuple[int, int] (width in characters, height in rows) (note this parameter may not always work)
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param border_width: (int)  width of border around element in pixels
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param element_justification: (str) All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param title: text that is displayed as the Frame's "label" or title
+        :type title: (str)
+        :param layout: The layout to put inside the Frame
+        :type layout: List[List[Elements]]
+        :param title_color: color of the title text
+        :type title_color: (str)
+        :param background_color: background color of the Frame
+        :type background_color: (str)
+        :param title_location: location to place the text title.  Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT
+        :type title_location: (enum)
+        :param relief: relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :type relief: (enum)
+        :param size: (width, height) (note this parameter may not always work)
+        :type size: Tuple[int, int]
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification: (str)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.UseDictionary = False
@@ -3993,7 +4286,8 @@ class Frame(Element):
         """
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
-        :param *args: List[Element] The list of elements for this row
+        :param *args: The list of elements for this row
+        :type *args: List[Element]
         """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -4043,8 +4337,10 @@ class Frame(Element):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows: List[List[Element]] The rows of Elements
-        :return: (Frame) Used for chaining
+        :param rows: The rows of Elements
+        :type rows: List[List[Element]]
+        :return: Used for chaining
+        :rtype: (Frame)
         """
 
         for row in rows:
@@ -4065,8 +4361,10 @@ class Frame(Element):
         """
         Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location: Tuple[int, int] (row, column) position of the element to find in layout
+        :param location: (row, column) position of the element to find in layout
+        :type location: Tuple[int, int]
         :return: (Element) The element found at the location
+        :rtype: (Element)
         """
 
         (row_num, col_num) = location
@@ -4078,8 +4376,10 @@ class Frame(Element):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value: (Any) New text value to show on frame
-        :param visible: (bool) control visibility of element
+        :param value: New text value to show on frame
+        :type value: (Any)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -4109,7 +4409,8 @@ class VerticalSeparator(Element):
 
     def __init__(self, pad=None):
         """
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
         """
 
         self.Orientation = 'vertical'  # for now only vertical works
@@ -4136,20 +4437,34 @@ class Tab(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
-        :param title: (str) text to show on the tab
-        :param layout: List[List[Element]] The element layout that will be shown in the tab
-        :param title_color: (str) color of the tab text (note not currently working on tkinter)
-        :param background_color: (str) color of background of the entire layout
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param disabled: (bool) If True button will be created disabled
-        :param border_width: (int)  width of border around element in pixels
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param element_justification: (str) All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param title: text to show on the tab
+        :type title: (str)
+        :param layout: The element layout that will be shown in the tab
+        :type layout: List[List[Element]]
+        :param title_color: color of the tab text (note not currently working on tkinter)
+        :type title_color: (str)
+        :param background_color: color of background of the entire layout
+        :type background_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param disabled: If True button will be created disabled
+        :type disabled: (bool)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param element_justification: All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification: (str)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.UseDictionary = False
@@ -4180,7 +4495,8 @@ class Tab(Element):
         """
         Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
-        :param *args: List[Element] The list of elements for this row
+        :param *args: The list of elements for this row
+        :type *args: List[Element]
         """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -4250,8 +4566,10 @@ class Tab(Element):
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param disabled: (bool) disable or enable state of the element
-        :param visible: (bool) control visibility of element
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -4274,8 +4592,10 @@ class Tab(Element):
         """
         Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location: Tuple[int, int] (row, column) position of the element to find in layout
-        :return: (Element) The element found at the location
+        :param location: (row, column) position of the element to find in layout
+        :type location: Tuple[int, int]
+        :return:  The element found at the location
+        :rtype: (Element)
         """
 
         (row_num, col_num) = location
@@ -4315,23 +4635,40 @@ class TabGroup(Element):
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
                  key=None, tooltip=None, visible=True, metadata=None):
         """
-        :param layout: List[List[Tab]] Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
-        :param tab_location: (str) location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
-        :param title_color: (str) color of text on tabs
-        :param tab_background_color: (str) color of all tabs that are not selected
-        :param selected_title_color: (str) color of tab text when it is selected
-        :param selected_background_color: (str) color of tab when it is selected
-        :param background_color: (str) color of background area that tabs are located on
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
-        :param enable_events: (bool) If True then switching tabs will generate an Event
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param border_width: (int)  width of border around element in pixels
-        :param theme: (enum) DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param layout: Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
+        :type layout: List[List[Tab]]
+        :param tab_location: location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
+        :type tab_location: (str)
+        :param title_color: color of text on tabs
+        :type title_color: (str)
+        :param tab_background_color: color of all tabs that are not selected
+        :type tab_background_color: (str)
+        :param selected_title_color: color of tab text when it is selected
+        :type selected_title_color: (str)
+        :param selected_background_color: color of tab when it is selected
+        :type selected_background_color: (str)
+        :param background_color: color of background area that tabs are located on
+        :type background_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param change_submits: * DEPRICATED DO NOT USE! Same as enable_events
+        :type change_submits: (bool)
+        :param enable_events: If True then switching tabs will generate an Event
+        :type enable_events: (bool)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param theme: DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
+        :type theme: (enum)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.UseDictionary = False
@@ -4365,7 +4702,8 @@ class TabGroup(Element):
         """
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
-        :param *args: List[Element] The list of elements for this row
+        :param *args:  The list of elements for this row
+        :typeparam *args: List[Element]
         """
 
         NumRows = len(self.Rows)  # number of existing rows is our row number
@@ -4413,8 +4751,10 @@ class TabGroup(Element):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows: List[List[Element]] The rows of Elements
-        :return: (Frame) Used for chaining
+        :param rows: The rows of Elements
+        :type rows: List[List[Element]]
+        :return: Used for chaining
+        :rtype: (Frame)
         """
         for row in rows:
             try:
@@ -4435,8 +4775,10 @@ class TabGroup(Element):
         """
         Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location: Tuple[int, int] (row, column) position of the element to find in layout
-        :return: (Element) The element found at the location
+        :param location: (row, column) position of the element to find in layout
+        :type location: Tuple[int, int]
+        :return: The element found at the location
+        :rtype: (Element)
         """
 
         (row_num, col_num) = location
@@ -4448,8 +4790,10 @@ class TabGroup(Element):
         """
         Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
-        :param tab_name:
-        :return: Union[key, None] Returns the key or None if no key found
+        :param tab_name: name of a tab
+        :type tab_name: str
+        :return: Returns the key or None if no key found
+        :rtype: Union[key, None]
         """
         for row in self.Rows:
             for element in row:
@@ -4497,33 +4841,46 @@ class Slider(Element):
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
                  text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
-
-        :param range: Union[Tuple[int, int], Tuple[float, float]] slider's range (min value, max value)
-        :param default_value: Union[int, float] starting value for the slider
-        :param resolution: Union[int, float] the smallest amount the slider can be moved
-        :param tick_interval: Union[int, float] how often a visible tick should be shown next to slider
-        :param orientation: (str) 'horizontal' or 'vertical' ('h' or 'v' also work)
-        :param disable_number_display: (bool) if True no number will be displayed by the Slider Element
-        :param border_width: (int) width of border around element in pixels
-        :param relief: (enum)  relief style.
-                        RELIEF_RAISED
-                        RELIEF_SUNKEN
-                        RELIEF_FLAT
-                        RELIEF_RIDGE
-                        RELIEF_GROOVE
-                        RELIEF_SOLID
-        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
-        :param enable_events: (bool) If True then moving the slider will generate an Event
-        :param disabled: (bool) set disable state for element
-        :param size: Tuple[int, int] (width in characters, height in rows)
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param background_color: (str) color of slider's background
-        :param text_color: (str) color of the slider's text
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param range: slider's range (min value, max value)
+        :type range: Union[Tuple[int, int], Tuple[float, float]]
+        :param default_value: starting value for the slider
+        :type default_value: Union[int, float]
+        :param resolution: the smallest amount the slider can be moved
+        :type resolution: Union[int, float]
+        :param tick_interval: how often a visible tick should be shown next to slider
+        :type tick_interval: Union[int, float]
+        :param orientation: 'horizontal' or 'vertical' ('h' or 'v' also work)
+        :type orientation: (str)
+        :param disable_number_display: if True no number will be displayed by the Slider Element
+        :type disable_number_display: (bool)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param relief: relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :type relief: (enum)
+        :param change_submits: * DEPRICATED DO NOT USE! Same as enable_events
+        :type change_submits: (bool)
+        :param enable_events: If True then moving the slider will generate an Event
+        :type enable_events: (bool)
+        :param disabled: set disable state for element
+        :type disabled: (bool)
+        :param size: (w=characters-wide, h=rows-high)
+        :type size: Tuple[int, int]
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param background_color: color of slider's background
+        :type background_color: (str)
+        :param text_color: color of the slider's text
+        :type text_color: (str)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.TKScale = self.Widget = None  # type: tk.Scale
@@ -4550,11 +4907,14 @@ class Slider(Element):
         """
         Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value: Union[int, float] sets current slider value
-        :param range: Union[Tuple[int, int], Tuple[float, float] Sets a new range for slider
-        :param disabled: (bool) disable or enable state of the element
-        :param visible: (bool) control visibility of element
-
+        :param value: sets current slider value
+        :type value: Union[int, float]
+        :param range: Sets a new range for slider
+        :type range: Union[Tuple[int, int], Tuple[float, float]
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -4607,6 +4967,7 @@ class TkFixedFrame(tk.Frame):
     def __init__(self, master, **kwargs):
         """
         :param master: (tk.Widget) The parent widget
+        :type master: (tk.Widget)
         :param **kwargs: The keyword args
         """
         tk.Frame.__init__(self, master, **kwargs)
@@ -4637,10 +4998,10 @@ class TkScrollableFrame(tk.Frame):
 
     def __init__(self, master, vertical_only, **kwargs):
         """
-
-        :param master: (tk.Widget) The parent widget
-        :param vertical_only: (bool) if True the only a vertical scrollbar will be shown
-        :param **kwargs: The keyword parms
+        :param master: The parent widget
+        :type master: (tk.Widget)
+        :param vertical_only: if True the only a vertical scrollbar will be shown
+        :type vertical_only: (bool)
         """
         tk.Frame.__init__(self, master, **kwargs)
         # create a canvas object and a vertical scrollbar for scrolling it
@@ -4693,11 +5054,6 @@ class TkScrollableFrame(tk.Frame):
         # self.bind_mouse_scroll(self, self.yscroll)
 
     def resize_frame(self, e):
-        """
-
-        :param e:
-
-        """
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
 
     def yscroll(self, event):
@@ -4736,11 +5092,7 @@ class TkScrollableFrame(tk.Frame):
         parent.bind("<Button-5>", mode)
 
     def set_scrollregion(self, event=None):
-        """Set the scroll region on the canvas
-
-        :param event:
-
-        """
+        """ Set the scroll region on the canvas """
         self.canvas.configure(scrollregion=self.canvas.bbox('all'))
 
 
@@ -4755,19 +5107,30 @@ class Column(Element):
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left', metadata=None):
         """
-        :param layout: List[List[Element]] Layout that will be shown in the Column container
-        :param background_color: (str) color of background of entire Column
-        :param size: Tuple[int, int] (width, height) size in pixels (doesn't work quite right, sometimes
-                      only 1 dimension is set by tkinter
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param scrollable: (bool) if True then scrollbars will be added to the column
-        :param vertical_scroll_only: (bool) if Truen then no horizontal scrollbar will be shown
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param visible: (bool) set visibility state of the element
-        :param justification: (str) set justification for the Column itself. Note entire row containing the Column will be affected
-        :param element_justification: (str) All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param layout: Layout that will be shown in the Column container
+        :type layout: List[List[Element]]
+        :param background_color: color of background of entire Column
+        :type background_color: (str)
+        :param size: (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter
+        :type size: Tuple[int, int]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param scrollable: if True then scrollbars will be added to the column
+        :type scrollable: (bool)
+        :param vertical_scroll_only: if Truen then no horizontal scrollbar will be shown
+        :type vertical_scroll_only: (bool)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param justification: set justification for the Column itself. Note entire row containing the Column will be affected
+        :type justification: (str)
+        :param element_justification: All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification: (str)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.UseDictionary = False
@@ -4796,7 +5159,8 @@ class Column(Element):
         """
         Not recommended user call.  Used to add rows of Elements to the Column Element.
 
-        :param *args: List[Element] The list of elements for this row
+        :param *args: The list of elements for this row
+        :type *args: List[Element]
         """
 
         NumRows = len(self.Rows)  # number of existing rows is our row number
@@ -4844,8 +5208,10 @@ class Column(Element):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
-        :param rows: List[List[Element]] The rows of Elements
-        :return: (Column) Used for chaining
+        :param rows: The rows of Elements
+        :type rows: List[List[Element]]
+        :return: Used for chaining
+        :rtype: (Column)
         """
 
         for row in rows:
@@ -4867,8 +5233,10 @@ class Column(Element):
         """
         Not user callable. Used to find the Element at a row, col position within the layout
 
-        :param location: Tuple[int, int] (row, column) position of the element to find in layout
-        :return: (Element) The element found at the location
+        :param location: (row, column) position of the element to find in layout
+        :typeparam location: Tuple[int, int]
+        :return: The element found at the location
+        :rtype: (Element)
         """
 
         (row_num, col_num) = location
@@ -4880,7 +5248,8 @@ class Column(Element):
         """
         Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param visible: (bool) control visibility of element
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -4917,24 +5286,30 @@ class Pane(Element):
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True, metadata=None):
         """
-        :param pane_list: List[Column] Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
-        :param background_color: (str) color of background
-        :param size: Tuple[int, int]  (w,h) w=characters-wide, h=rows-high How much room to reserve for the Pane
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param orientation: (str)  'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
-        :param show_handle: (bool) if True, the handle is drawn that makes it easier to grab and slide
-        :param relief: (enum) relief style. Values are same as other elements that use relief values.
-                    RELIEF_RAISED
-                    RELIEF_SUNKEN
-                    RELIEF_FLAT
-                    RELIEF_RIDGE
-                    RELIEF_GROOVE
-                    RELIEF_SOLID
-        :param handle_size: (int) Size of the handle in pixels
-        :param border_width: (int)  width of border around element in pixels
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param pane_list: Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
+        :type pane_list: List[Column]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param size: (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
+        :type size: Tuple[int, int]
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param orientation: 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
+        :type orientation: (str)
+        :param show_handle: if True, the handle is drawn that makes it easier to grab and slide
+        :type show_handle: (bool)
+        :param relief: relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
+        :type relief: (enum)
+        :param handle_size: Size of the handle in pixels
+        :type handle_size: (int)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.UseDictionary = False
@@ -4963,7 +5338,8 @@ class Pane(Element):
         """
         Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param visible: (bool) control visibility of element
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -4992,19 +5368,7 @@ class TKCalendar(ttk.Frame):
     timedelta = calendar.datetime.timedelta
 
     def __init__(self, master=None, target_element=None, close_when_chosen=True, default_date=(None, None, None), **kw):
-        """WIDGET-SPECIFIC OPTIONS
-
-            locale, firstweekday, year, month, selectbackground,
-            selectforeground
-
-        :param master:
-        :param target_element:
-        :param close_when_chosen:  (Default = True)
-        :param default_date:  (Default = (None))
-        :param None:, None))
-        :param **kw:
-
-        """
+        """WIDGET-SPECIFIC OPTIONS: locale, firstweekday, year, month, selectbackground, selectforeground """
         self._TargetElement = target_element
         default_mon, default_day, default_year = default_date
         # remove custom options from kw before initializating ttk.Frame
@@ -5043,12 +5407,6 @@ class TKCalendar(ttk.Frame):
         self._build_calendar()
 
     def __setitem__(self, item, value):
-        """
-
-        :param item:
-        :param value:
-
-        """
         if item in ('year', 'month'):
             raise AttributeError("attribute '%s' is not writeable" % item)
         elif item == 'selectbackground':
@@ -5059,11 +5417,6 @@ class TKCalendar(ttk.Frame):
             ttk.Frame.__setitem__(self, item, value)
 
     def __getitem__(self, item):
-        """
-
-        :param item:
-
-        """
         if item in ('year', 'month'):
             return getattr(self._date, item)
         elif item == 'selectbackground':
@@ -5115,12 +5468,6 @@ class TKCalendar(ttk.Frame):
                                   anchor='e')
 
     def __setup_selection(self, sel_bg, sel_fg):
-        """
-
-        :param sel_bg:
-        :param sel_fg:
-
-        """
         self._font = tkinter.font.Font()
         self._canvas = canvas = tk.Canvas(self._calendar,
                                           background=sel_bg, borderwidth=0, highlightthickness=0)
@@ -5131,17 +5478,11 @@ class TKCalendar(ttk.Frame):
         self._calendar.bind('<ButtonPress-1>', self._pressed)
 
     def __minsize(self, evt):
-        """
-
-        :param evt:
-
-        """
         width, height = self._calendar.master.geometry().split('x')
         height = height[:height.index('+')]
         self._calendar.master.minsize(width, height)
 
     def _build_calendar(self):
-        """ """
         year, month = self._date.year, self._date.month
 
         # update header text (Month, YEAR)
@@ -5156,12 +5497,7 @@ class TKCalendar(ttk.Frame):
             self._calendar.item(item, values=fmt_week)
 
     def _show_selection(self, text, bbox):
-        """Configure canvas for a new selection.
-
-        :param text:
-        :param bbox:
-
-        """
+        """ Configure canvas for a new selection. """
         x, y, width, height = bbox
 
         textw = self._font.measure(text)
@@ -5175,11 +5511,7 @@ class TKCalendar(ttk.Frame):
     # Callbacks
 
     def _pressed(self, evt):
-        """Clicked somewhere in the calendar.
-
-        :param evt:
-
-        """
+        """ Clicked somewhere in the calendar. """
         x, y, widget = evt.x, evt.y, evt.widget
         item = widget.identify_row(y)
         column = widget.identify_column(x)
@@ -5273,14 +5605,22 @@ class Menu(Element):
     def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None,
                  visible=True, metadata=None):
         """
-        :param menu_definition: List[List[Tuple[str, List[str]]]
-        :param background_color: (str) color of the background
-        :param size: Tuple[int, int]  Not used in the tkinter port
-        :param tearoff: (bool) if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param menu_definition: ???
+        :type menu_definition: List[List[Tuple[str, List[str]]]
+        :param background_color: color of the background
+        :type background_color: (str)
+        :param size: Not used in the tkinter port
+        :type size: Tuple[int, int]
+        :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+        :type tearoff: (bool)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
@@ -5297,7 +5637,8 @@ class Menu(Element):
         """
         Not user callable.  Called when some end-point on the menu (an item) has been clicked.  Send the information back to the application as an event.  Before event can be sent
 
-        :param item_chosen: (str) the text that was clicked on / chosen from the menu
+        :param item_chosen: the text that was clicked on / chosen from the menu
+        :type item_chosen: (str)
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
         self.MenuItemChosen = item_chosen
@@ -5310,8 +5651,10 @@ class Menu(Element):
         """
         Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
-        :param menu_definition: List[List[Tuple[str, List[str]]]
-        :param visible: (bool) control visibility of element
+        :param menu_definition: ???
+        :type menu_definition: List[List[Tuple[str, List[str]]]
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -5438,12 +5781,18 @@ class Table(Element):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param values: List[List[Union[str, int, float]]] A new 2-dimensional table to show
-        :param num_rows: (int) How many rows to display at a time
-        :param visible: (bool) if True then will be visible
-        :param select_rows: List[int] List of rows to select as if user did
-        :param alternating_row_color: (str) the color to make every other row
-        :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)
+        :param values: A new 2-dimensional table to show
+        :type values: List[List[Union[str, int, float]]]
+        :param num_rows: How many rows to display at a time
+        :type num_rows: (int)
+        :param visible: if True then will be visible
+        :type visible: (bool)
+        :param select_rows: List of rows to select as if user did
+        :type select_rows: List[int]
+        :param alternating_row_color: the color to make every other row
+        :type alternating_row_color: (str)
+        :param row_colors: list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color)
+        :type row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]]
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -5544,7 +5893,8 @@ class Table(Element):
         edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
         user when Table was created or Updated.
 
-        :return: List[List[Any]] the current table values (for now what was originally provided up updated)
+        :return: the current table values (for now what was originally provided up updated)
+        :rtype: List[List[Any]]
         """
         return self.Values
 
@@ -5569,37 +5919,60 @@ class Tree(Element):
                  background_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
-
-        :param data: (TreeData) The data represented using a PySimpleGUI provided TreeData class
-        :param headings: List[str] List of individual headings for each column
-        :param visible_column_map: List[bool] Determines if a column should be visible. If left empty, all columns will be shown
-        :param col_widths: List[int] List of column widths so that individual column widths can be controlled
-        :param col0_width:  (int) Size of Column 0 which is where the row numbers will be optionally shown
-        :param def_col_width:  (int) default column width
-        :param auto_size_columns: (bool) if True, the size of a column is determined  using the contents of the column
-        :param max_col_width: (int) the maximum size a column can be
-        :param select_mode: (enum) Use same values as found on Table Element.  Valid values include:
-                            TABLE_SELECT_MODE_NONE
-                            TABLE_SELECT_MODE_BROWSE
-                            TABLE_SELECT_MODE_EXTENDED
-        :param show_expanded: (bool) if True then the tree will be initially shown with all nodes completely expanded
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Tree events happen when row is clicked
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param justification:  (str) 'left', 'right', 'center' are valid choices
-        :param text_color: (str) color of the text
-        :param background_color: (str) color of background
-        :param header_text_color: (str) sets the text color for the header
-        :param header_background_color: (str) sets the background color for the header
-        :param header_font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param num_rows: (int) The number of rows of the table to display at a time
-        :param row_height: (int) height of a single row in pixels
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param data: The data represented using a PySimpleGUI provided TreeData class
+        :type data: (TreeData)
+        :param headings: List of individual headings for each column
+        :type headings: List[str]
+        :param visible_column_map: Determines if a column should be visible. If left empty, all columns will be shown
+        :type visible_column_map: List[bool]
+        :param col_widths: List of column widths so that individual column widths can be controlled
+        :type col_widths: List[int]
+        :param col0_width: Size of Column 0 which is where the row numbers will be optionally shown
+        :type col0_width: (int)
+        :param def_col_width: default column width
+        :type def_col_width: (int)
+        :param auto_size_columns: if True, the size of a column is determined  using the contents of the column
+        :type auto_size_columns: (bool)
+        :param max_col_width: the maximum size a column can be
+        :type max_col_width: (int)
+        :param select_mode: Use same values as found on Table Element.  Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED
+        :type select_mode: (enum)
+        :param show_expanded: if True then the tree will be initially shown with all nodes completely expanded
+        :type show_expanded: (bool)
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Tree events happen when row is clicked
+        :type enable_events: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param justification: 'left', 'right', 'center' are valid choices
+        :type justification: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param header_text_color: sets the text color for the header
+        :type header_text_color: (str)
+        :param header_background_color: sets the background color for the header
+        :type header_background_color: (str)
+        :param header_font: specifies the font family, size, etc
+        :type header_font: Union[str, Tuple[str, int]]
+        :param num_rows: The number of rows of the table to display at a time
+        :type num_rows: (int)
+        :param row_height: height of a single row in pixels
+        :type row_height: (int)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: [Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.TreeData = data
@@ -5638,7 +6011,8 @@ class Tree(Element):
         Not a user function.  Callback function that happens when an item is selected from the tree.  In this
         method, it saves away the reported selections so they can be properly returned.
 
-        :param event: (Any) An event parameter passed in by tkinter.  Not used
+        :param event: An event parameter passed in by tkinter.  Not used
+        :type event: (Any)
         """
 
         selections = self.TKTreeview.selection()
@@ -5658,7 +6032,8 @@ class Tree(Element):
         """
         Not a user function.  Recursive method that inserts tree data into the tkinter treeview widget.
 
-        :param node: (TreeData) The node to insert.  Will insert all nodes from starting point downward, recursively
+        :param node: The node to insert.  Will insert all nodes from starting point downward, recursively
+        :type node: (TreeData)
         """
         if node.key != '':
             if node.icon:
@@ -5687,12 +6062,18 @@ class Tree(Element):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param values: (TreeData) Representation of the tree
-        :param key: (Any) identifies a particular item in tree to update
-        :param value: (Any) sets the node identified by key to a particular value
-        :param text:  (str) sets the node identified by ket to this string
-        :param icon: Union[bytes, str] can be either a base64 icon or a filename for the icon
-        :param visible: (bool) control visibility of element
+        :param values: Representation of the tree
+        :type values: (TreeData)
+        :param key: identifies a particular item in tree to update
+        :type key: (Any)
+        :param value: sets the node identified by key to a particular value
+        :type value: (Any)
+        :param text: sets the node identified by ket to this string
+        :type text: (str)
+        :param icon: can be either a base64 icon or a filename for the icon
+        :type icon: Union[bytes, str]
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -5759,11 +6140,16 @@ class TreeData(object):
 
         def __init__(self, parent, key, text, values, icon=None):
             """
-            :param parent: (TreeData.Node) The parent Node
-            :param key:  (Any) Used to uniquely identify this node
-            :param text: (str) The text that is displayed at this node's location
-            :param values: List[Any] The list of values that are displayed at this node
-            :param icon: Union[str, bytes]
+            :param parent: The parent Node
+            :type parent: (TreeData.Node)
+            :param key: Used to uniquely identify this node
+            :type key: (Any)
+            :param text: The text that is displayed at this node's location
+            :type text: (str)
+            :param values: The list of values that are displayed at this node
+            :type values: List[Any]
+            :param icon: just a icon
+            :type icon: Union[str, bytes]
             """
 
             self.parent = parent  # type: TreeData.Node
@@ -5774,11 +6160,6 @@ class TreeData(object):
             self.icon = icon  # type: Union[str, bytes]
 
         def _Add(self, node):
-            """
-
-            :param node:
-
-            """
             self.children.append(node)
 
     def __init__(self):
@@ -5793,8 +6174,10 @@ class TreeData(object):
         """
         Adds a node to tree dictionary (not user callable)
 
-        :param key:  (str) Uniquely identifies this Node
-        :param node: (TreeData.Node) Node being added
+        :param key: Uniquely identifies this Node
+        :type key: (str)
+        :param node: Node being added
+        :type node: (TreeData.Node)
         """
         self.tree_dict[key] = node
 
@@ -5803,11 +6186,16 @@ class TreeData(object):
         Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
         This is the ONLY user callable method in the TreeData class
 
-        :param parent: (Node) the parent Node
-        :param key:  (Any) Used to uniquely identify this node
-        :param text: (str) The text that is displayed at this node's location
-        :param values: List[Any] The list of values that are displayed at this node
-        :param icon: Union[str, bytes]
+        :param parent: the parent Node
+        :type parent: (Node)
+        :param key: Used to uniquely identify this node
+        :type key: (Any)
+        :param text: The text that is displayed at this node's location
+        :type text: (str)
+        :param values: The list of values that are displayed at this node
+        :type values: List[Any]
+        :param icon: icon
+        :type icon: Union[str, bytes]
         """
 
         node = self.Node(parent, key, text, values, icon)
@@ -5857,10 +6245,14 @@ class ErrorElement(Element):
         """
         Update method for the Error Element, an element that should not be directly used by developer
 
-        :param silent_on_error: (bool) if False, then a Popup window will be shown
-        :param *args: (Any) meant to "soak up" any normal parameters passed in
-        :param **kwargs: (Any) meant to "soak up" any keyword parameters that were passed in
-        :return: (ErrorElement) returns 'self' so call can be chained
+        :param silent_on_error: if False, then a Popup window will be shown
+        :type silent_on_error: (bool)
+        :param *args:  meant to "soak up" any normal parameters passed in
+        :type *args: (Any)
+        :param **kwargs:  meant to "soak up" any keyword parameters that were passed in
+        :type **kwargs: (Any)
+        :return:  returns 'self' so call can be chained
+        :rtype: (ErrorElement)
         """
         if not silent_on_error:
             PopupError('Key error in Update',
@@ -5876,7 +6268,8 @@ class ErrorElement(Element):
         """
         One of the method names found in other Elements. Used here to return an error string in case it's called
 
-        :return: (str) A warning text string.
+        :return:  A warning text string.
+        :rtype: (str)
         """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
@@ -5918,43 +6311,80 @@ class Window:
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, metadata=None):
         """
-        :param title: (str) The title that will be displayed in the Titlebar and on the Taskbar
-        :param layout: List[List[Elements]] The layout for the window. Can also be specified in the Layout method
-        :param default_element_size: Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all elements in this window
-        :param default_button_element_size: Tuple[int, int] (width, height) size in characters (wide) and rows (high) for all Button elements in this window
-        :param auto_size_text: (bool) True if Elements in Window should be sized to exactly fir the length of text
-        :param auto_size_buttons: (bool) True if Buttons in this Window should be sized to exactly fit the text on this.
-        :param location: Tuple[int, int] (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
-        :param size: Tuple[int, int] (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user
-        :param element_padding: Tuple[int, int] or ((int, int),(int,int)) Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param margins:  Tuple[int, int] (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
-        :param button_color: Tuple[str, str] (text color, button color) Default button colors for all buttons in the window
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param progress_bar_color:  Tuple[str, str] (bar color, background color) Sets the default colors for all progress bars in the window
-        :param background_color: (str) color of background
-        :param border_depth: (int) Default border depth (width) for all elements in the window
-        :param auto_close: (bool) If True, the window will automatically close itself
-        :param auto_close_duration: (int) Number of seconds to wait before closing the window
-        :param icon: Union[str, str] Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
-        :param force_toplevel: (bool) If True will cause this window to skip the normal use of a hidden master window
-        :param alpha_channel: (float) Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
-        :param return_keyboard_events: (bool) if True key presses on the keyboard will be returned as Events from Read calls
-        :param use_default_focus: (bool) If True will use the default focus algorithm to set the focus to the "Correct" element
-        :param text_justification: (str) Union ['left', 'right', 'center'] Default text justification for all Text Elements in window
-        :param no_titlebar: (bool) If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar
-        :param grab_anywhere: (bool) If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems
-        :param keep_on_top: (bool) If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm
-        :param resizable:  (bool) If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
-        :param disable_close: (bool) If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users
-        :param disable_minimize:  (bool) if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param transparent_color:  (str) Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
-        :param debugger_enabled: (bool) If True then the internal debugger will be enabled
-        :param finalize:  (bool) If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
-        :param element_justification: (str) All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
-        :param ttk_theme: (str) Set the tkinter ttk "theme" of the window.  Default = DEFAULT_TTK_THEME.  Sets all ttk widgets to this theme as their default
-        :param use_ttk_buttons: (bool) Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param title: The title that will be displayed in the Titlebar and on the Taskbar
+        :type title: (str)
+        :param layout: The layout for the window. Can also be specified in the Layout method
+        :type layout: List[List[Elements]]
+        :param default_element_size: (width, height) size in characters (wide) and rows (high) for all elements in this window
+        :type default_element_size: Tuple[int, int]
+        :param default_button_element_size: (width, height) size in characters (wide) and rows (high) for all Button elements in this window
+        :type default_button_element_size: Tuple[int, int]
+        :param auto_size_text: True if Elements in Window should be sized to exactly fir the length of text
+        :type auto_size_text: (bool)
+        :param auto_size_buttons: True if Buttons in this Window should be sized to exactly fit the text on this.
+        :type auto_size_buttons: (bool)
+        :param location: (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
+        :type location: Tuple[int, int]
+        :param size: (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user
+        :type size: Tuple[int, int]
+        :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type element_padding: Tuple[int, int] or ((int, int),(int,int))
+        :param margins: (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
+        :type margins: Tuple[int, int]
+        :param button_color: (text color, button color) Default button colors for all buttons in the window
+        :type button_color: Tuple[str, str]
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param progress_bar_color: (bar color, background color) Sets the default colors for all progress bars in the window
+        :type progress_bar_color: Tuple[str, str]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param border_depth: Default border depth (width) for all elements in the window
+        :type border_depth: (int)
+        :param auto_close: If True, the window will automatically close itself
+        :type auto_close: (bool)
+        :param auto_close_duration: Number of seconds to wait before closing the window
+        :type auto_close_duration: (int)
+        :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+        :type icon: Union[str, str]
+        :param force_toplevel: If True will cause this window to skip the normal use of a hidden master window
+        :type force_toplevel: (bool)
+        :param alpha_channel: Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
+        :type alpha_channel: (float)
+        :param return_keyboard_events: if True key presses on the keyboard will be returned as Events from Read calls
+        :type return_keyboard_events: (bool)
+        :param use_default_focus: If True will use the default focus algorithm to set the focus to the "Correct" element
+        :type use_default_focus: (bool)
+        :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window
+        :type text_justification: (str)
+        :param no_titlebar: If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar
+        :type no_titlebar: (bool)
+        :param grab_anywhere: If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems
+        :type grab_anywhere: (bool)
+        :param keep_on_top: If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm
+        :type keep_on_top: (bool)
+        :param resizable: If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
+        :type resizable: (bool)
+        :param disable_close: If True, the X button in the top right corner of the window will no work.  Use with caution and always give a way out toyour users
+        :type disable_close: (bool)
+        :param disable_minimize: if True the user won't be able to minimize window.  Good for taking over entire screen and staying that way.
+        :type disable_minimize: (bool)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param transparent_color: Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window.
+        :type transparent_color: (str)
+        :param debugger_enabled: If True then the internal debugger will be enabled
+        :type debugger_enabled: (bool)
+        :param finalize: If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
+        :type finalize: (bool)
+        :param element_justification: All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
+        :type element_justification: (str)
+        :param ttk_theme: Set the tkinter ttk "theme" of the window.  Default = DEFAULT_TTK_THEME.  Sets all ttk widgets to this theme as their default
+        :type ttk_theme: (str)
+        :param use_ttk_buttons: Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
+        :type use_ttk_buttons: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -6159,8 +6589,10 @@ class Window:
         has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
         from history and replace with sending as a parameter to Window.
 
-        :param rows: List[List[Elements]] Your entire layout
-        :return: (Window} self so that you can chain method calls
+        :param rows: Your entire layout
+        :type rows: List[List[Elements]]
+        :return: self so that you can chain method calls
+        :rtype: (Window)
         """
         self.AddRows(rows)
         self._BuildKeyDict()
@@ -6172,8 +6604,11 @@ class Window:
         Adds new rows to an existing container element inside of this window
 
         :param container: (Union[Frame, Column, Tab]) - The container Element the layout will be placed inside of
+        :type container: (Union[Frame, Column, Tab])
         :param rows: (List[List[Element]]) - The layout to be added
+        :type rows: (List[List[Element]])
         :return: (Window) self so could be chained
+        :rtype: (Window)
         """
         column = Column(rows, pad=(0,0))
         if self == container:
@@ -6308,7 +6743,8 @@ class Window:
         """
         Returns the default elementSize
 
-        :return: Tuple[int, int] (width, height) of the default element size
+        :return:  (width, height) of the default element size
+        :rtype: Tuple[int, int]
         """
 
         return self.DefaultElementSize
@@ -6352,10 +6788,14 @@ class Window:
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
             if no other GUI events happen first.
 
-        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
-        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
-        :param close: (bool) if True the window will be closed prior to returning
-        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+        :param timeout: Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :type timeout: (int)
+        :param timeout_key: The value that will be returned from the call if the timer expired
+        :type timeout_key: (Any)
+        :param close: if True the window will be closed prior to returning
+        :type close: (bool)
+        :return:  (event, values)
+        :rtype: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None]
         """
         results = self._read(timeout=timeout, timeout_key=timeout_key)
         if close:
@@ -6372,10 +6812,12 @@ class Window:
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
             if no other GUI events happen first.
 
-        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
-        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
-        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
-                 (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
+        :param timeout: Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :type timeout: (int)
+        :param timeout_key: The value that will be returned from the call if the timer expired
+        :type timeout_key: (Any)
+        :return: (event, values) (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
+        :rtype: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None]
         """
         # ensure called only 1 time through a single read cycle
         if not Window._read_call_from_debugger:
@@ -6526,7 +6968,8 @@ class Window:
         Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
         Lots of action!
 
-        :return: (Window) Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)
+        :return:  Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)
+        :rtype: (Window)
         """
 
         if self.TKrootDestroyed:
@@ -6552,7 +6995,8 @@ class Window:
         Use this call when you want something to appear in your Window immediately (as soon as this function is called).
         Without this call your changes to a Window will not be visible to the user until the next Read call
 
-        :return: (Window) `self` so that method calls can be easily "chained"
+        :return: `self` so that method calls can be easily "chained"
+        :rtype: (Window)
         """
 
         if self.TKrootDestroyed:
@@ -6567,8 +7011,10 @@ class Window:
         """
         Fill in elements that are input fields with data based on a 'values dictionary'
 
-        :param values_dict: (Dict[Any:Any]) {Element key : value} pairs
-        :return: (Window) returns self so can be chained with other methods
+        :param values_dict: {Element key : value} pairs
+        :type values_dict: (Dict[Any:Any])
+        :return: returns self so can be chained with other methods
+        :rtype: (Window)
         """
 
         FillFormWithValues(self, values_dict)
@@ -6595,13 +7041,12 @@ class Window:
         Rememeber that this call will return None if no match is found which may cause your code to crash if not
         checked for.
 
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param silent_on_error: (bool)  If True do not display popup nor print warning of key errors
-
-        :return:  Union[Element, Error Element, None] Return value can be:
-                  * the Element that matches the supplied key if found
-                  * an Error Element if silent_on_error is False
-                  * None if silent_on_error True
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param silent_on_error: If True do not display popup nor print warning of key errors
+        :type silent_on_error: (bool)
+        :return:  Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+        :rtype: Union[Element, Error Element, None]
         """
         try:
             element = self.AllKeysDict[key]
@@ -6691,7 +7136,8 @@ class Window:
         """
         Returns a list of all elements in the window
 
-        :return: List[Element] - List of all elements in the window and container elements in the window
+        :return:  List of all elements in the window and container elements in the window
+        :rtype: List[Element]
         """
         return self._build_element_list()
 
@@ -6710,10 +7156,14 @@ class Window:
         Loop through all Rows and all Container Elements for this window and create a list
         Note that the calls are recursive as all pathes must be walked
 
-        :param top_window: (Window) The highest level of the window
-        :param window: Union[Column, Frame, TabGroup, Pane, Tab] The "sub-window" (container element) to be searched
+        :param top_window: The highest level of the window
+        :type top_window: (Window)
+        :param window: The "sub-window" (container element) to be searched
+        :type window: Union[Column, Frame, TabGroup, Pane, Tab]
         :param elem_list: The element list as it currently stands.... used as part of recursive call
-        :return: List[Element] List of all elements in this sub-window
+        :type elem_list: ???
+        :return:  List of all elements in this sub-window
+        :rtype: List[Element]
         """
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
@@ -6729,7 +7179,8 @@ class Window:
         Saves the values contained in each of the input areas of the form. Basically saves what would be returned
         from a call to Read.  It takes these results and saves them to disk using pickle
 
-        :param filename: (str) Filename to save the values to in pickled form
+        :param filename: Filename to save the values to in pickled form
+        :type filename: (str)
         """
         try:
             event, values = _BuildResults(self, False, self)
@@ -6748,7 +7199,8 @@ class Window:
         """
         Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
 
-        :param filename: (str) Pickle Filename to load
+        :param filename: Pickle Filename to load
+        :type filename: (str)
         """
         try:
             with open(filename, 'rb') as df:
@@ -6760,7 +7212,8 @@ class Window:
         """
         Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
 
-        :return: Union[Tuple[None, None], Tuple[width, height]] Tuple containing width and height of screen in pixels
+        :return: Tuple containing width and height of screen in pixels
+        :rtype: Union[Tuple[None, None], Tuple[width, height]]
         """
         if self.TKrootDestroyed:
             return Window.get_screen_size()
@@ -6771,8 +7224,10 @@ class Window:
     def Move(self, x, y):
         """
         Move the upper left corner of this window to the x,y coordinates provided
-        :param x: (int) x coordinate in pixels
-        :param y: (int) y coordinate in pixels
+        :param x: x coordinate in pixels
+        :type x: (int)
+        :param y: y coordinate in pixels
+        :type y: (int)
         """
         try:
             self.TKroot.geometry("+%s+%s" % (x, y))
@@ -6813,7 +7268,8 @@ class Window:
     def _StartMove(self, event):
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse-down. It marks the beginning of a drag.
-        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
+        :param event: event information passed in by tkinter. Contains x,y position of mouse
+        :type event: (event)
         """
         try:
             self.TKroot.x = event.x
@@ -6826,7 +7282,8 @@ class Window:
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse-up. It marks the ending of a drag.
         Sets the position of the window to this final x,y coordinates
-        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
+        :param event: event information passed in by tkinter. Contains x,y position of mouse
+        :type event: (event)
         """
         try:
             self.TKroot.x = None
@@ -6838,7 +7295,8 @@ class Window:
     def _OnMotion(self, event):
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse motion. It actually moves the window
-        :param event: (event) event information passed in by tkinter. Contains x,y position of mouse
+        :param event: event information passed in by tkinter. Contains x,y position of mouse
+        :type event: (event)
         """
         try:
             deltax = event.x - self.TKroot.x
@@ -6855,7 +7313,8 @@ class Window:
         Window keyboard callback. Called by tkinter.  Will kick user out of the tkinter event loop. Should only be
         called if user has requested window level keyboard events
 
-        :param event: (event) object provided by tkinter that contains the key information
+        :param event: object provided by tkinter that contains the key information
+        :type event: (event)
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -6873,7 +7332,8 @@ class Window:
         Called by tkinter when a mouse wheel event has happened. Only called if keyboard events for the window
         have been enabled
 
-        :param event: (event) object sent in by tkinter that has the wheel direction
+        :param event: object sent in by tkinter that has the wheel direction
+        :type event: (event)
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
@@ -6994,7 +7454,8 @@ class Window:
         """
         Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
 
-        :param alpha: (float) 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
+        :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
+        :type alpha: (float)
         """
         # Change the window's transparency
         # :param alpha: From 0 to 1 with 0 being completely transparent
@@ -7014,7 +7475,8 @@ class Window:
         """
         The setter method for this "property".
         Planning on depricating so that a Set call is always used by users. This is more in line with the SDK
-        :param alpha: (float) 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
+        :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
+        :type alpha: (float)
         """
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
@@ -13934,36 +14396,108 @@ def _refresh_debugger():
 
 import sys
 import site
-import os
 import requests
 import shutil
 import hashlib
 import base64
+from pathlib import Path
 
 
+def _install(files, url=None):
+    """
+    install one file package from GitHub
 
+    Parameters
+    ----------
+    files : list
+        files to be installed
+        the first item (files[0]) will be used as the name of the package
+        optional files should be preceded wit an exclamation mark (!)
 
+    url : str
+        url of the location of the GitHub repository
+        this will start usually with https://raw.githubusercontent.com/ and end with /master/
+        if omitted, the files will be copied from the current directory (no GitHub)
 
-def _upgrade_from_github():
-    files = "PySimpleGUI.py ".split()
-    url = "https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
+    Returns
+    -------
+    info : Info instance
+        with structure contains
+        info.package : name of the package installed
+        info.path : name where the package is installed in the site-packages
+        info.version : version of the package (obtained from <package>.py)
+        info.files_copied : list of copied files
 
+    Notes
+    -----
+    The program automatically makes the required __init__.py file (unless given in files) and
+    <package><version>.dist-info folder with the usual files METADATA, INSTALLER and RECORDS.
+    As the setup.py is not run, the METADATA is very limited, i.e. is contains just name and version.
+
+    If an __init__.py is in files that file will be used.
+    Otherwise, an __init__/py file will be generated. In thet case, if a __version__ = statement
+    is found in the source file, the __version__ will be included in that __init__.py file.
+
+    version 1.0.0
+    (c)2020 Ruud van der Ham - www.salabim.org
+    """
+
+    class Info:
+        version = "?"
+        package = "?"
+        path = "?"
+        files_copied = []
+
+    info = Info()
     Pythonista = sys.platform == "ios"
-    debug = False
-
-    package = files[0].split(".py")[0]
-    contents = {}
-    for file in files:
-        page = requests.get(url + file)
-
-        if page.status_code != 200:
-            raise FileNotFoundError(file + " not found on github. Nothing installed.")
-        contents[file] = page.content
-
+    package = Path(files[0]).stem
     sourcefile = files[0]
 
-    version = "-"
-    for line in contents[sourcefile].decode("utf-8").split("\n"):
+    if Pythonista:
+        cwd = Path.cwd()
+        parts1 = []
+        for part in cwd.parts:
+            parts1.append(part)
+            if part == "Documents":
+                break
+        else:
+            raise EnvironmentError("unable to install")
+
+        sitepackages_path = Path(*parts1) / "site-packages"
+    else:
+        sitepackages_path = Path(site.getsitepackages()[-1])
+
+    path = sitepackages_path / package
+
+    file_contents = {}
+    if url is None:
+        for file in files:
+            optional = file[0] == "!"
+            if optional:
+                file = file[1:]
+            if Path(file).is_file():
+                with open(file, "rb") as f:
+                    file_contents[file] = f.read()
+            else:
+                if not optional:
+                    raise FileNotFoundError(file + " not found. Nothing installed.")
+
+    else:
+        for file in files:
+            optional = file[0] == "!"
+            if optional:
+                file = file[1:]
+
+            page = requests.get(url + file)
+
+            if page.status_code == 200:
+                file_contents[file] = page.content
+            else:
+                if not optional:
+                    raise FileNotFoundError(file + " not found on github. Nothing installed.")
+
+    version = "unknown"
+    for line in file_contents[sourcefile].decode("utf-8").split("\n"):
         line_split = line.split("__version__ =")
         if len(line_split) > 1:
             raw_version = line_split[-1].strip(" '\"")
@@ -13975,76 +14509,85 @@ def _upgrade_from_github():
                     break
             break
 
-    if Pythonista:
-        documents = os.sep + "Documents"
-        sp = os.getcwd().split(documents)
-        if len(sp) != 2:
-            print("unable to install")
-            exit()
-        sitepackages_path = sp[0] + documents + os.sep + "site-packages"
-    else:
-        sitepackages_path = site.getsitepackages()[-1] + os.sep
+    if not path.is_dir():
+        path.mkdir()
 
-    path = os.path.join(site.getsitepackages()[-1], package)
+    for file, contents in file_contents.items():
+        with open(path / file, "wb") as f:
+            f.write(contents)
+        info.files_copied.append(file)
 
-    if not os.path.isdir(path):
-        os.makedirs(path)
-
-    for file in files:
-        with open(os.path.join(path, file), "wb") as f:
-            f.write(contents[file])
-        if debug:
-            print("copy", file)
-
-    if "__init__.py" not in files:
-        with open(os.path.join(path, "__init__.py"), "w") as f:
+    if "__init__.py" not in file_contents:
+        with open(path / "__init__.py", "w") as f:
             f.write("from ." + package + " import *\n")
-            if version is not None:
+            if version != "unknown":
                 f.write("from ." + package + " import __version__\n")
 
     if not Pythonista:
-        for entry in os.listdir(sitepackages_path):
-            if os.path.isdir(sitepackages_path + entry):
-                if entry.startswith(package) and entry.endswith(".dist-info"):
-                    shutil.rmtree(sitepackages_path + entry)
-        path_distinfo = path + "-" + ("unknown" if version is None else version) + ".dist-info"
-        if not os.path.isdir(path_distinfo):
-            os.makedirs(path_distinfo)
-        with open(os.path.join(path_distinfo, "METADATA"), "w") as f:  # make a dummy METADATA file
+        for entry in sitepackages_path.glob("*"):
+            if entry.is_dir():
+                if entry.stem.startswith(package) and entry.suffix == ".dist-info":
+                    shutil.rmtree(entry)
+        path_distinfo = Path(str(path) + "-" + version + ".dist-info")
+        if not path_distinfo.is_dir():
+            path_distinfo.mkdir()
+        with open(path_distinfo / "METADATA", "w") as f:  # make a dummy METADATA file
             f.write("Name: " + package + "\n")
             f.write("Version: " + version + "\n")
 
-        with open(os.path.join(path_distinfo, "INSTALLER"), "w") as f:  # make a dummy METADATA file
+        with open(path_distinfo / "INSTALLER", "w") as f:  # make a dummy METADATA file
             f.write("github\n")
-        with open(os.path.join(path_distinfo, "RECORD"), "w") as f:
+        with open(path_distinfo / "RECORD", "w") as f:
             pass  # just to create the file to be recorded
 
-        with open(os.path.join(path_distinfo, "RECORD"), "w") as record_file:
+        with open(path_distinfo / "RECORD", "w") as record_file:
 
             for p in (path, path_distinfo):
-                for file in os.listdir(p):
-                    full = os.path.join(p, file)
-                    name = full[len(sitepackages_path) :].replace("\\", "/")
-                    record_file.write(name + ",")
-                    if file == "RECORD" and p == path_distinfo:
-                        record_file.write(",")
-                    else:
-                        with open(os.path.join(p, file), "rb") as f:
-                            contents = f.read()
-                            hash = "sha256=" + base64.urlsafe_b64encode(hashlib.sha256(contents).digest()).decode(
-                                "latin1"
-                            ).rstrip("=")
-                            # hash calculation derived from wheel.py in pip
+                for file in p.glob("**/*"):
 
-                            length = str(len(contents))
-                            record_file.write(hash + "," + length)
+                    print(file, file.is_file(), file.is_dir())
+                    if file.is_file():
+                        name = str(file.relative_to(sitepackages_path)).replace("\\", "/")
+                        record_file.write(name + ",")
 
-                    record_file.write("\n")
+                        if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
+                            record_file.write(",")
+                        else:
+                            with open(file, "rb") as f:
+                                file_contents = f.read()
+                                hash = "sha256=" + base64.urlsafe_b64encode(
+                                    hashlib.sha256(file_contents).digest()
+                                ).decode("latin1").rstrip("=")
+                                # hash calculation derived from wheel.py in pip
+
+                                length = str(len(file_contents))
+                                record_file.write(hash + "," + length)
+
+                        record_file.write("\n")
+
+    info.package = package
+    info.version = version
+    info.path = str(path)
+    return info
 
 
-    # print(package + " " + ("?" if version is None else version) + " successfully installed in " + path)
 
-    popup(package, 'SUCCESSFULLY installed', 'Version ' + ("?" if version is None else version), 'Location installed:', path, keep_on_top=True, background_color='red', text_color='white')
+def _upgrade_from_github():
+    info = _install(
+        files="PySimpleGUI.py !init.py".split(), url="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
+    )
+    """
+    info = install(
+        files="salabim.py !calibri.ttf !mplus-1m-regular.ttf !license.txt !DejaVuSansMono.ttf !changelog.txt".split(),
+        url="https://raw.githubusercontent.com/salabim/salabim/master/",
+    )
+    """
+
+    print(info.package + " " + info.version + " successfully installed in " + info.path)
+    print("files copied: ", info.files_copied)
+
+    popup(info.package + " " + info.version + " successfully installed in " + info.path, "files copied: ", info.files_copied,
+          keep_on_top=True, background_color='red', text_color='white')
 
 
 def main():
