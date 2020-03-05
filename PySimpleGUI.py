@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.9  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
+version = __version__ = "4.16.10  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
 
 port = 'PySimpleGUI'
 
@@ -14447,6 +14447,7 @@ def _install(files, url=None):
         package = "?"
         path = "?"
         files_copied = []
+        log = ''
 
     info = Info()
     Pythonista = sys.platform == "ios"
@@ -14544,8 +14545,7 @@ def _install(files, url=None):
 
             for p in (path, path_distinfo):
                 for file in p.glob("**/*"):
-
-                    print(file, file.is_file(), file.is_dir())
+                    info.log += "{} {} {}".format(file, file.is_file(), file.is_dir())
                     if file.is_file():
                         name = str(file.relative_to(sitepackages_path)).replace("\\", "/")
                         record_file.write(name + ",")
@@ -14583,10 +14583,10 @@ def _upgrade_from_github():
     )
     """
 
-    print(info.package + " " + info.version + " successfully installed in " + info.path)
-    print("files copied: ", info.files_copied)
+    # print(info.package + " " + info.version + " successfully installed in " + info.path)
+    # print("files copied: ", info.files_copied)
 
-    popup(info.package + " " + info.version + " successfully installed in " + info.path, "files copied: ", info.files_copied,
+    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.files_copied,
           keep_on_top=True, background_color='red', text_color='white')
 
 
@@ -14688,7 +14688,7 @@ def main():
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Install PySimpleGUI from GitHub', key='-INSTALL-'),
+         Button('Install PySimpleGUI from GitHub', button_color=('white', 'red') ,key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -14740,7 +14740,7 @@ def main():
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
         elif event == '-INSTALL-':
-            if popup_yes_no('This will upgrade your PySimpleGUI pacakge from GitHub.  Are you sure?', title='Are you sure you want to overwrite?', keep_on_top=True) == 'Yes':
+            if popup_yes_no('* WARNING * This will upgrade your PySimpleGUI pacakge from GitHub.  Are you sure?', title='Are you sure you want to overwrite?', keep_on_top=True) == 'Yes':
                 _upgrade_from_github()
             else:
                 popup_quick_message('Cancelled upgrade', background_color='red', text_color='white', keep_on_top=True)
