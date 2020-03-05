@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.7  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print"
+version = __version__ = "4.16.8  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility"
 
 port = 'PySimpleGUI'
 
@@ -478,11 +478,12 @@ class ToolTip:
 
     def __init__(self, widget, text, timeout=DEFAULT_TOOLTIP_TIME):
         """
-
-        :param widget: (widget type varies) The tkinter widget
-        :param text: (str) text for the tooltip. It can inslude \n
-        :param timeout: (int) Time in milliseconds that mouse must remain still before tip is shown
-
+        :param widget: The tkinter widget
+        :type widget: widget type varies
+        :param text: text for the tooltip. It can inslude \n
+        :type text: str
+        :param timeout: Time in milliseconds that mouse must remain still before tip is shown
+        :type timeout: int
         """
         self.widget = widget
         self.text = text
@@ -576,17 +577,28 @@ class Element():
         """
         Element base class. Only used internally.  User will not create an Element object by itself
 
-        :param type: (int) (could be enum) The type of element. These constants all start with "ELEM_TYPE_"
-        :param size: Tuple[int, int]  (width ,height ) w=characters-wide, h=rows-high
-        :param auto_size_text: (bool) True if the Widget should be shrunk to exactly fit the number of chars to show
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc (see docs for exact formats)
-        :param background_color: (str) color of background. Can be in #RRGGBB format or a color name "black"
-        :param text_color: (str) element's text color. Can be in #RRGGBB format or a color name "black"
-        :param key: (Any)  Identifies an Element. Should be UNIQUE to this window.
-        :param pad: (int, int) or ((int,int),(int,int))  Amount of padding to put around element in pixels (left/right, top/bottom)
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element (Default = True)
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param type: The type of element. These constants all start with "ELEM_TYPE_"
+        :type type: (int) (could be enum)
+        :param size: w=characters-wide, h=rows-high
+        :type size: Tuple[int, int]  (width, height)
+        :param auto_size_text: True if the Widget should be shrunk to exactly fit the number of chars to show
+        :type auto_size_text: bool
+        :param font: specifies the font family, size, etc (see docs for exact formats)
+        :type font: Union[str, Tuple[str, int]]
+        :param background_color: color of background. Can be in #RRGGBB format or a color name "black"
+        :type background_color: (str)
+        :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
+        :type text_color: (str)
+        :param key: Identifies an Element. Should be UNIQUE to this window.
+        :type key: (Any)
+        :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+        :type pad: (int, int) or ((int,int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element (Default = True)
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
         self.Size = size
         self.Type = type
@@ -617,6 +629,9 @@ class Element():
         self.metadata = metadata  # type: Any
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
+        self.pad_used    = (0,0)        # the amount of pad used when was inserted into the layout
+
+
 
     def _RightClickMenuCallback(self, event):
         """
@@ -632,7 +647,8 @@ class Element():
         """
         Callback function called when user chooses a menu item from menubar, Button Menu or right click menu
 
-        :param item_chosen: (str) String holding the value chosen.
+        :param item_chosen: String holding the value chosen.
+        :type item_chosen: str
 
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
@@ -649,6 +665,7 @@ class Element():
 
         :param form: the Window object to search
         :return: Union[Button, None] Button Object if a button is found, else None if no button found
+        :rtype: Button Object if a button is found, else None if no button found
         """
         for row in form.Rows:
             for element in row:
@@ -862,7 +879,8 @@ class Element():
         """
         Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
-        :param tooltip_text: (str) the text to show in tooltip.
+        :param tooltip_text: the text to show in tooltip.
+        :type tooltip_text: str
         """
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
@@ -870,7 +888,8 @@ class Element():
         """
         Sets the current focus to be on this element
 
-        :param force: (bool) if True will call focus_force otherwise calls focus_set
+        :param force: if True will call focus_force otherwise calls focus_set
+        :type force: bool
         """
 
         try:
@@ -886,7 +905,8 @@ class Element():
         Changes the size of an element to a specific size.
         It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
 
-        :param size: Tuple[int, int] The size in characters, rows typically. In some cases they are pixels
+        :param size: The size in characters, rows typically. In some cases they are pixels
+        :type size: Tuple[int, int]
         """
         try:
             if size[0] != None:
@@ -905,7 +925,8 @@ class Element():
     def get_size(self):
         """
         Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
-        :return: Tuple[int, int] - Width, Height of the element
+        :return: width and height of the element
+        :rtype: Tuple[int, int]
         """
         try:
             w = self.Widget.winfo_width()
@@ -1002,26 +1023,44 @@ class InputText(Element):
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
                  use_readonly_for_disable=True, right_click_menu=None, visible=True, metadata=None):
         """
-
-        :param default_text: (str) Text initially shown in the input box as a default value(Default value = '')
-        :param size: Tuple[int, int]  (width, height) w=characters-wide, h=rows-high
-        :param disabled: (bool) set disable state for element (Default = False)
-        :param password_char: (char) Password character if this is a password field (Default value = '')
-        :param justification: (str) justification for data display. Valid choices - left, right, center
-        :param background_color: (str) color of background in one of the color formats
-        :param text_color: (str) color of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param change_submits: (bool) * DEPRICATED DO NOT USE! Same as enable_events
-        :param enable_events: (bool) If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
-        :param do_not_clear: (bool) If False then the field will be set to blank after ANY event (button, any event) (Default = True)
-        :param key:  (any)  Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :param focus: (bool) Determines if initial focus should go to this element.
-        :param pad:  (int, int) or ((int, int), (int, int)) Tuple(s). Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
-        :param use_readonly_for_disable: (bool) If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element (Default = True)
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param default_text: Text initially shown in the input box as a default value(Default value = '')
+        :type default_text: (str)
+        :param size: w=characters-wide, h=rows-high
+        :type size: Tuple[int, int]  (width, height)
+        :param disabled: set disable state for element (Default = False)
+        :type disabled: (bool)
+        :param password_char: Password character if this is a password field (Default value = '')
+        :type password_char: (char)
+        :param justification: justification for data display. Valid choices - left, right, center
+        :type justification: (str)
+        :param background_color: color of background in one of the color formats
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param change_submits: * DEPRICATED DO NOT USE! Same as enable_events
+        :type change_submits: (bool)
+        :param enable_events: If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
+        :type enable_events: (bool)
+        :param do_not_clear: If False then the field will be set to blank after ANY event (button, any event) (Default = True)
+        :type do_not_clear: (bool)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (any)
+        :param focus: Determines if initial focus should go to this element.
+        :type focus: (bool)
+        :param pad: . Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
+        :type pad: (int, int) or ((int, int), (int, int)) Tuple(s)
+        :param use_readonly_for_disable: If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
+        :type use_readonly_for_disable: (bool)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element (Default = True)
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
@@ -1042,13 +1081,20 @@ class InputText(Element):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :param value: (str) new text to display as default text in Input field
-        :param disabled: (bool) disable or enable state of the element (sets Entry Widget to readonly or normal)
-        :param select: (bool) if True, then the text will be selected
-        :param visible: (bool) change visibility of element
-        :param text_color: (str) change color of text being typed
-        :param background_color: (str) change color of the background
-        :param move_cursor_to: Union[int, str] Moves the cursor to a particular offset. Defaults to 'end'
+        :param value: new text to display as default text in Input field
+        :type value: (str)
+        :param disabled: disable or enable state of the element (sets Entry Widget to readonly or normal)
+        :type disabled: (bool)
+        :param select: if True, then the text will be selected
+        :type select: (bool)
+        :param visible: change visibility of element
+        :type visible: (bool)
+        :param text_color: change color of text being typed
+        :type text_color: (str)
+        :param background_color: change color of the background
+        :type background_color: (str)
+        :param move_cursor_to: Moves the cursor to a particular offset. Defaults to 'end'
+        :type move_cursor_to: Union[int, str]
         """
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
@@ -1076,13 +1122,14 @@ class InputText(Element):
         if visible is False:
             self.TKEntry.pack_forget()
         elif visible is True:
-            self.TKEntry.pack()
+            self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Get(self):
         """
         Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
-        :return: (str) current value of Input field or '' if error encountered
+        :return: current value of Input field or '' if error encountered
+        :rtype: (str)
         """
         try:
             text = self.TKStringVar.get()
@@ -1114,22 +1161,38 @@ class Combo(Element):
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
-        :param values: List[Any]  values to choose. While displayed as text, the items returned are what the caller supplied, not text
-        :param default_value: (Any) Choice to be displayed as initial value. Must match one of values variable contents
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) True if element should be the same size as the contents
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param change_submits: (bool) DEPRICATED DO NOT USE. Use `enable_events` instead
-        :param enable_events: (bool) Turns on the element specific events. Combo event is when a choice is made
-        :param disabled: (bool) set disable state for element
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text that will appear when mouse hovers over this element
-        :param readonly: (bool) make element readonly (user can't change). True means user cannot change
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param values: values to choose. While displayed as text, the items returned are what the caller supplied, not text
+        :type values: List[Any]
+        :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
+        :type default_value: (Any)
+        :param size: width = characters-wide, height = rows-high
+        :type size: Tuple[int, int] (width, height)
+        :param auto_size_text: True if element should be the same size as the contents
+        :type auto_size_text: (bool)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param change_submits: DEPRICATED DO NOT USE. Use `enable_events` instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Combo event is when a choice is made
+        :type enable_events: (bool)
+        :param disabled: set disable state for element
+        :type disabled: (bool)
+        :para key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param:  Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :para tooltip: text that will appear when mouse hovers over this element
+        :type tooltip: (str)
+        :par readonly: make element readonly (user can't change). True means user cannot change
+        :type readonly: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
         self.Values = values
         self.DefaultValue = default_value
@@ -1146,14 +1209,20 @@ class Combo(Element):
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
         """
         Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value: (Any) change which value is current selected hased on new list of previous list of choices
-        :param values: List[Any] change list of choices
-        :param set_to_index: (int) change selection to a particular choice starting with index = 0
-        :param disabled: (bool) disable or enable state of the element
-        :param readonly:  (bool) if True make element readonly (user cannot change any choices)
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param visible: (bool) control visibility of element
+        :param value: change which value is current selected hased on new list of previous list of choices
+        :type value: (Any)
+        :param values: change list of choices
+        :type values: List[Any]
+        :param set_to_index: change selection to a particular choice starting with index = 0
+        :type set_to_index: (int)
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param readonly: if True make element readonly (user cannot change any choices)
+        :type readonly: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1199,7 +1268,7 @@ class Combo(Element):
         if visible is False:
             self.TKCombo.pack_forget()
         elif visible is True:
-            self.TKCombo.pack()
+            self.TKCombo.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Get(self):
         """
@@ -1244,18 +1313,29 @@ class OptionMenu(Element):
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
-        :param values: List[Any] Values to be displayed
-        :param default_value: (Any) the value to choose by default
-        :param size:  Tuple[int, int] (width, height) size in characters (wide) and rows (high)
-        :param disabled: (bool) control enabled / disabled
-        :param auto_size_text: (bool) True if size of Element should match the contents of the items
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :param values: Values to be displayed
+        :type values: List[Any]
+        :param default_value: the value to choose by default
+        :type default_value: (Any)
+        :param size: size in characters (wide) and rows (high)
+        :type size: Tuple[int, int] (width, height)
+        :param disabled: control enabled / disabled
+        :type disabled: (bool)
+        :param auto_size_text: True if size of Element should match the contents of the items
+        :type auto_size_text: (bool)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
         :param tooltip: (str) text that will appear when mouse hovers over this element
+        :type tooltip: (str)
         :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
         """
         self.Values = values
         self.DefaultValue = default_value
@@ -1270,11 +1350,14 @@ class OptionMenu(Element):
     def Update(self, value=None, values=None, disabled=None, visible=None):
         """
         Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value: (Any) the value to choose by default
-        :param values: List[Any] Values to be displayed
-        :param disabled: (bool) disable or enable state of the element
-        :param visible: (bool) control visibility of element
+        :param value: the value to choose by default
+        :type value: (Any)
+        :param values: Values to be displayed
+        :type values: List[Any]
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1305,7 +1388,7 @@ class OptionMenu(Element):
         if visible is False:
             self.TKOptionMenu.pack_forget()
         elif visible is True:
-            self.TKOptionMenu.pack()
+            self.TKOptionMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -1330,28 +1413,42 @@ class Listbox(Element):
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True, metadata=None):
         """
-        :param values: List[Any] list of values to display. Can be any type including mixed types as long as they have __str__ method
-        :param default_values: List[Any] which values should be initially selected
-        :param select_mode: [enum] Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected.   Valid choices begin with "LISTBOX_SELECT_MODE_" and include:
-            LISTBOX_SELECT_MODE_SINGLE
-            LISTBOX_SELECT_MODE_MULTIPLE
-            LISTBOX_SELECT_MODE_BROWSE
-            LISTBOX_SELECT_MODE_EXTENDED
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Listbox generates events when an item is clicked
-        :param bind_return_key: (bool) If True, then the return key will cause a the Listbox to generate an event
-        :param size: Tuple(int, int) (width, height) width = characters-wide, height = rows-high
-        :param disabled: (bool) set disable state for element
-        :param auto_size_text: (bool) True if element should be the same size as the contents
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
+        :type values: List[Any]
+        :param default_values: which values should be initially selected
+        :type default_values: List[Any]
+        :param select_mode: Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected.   Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED
+        :type select_mode: [enum]
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Listbox generates events when an item is clicked
+        :type enable_events: (bool)
+        :param bind_return_key: If True, then the return key will cause a the Listbox to generate an event
+        :type bind_return_key: (bool)
+        :param size: width = characters-wide, height = rows-high
+        :type size: Tuple(int, int) (width, height)
+        :param disabled: set disable state for element
+        :type disabled: (bool)
+        :param auto_size_text: True if element should be the same size as the contents
+        :type auto_size_text: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
         self.Values = values
         self.DefaultValues = default_values
@@ -1381,13 +1478,18 @@ class Listbox(Element):
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param values: List[Any] new list of choices to be shown to user
-        :param disabled: (bool) disable or enable state of the element
-        :param set_to_index: Union[int, list, tuple] highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted
-        :param scroll_to_index: (int) scroll the listbox so that this index is the first shown
-        :param mode: (str) changes the select mode according to tkinter's listbox widget
-        :param visible: (bool) control visibility of element
+        :param values: new list of choices to be shown to user
+        :type values: List[Any]
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param set_to_index: highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted
+        :type set_to_index: Union[int, list, tuple]
+        :param scroll_to_index: scroll the listbox so that this index is the first shown
+        :type scroll_to_index: (int)
+        :param mode: changes the select mode according to tkinter's listbox widget
+        :type mode: (str)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1421,7 +1523,7 @@ class Listbox(Element):
             if not self.NoScrollbar:
                 self.vsb.pack_forget()
         elif visible is True:
-            self.TKListbox.pack()
+            self.TKListbox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             if not self.NoScrollbar:
                 self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
@@ -1436,7 +1538,8 @@ class Listbox(Element):
         """
         Set listbox highlighted choices
 
-        :param values: List[Any] new values to choose based on previously set values
+        :param values: new values to choose based on previously set values
+        :type values: List[Any]
 
         """
         for index, item in enumerate(self.Values):
@@ -1454,7 +1557,8 @@ class Listbox(Element):
         """
         Returns list of Values provided by the user in the user's format
 
-        :return: List[Any]. List of values. Can be any / mixed types -> []
+        :return: List of values. Can be any / mixed types -> []
+        :rtype: List[Any]
         """
         return self.Values
 
@@ -1462,7 +1566,8 @@ class Listbox(Element):
         """
         Returns the items currently selected as a list of indexes
 
-        :return: List[int] A list of offsets into values that is currently selected
+        :return: A list of offsets into values that is currently selected
+        :rtype: List[int]
         """
         return self.TKListbox.curselection()
 
@@ -1472,7 +1577,8 @@ class Listbox(Element):
         Returns the list of items currently selected in this listbox.  It should be identical
         to the value you would receive when performing a window.read() call.
 
-        :return: List[Any] The list of currently selected items. The actual items are returned, not the indexes
+        :return: The list of currently selected items. The actual items are returned, not the indexes
+        :rtype: List[Any]
         """
         try:
             items = self.TKListbox.curselection()
@@ -1508,23 +1614,38 @@ class Radio(Element):
                  background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True, metadata=None):
         """
-
-        :param text: (str) Text to display next to button
-        :param group_id: (Any) Groups together multiple Radio Buttons. Any type works
-        :param default: (bool). Set to True for the one element of the group you want initially selected
-        :param disabled: (bool) set disable state
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Radio Button events happen when an item is selected
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param text: Text to display next to button
+        :type text: (str)
+        :param group_id: Groups together multiple Radio Buttons. Any type works
+        :type group_id: (Any)
+        :param default: Set to True for the one element of the group you want initially selected
+        :type default: (bool)
+        :param disabled: set disable state
+        :type disabled: (bool)
+        :param size: int] (width, height) width = characters-wide, height = rows-high
+        :type size: Tuple[int,
+        :param auto_size_text: if True will size the element to match the length of the text
+        :type auto_size_text: (bool)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Radio Button events happen when an item is selected
+        :type enable_events: (bool)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.InitialState = default
@@ -1555,10 +1676,12 @@ class Radio(Element):
     def Update(self, value=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value:  (bool) if True change to selected and set others in group to unselected
-        :param disabled: (bool) disable or enable state of the element
-        :param visible: (bool) control visibility of element
+        :param value: if True change to selected and set others in group to unselected
+        :type value: (bool)
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1578,7 +1701,7 @@ class Radio(Element):
         if visible is False:
             self.TKRadio.pack_forget()
         elif visible is True:
-            self.TKRadio.pack()
+            self.TKRadio.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def ResetGroup(self):
         """
@@ -1591,7 +1714,8 @@ class Radio(Element):
         """
         A snapshot of the value of Radio Button -> (bool)
 
-        :return: (bool) True if this radio button is selected
+        :return: True if this radio button is selected
+        :rtype: (bool)
         """
         return self.TKIntVar.get() == self.EncodedRadioValue
 
@@ -1618,21 +1742,36 @@ class Checkbox(Element):
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
                  tooltip=None, visible=True, metadata=None):
         """
-        :param text: (str) Text to display next to checkbox
-        :param default: (bool). Set to True if you want this checkbox initially checked
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Checkbox events happen when an item changes
-        :param disabled: (bool) set disable state
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param text: Text to display next to checkbox
+        :type text: (str)
+        :param default: Set to True if you want this checkbox initially checked
+        :type default: (bool)
+        :param size: (width, height) width = characters-wide, height = rows-high
+        :type size: Tuple[int, int]
+        :param auto_size_text: if True will size the element to match the length of the text
+        :type auto_size_text: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Checkbox events happen when an item changes
+        :type enable_events: (bool)
+        :param disabled: set disable state
+        :type disabled: (bool)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.Text = text
@@ -1666,7 +1805,8 @@ class Checkbox(Element):
         """
         Return the current state of this checkbox
 
-        :return: (bool) Current state of checkbox
+        :return: Current state of checkbox
+        :rtype: (bool)
         """
         return self.TKIntVar.get()
 
@@ -1674,12 +1814,16 @@ class Checkbox(Element):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
-
-        :param value: (bool) if True checks the checkbox, False clears it
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text. Note this also changes the color of the checkmark
-        :param disabled: (bool) disable or enable element
-        :param visible: (bool) control visibility of element
+        :param value: if True checks the checkbox, False clears it
+        :type value: (bool)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text. Note this also changes the color of the checkmark
+        :type text_color: (str)
+        :param disabled: disable or enable element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1722,7 +1866,7 @@ class Checkbox(Element):
         if visible is False:
             self.TKCheckbutton.pack_forget()
         elif visible is True:
-            self.TKCheckbutton.pack()
+            self.TKCheckbutton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     get = Get
     set_focus = Element.SetFocus
@@ -1749,22 +1893,36 @@ class Spin(Element):
                  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None,
                  pad=None, tooltip=None, visible=True, metadata=None):
         """
-
-        :param values: List[Any] List of valid values
-        :param initial_value: (Any) Initial item to show in window. Choose from list of values supplied
-        :param disabled: (bool) set disable state
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Spin events happen when an item changes
-        :param size: Tuple[int, int] (width, height) width = characters-wide, height = rows-high
-        :param auto_size_text: (bool) if True will size the element to match the length of the text
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param background_color: (str) color of background
-        :param text_color: (str) color of the text
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param values: List of valid values
+        :type values: List[Any]
+        :param initial_value: Initial item to show in window. Choose from list of values supplied
+        :type initial_value: (Any)
+        :param disabled: set disable state
+        :type disabled: (bool)
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Spin events happen when an item changes
+        :type enable_events: (bool)
+        :param size: (width, height) width = characters-wide, height = rows-high
+        :type size: Tuple[int, int]
+        :param auto_size_text: if True will size the element to match the length of the text
+        :type auto_size_text: (bool)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :type key: (Any)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.Values = values
@@ -1782,11 +1940,14 @@ class Spin(Element):
     def Update(self, value=None, values=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
-
-        :param value:  (Any) set the current value from list of choices
-        :param values:  List[Any] set available choices
-        :param disabled: (bool) disable or enable state of the element
-        :param visible: (bool) control visibility of element
+        :param value: set the current value from list of choices
+        :type value: (Any)
+        :param values: set available choices
+        :type values: List[Any]
+        :param disabled: disable or enable state of the element
+        :type disabled: (bool)
+        :param visible: control visibility of element
+        :type visible: (bool)
         """
 
         if self.Widget is None:
@@ -1812,7 +1973,7 @@ class Spin(Element):
         if visible is False:
             self.TKSpinBox.pack_forget()
         elif visible is True:
-            self.TKSpinBox.pack()
+            self.TKSpinBox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def _SpinChangedHandler(self, event):
         """
@@ -1943,9 +2104,9 @@ class Multiline(Element):
             self.DefaultText = value
         if self.Autoscroll:
             self.TKText.see(tk.END)
-        if disabled == True:
+        if disabled is True:
             self.TKText.configure(state='disabled')
-        elif disabled == False:
+        elif disabled is False:
             self.TKText.configure(state='normal')
         if background_color is not None:
             self.TKText.configure(background=background_color)
@@ -1956,7 +2117,7 @@ class Multiline(Element):
         if visible is False:
             self.TKText.pack_forget()
         elif visible is True:
-            self.TKText.pack()
+            self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         self.TagCounter += 1  # doesn't matter if the counter is bumped every call
 
     def Get(self):
@@ -1980,7 +2141,7 @@ class Multiline(Element):
         :param text_color: The color of the text
         :param background_color: The background color of the line
         """
-        print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
 
 
 
@@ -2067,7 +2228,7 @@ class Text(Element):
         if visible is False:
             self.TKText.pack_forget()
         elif visible is True:
-            self.TKText.pack()
+            self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -2151,7 +2312,7 @@ class StatusBar(Element):
         if visible is False:
             self.TKText.pack_forget()
         elif visible is True:
-            self.TKText.pack()
+            self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -2371,7 +2532,7 @@ class Output(Element):
         if visible is False:
             self._TKOut.frame.pack_forget()
         elif visible is True:
-            self._TKOut.frame.pack()
+            self._TKOut.frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Get(self):
         """
@@ -2727,7 +2888,7 @@ class Button(Element):
         if visible is False:
             self.TKButton.pack_forget()
         elif visible is True:
-            self.TKButton.pack()
+            self.TKButton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if disabled_button_color != (None, None):
             if not self.UseTtkButtons:
                 self.TKButton['disabledforeground'] = disabled_button_color[0]
@@ -2857,7 +3018,7 @@ class ButtonMenu(Element):
         if visible is False:
             self.TKButtonMenu.pack_forget()
         elif visible is True:
-            self.TKButtonMenu.pack()
+            self.TKButtonMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Click(self):
         """
@@ -2947,7 +3108,7 @@ class ProgressBar(Element):
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
-            self.TKProgressBar.TKProgressBarForReal.pack()
+            self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -3036,7 +3197,7 @@ class Image(Element):
         if visible is False:
             self.tktext_label.pack_forget()
         elif visible is True:
-            self.tktext_label.pack()
+            self.tktext_label.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def UpdateAnimation(self, source, time_between_frames=0):
         """
@@ -3573,7 +3734,7 @@ class Graph(Element):
         if visible is False:
             self._TKCanvas2.pack_forget()
         elif visible is True:
-            self._TKCanvas2.pack()
+            self._TKCanvas2.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Move(self, x_direction, y_direction):
         """
@@ -3926,7 +4087,7 @@ class Frame(Element):
         if visible is False:
             self.TKFrame.pack_forget()
         elif visible is True:
-            self.TKFrame.pack()
+            self.TKFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if value is not None:
             self.TKFrame.config(text=str(value))
 
@@ -4411,7 +4572,7 @@ class Slider(Element):
         if visible is False:
             self.TKScale.pack_forget()
         elif visible is True:
-            self.TKScale.pack()
+            self.TKScale.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if range != (None, None):
             self.TKScale.config(from_=range[0], to_=range[1])
 
@@ -4731,7 +4892,7 @@ class Column(Element):
                 self.ParentPanedWindow.remove(self.TKColFrame)
         elif visible is True:
             if self.TKColFrame:
-                self.TKColFrame.pack()
+                self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
 
@@ -4810,7 +4971,7 @@ class Pane(Element):
         if visible is False:
             self.PanedWindow.pack_forget()
         elif visible is True:
-            self.PanedWindow.pack()
+            self.PanedWindow.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -5320,7 +5481,7 @@ class Table(Element):
         if visible is False:
             self.TKTreeview.pack_forget()
         elif visible is True:
-            self.TKTreeview.pack()
+            self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if num_rows is not None:
             self.TKTreeview.config(height=num_rows)
         if select_rows is not None:
@@ -5576,7 +5737,7 @@ class Tree(Element):
         if visible is False:
             self.TKTreeview.pack_forget()
         elif visible is True:
-            self.TKTreeview.pack()
+            self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         return self
 
     set_focus = Element.SetFocus
@@ -8651,6 +8812,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # Set foreground color
             text_color = element.TextColor
             elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
+            element.pad_used = elementpad    # store the value used back into the element
             # Determine Element size
             element_size = element.Size
             if (element_size == (None, None) and element_type not in (
@@ -10606,7 +10768,7 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
