@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.10 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline, Multiline readonly parm"
+version = __version__ = "0.31.0.11 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline, Multiline readonly parm"
 
 port = 'PySimpleGUIQt'
 
@@ -1040,7 +1040,6 @@ class Multiline(Element):
                 self.QT_TextEdit.setTextColor(text_color_for_value)
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
-            self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
             self.QT_TextEdit.insertPlainText(str(value))
             if self.Autoscroll:
                 self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
@@ -1064,6 +1063,22 @@ class Multiline(Element):
 
     def SetFocus(self):
         self.QT_TextEdit.setFocus()
+
+
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+        """
+        Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+        :param args: List[Any] The arguments to print
+        :param end: (str) The end char to use just like print uses
+        :param sep: (str) The separation character like print uses
+        :param text_color: The color of the text
+        :param background_color: The background color of the line
+        """
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+
+
+
 
     get = Get
     set_focus = SetFocus
@@ -1111,7 +1126,7 @@ class MultilineOutput(Element):
         return
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
         if value is not None and not append:
             self.QT_TextBrowser.setText(str(value))
         elif value is not None and append:
@@ -1126,6 +1141,21 @@ class MultilineOutput(Element):
 
     def Get(self):
         self.QT_TextBrowser.toPlainText()
+
+
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+        """
+        Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+        :param args: List[Any] The arguments to print
+        :param end: (str) The end char to use just like print uses
+        :param sep: (str) The separation character like print uses
+        :param text_color: The color of the text
+        :param background_color: The background color of the line
+        """
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+
+
 
     get = Get
     update = Update
@@ -5151,6 +5181,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     toplevel_win.FocusElement = element.QT_TextEdit
 
                 element.QT_TextEdit.setText(str(default_text))
+                element.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
                 if element.Tooltip:
                     element.QT_TextEdit.setToolTip(element.Tooltip)
                 # qt_row_layout.setContentsMargins(*full_element_pad)
@@ -6295,7 +6326,7 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
