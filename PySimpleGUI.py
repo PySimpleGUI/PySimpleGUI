@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.13  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter"
+version = __version__ = "4.16.14  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib"
 
 port = 'PySimpleGUI'
 
@@ -3376,7 +3376,10 @@ class Image(Element):
         else:
             return
         if image is not None:
-            width, height = size[0] or image.width(), size[1] or image.height()
+            if type(image) is not bytes:
+                width, height = size[0] or image.width(), size[1] or image.height()
+            else:
+                width, height = size
             try:  # sometimes crashes if user closed with X
                 self.tktext_label.configure(image=image, width=width, height=height)
             except:
@@ -14482,11 +14485,13 @@ def _refresh_debugger():
 
 import sys
 import site
-import requests
 import shutil
 import hashlib
 import base64
 from pathlib import Path
+import configparser
+import urllib.request
+import urllib.error
 
 
 def _install(files, url=None):
@@ -14524,7 +14529,15 @@ def _install(files, url=None):
     Otherwise, an __init__/py file will be generated. In thet case, if a __version__ = statement
     is found in the source file, the __version__ will be included in that __init__.py file.
 
-    version 1.0.0
+    Version history
+    ---------------
+    version 1.0.1  2020-03-04
+        now uses urllib instead of requests to avoid non standard libraries
+        installation for Pythonista improved
+
+    version 1.0.0  2020-03-04
+        initial version
+
     (c)2020 Ruud van der Ham - www.salabim.org
     """
 
@@ -14533,55 +14546,40 @@ def _install(files, url=None):
         package = "?"
         path = "?"
         files_copied = []
-        log = ''
 
     info = Info()
     Pythonista = sys.platform == "ios"
+    if not files:
+        raise ValueError('no files specified')
+    if files[0][0] == '!':
+        raise ValueError('first item in files (sourcefile) may not be optional')
     package = Path(files[0]).stem
     sourcefile = files[0]
 
-    if Pythonista:
-        cwd = Path.cwd()
-        parts1 = []
-        for part in cwd.parts:
-            parts1.append(part)
-            if part == "Documents":
-                break
-        else:
-            raise EnvironmentError("unable to install")
-
-        sitepackages_path = Path(*parts1) / "site-packages"
-    else:
-        sitepackages_path = Path(site.getsitepackages()[-1])
-
-    path = sitepackages_path / package
-
     file_contents = {}
-    if url is None:
-        for file in files:
-            optional = file[0] == "!"
-            if optional:
-                file = file[1:]
-            if Path(file).is_file():
+    for file in files:
+        optional = file[0] == "!"
+        if optional:
+            file = file[1:]
+
+        if url:
+            try:
+                with urllib.request.urlopen(url + file) as response:
+                    page = response.read()
+                #                page = requests.get(url + file)
+                file_contents[file] = page
+                exists = True
+            except urllib.error.URLError:
+                exists = False
+
+        else:
+            exists = Path(file).is_file()
+            if exists:
                 with open(file, "rb") as f:
                     file_contents[file] = f.read()
-            else:
-                if not optional:
-                    raise FileNotFoundError(file + " not found. Nothing installed.")
 
-    else:
-        for file in files:
-            optional = file[0] == "!"
-            if optional:
-                file = file[1:]
-
-            page = requests.get(url + file)
-
-            if page.status_code == 200:
-                file_contents[file] = page.content
-            else:
-                if not optional:
-                    raise FileNotFoundError(file + " not found on github. Nothing installed.")
+        if (not exists) and (not optional):
+            raise FileNotFoundError(file + " not found. Nothing installed.")
 
     version = "unknown"
     for line in file_contents[sourcefile].decode("utf-8").split("\n"):
@@ -14596,67 +14594,98 @@ def _install(files, url=None):
                     break
             break
 
-    if not path.is_dir():
-        path.mkdir()
-
-    for file, contents in file_contents.items():
-        with open(path / file, "wb") as f:
-            f.write(contents)
-        info.files_copied.append(file)
-
-    if "__init__.py" not in file_contents:
-        with open(path / "__init__.py", "w") as f:
-            f.write("from ." + package + " import *\n")
-            if version != "unknown":
-                f.write("from ." + package + " import __version__\n")
-
-    if not Pythonista:
-        for entry in sitepackages_path.glob("*"):
-            if entry.is_dir():
-                if entry.stem.startswith(package) and entry.suffix == ".dist-info":
-                    shutil.rmtree(entry)
-        path_distinfo = Path(str(path) + "-" + version + ".dist-info")
-        if not path_distinfo.is_dir():
-            path_distinfo.mkdir()
-        with open(path_distinfo / "METADATA", "w") as f:  # make a dummy METADATA file
-            f.write("Name: " + package + "\n")
-            f.write("Version: " + version + "\n")
-
-        with open(path_distinfo / "INSTALLER", "w") as f:  # make a dummy METADATA file
-            f.write("github\n")
-        with open(path_distinfo / "RECORD", "w") as f:
-            pass  # just to create the file to be recorded
-
-        with open(path_distinfo / "RECORD", "w") as record_file:
-
-            for p in (path, path_distinfo):
-                for file in p.glob("**/*"):
-                    info.log += "{} {} {}".format(file, file.is_file(), file.is_dir())
-                    if file.is_file():
-                        name = str(file.relative_to(sitepackages_path)).replace("\\", "/")
-                        record_file.write(name + ",")
-
-                        if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
-                            record_file.write(",")
-                        else:
-                            with open(file, "rb") as f:
-                                file_contents = f.read()
-                                hash = "sha256=" + base64.urlsafe_b64encode(
-                                    hashlib.sha256(file_contents).digest()
-                                ).decode("latin1").rstrip("=")
-                                # hash calculation derived from wheel.py in pip
-
-                                length = str(len(file_contents))
-                                record_file.write(hash + "," + length)
-
-                        record_file.write("\n")
-
+    info.files_copied = list(file_contents.keys())
     info.package = package
     info.version = version
-    info.path = str(path)
+    paths = []
+
+    file = '__init__.py'
+    if file not in file_contents:
+        file_contents[file] = ("from ." + package + " import *\n").encode()
+        if version != 'unknown':
+            file_contents[file] += ("from ." + package + " import __version__\n").encode()
+
+    if Pythonista:
+        cwd = Path.cwd()
+        parts1 = []
+        for part in cwd.parts:
+            parts1.append(part)
+            if part == "Documents":
+                break
+        else:
+            raise EnvironmentError("unable to install")
+
+        sitepackages_paths = [Path(*parts1) / ("site-packages" + ver) for ver in ("", "-2", "-3")]
+    else:
+        sitepackages_paths = [Path(site.getsitepackages()[-1])]
+
+    for sitepackages_path in sitepackages_paths:
+
+        path = sitepackages_path / package
+        paths.append(str(path))
+
+        if not path.is_dir():
+            path.mkdir()
+
+        for file, contents in file_contents.items():
+            with open(path / file, "wb") as f:
+                f.write(contents)
+
+        if Pythonista:
+            pypi_packages = sitepackages_path / '.pypi_packages'
+            config = configparser.ConfigParser()
+            config.read(pypi_packages)
+            config[package] = {}
+            config[package]['url'] = 'github'
+            config[package]['version'] = version
+            config[package]['summary'] = ''
+            config[package]['files'] = path.as_posix()
+            config[package]['dependency'] = ''
+            with pypi_packages.open('w') as f:
+                config.write(f)
+        else:
+            for entry in sitepackages_path.glob("*"):
+                if entry.is_dir():
+                    if entry.stem.startswith(package) and entry.suffix == ".dist-info":
+                        shutil.rmtree(entry)
+            path_distinfo = Path(str(path) + "-" + version + ".dist-info")
+            if not path_distinfo.is_dir():
+                path_distinfo.mkdir()
+            with open(path_distinfo / "METADATA", "w") as f:  # make a dummy METADATA file
+                f.write("Name: " + package + "\n")
+                f.write("Version: " + version + "\n")
+
+            with open(path_distinfo / "INSTALLER", "w") as f:  # make a dummy METADATA file
+                f.write("github\n")
+            with open(path_distinfo / "RECORD", "w") as f:
+                pass  # just to create the file to be recorded
+
+            with open(path_distinfo / "RECORD", "w") as record_file:
+
+                for p in (path, path_distinfo):
+                    for file in p.glob("**/*"):
+
+                        if file.is_file():
+                            name = file.relative_to(sitepackages_path).as_posix()  # make sure we have slashes
+                            record_file.write(name + ",")
+
+                            if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
+                                record_file.write(",")
+                            else:
+                                with open(file, "rb") as f:
+                                    file_contents = f.read()
+                                    hash = "sha256=" + base64.urlsafe_b64encode(
+                                        hashlib.sha256(file_contents).digest()
+                                    ).decode("latin1").rstrip("=")
+                                    # hash calculation derived from wheel.py in pip
+
+                                    length = str(len(file_contents))
+                                    record_file.write(hash + "," + length)
+
+                            record_file.write("\n")
+
+    info.path = ','.join(paths)
     return info
-
-
 
 def _upgrade_from_github():
     info = _install(
