@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.10  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
+version = __version__ = "4.16.11  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
 
 port = 'PySimpleGUI'
 
@@ -1275,7 +1275,8 @@ class Combo(Element):
         Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
         You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
 
-        :return: Union[Any, None] Returns the value of what is currently chosen
+        :return: Returns the value of what is currently chosen
+        :rtype: Union[Any, None]
         """
         try:
             if self.TKCombo.current() == -1:  # if the current value was not in the original list
@@ -4808,7 +4809,8 @@ class TabGroup(Element):
         Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
         are using this method correctly?
 
-        :return: Union[Any, None] The key of the currently selected tab or the tab's text if it has no key
+        :return:  The key of the currently selected tab or the tab's text if it has no key
+        :rtype: Union[Any, None]
         """
 
         try:
@@ -5057,34 +5059,18 @@ class TkScrollableFrame(tk.Frame):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
 
     def yscroll(self, event):
-        """
-
-        :param event:
-
-        """
         if event.num == 5 or event.delta < 0:
             self.canvas.yview_scroll(1, "unit")
         elif event.num == 4 or event.delta > 0:
             self.canvas.yview_scroll(-1, "unit")
 
     def xscroll(self, event):
-        """
-
-        :param event:
-
-        """
         if event.num == 5 or event.delta < 0:
             self.canvas.xview_scroll(1, "unit")
         elif event.num == 4 or event.delta > 0:
             self.canvas.xview_scroll(-1, "unit")
 
     def bind_mouse_scroll(self, parent, mode):
-        """
-
-        :param parent:
-        :param mode:
-
-        """
         # ~~ Windows only
         parent.bind("<MouseWheel>", mode)
         # ~~ Unix only
@@ -5706,41 +5692,70 @@ class Table(Element):
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
-        :param values: List[List[Union[str, int, float]]]
-        :param headings: List[str] The headings to show on the top line
-        :param visible_column_map: List[bool] One entry for each column. False indicates the column is not shown
-        :param col_widths: List[int] Number of characters that each column will occupy
-        :param def_col_width: (int) Default column width in characters
-        :param auto_size_columns: (bool) if True columns will be sized automatically
-        :param max_col_width: (int) Maximum width for all columns in characters
-        :param select_mode: (enum) Select Mode. Valid values start with "TABLE_SELECT_MODE_".  Valid values are:
-                            TABLE_SELECT_MODE_NONE
-                            TABLE_SELECT_MODE_BROWSE
-                            TABLE_SELECT_MODE_EXTENDED
-        :param display_row_numbers: (bool) if True, the first column of the table will be the row #
-        :param num_rows: (int) The number of rows of the table to display at a time
-        :param row_height: (int) height of a single row in pixels
-        :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param justification:  (str) 'left', 'right', 'center' are valid choices
-        :param text_color: (str) color of the text
-        :param background_color: (str) color of background
-        :param alternating_row_color: (str) if set then every other row will have this color in the background.
-        :param header_text_color: (str) sets the text color for the header
-        :param header_background_color: (str) sets the background color for the header
-        :param header_font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-        :param row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]] list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
-        :param vertical_scroll_only:  (bool) if True only the vertical scrollbar will be visible
-        :param hide_vertical_scroll:  (bool) if True vertical scrollbar will be hidden
-        :param size: Tuple[int, int] DO NOT USE! Use num_rows instead
-        :param change_submits: (bool) DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :param enable_events: (bool) Turns on the element specific events. Table events happen when row is clicked
-        :param bind_return_key: (bool) if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
-        :param pad: (int, int) or ((int, int),(int,int)) Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :param key: (Any) Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :param tooltip: (str) text, that will appear when mouse hovers over the element
-        :param right_click_menu: List[List[Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
-        :param visible: (bool) set visibility state of the element
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :param values: ???
+        :type values: List[List[Union[str, int, float]]]
+        :param headings: The headings to show on the top line
+        :type headings: List[str]
+        :param visible_column_map: One entry for each column. False indicates the column is not shown
+        :type visible_column_map: List[bool]
+        :param col_widths: Number of characters that each column will occupy
+        :type col_widths: List[int]
+        :param def_col_width: Default column width in characters
+        :type def_col_width: (int)
+        :param auto_size_columns: if True columns will be sized automatically
+        :type auto_size_columns: (bool)
+        :param max_col_width: Maximum width for all columns in characters
+        :type max_col_width: (int)
+        :param select_mode: Select Mode. Valid values start with "TABLE_SELECT_MODE_".  Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED
+        :type select_mode: (enum)
+        :param display_row_numbers: if True, the first column of the table will be the row #
+        :type display_row_numbers: (bool)
+        :param num_rows: The number of rows of the table to display at a time
+        :type num_rows: (int)
+        :param row_height: height of a single row in pixels
+        :type row_height: (int)
+        :param font: specifies the font family, size, etc
+        :type font: Union[str, Tuple[str, int]]
+        :param justification: 'left', 'right', 'center' are valid choices
+        :type justification: (str)
+        :param text_color: color of the text
+        :type text_color: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param alternating_row_color: if set then every other row will have this color in the background.
+        :type alternating_row_color: (str)
+        :param header_text_color: sets the text color for the header
+        :type header_text_color: (str)
+        :param header_background_color: sets the background color for the header
+        :type header_background_color: (str)
+        :param header_font: specifies the font family, size, etc
+        :type header_font: Union[str, Tuple[str, int]]
+        :param row_colors: list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
+        :type row_colors: List[Union[Tuple[int, str], Tuple[Int, str, str]]
+        :param vertical_scroll_only: if True only the vertical scrollbar will be visible
+        :type vertical_scroll_only: (bool)
+        :param hide_vertical_scroll: if True vertical scrollbar will be hidden
+        :type hide_vertical_scroll: (bool)
+        :param size: DO NOT USE! Use num_rows instead
+        :type size: Tuple[int, int]
+        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits: (bool)
+        :param enable_events: Turns on the element specific events. Table events happen when row is clicked
+        :type enable_events: (bool)
+        :param bind_return_key: if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
+        :type bind_return_key: (bool)
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int))
+        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :type key: (Any)
+        :param tooltip: text, that will appear when mouse hovers over the element
+        :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
+        :param visible: set visibility state of the element
+        :type visible: (bool)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
 
         self.Values = values
@@ -6692,8 +6707,10 @@ class Window:
         * bytes object
         * BASE64 encoded file held in a variable
 
-        :param icon: (str) Filename or bytes object
-        :param pngbase64: (str) Base64 encoded image
+        :param icon: Filename or bytes object
+        :type icon: (str)
+        :param pngbase64: Base64 encoded image
+        :type pngbase64: (str)
         """
         if type(icon) is bytes or pngbase64 is not None:
             wicon = tkinter.PhotoImage(data=icon if icon is not None else pngbase64)
@@ -7071,7 +7088,8 @@ class Window:
     def FindElementWithFocus(self):
         """
         Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
-        :return: Union[Element, None] An Element if one has been found with focus or None if no element found
+        :return: An Element if one has been found with focus or None if no element found
+        :rtype: Union[Element, None]
         """
         element = _FindElementWithFocusInSubForm(self)
         return element
@@ -7513,7 +7531,8 @@ class Window:
         """
         Get the current location of the window's top left corner
 
-        :return: Tuple[(int), (int)] The x and y location in tuple form (x,y)
+        :return: The x and y location in tuple form (x,y)
+        :rtype: Tuple[(int), (int)]
         """
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
@@ -7522,7 +7541,8 @@ class Window:
         """
         Return the current size of the window in pixels
 
-        :return: Tuple[(int), (int)] the (width, height) of the window
+        :return: (width, height) of the window
+        :rtype: Tuple[(int), (int)]
         """
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
@@ -7533,7 +7553,8 @@ class Window:
         """
         Changes the size of the window, if possible
 
-        :param size: Tuple[int, int] (width, height) of the desired window size
+        :param size: (width, height) of the desired window size
+        :type size: Tuple[int, int]
         """
         try:
             self.TKroot.geometry("%sx%s" % (size[0], size[1]))
@@ -7554,7 +7575,8 @@ class Window:
         """
         Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
-        :param color: (str) Color string that defines the transparent color
+        :param color: Color string that defines the transparent color
+        :type color: (str)
         """
         try:
             self.TKroot.attributes('-transparentcolor', color)
@@ -7602,7 +7624,9 @@ class Window:
         Used to add tkinter events to a Window.
         The tkinter specific data is in the Window's member variable user_bind_event
         :param bind_string: The string tkinter expected in its bind function
+        :type bind_string: (str)
         :param key: The event that will be generated when the tkinter event occurs
+        :type key: Any
         """
         self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
         self.user_bind_dict[bind_string] = key
@@ -7661,8 +7685,10 @@ class Window:
         This is "called" by writing code as thus:
         window['element key'].Update
 
-        :param key: (Any) The key to find
-        :return: Union[Element, None] The element found or None if no element was found
+        :param key: The key to find
+        :type key: (Any)
+        :return: The element found or None if no element was found
+        :rtype: Union[Element, None]
         """
         try:
             return self.FindElement(key)
@@ -7676,9 +7702,8 @@ class Window:
         window() == window.Read()
         window(timeout=50) == window.Read(timeout=50)
 
-        :param args:
-        :param kwargs:
-        :return: Tuple[Any, Dict[Any:Any]] The famous event, values that Read returns.
+        :return: The famous event, values that Read returns.
+        :rtype: Tuple[Any, Dict[Any:Any]]
         """
         return self.Read(*args, **kwargs)
 
@@ -7804,11 +7829,17 @@ class SystemTray:
         """
         SystemTray - create an icon in the system tray
         :param menu: Menu definition
+        :type menu: ???
         :param filename: filename for icon
+        :type filename: ????
         :param data: in-ram image for icon
+        :type data: ???
         :param data_base64: basee-64 data for icon
+        :type data_base64: ???
         :param tooltip: tooltip string
-        :param metadata: (Any) User metadata that can be set to ANYTHING
+        :type tooltip: (str)
+        :param metadata: User metadata that can be set to ANYTHING
+        :type metadata: Any
         """
         self.Menu = menu
         self.TrayIcon = None
@@ -7872,12 +7903,19 @@ class SystemTray:
         """
         Shows a balloon above icon in system tray
         :param title:  Title shown in balloon
+        :type title:
         :param message: Message to be displayed
+        :type message:
         :param filename: Optional icon filename
+        :type filename:
         :param data: Optional in-ram icon
+        :type data:
         :param data_base64: Optional base64 icon
-        :param time: Union[int, Tuple[int, int]] Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration
-        :return: (Any)  The event that happened during the display such as user clicked on message
+        :type data_base64:
+        :param time: Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration
+        :type time: Union[int, Tuple[int, int]]
+        :return:   The event that happened during the display such as user clicked on message
+        :rtype:  (Any)
         """
 
         if isinstance(time, tuple):
@@ -7903,11 +7941,15 @@ class SystemTray:
         """
         Updates the menu, tooltip or icon
         :param menu: menu defintion
+        :type menu: ???
         :param tooltip: string representing tooltip
+        :type tooltip: ???
         :param filename:  icon filename
+        :type filename: ???
         :param data:  icon raw image
+        :type data: ???
         :param data_base64: icon base 64 image
-        :return:
+        :type data_base64: ???
         """
         # Menu
         if menu is not None:
@@ -7932,14 +7974,22 @@ class SystemTray:
         """
         Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
         The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
-        :param title: (str) Text to be shown at the top of the window in a larger font
-        :param message: (str) Text message that makes up the majority of the window
-        :param icon: Union[bytes, str) A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
-        :param display_duration_in_ms: (int) Number of milliseconds to show the window
-        :param fade_in_duration: (int) Number of milliseconds to fade window in and out
-        :param alpha: (float) Alpha channel. 0 - invisible 1 - fully visible
-        :param location: Tuple[int, int] Location on the screen to display the window
+        :param title: Text to be shown at the top of the window in a larger font
+        :type title: (str)
+        :param message: Text message that makes up the majority of the window
+        :type message: (str)
+        :param icon: A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+        :type icon: Union[bytes, str]
+        :param display_duration_in_ms: Number of milliseconds to show the window
+        :type display_duration_in_ms: (int)
+        :param fade_in_duration: Number of milliseconds to fade window in and out
+        :type fade_in_duration: (int)
+        :param alpha: Alpha channel. 0 - invisible 1 - fully visible
+        :type alpha: (float)
+        :param location: Location on the screen to display the window
+        :type location: Tuple[int, int]
         :return: (int) reason for returning
+        :rtype: (int)
         """
 
         messages = message.split('\n')
@@ -8030,8 +8080,11 @@ def Sizer(h_pixels=0, v_pixels=0):
     "Pushes" out the size of whatever it is placed inside of.  This includes Columns, Frames, Tabs and Windows
 
     :param h_pixels: (int) number of horizontal pixels
+    :type h_pixels: (int)
     :param v_pixels: (int) number of vertical pixels
+    :type v_pixels: (int)
     :return: (Column) A column element that has a pad setting set according to parameters
+    :rtype: (Column)
     """
 
     return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
@@ -12887,23 +12940,40 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
-    :param *args: (Any) Variable number of your arguments.  Load up the call with stuff to see!
-    :param title: (str)  Optional title for the window. If none provided, the first arg will be used instead.
-    :param button_color: Tuple[str, str] Color of the buttons shown (text color, button color)
-    :param background_color: (str) Window's background color
-    :param text_color: (str) text color
-    :param button_type: (enum) NOT USER SET!  Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
-    :param auto_close: (bool) If True the window will automatically close
-    :param auto_close_duration:  (int) time in seconds to keep window open before closing it automatically
-    :param custom_text:  Union[Tuple[str, str], str] A string or pair of strings that contain the text to display on the buttons
-    :param non_blocking:  (bool) If True then will immediately return from the function without waiting for the user's input.
-    :param icon: Union[str, bytes] icon to display on the window. Same format as a Window call
-    :param line_width: (int) Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
-    :param font:  Union[str, tuple(font name, size, modifiers) specifies the font family, size, etc
-    :param no_titlebar:  (bool) If True will not show the frame around the window and the titlebar across the top
-    :param grab_anywhere: (bool) If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
-    :param location: Tuple[int, int]  Location on screen to display the top left corner of window. Defaults to window centered on screen
-    :return: Union[str, None] Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :param *args:  Variable number of your arguments.  Load up the call with stuff to see!
+    :type *args: (Any)
+    :param title:   Optional title for the window. If none provided, the first arg will be used instead.
+    :type title: (str)
+    :param button_color: Color of the buttons shown (text color, button color)
+    :type button_color: Tuple[str, str]
+    :param background_color:  Window's background color
+    :type background_color: (str)
+    :param text_color:  text color
+    :type text_color: (str)
+    :param button_type:  NOT USER SET!  Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect.
+    :type button_type: (enum)
+    :param auto_close:  If True the window will automatically close
+    :type auto_close: (bool)
+    :param auto_close_duration:  time in seconds to keep window open before closing it automatically
+    :type auto_close_duration: (int)
+    :param custom_text:  A string or pair of strings that contain the text to display on the buttons
+    :type custom_text: Union[Tuple[str, str], str]
+    :param non_blocking:  If True then will immediately return from the function without waiting for the user's input.
+    :type non_blocking: (bool)
+    :param icon:  icon to display on the window. Same format as a Window call
+    :type icon: Union[str, bytes]
+    :param line_width:  Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
+    :type line_width: (int)
+    :param font:  specifies the font family, size, etc
+    :type font: Union[str, tuple(font name, size, modifiers]
+    :param no_titlebar:  If True will not show the frame around the window and the titlebar across the top
+    :type no_titlebar: (bool)
+    :param grab_anywhere:  If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
+    :type grab_anywhere: (bool)
+    :param location:   Location on screen to display the top left corner of window. Defaults to window centered on screen
+    :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None]
     """
 
     if not args:
@@ -13611,20 +13681,35 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
     :param message: (str) message displayed to user
+    :type message: (str)
     :param title: (str) Window title
+    :type title: (str)
     :param default_text:  (str) default value to put into input area
+    :type default_text: (str)
     :param password_char: (str) character to be shown instead of actually typed characters
-    :param size: Tuple[int, int] (width, height) of the InputText Element
-    :param button_color: Tuple[str, str] Color of the button (text, background)
+    :type password_char: (str)
+    :param size: (width, height) of the InputText Element
+    :type size: Tuple[int, int]
+    :param button_color:  Color of the button (text, background)
+    :type button_color: Tuple[str, str]
     :param background_color: (str) background color of the entire window
+    :type background_color: (str)
     :param text_color: (str) color of the message text
-    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+    :type text_color: (str)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param no_titlebar: (bool) If True no titlebar will be shown
+    :type no_titlebar: (bool)
     :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
+    :type grab_anywhere: (bool)
     :param keep_on_top: (bool) If True the window will remain above all current windows
-    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
-    :return: Union[str, None] Text entered or None if window was closed or cancel button clicked
+    :type keep_on_top: (bool)
+    :param location: (x,y) Location on screen to display the upper left corner of window
+    :type location: Tuple[int, int]
+    :return: Text entered or None if window was closed or cancel button clicked
+    :rtype: Union[str, None]
     """
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
@@ -13706,13 +13791,21 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
     The return code specifies why the call is returning (e.g. did the user click the message to dismiss it)
 
     :param title: (str) Text to be shown at the top of the window in a larger font
+    :type title: (str)
     :param message: (str) Text message that makes up the majority of the window
-    :param icon: Union[bytes, str] A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+    :type message: (str)
+    :param icon: A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window
+    :type icon: Union[bytes, str]
     :param display_duration_in_ms: (int) Number of milliseconds to show the window
+    :type display_duration_in_ms: (int)
     :param fade_in_duration: (int) Number of milliseconds to fade window in and out
+    :type fade_in_duration: (int)
     :param alpha: (float) Alpha channel. 0 - invisible 1 - fully visible
-    :param location: Tuple[int, int] Location on the screen to display the window
-    :return: (int) reason for returning
+    :type alpha: (float)
+    :param location: Location on the screen to display the window
+    :type location: Tuple[int, int]
+    :return: reason for returning
+    :rtype: (int)
     """
 
     if not args:
@@ -13739,6 +13832,8 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
         total_lines += height
 
     message = output
+
+    # def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
     return SystemTray.notify(title=title, message=message, icon=icon, display_duration_in_ms=display_duration_in_ms, fade_in_duration=fade_in_duration, alpha=alpha, location=location)
 
 
@@ -13766,20 +13861,35 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     command is being executed.  Without this mechanism, the GUI appears locked up.
 
     :param command: (str) The command to run
+    :type command: (str) T
     :param args: List[str] List of arguments
-    :param image_source: Union[str, bytes] Either a filename or a base64 string.
+    :type args: List[str]
+    :param image_source: Either a filename or a base64 string.
+    :type image_source: Union[str, bytes]
     :param message: (str) An optional message to be shown with the animation
+    :type message: (str)
     :param background_color: (str) color of background
+    :type background_color: (str)
     :param text_color: (str) color of the text
-    :param font: Union[str, tuple) specifies the font family, size, etc
+    :type text_color: (str)
+    :param font:  specifies the font family, size, etc
+    :type font: Union[str, tuple]
     :param no_titlebar: (bool)  If True then the titlebar and window frame will not be shown
+    :type no_titlebar: (bool)
     :param grab_anywhere: (bool) If True then you can move the window just clicking anywhere on window, hold and drag
+    :type grab_anywhere: (bool)
     :param keep_on_top:  (bool) If True then Window will remain on top of all other windows currently shownn
-    :param location:  (int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
+    :type keep_on_top: (bool)
+    :param location:  (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
+    :type location: (int, int)
     :param alpha_channel: (float) Window transparency 0 = invisible 1 = completely visible. Values between are see through
+    :type alpha_channel: (float)
     :param time_between_frames: (int) Amount of time in milliseconds between each frame
+    :type time_between_frames: (int)
     :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
-    :return: (str) The resulting string output from stdout
+    :type transparent_color: (str)
+    :return: The resulting string output from stdout
+    :rtype: (str)
     """
 
     global __shell_process__
@@ -13833,8 +13943,6 @@ POPOUT_WINDOW_FONT = 'Sans 8'
 
 
 class _Debugger():
-    """ """
-
     debugger = None
 
     #     #                    ######
@@ -13846,7 +13954,6 @@ class _Debugger():
     #     # #    # # #    #    ######  ###### #####   ####   ####   ####  ###### #    #
 
     def __init__(self):
-        """ """
         self.watcher_window = None  # type: Window
         self.popout_window = None  # type: Window
         self.local_choices = {}
@@ -13858,11 +13965,6 @@ class _Debugger():
 
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
-        """
-
-        :param location:
-
-        """
         ChangeLookAndFeel(COLOR_SCHEME)
 
         def InVar(key1):
@@ -13934,12 +14036,6 @@ class _Debugger():
     #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
 
     def _refresh_main_debugger_window(self, mylocals, myglobals):
-        """
-
-        :param mylocals:
-        :param myglobals:
-
-        """
         if not self.watcher_window:  # if there is no window setup, nothing to do
             return False
         event, values = self.watcher_window.Read(timeout=1)
@@ -14077,11 +14173,6 @@ class _Debugger():
     # displays them into a single text box
 
     def _display_all_vars(self, dict):
-        """
-
-        :param dict:
-
-        """
         num_cols = 3
         output_text = ''
         num_lines = 2
@@ -14121,11 +14212,6 @@ class _Debugger():
        #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
-        """
-
-        :param my_locals:
-
-        """
         ChangeLookAndFeel(COLOR_SCHEME)
         num_cols = 3
         output_text = ''
@@ -14316,8 +14402,8 @@ class _Debugger():
 def show_debugger_window(location=(None, None), *args):
     """
     Shows the large main debugger window
-    :param location: Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window
-    :param *args:  Not used
+    :param location:  Locations (x,y) on the screen to place upper left corner of the window
+    :ttype location: Tuple[int, int]
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -14340,8 +14426,8 @@ def show_debugger_popout_window(location=(None, None), *args):
     """
     Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
-    :param location: Tuple[int, int] Locations (x,y) on the screen to place upper left corner of the window
-    :param *args:  Not used
+    :param location:  Locations (x,y) on the screen to place upper left corner of the window
+    :type location: Tuple[int, int]
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -14373,7 +14459,7 @@ def _refresh_debugger():
     Window._read_call_from_debugger = True
     # frame = inspect.currentframe()
     # frame = inspect.currentframe().f_back
-    frame, *others = inspect.stack()[0]
+    frame, *others = inspect.stack()[1]
     try:
         debugger.locals = frame.f_back.f_locals
         debugger.globals = frame.f_back.f_globals
@@ -14593,8 +14679,6 @@ def _upgrade_from_github():
 def main():
     """
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
-
-    :return:
     """
     from random import randint
 
