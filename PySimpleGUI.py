@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.12  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter"
+version = __version__ = "4.16.13  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter"
 
 port = 'PySimpleGUI'
 
@@ -14677,13 +14677,14 @@ def _upgrade_from_github():
 
 
 def _upgrade_gui():
-    if popup_yes_no('* WARNING * This will upgrade your PySimpleGUI pacakge from GitHub.',
+    if popup_yes_no('* WARNING *',
+                    'You are about to upgrade your PySimpleGUI package previously installed via pip to the latest version location on the GitHub server.',
                     'You are running verrsion {}'.format(version[:version.index('\n')]),
-                    '  Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
+                    'Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
                     keep_on_top=True) == 'Yes':
         _upgrade_from_github()
     else:
-        popup_quick_message('Cancelled upgrade\nand exiting', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
+        popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
 
 def main():
@@ -14835,10 +14836,7 @@ def main():
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
         elif event == '-INSTALL-':
-            if popup_yes_no('* WARNING * This will upgrade your PySimpleGUI pacakge from GitHub.  Are you sure?', title='Are you sure you want to overwrite?', keep_on_top=True) == 'Yes':
-                _upgrade_from_github()
-            else:
-                popup_quick_message('Cancelled upgrade', background_color='red', text_color='white', keep_on_top=True)
+            _upgrade_gui()
 
         i += 1
         # _refresh_debugger()
