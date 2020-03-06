@@ -931,6 +931,20 @@ class Multiline(Element):
             super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+        """
+        Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+        :param args: List[Any] The arguments to print
+        :param end: (str) The end char to use just like print uses
+        :param sep: (str) The separation character like print uses
+        :param text_color: The color of the text
+        :param background_color: The background color of the line
+        """
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+
+
+
     update = Update
 
 
@@ -994,6 +1008,22 @@ class MultilineOutput(Element):
                     "id": self.Widget.identifier, "content": self.Widget.get_value(), "autoscroll": 'true' if autoscroll else 'false'})
 
         super().Update(self.Widget, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+        """
+        Print like Python normally prints except route the output to a multline element and also add colors if desired
+
+        :param args: List[Any] The arguments to print
+        :param end: (str) The end char to use just like print uses
+        :param sep: (str) The separation character like print uses
+        :param text_color: The color of the text
+        :param background_color: The background color of the line
+        """
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+
+
+
+
 
     update = Update
 
@@ -1741,8 +1771,8 @@ class Graph(Element):
     def Move(self, x_direction, y_direction):
         # TODO - IT's still not working yet!  I'm trying!!
 
-        self.MoveFigure(self.SvgGroup, x_direction,y_direction)
-        return
+        # self.MoveFigure(self.SvgGroup, x_direction,y_direction)
+        # return
         zero_converted = self._convert_xy_to_canvas_xy(0, 0)
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
@@ -1750,8 +1780,9 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        cur_x = float(self.SvgGroup.attributes['cx'])
-        cur_y = float(self.SvgGroup.attributes['cy'])
+        print(self.SvgGroup.attributes)
+        cur_x = float(self.SvgGroup.attributes['x'])
+        cur_y = float(self.SvgGroup.attributes['y'])
         self.SvgGroup.set_position(cur_x - x_direction,cur_y - y_direction)
         self.SvgGroup.redraw()
 
@@ -1776,9 +1807,17 @@ class Graph(Element):
             print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
             print('Call Window.Finalize() prior to all graph operations')
             return None
-        cur_x = float(figure.attributes['x'])
-        cur_y = float(figure.attributes['y'])
-        figure.set_position(cur_x - x_direction,cur_y - y_direction)
+        print(figure.attributes)
+        try:
+            cur_x = float(figure.attributes['x'])
+            cur_y = float(figure.attributes['y'])
+            figure.set_position(cur_x - x_direction,cur_y - y_direction)
+        except:
+            cur_x1 = float(figure.attributes['x1'])
+            cur_x2 = float(figure.attributes['x2'])
+            cur_y1 = float(figure.attributes['y1'])
+            cur_y2 = float(figure.attributes['y2'])
+            figure.set_coords(cur_x1-x_direction, cur_y1-y_direction, cur_x2-x_direction, cur_y2-x_direction)
         figure.redraw()
 
     def RelocateFigure(self, figure, x, y):
@@ -5600,7 +5639,7 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
