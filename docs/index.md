@@ -11086,7 +11086,7 @@ Parameter Descriptions:
 
 ### set_tooltip
 
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetTooltip('New tip').
 
 ```
 set_tooltip(tooltip_text)
