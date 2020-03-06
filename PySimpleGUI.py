@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.11  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility"
+version = __version__ = "4.16.12  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter"
 
 port = 'PySimpleGUI'
 
@@ -14676,6 +14676,16 @@ def _upgrade_from_github():
           keep_on_top=True, background_color='red', text_color='white')
 
 
+def _upgrade_gui():
+    if popup_yes_no('* WARNING * This will upgrade your PySimpleGUI pacakge from GitHub.',
+                    'You are running verrsion {}'.format(version[:version.index('\n')]),
+                    '  Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
+                    keep_on_top=True) == 'Yes':
+        _upgrade_from_github()
+    else:
+        popup_quick_message('Cancelled upgrade\nand exiting', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
+
+
 def main():
     """
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
@@ -14687,7 +14697,8 @@ def main():
     # theme('dark red')
     # theme('Light Green 6')
     ver = version[:version.index('\n')]
-    popup_notify('Starting up PySimpleGUI Test Harness\n'+ver, f'tcl ver = {tkinter.TclVersion}', f'tkinter version = {tkinter.TkVersion}', f'{sys.version} Python Version', title=ver)
+    print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tkinter.TclVersion),
+          'tkinter version = {}'.format(tkinter.TkVersion), '\nPython Version {}'.format(sys.version))
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
@@ -14884,6 +14895,10 @@ theme(CURRENT_LOOK_AND_FEEL)
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == 'upgrade':
+        _upgrade_gui()
+        exit(69)
+
     main()
     exit(69)
 
