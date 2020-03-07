@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.14  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib"
+version = __version__ = "4.16.15  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib, more docstrings"
 
 port = 'PySimpleGUI'
 
@@ -391,10 +391,14 @@ ENABLE_TK_WINDOWS = False
 def RGB(red, green, blue):
     """
     Given integer values of Red, Green, Blue, return a color string "#RRGGBB"
-    :param red: (int) Red portion from 0 to 255
-    :param green: (int) Green portion from 0 to 255
-    :param  blue: (int) Blue portion from 0 to 255
-    :return: (str) A single RGB String in the format "#RRGGBB" where each pair is a hex number.
+    :param red:  Red portion from 0 to 255
+    :type red: (int)
+    :param green:  Green portion from 0 to 255
+    :type green: (int)
+    :param blue:  Blue portion from 0 to 255
+    :type  blue: (int)
+    :return:  A single RGB String in the format "#RRGGBB" where each pair is a hex number.
+    :rtype: (str)
     """
     red = min(int(red),255) if red > 0 else 0
     blue = min(int(blue),255) if blue > 0 else 0
@@ -997,10 +1001,6 @@ class Element():
                     sg.Text('foo', key='T')
                     Then you can call the Update method for that element by writing:
                     window.FindElement('T')('new text value')
-
-        :param args:
-        :param kwargs:
-        :return:
         """
         return self.Update(*args, **kwargs)
 
@@ -2164,11 +2164,16 @@ class Multiline(Element):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
-        :param args: List[Any] The arguments to print
-        :param end: (str) The end char to use just like print uses
-        :param sep: (str) The separation character like print uses
+        :param args: The arguments to print
+        :type args: List[Any]
+        :param end: The end char to use just like print uses
+        :type end: (str)
+        :param sep: The separation character like print uses
+        :type sep: (str)
         :param text_color: The color of the text
+        :type text_color: (str)
         :param background_color: The background color of the line
+        :type background_color: (str)
         """
         _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
 
@@ -2394,7 +2399,6 @@ class StatusBar(Element):
 # ---------------------------------------------------------------------- #
 
 class TKProgressBar():
-    """ """
 
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_TTK_THEME,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
@@ -2608,7 +2612,6 @@ class Output(Element):
 
     @property
     def TKOut(self):
-        """ """
         if self._TKOut is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
@@ -3501,7 +3504,6 @@ class Image(Element):
 #                           Canvas                                       #
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
-    """ """
 
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
@@ -3536,7 +3538,6 @@ class Canvas(Element):
 
     @property
     def TKCanvas(self):
-        """ """
         if self._TKCanvas is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** window = sg.Window("My Form", layout, finalize=True) ***')
@@ -3637,8 +3638,11 @@ class Graph(Element):
         Not user callable.  Used to convert tkinter Canvas coords into user's coordinates
 
         :param x_in: (int) The x coordinate in canvas coordinates
+        :type x_in: (int)
         :param y_in: (int) The y coordinate in canvas coordinates
-        :return: Union[Tuple[int, int], Tuple[float, float]] The converted USER coordinates
+        :type y_in: (int)
+        :return: The converted USER coordinates
+        :rtype: Union[Tuple[int, int], Tuple[float, float]]
         """
         if None in (x_in, y_in):
             return None, None
@@ -4126,7 +4130,6 @@ class Graph(Element):
 
     @property
     def TKCanvas(self):
-        """ """
         if self._TKCanvas2 is None:
             print('*** Did you forget to call Finalize()? Your code should look something like: ***')
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
@@ -5417,7 +5420,6 @@ class TKCalendar(ttk.Frame):
             return r[item]
 
     def __setup_styles(self):
-        """ """
         # custom ttk styles
         style = ttk.Style(self.master)
         arrow_layout = lambda dir: (
@@ -5427,7 +5429,6 @@ class TKCalendar(ttk.Frame):
         style.layout('R.TButton', arrow_layout('right'))
 
     def __place_widgets(self):
-        """ """
         # header frame and its widgets
         hframe = ttk.Frame(self)
         lbtn = ttk.Button(hframe, style='L.TButton', command=self._prev_month)
@@ -5444,7 +5445,6 @@ class TKCalendar(ttk.Frame):
         self._calendar.pack(in_=self, expand=1, fill='both', side='bottom')
 
     def __config_calendar(self):
-        """ """
         cols = self._cal.formatweekheader(3).split()
         self._calendar['columns'] = cols
         self._calendar.tag_configure('header', background='grey90')
@@ -5562,7 +5562,6 @@ class TKCalendar(ttk.Frame):
 
     @property
     def selection(self):
-        """ """
         if not self._selection:
             return None
 
@@ -5686,7 +5685,6 @@ MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
 #                           Table                                        #
 # ---------------------------------------------------------------------- #
 class Table(Element):
-    """ """
 
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
@@ -6233,8 +6231,10 @@ class TreeData(object):
         """
         Does the magic of converting the TreeData into a nicely formatted string version
 
-        :param node: (TreeData.Node) The node to begin printing the tree
-        :param level: (int) The indentation level for string formatting
+        :param node:  The node to begin printing the tree
+        :type node: (TreeData.Node)
+        :param level: The indentation level for string formatting
+        :type level: (int)
         """
         return '\n'.join(
             [str(node.key) + ' : ' + str(node.text)] +
@@ -6643,8 +6643,10 @@ class Window:
         """
         Deprecated!!  Now your layout your window's rows (layout) and then separately call Read.
 
-        :param rows: (List[List[Element]]) The layout of the window
-        :param non_blocking: (bool) if True the Read call will not block
+        :param rows:  The layout of the window
+        :type rows: List[List[Element]]
+        :param non_blocking:  if True the Read call will not block
+        :type non_blocking: (bool)
         """
         raise DeprecationWarning(
             'LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()\nor window(title, layout).Read()')
@@ -6655,7 +6657,6 @@ class Window:
     def LayoutAndShow(self, rows):
         """
         Deprecated - do not use any longer.  Layout your window and then call Read.  Or can add a Finalize call before the Read
-        :param rows:
         """
         raise DeprecationWarning('LayoutAndShow is no longer supported... ')
 
@@ -7762,7 +7763,6 @@ class Window:
     #     return False
     #
     # def __del__(self):
-    #     """ """
     #     # print('DELETING WINDOW')
     #     for row in self.Rows:
     #         for element in row:
@@ -8099,10 +8099,15 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
                  font=None, pad=None, key=None, metadata=None):
     """
     :param button_text: text in the button (Default value = 'Browse')
-    :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
+    :type button_text: (str)
+    :param target:  target for the button (Default value = (ThisRow, -1))
+    :type target: key or (row,col)
     :param initial_folder:  starting path for folders and files
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type initial_folder: (str)
+    :param tooltip:  text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
     :param button_color: button color (foreground, background)
     :param disabled: set disable state for element (Default = False)
@@ -8131,17 +8136,26 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :param initial_folder:  starting path for folders and files
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param disabled: set disable state for element (Default = False)
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :type disabled: (bool)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
@@ -8162,17 +8176,26 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param initial_folder:  starting path for folders and files
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
@@ -8192,16 +8215,25 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :param initial_folder:  starting path for folders and files
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
@@ -8221,16 +8253,25 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :param initial_folder:  starting path for folders and files
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :param enable_events: Turns on the element specific events.(Default = False)
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
@@ -8245,16 +8286,25 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
 
     :param button_text: text in the button (Default value = 'Save')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param bind_return_key:  (Default = True)
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8268,16 +8318,25 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
 
     :param button_text: text in the button (Default value = 'Submit')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = True)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8292,15 +8351,23 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
 
     :param button_text: text in the button (Default value = 'Open')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = True)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -8315,16 +8382,25 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
 
     :param button_text: text in the button (Default value = 'OK')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = True)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8338,16 +8414,25 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
 
     :param button_text: text in the button (Default value = 'Ok')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = True)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8361,15 +8446,23 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
 
     :param button_text: text in the button (Default value = 'Cancel')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -8384,16 +8477,25 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
 
     :param button_text: text in the button (Default value = 'Quit')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8407,15 +8509,23 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
 
     :param button_text: text in the button (Default value = 'Exit')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -8430,16 +8540,25 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
 
     :param button_text: text in the button (Default value = 'Yes')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = True)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8453,15 +8572,23 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
 
     :param button_text: text in the button (Default value = 'No')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type disabled: (bool)
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
@@ -8476,16 +8603,25 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
 
     :param button_text: text in the button (Default value = 'Help')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param font:  specifies the font family, size, etc
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type font: Union[str, Tuple[str, int]]
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8499,16 +8635,25 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
 
     :param button_text: text in the button (Default value = '')
     :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param font:  specifies the font family, size, etc
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :type font: Union[str, Tuple[str, int]]
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
@@ -8523,22 +8668,32 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  size of button image in pixels
     :param image_subsample:amount to reduce the size of the image
     :param border_width:  width of border around element
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -8554,22 +8709,32 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  size of button image in pixels
     :param image_subsample:amount to reduce the size of the image
     :param border_width:  width of border around element
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -8588,21 +8753,30 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  size of button image in pixels
     :param image_subsample:amount to reduce the size of the image
     :param border_width:  width of border around element
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
@@ -8623,21 +8797,30 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  size of button image in pixels
     :param image_subsample:amount to reduce the size of the image
     :param border_width:  width of border around element
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
 
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename,
@@ -8654,22 +8837,32 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  size of button image in pixels
     :param image_subsample:amount to reduce the size of the image
     :param border_width:  width of border around element
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -8687,28 +8880,37 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param target:
     :param close_when_date_chosen:  (Default = True)
     :param default_date_m_d_y:  (Default = (None))
-    :param None:
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  (Default = (None))
     :param image_subsample:amount to reduce the size of the image
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param border_width:  width of border around element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
     :param locale:
     :param format:
-    :return: (Button)
+    :return: returns a button
+    :rtype: (Button)
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
@@ -8730,23 +8932,33 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     """
 
     :param button_text: text in the button
+    :type button_text: (str)
     :param target:
     :param image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
     :param image_size:  (Default = (None))
     :param image_subsample:amount to reduce the size of the image
-    :param tooltip: (str) text, that will appear when mouse hovers over the element
+    :param tooltip: text, that will appear when mouse hovers over the element
+    :type tooltip: (str)
     :param border_width:  width of border around element
-    :param size:  (w,h) w=characters-wide, h=rows-high (Default = (None))
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
+    :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param disabled: set disable state for element (Default = False)
+    :type disabled: (bool)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
     :param focus: if focus should be set to this
-    :param pad:  Amount of padding to put around element
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
+    :type pad: (int, int) or ((int,int),(int,int))
+    :param key: key for uniquely identify this element (for window.FindElement)
+    :type key: Union[str, int, tuple]
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
@@ -8758,13 +8970,6 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 #####################################  -----  RESULTS   ------ ##################################################
 
 def AddToReturnDictionary(form, element, value):
-    """
-
-    :param form:
-    :param element:
-    :param value:
-
-    """
     form.ReturnValuesDictionary[element.Key] = value
     # if element.Key is None:
     #     form.ReturnValuesDictionary[form.DictionaryKeyCounter] = value
@@ -8775,23 +8980,12 @@ def AddToReturnDictionary(form, element, value):
 
 
 def AddToReturnList(form, value):
-    """
-
-    :param form:
-    :param value:
-
-    """
     form.ReturnValuesList.append(value)
 
 
 # ----------------------------------------------------------------------------#
 # -------  FUNCTION InitializeResults.  Sets up form results matrix  --------#
 def InitializeResults(form):
-    """
-
-    :param form:
-
-    """
     _BuildResults(form, True, form)
     return
 
@@ -8799,11 +8993,6 @@ def InitializeResults(form):
 # =====  Radio Button RadVar encoding and decoding =====#
 # =====  The value is simply the row * 1000 + col  =====#
 def DecodeRadioRowCol(RadValue):
-    """
-
-    :param RadValue:
-
-    """
     container = RadValue // 100000
     row = RadValue // 1000
     col = RadValue % 1000
@@ -8811,13 +9000,6 @@ def DecodeRadioRowCol(RadValue):
 
 
 def EncodeRadioRowCol(container, row, col):
-    """
-
-    :param container:
-    :param row:
-    :param col:
-
-    """
     RadValue = container * 100000 + row * 1000 + col
     return RadValue
 
@@ -8826,13 +9008,6 @@ def EncodeRadioRowCol(container, row, col):
 # format of return values is
 # (Button Pressed, input_values)
 def _BuildResults(form, initialize_only, top_level_form):
-    """
-
-    :param form:
-    :param initialize_only:
-    :param top_level_form:
-
-    """
     # Results for elements are:
     #   TEXT - Nothing
     #   INPUT - Read value from TK
@@ -8849,13 +9024,6 @@ def _BuildResults(form, initialize_only, top_level_form):
 
 
 def _BuildResultsForSubform(form, initialize_only, top_level_form):
-    """
-
-    :param form:
-    :param initialize_only:
-    :param top_level_form:
-
-    """
     button_pressed_text = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -9071,8 +9239,10 @@ def FillFormWithValues(window, values_dict):
     """
     Fills a window with values provided in a values dictionary { element_key : new_value }
 
-    :param window: (Window) The window object to fill
-    :param values_dict: (Dict[Any:Any]) A dictionary with element keys as key and value is values parm for Update call
+    :param window:  The window object to fill
+    :type window: (Window)
+    :param values_dict:  A dictionary with element keys as key and value is values parm for Update call
+    :type values_dict: (Dict[Any:Any])
     """
 
     for element_key in values_dict:
@@ -9087,7 +9257,9 @@ def _FindElementWithFocusInSubForm(form):
     Searches through a "sub-form" (can be a window or container) for the current element with focus
 
     :param form: a Window, Column, Frame, or TabGroup (container elements)
-    :return: Union[Element, None]
+    :type form: container elements
+    :return: Element
+    :rtyp0e: Union[Element, None]
     """
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
@@ -9134,9 +9306,9 @@ if sys.version_info[0] >= 3:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
         """
         Only to be used internally. Not user callable
-        :param top_menu:
-        :param sub_menu_info:
-        :param element:
+        :param top_menu: ???
+        :param sub_menu_info: ???
+        :param element: ???
         :param is_sub_menu:  (Default = False)
         :param skip:  (Default = False)
 
@@ -9195,9 +9367,9 @@ else:
     def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
         """
 
-        :param top_menu:
-        :param sub_menu_info:
-        :param element:
+        :param top_menu: ???
+        :param sub_menu_info: ???
+        :param element: ???
         :param is_sub_menu:  (Default = False)
         :param skip:  (Default = False)
 
@@ -9278,22 +9450,22 @@ else:
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     """
 
-    :param form: (Window)
-    :param containing_frame:
-    :param toplevel_form: (Window)
+    :param form: a window class
+    :type form: (Window)
+    :param containing_frame: ???
+    :type containing_frame: ???
+    :param toplevel_form: ???
+    :type toplevel_form: (Window)
 
     """
 
     def _char_width_in_pixels(font):
-        """ """
         return tkinter.font.Font(font=font).measure('A')  # single character width
 
     def _char_height_in_pixels(font):
-        """ """
         return tkinter.font.Font(font=font).metrics('linespace')
 
     def _string_width_in_pixels(font, string):
-        """ """
         return tkinter.font.Font(font=font).measure(string)  # single character width
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
@@ -10926,12 +11098,6 @@ def StartupTK(my_flex_form):
 # Helper function for determining how to wrap text   #
 # ===================================================#
 def _GetNumLinesNeeded(text, max_line_width):
-    """
-
-    :param text:
-    :param max_line_width:
-
-    """
     if max_line_width == 0:
         return 1
     lines = text.split('\n')
@@ -10976,7 +11142,6 @@ METER_STOPPED = False
 
 
 class QuickMeter(object):
-    """ """
     active_meters = {}
     exit_reasons = {}
 
@@ -10985,17 +11150,27 @@ class QuickMeter(object):
         """
 
         :param title: text to display in eleemnt
+        :type title: (str)
         :param current_value: current value
+        :type current_value: (int)
         :param max_value: max value of QuickMeter
+        :type max_value: (int)
         :param key:  Used with window.FindElement and with return values to uniquely identify this element
+        :type key: Union[str, int, tuple]
         :param *args: stuff to output
-        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')
-        :param bar_color:  ???????????????????????????????????
+        :type *args: (Any)
+        :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
+        :type orientation: (str)
+        :param bar_color:  color of a bar line
+        :type bar_color: str
         :param button_color: button color (foreground, background)
-        :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+        :type button_color: Tuple[str, str]
+        :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+        :type size: Tuple[int, int]
         :param border_width:  width of border around element
-        :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-
+        :type border_width: (int)
+        :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+        :type grab_anywhere: (bool)
         """
         self.start_time = datetime.datetime.utcnow()
         self.key = key
@@ -11012,11 +11187,6 @@ class QuickMeter(object):
         self.window = self.BuildWindow(*args)
 
     def BuildWindow(self, *args):
-        """
-
-        :param *args:
-
-        """
         layout = []
         if self.orientation.lower().startswith('h'):
             col = []
@@ -11042,13 +11212,7 @@ class QuickMeter(object):
         return self.window
 
     def UpdateMeter(self, current_value, max_value, *args):  ### support for *args when updating
-        """
 
-        :param current_value:
-        :param max_value:
-        :param *args:
-
-        """
         self.current_value = current_value
         self.max_value = max_value
         self.window.Element('_PROG_').UpdateBar(self.current_value, self.max_value)
@@ -11065,7 +11229,6 @@ class QuickMeter(object):
         return METER_OK
 
     def ComputeProgressStats(self):
-        """ """
         utc = datetime.datetime.utcnow()
         time_delta = utc - self.start_time
         total_seconds = time_delta.total_seconds()
@@ -11097,20 +11260,30 @@ class QuickMeter(object):
 def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
     """
-
-    :param title: text to display
-    :param current_value: current progressbar value
-    :param max_value: max value of progressbar
+    :param title: text to display in eleemnt
+    :type title: (str)
+    :param current_value: current value
+    :type current_value: (int)
+    :param max_value: max value of QuickMeter
+    :type max_value: (int)
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :param *args: stuff to output.
-    :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')(Default value = 'v')
-    :param bar_color:
+    :type key: Union[str, int, tuple]
+    :param *args: stuff to output
+    :type *args: (Any)
+    :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
+    :type orientation: (str)
+    :param bar_color:  color of a bar line
+    :type bar_color: str
     :param button_color: button color (foreground, background)
-    :param size:  Tuple[int, int] (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+    :type button_color: Tuple[str, str]
+    :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
+    :type size: Tuple[int, int]
     :param border_width:  width of border around element
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :return: (bool) True if updated successfully. False if user closed the meter with the X or Cancel button
-
+    :type border_width: (int)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :return: True if updated successfully. False if user closed the meter with the X or Cancel button
+    :rtype: (bool)
     """
     if key not in QuickMeter.active_meters:
         meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color,
@@ -11142,11 +11315,6 @@ def OneLineProgressMeterCancel(key):
 # input is #RRGGBB
 # output is #RRGGBB
 def GetComplimentaryHex(color):
-    """
-
-    :param color:
-
-    """
     # strip the # from the beginning
     color = color[1:]
     # convert the string into hex
@@ -11162,21 +11330,31 @@ def GetComplimentaryHex(color):
 # ========================  EasyPrint           =====#
 # ===================================================#
 class _DebugWin():
-    """ """
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
                  grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
         """
 
-        :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
-        :param location:  (Default = (None))
+        :param size:  (w,h) w=characters-wide, h=rows-high
+        :type size: Tuple[int, int]
+        :param location:  Location of upper left corner of the window
+        :type location: Tuple[int, int]
         :param font:  specifies the font family, size, etc
-        :param no_titlebar:  (Default = False)
-        :param no_button:  (Default = False)
-        :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-        :param location: Location on screen to display
-        :param do_not_reroute_stdout:  (Default = True)
+        :type font: Union[str, Tuple[str, int]]
+        :param no_titlebar: If True no titlebar will be shown
+        :type no_titlebar: (bool)
+
+        :param no_button: show button
+        :type no_button: (bool)
+
+        :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+        :type grab_anywhere: (bool)
+
+        :param location:  Location of upper left corner of the window
+        :type location: Tuple[int, int]
+        :param do_not_reroute_stdout: ??? (Default = True)
+        :type do_not_reroute_stdout: (bool)
 
         """
         # Show a form that's a running counter
@@ -11204,13 +11382,6 @@ class _DebugWin():
         return
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None):
-        """
-
-        :param *args:
-        :param end:
-        :param sep:
-
-        """
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
@@ -11236,7 +11407,6 @@ class _DebugWin():
             print(*args, sep=sepchar, end=endchar)
 
     def Close(self):
-        """ """
         if self.window.XFound:             # increment the number of open windows to get around a bug with debug windows
             Window._IncrementOpenCount()
         self.window.Close()
@@ -11244,26 +11414,40 @@ class _DebugWin():
 
 
 def PrintClose():
-    """ """
     EasyPrintClose()
 
 
 def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None):
     """
-
-    :param *args:
-    :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
-    :param end:
-    :param sep:
-    :param location:  (Default = (None))
+    :param *args: stuff to output
+    :type *args: (Any)
+    :param size: (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
+    :param sep: end character
+    :type end: (str)
+    :param sep: separator character
+    :type sep: (str)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param no_button:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param do_not_reroute_stdout:  (Default = True)
-
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param no_button: don't show button
+    :type no_button: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param background_color: color of background
+    :type background_color: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
+    :param do_not_reroute_stdout: do not reroute stdout
+    :type do_not_reroute_stdout: (bool)
     """
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
@@ -11277,7 +11461,6 @@ eprint = EasyPrint
 
 
 def EasyPrintClose():
-    """ """
     if _DebugWin.debug_window is not None:
         _DebugWin.debug_window.Close()
         _DebugWin.debug_window = None
@@ -11290,12 +11473,18 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
-    :param multiline_element: (Multiline) The multiline element to be output to
-    :param args: List[Any] The arguments to print
-    :param end: (str) The end char to use just like print uses
-    :param sep: (str) The separation character like print uses
-    :param text_color: The color of the text
+    :param multiline_element:  The multiline element to be output to
+    :type multiline_element: (Multiline)
+    :param args:  The arguments to print
+    :type args: List[Any]
+    :param end:  The end char to use just like print uses
+    :type end: (str)
+    :param sep:  The separation character like print uses
+    :type sep: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
     :param background_color: The background color of the line
+    :type background_color: (str)
     """
     sepchar = sep if sep is not None else ' '
     endchar = end if end is not None else '\n'
@@ -11336,43 +11525,73 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
                window_location=(None, None), error_button_color=(None, None), tooltip_time=None, use_ttk_buttons=None, ttk_theme=None):
     """
-
-    :param icon: filename of icon used for taskbar and title bar
-    :param button_color: button color (foreground, background)
-    :param element_size: Tuple[int, int] element size (width, height) in characters
-    :param button_element_size: Tuple[int, int]
-    :param margins: tkinter margins around outsize (Default = (None))
-    :param element_padding:  (Default = (None))
-    :param auto_size_text: True if size should fit the text length
-    :param auto_size_buttons:
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
+    :param button_color: Color of the button (text, background)
+    :type button_color: Tuple[str, str]
+    :param element_size: element size (width, height) in characters
+    :type element_size: Tuple[int, int]
+    :param button_element_size: Size of button
+    :type button_element_size: Tuple[int, int]
+    :param margins: (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
+    :type margins: Tuple[int, int]
+    :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
+    :type element_padding: Tuple[int, int] or ((int, int),(int,int))
+    :param auto_size_text: True if the Widget should be shrunk to exactly fit the number of chars to show
+    :type auto_size_text: bool
+    :param auto_size_buttons: True if Buttons in this Window should be sized to exactly fit the text on this.
+    :type auto_size_buttons: (bool)
     :param font:  specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
     :param border_width:  width of border around element
-    :param slider_border_width:
-    :param slider_relief:
-    :param slider_orientation:
-    :param autoclose_time:
-    :param message_box_line_width:
-    :param progress_meter_border_depth:
-    :param progress_meter_style:
+    :type border_width: (int)
+    :param slider_border_width: ???
+    :type slider_border_width: ???
+    :param slider_relief: ???
+    :type slider_relief: ???
+    :param slider_orientation: ???
+    :type slider_orientation: ???
+    :param autoclose_time: ???
+    :type autoclose_time: ???
+    :param message_box_line_width: ???
+    :type message_box_line_width: ???
+    :param progress_meter_border_depth: ???
+    :type progress_meter_border_depth: ???
+
+    :param progress_meter_style:  You can no longer set a progress bar style. All ttk styles must be the same for the window
+    :type progress_meter_style: ---
+
     :param progress_meter_relief:
     :param progress_meter_color:
-    :param progress_meter_size: Tuple[int, int]
-    :param text_justification:
+    :param progress_meter_size:
+    :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window
+    :type text_justification: (str)
     :param background_color: color of background
-    :param element_background_color:
-    :param text_element_background_color:
+    :type background_color: (str)
+    :param element_background_color: element background color
+    :type element_background_color: (str)
+    :param text_element_background_color: text element background color
+    :type text_element_background_color: (str)
     :param input_elements_background_color:
     :param input_text_color:
     :param scrollbar_color:
     :param text_color: color of the text
-    :param element_text_color:
-    :param debug_win_size:  Tuple[int, int] (Default = (None))
+    :type text_color: (str)
+    :param element_text_color: ???
+    :type element_text_color: ???
+    :param debug_win_size:  (Default = (None))
+    :type debug_win_size:  Tuple[int, int]
     :param window_location:  (Default = (None))
+    :type window_location: ???
     :param error_button_color:  (Default = (None))
+    :type error_button_color: ???
     :param tooltip_time:  time in milliseconds to wait before showing a tooltip. Default is 400ms
-    :param use_ttk_buttons: (bool) if True will cause all buttons to be ttk buttons
+    :type tooltip_time: (int)
+    :param use_ttk_buttons: if True will cause all buttons to be ttk buttons
+    :type use_ttk_buttons: (bool)
     :param ttk_theme:  (str) Theme to use with ttk widgets.  Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
-
+    :type ttk_theme:  (str)
+    ==============
     """
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
@@ -12725,8 +12944,10 @@ def ChangeLookAndFeel(index, force=False):
     The number will vary for each pair. There are more DarkGrey entries than there are LightYellow for example.
     Default = The default settings (only button color is different than system default)
     Default1 = The full system default including the button (everything's gray... how sad... don't be all gray... please....)
-    :param index: (str) the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")
-    :param force: (bool) no longer used
+    :param index:  the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy")
+    :type index: (str)
+    :param force:  no longer used
+    :type force: (bool)
     """
 
     global CURRENT_LOOK_AND_FEEL
@@ -12909,9 +13130,12 @@ def ObjToStringSingleObj(obj):
 def ObjToString(obj, extra='    '):
     """
     Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-    :param obj: (Any) The object to display
+    :param obj: The object to display
+    :type obj: (Any)
     :param extra:  (Default value = '    ')
-    returns (str) Formatted output of the object's values
+    :type extra: (str)
+    :return:  Formatted output of the object's values
+    :rtype: (str)
     """
     if obj is None:
         return 'None'
@@ -13076,16 +13300,26 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
 
-    :param *args: (Any) Variable number of items to display
-    :param title: (str) Title to display in the window.
-    :param button_color: Tuple[str, str] button color (foreground, background)
-    :param yes_no: (bool) If True, displays Yes and No buttons instead of Ok
-    :param auto_close:  (bool) if True window will close itself
-    :param auto_close_duration: Union[int, float] Older versions only accept int. Time in seconds until window will close
-    :param size: Tuple[int, int] (w,h) w=characters-wide, h=rows-high
-    :param location: Tuple[int, int] Location on the screen to place the upper left corner of the window
-    :param non_blocking: (bool) if True the call will immediately return rather than waiting on user input
-    :return: Union[str, None, TIMEOUT_KEY] Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_color:  button color (foreground, background)
+    :type button_color: Tuple[str, str]
+    :param yes_no:  If True, displays Yes and No buttons instead of Ok
+    :type yes_no: (bool)
+    :param auto_close:   if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param size:  (w,h) w=characters-wide, h=rows-high
+    :type size: Tuple[int, int]
+    :param location:  Location on the screen to place the upper left corner of the window
+    :type location: Tuple[int, int]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
     if not args: return
     width, height = size
@@ -13141,29 +13375,39 @@ sprint = ScrolledTextBox
 
 
 # --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+def PopupNoButtons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                    no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
     """Show a Popup but without any buttons
 
-    :param *args:
-    :param title:
-    :param button_color: button color (foreground, background)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking:  If True then will immediately return from the function without waiting for the user's input. (Default = False)
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
-
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True, than can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, button_color=None, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -13179,23 +13423,36 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     """
     Show Popup window and immediately return (does not block)
 
-    :param *args:
-    :param title:
-    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
+    :type button_type: (enum)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = True)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
-
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -13215,23 +13472,36 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     """
     Show Popup box that doesn't block and closes itself
 
-    :param *args:
-    :param title:
-    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
+    :type button_type: (enum)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = True)
-    :param auto_close_duration:  (Default value = 2)
-    :param non_blocking:  (Default = True)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
-    :param location:
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
 
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
@@ -13250,22 +13520,36 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
-    :param *args:
-    :param title:
-    :param button_type:  (Default value = POPUP_BUTTONS_NO_BUTTONS)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
+    :type button_type: (enum)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = True)
-    :param auto_close_duration:  (Default value = 2)
-    :param non_blocking:  (Default = True)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = True)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -13282,22 +13566,36 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
-    :param *args:
-    :param title:
-    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
+    :type button_type: (enum)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param grab_anywhere:  (Default = True)
-    :param location: Location on screen to display
-    :param location:
-
+    :type font: Union[str, Tuple[str, int]]
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -13319,22 +13617,40 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
                    location=(None, None)):
     """Popup that closes itself after some time period
 
-    :param *args:
-    :param title:
-    :param button_type:  (Default value = POPUP_BUTTONS_OK)
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
+    :type button_type: (enum)
+
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = True)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
 
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
@@ -13354,21 +13670,36 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     """
     Popup with colored button and 'Error' as button text
 
-    :param *args:
-    :param title:
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:  (Default = (None))
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
@@ -13385,22 +13716,36 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     """
     Display Popup with "cancelled" button text
 
-    :param *args:
-    :param title:
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
-
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
                  text_color=text_color,
@@ -13416,21 +13761,36 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     """
     Display Popup with OK button only
 
-    :param *args:
-    :param title:
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :param location:
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
@@ -13445,21 +13805,38 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     """
     Display popup with OK and Cancel buttons
 
-    :param *args:
-    :param title:
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :return: Union["OK", "Cancel", None]
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
+    :return: clicked button
+    :rtype: Union["OK", "Cancel", None]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color,
                  text_color=text_color,
@@ -13475,21 +13852,38 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     """
     Display Popup with Yes and No buttons
 
-    :param *args:
-    :param title:
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
     :param button_color: button color (foreground, background)
+    :type button_color: Tuple[str, str]
     :param background_color: color of background
+    :type background_color: (str)
     :param text_color: color of the text
-    :param auto_close:  (Default = False)
-    :param auto_close_duration:
-    :param non_blocking:  (Default = False)
-    :param icon: Icon to display
+    :type text_color: (str)
+    :param auto_close:  if True window will close itself
+    :type auto_close:  (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: Union[int, float]
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
     :param line_width: Width of lines in characters
+    :type line_width: (int)
     :param font:  specifies the font family, size, etc
-    :param no_titlebar:  (Default = False)
-    :param grab_anywhere: If True can grab anywhere to move the window (Default = False)
-    :param location: Location on screen to display
-    :return: Union["Yes", "No", None]
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
+    :return: clicked button
+    :rtype: Union["Yes", "No", None]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
                  text_color=text_color,
@@ -13511,22 +13905,38 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
 
-    :param message: (str) message displayed to user
-    :param title: (str) Window title
-    :param default_path: (str) path to display to user as starting point (filled into the input field)
-    :param no_window:  (bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
-    :param size: Tuple[int, int] (width, height) of the InputText Element
-    :param button_color: Tuple[str, str] Color of the button (text, background)
-    :param background_color: (str) background color of the entire window
-    :param text_color: (str) color of the message text
-    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-    :param no_titlebar: (bool) If True no titlebar will be shown
-    :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
-    :param keep_on_top: (bool) If True the window will remain above all current windows
-    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
-    :param initial_folder: (str) location in filesystem to begin browsing
-    :return: Union[str, None]  string representing the path chosen, None if cancelled or window closed with X
+    :param message:  message displayed to user
+    :type message: (str)
+    :param title:  Window title
+    :type title: (str)
+    :param default_path: path to display to user as starting point (filled into the input field)
+    :type default_path: (str)
+    :param no_window:  if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
+    :type no_window: (bool)
+    :param size: (width, height) of the InputText Element
+    :type size: Tuple[int, int]
+    :param button_color:  button color (foreground, background)
+    :type button_color: Tuple[str, str]
+    :param background_color: color of background
+    :type background_color: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
+    :param initial_folder:  location in filesystem to begin browsing
+    :type initial_folder: (str)
+    :return: string representing the path chosen, None if cancelled or window closed with X
+    :rtype: Union[str, None]
     """
 
     # global _my_windows
@@ -13586,26 +13996,46 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
 
-    :param message: (str) message displayed to user
-    :param title: (str) Window title
-    :param default_path: (str) path to display to user as starting point (filled into the input field)
-    :param default_extension: (str) If no extension entered by user, add this to filename (only used in saveas dialogs)
-    :param save_as:  (bool) if True, the "save as" dialog is shown which will verify before overwriting
-    :param multiple_files:  (bool) if True, then allows multiple files to be selected that are returned with ';' between each filename
-    :param file_types:  Tuple[Tuple[str,str]] List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)
-    :param no_window:  (bool) if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
-    :param size: Tuple[int, int] (width, height) of the InputText Element
-    :param button_color: Tuple[str, str] Color of the button (text, background)
-    :param background_color: (str) background color of the entire window
-    :param text_color: (str) color of the message text
-    :param icon: Union[bytes, str] filename or base64 string to be used for the window's icon
-    :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
-    :param no_titlebar: (bool) If True no titlebar will be shown
-    :param grab_anywhere: (bool) If True can click and drag anywhere in the window to move the window
-    :param keep_on_top: (bool) If True the window will remain above all current windows
-    :param location: Tuyple[int, int] (x,y) Location on screen to display the upper left corner of window
-    :param initial_folder: (str) location in filesystem to begin browsing
-    :return: Union[str, None]  string representing the file(s) chosen, None if cancelled or window closed with X
+    :param message:  message displayed to user
+    :type message: (str)
+    :param title:  Window title
+    :type title: (str)
+    :param default_path: path to display to user as starting point (filled into the input field)
+    :type default_path: (str)
+    :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
+    :type default_extension: (str)
+    :param save_as: if True, the "save as" dialog is shown which will verify before overwriting
+    :type save_as: (bool)
+    :param multiple_files:  if True, then allows multiple files to be selected that are returned with ';' between each filename
+    :type multiple_files: (bool)
+    :param file_types: List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)
+    :type file_types:  Tuple[Tuple[str,str]]
+    :param no_window:  if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
+    :type no_window:  (bool)
+    :param size: (width, height) of the InputText Element
+    :type size: Tuple[int, int]
+    :param button_color: Color of the button (text, background)
+    :type button_color: Tuple[str, str]
+    :param background_color: background color of the entire window
+    :type background_color: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: Union[bytes, str]
+    :param font: specifies the font family, size, etc
+    :type font: Union[str, Tuple[str, int]]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top:  If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location:  Location of upper left corner of the window
+    :type location: Tuple[int, int]
+    :param initial_folder:  location in filesystem to begin browsing
+    :type initial_folder: (str)
+    :return: string representing the file(s) chosen, None if cancelled or window closed with X
+    :rtype: Union[str, None]
     """
 
     if no_window:
@@ -13743,18 +14173,30 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
      event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
      loop.
 
-    :param image_source: Union[str, bytes] Either a filename or a base64 string.
-    :param message: (str) An optional message to be shown with the animation
-    :param background_color: (str) color of background
-    :param text_color: (str) color of the text
-    :param font: Union[str, tuple) specifies the font family, size, etc
-    :param no_titlebar: (bool)  If True then the titlebar and window frame will not be shown
-    :param grab_anywhere: (bool) If True then you can move the window just clicking anywhere on window, hold and drag
-    :param keep_on_top:  (bool) If True then Window will remain on top of all other windows currently shownn
-    :param location:  (int, int) (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
-    :param alpha_channel: (float) Window transparency 0 = invisible 1 = completely visible. Values between are see through
-    :param time_between_frames: (int) Amount of time in milliseconds between each frame
-    :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
+    :param image_source:  Either a filename or a base64 string.
+    :type image_source: Union[str, bytes]
+    :param message:  An optional message to be shown with the animation
+    :type message: (str)
+    :param background_color: color of background
+    :type background_color: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
+    :param font:  specifies the font family, size, etc
+    :type font: Union[str, tuple]
+    :param no_titlebar:   If True then the titlebar and window frame will not be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere:  If True then you can move the window just clicking anywhere on window, hold and drag
+    :type grab_anywhere: (bool)
+    :param keep_on_top:   If True then Window will remain on top of all other windows currently shownn
+    :type keep_on_top:  (bool)
+    :param location:   (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
+    :type location:  (int, int)
+    :param alpha_channel:  Window transparency 0 = invisible 1 = completely visible. Values between are see through
+    :type alpha_channel: (float)
+    :param time_between_frames:  Amount of time in milliseconds between each frame
+    :type time_between_frames: (int)
+    :param transparent_color:  This color will be completely see-through in your window. Can even click through
+    :type transparent_color: (str)
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
@@ -13864,32 +14306,32 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     command is being executed.  Without this mechanism, the GUI appears locked up.
 
     :param command: (str) The command to run
-    :type command: (str) T
+    :type command: (str)
     :param args: List[str] List of arguments
     :type args: List[str]
     :param image_source: Either a filename or a base64 string.
     :type image_source: Union[str, bytes]
-    :param message: (str) An optional message to be shown with the animation
+    :param message:  An optional message to be shown with the animation
     :type message: (str)
     :param background_color: (str) color of background
     :type background_color: (str)
-    :param text_color: (str) color of the text
+    :param text_color:  color of the text
     :type text_color: (str)
     :param font:  specifies the font family, size, etc
     :type font: Union[str, tuple]
-    :param no_titlebar: (bool)  If True then the titlebar and window frame will not be shown
+    :param no_titlebar: If True then the titlebar and window frame will not be shown
     :type no_titlebar: (bool)
-    :param grab_anywhere: (bool) If True then you can move the window just clicking anywhere on window, hold and drag
+    :param grab_anywhere: If True then you can move the window just clicking anywhere on window, hold and drag
     :type grab_anywhere: (bool)
-    :param keep_on_top:  (bool) If True then Window will remain on top of all other windows currently shownn
+    :param keep_on_top:  If True then Window will remain on top of all other windows currently shownn
     :type keep_on_top: (bool)
     :param location:  (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
     :type location: (int, int)
-    :param alpha_channel: (float) Window transparency 0 = invisible 1 = completely visible. Values between are see through
+    :param alpha_channel:  Window transparency 0 = invisible 1 = completely visible. Values between are see through
     :type alpha_channel: (float)
-    :param time_between_frames: (int) Amount of time in milliseconds between each frame
+    :param time_between_frames: Amount of time in milliseconds between each frame
     :type time_between_frames: (int)
-    :param transparent_color: (str) This color will be completely see-through in your window. Can even click through
+    :param transparent_color: This color will be completely see-through in your window. Can even click through
     :type transparent_color: (str)
     :return: The resulting string output from stdout
     :rtype: (str)
@@ -13971,11 +14413,6 @@ class _Debugger():
         ChangeLookAndFeel(COLOR_SCHEME)
 
         def InVar(key1):
-            """
-
-            :param key1:
-
-            """
             row1 = [T('    '),
                     I(key=key1, size=(WIDTH_VARIABLES, 1)),
                     T('', key=key1 + 'CHANGED_', size=(WIDTH_RESULTS, 1)), B('Detail', key=key1 + 'DETAIL_'),
@@ -14368,7 +14805,6 @@ class _Debugger():
      ## ##  # #    # #####   ####  #    #
 
     def _refresh_floating_window(self):
-        """ """
         if not self.popout_window:
             return
         for key in self.popout_choices:
