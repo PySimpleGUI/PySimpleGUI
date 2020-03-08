@@ -1038,6 +1038,94 @@ Table and Tree header colors, expanded Graph methods
 * Test Harness sets incorrect look and feel on purpose so a random one is chosen
 
 
+## 4.14.0 PySimpleGUI 23-Dec-2019
+
+THEMES!
+
+* theme is replacing change_look_and_feel. The old calls will still be usable however
+* LOTS of new theme functions.  Search for "theme_" to find them in this documentation.  There's a section discussing themes too
+* "Dark Blue 3" is the default theme now.  All windows will be colored using this theme unless the user sets another one
+* Removed the code that forced Macs to use gray
+* New element.set_cursor - can now set a cursor for any of the elements.  Pass in a cursor string and cursor will appear when mouse over widget
+* Combo - enable setting to any value, not just those in the list
+* Combo - changed how initial value is set
+* Can change the font on tabs by setting font parameter in TabGroup
+* Table heading font now defaults correctly
+* Tree heading font now defaults correctly
+* Renamed DebugWin to _DebugWin to discourage use
+
+
+## 4.15.0 PySimpleGUI 08-Jan-2020
+
+Dynamic Window Layouts!  Extend your layouts with `Window.extend_layout`
+Lots of fixes
+
+* Window.extend_layout
+* Graph.change_coordinates - realtime change of coordinate systems for the Graph element
+* theme_text_element_background_color - new function to expose this setting
+* Radio & Checkbox colors changed to be ligher/darker than background
+* Progress bar - allow updates of value > max value
+* Output element does deletes now so that cleanup works. Can use in multiple windows as a result
+* DrawArc (draw_arc) - New width / line width parameter
+* RGB does more error checking, converts types
+* More descriptive errors for find element	
+* popup_error used interally now sets keep on top
+* Element Re-use wording changed so that it's clear the element is the problem not the layout when re-use detected
+* Window.Close (Window.close) - fix for not immediately seeing the window disappear on Linux when clicking "X"
+* Window.BringToFront (bring_to_front) - on Windows needed to use topmost to bring window to front insteade of lift
+* Multiline Scrollbar - removed the scrollbar color. It doesn't work on Windows so keeping consistent
+* Changed how Debug Windows are created.  Uses finalize now instead of the read non-blocking
+* Fix for Debug Window being closed by X causing main window to also close
+* Changed all "black" and "white" in the Look and Feel table to #000000 and #FFFFFF
+* Added new color processing functions for internal use (hsl and hsv related)
+* popup - extended the automatic wrapping capabilities to messages containing \n
+* Test harness uses a nicer colors for event, value print outs.
+* _timeit decorator for timing functions
+
+
+
+## 4.15.1 PySimpleGUI 09-Jan-2020
+
+Quick patch to remove change to popup
+
+## 4.15.2 PySimpleGUI 15-Jan-2020
+
+Quick patch to remove f-string for 3.5 compat.
+
+
+## 4.16.0 PySimpleGUI 08-Jan-2020
+
+The "LONG time coming" release.  System Tray, Read with close + loads more changes
+Note - there is a known problem with the built-in debugger created when the new read with close was added
+
+* System Tray - Simulates the System Tray feature currently in PySimpleGUIWx and PySimpleGUIQt. All calls are the same. The icon is located just above the system tray (bottom right corner)
+* Window.read - NEW close parameter will close the window for you after the read completes. Can make a single line window using this
+* Window.element_list - Returns a list of all elements in the window
+* Element.unbind - can remove a previously created binding
+* Element.set_size - retries using "length" if "height" setting fails
+* Listbox.update - select_mode parameter added
+* Listbox.update - no longer selects the first entry when all values are changed
+* Listbox.get - new. use to get the current values.  Will be the same as the read return dictionary
+* Checkbox.update - added ability to change background and text colors.  Uses the same combuted checkbox background color (may remove)
+* Multiline.update - fix for when no value is specified
+* Multiline - Check for None when creating. Ignores None rather than converting to string
+* Text.update - added changing value to string. Assumed caller was passing in string previously.
+* Text Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Input Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* StatusBar Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Image Element - can specify no image when creating.  Previously gave a warning and required filename = '' to indicate nothing set
+* Table Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Tree Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Graph.draw_point - changed to using 1/2 the size rather than size. Set width = 0 so no outline will be drawn
+* Graph.draw_polygon - new drawing method!  Can now draw polygons that fill
+* Layout error checking and reporting added for - Frame, Tab, TabGroup, Column, Window
+* Menu - Ability to set the font for the menu items
+* Debug window - fix for problem closing using the "Quit" button
+* print_to_element - print-like call that can be used to output to a Multiline element as if it is an Output element
+
+
+
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.

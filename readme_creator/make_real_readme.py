@@ -1,11 +1,9 @@
 from inspect import getmembers, isfunction, isclass, getsource, signature, _empty, isdatadescriptor
 from datetime import datetime
-import PySimpleGUIlib
-import click
-import logging
-import json
-import re
-import os
+import PySimpleGUIlib, click, textwrap, logging, json, re, os
+
+from collections import namedtuple
+triplet = namedtuple('triplet', 'name value atype'.split(' '))
 
 ########################################################
 #     _                       _       _                #
@@ -18,18 +16,9 @@ import os
 #                      |_|                             #
 ########################################################
 TAB_char = '    '
-TABLE_TEMPLATE='''
-                    Parameter Descriptions:
-
-                        |Name|Meaning|
-                        |---|---|
-                        {md_table}
-                        {md_return}
-                        
-                        '''
 TABLE_ROW_TEMPLATE = '|{name}|{desc}|'
-TABLE_RETURN_TEMPLATE = '|||\n| **return** | {return_guy} |'
-TABLE_Only_table_RETURN_TEMPLATE = '''|Name|Meaning|\n|---|---|\n| **return** | $ |''' # $ - is the part for return value
+TABLE_RETURN_TEMPLATE = '|||\n|| **return** | {} |'
+TABLE_Only_table_RETURN_TEMPLATE = '''|Type|Name|Meaning|\n|---|---|---|\n|<type>| **return** | $ |''' # $ - is the part for return value
 
 ##############################################################################
 #                    _                         _                             #
@@ -89,67 +78,20 @@ CLASS
     }
 """
 
-def get_params_part(code: str, versbose=True) -> dict:
-    """
-    Find ":param " part in given "doc string".
-
-    from __doc__ to {
-        'parameter' :  'desctiption',
-        'parameter2' : 'desctiption2',
-        'parameter3' : 'desctiption3',
-    }
-    """
-    code = code.strip()
-    
-    # if doc_string is empty
-    if code == None or code == '' or ':param' not in code:
-        return {}
-    elif ':return' in code: # strip ':return:'
-        new_code = code[:code.index(':return:')]
-        
-        regg_ = re.compile(r':return[\d\D]*?:param', flags=re.MULTILINE)
-        if len(list(regg_.finditer(new_code))) > 0:
-            if versbose:
-                print(f'warning-> ":return" MUST BY AT THE END. FIX IT NOW in "{code}"!!!\nBut i will try to parse it...')
-            code = re.sub(regg_, r':param', code)
-        else:
-            code = new_code
-
-    try:
-        only_params = code[code.index(':param'):]  # get_only_params_string(code)
-    except Exception as e:
-        if versbose:
-            print(f'SORRY, fail at parsing that stuff in "{code}"')
-        return {}
-
-    # making dict
-    param_lines = only_params.split(':param ')
-    param_lines = [re.sub(r'[ ]{2,}', ' ', i.strip(' ').strip('\t').replace('\n', '  '), flags=re.MULTILINE)
-                   for i in param_lines if i.strip()]  # filter empty lines
-
-    args_kwargs_pairs = {}
-    for i in param_lines:
-
-        cols = i.split(':')
-        param_name, els = cols[0], '\n'.join(
-            [j.strip() for j in ':'.join(cols[1:]).split('\n')])
-        # param_name, els = cols[0],  ' '.join([j.strip() for j in ':'.join(cols).split('\n')]) # can be this:
-
-        param_name, els = param_name.strip(), els.strip()
-        args_kwargs_pairs[param_name] = els
-
-    return args_kwargs_pairs
-
-
 def get_return_part(code: str, line_break=None) -> str:
     """ Find ":return:" part in given "doc string"."""
     if not line_break:
-        line_break = ' <br> '
+        # line_break = ' <br> '
+        line_break = ''
 
     if ':return:' not in code:
         return ''
 
-    return code[code.index(':return:')+len(':return:'):].strip().replace('\n', line_break)
+
+    only_return = code[code.index(':return:')+len(':return:'):].strip().replace('\n', line_break)
+    if ':rtype' in only_return:
+        only_return = only_return.split(':rtype')[0]
+    return only_return
 
 
 def special_cases(function_name, function_obj, sig, doc_string, line_break=None):
@@ -274,8 +216,14 @@ def get_doc_desc(doc, original_obj):
 def is_propery(func):
     return isdatadescriptor(func) and not isfunction(func)
 
-def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is_method=False, line_break=None, insert_md_section_for__class_methods=False):
-    """ Convert "function + __doc__" tp "method call + params table" in MARKDOWN """
+def get_sig_table_parts(function_obj, function_name, doc_string,
+                    logger=None, is_method=False, line_break=None,
+                    insert_md_section_for__class_methods=False):
+    """
+        Convert python object "function + __doc__"
+            to
+            "method call + params table"    in MARKDOWN
+    """
     doc_string = doc_string.strip()
     # qpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqpqp
     # 0   0            Making INIT_CALL          0   0 #
@@ -287,32 +235,29 @@ def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is
     except Exception as e:
         if logger: logger.error(f'PROBLEM WITH "{function_obj}" "{function_name}":\nit\'s signature is BS. Ok, I will just return \'\' for \'signature\' and \'param_table\'\nOR BETTER - delete it from the 2_readme.md.\n======')
         return '', ''
+
+
     if not is_propery(function_obj):
         for key in sig:
             val = sig[key].default
-            if 'self' == str(key):
-                continue
-            if val == _empty:        rows.append(key)
-            elif val == None:        rows.append(f'{key}=None')
-            elif type(val) is int:   rows.append(f'{key}={val}')
-            elif type(val) is str:   rows.append(f'{key}="{val}"')
-            elif type(val) is tuple: rows.append(f'{key}={val}')
-            elif type(val) is bool:  rows.append(f'{key}={val}')
-            elif type(val) is bytes: rows.append(f'{key}=...')
+            if 'self' == str(key): continue
+            elif key == 'args': rows.append('args=*<1 or N object>')
+            elif val == _empty:                 rows.append(key)
+            elif val == None:                   rows.append(f'{key}=None')
+            elif type(val) in (int, float):     rows.append(f'{key}={val}')
+            elif type(val) is str:              rows.append(f'{key}="{val}"')
+            elif type(val) is tuple:            rows.append(f'{key}={val}')
+            elif type(val) is bool:             rows.append(f'{key}={val}')
+            elif type(val) is bytes:            rows.append(f'{key}=...')
             else:
                 raise Exception(f'IDK this type -> {key, val}')
 
 
     sig_content = f',\n{TAB_char}'.join(rows) if len(rows) > 2 else f', '.join(rows) if rows else ''
-    # # # make 2 line signature into 1-line
-    # # # sig_content = f',\n{TAB_char}'.join(rows)
-    # # # if sig_content.count('\n') < 3: sig_content = re.sub(r'\n[ \t]{,8}', ' ', sig_content, flags=re.MULTILINE)
-
     sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
 
     if is_method:
         if insert_md_section_for__class_methods:
-            # sign = "#### {1}\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
             sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
         else:
             sign = "{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
@@ -334,25 +279,89 @@ def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is
     if not return_guy:
         md_return = return_guy = ''
     else:
-        return_guy = return_guy.strip()
-        md_return = TABLE_RETURN_TEMPLATE.format(return_guy=return_guy)
-        # return_guy = f'\n\nreturn value: {return_guy}\n'
-        # return_guy_val_str = return_guy
+        md_return = TABLE_RETURN_TEMPLATE.format(return_guy.strip())
 
     
     # 2
-    md_table = '\n'.join([TABLE_ROW_TEMPLATE.format(name=name, desc=desc)
-                           for name, desc in
-                           get_params_part(doc_string).items()])
+    def make_md_table_from_docstring(docstring):
+        # print(f'docstring = {docstring}')
+        # print(f'docstring = {type(docstring)}')
+        row_n_type_regex = re.compile(r':param ([\s\S]*?):([\s\S]*?):type [\s\S]*?:([\d\D]*?)\n', flags=re.M|re.DOTALL)
+        # row_n_type_regex = re.compile(r':param ([\d\w]+):([\d\D]*?):type [\w\d]+:([\d\D].*?)$', flags=re.M|re.DOTALL)
+
+
+
+        '''replace WITH regex'''
+        def replace_re(i, a=r' ',z=' '):  return re.sub(a,z,i, flags=re.MULTILINE).strip()
+
+        def process_type(txt):
+            '''
+            striping brackets () from txt:
+            Example:
+            (str)                       -> str
+            Union[str, Tuple[str, int]] -> Union[str, Tuple[str, int]]
+            '''
+            if re.compile(r'\(\s?\w+\s?\)', flags=re.M|re.DOTALL).match(txt):
+                return txt.rstrip(')').lstrip('(')
+            else:
+                return txt
+
+        # if 'led by application to change the tooltip text for an Element.  Normally invoked using ' in docstring:
+        #     pass
+        #     print(123)
+            
+
+        # |> find PARAM, PARAM_TYPE, PARAM_DESCRIPTIONe
+        trips = [triplet(   i.group(1), replace_re(i.group(2), r'\s{2,}', ' '), process_type(i.group(3).strip()))
+                            for index, i in enumerate(re.finditer(row_n_type_regex, docstring + ' \n'))]
+        if not trips:
+            raise Exception('no _TRIPs found!')
+
+        #          ===|> format markdown table
+        #          ---------------------------
+
+        # ROW template:
+        max_type_width, max_name_width = 20, 20
+        try:
+            max_type_width, max_name_width = max([len(i.atype) for i in trips]), max([len(i.name) for i in trips])
+        except Exception as e:
+            pass
+        row_template = f'| {{: ^{max_type_width}}} | {{: ^{max_name_width}}} | {{}} |'
+
+        # rows, and finally table.
+        rows = [row_template.format(i.atype, i.name, i.value) for i in trips]
+
+        row_n_type_regex = re.compile(r':param ([\d\w\*\s]+):([\d\D]*?):type [\w\d]+:([\d\D].*?)\n', flags=re.M|re.DOTALL)
+
+        try: # try to get return value
+            
+            # return_regex = re.compile(r':return:\s*(.*?):rtype:\s*(.*?)\n', flags=re.M|re.DOTALL)
+            regex_pattern = re.compile(r':return:\s*(.*?)\n\s*:rtype:\s*(.*?)\n', flags=re.M|re.DOTALL)
+            a_doc = docstring + ' \n'
+            aa =  list(re.finditer(regex_pattern, a_doc))[0]
+            text, atype = aa.group(1).strip(), aa.group(2).strip()
+
+            rows.append(f'| {atype} | **RETURN** | {text}')
+            
+        except Exception as e:
+            print(e)
+            # print(f'docstring = {docstring}')
+            pass
+
+        header = '\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n'
+
+        md_table = header+'\n'.join(rows)
+        # md_table = '\n'.join(rows)
+        return md_table
+    # md_table = '\n'.join([TABLE_ROW_TEMPLATE.format(name=name, desc=desc)
+    #                        for name, desc in
+    #                        get_params_part(doc_string).items()])
 
     # 3
-    params_TABLE = TABLE_TEMPLATE.format(md_table=md_table, md_return=md_return).replace(TAB_char, '').replace('    ', '').replace('\t', '')
-
-    # 1 and N
-    # if len(get_params_part(doc_string).items()) == 1:
-    #     params_TABLE = TABLE_TEMPLATE.replace('Parameters Descriptions:', 'Parameter Description:').format(md_table=md_table, md_return=md_return).replace(TAB_char, '').replace('    ', '').replace('\t', '')
-    # else:
-    #     params_TABLE = TABLE_TEMPLATE.format(md_table=md_table, md_return=md_return).replace(TAB_char, '').replace('    ', '').replace('\t', '')
+    try:
+        params_TABLE = md_table = make_md_table_from_docstring(doc_string)
+    except Exception as e:
+        params_TABLE = md_table = ''
 
     if not md_table.strip():
         params_TABLE = ''
@@ -363,7 +372,8 @@ def get_sig_table_parts(function_obj, function_name, doc_string, logger=None, is
     return sign, params_TABLE
 
 
-def pad_n(text): return f'\n{text}\n'
+def pad_n(text):
+    return f'\n{text}\n'
 
 
 def render(injection, logger=None, line_break=None, insert_md_section_for__class_methods=False):
@@ -402,7 +412,18 @@ def readfile(fname):
         return ff.read()
 
 
-def main(do_full_readme=False, files_to_include: list = [], logger:object=None, output_name:str=None, delete_html_comments:bool=True, delete_x3_newlines:bool=True, allow_multiple_tags:bool=True, line_break:str=None, insert_md_section_for__class_methods:bool=True, remove_repeated_sections_classmethods:bool=False, output_repeated_tags:bool=False, skip_dunder_method:bool=True):
+def main(do_full_readme=False,
+        files_to_include: list = [],
+        logger:object=None,
+        output_name:str=None,
+        delete_html_comments:bool=True,
+        delete_x3_newlines:bool=True,
+        allow_multiple_tags:bool=True,
+        line_break:str=None,
+        insert_md_section_for__class_methods:bool=True,
+        remove_repeated_sections_classmethods:bool=False,
+        output_repeated_tags:bool=False,
+        skip_dunder_method:bool=True):
     """
     Goal is:
     1) load 1_.md 2_.md 3_.md 4_.md
@@ -430,11 +451,9 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
 
     # 888888888888888888888888888888888888888888
     # ===========  1 loading files =========== #
-    # 888888888888888888888888888888888888888888
-    readme  = readfile('2_readme.md')
-    # 8888888888888888888888888888888888888888888888888888888888888888888888888
     # ===========  2 GET classes, funcions, varialbe a.k.a. memes =========== #
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
+    readme  = readfile('2_readme.md')
 
     def valid_field(pair):
         bad_fields = 'LOOK_AND_FEEL_TABLE copyright __builtins__ icon'.split(' ')
@@ -449,13 +468,15 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
             return False
         return True
 
+        
     psg_members  = [i for i in getmembers(PySimpleGUIlib) if valid_field(i)] # variables, functions, classes
     # psg_members  = getmembers(PySimpleGUIlib) # variables, functions, classes
     psg_funcs = [o for o in psg_members if isfunction(o[1])] # only functions
     psg_classes = [o for o in psg_members if isclass(o[1])]  # only classes
     psg_classes_ = list(set([i[1] for i in psg_classes]))    # boildown B,Btn,Butt -into-> Button
     psg_classes = list(zip([i.__name__ for i in psg_classes_], psg_classes_))
-
+    # psg_props    = [o for o in psg_members if type(o[1]).__name__ == 'property']
+ 
     # 8888888888888888888888888888888888888888888888888888888
     # ===========  3 find all tags in 2_readme  =========== #
     # 8888888888888888888888888888888888888888888888888888888
@@ -478,14 +499,17 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
     # 8888888888888888888888888888888888888888888888888888888
 
     # >1 REMOVE HEADER
+
     started_mark = '<!-- Start from here -->'
     if started_mark in readme:
-        readme = readme[readme.index(started_mark)+len(started_mark):]
+        readme = readme.split('<!-- Start from here -->')[1]
+        # readme = re.sub(r'([\d\D]*)<!-- Start from here -->', '', readme, flags=re.MULTILINE)
+
 
     # 2> find good tags
     re_tags     = re.compile(r'<!-- <\+[a-zA-Z_]+[\d\w_]*\.([a-zA-Z_]+[\d\w_]*)\+> -->')
     mark_points = [i for i in readme.split('\n') if re_tags.match(i)]
-    
+
     special_dunder_methods = ['init', 'repr', 'str', 'next']
     # 3> find '_' tags OPTION
     if skip_dunder_method:
@@ -511,7 +535,9 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
 
     injection_points = []
     classes_method_tags = [j for j in mark_points if 'func.' not in j]
+    
     func_tags = [j for j in mark_points if 'func.' in j]
+
 
     # 0===0 functions 0===0
     for tag in func_tags:
@@ -618,11 +644,20 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
         
         # SPECIAL CASE: X.doc tag
         if injection['part2'] == 'doc':
-            readme = readme.replace(injection['tag'], injection['parent_class'].__doc__)
+            a_tag = injection['tag']
+            print(f'a_tag = {a_tag}')
+            print(f'a_tag = {type(a_tag)}')
+            doc_ = '' if not injection['parent_class'].__doc__ else injection['parent_class'].__doc__
+            # if doc_ == None or a_tag == None:
+            #     import pdb; pdb.set_trace();
+                
+            readme = readme.replace(a_tag, doc_)
         
         else:
+
+
             content = render(injection, logger=logger, line_break=line_break,
-                insert_md_section_for__class_methods=insert_md_section_for__class_methods,)
+                insert_md_section_for__class_methods=insert_md_section_for__class_methods)
         
             tag = injection["tag"]
             if content:
@@ -631,6 +666,9 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
                 bad_tags.append(f'{tag} - FAIL')
 
             readme = readme.replace(tag, content)
+
+    bad_part = '''\n\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n\n'''
+    readme = readme.replace(bad_part, '\n')
 
     # 2> log some data
     if logger:
@@ -644,6 +682,8 @@ def main(do_full_readme=False, files_to_include: list = [], logger:object=None, 
 
         logger.info(good_message)
         logger.info(bad_message)
+
+    print(123)
 
 
     # 8888888888888888888888888888888888

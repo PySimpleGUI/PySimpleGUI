@@ -29,7 +29,7 @@ HOW DO I INSERT IMAGES ???
 
 [![Downloads](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
 
-[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7 (WARNING - DISAPPEARING Entirely on 12/31/2019!!!)
+[![Downloads ](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tkinter 2.7
 
 [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
 
@@ -42,8 +42,7 @@ HOW DO I INSERT IMAGES ???
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.13.1-red.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_2.7_Version-2.4.1-blue.svg?longCache=true&style=for-the-badge)
+![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.16.0-red.svg?longCache=true&style=for-the-badge)
 
 ![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
 ![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
@@ -74,7 +73,7 @@ pip3 install pysimplegui
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('DarkAmber')	# Add a touch of color
+sg.theme('DarkAmber')	# Add a touch of color
 # All the stuff inside your window.
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -317,7 +316,7 @@ This makes the coding process extremely quick and the amount of code very small
 
 ```python
 import PySimpleGUI as sg
-sg.change_look_and_feel('DarkAmber')   # Add a little color to your windows
+sg.theme('DarkAmber')   # Add a little color to your windows
 # All the stuff inside your window. This is the PSG magic code compactor...
 layout = [  [sg.Text('Some text on Row 1')],
             [sg.Text('Enter something on Row 2'), sg.InputText()],
@@ -788,7 +787,7 @@ Creating and reading the user's inputs for the window occupy the last 2 lines of
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your creations colorful
+sg.theme('Dark Blue 3')  # please make your creations colorful
 
 layout = [	[sg.Text('Filename')],
           	[sg.Input(), sg.FileBrowse()], 
@@ -893,9 +892,9 @@ Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 wind
 
 ![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
 
-Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `change_look_and_feel` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
+Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `theme` to instantly transform your window from gray to something more visually pleasing to interact with.  If you mispell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
 
-In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `change_look_and_feel('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `preview_all_look_and_feel_themes()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
+In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `theme('Theme Name)` to your code, passing in the name of thd desired color theme. To see this window and the list of available themes on your releeae of softrware, call the function `theme_previewer()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
 
 In release 4.9 another 32 Color Themes were added... here are the current choices
 
