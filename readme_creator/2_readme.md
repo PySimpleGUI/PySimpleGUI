@@ -429,7 +429,7 @@ Writing the code for this one is just as straightforward.  There is one tricky t
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Filename')],
 			[sg.Input(), sg.FileBrowse()],
@@ -448,7 +448,7 @@ Read on for detailed instructions on the calls that show the window and return y
 
 All of your PySimpleGUI programs will utilize one of these 2 design patterns depending on the type of window you're implementing.
 
-## Pattern 1 - "One-shot Window" - Read a window one time then close it
+## Pattern 1 A - "One-shot Window" - Read a window one time then close it
 
 This will be the most common pattern you'll follow if you are not using an "event loop" (not reading the window multiple times).  The window is read and closed.
 
@@ -457,7 +457,7 @@ The input fields in your window will be returned to you as a dictionary (syntact
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
@@ -472,6 +472,23 @@ window.close()
 source_filename = values[0]     # the first input element is values[0]
 ```
 
+## Pattern 1 B - "One-shot Window" - Read a window one time then close it (compact format)
+
+Same as Pattern 1, but done in a highly compact way.  This example uses the `close` parameter in `window.read` to automatically close the window as part of the read operation (new in version 4.16.0).  This enables you to write a single line of code that will create, display, gather input and close a window.  It's really powerful stuff!
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 3')  # please make your windows colorful
+
+event, values  = sg.Window('SHA-1 & 256 Hash', [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
+				        [sg.InputText(), sg.FileBrowse()],
+				        [sg.Submit(), sg.Cancel()]]).read(close=True)
+
+source_filename = values[0]     # the first input element is values[0]
+```
+
+
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)
 
 Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.
@@ -481,7 +498,7 @@ This code will present a window and will print values until the user clicks the 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Persistent window')],
 		  [sg.Input()],
@@ -506,15 +523,15 @@ Do not worry yet what all of these statements mean.   Just copy it so you can be
 
 A final note... the parameter `do_not_clear` in the input call determines the action of the input field after a button event.  If this value is True, the input value remains visible following button clicks.  If False, then the input field is CLEARED of whatever was input.  If you are building a "Form" type of window with data entry, you likely want False. The default is to NOT clear the input element (`do_not_clear=True`).
 
-This example introduces the concept of "keys".  Keys are super important in PySimpleGUI as they enable you to identify and work with Elements using names you want to use.  Keys can be ANYTHING, except `None`.  To access an input element's data that is read in the example below, you will use `values['_IN_']` instead of `values[0]` like before.  
+This example introduces the concept of "keys".  Keys are super important in PySimpleGUI as they enable you to identify and work with Elements using names you want to use.  Keys can be ANYTHING, except `None`.  To access an input element's data that is read in the example below, you will use `values['-IN-']` instead of `values[0]` like before.  
 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
-layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='_OUTPUT_')],
-          [sg.Input(key='_IN_')],
+layout = [[sg.Text('Your typed chars appear here:'), sg.Text(size=(12,1), key='-OUTPUT-')],
+          [sg.Input(key='-IN-')],
           [sg.Button('Show'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
@@ -526,9 +543,9 @@ while True:  # Event Loop
         break
     if event == 'Show':
         # change the "output" element to be the value of "input" element
-        window['_OUTPUT_'].update(values['_IN_'])
+        window['-OUTPUT-'].update(values['-IN-'])
         # above line can also be written without the update specified
-        window['_OUTPUT_'](values['_IN_'])
+        window['-OUTPUT-'](values['-IN-'])
 
 window.close()
 ```
@@ -545,12 +562,12 @@ While one goal was making it simple to create a GUI another just as important go
 
 The key to custom windows in PySimpleGUI is to view windows as ROWS of GUI  Elements.  Each row is specified as a list of these Elements.  Put the rows together and you've got a window.  This means the GUI is defined as a series of Lists, a Pythonic way of looking at things.
 
-Let's dissect this little program
+### Let's dissect this little program
 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [[sg.Text('Rename files or folders')],
 			[sg.Text('Source for Folders', size=(15, 1)), sg.InputText(), sg.FolderBrowse()],
@@ -565,16 +582,16 @@ folder_path, file_path = values[0], values[1]       # get the data from the valu
 print(folder_path, file_path)
 ```
 
-#### Colors
+### Themes
 
 ![image](https://user-images.githubusercontent.com/46163555/70470775-cd01ff00-1a99-11ea-8b9c-8b33c8880c99.png)
 
-The first line of code after the import is a call to `change_look_and_feel`.  This single line of code make the window look like the window above instead of the window below.  It will also stop PySimpleGUI from nagging you to put one of these calls into your program.
+The first line of code after the import is a call to `theme`.  
+
+Until Dec 2019 the way a "theme" was specific in PySimpleGUI was to call `change_look_and_feel`.  That call has been replaced by the more simple function `theme`.  
 
 
-![snap0131](https://user-images.githubusercontent.com/13696193/43417007-df6d8408-9407-11e8-9986-30f0415f08a5.jpg)
-
-#### Window contents
+### Window contents (The Layout)
 
 Let's agree the window has 4 rows.
 
@@ -599,7 +616,7 @@ For return values the window is scanned from top to bottom, left to right.  Each
 
 In our example window, there are 2 fields, so the return values from this window will be a dictionary with 2 values in it.  Remember, if you do not specify a `key` when creating an element, one will be created for you.  They are ints starting with 0.  In this example, we have 2 input elements.  They will be addressable as values[0] and values[1]
 
-#### "Reading" the window's values (also displays the window)
+### "Reading" the window's values (also displays the window)
 
 ```python
 event, values = window.read()
@@ -815,13 +832,13 @@ Let's take a look at your first dictionary-based window.
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Blue 3')  # please make your windows colorful
+sg.theme('Dark Blue 3')  # please make your windows colorful
 
 layout = [
 			[sg.Text('Please enter your Name, Address, Phone')],
-			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='_NAME_')],
-			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='_ADDRESS_')],
-			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='_PHONE_')],
+			[sg.Text('Name', size=(15, 1)), sg.InputText('1', key='-NAME-')],
+			[sg.Text('Address', size=(15, 1)), sg.InputText('2', key='-ADDRESS-')],
+			[sg.Text('Phone', size=(15, 1)), sg.InputText('3', key='-PHONE-')],
 			[sg.Submit(), sg.Cancel()]
 			]
 
@@ -829,22 +846,22 @@ window = sg.Window('Simple data entry window', layout)
 event, values = window.read()
 window.close()
 
-sg.Popup(event, values, values['_NAME_'], values['_ADDRESS_'], values['_PHONE_'])
+sg.Popup(event, values, values['-NAME-'], values['-ADDRESS-'], values['-PHONE-'])
 ```
 
 To get the value of an input field, you use whatever value used as the `key` value as the index value.  Thus to get the value of the name field, it is written as
 
-	values['_NAME_']
+	values['-NAME-']
 
-Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['_NAME_']`.
+Think of the variable values in the same way as you would a list, however, instead of using 0,1,2, to reference each item in the list, use the values of the key.  The Name field in the window above is referenced by `values['-NAME-']`.
 
 You will find the key field used quite heavily in most PySimpleGUI windows unless the window is very simple.
 
 One convention you'll see in many of the demo programs is keys being named in all caps with an underscores at the beginning and the end.  You don't HAVE to do this... your key value may look like this:
-`key = '_NAME__'`
+`key = '-NAME-'`
 
 The reason for this naming convention is that when you are scanning the code, these key values jump out at you.   You instantly know it's a key.  Try scanning the code above and see if those keys pop out.
-`key = '_NAME__'`
+`key = '-NAME-'`
 
 
 
@@ -1007,6 +1024,81 @@ event, values = window.Read(timeout=100)
 ```
 
 You can learn more about these async / non-blocking windows toward the end of this document.
+
+# Themes - Automatic Coloring of Your Windows
+
+In Dec 2019 the function `change_look_and_feel` was replaced by `theme`.  The concept remains the same, but a new group of function alls makes it a lot easier to manage colors and other settings.
+
+By default the PySimpleGUI color theme is now `Dark Blue 3`.  Gone are the "system default" gray colors.  If you want your window to be devoid of all colors so that the system chooses the colors (gray) for you, then set the theme to 'SystemDefault1' or `Default1`.
+
+There are 130 themes available.  You can preview these themes by calling `theme_previewer()` which will create a LARGE window displaying all of the color themes available.
+
+As of this writing, these are your available themes.
+
+![SNAG-0620](https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg)
+
+## Default is `Dark Blue 3`
+
+![image](https://user-images.githubusercontent.com/46163555/71362356-cd070200-2563-11ea-9455-9315b9423d7e.png)
+
+
+In Dec 2019 the default for all PySimpleGUI windows changed from the system gray with blue buttons to a more complete theme using a grayish blue with white text.  Previouisly users were nagged into choosing  color theme other than gray.  Now it's done for you instead of nagging you.
+
+If you're struggling with this color theme, then add a call to `theme` to change it.
+
+
+
+## Theme Name Formula
+
+Themes names that you specify can be "fuzzy".  The text does not have to match exactly what you see printed.  For example "Dark Blue 3" and "DarkBlue3" and "dark blue 3" all work.
+
+One way to quickly determine the best setting for your window is to simply display your window using a lot of different themes.  Add the line of code to set the theme - `theme('Dark Green 1')`, run your code, see if you like it, if not, change the theme string to `'Dark Green 2'` and try again.  Repeat until you find something you like.
+
+The "Formula" for the string is:
+
+`Dark Color #`
+
+or
+
+`Light Color #`
+
+Color can be Blue, Green, Black, Gray, Purple, Brown, Teal, Red.   The # is optional or can be from 1 to XX.  Some colors have a lot of choices.  There are 13 "Light Brown" choices for example.
+
+### "System" Default - No Colors
+
+If you're bent on having no colors at all in your window, then choose `Default 1` or `System Default 1`.
+
+If you want the original PySimpleGUI color scheme of a blue button and everything else gray then you can get that with the theme `Default` or `System Default`.
+
+
+## Theme Functions
+
+The basic theme function call is `theme(theme_name)`.  This sets the theme.  Calling without a parameter, `theme()` will return the name of the current theme.
+
+If you want to get or modify any of the theme settings, you can do it with these functions that you will find detailed information about in the function definitions section at the bottom of the document.  Each will return the current value if no parameter is used.
+
+```python
+theme_background_color
+theme_border_width
+theme_button_color
+theme_element_background_color
+theme_element_text_color
+theme_input_background_color
+theme_input_text_color
+theme_progress_bar_border_width
+theme_progress_bar_color
+theme_slider_border_width
+theme_slider_color
+theme_text_color
+```
+
+These will help you get a list of available choices.
+
+```python
+theme_list
+theme_previewer
+```
+
 
 # Window Object - Beginning a window
 
@@ -1410,7 +1502,7 @@ Here is our final program that uses simple addition to add the headers onto the 
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Brown 1')
+sg.theme('Dark Brown 1')
 
 headings = ['HEADER 1', 'HEADER 2', 'HEADER 3','HEADER 4']
 header =  [[sg.Text('  ')] + [sg.Text(h, size=(14,1)) for h in headings]]
@@ -1575,11 +1667,74 @@ You will find information on Elements and all other classes and functions are lo
 - Stretch (Qt only)
 - Sizer (plain PySimpleGUI only)
 
+## Keys
+
+***Keys are a super important concept to understand in PySimpleGUI.*** 
+
+If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
+
+You can think of a "key" as a "name" for an element. Or an "identifier".  It's a way for you to identify and talk about an element with the PySimpleGUI library.  It's the exact same kind of key as a dictionary key.  They must be unique to a window.
+
+Keys are specified when the Element is created using the `key` parameter.
+
+Keys are used in these ways:
+* Specified when creating the element
+* Returned as events. If an element causes an event, its key will be used
+* In the `values` dictionary that is returned from `window.read()`
+* To make updates (changes), to an element that's in the window
+
+
+After you put a key in an element's definition, the values returned from `window.read` will use that key to tell you the value.  For example, if you have an input element in your layout:
+
+`Input(key='mykey')`
+
+And your read looks like this: `event, values = Read()`
+
+Then to get the input value from the read it would be: `values['mykey']`
+
+You also use the same key if you want to call Update on an element.  Please see the section Updating Elements to understand that usage.  To get find an element object given the element's key, you can call the window method `find_element` (also written `FindElement`, `element`), or you can use the more common lookup mechanism:
+
+```python
+window['key']
+```
+
+While you'll often see keys written as strings in examples in this document, know that keys can be ***ANYTHING***.  
+
+Let's say you have a window with a grid of input elements.  You could use their row and column location as a key (a tuple)
+
+`key=(row, col)`
+
+Then when you read the `values` variable that's returned to you from calling `Window.read()`, the key in the `values` variable will be whatever you used to create the element. In this case you would read the values as:
+`values[(row, col)]`
+
+Most of the time they are simple text strings.  In the Demo Programs, keys are written with this convention:
+`_KEY_NAME_` (underscore at beginning and end with all caps letters) or the most recent convention is to use a dash at the beginning and end (e.g. `'-KEY_NAME-'`).  You don't have to follow the convention, but it's not a bad one to follow as other users are used to seeing this format and it's easy to spot when element keys are being used.
+
+If you have an element object, to find its key, access the member variable `.Key` for the element.  This assumes you've got the element in a variable already. 
+
+```python
+text_elem = sg.Text('', key='-TEXT-')
+
+the_key = text_elem.Key
+```
+
+### Default Keys
+
+If you fail to place a key on an Element, then one will be created for you automatically.  
+
+For `Buttons`, the text on the button is that button's key. `Text` elements will default to the text's string (for when events are enabled and the text is clicked) 
+
+If the element is one of the input elements (one that will cause an generate an entry in the return values dictionary) and you fail to specify one, then a number will be assigned to it beginning with the number 0.  The effect will be as if the values are represented as a list even if a dictionary is used.
+
+### Menu Keys
+
+Menu items can have keys associated with them as well.  See the section on Menus for more information about these special keys. They aren't the same as Element keys.  Like all elements, Menu Element have one of these Element keys.  The individual menu item keys are different.
+
 ## Common Element Parameters
 
 Some parameters that you  will see on almost all Element creation calls include:
 
-- key   -  Used with window.FindElement and with return values
+- key   -  Used with window[key], events, and in return value dictionary
 - tooltip   - Hover your mouse over the elemnt and you'll get a popup with this text
 - size  - (width, height) - usually measured in characters-wide, rows-high.  Sometimes they mean pixels
 - font - specifies the font family, size, etc
@@ -1657,34 +1812,7 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 
 #### Key
 
-If you are going to do anything beyond the basic stuff with your GUI, then you need to understand keys.
-Keys are a way for you to "tag" an Element with a value that will be used to identify that element.  After you put a key in an element's definition, the values returned from Read will use that key to tell you the value.  For example, if you have an input field:
-
-`Input(key='mykey')`
-
-And your read looks like this: `event, values = Read()`
-
-Then to get the input value from the read it would be: `values['mykey']`
-
-You also use the same key if you want to call Update on an element.  Please see the section below on Updates to understand that usage.
-
-Keys can be ANYTHING.  Let's say you have a window with a grid of input elements.  You could use their row and column location as a key (a tuple)
-
-`key=(row, col)`
-
-Then when you read the `values` variable that's returned to you from calling `Window.Read()`, the key in the `values` variable will be whatever you used to create the element. In this case you would read the values as:
-`values[(row, col)]`
-
-Most of the time they are simple text strings.  In the Demo Programs, keys are written with this convention:
-`_KEY_NAME_` (underscore at beginning and end with all caps letters) or '-KEY_NAME-.  You don't have to follow that convention.  It's used so that you can quickly spot when a key is being used.
-
-To find an element's key, access the member variable `.Key` for the element.  This assumes you've got the element in a variable already. 
-
-```python
-text_elem = sg.Text('', key='-TEXT-')
-
-the_key = text_elem.Key
-```
+See the section above that has full information about keys.
 
 
 #### Visible
@@ -1718,7 +1846,7 @@ In other words, I am lazy and don't like to type. The result is multiple ways to
 
 This enables you to code much quicker once you are used to using the SDK.  The Text Element, for example, has 3 different names `Text`, `Txt` or`T`.  InputText can also be written `Input` or `In` .  
 
-The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  BUT,even that has now been shortened.  
+The shortcuts aren't limited to Elements.  The `Window` method `Window.FindElement` can be written as `Window.Element` because it's such a commonly used function.  BUT, even that has now been shortened to `window[key]`
 
 It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut in the code.  For examples Replace sg.T with sg.Text if your version doesn't have sg.T in it.
 
@@ -1748,27 +1876,27 @@ With proportional spaced fonts (normally the default) the pixel size of one set 
 
 ---
 
-## `Window.FindElement(key)` Shortcut `Window[key]`
+## `Window.FindElement(key)` shortened to `Window[key]`
 
 There's been a fantastic leap forward in making PySimpleGUI code more compact.  
 
 Instead of writing:
 ```python
-window.FindElement(key).Update(new_value)
+window.FindElement(key).update(new_value)
  ```
 
 You can now write it as:
 
 ```python
-window[key].Update(new_value)
+window[key].update(new_value)
  ```
 
 This change has been released to PyPI for PySimpleGUI
 
-MANY Thanks is owed to the person that suggested and showed me how to do this.  It's an incredible find.
+MANY Thanks is owed to the nngogol that suggested and showed me how to do this.  It's an incredible find as have been many of his suggestions.
 
 
-## `Element.Update()` ->  `Element()` shortcut
+## `Element.update()` ->  `Element()` shortcut
 
 This has to be one of the strangest syntactical contructs I've ever written.  
 
@@ -1821,7 +1949,7 @@ layout = [[graph_element]]
 .
 .
 .
-graph_element(background_color='blue')      # this calls Graph.Update for the previously defined element
+graph_element(background_color='blue')      # this calls Graph.update for the previously defined element
 ```
 
 Hopefully this isn't too confusing.  Note that the methods these shortcuts replace will not be removed.  You can continue to use the old constructs without changes.
@@ -1842,9 +1970,9 @@ Individual colors are specified using either the color names as defined in tkint
 ### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
 
-`Text('', key='_TXTOUT_)` will create a `Text` Element that has 0 length.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
+`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
 
-`Text('', size=(15,1), key='_TXTOUT_)` creates a `Text` Element that can hold 15 characters.
+`Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
 
 
 ### Chortcut functions
@@ -2575,7 +2703,7 @@ The order of operations to obtain a tkinter Canvas Widget is:
 
 
     # add the plot to the window
-    fig_photo = draw_figure(window.FindElement('canvas').TKCanvas, fig)
+    fig_photo = draw_figure(window['canvas'].TKCanvas, fig)
 
     # show it all again and get buttons
     event, values = window.read()
@@ -2846,11 +2974,11 @@ to this... with one function call...
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
 
 
-While you can do it on an element by element or window level basis, the easiest way, by far, is a call to `SetOptions`.
+While you can do it on an element by element or window level basis, the easier way is to use either the `theme` calls or `set_options`.  These calls will set colors for all window that are created.
 
-Be aware that once you change these options they are changed for the rest of your program's execution.  All of your windows will have that look and feel, until you change it to something else (which could be the system default colors.
+Be aware that once you change these options they are changed for the rest of your program's execution.  All of your windows will have that Theme, until you change it to something else.
 
-This call sets all of the different color options.
+This call sets a number of the different color options.
 
 ```python
 SetOptions(background_color='#9FB8AD',
@@ -2864,21 +2992,32 @@ SetOptions(background_color='#9FB8AD',
 
 # SystemTray
 
-This is a PySimpleGUIQt and PySimpleGUIWx only feature.  Don't know of a way to do it using tkinter.  Your source code for SystemTray is identical for the Qt and Wx implementations.  You can switch frameworks by simply changing your import statement.
 
-In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then  you perform Reads in order to get events.
+In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then you perform Reads in order to get events.
+
+## Tkinter version
+
+While only PySimpleGUIQt and PySimpleGUIWx offer a true "system tray" feature, there is a simulated system tray feature that became available in 2020 for the tkinter version of PySimpleGUI.  All of the same objects and method calls are the same and the effect is very similar to what you see with the Wx and Qt versions.  The icon is placed in the bottom right corner of the window.  Setting the location of it has not yet been exposed, but you can drag it to another location on your screen.
+
+The idea of supporting Wx, Qt, and tkinter with the exact same source code is very appealing and is one of the reasons a tkinter version was developed.  You can switch frameworks by simply changing your import statement to any of those 3 ports.
+
+The balloons shown for the tkinter version is different than the message balloons shown by real system tray icons.  Instead a nice semi-transparent window is shown.  This window will fade in / out and is the same design as the one found in the [ptoaster package](https://github.com/PySimpleGUI/ptoaster).
+
+## SystemTray Object
 
 Here is the definition of the SystemTray object.
 
 ```python
-SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None):
+SystemTray(menu=None, filename=None, data=None, data_base64=None, tooltip=None,  metadata=None):
         '''
  SystemTray - create an icon in the system tray
  :param menu: Menu definition
  :param filename: filename for icon
  :param data: in-ram image for icon
  :param data_base64: basee-64 data for icon
- :param tooltip: tooltip string '''
+ :param tooltip: tooltip string 
+ :param metadata: (Any) User metadata that can be set to ANYTHING
+'''
 ```
 
 You'll notice that there are 3 different ways to specify the icon image.  The base-64 parameter allows you to define a variable in your .py code that is the encoded image so that you do not need any additional files.  Very handy feature.
@@ -2889,26 +3028,31 @@ Here is a design pattern you can use to get a jump-start.
 
 This program will create a system tray icon and perform a blocking Read.  If the item "Open" is chosen from the system tray, then a popup is shown.
 
+The same code can be executed on any of the Desktop versions of PySimpleGUI (tkinter, Qt, WxPython)
 ```python
 import PySimpleGUIQt as sg
+# import PySimpleGUIWx as sg
+# import PySimpleGUI as sg
 
 menu_def = ['BLANK', ['&Open', '---', '&Save', ['1', '2', ['a', 'b']], '&Properties', 'E&xit']]
 
 tray = sg.SystemTray(menu=menu_def, filename=r'default_icon.ico')
 
 while True:  # The event loop
-  menu_item = tray.Read()
+    menu_item = tray.read()
     print(menu_item)
     if menu_item == 'Exit':
         break
     elif menu_item == 'Open':
-        sg.Popup('Menu item chosen', menu_item)
+        sg.popup('Menu item chosen', menu_item)
 
 ```
 The design pattern creates an icon that will display this menu:
 ![snag-0293](https://user-images.githubusercontent.com/13696193/49057441-8bbfe980-f1cd-11e8-93e7-1aeda9ccd173.jpg)
 
-### Icons
+### Icons for System Trays
+
+System Tray Icons are in PNG & GIF format when running on PySimpleGUI (tkinter version).  PNG, GIF, and ICO formats will work for the Wx and Qt ports.
 
 When specifying "icons", you can use 3 different formats.
 * `filename`- filename
@@ -2916,6 +3060,13 @@ When specifying "icons", you can use 3 different formats.
 * '`data` - in-ram bitmap or other "raw" image
 
 You will find 3 parameters used to specify these 3 options on both the initialize statement and on the Update method.
+
+For testing you may find using the built-in PySimpleGUI icon is a good place to start to make sure you've got everything coded correctly before bringing in outside image assets. It'll tell you quickly if you've got a problem with your icon file.  To run using the default icon, use something like this to create the System Tray:
+
+```python
+tray = sg.SystemTray(menu=menu_def, data_base64=sg.DEFAULT_BASE64_ICON)
+```
+
 
 ## Menu Definition
 ```python
@@ -3055,6 +3206,24 @@ Update(menu=None, tooltip=None,filename=None, data=None, data_base64=None,)
 ```
  -->
 
+### Notify Class Method
+
+In addition to being able to show messages via the system tray, the tkinter port has the added capability of being able to display the system tray messages without having a system tray object defined.  You can simply show a notification window.  This perhaps removes the need for using the ptoaster package?
+
+The method is a "class method" which means you can call it directly without first creating an instanciation of the object.  To show a notification window, call `SystemTray.notify`.
+
+This line of code
+
+```python
+sg.SystemTray.notify('Notification Title', 'This is the notification message')
+```
+
+Will show this window, fading it in and out:
+
+![image](https://user-images.githubusercontent.com/46163555/74970862-2321e580-53ed-11ea-99ba-1581a05575f0.png)
+
+This is a blocking call so expect it to take a few seconds if you're fading the window in and out.  There are options to control the fade, how long things are displayed, the alpha channel, etc.  See the call signature at the end of this document.
+
 
 # Global Settings
 
@@ -3074,15 +3243,15 @@ Each lower level overrides the settings of the higher level.  Once settings have
 
 # Persistent windows (Window stays open after button click)
 
-Apologies that the next few pages are perhaps confusing.  There have been a number of changes recently in PySimpleGUI's Read calls that added some really cool stuff, but at the expense of being not so simple.  Part of the issue is an attempt to make sure existing code doesn't break.  These changes are all in the area of non-blocking reads and reads with timeouts.
+Early versions of PySimpleGUI did not have a concept of "persisent window". Once a user clicked a button, the window would close.  After some time, the functionality was expanded so that windows remained open by default.
 
-There are 2 ways to keep a window open after the user has clicked a button.  One way is to use non-blocking windows (see the next section).  The other way is to use buttons that 'read' the window instead of 'close' the window when clicked.  The typical buttons you find in windows, including the shortcut buttons, close the window.  These include OK, Cancel, Submit, etc.  The Button Element also closes the window.
 
-The `RButton` Element creates a button that when clicked will return control to the user, but will leave the window open and visible.  This button is also used in Non-Blocking windows.  The difference is in which call is made to read the window.  The normal `Read` call with no parameters will block, a call with a `timeout` value of zero will not block.
-
-Note that `InputText` and `MultiLine` Elements will be **cleared**   when performing a `Read`.  If you do not want your input field to be cleared after a `Read` then you can set the `do_not_clear` parameter to True when creating those elements. The clear is turned on and off on an element by element basis.
+## Input Fields that Auto-clear
+Note that `InputText` and `MultiLine` Elements can be **cleared** when performing a `read`.  If you want your input field to be cleared after a `window.read` then you can set the `do_not_clear` parameter to False when creating those elements. The clear is turned on and off on an element by element basis.
 
 The reasoning behind this is that Persistent Windows are often "forms".  When "submitting" a form you want to have all of the fields left blank so the next entry of data will start with a fresh window.  Also, when implementing a "Chat Window" type of interface, after each read / send of the chat data, you want the input field cleared.  Think of it as a Texting application.  Would you want to have to clear your previous text if you want to send a second text?
+
+## Basic Persistent Window Design Pattern
 
 The design pattern for Persistent Windows was already shown to you earlier in the document... here it is for your convenience.
 
@@ -3097,17 +3266,19 @@ window = sg.Window('Window that stays open', layout)
 
 while True:
     event, values = window.read()
-    if event is None or event == 'Exit':
-        break
     print(event, values)
+    if event in (None, 'Exit'):
+        break
 
-window.Close()
+window.close()
 ```
 
 
-## Read(timeout = t, timeout_key=TIMEOUT_KEY)
+## Read(timeout = t, timeout_key=TIMEOUT_KEY, close=False)
 
-Read with a timeout is a very good thing for your GUIs to use in a read non-blocking situation, you can use them.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.
+Read with a timeout is a very good thing for your GUIs to use in a non-blocking read situation.  If your device can wait for a little while, then use this kind of read.  The longer you're able to add to the timeout value, the less CPU time you'll be taking.  
+
+The idea to wait for some number of milliseconds before returning.  It's a trivial way to make a window that runs on a periodic basis.
 
 One way of thinking of reads with timeouts:
 > During the timeout time, you are "yielding" the processor to do other tasks.
@@ -3121,49 +3292,32 @@ Let's say you had a device that you want to "poll" every 100ms.   The "easy way 
 while True:             # Event Loop
     event, values = window.ReadNonBlocking()   # DO NOT USE THIS CALL ANYMORE
     read_my_hardware() # process my device here
-    time.sleep(.1)     # sleep 1/10 second
+    time.sleep(.1)     # sleep 1/10 second  DO NOT PUT SLEEPS IN YOUR EVENT LOOP!
 ```
 
-This program will quickly test for user input, then deal with the hardware.  Then it'll sleep for 100ms, while your gui is non-responsive, then it'll check in with your GUI again.  I fully realize this is a crude way of doing things.  We're talking dirt simple stuff without trying to use threads, etc to 'get it right'.  It's for demonstration purposes.
+This program will quickly test for user input, then deal with the hardware.  Then it'll sleep for 100ms, while your gui is non-responsive, then it'll check in with your GUI again.  
 
-The new and better way....
-using the Read Timeout mechanism, the sleep goes away.
+The better way using PySimpleGUI... using the Read Timeout mechanism, the sleep goes away.
 
 ```python
 # This is the right way to poll for hardware
 while True:             # Event Loop
-    event, values = window.Read(timeout = 100)
+    event, values = window.read(timeout = 100)
     read_my_hardware() # process my device here
 ```
 
-This event loop will run every 100 ms.  You're making a Read call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
-
-
-## Non-Blocking Windows   (Asynchronous reads, timeouts)
-
-You can easily spot a non-blocking call in PySimpleGUI.  If you see a call to `Window.Read()` with a timeout parameter set to a value other than `None`, then it is a non-blocking call.
-
-This call to read is asynchronous as it has a timeout value:
-
-```
-The new way
-```python
-event, values = sg.Read(timeout=20)
-```
-You should use the new way if you're reading this for the first time.
-
-The difference in the 2 calls is in the value of event.  For ReadNonBlocking, event will be `None` if there are no other events to report.  There is a "problem" with this however.  With normal Read calls, an event value of None signified the window was closed.  For ReadNonBlocking, the way a closed window is returned is via the values variable being set to None.
+This event loop will run every 100 ms.  You're making a `read` call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
 
 ## sg.TIMEOUT_KEY
 
-If you're using the new, timeout=0 method, then an event value of None signifies that the window was closed, just like a normal Read.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `timeout_key`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
+If you're using a read with a timeout value, then an event value of None signifies that the window was closed, just like a normal `window.read`.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `TIMEOUT_KEY`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
 `TIMEOUT_KEY = __timeout__`
 
 If you wanted to test for "no event" in your loop, it would be written like this:
 ```python
 while True:
-    event, value = window.Read(timeout=0)
+    event, value = window.Read(timeout=10)
     if event is None:
         break # the use has closed the window
     if event == sg.TIMEOUT_KEY:
@@ -3173,7 +3327,15 @@ while True:
 
 Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
-Non-blocking (timeout=0) is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine.
+### `read(timeout=0)`
+
+You may find some PySimpleGUI programs that set the timeout value to zero.  This is a very dangerous thing to do.  If you do not pend on something else in your event loop, then your program will consume 100% of your CPU.  Remember that today's CPUs are multi-cored.  You may see only 7% of your CPU is busy when you're running with timeout of 0.  This is because task manager is reporting a system-wide CPU usage.  The single core your program is running on is likely at 100%.
+
+A true non-blocking (timeout=0) read is generally reserved as a "last resort".  Too many times people use non-blocking reads when a blocking read will do just fine or a read with a timeout would work.
+
+It's valid to use a timeout value of zero if you're in need of every bit of CPU horsepower in your application.  Maybe your loop is doing something super-CPU intensive and you can't afford for the GUI to use any CPU time. This is the kind of situation where a timeout of zero is appropriate.  
+
+Be a good computing citizen.  Run with a non-zero timeout so that other programs on your CPU will have time to run.
 
 ### Small Timeout Values (under 10ms)
 
@@ -3202,11 +3364,37 @@ There are 2 methods of interacting with non-blocking windows.
 
  ## Exiting (Closing) a Persistent Window
 
-If your window has a button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are ReadButtons, then it'll be up to you to close the window when done.
-To close a window, call the `Close` method.
+If your window has a special button that closes the window, then PySimpleGUI will automatically close the window for you.  If all of your buttons are normal `Button` elements, then it'll be up to you to close the window when done.
+
+To close a window, call the `close` method.
 ```python
-window.Close()
+window.close()
 ```
+
+Beginning in version 4.16.0 you can use a `close` parameter in the `window.read` call to indicate that the window should be closed before returning from the read.  This capability to an excellent way to make a single line Window to quickly get information.
+
+This single line of code will display a window, get the user's input, close the window, and return the values as an event and a values dictionary.
+
+```python
+event, values = sg.Window('Login Window',
+                  [[sg.T('Enter your Login ID'), sg.In(key='-ID-')],
+                  [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
+
+login_id = values['-ID-']
+```
+
+You can also make a custom popup quite easily:
+
+```python
+long_string = '123456789 '* 40
+
+event, values = sg.Window('This is my customn popup',
+                  [[sg.Text(long_string, size=(40,None))],
+                  [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
+```
+
+Notice the height parameter of size is `None` in this case.  For the tkinter port of PySimpleGUI this will cause the number of rows to "fit" the contents of the string to be displayed.
+
 
 ## Persistent Window Example - Running timer that updates
 
@@ -3237,7 +3425,7 @@ while (True):
     event, values = window.Read(timeout=10)
     current_time = int(round(time.time() * 100)) - start_time
     # --------- Display timer in window --------
-    window.FindElement('text').Update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
+    window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                                   (current_time // 100) % 60,
                                                                   current_time % 100))
 ```
@@ -3265,14 +3453,14 @@ One example is you have an input field that changes as you press buttons on an o
 
 If you want to change an Element's settings in your window after the window has been created, then you will call the Element's Update method.
 
-**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  Also, not all settings available to you when you created the Element are available to you via its `Update` method.
+**NOTE** a window **must be Read or Finalized** before any Update calls can be made.  Also, not all settings available to you when you created the Element are available to you via its `update` method.
 
 Here is an example of updating a Text Element
 
 ```python
 import PySimpleGUI as sg
 
-layout = [ [sg.Text('My layout', key='_TEXT_')],
+layout = [ [sg.Text('My layout', key='-TEXT-')],
            [sg.Button('Read')]]
 
 window = sg.Window('My new window', layout)
@@ -3281,7 +3469,7 @@ while True:             # Event Loop
     event, values = window.read()
     if event is None:
         break
-    window.Element('_TEXT_').Update('My new text value')
+    window['-TEXT-'].update('My new text value')
 ```
 
 Notice the placement of the Update call.  If you wanted to Update the Text Element *prior* to the Read call, outside of the event loop, then you must call Finalize on the window first.
@@ -3290,13 +3478,12 @@ In this example, the Update is done prior the Read.  Because of this, the Finali
 ```python
 import PySimpleGUI as sg
 
-layout = [ [sg.Text('My layout', key='_TEXT_')],
-           [sg.Button('Read')]
-         ]
+layout = [ [sg.Text('My layout', key='-TEXT-')],
+           [sg.Button('Read')]]
 
-window = sg.Window('My new window', layout).Finalize()
+window = sg.Window('My new window', layout, finalize=True)
 
-window.Element('_TEXT_').Update('My new text value')
+window['-TEXT-'].update('My new text value')
 
 while True:             # Event Loop
   event, values = window.read()
@@ -3348,9 +3535,9 @@ while True:
     if sz != fontSize:
         fontSize = sz
         font = "Helvetica "  + str(fontSize)
-        window.FindElement('text').Update(font=font)
-        window.FindElement('slider').Update(sz)
-        window.FindElement('spin').Update(sz)
+        window['text'].update(font=font)
+        window['slider'].update(sz)
+        window['spin'].update(sz)
 
 print("Done.")
 ```
@@ -3362,21 +3549,21 @@ For example, `values['slider']` is the value of the Slider Element.
 This program changes all 3 elements if either the Slider or the Spinner changes.  This is done with these statements:
 
 ```python
-window.FindElement('text').Update(font=font)
-window.FindElement('slider').Update(sz)
-window.FindElement('spin').Update(sz)
+window['text'].update(font=font)
+window['slider'].update(sz)
+window['spin'].update(sz)
 ```
 
 Remember this design pattern because you will use it OFTEN if you use persistent windows.
 
-It works as follows.  The call to `window.FindElement` returns the Element object represented by they provided `key`.  This element is then updated by calling it's `Update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
+It works as follows.  The expresion `window[key]` returns the Element object represented by the provided `key`.  This element is then updated by calling it's `update` method.  This is another example of Python's "chaining" feature. We could write this code using the long-form:
 
-    text_element = window.FindElement('text')
-    text_element.Update(font=font)
+    text_element = window['text']
+    text_element.update(font=font)
 
-The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used as targets in  Button calls.
+The takeaway from this exercise is that keys are key in PySimpleGUI's design.  They are used to both read the values of the window and also to identify elements.  As already mentioned, they are used in a wide variety of places.
 
-### Locating Elements (FindElement == Element == Elem)
+### Locating Elements (FindElement == Element == Elem == [ ])
 
 The Window method call that's used to find an element is:
 `FindElement`
@@ -3385,13 +3572,15 @@ or the shortened version
 or even shorter (version 4.1+)
 `Elem`
 
-When you see a call to window.FindElement or window.Element, then you know an element is being addressed.  Normally this is done so you can call the element's Update method.
+And now it's finally shortened down to:
+window[key]
 
+You'll find the pattern - `window.Element(key)` in older code.  All of code after about 4.0 uses the shortened `window[key]` notation.
 
 
 ### ProgressBar / Progress Meters
 
-Note that to change a progress meter's progress, you call `UpdateBar`, not `Update`.
+Note that to change a progress meter's progress, you call `update_bar`, not `update`.  A change to this is being considered for a future release.
 
 
 # Keyboard & Mouse Capture
@@ -3431,7 +3620,7 @@ while True:
     if event == "OK" or event is None:
         print(event, "exiting")
         break
-    text_elem.Update(event)
+    text_elem.update(event)
 ```
 
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.
@@ -3581,7 +3770,7 @@ import PySimpleGUI as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text(size=(15,1), key='_OUTPUT_')],
+          [sg.Text(size=(15,1), key='-OUTPUT-')],
           [sg.Button('Launch 2'), sg.Button('Exit')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -3589,7 +3778,7 @@ win1 = sg.Window('Window 1', layout)
 win2_active = False
 while True:
     ev1, vals1 = win1.Read(timeout=100)
-    win1.FindElement('_OUTPUT_').Update(vals1[0])
+    win1['-OUTPUT-'].update(vals1[0])
     if ev1 is None or ev1 == 'Exit':
         break
 
@@ -3617,7 +3806,7 @@ import PySimpleGUIQt as sg
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
-          [sg.Text(size=(15,1),  key='_OUTPUT_')],
+          [sg.Text(size=(15,1),  key='-OUTPUT-')],
           [sg.Button('Launch 2')]]
 
 win1 = sg.Window('Window 1', layout)
@@ -3626,7 +3815,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)
     if ev1 is None:
         break
-    win1.FindElement('_OUTPUT_').Update(vals1[0])
+    win1.FindElement('-OUTPUT-').update(vals1[0])
 
     if ev1 == 'Launch 2'  and not win2_active:
         win2_active = True
@@ -4049,7 +4238,7 @@ Three events are being bound.
 ```python
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('Dark Green 2')
+sg.theme('Dark Green 2')
 
 layout = [  [sg.Text('My Window')],
             [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
@@ -4091,2362 +4280,1835 @@ This section of the documentation is generated directly from the source code.  A
 
 Without further delay... here are all of the Elements and the Window class
 
-## Button Element
-
+## Button Element 
 <!-- <+Button.doc+> -->
 <!-- <+Button.__init__+> -->
 
-
 ### Click
-
 <!-- <+Button.Click+> -->
 
 ### GetText
-
 <!-- <+Button.GetText+> -->
 
 ### SetFocus
-
 <!-- <+Button.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Button.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Button.Update+> -->
 
 ### bind
-
 <!-- <+Button.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Button.button_rebound_callback+> -->
-
 ### click
-
 <!-- <+Button.click+> -->
 
 ### expand
-
 <!-- <+Button.expand+> -->
 
 ### get_size
-
 <!-- <+Button.get_size+> -->
 
 ### get_text
-
 <!-- <+Button.get_text+> -->
 
 ### hide_row
-
 <!-- <+Button.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Button.set_cursor+> -->
 
+### set_focus
 <!-- <+Button.set_focus+> -->
 
 ### set_size
-
 <!-- <+Button.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Button.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Button.unbind+> -->
 
+### unhide_row
 <!-- <+Button.unhide_row+> -->
 
 ### update
-
 <!-- <+Button.update+> -->
 
-## ButtonMenu Element
-
+## ButtonMenu Element 
 <!-- <+ButtonMenu.doc+> -->
 <!-- <+ButtonMenu.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+ButtonMenu.ButtonReboundCallback+> -->
-
 ### Click
-
 <!-- <+ButtonMenu.Click+> -->
 
 ### SetFocus
-
 <!-- <+ButtonMenu.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+ButtonMenu.SetTooltip+> -->
 
 ### Update
-
 <!-- <+ButtonMenu.Update+> -->
 
 ### bind
-
 <!-- <+ButtonMenu.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+ButtonMenu.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+ButtonMenu.expand+> -->
 
 ### get_size
-
 <!-- <+ButtonMenu.get_size+> -->
 
 ### hide_row
-
 <!-- <+ButtonMenu.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+ButtonMenu.set_cursor+> -->
 
+### set_focus
 <!-- <+ButtonMenu.set_focus+> -->
 
 ### set_size
-
 <!-- <+ButtonMenu.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+ButtonMenu.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+ButtonMenu.unbind+> -->
 
+### unhide_row
 <!-- <+ButtonMenu.unhide_row+> -->
 
 ### update
-
 <!-- <+ButtonMenu.update+> -->
 
-## Canvas Element
-
+## Canvas Element 
 <!-- <+Canvas.doc+> -->
 <!-- <+Canvas.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Canvas.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Canvas.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Canvas.SetTooltip+> -->
 
 ### TKCanvas
-
 <!-- <+Canvas.TKCanvas+> -->
 
 ### bind
-
 <!-- <+Canvas.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Canvas.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Canvas.expand+> -->
 
 ### get_size
-
 <!-- <+Canvas.get_size+> -->
 
 ### hide_row
-
 <!-- <+Canvas.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Canvas.set_cursor+> -->
 
+### set_focus
 <!-- <+Canvas.set_focus+> -->
 
 ### set_size
-
 <!-- <+Canvas.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Canvas.set_tooltip+> -->
 
 ### tk_canvas
-
 <!-- <+Canvas.tk_canvas+> -->
 
-### unhide_row
+### unbind
+<!-- <+Canvas.unbind+> -->
 
+### unhide_row
 <!-- <+Canvas.unhide_row+> -->
 
-## Checkbox Element
-
+## Checkbox Element 
 <!-- <+Checkbox.doc+> -->
 <!-- <+Checkbox.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Checkbox.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Checkbox.Get+> -->
 
 ### SetFocus
-
 <!-- <+Checkbox.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Checkbox.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Checkbox.Update+> -->
 
 ### bind
-
 <!-- <+Checkbox.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Checkbox.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Checkbox.expand+> -->
 
 ### get
-
 <!-- <+Checkbox.get+> -->
 
 ### get_size
-
 <!-- <+Checkbox.get_size+> -->
 
 ### hide_row
-
 <!-- <+Checkbox.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Checkbox.set_cursor+> -->
 
+### set_focus
 <!-- <+Checkbox.set_focus+> -->
 
 ### set_size
-
 <!-- <+Checkbox.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Checkbox.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Checkbox.unbind+> -->
 
+### unhide_row
 <!-- <+Checkbox.unhide_row+> -->
 
 ### update
-
 <!-- <+Checkbox.update+> -->
 
-## Column Element
-
+## Column Element 
 <!-- <+Column.doc+> -->
 <!-- <+Column.__init__+> -->
 
+### AddRow
+<!-- <+Column.AddRow+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Column.ButtonReboundCallback+> -->
+### Layout
+<!-- <+Column.Layout+> -->
 
 ### SetFocus
-
 <!-- <+Column.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Column.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Column.Update+> -->
 
 ### add_row
-
 <!-- <+Column.add_row+> -->
 
 ### bind
-
 <!-- <+Column.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Column.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Column.expand+> -->
 
 ### get_size
-
 <!-- <+Column.get_size+> -->
 
 ### hide_row
-
 <!-- <+Column.hide_row+> -->
 
 ### layout
-
 <!-- <+Column.layout+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Column.set_cursor+> -->
 
+### set_focus
 <!-- <+Column.set_focus+> -->
 
 ### set_size
-
 <!-- <+Column.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Column.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Column.unbind+> -->
 
+### unhide_row
 <!-- <+Column.unhide_row+> -->
 
 ### update
-
 <!-- <+Column.update+> -->
 
-## Combo Element
-
+## Combo Element 
 <!-- <+Combo.doc+> -->
 <!-- <+Combo.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Combo.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Combo.Get+> -->
 
 ### SetFocus
-
 <!-- <+Combo.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Combo.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Combo.Update+> -->
 
 ### bind
-
 <!-- <+Combo.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Combo.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Combo.expand+> -->
 
 ### get
-
 <!-- <+Combo.get+> -->
 
 ### get_size
-
 <!-- <+Combo.get_size+> -->
 
 ### hide_row
-
 <!-- <+Combo.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Combo.set_cursor+> -->
 
+### set_focus
 <!-- <+Combo.set_focus+> -->
 
 ### set_size
-
 <!-- <+Combo.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Combo.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Combo.unbind+> -->
 
+### unhide_row
 <!-- <+Combo.unhide_row+> -->
 
 ### update
-
 <!-- <+Combo.update+> -->
 
-## Frame Element
 
+## Frame Element 
 <!-- <+Frame.doc+> -->
 <!-- <+Frame.__init__+> -->
 
+### AddRow
+<!-- <+Frame.AddRow+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Frame.ButtonReboundCallback+> -->
-
+### Layout
+<!-- <+Frame.Layout+> -->
 
 ### SetFocus
-
 <!-- <+Frame.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Frame.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Frame.Update+> -->
 
+### add_row
+<!-- <+Frame.add_row+> -->
 
 ### bind
-
 <!-- <+Frame.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Frame.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Frame.expand+> -->
 
 ### get_size
-
 <!-- <+Frame.get_size+> -->
 
 ### hide_row
-
 <!-- <+Frame.hide_row+> -->
 
+### layout
+<!-- <+Frame.layout+> -->
+
+### set_cursor
+<!-- <+Frame.set_cursor+> -->
 
 ### set_focus
-
 <!-- <+Frame.set_focus+> -->
 
 ### set_size
-
 <!-- <+Frame.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Frame.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Frame.unbind+> -->
 
+### unhide_row
 <!-- <+Frame.unhide_row+> -->
 
 ### update
-
 <!-- <+Frame.update+> -->
 
-## Graph Element
-
+## Graph Element 
 <!-- <+Graph.doc+> -->
 <!-- <+Graph.__init__+> -->
 
 ### BringFigureToFront
-
 <!-- <+Graph.BringFigureToFront+> -->
 
-### ButtonPressCallBack
-
-<!-- <+Graph.ButtonPressCallBack+> -->
-
-### ButtonReboundCallback
-
-<!-- <+Graph.ButtonReboundCallback+> -->
-
 ### DeleteFigure
-
 <!-- <+Graph.DeleteFigure+> -->
 
 ### DrawArc
-
 <!-- <+Graph.DrawArc+> -->
 
 ### DrawCircle
-
 <!-- <+Graph.DrawCircle+> -->
 
 ### DrawImage
-
 <!-- <+Graph.DrawImage+> -->
 
 ### DrawLine
-
 <!-- <+Graph.DrawLine+> -->
 
 ### DrawOval
-
 <!-- <+Graph.DrawOval+> -->
 
 ### DrawPoint
-
 <!-- <+Graph.DrawPoint+> -->
 
-### DrawRectangle
+### DrawPolygon
+<!-- <+Graph.DrawPolygon+> -->
 
+### DrawRectangle
 <!-- <+Graph.DrawRectangle+> -->
 
 ### DrawText
-
 <!-- <+Graph.DrawText+> -->
 
 ### Erase
-
 <!-- <+Graph.Erase+> -->
 
-
 ### GetBoundingBox
-
 <!-- <+Graph.GetBoundingBox+> -->
 
 ### GetFiguresAtLocation
-
 <!-- <+Graph.GetFiguresAtLocation+> -->
 
 ### Move
-
 <!-- <+Graph.Move+> -->
 
 ### MoveFigure
-
 <!-- <+Graph.MoveFigure+> -->
 
 ### RelocateFigure
-
 <!-- <+Graph.RelocateFigure+> -->
 
 ### SendFigureToBack
-
 <!-- <+Graph.SendFigureToBack+> -->
 
 ### SetFocus
-
 <!-- <+Graph.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Graph.SetTooltip+> -->
 
 ### TKCanvas
-
 <!-- <+Graph.TKCanvas+> -->
 
 ### Update
-
 <!-- <+Graph.Update+> -->
 
 ### bind
-
 <!-- <+Graph.bind+> -->
 
 ### bring_figure_to_front
-
 <!-- <+Graph.bring_figure_to_front+> -->
 
-### button_press_call_back
-
-<!-- <+Graph.button_press_call_back+> -->
-
-### button_rebound_callback
-
-<!-- <+Graph.button_rebound_callback+> -->
-
+### change_coordinates
+<!-- <+Graph.change_coordinates+> -->
 
 ### delete_figure
-
 <!-- <+Graph.delete_figure+> -->
 
 ### draw_arc
-
 <!-- <+Graph.draw_arc+> -->
 
 ### draw_circle
-
 <!-- <+Graph.draw_circle+> -->
 
 ### draw_image
-
 <!-- <+Graph.draw_image+> -->
 
 ### draw_line
-
 <!-- <+Graph.draw_line+> -->
 
 ### draw_oval
-
 <!-- <+Graph.draw_oval+> -->
 
 ### draw_point
-
 <!-- <+Graph.draw_point+> -->
 
-### draw_rectangle
+### draw_polygon
+<!-- <+Graph.draw_polygon+> -->
 
+### draw_rectangle
 <!-- <+Graph.draw_rectangle+> -->
 
 ### draw_text
-
 <!-- <+Graph.draw_text+> -->
 
 ### erase
-
 <!-- <+Graph.erase+> -->
 
 ### expand
-
 <!-- <+Graph.expand+> -->
 
-
-
 ### get_bounding_box
-
 <!-- <+Graph.get_bounding_box+> -->
 
 ### get_figures_at_location
-
 <!-- <+Graph.get_figures_at_location+> -->
 
-
 ### get_size
-
 <!-- <+Graph.get_size+> -->
 
 ### hide_row
-
 <!-- <+Graph.hide_row+> -->
 
 ### move
-
 <!-- <+Graph.move+> -->
 
 ### move_figure
-
 <!-- <+Graph.move_figure+> -->
 
 ### relocate_figure
-
 <!-- <+Graph.relocate_figure+> -->
 
 ### send_figure_to_back
-
 <!-- <+Graph.send_figure_to_back+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Graph.set_cursor+> -->
 
+### set_focus
 <!-- <+Graph.set_focus+> -->
 
 ### set_size
-
 <!-- <+Graph.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Graph.set_tooltip+> -->
 
 ### tk_canvas
-
 <!-- <+Graph.tk_canvas+> -->
 
-### unhide_row
+### unbind
+<!-- <+Graph.unbind+> -->
 
+### unhide_row
 <!-- <+Graph.unhide_row+> -->
 
 ### update
-
 <!-- <+Graph.update+> -->
 
-## Image Element
-
+## Image Element 
 <!-- <+Image.doc+> -->
 <!-- <+Image.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Image.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Image.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Image.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Image.Update+> -->
 
 ### UpdateAnimation
-
 <!-- <+Image.UpdateAnimation+> -->
 
 ### bind
-
 <!-- <+Image.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Image.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Image.expand+> -->
 
 ### get_size
-
 <!-- <+Image.get_size+> -->
 
 ### hide_row
-
 <!-- <+Image.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Image.set_cursor+> -->
 
+### set_focus
 <!-- <+Image.set_focus+> -->
 
 ### set_size
-
 <!-- <+Image.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Image.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Image.unbind+> -->
 
+### unhide_row
 <!-- <+Image.unhide_row+> -->
 
 ### update
-
 <!-- <+Image.update+> -->
 
 ### update_animation
-
 <!-- <+Image.update_animation+> -->
 
-## InputText Element
+### update_animation_no_buffering
+<!-- <+Image.update_animation_no_buffering+> -->
 
+## InputText Element 
 <!-- <+InputText.doc+> -->
 <!-- <+InputText.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+InputText.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+InputText.Get+> -->
 
 ### SetFocus
-
 <!-- <+InputText.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+InputText.SetTooltip+> -->
 
 ### Update
-
 <!-- <+InputText.Update+> -->
 
 ### bind
-
 <!-- <+InputText.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+InputText.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+InputText.expand+> -->
 
 ### get
-
 <!-- <+InputText.get+> -->
 
 ### get_size
-
 <!-- <+InputText.get_size+> -->
 
 ### hide_row
-
 <!-- <+InputText.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+InputText.set_cursor+> -->
 
+### set_focus
 <!-- <+InputText.set_focus+> -->
 
 ### set_size
-
 <!-- <+InputText.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+InputText.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+InputText.unbind+> -->
 
+### unhide_row
 <!-- <+InputText.unhide_row+> -->
 
 ### update
-
 <!-- <+InputText.update+> -->
 
-## Listbox Element
-
+## Listbox Element 
 <!-- <+Listbox.doc+> -->
 <!-- <+Listbox.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Listbox.ButtonReboundCallback+> -->
-
 ### GetIndexes
-
 <!-- <+Listbox.GetIndexes+> -->
 
 ### GetListValues
-
 <!-- <+Listbox.GetListValues+> -->
 
 ### SetFocus
-
 <!-- <+Listbox.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Listbox.SetTooltip+> -->
 
 ### SetValue
-
 <!-- <+Listbox.SetValue+> -->
 
 ### Update
-
 <!-- <+Listbox.Update+> -->
 
 ### bind
-
 <!-- <+Listbox.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Listbox.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Listbox.expand+> -->
 
-### get_indexes
+### get
+<!-- <+Listbox.get+> -->
 
+### get_indexes
 <!-- <+Listbox.get_indexes+> -->
 
 ### get_list_values
-
 <!-- <+Listbox.get_list_values+> -->
 
 ### get_size
-
 <!-- <+Listbox.get_size+> -->
 
 ### hide_row
-
 <!-- <+Listbox.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Listbox.set_cursor+> -->
 
+### set_focus
 <!-- <+Listbox.set_focus+> -->
 
 ### set_size
-
 <!-- <+Listbox.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Listbox.set_tooltip+> -->
 
 ### set_value
-
 <!-- <+Listbox.set_value+> -->
 
-### unhide_row
+### unbind
+<!-- <+Listbox.unbind+> -->
 
+### unhide_row
 <!-- <+Listbox.unhide_row+> -->
 
 ### update
-
 <!-- <+Listbox.update+> -->
 
-## Menu Element
-
+## Menu Element 
 <!-- <+Menu.doc+> -->
 <!-- <+Menu.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Menu.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Menu.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Menu.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Menu.Update+> -->
 
 ### bind
-
 <!-- <+Menu.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Menu.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Menu.expand+> -->
 
 ### get_size
-
 <!-- <+Menu.get_size+> -->
 
 ### hide_row
-
 <!-- <+Menu.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Menu.set_cursor+> -->
 
+### set_focus
 <!-- <+Menu.set_focus+> -->
 
 ### set_size
-
 <!-- <+Menu.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Menu.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Menu.unbind+> -->
 
+### unhide_row
 <!-- <+Menu.unhide_row+> -->
 
 ### update
-
 <!-- <+Menu.update+> -->
 
-## Multiline Element
-
+## Multiline Element 
 <!-- <+Multiline.doc+> -->
 <!-- <+Multiline.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Multiline.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Multiline.Get+> -->
 
 ### SetFocus
-
 <!-- <+Multiline.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Multiline.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Multiline.Update+> -->
 
 ### bind
-
 <!-- <+Multiline.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Multiline.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Multiline.expand+> -->
 
 ### get
-
 <!-- <+Multiline.get+> -->
 
 ### get_size
-
 <!-- <+Multiline.get_size+> -->
 
 ### hide_row
-
 <!-- <+Multiline.hide_row+> -->
 
-### set_focus
+### print
+<!-- <+Multiline.print+> -->
 
+### set_cursor
+<!-- <+Multiline.set_cursor+> -->
+
+### set_focus
 <!-- <+Multiline.set_focus+> -->
 
 ### set_size
-
 <!-- <+Multiline.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Multiline.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Multiline.unbind+> -->
 
+### unhide_row
 <!-- <+Multiline.unhide_row+> -->
 
 ### update
-
 <!-- <+Multiline.update+> -->
 
-## OptionMenu Element
-
+## OptionMenu Element 
 <!-- <+OptionMenu.doc+> -->
 <!-- <+OptionMenu.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+OptionMenu.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+OptionMenu.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+OptionMenu.SetTooltip+> -->
 
 ### Update
-
 <!-- <+OptionMenu.Update+> -->
 
 ### bind
-
 <!-- <+OptionMenu.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+OptionMenu.button_rebound_callback+> -->
 
 ### expand
-
 <!-- <+OptionMenu.expand+> -->
 
 ### get_size
-
 <!-- <+OptionMenu.get_size+> -->
 
 ### hide_row
-
 <!-- <+OptionMenu.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+OptionMenu.set_cursor+> -->
 
+### set_focus
 <!-- <+OptionMenu.set_focus+> -->
 
 ### set_size
-
 <!-- <+OptionMenu.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+OptionMenu.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+OptionMenu.unbind+> -->
 
+### unhide_row
 <!-- <+OptionMenu.unhide_row+> -->
 
 ### update
-
 <!-- <+OptionMenu.update+> -->
 
-## Output Element
-
+## Output Element 
 <!-- <+Output.doc+> -->
 <!-- <+Output.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Output.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Output.Get+> -->
 
 ### SetFocus
-
 <!-- <+Output.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Output.SetTooltip+> -->
 
 ### TKOut
-
 <!-- <+Output.TKOut+> -->
 
 ### Update
-
 <!-- <+Output.Update+> -->
 
 ### bind
-
 <!-- <+Output.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Output.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Output.expand+> -->
 
 ### get_size
-
 <!-- <+Output.get_size+> -->
 
 ### hide_row
-
 <!-- <+Output.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Output.set_cursor+> -->
 
+### set_focus
 <!-- <+Output.set_focus+> -->
 
 ### set_size
-
 <!-- <+Output.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Output.set_tooltip+> -->
 
 ### tk_out
-
 <!-- <+Output.tk_out+> -->
 
-### unhide_row
+### unbind
+<!-- <+Output.unbind+> -->
 
+### unhide_row
 <!-- <+Output.unhide_row+> -->
 
 ### update
-
 <!-- <+Output.update+> -->
 
-## Pane Element
-
+## Pane Element 
 <!-- <+Pane.doc+> -->
 <!-- <+Pane.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Pane.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Pane.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Pane.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Pane.Update+> -->
 
 ### bind
-
 <!-- <+Pane.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Pane.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Pane.expand+> -->
 
 ### get_size
-
 <!-- <+Pane.get_size+> -->
 
 ### hide_row
-
 <!-- <+Pane.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Pane.set_cursor+> -->
 
+### set_focus
 <!-- <+Pane.set_focus+> -->
 
 ### set_size
-
 <!-- <+Pane.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Pane.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Pane.unbind+> -->
 
+### unhide_row
 <!-- <+Pane.unhide_row+> -->
 
 ### update
-
 <!-- <+Pane.update+> -->
 
-## ProgressBar Element
-
+## ProgressBar Element 
 <!-- <+ProgressBar.doc+> -->
 <!-- <+ProgressBar.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+ProgressBar.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+ProgressBar.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+ProgressBar.SetTooltip+> -->
 
 ### Update
-
 <!-- <+ProgressBar.Update+> -->
 
 ### UpdateBar
-
 <!-- <+ProgressBar.UpdateBar+> -->
 
 ### bind
-
 <!-- <+ProgressBar.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+ProgressBar.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+ProgressBar.expand+> -->
 
 ### get_size
-
 <!-- <+ProgressBar.get_size+> -->
 
 ### hide_row
-
 <!-- <+ProgressBar.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+ProgressBar.set_cursor+> -->
 
+### set_focus
 <!-- <+ProgressBar.set_focus+> -->
 
 ### set_size
-
 <!-- <+ProgressBar.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+ProgressBar.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+ProgressBar.unbind+> -->
 
+### unhide_row
 <!-- <+ProgressBar.unhide_row+> -->
 
 ### update
-
 <!-- <+ProgressBar.update+> -->
 
 ### update_bar
-
 <!-- <+ProgressBar.update_bar+> -->
 
-
-## Radio Element
-
+## Radio Element 
 <!-- <+Radio.doc+> -->
 <!-- <+Radio.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Radio.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Radio.Get+> -->
 
 ### ResetGroup
-
 <!-- <+Radio.ResetGroup+> -->
 
 ### SetFocus
-
 <!-- <+Radio.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Radio.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Radio.Update+> -->
 
 ### bind
-
 <!-- <+Radio.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Radio.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Radio.expand+> -->
 
 ### get
-
 <!-- <+Radio.get+> -->
 
 ### get_size
-
 <!-- <+Radio.get_size+> -->
 
 ### hide_row
-
 <!-- <+Radio.hide_row+> -->
 
 ### reset_group
-
 <!-- <+Radio.reset_group+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Radio.set_cursor+> -->
 
+### set_focus
 <!-- <+Radio.set_focus+> -->
 
 ### set_size
-
 <!-- <+Radio.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Radio.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Radio.unbind+> -->
 
+### unhide_row
 <!-- <+Radio.unhide_row+> -->
 
 ### update
-
 <!-- <+Radio.update+> -->
 
-## Slider Element
-
+## Slider Element 
 <!-- <+Slider.doc+> -->
 <!-- <+Slider.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Slider.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Slider.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Slider.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Slider.Update+> -->
 
 ### bind
-
 <!-- <+Slider.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Slider.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Slider.expand+> -->
 
 ### get_size
-
 <!-- <+Slider.get_size+> -->
 
 ### hide_row
-
 <!-- <+Slider.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Slider.set_cursor+> -->
 
+### set_focus
 <!-- <+Slider.set_focus+> -->
 
 ### set_size
-
 <!-- <+Slider.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Slider.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Slider.unbind+> -->
 
+### unhide_row
 <!-- <+Slider.unhide_row+> -->
 
 ### update
-
 <!-- <+Slider.update+> -->
 
-## Spin Element
-
+## Spin Element 
 <!-- <+Spin.doc+> -->
 <!-- <+Spin.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Spin.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Spin.Get+> -->
 
 ### SetFocus
-
 <!-- <+Spin.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Spin.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Spin.Update+> -->
 
 ### bind
-
 <!-- <+Spin.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Spin.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Spin.expand+> -->
 
 ### get
-
 <!-- <+Spin.get+> -->
 
 ### get_size
-
 <!-- <+Spin.get_size+> -->
 
 ### hide_row
-
 <!-- <+Spin.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Spin.set_cursor+> -->
 
+### set_focus
 <!-- <+Spin.set_focus+> -->
 
 ### set_size
-
 <!-- <+Spin.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Spin.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Spin.unbind+> -->
 
+### unhide_row
 <!-- <+Spin.unhide_row+> -->
 
 ### update
-
 <!-- <+Spin.update+> -->
 
-## StatusBar Element
-
+## StatusBar Element 
 <!-- <+StatusBar.doc+> -->
 <!-- <+StatusBar.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+StatusBar.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+StatusBar.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+StatusBar.SetTooltip+> -->
 
 ### Update
-
 <!-- <+StatusBar.Update+> -->
 
 ### bind
-
 <!-- <+StatusBar.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+StatusBar.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+StatusBar.expand+> -->
 
 ### get_size
-
 <!-- <+StatusBar.get_size+> -->
 
 ### hide_row
-
 <!-- <+StatusBar.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+StatusBar.set_cursor+> -->
 
+### set_focus
 <!-- <+StatusBar.set_focus+> -->
 
 ### set_size
-
 <!-- <+StatusBar.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+StatusBar.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+StatusBar.unbind+> -->
 
+### unhide_row
 <!-- <+StatusBar.unhide_row+> -->
 
 ### update
-
 <!-- <+StatusBar.update+> -->
 
-## Tab Element
+## SystemTray Element 
+<!-- <+SystemTray.doc+> -->
+<!-- <+SystemTray.__init__+> -->
 
+### Close
+<!-- <+SystemTray.Close+> -->
+
+### Hide
+<!-- <+SystemTray.Hide+> -->
+
+### Read
+<!-- <+SystemTray.Read+> -->
+
+### ShowMessage
+<!-- <+SystemTray.ShowMessage+> -->
+
+### UnHide
+<!-- <+SystemTray.UnHide+> -->
+
+### Update
+<!-- <+SystemTray.Update+> -->
+
+### close
+<!-- <+SystemTray.close+> -->
+
+### hide
+<!-- <+SystemTray.hide+> -->
+
+### notify
+<!-- <+SystemTray.notify+> -->
+
+### read
+<!-- <+SystemTray.read+> -->
+
+### show_message
+<!-- <+SystemTray.show_message+> -->
+
+### un_hide
+<!-- <+SystemTray.un_hide+> -->
+
+### update
+<!-- <+SystemTray.update+> -->
+
+## Tab Element 
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
 
-### ButtonReboundCallback
+### AddRow
+<!-- <+Tab.AddRow+> -->
 
-<!-- <+Tab.ButtonReboundCallback+> -->
-
-
+### Layout
+<!-- <+Tab.Layout+> -->
 
 ### Select
-
 <!-- <+Tab.Select+> -->
 
 ### SetFocus
-
 <!-- <+Tab.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Tab.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Tab.Update+> -->
 
+### add_row
+<!-- <+Tab.add_row+> -->
 
 ### bind
-
 <!-- <+Tab.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Tab.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Tab.expand+> -->
 
 ### get_size
-
 <!-- <+Tab.get_size+> -->
 
 ### hide_row
-
 <!-- <+Tab.hide_row+> -->
 
+### layout
+<!-- <+Tab.layout+> -->
 
 ### select
-
 <!-- <+Tab.select+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Tab.set_cursor+> -->
 
+### set_focus
 <!-- <+Tab.set_focus+> -->
 
 ### set_size
-
 <!-- <+Tab.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Tab.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Tab.unbind+> -->
 
+### unhide_row
 <!-- <+Tab.unhide_row+> -->
 
 ### update
-
 <!-- <+Tab.update+> -->
 
-## TabGroup Element
-
+## TabGroup Element 
 <!-- <+TabGroup.doc+> -->
 <!-- <+TabGroup.__init__+> -->
 
 
-### ButtonReboundCallback
-
-<!-- <+TabGroup.ButtonReboundCallback+> -->
 
 ### FindKeyFromTabName
-
 <!-- <+TabGroup.FindKeyFromTabName+> -->
 
 ### Get
-
 <!-- <+TabGroup.Get+> -->
 
 
 ### SetFocus
-
 <!-- <+TabGroup.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+TabGroup.SetTooltip+> -->
 
 
 ### bind
-
 <!-- <+TabGroup.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+TabGroup.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+TabGroup.expand+> -->
 
 ### find_key_from_tab_name
-
 <!-- <+TabGroup.find_key_from_tab_name+> -->
 
 ### get
-
 <!-- <+TabGroup.get+> -->
 
 ### get_size
-
 <!-- <+TabGroup.get_size+> -->
 
 ### hide_row
-
 <!-- <+TabGroup.hide_row+> -->
 
-### layout
 
-<!-- <+TabGroup.layout+> -->
+### set_cursor
+<!-- <+TabGroup.set_cursor+> -->
 
 ### set_focus
-
 <!-- <+TabGroup.set_focus+> -->
 
 ### set_size
-
 <!-- <+TabGroup.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+TabGroup.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+TabGroup.unbind+> -->
 
+### unhide_row
 <!-- <+TabGroup.unhide_row+> -->
 
-## Table Element
-
+## Table Element 
 <!-- <+Table.doc+> -->
 <!-- <+Table.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Table.ButtonReboundCallback+> -->
-
 ### Get
-
 <!-- <+Table.Get+> -->
 
 ### SetFocus
-
 <!-- <+Table.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Table.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Table.Update+> -->
 
 ### bind
-
 <!-- <+Table.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Table.button_rebound_callback+> -->
 
 ### expand
-
 <!-- <+Table.expand+> -->
 
 ### get
-
 <!-- <+Table.get+> -->
 
 ### get_size
-
 <!-- <+Table.get_size+> -->
 
 ### hide_row
-
 <!-- <+Table.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Table.set_cursor+> -->
 
+### set_focus
 <!-- <+Table.set_focus+> -->
 
 ### set_size
-
 <!-- <+Table.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Table.set_tooltip+> -->
 
+### unbind
+<!-- <+Table.unbind+> -->
 
 ### unhide_row
-
 <!-- <+Table.unhide_row+> -->
 
 ### update
-
 <!-- <+Table.update+> -->
 
-## Text Element
-
+## Text Element 
 <!-- <+Text.doc+> -->
 <!-- <+Text.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Text.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Text.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Text.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Text.Update+> -->
 
 ### bind
-
 <!-- <+Text.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Text.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Text.expand+> -->
 
 ### get_size
-
 <!-- <+Text.get_size+> -->
 
 ### hide_row
-
 <!-- <+Text.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Text.set_cursor+> -->
 
+### set_focus
 <!-- <+Text.set_focus+> -->
 
 ### set_size
-
 <!-- <+Text.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Text.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+Text.unbind+> -->
 
+### unhide_row
 <!-- <+Text.unhide_row+> -->
 
 ### update
-
 <!-- <+Text.update+> -->
 
-## ToolTip Element
 
-<!-- <+ToolTip.doc+> -->
-<!-- <+ToolTip.__init__+> -->
-
-### enter
-
-<!-- <+ToolTip.enter+> -->
-
-### hidetip
-
-<!-- <+ToolTip.hidetip+> -->
-
-### leave
-
-<!-- <+ToolTip.leave+> -->
-
-### schedule
-
-<!-- <+ToolTip.schedule+> -->
-
-### showtip
-
-<!-- <+ToolTip.showtip+> -->
-
-### unschedule
-
-<!-- <+ToolTip.unschedule+> -->
-
-## Tree Element
-
+## Tree Element 
 <!-- <+Tree.doc+> -->
 <!-- <+Tree.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+Tree.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+Tree.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+Tree.SetTooltip+> -->
 
 ### Update
-
 <!-- <+Tree.Update+> -->
 
 ### add_treeview_data
-
 <!-- <+Tree.add_treeview_data+> -->
 
 ### bind
-
 <!-- <+Tree.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+Tree.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+Tree.expand+> -->
 
 ### get_size
-
 <!-- <+Tree.get_size+> -->
 
 ### hide_row
-
 <!-- <+Tree.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+Tree.set_cursor+> -->
 
+### set_focus
 <!-- <+Tree.set_focus+> -->
 
 ### set_size
-
 <!-- <+Tree.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+Tree.set_tooltip+> -->
 
-### treeview_selected
-
-<!-- <+Tree.treeview_selected+> -->
+### unbind
+<!-- <+Tree.unbind+> -->
 
 ### unhide_row
-
 <!-- <+Tree.unhide_row+> -->
 
 ### update
-
 <!-- <+Tree.update+> -->
 
-## TreeData Element
-
+## TreeData Element 
 <!-- <+TreeData.doc+> -->
 <!-- <+TreeData.__init__+> -->
 
 ### Insert
-
 <!-- <+TreeData.Insert+> -->
 
 ### Node
-
 <!-- <+TreeData.Node+> -->
 
 ### insert
-
 <!-- <+TreeData.insert+> -->
 
-## VerticalSeparator Element
-
+## VerticalSeparator Element 
 <!-- <+VerticalSeparator.doc+> -->
 <!-- <+VerticalSeparator.__init__+> -->
 
-### ButtonReboundCallback
-
-<!-- <+VerticalSeparator.ButtonReboundCallback+> -->
-
 ### SetFocus
-
 <!-- <+VerticalSeparator.SetFocus+> -->
 
 ### SetTooltip
-
 <!-- <+VerticalSeparator.SetTooltip+> -->
 
 ### bind
-
 <!-- <+VerticalSeparator.bind+> -->
 
-### button_rebound_callback
-
-<!-- <+VerticalSeparator.button_rebound_callback+> -->
-
 ### expand
-
 <!-- <+VerticalSeparator.expand+> -->
 
 ### get_size
-
 <!-- <+VerticalSeparator.get_size+> -->
 
 ### hide_row
-
 <!-- <+VerticalSeparator.hide_row+> -->
 
-### set_focus
+### set_cursor
+<!-- <+VerticalSeparator.set_cursor+> -->
 
+### set_focus
 <!-- <+VerticalSeparator.set_focus+> -->
 
 ### set_size
-
 <!-- <+VerticalSeparator.set_size+> -->
 
 ### set_tooltip
-
 <!-- <+VerticalSeparator.set_tooltip+> -->
 
-### unhide_row
+### unbind
+<!-- <+VerticalSeparator.unbind+> -->
 
+### unhide_row
 <!-- <+VerticalSeparator.unhide_row+> -->
 
-## Window Element
-
+## Window 
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
 
 ### AddRow
-
 <!-- <+Window.AddRow+> -->
 
 ### AddRows
-
 <!-- <+Window.AddRows+> -->
 
 ### AlphaChannel
-
 <!-- <+Window.AlphaChannel+> -->
 
 ### BringToFront
-
 <!-- <+Window.BringToFront+> -->
 
 ### Close
-
 <!-- <+Window.Close+> -->
 
-
 ### CurrentLocation
-
 <!-- <+Window.CurrentLocation+> -->
 
-
 ### Disable
-
 <!-- <+Window.Disable+> -->
 
 ### DisableDebugger
-
 <!-- <+Window.DisableDebugger+> -->
 
 ### Disappear
-
 <!-- <+Window.Disappear+> -->
 
 ### Elem
-
 <!-- <+Window.Elem+> -->
 
 ### Element
-
 <!-- <+Window.Element+> -->
 
 ### Enable
-
 <!-- <+Window.Enable+> -->
 
 ### EnableDebugger
-
 <!-- <+Window.EnableDebugger+> -->
 
 ### Fill
-
 <!-- <+Window.Fill+> -->
 
 ### Finalize
-
 <!-- <+Window.Finalize+> -->
 
 ### Find
-
 <!-- <+Window.Find+> -->
 
 ### FindElement
-
 <!-- <+Window.FindElement+> -->
 
 ### FindElementWithFocus
-
 <!-- <+Window.FindElementWithFocus+> -->
 
-
 ### GetScreenDimensions
-
 <!-- <+Window.GetScreenDimensions+> -->
 
 ### GrabAnyWhereOff
-
 <!-- <+Window.GrabAnyWhereOff+> -->
 
 ### GrabAnyWhereOn
-
 <!-- <+Window.GrabAnyWhereOn+> -->
 
 ### Hide
-
 <!-- <+Window.Hide+> -->
 
 ### Layout
-
 <!-- <+Window.Layout+> -->
 
-
 ### LoadFromDisk
-
 <!-- <+Window.LoadFromDisk+> -->
 
 ### Maximize
-
 <!-- <+Window.Maximize+> -->
 
 ### Minimize
-
 <!-- <+Window.Minimize+> -->
 
 ### Move
-
 <!-- <+Window.Move+> -->
 
 ### Normal
-
 <!-- <+Window.Normal+> -->
 
-
 ### Read
-
 <!-- <+Window.Read+> -->
 
 ### Reappear
-
 <!-- <+Window.Reappear+> -->
 
 ### Refresh
-
 <!-- <+Window.Refresh+> -->
 
 ### SaveToDisk
-
 <!-- <+Window.SaveToDisk+> -->
 
 ### SendToBack
-
 <!-- <+Window.SendToBack+> -->
 
 ### SetAlpha
-
 <!-- <+Window.SetAlpha+> -->
 
 ### SetIcon
-
 <!-- <+Window.SetIcon+> -->
 
 ### SetTransparentColor
-
 <!-- <+Window.SetTransparentColor+> -->
 
 ### Size
-
 <!-- <+Window.Size+> -->
 
 ### UnHide
-
 <!-- <+Window.UnHide+> -->
 
 ### VisibilityChanged
-
 <!-- <+Window.VisibilityChanged+> -->
 
 ### add_row
-
 <!-- <+Window.add_row+> -->
 
 ### add_rows
-
 <!-- <+Window.add_rows+> -->
 
 ### alpha_channel
-
 <!-- <+Window.alpha_channel+> -->
 
 ### bind
-
 <!-- <+Window.bind+> -->
 
 ### bring_to_front
-
 <!-- <+Window.bring_to_front+> -->
 
 ### close
-
 <!-- <+Window.close+> -->
 
 ### current_location
-
 <!-- <+Window.current_location+> -->
 
 ### disable
-
 <!-- <+Window.disable+> -->
 
 ### disable_debugger
-
 <!-- <+Window.disable_debugger+> -->
 
 ### disappear
-
 <!-- <+Window.disappear+> -->
 
 ### elem
-
 <!-- <+Window.elem+> -->
 
 ### element
-
 <!-- <+Window.element+> -->
 
-### enable
+### element_list
+<!-- <+Window.element_list+> -->
 
+### enable
 <!-- <+Window.enable+> -->
 
 ### enable_debugger
-
 <!-- <+Window.enable_debugger+> -->
 
-### fill
+### extend_layout
+<!-- <+Window.extend_layout+> -->
 
+### fill
 <!-- <+Window.fill+> -->
 
 ### finalize
-
 <!-- <+Window.finalize+> -->
 
 ### find
-
 <!-- <+Window.find+> -->
 
 ### find_element
-
 <!-- <+Window.find_element+> -->
 
 ### find_element_with_focus
-
 <!-- <+Window.find_element_with_focus+> -->
 
 ### get_screen_dimensions
-
 <!-- <+Window.get_screen_dimensions+> -->
 
 ### get_screen_size
-
 <!-- <+Window.get_screen_size+> -->
 
 ### grab_any_where_off
-
 <!-- <+Window.grab_any_where_off+> -->
 
 ### grab_any_where_on
-
 <!-- <+Window.grab_any_where_on+> -->
 
 
 ### hide
-
 <!-- <+Window.hide+> -->
 
 ### layout
-
 <!-- <+Window.layout+> -->
 
 ### load_from_disk
-
 <!-- <+Window.load_from_disk+> -->
 
 ### maximize
-
 <!-- <+Window.maximize+> -->
 
 ### minimize
-
 <!-- <+Window.minimize+> -->
 
 ### move
-
 <!-- <+Window.move+> -->
 
 ### normal
-
 <!-- <+Window.normal+> -->
 
 ### read
-
 <!-- <+Window.read+> -->
 
-
 ### reappear
-
 <!-- <+Window.reappear+> -->
 
 ### refresh
-
 <!-- <+Window.refresh+> -->
 
 ### save_to_disk
-
 <!-- <+Window.save_to_disk+> -->
 
 ### send_to_back
-
 <!-- <+Window.send_to_back+> -->
 
 ### set_alpha
-
 <!-- <+Window.set_alpha+> -->
 
 ### set_icon
-
 <!-- <+Window.set_icon+> -->
 
 ### set_transparent_color
-
 <!-- <+Window.set_transparent_color+> -->
 
 ### size
-
 <!-- <+Window.size+> -->
 
 ### un_hide
-
 <!-- <+Window.un_hide+> -->
 
-
 ### visibility_changed
-
 <!-- <+Window.visibility_changed+> -->
 
 
@@ -6490,6 +6152,7 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.easy_print+> -->
 <!-- <+func.easy_print_close+> -->
 <!-- <+func.eprint+> -->
+<!-- <+func.print_to_element+> -->
 <!-- <+func.sgprint+> -->
 <!-- <+func.sgprint_close+> -->
 <!-- <+func.EasyPrint+> -->
@@ -6573,18 +6236,25 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.test+> -->
 
 
-
-
 ## Themes
 
 <!-- <+func.theme+> -->
 <!-- <+func.theme_background_color+> -->
+<!-- <+func.theme_border_width+> -->
 <!-- <+func.theme_button_color+> -->
+<!-- <+func.theme_element_background_color+> -->
+<!-- <+func.theme_element_text_color+> -->
 <!-- <+func.theme_input_background_color+> -->
 <!-- <+func.theme_input_text_color+> -->
 <!-- <+func.theme_list+> -->
 <!-- <+func.theme_previewer+> -->
+<!-- <+func.theme_progress_bar_border_width+> -->
+<!-- <+func.theme_progress_bar_color+> -->
+<!-- <+func.theme_slider_border_width+> -->
+<!-- <+func.theme_slider_color+> -->
 <!-- <+func.theme_text_color+> -->
+<!-- <+func.theme_text_element_background_color+> -->
+
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
