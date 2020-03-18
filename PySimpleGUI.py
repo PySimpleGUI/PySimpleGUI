@@ -1811,12 +1811,14 @@ class Checkbox(Element):
         """
         return self.TKIntVar.get()
 
-    def Update(self, value=None, background_color=None, text_color=None, disabled=None, visible=None):
+    def Update(self, value=None, text = None background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
         :param value: if True checks the checkbox, False clears it
         :type value: (bool)
+        :param text: Text to display next to checkbox
+        :type text: (str)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text. Note this also changes the color of the checkmark
@@ -1836,6 +1838,9 @@ class Checkbox(Element):
                 self.InitialState = value
             except:
                 print('Checkbox update failed')
+        if text is not None:
+            self.TKCheckbutton.configure(text=text)
+            self.Text = text
         if disabled == True:
             self.TKCheckbutton.configure(state='disabled')
         elif disabled == False:
