@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.15  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib, more docstrings"
+version = __version__ = "4.16.16  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib, more docstrings"
 
 port = 'PySimpleGUI'
 
