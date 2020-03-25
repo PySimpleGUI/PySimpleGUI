@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.17.0  Released 24 Mar 2020"
+version = __version__ = "4.17.0.1  Unreleased - popup_animated title parm"
 
 port = 'PySimpleGUI'
 
@@ -14216,8 +14216,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None,
-                  time_between_frames=0, transparent_color=None):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title=''):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -14248,6 +14247,8 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :type time_between_frames: (int)
     :param transparent_color:  This color will be completely see-through in your window. Can even click through
     :type transparent_color: (str)
+    :param title:  Title that will be shown on the window
+    :type title: (str)
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
@@ -14264,7 +14265,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
-        window = Window('Animated GIF', layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
+        window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
                         transparent_color=transparent_color, finalize=True, element_justification='c')
