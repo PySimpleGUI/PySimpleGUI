@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.17.0.1  Unreleased - popup_animated title parm"
+version = __version__ = "4.17.0.2  Unreleased - popup_animated title parm, checkbox update text"
 
 port = 'PySimpleGUI'
 
@@ -1816,12 +1816,14 @@ class Checkbox(Element):
         """
         return self.TKIntVar.get()
 
-    def Update(self, value=None, background_color=None, text_color=None, disabled=None, visible=None):
+    def Update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
         :param value: if True checks the checkbox, False clears it
         :type value: (bool)
+        :param text: Text to display next to checkbox
+        :type text: (str)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text. Note this also changes the color of the checkmark
@@ -1845,6 +1847,9 @@ class Checkbox(Element):
             self.TKCheckbutton.configure(state='disabled')
         elif disabled == False:
             self.TKCheckbutton.configure(state='normal')
+        if text is not None:
+            self.Text = str(text)
+            self.TKCheckbutton.configure(text=self.Text)
         if background_color is not None:
             self.TKCheckbutton.configure(background=background_color)
             self.BackgroundColor = background_color
