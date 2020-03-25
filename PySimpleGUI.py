@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.16.16  Unreleased\n update_animation_no_buffering, popup_notify, removed TRANSPARENT_BUTTON, TabGroup now autonumbers keys, Table col width better size based on font, Table measure row height, Upgrade from GitHub utility (experimental), Multiline.print, fix padding lost with visibility, new upgrade utility, upgrade parameter, switched to urllib, more docstrings"
+version = __version__ = "4.17.0  Released 24 Mar 2020"
 
 port = 'PySimpleGUI'
 
@@ -277,6 +277,7 @@ OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
 
 CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
 
+
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
 DEFAULT_ELEMENT_BACKGROUND_COLOR = None
@@ -298,6 +299,9 @@ DEFAULT_SCROLLBAR_COLOR = None
 
 # A transparent button is simply one that matches the background
 # TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
+
+TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')  # Use (sg.theme_background_color(), sg.theme_background_color()) instead!!!
+
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
 RELIEF_RAISED = 'raised'
@@ -6841,6 +6845,9 @@ class Window:
         :return:  (event, values)
         :rtype: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None]
         """
+        # ensure called only 1 time through a single read cycle
+        if not Window._read_call_from_debugger:
+            _refresh_debugger()
         results = self._read(timeout=timeout, timeout_key=timeout_key)
         if close:
             self.close()
@@ -6863,9 +6870,7 @@ class Window:
         :return: (event, values) (event or timeout_key or None, Dictionary of values or List of values from all elements in the Window)
         :rtype: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None]
         """
-        # ensure called only 1 time through a single read cycle
-        if not Window._read_call_from_debugger:
-            _refresh_debugger()
+
         timeout = int(timeout) if timeout is not None else None
         if timeout == 0:  # timeout of zero runs the old readnonblocking
             event, values = self._ReadNonBlocking()
@@ -15188,9 +15193,14 @@ def _upgrade_from_github():
 
 
 def _upgrade_gui():
+    try:
+        cur_ver = version[:version.index('\n')]
+    except:
+        cur_ver = version
+
     if popup_yes_no('* WARNING *',
                     'You are about to upgrade your PySimpleGUI package previously installed via pip to the latest version location on the GitHub server.',
-                    'You are running verrsion {}'.format(version[:version.index('\n')]),
+                    'You are running verrsion {}'.format(cur_ver),
                     'Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
                     keep_on_top=True) == 'Yes':
         _upgrade_from_github()
@@ -15208,7 +15218,11 @@ def main():
     # theme('dark brown 2')
     # theme('dark red')
     # theme('Light Green 6')
-    ver = version[:version.index('\n')]
+    try:
+        ver = version[:version.index('\n')]
+    except:
+        ver = version
+
     print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tkinter.TclVersion),
           'tkinter version = {}'.format(tkinter.TkVersion), '\nPython Version {}'.format(sys.version))
 
