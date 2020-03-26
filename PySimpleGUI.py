@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.17.0.3  Unreleased - popup_animated title parm, checkbox update text, table width fix"
+version = __version__ = "4.18.0  Released 26 Mar 2020"
 
 port = 'PySimpleGUI'
 
