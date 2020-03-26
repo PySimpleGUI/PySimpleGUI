@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.17.0.2  Unreleased - popup_animated title parm, checkbox update text"
+version = __version__ = "4.17.0.3  Unreleased - popup_animated title parm, checkbox update text, table width fix"
 
 port = 'PySimpleGUI'
 
@@ -10364,7 +10364,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     photo = tk.PhotoImage(data=element.Data)
                 else:
                     photo = None
-                    print('*ERROR laying out form.... Image Element has no image specified*')
+                    # print('*ERROR laying out form.... Image Element has no image specified*')
 
                 if photo is not None:
                     if element_size == (
@@ -10386,19 +10386,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.image = photo
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                    if element.Visible is False:
-                        element.tktext_label.pack_forget()
-                    if element.Tooltip is not None:
-                        element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
-                                                        timeout=DEFAULT_TOOLTIP_TIME)
-                    if element.EnableEvents:
-                        element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
-                    if element.RightClickMenu or toplevel_form.RightClickMenu:
-                        menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                        top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                        AddMenuItem(top_menu, menu[1], element)
-                        element.TKRightClickMenu = top_menu
-                        element.tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
+
+                if element.Visible is False:
+                    element.tktext_label.pack_forget()
+                if element.Tooltip is not None:
+                    element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
+                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                if element.EnableEvents:
+                    element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
                 # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -10649,6 +10650,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     anchor = tk.CENTER
                 column_widths = {}
+                # create column width list
                 for row in element.Values:
                     for i, col in enumerate(row):
                         col_width = min(len(str(col)), element.MaxColumnWidth)
@@ -10689,14 +10691,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 for i, heading in enumerate(headings):
                     treeview.heading(heading, text=heading)
                     if element.AutoSizeColumns:
-                        width = max(column_widths[i], _string_width_in_pixels(font, heading) + 10)
+                        width = max(column_widths[i], len(heading))  * _char_width_in_pixels(font)
                     else:
                         try:
                             width = element.ColumnWidths[i] * _char_width_in_pixels(font)
                         except:
                             width = element.DefaultColumnWidth * _char_width_in_pixels(font)
                     treeview.column(heading, width=width, minwidth=10, anchor=anchor, stretch=0)
-
                 # Insert values into the tree
                 for i, value in enumerate(element.Values):
                     if element.DisplayRowNumbers:
@@ -10802,8 +10803,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             width = element.ColumnWidths[i]
                         except:
                             width = element.DefaultColumnWidth
-                    treeview.column(heading, width=width * _char_width_in_pixels(font), anchor=anchor)
-
+                    treeview.column(heading, width=width * _char_width_in_pixels(font)+ 10, anchor=anchor)
                 def add_treeview_data(node):
                     """
 
@@ -15303,7 +15303,7 @@ def main():
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red')
 
     layout1 = [
-        [Image(data=DEFAULT_BASE64_ICON), Image(data=DEFAULT_BASE64_LOADING_GIF, key='_IMAGE_'),
+        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
          Text('You are running the PySimpleGUI.py file instead of importing it.\nAnd are thus seeing a test harness instead of your code', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
         [Frame('Input Text Group', frame1, title_color='red')],
