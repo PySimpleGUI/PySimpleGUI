@@ -1812,7 +1812,8 @@ popup_animated(image_source,
     location=(None, None),
     alpha_channel=None,
     time_between_frames=0,
-    transparent_color=None)
+    transparent_color=None,
+    title="")
 ```
 
 Parameter Descriptions:
@@ -1831,6 +1832,7 @@ Parameter Descriptions:
 |       float       |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int        | time_between_frames | Amount of time in milliseconds between each frame |
 |        str        |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str        |        title        | Title that will be shown on the window |
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
 
@@ -6506,6 +6508,7 @@ Note that changing visibility may cause element to change locations when made vi
 
 ```
 Update(value=None,
+    text=None,
     background_color=None,
     text_color=None,
     disabled=None,
@@ -6517,6 +6520,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | bool |      value       | if True checks the checkbox, False clears it |
+| str  |       text       | Text to display next to checkbox |
 | str  | background_color | color of background |
 | str  |    text_color    | color of the text. Note this also changes the color of the checkmark |
 | bool |     disabled     | disable or enable element |
@@ -6645,6 +6649,7 @@ Note that changing visibility may cause element to change locations when made vi
 
 ```
 update(value=None,
+    text=None,
     background_color=None,
     text_color=None,
     disabled=None,
@@ -6656,6 +6661,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | bool |      value       | if True checks the checkbox, False clears it |
+| str  |       text       | Text to display next to checkbox |
 | str  | background_color | color of background |
 | str  |    text_color    | color of the text. Note this also changes the color of the checkmark |
 | bool |     disabled     | disable or enable element |
@@ -15662,7 +15668,8 @@ PopupAnimated(image_source,
     location=(None, None),
     alpha_channel=None,
     time_between_frames=0,
-    transparent_color=None)
+    transparent_color=None,
+    title="")
 ```
 
 Parameter Descriptions:
@@ -15681,6 +15688,7 @@ Parameter Descriptions:
 |       float       |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int        | time_between_frames | Amount of time in milliseconds between each frame |
 |        str        |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str        |        title        | Title that will be shown on the window |
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -16558,7 +16566,8 @@ popup_animated(image_source,
     location=(None, None),
     alpha_channel=None,
     time_between_frames=0,
-    transparent_color=None)
+    transparent_color=None,
+    title="")
 ```
 
 Parameter Descriptions:
@@ -16577,6 +16586,7 @@ Parameter Descriptions:
 |       float       |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
 |        int        | time_between_frames | Amount of time in milliseconds between each frame |
 |        str        |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str        |        title        | Title that will be shown on the window |
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -19138,6 +19148,14 @@ Upgrade utility
 * popup_notify - Creates a "notification window" that is like the System Tray Message window
 * shell_with_animation - launch a shell command that runs while an animated GIF is shown
 * Fixed problem with debugger not working after the recent close parameter addition to Window.read
+
+## 4.18.0 PySimpleGUI 26-Mar-2020
+
+An "Oh F**k" Release - Table column sizes were bad
+
+* Fixed bug in Table Element's column size computation
+* popup_animated has new title parameter
+* Checkbox - update can change the text
 
 ### Upcoming
 
