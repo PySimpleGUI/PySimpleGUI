@@ -15,15 +15,10 @@
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
 [![PyPI Version](https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge)](https://pypi.org/project/pysimplegui/) tkinter
-
 [![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) Qt
-
 [![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiweb/) Web
-
 [![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiwx/) Wx
-
 [![Commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
-
 [![Last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
 
 # PySimpleGUI User's Manual
@@ -794,9 +789,9 @@ Beautiful windows are created, not simply given to you.  There are people that d
 
 Some of these have been "polished", others like the Matplotlib example is more a functional example to show you it works.
 
-![batterup2](https://user-images.githubusercontent.com/13696193/50378902-6aa2bb00-060a-11e9-8f2f-d746694fa4ee.gif)
+![batterup](https://user-images.githubusercontent.com/46163555/77781297-b624ef80-702b-11ea-857a-b0809f061dc9.png)
 
-![uno_final](https://user-images.githubusercontent.com/13696193/49945232-67952580-feba-11e8-90c8-7dc31c5f7c67.gif)
+![Uno](https://user-images.githubusercontent.com/46163555/77781360-d05ecd80-702b-11ea-90f9-cb9fb3339c05.png)
 
 This chess program is capable of running multiple AI chess engines and was written by another user using PySimpleGUI.
 
@@ -820,7 +815,7 @@ In release 4.9 another 32 Color Themes were added... here are the current choice
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
-![cpu cores dashboard 2](https://user-images.githubusercontent.com/13696193/47611749-18964c80-da42-11e8-93c4-6821a6fce488.gif)
+![cpumeter](https://user-images.githubusercontent.com/46163555/77781418-ec626f00-702b-11ea-90b3-668fb71d63b5.png)
 
 Want to build a Crossword Puzzle?  No problem, the drawing primitives are there for you.
 
@@ -856,7 +851,7 @@ It's possible to create some cool games by simply using the built-in PySimpleGUI
 
 Games haven't not been explored much, yet, using PySimpleGUI.
 
-![pong](https://user-images.githubusercontent.com/13696193/45860012-2d8d0b00-bd33-11e8-9efd-3eaf4c30f324.gif)
+![pong](https://user-images.githubusercontent.com/46163555/77781526-1c117700-702c-11ea-901b-4cb5f7a34cb4.png)
 
 # Windows Programs That Look Like Windows Programs
 
@@ -868,7 +863,7 @@ Combining PySimpleGUI with PyInstaller creates something truly remarkable and sp
 
 The application you see below with a working menu was created in 20 lines of Python code.  It is a single .EXE file that launches straight into the screen you see.  And more good news, the only icon you see on the taskbar is the window itself... there is no pesky shell window.  Nice, huh? 
 
-![menu demo](https://user-images.githubusercontent.com/13696193/45923097-8fbc4c00-beaa-11e8-87d2-01a5331811c8.gif)
+![windowsprogram](https://user-images.githubusercontent.com/46163555/77781479-03a15c80-702c-11ea-9408-903e022e0418.png)
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
 
