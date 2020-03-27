@@ -11435,8 +11435,12 @@ class _DebugWin():
         # print(f'Printing {ObjToStringSingleObj(self.output_element)}')
         if self.do_not_reroute_stdout:
             outstring = ''
-            for arg in args:
-                outstring += str(arg) + sepchar
+            num_args = len(args)
+            sep_str = str(sep) if sep is not None else ' '
+            for i, arg in enumerate(args):
+                outstring += str(arg)
+                if i != num_args - 1:
+                    outstring += str(sep_str)
             outstring += endchar
             self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
         else:
@@ -11534,8 +11538,13 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     endchar = end if end is not None else '\n'
 
     outstring = ''
-    for arg in args:
-        outstring += str(arg) + sepchar
+    num_args = len(args)
+    sep_str = str(sep) if sep is not None else ' '
+    for i, arg in enumerate(args):
+        outstring += str(arg)
+        if i != num_args-1:
+            outstring += str(sep_str)
+
     outstring += endchar
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
 
