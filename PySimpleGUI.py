@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0  Released 26 Mar 2020"
+version = __version__ = "4.18.0.2  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date"
 
 port = 'PySimpleGUI'
 
@@ -128,6 +128,8 @@ from math import fabs
 from functools import wraps
 from subprocess import run, PIPE
 from threading import Thread
+import calendar as cal
+import itertools
 import os
 
 warnings.simplefilter('always', UserWarning)
@@ -11434,10 +11436,17 @@ class _DebugWin():
             event, values = self.window.Read(timeout=0)
         # print(f'Printing {ObjToStringSingleObj(self.output_element)}')
         if self.do_not_reroute_stdout:
+            end_str = str(end) if end is not None else '\n'
+            sep_str = str(sep) if sep is not None else ' '
+
             outstring = ''
-            for arg in args:
-                outstring += str(arg) + sepchar
-            outstring += endchar
+            num_args = len(args)
+            for i, arg in enumerate(args):
+                outstring += str(arg)
+                if i != num_args - 1:
+                    outstring += sep_str
+            outstring += end_str
+
             self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
         else:
             print(*args, sep=sepchar, end=endchar)
@@ -11530,13 +11539,17 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :param background_color: The background color of the line
     :type background_color: (str)
     """
-    sepchar = sep if sep is not None else ' '
-    endchar = end if end is not None else '\n'
+    end_str = str(end) if end is not None else '\n'
+    sep_str = str(sep) if sep is not None else ' '
 
     outstring = ''
-    for arg in args:
-        outstring += str(arg) + sepchar
-    outstring += endchar
+    num_args = len(args)
+    for i, arg in enumerate(args):
+        outstring += str(arg)
+        if i != num_args-1:
+            outstring += sep_str
+    outstring += end_str
+
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
 
 
@@ -14217,6 +14230,110 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     else:
         path = values['_INPUT_']
         return path
+
+
+
+def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, location=(None, None)):
+    """
+    Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
+
+    :param start_mon: The starting month
+    :type start_mon: int
+    :param start_day: The starting day - optional. Set to 0 if no date to be chosen at start
+    :type start_day: int
+    :param start_year: The starting year
+    :type start_year: int
+    :param begin_at_sunday_plus: Determines the left-most day in the display. 0=sunday, 1=monday, etc
+    :type begin_at_sunday_plus: int
+    :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
+    :rtype: None or (int, int, int)
+    """
+
+    day_font = 'TkFixedFont 8'
+    mon_year_font = 'TkFixedFont 10'
+    arrow_font = 'TkFixedFont 8'
+
+    def update_days(window, month, year, begin_at_sunday_plus):
+        [window[(week, day)].update('') for day in range(7) for week in range(6)]
+        weeks = cal.monthcalendar(year, month)
+        month_days = list(itertools.chain.from_iterable([[0 for _ in range(8 - begin_at_sunday_plus)]] + weeks))
+        if month_days[6] == 0:
+            month_days = month_days[7:]
+            if month_days[6] == 0:
+                month_days = month_days[7:]
+        for i, day in enumerate(month_days):
+            offset = i
+            if offset >= 6 * 7:
+                break
+            window[(offset // 7, offset % 7)].update(str(day) if day else '')
+
+    def make_days_layout():
+        days_layout = []
+        for week in range(6):
+            row = []
+            for day in range(7):
+                row.append(T('', size=(4, 1), justification='c', font=day_font, key=(week, day), enable_events=True, pad=(0, 0)))
+            days_layout.append(row)
+        return days_layout
+
+    cur_month = start_mon
+    cur_year = start_year
+    cur_day = start_day
+
+    days_layout = make_days_layout()
+
+    layout = [[B('◄', font=arrow_font, border_width=0, key='-MON-DOWN-'),
+               Text('{} {}'.format(cal.month_name[cur_month], cur_year), size=(16,1), justification='c', font=mon_year_font, key='-MON-YEAR-'),
+               B('►', font=arrow_font,border_width=0, key='-MON-UP-')]]
+    layout += [[Col([[T(cal.day_abbr[i - (8 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
+    layout += days_layout
+    layout += [[Button('Ok', border_width=0,font='TkFixedFont 8'), Button('Cancel',border_width=0, font='TkFixedFont 8')]]
+
+    window = Window('Window Title', layout, no_titlebar=True, grab_anywhere=True, keep_on_top=True, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True)
+
+    update_days(window, cur_month, cur_year, begin_at_sunday_plus)
+
+    prev_choice = chosen_mon_day_year = None
+
+    if cur_day:
+        chosen_mon_day_year = cur_month, cur_day, cur_year
+        for week in range(6):
+            for day in range(7):
+                if window[(week,day)].DisplayText == str(cur_day):
+                    window[(week,day)].update(background_color=theme_text_color(), text_color=theme_background_color())
+                    prev_choice = (week,day)
+                    break
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event in (None, 'Cancel'):
+            chosen_mon_day_year = None
+            break
+        if event == 'Ok':
+            break
+        if event in ('-MON-UP-', '-MON-DOWN-'):
+            cur_month += 1 if event == '-MON-UP-' else -1
+            if cur_month > 12:
+                cur_month = 1
+                cur_year += 1
+            elif cur_month < 1:
+                cur_month = 12
+                cur_year -= 1
+            window['-MON-YEAR-'].update('{} {}'.format(cal.month_name[cur_month], cur_year))
+            update_days(window, cur_month, cur_year, begin_at_sunday_plus)
+            if prev_choice:
+                window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
+        elif type(event) is tuple:
+            if window[event].DisplayText != "":
+                chosen_mon_day_year = cur_month, int(window[event].DisplayText), cur_year
+                if prev_choice:
+                    window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
+                window[event].update(background_color=theme_text_color(), text_color=theme_background_color())
+                prev_choice = event
+    window.close()
+    return chosen_mon_day_year
+
+
 
 
 # --------------------------- PopupAnimated ---------------------------
