@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.2  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date"
+version = __version__ = "4.18.0.3  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated"
 
 port = 'PySimpleGUI'
 
@@ -12229,7 +12229,7 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                      'ACCENT3': '#889743'},
 
                        'LightGreen1': {'BACKGROUND': '#9FB8AD',
-                                       'TEXT': COLOR_SYSTEM_DEFAULT,
+                                       'TEXT': '#000000',
                                        'INPUT': '#F7F3EC', 'TEXT_INPUT': '#000000',
                                        'SCROLL': '#F7F3EC',
                                        'BUTTON': ('#FFFFFF', '#475841'),
@@ -14233,7 +14233,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 
-def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, location=(None, None)):
+def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, no_titlebar=True, keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -14245,6 +14245,8 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, lo
     :type start_year: int
     :param begin_at_sunday_plus: Determines the left-most day in the display. 0=sunday, 1=monday, etc
     :type begin_at_sunday_plus: int
+    :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :type icon: str
     :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
     :rtype: None or (int, int, int)
     """
@@ -14287,9 +14289,10 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, lo
                B('►', font=arrow_font,border_width=0, key='-MON-UP-')]]
     layout += [[Col([[T(cal.day_abbr[i - (8 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
     layout += days_layout
-    layout += [[Button('Ok', border_width=0,font='TkFixedFont 8'), Button('Cancel',border_width=0, font='TkFixedFont 8')]]
+    if not close_when_chosen:
+        layout += [[Button('Ok', border_width=0,font='TkFixedFont 8'), Button('Cancel',border_width=0, font='TkFixedFont 8')]]
 
-    window = Window('Window Title', layout, no_titlebar=True, grab_anywhere=True, keep_on_top=True, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True)
+    window = Window('Window Title', layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True, icon=icon)
 
     update_days(window, cur_month, cur_year, begin_at_sunday_plus)
 
@@ -14330,6 +14333,8 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, lo
                     window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
                 window[event].update(background_color=theme_text_color(), text_color=theme_background_color())
                 prev_choice = event
+                if no_buttons:
+                    break
     window.close()
     return chosen_mon_day_year
 
@@ -14338,7 +14343,7 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, lo
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title=''):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -14371,6 +14376,8 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :type transparent_color: (str)
     :param title:  Title that will be shown on the window
     :type title: (str)
+    :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :type icon: str
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
@@ -14390,7 +14397,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
-                        transparent_color=transparent_color, finalize=True, element_justification='c')
+                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon)
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
