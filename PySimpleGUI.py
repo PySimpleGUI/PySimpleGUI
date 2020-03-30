@@ -2790,6 +2790,7 @@ class Button(Element):
         self.CalendarCloseWhenChosen = False
         self.CalendarLocale = None
         self.CalendarFormat = None
+        self.CalendarLocation = (None, None)
         self.CalendarNoTitlebar = True
         self.CalendarBeginAtSundayPlus = 0
         self.InitialFolder = initial_folder
@@ -2949,7 +2950,7 @@ class Button(Element):
             else:
                 cur_month, cur_day, cur_year = self.CalendarDefaultDate_M_D_Y
 
-            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.CalendarCloseWhenChosen, no_titlebar=self.CalendarNoTitlebar, begin_at_sunday_plus=self.CalendarBeginAtSundayPlus, locale=self.CalendarLocale)
+            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.CalendarCloseWhenChosen, no_titlebar=self.CalendarNoTitlebar, begin_at_sunday_plus=self.CalendarBeginAtSundayPlus, locale=self.CalendarLocale, location=self.CalendarLocation)
             if date_chosen is not None:
                 month, day, year = date_chosen
                 now = datetime.datetime.now()
@@ -8941,7 +8942,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, no_titlebar=True, metadata=None):
+                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, no_titlebar=True, location=(None, None), metadata=None):
     """
     Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -8989,6 +8990,8 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     :type format: str
     :param no_titlebar: if True no titlebar will be shown on the date chooser window
     :type no_titlebar: bool
+    :param location: Location on the screen (x,y) to show the calendar popup window
+    :type location: (int, int)
     :param metadata: Anything you want to store along with this button
     :type metadata: Any
     :return: returns a button
@@ -9004,6 +9007,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     button.CalendarLocale = locale
     button.CalendarFormat = format
     button.CalendarNoTitlebar = no_titlebar
+    button.CalendarLocation = location
     button.CalendarBeginAtSundayPlus = begin_at_sunday_plus
     return button
 
