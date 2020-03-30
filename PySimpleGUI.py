@@ -14282,13 +14282,13 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 
-def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, no_titlebar=True, keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None):
+def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_sunday_plus=0, no_titlebar=True, keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
     :param start_mon: The starting month
     :type start_mon: int
-    :param start_day: The starting day - optional. Set to 0 if no date to be chosen at start
+    :param start_day: The starting day - optional. Set to None or 0 if no date to be chosen at start
     :type start_day: int or None
     :param start_year: The starting year
     :type start_year: int
@@ -14305,6 +14305,13 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, no
     day_font = 'TkFixedFont 8'
     mon_year_font = 'TkFixedFont 10'
     arrow_font = 'TkFixedFont 8'
+
+    now = datetime.datetime.now()
+    cur_month, cur_day, cur_year = now.month, now.day, now.year
+    cur_month = start_mon or cur_month
+    cur_day = start_day or cur_day
+    cur_year = start_year or cur_year
+
 
     def update_days(window, month, year, begin_at_sunday_plus):
         [window[(week, day)].update('') for day in range(7) for week in range(6)]
@@ -14328,10 +14335,6 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, no
                 row.append(T('', size=(4, 1), justification='c', font=day_font, key=(week, day), enable_events=True, pad=(0, 0)))
             days_layout.append(row)
         return days_layout
-
-    cur_month = start_mon
-    cur_year = start_year
-    cur_day = start_day
 
 
     def get_month_name(month_no, locale):
