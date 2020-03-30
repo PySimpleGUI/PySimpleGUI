@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.3  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated"
+version = __version__ = "4.18.0.4  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1)"
 
 port = 'PySimpleGUI'
 
@@ -2786,7 +2786,7 @@ class Button(Element):
         self.Focus = focus
         self.TKCal = None
         self.CalendarCloseWhenChosen = None
-        self.DefaultDate_M_D_Y = (None, None, None)
+        self.CalendarDefaultDate_M_D_Y = (None, None, None)
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -2936,12 +2936,26 @@ class Button(Element):
                 self.ParentForm.TKroot.destroy()
                 Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
+            # ------------ new chooser code -------------
+            #
+            # if self.CalendarDefaultDate_M_D_Y == (None, None, None):
+            #     now = datetime.datetime.now()
+            #     cur_month, cur_day, cur_year = now.month, now.day, now.year
+            # else:
+            #     cur_month, cur_day, cur_year = self.CalendarDefaultDate_M_D_Y
+            #
+            # date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.CalendarCloseWhenChosen)
+            #
+            # strvar.set(date_chosen)
+            # self.TKStringVar.set(date_chosen)
+
+            # ------------ old chooser code -------------
             should_submit_window = False
             root = tk.Toplevel()
             root.title('Calendar Chooser')
             root.wm_attributes("-topmost", 1)
             self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element,
-                                    close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y,
+                                    close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.CalendarDefaultDate_M_D_Y,
                                     locale=self.CalendarLocale, format=self.CalendarFormat)
             self.TKCal.pack(expand=1, fill='both')
             root.update()
@@ -8953,7 +8967,7 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
     button.CalendarCloseWhenChosen = close_when_date_chosen
-    button.DefaultDate_M_D_Y = default_date_m_d_y
+    button.CalendarDefaultDate_M_D_Y = default_date_m_d_y
     button.CalendarLocale = locale
     button.CalendarFormat = format
     return button
@@ -14040,7 +14054,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'),
                FolderBrowse(initial_folder=initial_folder)],
-              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
@@ -14216,7 +14230,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
-              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     no_titlebar=no_titlebar,
@@ -14333,7 +14347,7 @@ def popup_get_date(start_mon, start_day,  start_year, begin_at_sunday_plus=0, no
                     window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
                 window[event].update(background_color=theme_text_color(), text_color=theme_background_color())
                 prev_choice = event
-                if no_buttons:
+                if close_when_chosen:
                     break
     window.close()
     return chosen_mon_day_year
