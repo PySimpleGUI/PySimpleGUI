@@ -6,10 +6,10 @@ import PySimpleGUI as sg
 """
 
 layout = [[sg.Text('Date Chooser Test Harness', key='-TXT-')],
-      [sg.Input(key='-IN-', size=(20,1)), sg.CalendarButton('Cal US No Buttons', close_when_date_chosen=True,  target='-IN-')],
+      [sg.Input(key='-IN-', size=(20,1)), sg.CalendarButton('Cal US No Buttons Location (0,0)', close_when_date_chosen=True,  target='-IN-', location=(0,0))],
       [sg.Input(key='-IN3-', size=(20,1)), sg.CalendarButton('Cal US Monday', close_when_date_chosen=False,  target='-IN3-', begin_at_sunday_plus=1)],
       [sg.Input(key='-IN2-', size=(20,1)), sg.CalendarButton('Cal German Feb 2020',  target='-IN2-',  default_date_m_d_y=(2,None,2020), locale='de_DE', begin_at_sunday_plus=1 )],
-      [sg.Input(key='-IN4-', size=(20,1)), sg.CalendarButton('Cal Format %m-%d',  target='-IN4-', format='%m-%d', default_date_m_d_y=(2,None,2020), locale='de_DE', begin_at_sunday_plus=1 )],
+      [sg.Input(key='-IN4-', size=(20,1)), sg.CalendarButton('Cal Format %m-%d Jan 2020',  target='-IN4-', format='%m-%d', default_date_m_d_y=(1,None,2020), )],
       [sg.Button('Read'), sg.Button('Date Popup'), sg.Exit()]]
 
 window = sg.Window('window', layout)
