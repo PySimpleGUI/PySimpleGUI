@@ -51,7 +51,7 @@ win_size = (xx+size, 2*x0)
 
 layout = [[sg.Graph(canvas_size=win_size, graph_bottom_left=(0, 0),
                      graph_top_right=win_size, key='-GRAPH-')]]
-window = sg.Window('Fourier', layout=layout, finalize=True)
+window = sg.Window('Fourier', layout=layout)
 draw = window['-GRAPH-']
 
 i = 0
