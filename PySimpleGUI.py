@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.8  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
+version = __version__ = "4.18.0.9  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
 
 port = 'PySimpleGUI'
 
@@ -2785,14 +2785,16 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
-        self.CalendarCloseWhenChosen = None
-        self.CalendarDefaultDate_M_D_Y = (None, None, None)
-        self.CalendarCloseWhenChosen = False
-        self.CalendarLocale = None
-        self.CalendarFormat = None
-        self.CalendarLocation = (None, None)
-        self.CalendarNoTitlebar = True
-        self.CalendarBeginAtSundayPlus = 0
+        self.calendar_default_date_M_D_Y = (None, None, None)
+        self.calendar_close_when_chosen = False
+        self.calendar_locale = None
+        self.calendar_format = None
+        self.calendar_location = (None, None)
+        self.calendar_no_titlebar = True
+        self.calendar_begin_at_sunday_plus = 0
+        self.calendar_month_names = None
+        self.calendar_day_abbreviations = None
+        self.calendar_title = ''
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -2944,19 +2946,19 @@ class Button(Element):
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             # ------------ new chooser code -------------
 
-            if self.CalendarDefaultDate_M_D_Y == (None, None, None):
+            if self.calendar_default_date_M_D_Y == (None, None, None):
                 now = datetime.datetime.now()
                 cur_month, cur_day, cur_year = now.month, now.day, now.year
             else:
-                cur_month, cur_day, cur_year = self.CalendarDefaultDate_M_D_Y
+                cur_month, cur_day, cur_year = self.calendar_default_date_M_D_Y
 
-            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.CalendarCloseWhenChosen, no_titlebar=self.CalendarNoTitlebar, begin_at_sunday_plus=self.CalendarBeginAtSundayPlus, locale=self.CalendarLocale, location=self.CalendarLocation)
+            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.calendar_close_when_chosen, no_titlebar=self.calendar_no_titlebar, begin_at_sunday_plus=self.calendar_begin_at_sunday_plus, locale=self.calendar_locale, location=self.calendar_location, month_names=self.calendar_month_names, day_abbreviations=self.calendar_day_abbreviations, title=self.calendar_title)
             if date_chosen is not None:
                 month, day, year = date_chosen
                 now = datetime.datetime.now()
                 hour, minute, second = now.hour, now.minute, now.second
                 try:
-                    date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.CalendarFormat)
+                    date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.calendar_format)
                 except Exception as e:
                     print('Bad format string', e)
                     date_string = 'Bad format string'
@@ -8967,7 +8969,8 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, no_titlebar=True, location=(None, None), metadata=None):
+                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
+                   no_titlebar=True, location=(None, None), metadata=None):
     """
     Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -9013,6 +9016,12 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     :type locale: str
     :param format: formats result using this strftime format
     :type format: str
+    :param month_names: optional list of month names to use (should be 12 items)
+    :type month_names: List[str]
+    :param day_abbreviations: optional list of abbreviations to display as the day of week
+    :type day_abbreviations: List[str]
+    :param title: Title shown on the date chooser window
+    :type title: str
     :param no_titlebar: if True no titlebar will be shown on the date chooser window
     :type no_titlebar: bool
     :param location: Location on the screen (x,y) to show the calendar popup window
@@ -9027,13 +9036,17 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
-    button.CalendarCloseWhenChosen = close_when_date_chosen
-    button.CalendarDefaultDate_M_D_Y = default_date_m_d_y
-    button.CalendarLocale = locale
-    button.CalendarFormat = format
-    button.CalendarNoTitlebar = no_titlebar
-    button.CalendarLocation = location
-    button.CalendarBeginAtSundayPlus = begin_at_sunday_plus
+    button.calendar_close_when_chosen = close_when_date_chosen
+    button.calendar_default_date_M_D_Y = default_date_m_d_y
+    button.calendar_locale = locale
+    button.calendar_format = format
+    button.calendar_no_titlebar = no_titlebar
+    button.calendar_location = location
+    button.calendar_begin_at_sunday_plus = begin_at_sunday_plus
+    button.calendar_month_names = month_names
+    button.calendar_day_abbreviations = day_abbreviations
+    button.calendar_title = title
+
     return button
 
 
@@ -14311,7 +14324,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 
-def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_sunday_plus=0, no_titlebar=True, keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None):
+def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -14327,9 +14340,19 @@ def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_su
     :type icon: str
     :param locale: locale used to get the day names
     :type locale: str
+    :param month_names: optional list of month names to use (should be 12 items)
+    :type month_names: List[str]
+    :param day_abbreviations: optional list of abbreviations to display as the day of week
+    :type day_abbreviations: List[str]
     :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
     :rtype: None or (int, int, int)
     """
+
+    if month_names is not None and len(month_names) != 12:
+        popup_error('Incorrect month names list specified. Must have 12 entries.', 'Your list:', month_names)
+
+    if day_abbreviations is not None and len(day_abbreviations) != 7:
+        popup_error('Incorrect day abbreviation list. Must have 7 entries.', 'Your list:', day_abbreviations)
 
     day_font = 'TkFixedFont 8'
     mon_year_font = 'TkFixedFont 10'
@@ -14338,7 +14361,10 @@ def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_su
     now = datetime.datetime.now()
     cur_month, cur_day, cur_year = now.month, now.day, now.year
     cur_month = start_mon or cur_month
-    cur_day = start_day or cur_day
+    if start_mon is not None:
+        cur_day = start_day
+    else:
+        cur_day = cur_day
     cur_year = start_year or cur_year
 
 
@@ -14366,39 +14392,34 @@ def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_su
         return days_layout
 
 
-    # def get_month_name(month_no, locale):
-    #     with calendar.different_locale(locale):
-    #         return calendar.month_name[month_no]
-    #
-    # def get_day_name(day_no, locale):
-    #     with calendar.different_locale(locale):
-    #         return calendar.day_abbr[day_no]
-    #
-    # month_names = [get_month_name(month, locale) for month in range(1,13)]
-    # day_names = [get_day_name(day, locale) for day in range(0,7)]
-
     # Create table of month names and week day abbreviations
-    fwday = calendar.MONDAY
-    if locale is not None:
-        _cal = calendar.LocaleTextCalendar(fwday, locale)
+
+    if day_abbreviations is None or len(day_abbreviations) != 7:
+        fwday = calendar.SUNDAY
+        try:
+            if locale is not None:
+                _cal = calendar.LocaleTextCalendar(fwday, locale)
+            else:
+                _cal = calendar.TextCalendar(fwday)
+            day_names = _cal.formatweekheader(3).split()
+        except Exception as e:
+            print('Exception building day names from locale', locale,  e)
+            day_names = ('Sun', 'Mon', 'Tue', 'Wed', 'Th', 'Fri', 'Sat')
     else:
-        _cal = calendar.TextCalendar(fwday)
+        day_names = day_abbreviations
 
-    day_names = _cal.formatweekheader(3).split()
-
-    month_names= [calendar.month_name[i] for i in range(7)]
-
+    mon_names = month_names if month_names is not None and len(month_names) == 12  else [calendar.month_name[i] for i in range(1,13)]
     days_layout = make_days_layout()
 
     layout = [[B('◄', font=arrow_font, border_width=0, key='-MON-DOWN-'),
-               Text('{} {}'.format(month_names[cur_month-1], cur_year), size=(16,1), justification='c', font=mon_year_font, key='-MON-YEAR-'),
+               Text('{} {}'.format(mon_names[cur_month - 1], cur_year), size=(16, 1), justification='c', font=mon_year_font, key='-MON-YEAR-'),
                B('►', font=arrow_font,border_width=0, key='-MON-UP-')]]
-    layout += [[Col([[T(day_names[i - (8 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
+    layout += [[Col([[T(day_names[i - (7 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
     layout += days_layout
     if not close_when_chosen:
         layout += [[Button('Ok', border_width=0,font='TkFixedFont 8'), Button('Cancel',border_width=0, font='TkFixedFont 8')]]
 
-    window = Window('Window Title', layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True, icon=icon)
+    window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True, icon=icon)
 
     update_days(window, cur_month, cur_year, begin_at_sunday_plus)
 
@@ -14428,7 +14449,7 @@ def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_su
             elif cur_month < 1:
                 cur_month = 12
                 cur_year -= 1
-            window['-MON-YEAR-'].update('{} {}'.format(month_names[cur_month-1], cur_year))
+            window['-MON-YEAR-'].update('{} {}'.format(mon_names[cur_month - 1], cur_year))
             update_days(window, cur_month, cur_year, begin_at_sunday_plus)
             if prev_choice:
                 window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
