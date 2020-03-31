@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.7  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
+version = __version__ = "4.18.0.8  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
 
 port = 'PySimpleGUI'
 
@@ -3758,13 +3758,12 @@ class Graph(Element):
         """
         converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
 
-        if self._TKCanvas2 is None:
-            print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
-            print('Call Window.Finalize() prior to this operation')
-            return None
         try:  # in case window was closed with an X
             id = self._TKCanvas2.create_line(*converted_points, width=width, fill=color)
         except:
+            if self._TKCanvas2 is None:
+                print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+                print('Call Window.Finalize() prior to this operation')
             id = None
         return id
 
