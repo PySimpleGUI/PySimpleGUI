@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.5  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated"
+version = __version__ = "4.18.0.6  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated"
 
 port = 'PySimpleGUI'
 
@@ -14341,16 +14341,27 @@ def popup_get_date(start_mon=None, start_day=None,  start_year=None, begin_at_su
         return days_layout
 
 
-    def get_month_name(month_no, locale):
-        with calendar.different_locale(locale):
-            return calendar.month_name[month_no]
+    # def get_month_name(month_no, locale):
+    #     with calendar.different_locale(locale):
+    #         return calendar.month_name[month_no]
+    #
+    # def get_day_name(day_no, locale):
+    #     with calendar.different_locale(locale):
+    #         return calendar.day_abbr[day_no]
+    #
+    # month_names = [get_month_name(month, locale) for month in range(1,13)]
+    # day_names = [get_day_name(day, locale) for day in range(0,7)]
 
-    def get_day_name(day_no, locale):
-        with calendar.different_locale(locale):
-            return calendar.day_abbr[day_no]
+    # Create table of month names and week day abbreviations
+    fwday = calendar.MONDAY
+    if locale is not None:
+        _cal = calendar.LocaleTextCalendar(fwday, locale)
+    else:
+        _cal = calendar.TextCalendar(fwday)
 
-    month_names = [get_month_name(month, locale) for month in range(1,13)]
-    day_names = [get_day_name(day, locale) for day in range(0,7)]
+    day_names = _cal.formatweekheader(3).split()
+
+    month_names= [calendar.month_name[i] for i in range(7)]
 
     days_layout = make_days_layout()
 
