@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.9  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
+version = __version__ = "4.18.0.10  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
 
 port = 'PySimpleGUI'
 
@@ -14354,9 +14354,9 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     if day_abbreviations is not None and len(day_abbreviations) != 7:
         popup_error('Incorrect day abbreviation list. Must have 7 entries.', 'Your list:', day_abbreviations)
 
-    day_font = 'TkFixedFont 8'
+    day_font = 'TkFixedFont 9'
     mon_year_font = 'TkFixedFont 10'
-    arrow_font = 'TkFixedFont 8'
+    arrow_font = 'TkFixedFont 7'
 
     now = datetime.datetime.now()
     cur_month, cur_day, cur_year = now.month, now.day, now.year
@@ -14411,9 +14411,11 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     mon_names = month_names if month_names is not None and len(month_names) == 12  else [calendar.month_name[i] for i in range(1,13)]
     days_layout = make_days_layout()
 
-    layout = [[B('◄', font=arrow_font, border_width=0, key='-MON-DOWN-'),
-               Text('{} {}'.format(mon_names[cur_month - 1], cur_year), size=(16, 1), justification='c', font=mon_year_font, key='-MON-YEAR-'),
-               B('►', font=arrow_font,border_width=0, key='-MON-UP-')]]
+    layout = [[B('◄◄', font=arrow_font, border_width=0, key='-YEAR-DOWN-', pad=((10,2),2)),
+                B('◄', font=arrow_font, border_width=0, key='-MON-DOWN-', pad=(0,2)),
+               Text('{} {}'.format(mon_names[cur_month - 1], cur_year), size=(16, 1), justification='c', font=mon_year_font, key='-MON-YEAR-', pad=(0,2)),
+               B('►', font=arrow_font,border_width=0, key='-MON-UP-', pad=(0,2)),
+               B('►►', font=arrow_font,border_width=0, key='-YEAR-UP-', pad=(2,2))]]
     layout += [[Col([[T(day_names[i - (7 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
     layout += days_layout
     if not close_when_chosen:
@@ -14441,8 +14443,11 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
             break
         if event == 'Ok':
             break
-        if event in ('-MON-UP-', '-MON-DOWN-'):
-            cur_month += 1 if event == '-MON-UP-' else -1
+        if event in ('-MON-UP-', '-MON-DOWN-', '-YEAR-UP-','-YEAR-DOWN-'):
+            cur_month += (event == '-MON-UP-')
+            cur_month -= (event == '-MON-DOWN-')
+            cur_year += (event == '-YEAR-UP-')
+            cur_year -= (event == '-YEAR-DOWN-')
             if cur_month > 12:
                 cur_month = 1
                 cur_year += 1
