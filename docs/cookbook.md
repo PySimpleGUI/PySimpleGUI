@@ -2,7 +2,7 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
     
-# 2019 - Updates are in Progress
+# 2020 - Updates are in Progress
 
 It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.        
 # The PySimpleGUI Cookbook      
@@ -20,11 +20,11 @@ If you like this Cookbook, then you'll LOVE the 200 sample programs that are jus
 
 These programs are updated frequently, much more so than this Cookbook document.  It's there that you'll find the largest potential for a big jump-start on your project.
 
-These short Demo Programs fall into 2 categories:
+These short Demo Programs fall into 3 categories:
 
 1. Demonstrate a particular Element
 2. Integration with another package (e.g. Matplotlib, OpenCV, etc)
-3. Provide added functionality / more complex element combinations
+3. Provide added functionality - more complex element combinations or extensions to elements
 
 So, for example, if you're trying to use the Graph Element to create a line graph, check out the demo programs... there are 8 different demos for the Graph Element alone.
 
@@ -44,9 +44,9 @@ The [PySimpleGUI repl.it repository](https://repl.it/@PySimpleGUI) is also used,
 
 # Cookbook Purpose
 
-A quick explanation about this document. The PySimpleGUI Cookbook is meant to get you started quickly.  But that's only part of the purpose.  The other, probably more important one, is *coding conventions*.  The more of these examples and the programs you see in the [Demo Programs](http://Demos.PySimpleGUI.org) section on the GitHub, the more familiar certain patterns will emerge.
+A quick explanation about this document. The PySimpleGUI Cookbook is meant to get you started quickly.  But that's only part of the purpose.  The other, probably most important one, is *coding conventions*.  The more of these examples and the programs you see in the [Demo Programs](http://Demos.PySimpleGUI.org) section on the GitHub, the more familiar certain patterns will emerge.
 
-It's through the Cookbook and the Demo Programs that new PySimpleGUI constructs and naming conventions are "rolled out" to the user community.  If you are brand new to PySimpleGUI, then you're getting your foundation here.  That foundation changes over time as the package improves.  The old code still runs, but it's been improved. 
+It's through the Cookbook and the Demo Programs that new PySimpleGUI constructs and naming conventions are "rolled out" to the user community.  If you are brand new to PySimpleGUI, then you're getting your foundation here.  That foundation changes over time as the package improves.  The old code still runs, but as more features are developed and better practices are discovered, you'll want to be using newer examples and coding conventions. 
 
 PEP8 names are a really good example.  Previously many of the method names for the Elements were done with CamelCase which is not a PEP8 compliant way of naming those functions.  They should have been snake_case.  Now that a complete set of PEP8 bindings is available, the method names are being changed here, in the primary documentation and in the demo programs.  `window.Read()` became `window.read()`.  It's better that you see examples using the newer `windows.read()` names.
 
@@ -56,7 +56,7 @@ In short, it's brainwashing you to program PySimpleGUI a certain way.  The effec
 
 # Keys
 
-Keys are an extremely important concept for you to understand as you learn PySimpleGUI.  They are the labels/tags/names/identifiers you give Elements.  They are a way for you to communicate about a specific element with the PySimpleGUI API calls.  
+Keys are an extremely important concept for you to understand.  They are the labels/tags/names/identifiers you give Elements.  They are a way for you to communicate about a specific element with the PySimpleGUI API calls.  
 
 Keys are used to:
 
@@ -66,7 +66,7 @@ Keys are used to:
 
 **Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
 
-Keys are specified when you create an element using the `key` keyword parameter.
+Keys are specified when you create an element using the `key` keyword parameter.  They are used to "find elements" so that you can perform actions on them.
 
 
 # GETTING STARTED - Copy these design patterns!      
@@ -154,7 +154,9 @@ login_id = values['-IN-']
 
 The important part of this bit of code is `close=True`.  This is the parameter that instructs PySimpleGUI to close the window just before the read returns.
 
-This is a single line of code, broken up to make reading the window layout easier.  It will display a window, let the user enter a value, click a button and then the window will close and execution will be returned to you with the variables `event` and `values` being returned.  Notice use of Element name "Shortcuts" (uses `B` rather than `Button`, `T` instead of `Text`, etc.)
+This is a single line of code, broken up to make reading the window layout easier.  It will display a window, let the user enter a value, click a button and then the window will close and execution will be returned to you with the variables `event` and `values` being returned.  
+
+Notice use of Element name "Shortcuts" (uses `B` rather than `Button`, `T` instead of `Text`, `In` rather than `InputText`, etc.).  These shortcuts are fantastic to use when you have complex layouts.  Being able to "see" your entire window's definition on a single screen of code has huge benefits.  It's another tool to help you achieve simple code.
 
 
 
@@ -164,7 +166,7 @@ This is a single line of code, broken up to make reading the window layout easie
 ![image](https://user-images.githubusercontent.com/46163555/68600333-5361fb80-0470-11ea-91cb-691e32832b60.png)
 
 
-Some of the more advanced programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both output information to the user and gather input data.  In other words, a typical Window, Mac or Linux window.  
+The more advanced/typical GUI programs operate with the window remaining visible on the screen.  Input values are collected, but rather than closing the window, it is kept visible acting as a way to both input and output information.  In other words, a typical Window, Mac or Linux window.  
 
 *Let this sink in for a moment....* in 10 lines of Python code, you can display and interact with your own custom GUI window.  You are writing "*real GUI code*" (as one user put it) that will look and act like other windows you're used to using daily.
     
@@ -219,9 +221,9 @@ In some cirsumstances when a window is closed with an X, both of the return valu
 
 ![image](https://user-images.githubusercontent.com/46163555/68633697-df9c0f00-04c0-11ea-9fb3-121a72a87a59.png)
 
-This is a slightly more complex, but more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this will give you a big jump-start.
+This is a slightly more complex, but more realistic version that reads input from the user and displays that input as text in the window.  Your program is likely to be doing both of those activities so this pattern will likely be your starting point.
 
-Do not worry yet what all of these statements mean.  Just copy it so you can begin to play with it, make some changes.  Experiment to see how thing work.
+Do not worry yet what all of these statements mean.  Just copy the template so you can start to experiment and discover  how PySimpleGUI programs work.
 
 
 ```python
@@ -257,8 +259,7 @@ window['-OUTPUT-'].update(values['-IN-'])
 
 `window['-OUTPUT-']` returns the element that has the key `'-OUTPUT-'`.  Then the `update` method for that element is called so that the value of the Text Element is modified.
 
-This construct, `window['-OUTPUT-']` was added in 2019.  
-
+Note - if you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first.
 
 ------------
 
@@ -275,9 +276,9 @@ These 3 lines of code do the same thing.  The first line is the currently accept
 ```python
 window['-OUTPUT-']
 window.FindElement('-OUTPUT-')
+window.find_element('-OUTPUT-')
 window.Element('-OUTPUT-')
 ```
-
 
 ### Element Operations
 
@@ -286,7 +287,7 @@ Once you lookup an element, the most often performed operation is `update`.  The
 To call any of these other methods, you do the element lookup, then add on the call such as this call to `set_tooltip`.
 
 ```python
-window[my_key].set_tooltip('New Tooltip')   # note - only in base PySimpleGUI port currently
+window[my_key].set_tooltip('New Tooltip')
 ```
 
 ----
@@ -312,6 +313,9 @@ if event is None or event == 'Quit':
 
 The `event in (None, 'Quit')` simply means is the value of the `event` variable in the list of choices shown, in this case `None` or `Quit`.  If so, then break out of the Event Loop and likely exit the program when that happens for simple programs.
 
+You may find 'Exit' instead of 'Quit' in some programs.  Or may find only `None` is checked.  Exit & Quit in this case refer to a Quit/Exit button being clicked. If your program doesn't have one, then you don't need to include it.
+
+
 ## Close Your Windows
 
 When you're done with your window, close it.
@@ -323,50 +327,96 @@ window.close()
 The reason is that for some ports, like PySimpleGUIWeb, you cannot exit the program unless the window is closed.  It's nice to clean up after yourself too.
 
 
+---------------------
+
+
+# Coding Conventions
+
+By following some simple coding conventions you'll be able to copy / paste demo program code into your code with minimal or no modifications.  Your code will be understandable by other PySimpleGUI programmers as well.
+ 
+The primary *suggested* conventions are:
+
+* `import PySimpleGUI as sg`
+* Name your Window `window`
+* Name the return values from reading your window `event` and `values`
+* Name your layout `layout`
+* Use `window[key]` to lookup elements
+* For keys that are strings, follow this pattern `'-KEY-'`
+
+Of course you don't have to follow *any* of these.  They're suggestions, but if you do follow them, your code is a lot easier to understand by someone else.
+
+## Coding Tips
+
+A few tips that have worked well for others.  In the same spirit as the coding conventions, these a few observations that may speed up your development or make it easier for others to understand your code. They're guidelines / tips / suggestions / ideas... meant to help you.
+
+* Stay ***simple*** at every opportunity
+* Read or search the documentation (http://www.PySimpleGUI.org)
+* Use the coding conventions outlined above
+* Write compact layouts
+* Use "user defined elements" when you find yourself repeating parameters many times (functions that return elements)
+* Use PySimpleGUI constructs rather than other GUI frameworks' constructs
+* Use reasonable timeout values (as large of non-zero values as possible... be a good CPU citizen)
+* Do not try to make any PySimpleGUI call from a thread
+* Close your windows before exiting
+* Make linear event loops
+* Use the `values` dictionary rather than `Element.get` methods
+* Look through Demo Programs for more tips / techniques (http://Demos.PySimpleGUI.org)
+
+Most of these are self-explanatory or will be understood as you learn more about PySimpleGUI.  You won't now what a timeout value is at this point, but if/when you do use reads with timeouts, then you'll understand the tip.
+
+A little more detail on a few of them that aren't obvious.
+
+### Write compact layouts
+
+Try to keep your layout definitions to a single screen of code.  Don't put every parameter on a new line.  Don't add tons of whitespace.  
+
+If you've got a lot of elements, use the shortcut names (e.g. using `sg.B` rather than `sg.Button` saves 5 characters per button in your layout).
+
+The idea here to be able to see your entire window in your code without having to scroll.
+
+### Use PySimpleGUI constructs
+
+PySimpleGUI programs were not designed using the same OOP design as the other Python GUI frameworks.  Trying to force fit them into an OOP design doesn't buy anything other then lots of `self.` scattered in your code, more complexity, and possibly more confusion
+
+Of course your overall design can be OOP.  
+
+The point is that there is no concept of an "App" or a never-ending event loop or callback functions.  PySimpleGUI is different than tkinter and Qt.  Trying to code in that style is likely to not result in success.  If you're writing a subclass for `Window` as a starting point, it's highly likely you're doing something wrong.
+
+
 -----
 
-# Window "Beautification" - Colors Other Than Gray... Use them!
+# Themes - Window "Beautification"
 
-One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that in 1 line of PySimpleGUI code. 
+"Beautiful windows" don't just happen, but coloring your window can be accomplished with 1 line of code.
+
+One complaint about tkinter that is often heard is how "ugly" it looks.  You can do something about that by using PySimpleGUI themes.
+
+```python
+sg.theme('Dark Green 5')
+```
 
 A call to `theme` will set the colors to be used when creating windows.  It sets text color, background color, input field colors, button color,.... 13 different settings are changed.  
 
-```python
-import PySimpleGUI as sg
-
-sg.theme('GreenMono')
-```
-
-At the start of Nov 2019, the list of valid look and feel settings includes:
-
-SystemDefault, Material1, Material2, Reddit, Topanga, GreenTan, Dark, LightGreen, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green, BluePurple, Purple, BlueMono, GreenMono, BrownBlue, BrightColors, NeutralBlue, Kayak, SandyBeach, TealMono
-
-**A quick reference of Themes available in releases prior to November 2019**
-
-![image](https://user-images.githubusercontent.com/46163555/68784032-ed10e080-0609-11ea-81bc-22dc8b27692d.png)
-
-Even windows that are created for you, such as popups, will use the color settings you specify.  And, you can change them at any point, even mid-way through defining a window layout.
-
-
-This one line of code helps, but it's not the only thing that is going to make your window attractive.  "Beautiful windows" don't just happen.  
-
-
-***Mac users*** - Unfortunately tkinter and the Mac haven't been playing well together when it comes to colors, in particular button colors. The Themes you see here will set everything except the button colors on a Mac.
+The default theme is "Dark Blue 3"
 
 ## Look and Feel Theme Explosion
 
-In Nov 2019 the number of available themes balooned to 105 Themes.  The existing 28 themes are still available and they are available using 2 different naming schemes, the initial names as seen in the above image and a new naming format explained below. 
+There are currently 140 themes to choose from (in April 2020, maybe more by the time you read this) 
 
-These new additions were added beginning with release 4.6 of the tkinter port of PySimpleGUI.  They were simultaneously released to the other 3 ports of PySimpleGUI as well (Qt, WxPython, Remi)
+![SNAG-0620](https://user-images.githubusercontent.com/46163555/71361827-2a01b880-2562-11ea-9af8-2c264c02c3e8.jpg)
 
-**A quick reference of Themes available in releases after mid November 2019**
+To see the above preview for your version of PySimpleGUI, make this call to generate a preview of all available themes:
 
+```python
+sg.theme_previewer()
+```
 
-![Nov 2019 Look and Feel Themes](https://user-images.githubusercontent.com/46163555/68987669-91a54500-07f9-11ea-921e-8bf9320e3156.png)
+Even windows that are created for you, such as popups, will use the color settings you specify.  And, you can change them at any point, even mid-way through defining a window layout.
+
+This one line of code helps, but it's not the only thing that is going to make your window attractive. 
+
 
 ### Theme Name Format
-
-In addition to getting lots of new Themes, the process of choosing and specifying one was improved.
 
 You can look at the table of available themes to get the name of a theme you want to try, or you can "guess" at one using this formula:
 
@@ -379,9 +429,9 @@ Where Color is one of these:
 The # is optional and is used when there is more than 1 choice for a color.  For example, for "Dark Blue" there are 12 different themes (Dark Blue, and Dark Blue 1-11).  These colors specify the rough color of the background.  These can vary wildly so you'll have to try them out to see what you like the best.
 
 
-### Recipe - Built-in Theme Viewer
+## Recipe - Built-in Theme Viewer
 
-If you want to see a window on your system like the above screenshot, then make this call and you'll see the same window:
+If you want to see a window on your system like the above theme preview screenshot, then make this call and you'll see the same window:
 
 ```python
 import PySimpleGUI as sg
@@ -405,48 +455,20 @@ import PySimpleGUI as sg
 theme_name_list = sg.theme_list()
 ```
 
-Also, if you guess incorrectly, then you'll get a random theme presented instead of some hard coded default.  You were calling theme to get more color, in theory, so instead of giving you a gray window, you'll get a randomly chosen theme (and you'll get the name of this theme printed on the console)
-
+If you guess incorrectly, then you'll be treated to a random theme instead of some hard coded default.  You were calling theme to get more color, in theory, so instead of giving you a gray window, you'll get a randomly chosen theme (and you'll get the name of this theme printed on the console).  It's a great way to discover new color combinations via a mistake.
 
 ---
 
 
-## Recipe - Theme Previewer
+# Recipe - Theme Browser
 
-If you don't like the theme previewer built into PySimpleGUI, then you can write your own like in this recipe.
+This Recipe is a "Theme Browser" that enables you to see the different color schemes.
 
-```python
-import PySimpleGUI as sg
-
-def sample_layout():
-    return [[sg.Text('Text element'), sg.InputText('Input data here', size=(12,1))],
-                [sg.Button('Ok'), sg.Button('Cancel')] ]
-
-layout =   [[sg.Text('My Theme Previewer', font='Default 18', background_color='black')]]
-
-row = []
-for count, theme in enumerate(sg.theme_list()):
-    sg.theme(theme)
-    if not count % 10:
-        layout += [row]
-        row = []
-    row += [sg.Frame(theme, sample_layout())]
-if row:
-    layout += [row]
-sg.Window('Window Title', layout, background_color=WINDOW_BACKGROUND).read()
-```
-
------
-
-## Recipe - Look and Feel Browser
-
-This Recipe is a "Look and Feel Browser" that enables you to see the different color schemes.
-
-You're first shown this window that lists all of the available "Look and Feel" settings.  This window was created after the Look and Feel were set to "Dark Brown".
+You're first shown this window that lists all of the available "Theme" settings.  This window was created after the Theme were set to "Dark Brown".
 
 ![image](https://user-images.githubusercontent.com/46163555/69106236-bee13580-0a3b-11ea-9eaa-f5f0282b1c63.png)
 
-If you click on an item in the list, you will immediately get a popup window that is created using the new Look and Feel.
+If you click on an item in the list, you will immediately get a popup window that is created using the new Theme.
 
 ![SNAG-0549](https://user-images.githubusercontent.com/46163555/68547123-a8880980-03ab-11ea-92f3-cb8d3136ae07.jpg)
 
@@ -455,7 +477,7 @@ If you click on an item in the list, you will immediately get a popup window tha
 import PySimpleGUI as sg
 
 """
-    Allows you to "browse" through the look and feel settings.  Click on one and you'll see a
+    Allows you to "browse" through the Theme settings.  Click on one and you'll see a
     Popup window using the color scheme you chose.  It's a simple little program that also demonstrates
     how snappy a GUI can feel if you enable an element's events rather than waiting on a button click.
     In this program, as soon as a listbox entry is clicked, the read returns.
@@ -463,13 +485,13 @@ import PySimpleGUI as sg
 
 sg.theme('Dark Brown')
 
-layout = [[sg.Text('Look and Feel Browser')],
-          [sg.Text('Click a look and feel color to see demo window')],
-          [sg.Listbox(values=sg.theme_list(),
-                      size=(20, 12), key='-LIST-', enable_events=True)],
+
+layout = [[sg.Text('Theme Browser')],
+          [sg.Text('Click a Theme color to see demo window')],
+          [sg.Listbox(values=sg.theme_list(), size=(20, 12), key='-LIST-', enable_events=True)],
           [sg.Button('Exit')]]
 
-window = sg.Window('Look and Feel Browser', layout)
+window = sg.Window('Theme Browser', layout)
 
 while True:  # Event Loop
     event, values = window.read()
@@ -486,7 +508,7 @@ window.close()
 
 Modifying and creating your own theme is not difficult.
 
-The Look and Feel Theme definitions are stored in a dictionary.  The underlying dictionary can be directly accessed via the variable `LOOK_AND_FEEL_TABLE`.
+The Theme definitions are stored in a dictionary.  The underlying dictionary can be directly accessed via the variable `LOOK_AND_FEEL_TABLE`.
 
 A single entry in this dictionary has this format (copy this code):
 
@@ -507,9 +529,14 @@ As you can see, a single entry in the Look and Feel dictionary is itself a dicti
 
 ---
 
-### Modifying an existing entry
+## Modifying an existing Theme
 
-Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the entry in the table directly.
+Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the theme at runtime.
+
+Normal use of `theme` calls is to retrieve a theme's setting such as the background color.  The functions used to retrieve a theme setting can also be used to modify the setting by passing in the new setting as a parameter.
+
+Calling `theme_background_color()` returns the background color currently in use.  Passing in the color `'blue'` as the parameter, `theme_background_color('blue')`, will change the background color for future windows you create to blue. 
+
 
 ```python
 import PySimpleGUI as sg
@@ -564,7 +591,7 @@ sg.popup_get_text('This how the MyNewTheme custom theme looks')
 In addition to color there are a several of other ways to potentially make your window more attractive.  A few easy ones include:
 
 * Remove the titlebar
-* Make your window semi-transparent
+* Make your window semi-transparent (change opacity)
 * Replace normal buttons with graphics
 
 You can use a combination of these 3 settings to create windows that look like Rainmeter style desktop-widgets.
@@ -578,13 +605,16 @@ This window demonstrates these settings.  As you can see, there is text showing 
 
 Both of these can be set when you create your window.  These 2 parameters are all you need - `no_titlebar` and `alpha_channel`.
 
-When creating a window without a titlebar you create a problem where the user is unable to move your window as they have no titlebar to grab and drag.  Another parameter to the window creation will fix this problem - `grab_anywhere`.  When true, this parameter allows the user to move the window by clicking anywhere within the window and dragging it, just as if they clicked the titlebar.  Some PySimpleGUI ports allow you to click on input fields and drag, others require you to grab a spot on the background of the window.  Note - you do not have to remove the titlebar in order to use `grab_anywhere`
+When creating a window without a titlebar you create a problem where the user is unable to move your window as they have no titlebar to grab and drag.  Another parameter to the window creation will fix this problem - `grab_anywhere`.  When `True`, this parameter allows the user to move the window by clicking anywhere within the window and dragging it, just as if they clicked the titlebar.  Some PySimpleGUI ports allow you to click on input fields and drag, others require you to grab a spot on the background of the window.  Note - you do not have to remove the titlebar in order to use `grab_anywhere`
+
+To make your window semi-transpaerent (change the opacity) use ghe `alhpa_channel` parameter when you create the window.  The setting is a float with valid values from 0 to 1.
 
 To create a window like the one above, your window creation call would look something like:
 
 ```python
 window = sg.Window('PSG System Dashboard', layout, no_titlebar=True, alpha_channel=.5, grab_anywhere=True)
 ```
+
 
 ### Replacing a Button with a Graphic
 
@@ -612,6 +642,8 @@ You can download your image or get a copy of the link to it.
 
 One of the demo programs provided on the PySimpleGUI GitHub is called "Demo_Base64_Image_Encoder.py".  This program will convert all of the images in a folder and write the encoded data to a file named `output.py`.
 
+Another demo program, "Demo_Base64_Single_Image_Encoder.py" will convert the input file to a base64 string and place the string onto the clipboard. Paste the result into your code and assign it to a variable. 
+
 You can also use an online conversion tool such as https://base64.guru/converter/encode/image
 
 On that page I chose to use the "Remote URL" (see above), pasted it into the input box and clicked "Encode image to Base64". Under the encode button is an area labeled "Base64".  If your conversion was successful, you'll see it filled with data like shown here:
@@ -629,7 +661,7 @@ red_x_base64 = b''
 
 Paste the long data you got from the webpage inside the quotes after the `b`.
 
-You can also copy and paste the byte string from the `output.py` file if you used the demo program.
+You can also copy and paste the byte string from the `output.py` file if you used the demo program or paste the string created using the single file encoder demo program.
 
 #### Step 4 - Use Base64 Variable to Make Your Button
 
@@ -712,7 +744,7 @@ print(event, values[0], values[1], values[2])    # the input data looks like a s
 
 --------------------------      
 
-## Recipe - Add GUI to Front-End of Script 
+# Recipe - Add GUI to Front-End of Script 
 
 
 ![image](https://user-images.githubusercontent.com/46163555/75084200-83e41780-54ec-11ea-9dc1-b38d382d5f50.png)
@@ -741,7 +773,7 @@ else:
 ```
 
 
-If you really want to compress your 1-line of GUI code, you can directly access just the entered data by using this single-line-of-code solution:
+If you really want to compress your 1-line of GUI code, you can directly access just the entered data by using this single-line-of-code solution.  Dunno if it's the safest way to go, but it's certainly the most compact.  Single line GUIs are fun when you can get away with them.
 
 ```python
 import PySimpleGUI as sg
@@ -764,10 +796,9 @@ else:
 
 
 
-
 ---
 
-### Recipe - The `popup_get_file` Version of Add GUI to Front-End of Script
+# Recipe - The `popup_get_file` Version of Add GUI to Front-End of Script
 
 Why recreate the wheel?  There's a `Popup` function that will get a Filename for you.  This is a single-line GUI:
 
@@ -812,6 +843,146 @@ if not fname:
     raise SystemExit("Cancelling: no filename supplied")
 else:
     sg.popup('The filename you chose was', fname)
+```
+
+-------
+
+# Recipe - Highly Responsive Inputs
+
+Sometimes it's desireable to begin processing input information when a user makes a selection rather than requiring the user to click an OK button.
+
+Let's say you've got a listbox of entries and a user can select an item from it.
+
+```python
+import PySimpleGUI as sg
+
+choices = ('Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple', 'Chartreuse')
+
+layout = [  [sg.Text('What is your favorite color?')],
+            [sg.Listbox(choices, size=(15, len(choices)), key='-COLOR-')],
+            [sg.Button('Ok')]  ]
+
+window = sg.Window('Pick a color', layout)
+
+while True:                  # the event loop
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    if values['-COLOR-']:    # if something is highlighted in the list
+        sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
+window.close()
+
+```
+
+![image](https://user-images.githubusercontent.com/46163555/78260531-10123300-74cc-11ea-9050-83cbdd0dc978.png)
+
+When you choose a color and click OK, a popup like this one is shown:
+
+![image](https://user-images.githubusercontent.com/46163555/78260638-2d470180-74cc-11ea-949a-eca2eb7f2f5d.png)
+
+
+## Use `enable_events` to instantly get events
+
+That was simple enough.  But maybe you're impatient and don't want to have to cick "Ok".  Maybe you don't want an OK button at all.  If that's you, then you'll like the `enable_events` parameter that is available for nearly all elements.  Setting `enable_events` means that like button presses, when that element is interacted with (e.g. clicked on, a character entered into) then an event is immediately generated causing your `window.read()` call to return.
+
+If the previous example were changed such that the OK button is removed and the `enable_events` parameter is added, then the code and window appear like this:
+
+```python
+import PySimpleGUI as sg
+
+choices = ('Red', 'Green', 'Blue', 'Yellow', 'Orange', 'Purple', 'Chartreuse')
+
+layout = [  [sg.Text('What is your favorite color?')],
+            [sg.Listbox(choices, size=(15, len(choices)), key='-COLOR-', enable_events=True)] ]
+
+window = sg.Window('Pick a color', layout)
+
+while True:                  # the event loop
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    if values['-COLOR-']:    # if something is highlighted in the list
+        sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
+window.close()
+
+```
+
+![image](https://user-images.githubusercontent.com/46163555/78261430-38e6f800-74cd-11ea-8789-dd82919d20fb.png)
+
+
+You won't need to click the OK button anymore because as soon as you make the selection in the listbox the `read()` call returns and the popup will be displayed as before.
+
+
+
+
+------
+
+# Recipe - Input Validation
+
+Sometimes you want to restrict what a use can input into a field.  Maybe you have a zipcode field and want to make sure only numbers are entered and it's no longer than 5 digits.  
+
+Perhaps you need a floating point number and only want to allow `0`-`9`, `.`, and `-`.  One way restrict the user's input to only those characters is to get an event any time the user inputs a character and if the character isn't a valid one, remove it.
+
+You've already seen (above) that to get an event immediate when an element is interacted with in some way you set the `enable_events` parameter.
+
+```python
+import PySimpleGUI as sg
+
+"""
+    Restrict the characters allowed in an input element to digits and . or -
+    Accomplished by removing last character input if not a valid character
+"""
+
+layout = [  [sg.Text('Input only floating point numbers')],
+            [sg.Input(key='-IN-', enable_events=True)],
+            [sg.Button('Exit')]  ]
+
+window = sg.Window('Floating point input validation', layout)
+
+while True:
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    # if last character in input element is invalid, remove it
+    if event == '-IN-' and values['-IN-'] and values['-IN-'][-1] not in ('0123456789.-'):
+        window['-IN-'].update(values['-IN-'][:-1])
+window.close()
+```
+
+This code only allows entry of the correct characters.
+
+Note that this example does not fully validate that the entry is a valid floating point number, but rather that it has the correct characters.
+
+If you wanted to take it a step further and verify that the entry is actually a valid floating point number, then you can change the "if" statement to test for valid floating point number.
+
+```python
+import PySimpleGUI as sg
+
+"""
+    Restrict the characters allowed in an input element to digits and . or -
+    Accomplished by removing last character input if not a valid character
+"""
+
+layout = [  [sg.Text('Input only floating point numbers')],
+            [sg.Input(key='-IN-', enable_events=True)],
+            [sg.Button('Exit')]  ]
+
+window = sg.Window('Floating point input validation', layout)
+
+while True:
+    event, values = window.read()
+    if event in (None, 'Exit'):
+        break
+    # if last character in input element is invalid, remove it
+    if event == '-IN-' and values['-IN-']:
+        try:
+            in_as_float = float(values['-IN-'])
+        except:
+            if len(values['-IN-']) == 1 and values['-IN-'][0] == '-':
+                continue
+            window['-IN-'].update(values['-IN-'][:-1])
+window.close()
+
 ```
 
 --------------      
@@ -863,6 +1034,7 @@ event, values = sg.Window('File Compare', layout).read(close=True)
 
 print(f'You chose: {values["-FILE-"]}')
 ```
+
 
 
 --------------- 
