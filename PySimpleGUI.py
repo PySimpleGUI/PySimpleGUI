@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.10  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines"
+version = __version__ = "4.18.0.11  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window"
 
 port = 'PySimpleGUI'
 
@@ -277,7 +277,8 @@ COLOR_SYSTEM_DEFAULT = '1234567890'  # A Magic Number kind of signal to PySimple
 DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
 
-CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
+# The "default PySimpleGUI theme"
+CURRENT_LOOK_AND_FEEL = 'Dark Blue 3'
 
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
@@ -314,7 +315,7 @@ RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 # These are the spepific themes that tkinter offers
-THEME_DEFAULT = 'default'
+THEME_DEFAULT = 'default'           # this is a TTK theme, not a PSG theme!!!
 THEME_WINNATIVE = 'winnative'
 THEME_CLAM = 'clam'
 THEME_ALT = 'alt'
@@ -2891,7 +2892,7 @@ class Button(Element):
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             color = color[1]  # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
