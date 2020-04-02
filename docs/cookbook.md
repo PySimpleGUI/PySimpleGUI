@@ -866,7 +866,7 @@ window = sg.Window('Pick a color', layout)
 
 while True:                  # the event loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event is None:
         break
     if event == 'Ok':
         if values['-COLOR-']:    # if something is highlighted in the list
@@ -899,7 +899,7 @@ window = sg.Window('Pick a color', layout)
 
 while True:                  # the event loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event is None:
         break
     if values['-COLOR-']:    # if something is highlighted in the list
         sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
