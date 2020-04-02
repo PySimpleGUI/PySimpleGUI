@@ -868,10 +868,10 @@ while True:                  # the event loop
     event, values = window.read()
     if event in (None, 'Exit'):
         break
-    if values['-COLOR-']:    # if something is highlighted in the list
-        sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
+    if event == 'Ok':
+        if values['-COLOR-']:    # if something is highlighted in the list
+            sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
 window.close()
-
 ```
 
 ![image](https://user-images.githubusercontent.com/46163555/78260531-10123300-74cc-11ea-9050-83cbdd0dc978.png)
@@ -904,7 +904,6 @@ while True:                  # the event loop
     if values['-COLOR-']:    # if something is highlighted in the list
         sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
 window.close()
-
 ```
 
 ![image](https://user-images.githubusercontent.com/46163555/78261430-38e6f800-74cd-11ea-8789-dd82919d20fb.png)
@@ -912,7 +911,7 @@ window.close()
 
 You won't need to click the OK button anymore because as soon as you make the selection in the listbox the `read()` call returns and the popup will be displayed as before.
 
-
+This second example code could be used with the OK button.  It doesn't matter what event caused the `window.read()` to return. The important thing is whether or not a valid selection was made.  The check for `event == 'Ok'` is actually not needed.
 
 
 ------
