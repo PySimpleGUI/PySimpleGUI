@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.11  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window"
+version = __version__ = "4.18.0.12  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print"
 
 port = 'PySimpleGUI'
 
@@ -2173,7 +2173,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -2188,7 +2188,7 @@ class Multiline(Element):
         :param background_color: The background color of the line
         :type background_color: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
 
 
 
@@ -5092,6 +5092,8 @@ class TkFixedFrame(tk.Frame):
 # ---------------------------------------------------------------------- #
 #                          TkScrollableFrame (Used by Column)            #
 # ---------------------------------------------------------------------- #
+
+
 class TkScrollableFrame(tk.Frame):
     """
     A frame with one or two scrollbars.  Used to make Columns with scrollbars
@@ -5133,26 +5135,15 @@ class TkScrollableFrame(tk.Frame):
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
-        # scrollbar = tk.Scrollbar(frame)
-        # scrollbar.pack(side=tk.RIGHT, fill='y')
-        # scrollbar.config(command=treeview.yview)
-        # self.vscrollbar.config(command=self.TKFrame.yview)
-        # self.TKFrame.configure(yscrollcommand=self.vscrollbar.set)
-
+        # Canvas can be: master, canvas, TKFrame
+        if sys.platform.startswith('linux'):
+            self.canvas.bind_all('<4>', self.yscroll, add='+')
+            self.canvas.bind_all('<5>', self.yscroll, add='+')
+        else:
+            # Windows and MacOS
+            self.canvas.bind_all("<MouseWheel>", self.yscroll, add='+')
+            self.canvas.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
         self.bind('<Configure>', self.set_scrollregion)
-
-        self.canvas.bind("<MouseWheel>", self.yscroll)  # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
-        self.canvas.bind("<Shift-MouseWheel>", self.xscroll)  # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
-
-        # def _on_mousewheel(self, event):
-        #     self.canv.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-        # self.bind_mouse_scroll(self.canvas, self.yscroll)
-        # if not vertical_only:
-        #     self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
-        # self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
-        # self.bind_mouse_scroll(self.TKFrame, self.yscroll)
-        # self.bind_mouse_scroll(self, self.yscroll)
 
     def resize_frame(self, e):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
@@ -11614,7 +11605,7 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -11630,6 +11621,8 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :type text_color: (str)
     :param background_color: The background color of the line
     :type background_color: (str)
+    :param autoscroll: If True (the default), the element will scroll to bottom after updating
+    :type autoscroll: Bool
     """
     end_str = str(end) if end is not None else '\n'
     sep_str = str(sep) if sep is not None else ' '
@@ -11642,7 +11635,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
             outstring += sep_str
     outstring += end_str
 
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll)
 
 
 # ============================== SetGlobalIcon ======#
