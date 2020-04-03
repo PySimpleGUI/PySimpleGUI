@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.12  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print"
+version = __version__ = "4.18.0.13  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print"
 
 port = 'PySimpleGUI'
 
@@ -5137,13 +5137,13 @@ class TkScrollableFrame(tk.Frame):
 
         # Canvas can be: master, canvas, TKFrame
         if sys.platform.startswith('linux'):
-            self.canvas.bind_all('<4>', self.yscroll, add='+')
-            self.canvas.bind_all('<5>', self.yscroll, add='+')
+            self.canvas.bind('<4>', self.yscroll, add='+')
+            self.canvas.bind('<5>', self.yscroll, add='+')
         else:
             # Windows and MacOS
-            self.canvas.bind_all("<MouseWheel>", self.yscroll, add='+')
-            self.canvas.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
-        self.bind('<Configure>', self.set_scrollregion)
+            self.canvas.bind("<MouseWheel>", self.yscroll, add='+')
+            self.canvas.bind("<Shift-MouseWheel>", self.xscroll, add='+')
+        self.canvas.bind('<Configure>', self.set_scrollregion)
 
     def resize_frame(self, e):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
