@@ -28,7 +28,7 @@ print(sg.version)
 
 _________ Python programming experience
 _________ Programming experience overall
-_________ Have used another Python GUI Framework (tkiner, Qt, etc) previously (yes/no is fine)?
+_________ Have used another Python GUI Framework (tkinter, Qt, etc) previously (yes/no is fine)?
 
 ### You have completed these steps:
 
