@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.31.0.11 Unreleased - fix for Listbox.update, Graph.change_coordinates, Added Image.Widget, return correct value with ComboBox has manual data entry, added print_to_element, multlineline update moves cursor to end, scrollable columns, listbox.get, fix for visible ignored in Text Element, Window.read close parm, move cursor to end when default text in Multiline, Multiline readonly parm"
+version = __version__ = "0.32.0. Released 04-Apr-2020"
 
 port = 'PySimpleGUIQt'
 
@@ -1014,13 +1014,14 @@ class Multiline(Element):
 
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None, readonly=None):
+    def Update(self, value=None, disabled=None, append=False, autoscroll=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None, readonly=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.read` or `Window.finalize` or "finalize" the window using finalize parameter prior
 
         :param value: (str) new text to display
         :param disabled: (bool) disable or enable state of the element
         :param append: (bool) if True then new value will be added onto the end of the current value. if False then contents will be replaced.
+        :param autoscroll: (bool)  if True cursor will be moved to end of element after updating
         :param background_color: (str) color of background
         :param text_color: (str) color of the text
         :param font: Union[str, Tuple[str, int]] specifies the font family, size, etc
@@ -1041,7 +1042,7 @@ class Multiline(Element):
             if background_color_for_value is not None:
                 self.QT_TextEdit.setTextBackgroundColor(background_color_for_value)
             self.QT_TextEdit.insertPlainText(str(value))
-            if self.Autoscroll:
+            if self.Autoscroll or autoscroll and autoscroll is not False:
                 self.QT_TextEdit.moveCursor(QtGui.QTextCursor.End)
             if text_color_for_value is not None:
                 self.QT_TextEdit.setTextColor(self.TextColor)
@@ -1065,7 +1066,7 @@ class Multiline(Element):
         self.QT_TextEdit.setFocus()
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -1074,8 +1075,9 @@ class Multiline(Element):
         :param sep: (str) The separation character like print uses
         :param text_color: The color of the text
         :param background_color: The background color of the line
+        :param autoscroll: (bool) If True cursor is moved to end after print
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
 
 
 
@@ -1126,16 +1128,18 @@ class MultilineOutput(Element):
         return
 
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, autoscroll=None, background_color=None, text_color=None, font=None, text_color_for_value=None, background_color_for_value=None, visible=None):
         if value is not None and not append:
             self.QT_TextBrowser.setText(str(value))
         elif value is not None and append:
             self.QT_TextBrowser.insertPlainText(str(value))
-            self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+            # self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
         if disabled == True:
             self.QT_TextBrowser.setDisabled(True)
         elif disabled == False:
             self.QT_TextBrowser.setDisabled(False)
+        if self.Autoscroll or autoscroll and autoscroll is not False:
+            self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
         super().Update(self.QT_TextBrowser, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
@@ -1143,7 +1147,7 @@ class MultilineOutput(Element):
         self.QT_TextBrowser.toPlainText()
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -1152,8 +1156,9 @@ class MultilineOutput(Element):
         :param sep: (str) The separation character like print uses
         :param text_color: The color of the text
         :param background_color: The background color of the line
+        :param autoscroll: (bool) If True cursor is moved to end after print
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
 
 
 
@@ -5618,6 +5623,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     element.QT_QTabWidget.currentChanged.connect(element.QtCallbackStateChanged)
             # -------------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
+                element = element           # type: Slider
                 element.Widget = element.QT_Slider = QSlider()
                 if element.Orientation.startswith('h'):
                     element.QT_Slider.setOrientation(Qt.Horizontal)
@@ -6284,10 +6290,16 @@ class DebugWin():
             self.Close()
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar, no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top, do_not_reroute_stdout=self.do_not_reroute_stdout)
         if self.do_not_reroute_stdout:
+            end_str = str(end) if end is not None else '\n'
+            sep_str = str(sep) if sep is not None else ' '
+
             outstring = ''
-            for arg in args:
-                outstring += str(arg) + sepchar
-            outstring += endchar
+            num_args = len(args)
+            for i, arg in enumerate(args):
+                outstring += str(arg)
+                if i != num_args - 1:
+                    outstring += sep_str
+            outstring += end_str
             self.output_element.Update(outstring, append=True)
         else:
             print(*args, sep=sepchar, end=endchar)
@@ -6326,25 +6338,38 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
-    :param multiline_element: (Multiline) The multiline element to be output to
-    :param args: List[Any] The arguments to print
-    :param end: (str) The end char to use just like print uses
-    :param sep: (str) The separation character like print uses
-    :param text_color: The color of the text
+    :param multiline_element:  The multiline element to be output to
+    :type multiline_element: (Multiline)
+    :param args:  The arguments to print
+    :type args: List[Any]
+    :param end:  The end char to use just like print uses
+    :type end: (str)
+    :param sep:  The separation character like print uses
+    :type sep: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
     :param background_color: The background color of the line
+    :type background_color: (str)
+    :param autoscroll: If True (the default), the element will scroll to bottom after updating
+    :type autoscroll: Bool
     """
-    sepchar = sep if sep is not None else ' '
-    endchar = end if end is not None else '\n'
+    end_str = str(end) if end is not None else '\n'
+    sep_str = str(sep) if sep is not None else ' '
 
     outstring = ''
-    for arg in args:
-        outstring += str(arg) + sepchar
-    outstring += endchar
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+    num_args = len(args)
+    for i, arg in enumerate(args):
+        outstring += str(arg)
+        if i != num_args-1:
+            outstring += sep_str
+    outstring += end_str
+
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll)
 
 
 

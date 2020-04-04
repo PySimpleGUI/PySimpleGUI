@@ -16,7 +16,10 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_For_Python_3.x_Version-0.31.0-orange.svg?longCache=true&style=for-the-badge)        
+PySimpleGUIQt on PyPI...
+        
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) 
+     
         
         
         
@@ -25,6 +28,7 @@
 
 "Qt without the ugly"
 
+(For newbies... "Qt" is prouncounced "Cute")
 
 ## The Alpha Release    
  [Announcements of Latest Developments](https://github.com/MikeTheWatchGuy/PySimpleGUI/issues/142)        
@@ -776,6 +780,27 @@ Themes and more!
 * TabGroup - Tab positions now supporrted
 	* left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright
 * Tables & Trees - text color and background color now work.  Don't appear to have worked before
+
+
+## 0.32.0 PySimpleGUIQt 4-Apr-2020
+
+The "Jeez... it's been way too LONG since a release" release
+
+Highlights - Read with close (Single line GUIs!), Print to Multiline, Scrollable columns
+
+* Listbox.update fix
+* Added Graph.change_coordinates
+* Added Image.Widget
+* Return correct value when Comboxbox has manual data entered
+* Multiline.print - new printing capabilities
+* Multiline move cursor to end
+* Scrollable columns
+* Added Listbox.get
+* Fix for visible ignored in Text Element
+* Window.read - close parameter (YES! Single line GUIs again)
+* Multiline readonly parm on update
+* Print fixed sep char to act line normal print
+* Print (Multiline) added autoscroll parm
 
 
 
