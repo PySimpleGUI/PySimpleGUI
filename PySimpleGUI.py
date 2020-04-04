@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from wx._core import Border
 
-version = __version__ = "4.18.0.14  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print"
+version = __version__ = "4.18.0.15  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width"
 
 port = 'PySimpleGUI'
 
@@ -10675,6 +10676,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', background=element.TabBackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
+                if element.BorderWidth is not None:
+                    style.configure(custom_style, borderwidth=element.BorderWidth)
+                    # style.configure(custom_style + '.Tab', borderwidth=0)       # if ever want to get rid of border around the TABS themselves
+
                 style.configure(custom_style + '.Tab', font=font)
 
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
@@ -10683,8 +10688,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.ChangeSubmits:
                     element.TKNotebook.bind('<<NotebookTabChanged>>', element._TabGroupSelectHandler)
-                if element.BorderWidth is not None:
-                    element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -15561,11 +15564,11 @@ def main():
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
+    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red', )
     tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
-                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]])
-    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red')
-    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red')
+                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]], )
+    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
+    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
 
     layout1 = [
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
@@ -15576,7 +15579,7 @@ def main():
          [Text('PySimpleGUI Location {}'.format(os.path.dirname(os.path.abspath(__file__))), size=(50, None), font='ANY 12')],
          [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
          [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
-        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', )],
+        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
