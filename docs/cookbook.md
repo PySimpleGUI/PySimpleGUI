@@ -984,6 +984,244 @@ window.close()
 
 ```
 
+
+---------
+
+# Recipe - Printing
+
+Outputting text is a very common operation in programming.  Your first Python program may have been
+
+```python
+print('Hello World')
+```
+
+But in the world of GUIs where do "prints" fit in?  Well, lots of places!  Of course you can still use the normal `print` statement.  It will output to StdOut (standard out) which is normally the shell where the program was launched from.  
+
+Prining to the console becomes a problem however when you launch using `pythonw` on Windows or if you launch your program in some other way that doesn't have a console.  With PySimpleGUI you have many options available to you so fear not.  
+
+These Recipes explore how to retain *prints already in your code*.  Let's say your code was written for a console and you want to migrate over to a GUI.  Maybe there are so many print statements that you don't want to modify every one of them individually.
+
+There are at least 3 ways to transform your `print` statements that we'll explore here
+1. The Debug window
+2. The Output Element
+3. The Multiline Element
+
+The various forms of "print" you'll be introduced to all support the `sep` and `end` parameters that you find on normal print statements.
+
+
+## Recipe - #1/3 Printing to Debug Window
+
+The debug window acts like a virtual console.  There are 2 operating modes for the debug window.  One re-routes stdout to the window, the other does not.
+
+### `Print` - Print to the Debug Window
+
+The functions `Print`, `eprint`, `EasyPrint` all refer to the same funtion.   There is no difference whic hyou use as they point to identical code.  The one you'll see used in Demo Programs is `Print`.
+
+One method for routing your print statements to the debuyg window is to reassign the `print` keyword to be the PySimpleGUI function `Print`.  This can be done through simple assignment.  
+
+`print = sg.Print`
+
+You can also remap stdout to the debug window by calling `Print` with the parameter `do_not_reroute_stdout = False`.  This will reroute all of your print statements out to the debug window.
+
+```python
+import PySimpleGUI as sg
+
+sg.Print('Re-routing the stdout', do_not_reroute_stdout=False)
+print('This is a normal print that has been re-routed.')
+```
+
+![SNAG-0744](https://user-images.githubusercontent.com/46163555/78322296-4f786800-753c-11ea-94eb-6321bc046e28.jpg)
+
+While both `print` and `sg.Print` will output text to your Debug Window.  
+
+***Printing in color is only operational if you do not reroute stdout to the debug window.***
+
+If color printing is important, then don't reroute your stdout to the debug window.  Only use calls to `Print` without any change to the stdout settings and you'll be able to print in color.  
+
+```python
+import PySimpleGUI as sg
+
+sg.Print('This text is white on a green background', text_color='white', background_color='green', font='Courier 10')
+sg.Print('The first call sets some window settings like font that cannot be changed')
+sg.Print('This is plain text just like a print would display')
+sg.Print('White on Red', background_color='red', text_color='white')
+sg.Print('The other print', 'parms work', 'such as sep', sep=',')
+sg.Print('To not extend a colored line use the "end" parm', background_color='blue', text_color='white', end='')
+sg.Print('\nThis line has no color.')
+```
+
+![image](https://user-images.githubusercontent.com/46163555/78385546-03640c80-75aa-11ea-8051-75285a1c1348.png)
+
+
+--------
+
+## Recipe - #2/3 Print to `Output` Element
+
+If you want to re-route your standard out to your window, then placing an `Output` Element in your layout will do just that.  When you call "print", your text will be routed to that `Output` Element.  Note you can only have 1 of these in your layout because there's only 1 stdout.
+
+Of all of the "print" techniques, this is the best to use if you cannot change your print statements.  The `Output` element is the best choice if your prints are in another module that you don't have control over such that "redefining / reassigning" what `print` does isn't a possibility.
+
+This layout with an `Output` element shows the results of a few clicks of the Go Button. 
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('What you print will display below:')],
+            [sg.Output(size=(50,10), key='-OUTPUT-')],
+            [sg.In(key='-IN-')],
+            [sg.Button('Go'), sg.Button('Clear'), sg.Button('Exit')]  ]
+
+window = sg.Window('Window Title', layout)
+
+while True:             # Event Loop
+    event, values = window.read()
+    print(event, values)
+    if event in (None, 'Exit'):
+        break
+    if event == 'Clear':
+        window['-OUTPUT-'].update('')
+window.close()
+```
+
+![image](https://user-images.githubusercontent.com/46163555/78387450-5ab7ac00-75ad-11ea-8a29-321a30db0248.png)
+
+-----------------
+
+## Recipe - #3/3 Print to `Multiline` Element
+
+Beginning in 4.18.0 you can "print" to any `Multiline` Element in your layouts.  The `Multiline.print` method acts similar to the `Print` function described earlier.  It has the normal print parameters `sep` & `end` and also has color options.  It's like a super-charged `print` statement.
+
+"Converting" expring print statements to output to a `Multiline` Element can be done by either
+
+* Adding the `Multiline` element to the `print` statment so that it's calling the `Multiline.print` method
+* Redefining `print`
+
+### 3A Appending Element to `print` Statement to print to Multiline
+
+Let's try the first option, adding the element onto the front of an existing `print` statement as well as using the color parameters.
+
+The most basic form of converting your exiting `print` into a `Multline` based `print` is to add the same element-lookup code that you would use when calling an element's `update` method.  Generically, that conversion looks like this:
+
+```python
+print('Testing 1 2 3')
+```
+
+If our Multiline's key is '-ML-' then the expression to look the element up is:
+```python
+window['-ML-']
+```
+
+Combing the two transforms the original print to a `Multline` element print:
+```python
+window['-ML-'].print('Testing 1 2 3')
+```
+
+Because we're using these `Multilne` elements as output only elements, we don't want to have their contents returned in the values dictionary when we call `window.read()`.  To make any element not be included in the values dictionary, add the constant `WRITE_ONLY_KEY` onto the end of your key.  This would change our previous example to:
+
+```python
+window['-ML-'+sg.WRITE_ONLY_KEY].print('Testing 1 2 3')
+```
+When you define the multiline element in your layout, its key will need to have this suffix added too.
+
+Combining all of this information into a full-program we arrive at this Recipe:
+
+```python
+import PySimpleGUI as sg
+
+layout = [  [sg.Text('Demonstration of Multiline Element Printing')],
+            [sg.MLine(key='-ML1-'+sg.WRITE_ONLY_KEY, size=(40,8))],
+            [sg.MLine(key='-ML2-'+sg.WRITE_ONLY_KEY,  size=(40,8))],
+            [sg.Button('Go'), sg.Button('Exit')]]
+
+window = sg.Window('Window Title', layout, finalize=True)
+
+
+# Note, need to finalize the window above if want to do these prior to calling window.read()
+window['-ML1-'+sg.WRITE_ONLY_KEY].print(1,2,3,4,end='', text_color='red', background_color='yellow')
+window['-ML1-'+sg.WRITE_ONLY_KEY].print('\n', end='')
+window['-ML1-'+sg.WRITE_ONLY_KEY].print(1,2,3,4,text_color='white', background_color='green')
+counter = 0
+
+while True:             # Event Loop
+    event, values = window.read(timeout=100)
+    if event in (None, 'Exit'):
+        break
+    if event == 'Go':
+        window['-ML1-'+sg.WRITE_ONLY_KEY].print(event, values, text_color='red')
+    window['-ML2-'+sg.WRITE_ONLY_KEY].print(counter)
+    counter += 1
+window.close()
+```
+
+It produces this window:
+
+
+![image](https://user-images.githubusercontent.com/46163555/78400036-fbb16180-75c3-11ea-8261-f8b80a38d2e4.png)
+
+
+There are a number of tricks and techniques burried in this Recpie so study it closely as there are a lot of options being used.
+
+
+
+### 3B Redefining `print` to Print to `Multiline`
+
+If you want to use the `Multline` element as the destination for your print, but you don't want to go through your code and modify every print statement by adding an element lookup, then you can simply redefine your call to `print` to either be a function that adds that multline element onto the print for you or a lambda expression if you want to make it a single line of code.  Yes, it's not suggested to use a lambda expression by assignment to a vairable, but sometimes it may be easier to understand.  Find the right balanace for you and ryour projct.
+
+
+If you were to use a funciton, then your code my look like this:
+
+```python
+def mprint(*args, **kwargs):
+    window['-ML1-' + sg.WRITE_ONLY_KEY].print(*args, **kwargs)
+
+print = mprint
+```
+
+A named lambda expression would perhaps resemeble this:
+
+```python
+print = lambda *args, **kwargs: window['-ML1-' + sg.WRITE_ONLY_KEY].print(*args, **kwargs)
+```
+
+Putting it all together into a single block of code for you to copy and run results in
+```python
+
+def mprint(*args, **kwargs):
+    window['-ML1-'+sg.WRITE_ONLY_KEY].print(*args, **kwargs)
+
+print = mprint
+
+# Optionally could use this lambda instead of the mprint function
+# print = lambda *args, **kwargs: window['-ML1-' + sg.WRITE_ONLY_KEY].print(*args, **kwargs)
+
+layout = [  [sg.Text('Demonstration of Multiline Element Printing')],
+            [sg.MLine(key='-ML1-'+sg.WRITE_ONLY_KEY, size=(40,8))],
+            [sg.MLine(key='-ML2-'+sg.WRITE_ONLY_KEY,  size=(40,8))],
+            [sg.Button('Go'), sg.Button('Exit')]]
+
+window = sg.Window('Window Title', layout, finalize=True)
+print(1,2,3,4,end='', text_color='red', background_color='yellow')
+print('\n', end='')
+print(1,2,3,4,text_color='white', background_color='green')
+counter = 0
+
+# Switch to printing to second multiline
+print = lambda *args, **kwargs: window['-ML2-' + sg.WRITE_ONLY_KEY].print(*args, **kwargs)
+
+
+while True:             # Event Loop
+    event, values = window.read(timeout=100)
+    if event in (None, 'Exit'):
+        break
+    if event == 'Go':
+        print(event, values, text_color='red')
+    print(counter)
+    counter += 1
+window.close()
+
+```
+
+
 --------------      
       
 ## Recipe - Get 2 Files By Browsing 
