@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-from wx._core import Border
 
-version = __version__ = "4.18.0.15  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width"
+version = __version__ = "4.18.0.16  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns"
 
 port = 'PySimpleGUI'
 
@@ -585,6 +584,9 @@ class Element():
     Holds the basic description of an Element like size and colors
     """
 
+    def testHook(self, e):
+        print("IN")
+
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
                  visible=True, metadata=None):
         """
@@ -626,7 +628,7 @@ class Element():
         self.TKImage = None
 
         self.ParentForm = None  # type: Window
-        self.ParentContainer = None  # will be a Form, Column, or Frame element
+        self.ParentContainer = None  # will be a Form, Column, or Frame element # UNBIND
         self.TextInputDefault = None
         self.Position = (0, 0)  # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
@@ -905,6 +907,7 @@ class Element():
         :type force: bool
         """
 
+        print("FOCUS!")
         try:
             if force:
                 self.Widget.focus_force()
@@ -1485,6 +1488,13 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
+
+    def testHookList(self, e):
+        print("In listbox!")
+
+    def testUnhookList(self, e):
+        print("Left listbox!")
+
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -1505,6 +1515,9 @@ class Listbox(Element):
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
+        else:
+            self.Widget.bind("<Mouse>", testHookList)
+            self.Widget.bind("<Leave>", testUnookList)
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -5139,6 +5152,8 @@ class TkScrollableFrame(tk.Frame):
 
         # Canvas can be: master, canvas, TKFrame
 
+        # Chr0nic
+
         self.TKFrame.bind("<Enter>", self.hookMouseWheel)
         self.TKFrame.bind("<Leave>", self.unhookMouseWheel)
 
@@ -5149,13 +5164,19 @@ class TkScrollableFrame(tk.Frame):
 
         self.bind('<Configure>', self.set_scrollregion)
 
+    # Chr0nic
     def hookMouseWheel(self, e):
+        #print("enter")
+        VarHolder.canvas_holder = self.canvas
         self.TKFrame.bind_all('<4>', self.yscroll, add='+')
         self.TKFrame.bind_all('<5>', self.yscroll, add='+')
         self.TKFrame.bind_all("<MouseWheel>", self.yscroll, add='+')
         self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
 
+    # Chr0nic
     def unhookMouseWheel(self, e):
+        #print("leave")
+        VarHolder.canvas_holder = None
         self.TKFrame.unbind_all('<4>')
         self.TKFrame.unbind_all('<5>')
         self.TKFrame.unbind_all("<MouseWheel>")
@@ -9575,6 +9596,12 @@ else:
 
 """
 
+# Chr0nic || This is probably *very* bad practice. But it works. Simple, but it works...
+class VarHolder(object):
+    canvas_holder = None
+    def __init__(self):
+        self.canvas_holder = None
+
 
 # Also, to get to the point in the code where each element's widget is created, look for element + "p lacement" (without the space)
 
@@ -9592,6 +9619,39 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     :type toplevel_form: (Window)
 
     """
+
+    # Old bindings
+    def yscroll_old(event):
+        try:
+            if event.num == 5 or event.delta < 0:
+                VarHolder.canvas_holder.yview_scroll(1, "unit")
+            elif event.num == 4 or event.delta > 0:
+                VarHolder.canvas_holder.yview_scroll(-1, "unit")
+        except:
+            pass
+
+    def xscroll_old(event):
+        try:
+            if event.num == 5 or event.delta < 0:
+                VarHolder.canvas_holder.xview_scroll(1, "unit")
+            elif event.num == 4 or event.delta > 0:
+                VarHolder.canvas_holder.xview_scroll(-1, "unit")
+        except:
+            pass
+
+    # Chr0nic
+    def testMouseHook(em):
+        containing_frame.unbind_all('<4>')
+        containing_frame.unbind_all('<5>')
+        containing_frame.unbind_all("<MouseWheel>")
+        containing_frame.unbind_all("<Shift-MouseWheel>")
+
+    # Chr0nic
+    def testMouseUnhook(em):
+        containing_frame.bind_all('<4>', yscroll_old, add="+")
+        containing_frame.bind_all('<5>', yscroll_old, add="+")
+        containing_frame.bind_all("<MouseWheel>", yscroll_old, add="+")
+        containing_frame.bind_all("<Shift-MouseWheel>", xscroll_old, add="+")
 
     def _char_width_in_pixels(font):
         return tkinter.font.Font(font=font).measure('A')  # single character width
@@ -10254,6 +10314,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                     element.TKListbox.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
+
+                    # Chr0nic
+                    element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 element.TKListbox.pack(side=tk.LEFT)
                 if element.Visible is False:
@@ -10291,6 +10355,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKText.pack_forget()
+                else:
+                    # Chr0nic
+                    element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.TKText.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
                 if element.ChangeSubmits:
                     element.TKText.bind('<Key>', element._KeyboardHandler)
                 if element.EnterSubmits:
@@ -10626,6 +10694,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     state = 'disabled'
                 if element.Visible is False:
                     state = 'hidden'
+                # this code will add an image to the tab. Use it when adding the image on a tab enhancement
+                # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
+                # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
                 form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
                 form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 element.ParentNotebook = form.TKNotebook
