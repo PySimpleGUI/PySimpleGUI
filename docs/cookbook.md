@@ -529,7 +529,7 @@ As you can see, a single entry in the Look and Feel dictionary is itself a dicti
 
 ---
 
-## Modifying an existing Theme
+# Recipe - Modifying an existing Theme
 
 Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the theme at runtime.
 
@@ -556,7 +556,7 @@ Produces these 2 windows
 
 ----
 
-### Adding Your Own Theme
+## Recipe - Adding Your Own Color Theme
 
 The great thing about these themes is that you set it onces and all future Elements will use the new settings.  If you're adding the same colors in your element definitions over and over then perhaps making your own theme is in order.
 
@@ -1223,7 +1223,154 @@ window.close()
 
 
 --------------      
-      
+
+# Recipe - Save and Load Program Settings
+
+
+Some programs, in particular Desktop Widget like Rainmeter-style prorams, need to retain "state" or some series of settings.
+
+This program is a tad large for a Cookbook, but it's a commmon enough feature to go ahead and include.  Besides, it may give you some ideas.
+
+The idea here is that your program's settings are stored in a dictionary.  This dictionary is then written to disk and loaded from disk.
+
+One type of program where this kind of feature is a requirement is when yuou make "rainmeter" tyle Desktop Widgets.  These little programs almost always need to store some kind of state.... everything from the transprency of the widget to the zip code your program uses to look up the weather.
+
+The architecture is quite simple.  You keep your settings ina dictionary.  Your GUI settings window modifies the dictionary and eventually it's written to disk so that the next time you run the probgram you don't have to set up everyihng that's been saved previously.
+
+The package used to save / load that data is the JSON package.  It makes writing and reading Python dictionaries downright trivial.  I use it as a simplified database.  You can also hand edit these files easily.
+
+The portions of this Recipe you'll need to modify to integrate into your code will be:
+
+* the default settings at the top
+* the mapping table to/from settings keys to element keys
+* the settings filename
+* the settings window
+* replace the "main" program with yours
+
+
+The simple main program is there to trigger the change settings event:
+
+![image](https://user-images.githubusercontent.com/46163555/78509070-61832200-7759-11ea-9b3e-a36a3faadbcb.png)
+
+
+The more important window in this program is the settings window
+
+![image](https://user-images.githubusercontent.com/46163555/78509043-34367400-7759-11ea-99fa-a7b66a58ef8f.png)
+
+You'll be converting back and forth between the settings file contents and the values that come out of reading the settings GUI window.
+
+Notice how creation of the window is done is a separate function in this Recipe so that you get a "fresh" layout every time the window is created. It's critical that you do not try to re-use elements.
+
+If you're considering allowing the user to change your program's theme, then this is an excellent way to do that.  All that has to be done is to close your window when a new theme is chosen.  
+
+
+```python
+
+
+import PySimpleGUI as sg
+from json import (load as jsonload, dump as jsondump)
+from os import path
+
+"""
+    A simple "settings" implementation.  Load/Edit/Save settings for your programs
+    Uses json file format which makes it trivial to integrate into a Python program.  If you can
+    put your data into a dictionary, you can save it as a settings file.
+    
+    Note that it attempts to use a lookup dictionary to convert from the settings file to keys used in 
+    your settings window.  Some element's "update" methods may not work correctly for some elements.
+    
+    Copyright 2020 PySimpleGUI.com
+    Licensed under LGPL-3
+"""
+
+SETTINGS_FILE = path.join(path.dirname(__file__), r'settings_file.cfg')
+DEFAULT_SETTINGS = {'max_users': 10, 'user_data_folder': None , 'theme': sg.theme(), 'zipcode' : '94102'}
+# "Map" from the settings dictionary keys to the window's element keys
+SETTINGS_KEYS_TO_ELEMENT_KEYS = {'max_users': '-MAX USERS-', 'user_data_folder': '-USER FOLDER-' , 'theme': '-THEME-', 'zipcode' : '-ZIPCODE-'}
+
+##################### Load/Save Settings File #####################
+def load_settings(settings_file, default_settings):
+    try:
+        with open(settings_file, 'r') as f:
+            settings = jsonload(f)
+    except Exception as e:
+        sg.popup_quick_message(f'exception {e}', 'No settings file found... will create one for you', keep_on_top=True, background_color='red', text_color='white')
+        settings = default_settings
+        save_settings(settings_file, settings, None)
+    return settings
+
+
+def save_settings(settings_file, settings, values):
+    if values:      # if there are stuff specified by another window, fill in those values
+        for key in SETTINGS_KEYS_TO_ELEMENT_KEYS:  # update window with the values read from settings file
+            try:
+                settings[key] = values[SETTINGS_KEYS_TO_ELEMENT_KEYS[key]]
+            except Exception as e:
+                print(f'Problem updating settings from window values. Key = {key}')
+
+    with open(settings_file, 'w') as f:
+        jsondump(settings, f)
+
+    sg.popup('Settings saved')
+
+##################### Make a settings window #####################
+def create_settings_window(settings):
+    sg.theme(settings['theme'])
+
+    def TextLabel(text): return sg.Text(text+':', justification='r', size=(15,1))
+
+    layout = [  [sg.Text('Settings', font='Any 15')],
+                [TextLabel('Max Users'), sg.Input(key='-MAX USERS-')],
+                [TextLabel('User Folder'),sg.Input(key='-USER FOLDER-'), sg.FolderBrowse(target='-USER FOLDER-')],
+                [TextLabel('Zipcode'),sg.Input(key='-ZIPCODE-')],
+                [TextLabel('Theme'),sg.Combo(sg.theme_list(), size=(20, 20), key='-THEME-')],
+                [sg.Button('Save'), sg.Button('Exit')]  ]
+
+    window = sg.Window('Settings', layout, keep_on_top=True, finalize=True)
+
+    for key in SETTINGS_KEYS_TO_ELEMENT_KEYS:   # update window with the values read from settings file
+        try:
+            window[SETTINGS_KEYS_TO_ELEMENT_KEYS[key]].update(value=settings[key])
+        except Exception as e:
+            print(f'Problem updating PySimpleGUI window from settings. Key = {key}')
+
+    return window
+
+##################### Main Program Window & Event Loop #####################
+def create_main_window(settings):
+    sg.theme(settings['theme'])
+
+    layout = [[sg.T('This is my main application')],
+              [sg.T('Add your primary window stuff in here')],
+              [sg.B('Ok'), sg.B('Exit'), sg.B('Change Settings')]]
+
+    return sg.Window('Main Application', layout)
+
+
+def main():
+    window, settings = None, load_settings(SETTINGS_FILE, DEFAULT_SETTINGS )
+
+    while True:             # Event Loop
+        if window is None:
+            window = create_main_window(settings)
+
+        event, values = window.read()
+        if event in (None, 'Exit'):
+            break
+        if event == 'Change Settings':
+            event, values = create_settings_window(settings).read(close=True)
+            if event == 'Save':
+                window.close()
+                window = None
+                save_settings(SETTINGS_FILE, settings, values)
+    window.close()
+main()
+
+```
+
+----------
+
+
 ## Recipe - Get 2 Files By Browsing 
       
 Sometimes you just need to get a couple of filenames.  Browse to get 2 file names that can be then compared.  By using `Input` elements the user can either use the Browse button to browse to select a file or they can paste the filename into the input element directly.    
