@@ -71,7 +71,8 @@ def create_settings_window(settings):
 def create_main_window(settings):
     sg.theme(settings['theme'])
 
-    layout = [[sg.Menu([['&File', []], ['&Edit', ['&Settings'], ],['&Help', '&About...'],])],
+    layout = [
+              [sg.Menu([['File', ['Open']], ['Edit', ['Settings'], ],['Help', 'About...'],])],
               [sg.T('This is my main application')],
               [sg.T('Add your primary window stuff in here')],
               [sg.B('Ok'), sg.B('Exit'), sg.B('Change Settings')]]
