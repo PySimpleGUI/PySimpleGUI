@@ -71,7 +71,8 @@ def create_settings_window(settings):
 def create_main_window(settings):
     sg.theme(settings['theme'])
 
-    layout = [[sg.T('This is my main application')],
+    layout = [[sg.Menu([['&File', []], ['&Edit', ['&Settings'], ],['&Help', '&About...'],])],
+              [sg.T('This is my main application')],
               [sg.T('Add your primary window stuff in here')],
               [sg.B('Ok'), sg.B('Exit'), sg.B('Change Settings')]]
 
@@ -86,9 +87,10 @@ def main():
             window = create_main_window(settings)
 
         event, values = window.read()
+
         if event in (None, 'Exit'):
             break
-        if event == 'Change Settings':
+        if event in ('Change Settings', 'Settings'):
             event, values = create_settings_window(settings).read(close=True)
             if event == 'Save':
                 window.close()
