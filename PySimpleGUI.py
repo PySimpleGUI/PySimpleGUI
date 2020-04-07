@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.17  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub"
+version = __version__ = "4.18.0.18  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get"
 
 port = 'PySimpleGUI'
 
@@ -907,7 +907,7 @@ class Element():
         :type force: bool
         """
 
-        print("FOCUS!")
+        # print("FOCUS!")
         try:
             if force:
                 self.Widget.focus_force()
@@ -1515,9 +1515,6 @@ class Listbox(Element):
         if self.Widget is None:
             warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
             return
-        else:
-            self.Widget.bind("<Mouse>", testHookList)
-            self.Widget.bind("<Leave>", testUnookList)
         if disabled == True:
             self.TKListbox.configure(state='disabled')
         elif disabled == False:
@@ -2312,6 +2309,12 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
+    def Get(self):
+        return self.DisplayText
+
+
+
+    get = Get
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
@@ -9640,6 +9643,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             pass
 
     # Chr0nic
+    def breakScroll(event):
+      print("[TOLD TO BREAK SCROLLING EVENT]")
+
+    # Chr0nic
+    def testMouseHook2(em):
+        combo = em.TKCombo
+        combo.unbind_class("TCombobox", "<MouseWheel>")
+        combo.unbind_class("TCombobox", "<ButtonPress-4>")
+        combo.unbind_class("TCombobox", "<ButtonPress-5>")
+        containing_frame.unbind_all('<4>')
+        containing_frame.unbind_all('<5>')
+        containing_frame.unbind_all("<MouseWheel>")
+        containing_frame.unbind_all("<Shift-MouseWheel>")
+
+    # Chr0nic
+    def testMouseUnhook2(em):
+        containing_frame.bind_all('<4>', yscroll_old, add="+")
+        containing_frame.bind_all('<5>', yscroll_old, add="+")
+        containing_frame.bind_all("<MouseWheel>", yscroll_old, add="+")
+        containing_frame.bind_all("<Shift-MouseWheel>", xscroll_old, add="+")
+
+    # Chr0nic
     def testMouseHook(em):
         containing_frame.unbind_all('<4>')
         containing_frame.unbind_all('<5>')
@@ -10237,6 +10262,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width,
                                                                 textvariable=element.TKStringVar, font=font,
                                                                 style=style_name)
+
+
+                # Chr0nic
+                element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
+                element.TKCombo.bind("<Leave>", lambda event, em=element: testMouseUnhook2(em))
+
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 element.TKCombo['values'] = element.Values
