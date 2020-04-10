@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.19  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix"
+version = __version__ = "4.18.0.20  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again"
 
 port = 'PySimpleGUI'
 
@@ -121,7 +121,7 @@ import calendar
 import datetime
 import textwrap
 import inspect
-# from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 from random import randint
 import warnings
 from math import floor
