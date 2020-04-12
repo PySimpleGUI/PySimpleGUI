@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.36.2  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix"
+version = __version__ = "0.36.3  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix, print sep char fixed, fix for extra Tab, replaced SvgGroup with SvgSubcontainer"
 
 port = 'PySimpleGUIWeb'
 
@@ -1601,7 +1601,7 @@ class Graph(Element):
         self.MouseButtonDown = False
         self.Disabled = disabled
         self.Widget = None                  # type: remi.gui.Svg
-        self.SvgGroup = None                # type: remi.gui.SvgGroup
+        self.SvgGroup = None                # type: remi.gui.SvgSubcontainer
         super().__init__(ELEM_TYPE_GRAPH, size=canvas_size, size_px=size_px, visible=visible, background_color=background_color, pad=pad,  tooltip=tooltip, key=key)
         return
 
@@ -1757,7 +1757,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self.Widget.empty()
-        self.SvgGroup = remi.gui.SvgGroup(self.Size[1],0)
+        self.SvgGroup = remi.gui.SvgSubcontainer(self.Size[1],0)
         self.Widget.append(self.SvgGroup)
 
     def Update(self, background_color):
@@ -4670,7 +4670,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 element.Widget = remi.gui.Svg(width=element.CanvasSize[0], height=element.CanvasSize[1])
-                element.SvgGroup = remi.gui.SvgGroup(element.CanvasSize[1],0)
+                element.SvgGroup = remi.gui.SvgSubcontainer(element.CanvasSize[1],0)
                 element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
@@ -5148,7 +5148,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         #     tk_row_frame.configure(background=form.BackgroundColor)
         # toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
-        containing_frame.append(tk_row_frame)
+        if not type(containing_frame) == remi.gui.TabBox:
+            containing_frame.append(tk_row_frame)
     return
 
 
@@ -5650,13 +5651,17 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :param text_color: The color of the text
     :param background_color: The background color of the line
     """
-    sepchar = sep if sep is not None else ' '
-    endchar = end if end is not None else '\n'
+    end_str = str(end) if end is not None else '\n'
+    sep_str = str(sep) if sep is not None else ' '
 
     outstring = ''
-    for arg in args:
-        outstring += str(arg) + sepchar
-    outstring += endchar
+    num_args = len(args)
+    for i, arg in enumerate(args):
+        outstring += str(arg)
+        if i != num_args - 1:
+            outstring += sep_str
+    outstring += end_str
+
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
 
 
@@ -7910,7 +7915,7 @@ def main():
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
         [Multiline('Multiline Input', do_not_clear=True, size=(40, 4), enable_events=False, key='_MULTI_IN_')],
         # [Output(size=(60,10))],
-        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=False)],
+        [MultilineOutput('Multiline Output', size=(80, 8), text_color='blue', font='Courier 12', key='_MULTIOUT_', autoscroll=True)],
         [Checkbox('Checkbox 1', enable_events=True, key='_CB1_'), Checkbox('Checkbox 2', default=True, key='_CB2_', enable_events=True)],
         [Combo(values=['Combo 1', 'Combo 2', 'Combo 3'], default_value='Combo 2', key='_COMBO_', enable_events=True,
                readonly=False, tooltip='Combo box', disabled=False, size=(12, 1))],
