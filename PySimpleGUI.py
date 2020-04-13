@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0.20  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again"
+version = __version__ = "4.18.2.20  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi"
 
 port = 'PySimpleGUI'
 
@@ -127,7 +127,11 @@ import warnings
 from math import floor
 from math import fabs
 from functools import wraps
-from subprocess import run, PIPE
+try:        # Because Raspberry Pi is still on 3.4....
+    from subprocess import run, PIPE
+except:
+    pass
+
 from threading import Thread
 import itertools
 import os
@@ -7956,16 +7960,16 @@ class SystemTray:
     def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
         """
         SystemTray - create an icon in the system tray
-        :param menu: Menu definition
-        :type menu: ???
+        :param menu: Menu definition. Example - ['UNUSED', ['My', 'Simple', '---', 'Menu', 'Exit']]
+        :type menu: List[List[List[str] or str]]
         :param filename: filename for icon
-        :type filename: ????
-        :param data: in-ram image for icon
-        :type data: ???
-        :param data_base64: basee-64 data for icon
-        :type data_base64: ???
+        :type filename: str
+        :param data: in-ram image for icon (same as data_base64 parm)
+        :type data: bytes
+        :param data_base64: base-64 data for icon
+        :type data_base64: bytes
         :param tooltip: tooltip string
-        :type tooltip: (str)
+        :type tooltip: str
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: Any
         """
@@ -14722,7 +14726,7 @@ def _process_thread(*args):
     try:
         __shell_process__ = run(args, shell=True, stdout=PIPE)
     except Exception as e:
-        print(f'Exception running process args = {args}')
+        print('Exception running process args = {}'.format(args))
         __shell_process__ = None
 
 
