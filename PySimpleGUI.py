@@ -1178,7 +1178,7 @@ class Combo(Element):
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values: values to choose. While displayed as text, the items returned are what the caller supplied, not text
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value: (Any)
         :param size: width = characters-wide, height = rows-high
@@ -13197,7 +13197,7 @@ def theme_list():
     Returns a sorted list of the currently available color themes
 
     :return: List[str] - A sorted list of the currently available color themes
-    :rtype: (str)
+    :rtype: List[str]
     """
     return list_of_look_and_feel_values()
 
