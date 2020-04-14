@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.36.3  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix, print sep char fixed, fix for extra Tab, replaced SvgGroup with SvgSubcontainer"
+version = __version__ = "0.36.4  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix, print sep char fixed, fix for extra Tab, replaced SvgGroup with SvgSubcontainer, fixed Graph element (Thanks Davide from Remi!)"
 
 port = 'PySimpleGUIWeb'
 
@@ -1757,7 +1757,7 @@ class Graph(Element):
             print('Call Window.Finalize() prior to this operation')
             return None
         self.Widget.empty()
-        self.SvgGroup = remi.gui.SvgSubcontainer(self.Size[1],0)
+        self.SvgGroup = remi.gui.SvgSubcontainer(0, 0, "100%", "100%")
         self.Widget.append(self.SvgGroup)
 
     def Update(self, background_color):
@@ -4670,7 +4670,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
                 element.Widget = remi.gui.Svg(width=element.CanvasSize[0], height=element.CanvasSize[1])
-                element.SvgGroup = remi.gui.SvgSubcontainer(element.CanvasSize[1],0)
+                element.SvgGroup = remi.gui.SvgSubcontainer(0,0, "100%", "100%")
                 element.Widget.append([element.SvgGroup,])
                 do_font_and_color(element.Widget)
                 if element.ChangeSubmits:
