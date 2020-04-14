@@ -42,11 +42,13 @@ HOW DO I INSERT IMAGES ???
 ![Awesome Meter](https://img.shields.io/badge/Awesome_meter-100-yellow.svg)
 ![Python Version](https://img.shields.io/badge/Python-2.7_3.x-yellow.svg)
 
-![Python Version](https://img.shields.io/badge/PySimpleGUI_For_Python_3.x_Version-4.16.0-red.svg?longCache=true&style=for-the-badge)
-
-![Python Version](https://img.shields.io/badge/PySimpleGUIQt_Version-0.30.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_version-0.14.0-orange.svg?longCache=true&style=for-the-badge)
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_Version-0.33.0-orange.svg?longCache=true&style=for-the-badge)
+[![PyPI Version](https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge)](https://pypi.org/project/pysimplegui/) tkinter
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) Qt
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiweb/) Web
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiwx/) Wx
+![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
+[![Last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
 
 
 
@@ -562,36 +564,13 @@ You won't look stupid posting an Issue on GitHub.  It's just the opposite.
 
 **PySimpleGUI is an active project.**  Bugs are fixed, features are added, often.  Should you run into trouble, **open an issue** on the [GitHub site](http://www.PySimpleGUI.com) and you'll receive help.  Posting questions on StackOverflow, Forums, Mailing lists, Reddit, etc, is not the fastest path to support and taking it may very well lead you astray as folks not familiar with the package struggle to help you. You may also run into the common response of "I don't know PySimpleGUI (and perhaps dislike it as a result), but I know you can do that with Qt".
 
-Why only 1 location?  It's simple.... it's where the bugs, enhancements, etc are tracked.  It's THE spot on the Internet for this project.  It's not some freakish being in control, telling people how to do things.  It's so that YOU get the best and quickest support possible.
+Why only 1 location?  It's simple.... it's where the bugs, enhancements, etc are tracked.  It's THE spot on the Internet for this project.  There's not driven by a freakish being in control, telling people how to do things, reasoning.  It's so that YOU get the best and quickest support possible.
 
 So, [open an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/new/choose), choose "custom form" and fill it out completely.  There are very good reasons behind all of the questions.  Cutting corners only cuts your chances of getting help and getting quality help as it's difficult enough to debug remotely.  Don't handicap people that want to help by not providing enough information.
 
 **Be sure and run your program outside of your IDE** ***first***.  Start your program from the shell using `python` or `python3` command.  On numerous occassions much time was spent chasing problems caused by the IDE.  By running from a command line, you take that whole question out of the problem, an important step.
 
 ***Don't sit and stew, trying the same thing over and over***, until you hate life... stop, and post an Issue on the GitHub.  Someone **WILL** answer you.  Support is included in the purchase price for this package (the quality level matches the price as well I'm afraid).  Just don't be too upset when your free support turns out to be a little bit crappy, but it's free and typically good advice.
-
-
-### PySimpleGUI Trolls
-
-Yea, they're out there.  Would have NEVER in a billion years guessed that there would be objection to this package, coming from a small, but vocal, number of people.  I naively believed everyone would be supportive, see the value, hold hands around the fire, sing songs, and in the very least be truthful.  But, this ain't Kansas and the Internet is well...  
-
-If someone is actively discouraging you from using this package, then know you are on the right track and you should give it a try.  Stuff like this sometimes happens because the person works for a particular company or they have a GUI package of their own.... that's not popuplar, or they like to tear things down or I dunno... people can be really weird and emotional.
-
-I promise you're not going to be wrecked for life.  It will not cause you to be a bad programmer with bad habits.  It will not ruin your career.  It's not going to teach you bad habits.  One person I know got a bonus based on a PySimpleGUI program he wrote.
-
-***How about success being the goal?***  Spend time polishing your GUI and working on your primary code instead of struggling your way through the mountains of documentation in the Qt library, trying to set the color of something.  How about getting your program done, working, and in use?
-
-Start with PySimpleGUI, then in the future if you want to code directly in Qt, it's not like you won't be able to learn something else due to your PySimpleGUI knowledge.  Unable to write a `while` loop because you already learned using a `for` loop?  That seems to be the logic.
-
-If anything, you'll have more knowledge than most people that are just starting because you'll have already built working GUIs, perhaps many of them and understand how to layout an efficient interface as well as having a good education in GUI Widgets and how they work.
-
-Here are the forces likely at work.... said Troll has been programming for a while now and really knows these GUI frameworks. Probably invested a lot of hours learning them and thus has some marketable skills (yes, follow the money).  
-
-Enter snotty-nosed high-shool or first year programmer using PySimpleGUI that manages to make GUI windows with great ease... that look, well, pretty much the **same** as the windows Sir Troll ***was*** used to getting paid big bucks to make.  What used to be a skill only a select few can do, now 1,000's, 10,000's, or 100,000s more programmers can do, quicker and easier.  Bummer Mr. Troll.  Bummer.
-
-"***It's supposed to be difficult to write a GUI***" was an actual reason listed why not to use PySimpleGUI by one person offering to help junior programmers learn Qt. Really?  It's supposed to be difficult.  Huh.  Well, not in this Python universe.  Maybe in C++ world it works that way??
-
-Just know you're safe in trying and possibly even succeeding in the process.
 
 
 ### Target Audience
@@ -764,7 +743,7 @@ Or how about a ***custom GUI*** in 1 line of code?  No kidding this is a valid p
 ```python
 import PySimpleGUI as sg
 
-event, values = sg.Window('Get filename example', [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ]).Read()
+event, values = sg.Window('Get filename example', [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ]).read(close=True)
 ```
 
 ![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
@@ -795,7 +774,7 @@ layout = [	[sg.Text('Filename')],
 
 window = sg.Window('Get filename example', layout)
 
-event, values = window.Read()
+event, values = window.read()
 window.close()
 ```
 
@@ -874,9 +853,9 @@ Beautiful windows are created, not simply given to you.  There are people that d
 
 Some of these have been "polished", others like the Matplotlib example is more a functional example to show you it works.
 
-![batterup2](https://user-images.githubusercontent.com/13696193/50378902-6aa2bb00-060a-11e9-8f2f-d746694fa4ee.gif)
+![batterup](https://user-images.githubusercontent.com/46163555/77781297-b624ef80-702b-11ea-857a-b0809f061dc9.png)
 
-![uno_final](https://user-images.githubusercontent.com/13696193/49945232-67952580-feba-11e8-90c8-7dc31c5f7c67.gif)
+![Uno](https://user-images.githubusercontent.com/46163555/77781360-d05ecd80-702b-11ea-90f9-cb9fb3339c05.png)
 
 
 This chess program is capable of running multiple AI chess engines and was written by another user using PySimpleGUI.
@@ -902,7 +881,7 @@ In release 4.9 another 32 Color Themes were added... here are the current choice
 
 Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
 
-![cpu cores dashboard 2](https://user-images.githubusercontent.com/13696193/47611749-18964c80-da42-11e8-93c4-6821a6fce488.gif)
+![cpumeter](https://user-images.githubusercontent.com/46163555/77781418-ec626f00-702b-11ea-90b3-668fb71d63b5.png)
 
 Want to build a Crossword Puzzle?  No problem, the drawing primitives are there for you.
 
@@ -943,7 +922,7 @@ It's possible to create some cool games by simply using the built-in PySimpleGUI
 
 Games haven't not been explored much, yet, using PySimpleGUI.
 
-![pong](https://user-images.githubusercontent.com/13696193/45860012-2d8d0b00-bd33-11e8-9efd-3eaf4c30f324.gif)
+![pong](https://user-images.githubusercontent.com/46163555/77781526-1c117700-702c-11ea-901b-4cb5f7a34cb4.png)
 
 
 # Windows Programs That Look Like Windows Programs
@@ -956,7 +935,7 @@ Combining PySimpleGUI with PyInstaller creates something truly remarkable and sp
 
 The application you see below with a working menu was created in 20 lines of Python code.  It is a single .EXE file that launches straight into the screen you see.  And more good news, the only icon you see on the taskbar is the window itself... there is no pesky shell window.  Nice, huh? 
 
-![menu demo](https://user-images.githubusercontent.com/13696193/45923097-8fbc4c00-beaa-11e8-87d2-01a5331811c8.gif)
+![windowsprogram](https://user-images.githubusercontent.com/46163555/77781479-03a15c80-702c-11ea-9408-903e022e0418.png)
 
 
 With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
@@ -987,9 +966,9 @@ This meant classes could be used to build and use it, but classes can not be par
 
 What about those pesky callbacks?  They're difficult for beginners to grasp and they're a bit of a pain in the ass to deal with.  The way PySimpleGUI got around events was to utilize ***a "message passing" architecture*** instead.  
 
-Instead of a user function being called when there's some event, instead the information is "passed" to the user when they call the function `Window.Read()` 
+Instead of a user function being called when there's some event, instead the information is "passed" to the user when they call the function `Window.read()` 
 
-***Everything*** is returned through this `Window.Read` call.  Of course the underlying GUI frameworks still perform callbacks, but they all happen inside of PySimpleGUI where they are turned into messages to pass to you.
+***Everything*** is returned through this `Window.read` call.  Of course the underlying GUI frameworks still perform callbacks, but they all happen inside of PySimpleGUI where they are turned into messages to pass to you.
 
 All of the boilerplate code, the event handling, widget creation, frames containing widgets, etc, are **exactly the same** objects and calls that you would be writing if you wrote directly in tktiner, Qt, etc.  With all of this code out of the way and done for you, that leaves you with the task of doing something useful with the information the user entered.  THAT, afterall, is the goal here.... getting user information and acting on it.
 
@@ -1222,19 +1201,68 @@ Like above, you may have to install either pip or tkinter.  To do this on Python
 
 `sudo apt install python-tkinter`
 
+### Upgrading from GitHub Using PySimpleGUI
+
+Starting in version 4.17.0 there is code in the PySimpleGUI package that upgrades your previously pip installed package using the latest version checked into GitHub.  
+
+Previously if you wanted to run the GitHub version, you would:
+* Download the PySimpleGUI.py file from GitHub
+* Place it in your applications's folder
+
+This required you to go back later and delete this file when you want to move on to the next version released to PyPI.  
+
+The new capability is the ability to overwrite your PySimpleGUI.py file that you installed using `pip` with the currently posted version on GitHub.  Using this method when you're ready to install the next version from PyPI or you want to maybe roll back to a PyPI release, you only need to run `pip`.  You don't have to find and delete any PySimpleGUI.py files.
+
+***Important - Linux Users*** - There is currently a problem using this utility on Linux systems.  It's being worked on and a patch will be released as soon as something is figured out.
+
+
+#### Command Line Upgrade
+
+To upgrade PySimpleGUI from the command line type this command into your dos window
+
+`python -m PySimpleGUI upgrade`
+
+You will first be shown a confirmation window:
+
+![image](https://user-images.githubusercontent.com/46163555/77477572-f0f01300-6df2-11ea-812f-98a36e7c28e0.png)
+
+If you choose yes, then the new version will be installed and you'll see a red "completed" window
+
+
+![image](https://user-images.githubusercontent.com/46163555/77477619-006f5c00-6df3-11ea-8b01-44b1bea22989.png)
+
+
+#### GUI Upgrade
+
+The PySimpleGUI Test Harness is another mechanism you can use to upgrade.  To start the test harness you "run" the PySimpleGUI package.  
+
+`python -m PySimpleGUI.PySimpleGUI`
+
+Of course if you're running Linux you may run `python3` instead.
+
+From your code you can call `PySimpleGUI.main()`.  This window may not look exactly like the one you see, but the thing that should be there is the red "Install" button.
+
+![image](https://user-images.githubusercontent.com/46163555/77478381-437dff00-6df4-11ea-994e-a443ff967917.png)
+
+
+Clicking the install button will bring up the same confirmation window shown as the command line upgrade above.
+
 ### Testing your installation and Troubleshooting
 
 Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.
 
 #### The Quick Test
 
-From your commant line type:
-`python -m PySimpleGUI`
+The PySimpleGUI Test Harness pictured in the previous section on GUI upgrades is the short program that's built into PySimpleGUI that serves multiple purposes.  It exercises many/most of the available Elements, displays version and location data and works as a quick self-test.
 
-Of course if you're on Linux/Mac and need to run using the command `python3` then of course type that.
+From your command line type:
+`python -m PySimpleGUI.PySimpleGUI`
 
-This will display the same window as these instructions:
+If you're on Linux/Mac and need to run using the command `python3` then of course type that.
 
+This will display the test harnes window.  
+
+You can also test by using the REPL....
 
 #### Instructions for Testing Python 2.7:
 ```python
@@ -1339,6 +1367,13 @@ See.... written with the "Developer" in mind, at all times.  It's about YOU, Mr/
 The other ports of PySimpleGUI (Qt, WxPython, Web) have not yet had their docstrings updated.  They're NEXT in line to be better documented.  Work on a tool has already begun to make that happen sooner than later.
 
 
+#### Type Checking With Docstrings
+
+In version 4.17.0 a new format started being used for docstrings.  This new format more clearly specified the types for each parameter.  It will take some time to get all of the parameter types correctly identied and documented.  
+
+Pay attention when you're working with PyCharm and you'll see where you may have a mismatch... or where there's a bad docstring, take your pick. It will shade your code in a way that makes mismatched types very clear to see.
+
+
 ## Using  - Python 3
 
 To use in your code, simply import....
@@ -1358,7 +1393,10 @@ Yes, it's just that easy to have a window appear on the screen using Python.  Wi
 
 If you must run 3.7, try 3.7.2.  It does work with PySimpleGUI with no known issues.
 
-***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  It's unclear if there's been a change that makes the tkinter API no longer working which means they are not backwards compatible.  That would be a real shame. If so, more work needs to be done in PySimpleGUI
+***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  
+
+March 2020 - Still not quite sure if all issues have been ironed out with tkinter in the 3.7 and 3.8 releases.
+
 
 ## Python 2.7
 

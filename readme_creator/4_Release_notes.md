@@ -1093,7 +1093,7 @@ Quick patch to remove change to popup
 Quick patch to remove f-string for 3.5 compat.
 
 
-## 4.16.0 PySimpleGUI 08-Jan-2020
+## 4.16.0 PySimpleGUI 20-Feb-2020
 
 The "LONG time coming" release.  System Tray, Read with close + loads more changes
 Note - there is a known problem with the built-in debugger created when the new read with close was added
@@ -1123,6 +1123,55 @@ Note - there is a known problem with the built-in debugger created when the new 
 * Debug window - fix for problem closing using the "Quit" button
 * print_to_element - print-like call that can be used to output to a Multiline element as if it is an Output element
 
+
+## 4.17.0 PySimpleGUI 24-Mar-2020
+
+The "it's been a minute" release
+Improved DocStrings and documentation!
+Upgrade utility
+"Printing" directly to Multiline
+
+* New upgrade utility to upgrade your installed package using GitHub version
+    * Can invoke from command line. Run      `python -m PySimpleGUI.PySimpleGUI upgrade`
+	* The test harness GUI has an upgrade button
+* Multiline.print - Add multiline element to the front of any print statement.  Also supports color output
+* Debug informmation like path and version displayed in test harness GUI
+* Added back the TRANSPARENT_BUTTON variable until can find a better way to deprecate
+* All elements were losing padding when made invisible. Fixed
+* Image.update - fixed crash due to not checking for type before getting size
+* Image.update_animation_no_buffering - playback GIF animations of any length
+* Graph element - Fixed divide by zero error in convert function
+* TabGroup will now autonumber keys if none specified
+* Measuring strings more accurately during layout
+	* Using specific font for measurement
+	* Used to compute TTK button height
+	* Used to compute Slider length
+	* Used to compute header widths in Tables, Trees
+	* Used to compute column widths in Tables, Trees
+	* Used to compute row heights in Tables
+* Removed padx from row frames.  Was using window's margins. Now padx & pady = 0. Was causing too every Column element to have extra padding
+* Added no_titlebar to one line progress meter
+* popup_notify - Creates a "notification window" that is like the System Tray Message window
+* shell_with_animation - launch a shell command that runs while an animated GIF is shown
+* Fixed problem with debugger not working after the recent close parameter addition to Window.read
+
+
+## 4.18.0 PySimpleGUI 26-Mar-2020
+
+An "Oh F**k" Release - Table column sizes were bad
+
+* Fixed bug in Table Element's column size computation
+* popup_animated has new title parameter
+* Checkbox - update can change the text
+
+
+## 4.18.1 PySimpleGUI 12-Apr-2020
+
+Emergency patch - f-string managed to get into the code resulting crashes on 3.5 systems (Pi's for example) 
+
+## 4.18.2 PySimpleGUI 12-Apr-2020
+
+The Epic Fail release.... import error on 3.5 for subprocess.
 
 
 

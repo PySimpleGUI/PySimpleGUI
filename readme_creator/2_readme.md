@@ -56,7 +56,7 @@ For the time being, class variables will remain the way they are currently.  It 
 
 # High Level API Calls  - Popup's
 
-"High level calls" are those that start with "Popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.
+"High level calls" are those that start with "popup".    They are the most basic form of communications with the user.   They are named after the type of window they create, a pop-up window.  These windows are meant to be short lived while, either delivering information or collecting it, and then quickly disappearing.
 
 Think of Popups as your first windows, sorta like your first bicycle. It worked well, but was limited.  It probably wasn't long before you wanted more features and it seemed too limiting for your newly found sense of adventure.
 
@@ -64,28 +64,51 @@ When you've reached the point with Popups that you are thinking of filing a GitH
 
 It's at THIS time that you should immediately turn to the section entitled "Custom Window API Calls - Your First Window".  Congratulations, you just graduated and are not an official "GUI Designer".  Oh, nevermind that you only started learning Python 2 weeks ago, you're a real GUI Designer now so buck up and start acting like one.
 
-But, for now, let's stick with these 1-line window calls, the Popups.
+But, for now, let's stick with these 1-line window calls, the Popups.   This is the list of popup calls available to you:
+
+popup_animated
+popup_annoying
+popup_auto_close 
+popup_cancel
+popup_error
+popup_get_file 
+popup_get_folder 
+popup_get_text
+popup_no_border
+popup_no_buttons
+popup_no_frame 
+popup_no_titlebar
+popup_no_wait
+popup_notify
+popup_non_blocking
+popup_ok
+popup_ok_cancel
+popup_quick
+popup_quick_message
+popup_scrolled
+popup_timed
+popup_yes_no
 
 
 ## Popup Output
 
-Think of the `Popup` call as the GUI equivalent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
+Think of the `popup` call as the GUI equivalent of a  `print` statement.  It's your way of displaying results to a user in the windowed world.  Each call to Popup will create a new Popup window.
 
-`Popup` calls are normally blocking.  your program will stop executing until the user has closed the Popup window.  A non-blocking window of Popup discussed in the async section.
+`popup` calls are normally blocking.  your program will stop executing until the user has closed the Popup window.  A non-blocking window of Popup discussed in the async section.
 
 Just like a print statement, you can pass any number of arguments you wish.  They will all be turned into strings and displayed in the popup window.
 
-There are a number of Popup output calls, each with a slightly different look (e.g. different button labels).
+There are a number of Popup output calls, each with a slightly different look or functionality (e.g. different button labels, window options).
 
 The list of Popup output functions are:
-- Popup
-- PopupOk
-- PopupYesNo
-- PopupCancel
-- PopupOkCancel
-- PopupError
-- PopupTimed, PopupAutoClose
-- PopupNoWait, PopupNonBlocking
+- popup
+- popup_ok
+- popup_yes_no
+- popup_cancel
+- popup_ok_cancel
+- popup_error
+- popup_timed, popup_auto_close, popup_quick, popup_quick_message
+- popup_no_waitWait, popup_non_blocking
 
 The trailing portion of the function name after Popup indicates what buttons are shown.  `PopupYesNo` shows a pair of button with Yes and No on them.   `PopupCancel` has a Cancel button, etc.
 
@@ -96,14 +119,14 @@ The function `PopupTimed` or `PopupAutoClose` are popup windows that will automa
 Here is a quick-reference showing how the Popup calls look.
 
 ```python
-sg.Popup('Popup')  # Shows OK button
-sg.PopupOk('PopupOk')  # Shows OK button
-sg.PopupYesNo('PopupYesNo')  # Shows Yes and No buttons
-sg.PopupCancel('PopupCancel')  # Shows Cancelled button
-sg.PopupOKCancel('PopupOKCancel')  # Shows OK and Cancel buttons
-sg.PopupError('PopupError')  # Shows red error button
-sg.PopupTimed('PopupTimed')  # Automatically closes
-sg.PopupAutoClose('PopupAutoClose')  # Same as PopupTimed
+sg.popup('Popup')  # Shows OK button
+sg.popup_ok('PopupOk')  # Shows OK button
+sg.popup_yes_no('PopupYesNo')  # Shows Yes and No buttons
+sg.popup_cancel('PopupCancel')  # Shows Cancelled button
+sg.popup_ok_cancel('PopupOKCancel')  # Shows OK and Cancel buttons
+sg.popup_error('PopupError')  # Shows red error button
+sg.popup_timed('PopupTimed')  # Automatically closes
+sg.popup_auto_close('PopupAutoClose')  # Same as PopupTimed
 ```
 
 Preview of popups:
@@ -125,11 +148,8 @@ Preview of popups:
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
 
+The choices for button_type are (you should not specify these yourself however):
 
-
-The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
-
-The choices for button_type are:
 ```
 POPUP_BUTTONS_YES_NO
 POPUP_BUTTONS_CANCELLED
@@ -139,79 +159,82 @@ POPUP_BUTTONS_OK
 POPUP_BUTTONS_NO_BUTTONS
 ```
 
-**Note that you should not call Popup yourself with different button_types.**  Rely on the Popup function named that sets that value for you.  For example PopupYesNo will set the button type to POPUP_BUTTONS_YES_NO for you.
+**Note that you should not call Popup yourself with different button_types.**  Rely on the Popup function named that sets that value for you.  For example `popup_yes_no` will set the button type to POPUP_BUTTONS_YES_NO for you.
 
-
-
-
-
-#### Scrolled Output
+### Scrolled Output
 There is a scrolled version of Popups should you have a lot of information to display.
 
-<!-- <+func.PopupScrolled+> -->
+<!-- <+func.popup_scrolled+> -->
 
 
-
-```python
-PopupScrolled(*args, button_color=None, yes_no=False, auto_close=False, auto_close_duration=None, size=(None, None), location=(None, None), title=None, non_blocking=False)
-```
 Typical usage:
 
 ```python
-sg.PopupScrolled(my_text)
+sg.popup_scrolled(my_text)
 ```
 
 
 ![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)
 
 
-The `PopupScrolled` will auto-fit the window size to the size of the text.  Specify `None` in the height field of a `size` parameter to get auto-sized height. 
+The `popup_scrolled` will auto-fit the window size to the size of the text.  Specify `None` in the height field of a `size` parameter to get auto-sized height. 
 
 This call will create a scrolled box 80 characters wide and a height dependent upon the number of lines of text. 
 
-`sg.PopupScrolled(my_text, size=(80, None))`  
+`sg.popup_scrolled(my_text, size=(80, None))`  
 
 Note that the default max number of lines before scrolling happens is set to 50. At 50 lines the scrolling will begin. 
 
 If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow. 
 
 
-### PopupNoWait
+### Non-Blocking Popups - popup_no_wait and the non_blocking parameter
 
-<!-- <+func.PopupNoWait+> -->
+<!-- <+func.popup_no_wait+> -->
 
-
-The Popup call PopupNoWait or PopupNonBlocking will create a popup window and then immediately return control back to you.  All other popup functions will block, waiting for the user to close the popup window. 
+The Popup call PopupNoWait or PopupNonBlocking will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
 
 This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement. There are no return values on one of these Popups. 
 
+
+### Popup Parameter Combinations
+
+So that you don't have to specify a potentially long list common parameters there are a number of popup functions that set combinations of parameters.  For example `popup_quick_message` will show a non-blocking popup that autocloses and does not have a titlebar.  You could achieve this same end result using the plain `popup` call.
+
+
+
 ## Popup Input
-There are Popup calls for single-item inputs. These follow the pattern of `Popup` followed by `Get` and then the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization.
-- `PopupGetText` - get a single line of text
-- `PopupGetFile` - get a filename
-- `PopupGetFolder` - get a folder name
+
+There are Popup calls for single-item inputs. These follow the pattern of `popup_get` followed by the type of item to get.  There are 3 of these input Popups to choose from, each with settings enabling customization. 
+
+- `popup_get_text` - get a single line of text
+- `popup_get_file` - get a filename
+- `popup_get_folder` - get a folder name
 
 Use these Popups instead of making  a custom window to get one data value, call the Popup input function to get the item from the user.  If you find the parameters are unable to create the kind of window you are looking for, then it's time for you to create your own window.
-### PopupGetText
+
+
+### popup_get_text
 Use this Popup to get a line of text from the user.
 
-<!-- <+func.PopupGetText+> -->
+<!-- <+func.popup_get_text+> -->
 
 
 ```python
 import PySimpleGUI as sg
-text = sg.PopupGetText('Title', 'Please input something')
-sg.Popup('Results', 'The value returned from PopupGetText', text)
+text = sg.popup_get_text('Title', 'Please input something')
+sg.popup('Results', 'The value returned from PopupGetText', text)
 ```
 
 ![popupgettext](https://user-images.githubusercontent.com/13696193/44957281-8721b880-ae9e-11e8-98cd-d06369f4187e.jpg)
 
 ![popup gettext response](https://user-images.githubusercontent.com/13696193/44957282-8721b880-ae9e-11e8-84ae-dc8bb30504a0.jpg)
 
-### PopupGetFile
-Gets a filename from the user.  There are options to configure the type of dialog box to show.  Normally an "Open File" dialog box is shown.
+### popup_get_file
 
-<!-- <+func.PopupGetFile+> -->
+Gets one or more filenames from the user.  There are options to configure the type of dialog box to show.  Normally an "Open File" dialog box is shown.
+
+<!-- <+func.popup_get_file+> -->
 
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
@@ -227,34 +250,34 @@ If you choose a filename that already exists, you'll get a warning popup box ask
 A typical call produces this window.
 
 ```python
-text = sg.PopupGetFile('Please enter a file name')
-sg.Popup('Results', 'The value returned from PopupGetFile', text)
+text = sg.popup_get_file('Please enter a file name')
+sg.popup('Results', 'The value returned from PopupGetFile', text)
 ```
 
 ![popupgetfile](https://user-images.githubusercontent.com/13696193/44957857-2fd31680-aea5-11e8-8eb7-f6b91c202cc8.jpg)
 
-### PopupGetFolder
+### popup_get_folder
 
 The window created to get a folder name looks the same as the get a file name.  The difference is in what the browse button does.  `PopupGetFile` shows an Open File dialog box while `PopupGetFolder`  shows an Open Folder dialog box.
 
-<!-- <+func.PopupGetFolder+> -->
+<!-- <+func.popup_get_folder+> -->
 
 This is a typpical call
 
 ```python
-	text = sg.PopupGetFolder('Please enter a folder name')
-	sg.Popup('Results', 'The value returned from PopupGetFolder', text)
+	text = sg.popup_get_folder('Please enter a folder name')
+	sg.popup('Results', 'The value returned from PopupGetFolder', text)
 ```
 
 ![popupgetfolder](https://user-images.githubusercontent.com/13696193/44957861-45484080-aea5-11e8-926c-cf607a45251c.jpg)
 
-### PopupAnimated
+### popup_animated
 
 ![ring](https://user-images.githubusercontent.com/13696193/51296743-6ee4ad00-19eb-11e9-91f5-cd8086ad1b50.gif)
 
 The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
 
-<!-- <+func.PopupAnimated+> -->
+<!-- <+func.popup_animated+> -->
 
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
@@ -263,25 +286,13 @@ The animated Popup enables you to easily display a "loading" style animation spe
 # Progress Meters!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 
-
-```
-OneLineProgressMeter(title,
-			current_value,
-			max_value,
-			key,
-			*args,
-			orientation=None,
-			bar_color=DEFAULT_PROGRESS_BAR_COLOR,
-			button_color=None,
-			size=DEFAULT_PROGRESS_BAR_SIZE,
-			border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH):
-```
+<!-- <+func.one_line_progress_meter+> -->
 
 Here's the one-line Progress Meter in action!
 
 ```python
 for i in range(1,10000):
-	sg.OneLineProgressMeter('My Meter', i+1, 10000, 'key','Optional message')
+	sg.one_line_progress_meter('My Meter', i+1, 10000, 'key','Optional message')
 ```
 
 That line of code resulted in this window popping up and updating.
@@ -293,12 +304,12 @@ With a little trickery you can provide a way to break out of your loop using the
 
 ***Be sure and add one to your loop counter*** so that your counter goes from 1 to the max value.  If you do not add one, your counter will never hit the max value.  Instead it will go from 0 to max-1.
 
-# Debug Output (EasyPrint = Print = eprint)
+# Debug Output (easy_print = Print = eprint)
 
 Another call in the 'Easy' families of APIs is `EasyPrint`.  As is with other commonly used PySimpleGUI calls, there are other names for the same call.  You can use `Print` or `eprint` in addition to `EasyPrint`.  They all do the same thing, output to a debug window.  If the debug window isn't open, then the first call will open it.  No need to do anything but stick an 'sg.Print' call in your code. You can even replace your 'print' calls with calls to EasyPrint by simply sticking the statement
 
 ```python
-print = sg.EasyPrint
+print = sg.Print
 ```
 
 at the top of your code.
@@ -321,16 +332,22 @@ import PySimpleGUI as sg
 
 print=sg.Print
 for i in range(100):
-print(i)
+    print(i)
 ```
 
-Just like the standard print call, `EasyPrint` supports the `sep` and `end` keyword arguments.  Other names that can be used to call `EasyPrint` include `Print`, `eprint`,   If you want to close the window, call the function `EasyPrintClose`.
+Just like the standard print call, `easy_print` supports the `sep` and `end` keyword arguments.  Other names that can be used to call `easy_print` include `Print`, `eprint`,   If you want to close the window, call the function `easy_print_close`.
 
-You can change the size of the debug window using the `SetOptions` call with the `debug_win_size` parameter.
+You can change the size of the debug window using the `set_options` call with the `debug_win_size` parameter.
 
-There is an option to tell PySimpleGUI to reroute all of your stdout and stderr output to this window.  To do so call EasyPrint with the parameter `do_not_reroute_stdout` set to `False`.  After calling it once with this parameter set to True, all future calls to a normal`print` will go to the debug window.
+There is an option to tell PySimpleGUI to reroute all of your stdout and stderr output to this window.  To do so call easy_print with the parameter `do_not_reroute_stdout` set to `False`.  After calling it once with this parameter set to True, all future calls to a normal `print` will go to the debug window.
 
-If you close the debug window it will re-open the next time you Print to it.  If you wish to close the window using your code, then you can call either `EasyPrintClose()` or `PrintClose()`
+If you close the debug window it will re-open the next time you Print to it.  If you wish to close the window using your code, then you can call either `easy_print_close()` or `PrintClose()`
+
+
+### Printing To Multiline Elements
+
+Another technique for outputting information that you would normally print is to use the function `Multiline.print`.  You'll find it discussed further into this document.  The basic idea is that you can easily modify your normal `print` calls to route your printed information to your window.
+
 
 ---
 # Custom window API Calls  (Your First window)
@@ -341,7 +358,7 @@ This first section on custom windows is for your typical, blocking, non-persiste
 
 Two other types of windows exist.
 1. Persistent window - the `Window.read()` method returns and the window continues to be visible.  This is good for applications like a chat window or a timer or anything that stays active on the screen for a while.
-2. Asynchronous window - the trickiest of the lot. Great care must be exercised.  Examples are an MP3 player or status dashboard.  Async windows are updated (refreshed) on a periodic basis.  You can spot them easily as they will have a `timeout` parameter on the call to read.     `event, values = window.Read(timeout=100)`
+2. Asynchronous window - the trickiest of the lot. Great care must be exercised.  Examples are an MP3 player or status dashboard.  Async windows are updated (refreshed) on a periodic basis.  You can spot them easily as they will have a `timeout` parameter on the call to read.     `event, values = window.read(timeout=100)`
 
 It's both not enjoyable nor helpful to immediately jump into tweaking each and every little thing available to you.  Make some simple windows.  Use the Cookbook and the Demo Programs as a way to learn and as a "starting point".
 
@@ -410,7 +427,7 @@ layout = [[sg.Text('Enter a Number')],
           [sg.Input()],
           [sg.OK()] ]
 
-event, values = sg.Window('Enter a number example', layout).Read()
+event, values = sg.Window('Enter a number example', layout).read()
 
 sg.Popup(event, values[0])
 ```
@@ -796,12 +813,12 @@ By default return values are a list of values, one entry for each input field, b
 
 Each of the Elements that are Input Elements will have a value in the list of return values.  If you know for sure that the values will be returned as a list, then you could get clever and unpack directly into variables.
 
-event, (filename, folder1, folder2, should_overwrite) = sg.Window('My title', window_rows).Read()
+event, (filename, folder1, folder2, should_overwrite) = sg.Window('My title', window_rows).read()
 
 Or, more commonly, you can unpack the return results separately.  This is the preferred method because it works for **both** list and dictionary return values.
 
 ```python
-event, values = sg.Window('My title', window_rows).Read()
+event, values = sg.Window('My title', window_rows).read()
 event, value_list = window.read()
 value1 = value_list[0]
 value2 = value_list[1]
@@ -820,7 +837,7 @@ For windows longer than 3 or 4 fields you will want to use a dictionary to help 
 
 The most common window read statement you'll encounter looks something like this:
 
-`window = sg.Window("My title", layout).Read()`
+`window = sg.Window("My title", layout).read()`
 
 To use a dictionary, you will need to:
 * Mark each input element you wish to be in the dictionary with the keyword `key`.
@@ -955,7 +972,7 @@ Clicking the Submit button caused the window call to return.  The call to Popup 
 
 **`Note, event values can be None`**.  The value for `event` will be the text that is displayed on the button element when it was created or the key for the button.  If the user closed the window using the "X" in the upper right corner of the window, then `event` will be `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for None. 
 
-For "persistent windows",  **always give your users a way out of the window**.  Otherwise you'll end up  with windows that never properly close.  It's literally 2 lines of code that you'll find in every Demo Program.  While you're at it, make sure a `window.Close()` call is after your event loop so that your window closes for sure.
+For "persistent windows",  **always give your users a way out of the window**.  Otherwise you'll end up  with windows that never properly close.  It's literally 2 lines of code that you'll find in every Demo Program.  While you're at it, make sure a `window.close()` call is after your event loop so that your window closes for sure.
 
 You can see in the results Popup window that the values returned are a dictionary.  Each input field in the window generates one item in the return values list.  Input fields often return a `string`. Check Boxes and Radio Buttons return `bool`.  Sliders return float or perhaps int depending on how you configured it or which port you're using.
 
@@ -1020,7 +1037,7 @@ event, values = window.read()
 A non-blocking / Async Read call looks like this:
 
 ```python
-event, values = window.Read(timeout=100)
+event, values = window.read(timeout=100)
 ```
 
 You can learn more about these async / non-blocking windows toward the end of this document.
@@ -1107,7 +1124,7 @@ The first step is to create the window object using the desired window customiza
 Note - There is no direct support for "**modal windows**" in PySimpleGUI.  All windows are accessable at all times unless you manually change the windows' settings.
 
 
-**IMPORTANT** - Many of the `Window` methods require you to either call `Window.Read` or `Window.Finalize` (or set `finalize=True` in your `Window` call) before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
+**IMPORTANT** - Many of the `Window` methods require you to either call `Window.read` or `Window.Finalize` (or set `finalize=True` in your `Window` call) before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
 
 ### Window Location
@@ -1411,7 +1428,7 @@ If you really wanted to crunch things down, you can make it a 2 line program (an
 ```python
 import PySimpleGUI as sg
 
-event, values = sg.Window('To Do List Example', layout=[[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]).Read()
+event, values = sg.Window('To Do List Example', layout=[[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]).read()
 ```
 
 
@@ -1730,6 +1747,26 @@ If the element is one of the input elements (one that will cause an generate an 
 
 Menu items can have keys associated with them as well.  See the section on Menus for more information about these special keys. They aren't the same as Element keys.  Like all elements, Menu Element have one of these Element keys.  The individual menu item keys are different.
 
+### `WRITE_ONLY_KEY` Modifier
+
+Sometimes you have input elements (e.g. `Multiline`) that you are using as an output.  The contents of these elements may get very long.  You don't need ot "read" these elements and doing so will potentially needlessly return a lot of data.
+
+To tell PySimpleGUI that you do not want an element to return a value when `Window.read` is called, add the string `WRITE_ONLY_KEY` to your key name.
+
+If your `Multiline` element was defined like this originally:
+
+```python
+sg.Multiline(size=(40,8), key='-MLINE-')
+```
+
+Then to turn off return values for that element, the `Multiline` element would be written like this:
+
+```python
+sg.Multiline(size=(40,8), key='-MLINE-' + sg.WRITE_ONLY_KEY)
+```
+
+
+
 ## Common Element Parameters
 
 Some parameters that you  will see on almost all Element creation calls include:
@@ -1994,6 +2031,43 @@ layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', siz
 ![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
 
 
+This element has been expanded upon quite a bit over time.  Two of the more exciting additions have been
+
+* Ability to output unique text and background colors on a per-character basis
+* The `print` method that allows you to easily reroute your normally printed output to a multiline element instead
+
+The `Multiline.print()` call is made using the same element-lookup technique you're used to using to call `update`.  One of these lookups generally appear:
+
+```python
+window['-MULTILINE KEY-']
+```
+
+To change one of your normal prints to output to your multiline element, you simply add the above lookup expression to the front of your print statement.
+
+```python
+print('My variables are', a, b, c)       # a normal print statement
+
+window['-MULTILINE KEY-'].print('My variables are', a, b, c)     # Routed to your multiline element
+```
+
+It gets even better though.... you can add color to your prints
+
+```python
+# Outputs red text on a yellow background
+window['-MULTILINE KEY-'].print('My variables are', a, b, c, text_color='red', background_color='yellow')
+
+```
+
+
+### Redefine print
+
+Another way to use this print capability is to redefine the `print` statement itself.  This will allow you to leave your code entirely as is.  By adding this line of code your entire program will output all printed information to a multiline element.
+
+```python
+print = lambda *args, **kwargs: window['-MULTILINE KEY-'].print(*args, **kwargs)
+```
+
+
 ## Text Input Element  | `InputText == Input == In`
 
 
@@ -2008,7 +2082,7 @@ layout = [[sg.InputText('Default text')]]
 
 #### Note about the `do_not_clear` parameter
 
-This used to really trip people up, but don't think so anymore.  The `do_not_clear` parameter is initialized when creating the InputText Element.  If set to False, then the input field's contents will be erased after every `Window.Read()` call.  Use this setting for when your window is an "Input Form" type of window where you want all of the fields to be erased and start over again every time.
+This used to really trip people up, but don't think so anymore.  The `do_not_clear` parameter is initialized when creating the InputText Element.  If set to False, then the input field's contents will be erased after every `Window.read()` call.  Use this setting for when your window is an "Input Form" type of window where you want all of the fields to be erased and start over again every time.
 
 
 
@@ -2312,26 +2386,36 @@ All buttons can have their text changed by changing the `button_text` parameter 
 layout =  [[sg.Button('My Button', key='_BUTTON_KEY_')]]
 ```
 
-With this layout, the event that is returned from a `Window.Read()` call when the button is clicked will be "`_BUTTON_KEY_`"
+With this layout, the event that is returned from a `Window.read()` call when the button is clicked will be "`_BUTTON_KEY_`"
 
 
 ### Button Images
 
 Now this is an exciting feature not found in many simplified packages.... images on buttons!  You can make a pretty spiffy user interface with the help of a few button images.
 
-Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  There's a button color TRANSPARENT_BUTTON that you can set your button color to in order for it to blend into the background.  Note that this value is currently the same as the color as the default system background on Windows.  If you want to set the button background color to the current system default, use the value COLOR_SYSTEM_DEFAULT as the background color.
+This is one of the quickest and easiest ways to transform tkinter from a "1990s looking GUI" into a "modern GUI".  If you don't like the default buttons, then simply bring your own button images and use those instead.
 
-This example comes from the `Demo Media Player.py` example program.  Because it's a non-blocking button, it's defined as `RButton`.  You also put images on blocking buttons by using `Button`.
+Your button images need to be in PNG or GIF format.  When you make a button with an image, set the button background to the same color as the background.  You can get the theme's background color by calling `theme_background_color()`
+
+`TRANSPARENT_BUTTON` - **Important** - This is a legacy value that is misleading.  It is currently defined as this constant value:
 
 ```python
-sg.Button('Restart Song', button_color=sg.TRANSPARENT_BUTTON,
+TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')  
+```
+
+As you can see it is simply a tuple of 2 gray colors.  The effect is that the button text and the button background color to a specific shade of gray.  Way back in time, before you could change the background colors and all windows were gray, this value worked. But now that your button can be on any background color, you'll want to set the buttons color to match the background so that your button blends with the background color.
+
+```python
+sg.Button('Restart Song', button_color=(sg.theme_background_color(), sg.theme_background_color()),
                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0)
 ```
-Three parameters are used for button images.
+
+There are several parameters in `Button` elements that are used for button images.
 
 ```
-image_filename - Filename. Can be a relative path
-image_size - Size of image file in pixels
+image_filename - Filename of image. Can be a relative path
+image_data - A Base64 image
+image_size - Size of image in pixels
 image_subsample - Amount to divide the size by.  2 means your image will be 1/2 the size.  3 means 1/3
 ```
 
@@ -2340,15 +2424,18 @@ Here's an example window made with button images.
 ![media file player](https://user-images.githubusercontent.com/13696193/43161977-9ee7cace-8f57-11e8-8ff8-3ea24b69dab9.jpg)
 
 You'll find the source code in the file Demo Media Player.  Here is what the button calls look like to create media player window
+
  ```python
-sg.Button('Pause', button_color=sg.TRANSPARENT_BUTTON,
+sg.Button('Pause', button_color=(sg.theme_background_color(), sg.theme_background_color()),
               image_filename=image_pause,
               image_size=(50, 50),
               image_subsample=2,
               border_width=0)
 ```
 
-Experimentation is sometimes required for these concepts to really sink in.
+Experimentation is sometimes required for these concepts to really sink in and they can vary depending on the underlying GUI framework. 
+
+Button Images do work so play with them.  You can use PIL to change the size of your images before passing to PySimpleGUI.
 
 ### Realtime Buttons
 
@@ -2360,8 +2447,6 @@ Normally buttons are considered "clicked" when the mouse button is let UP after 
 This window has 2 button types.  There's the normal "Read Button" (Quit) and 4 "Realtime Buttons".
 
 Here is the code to make, show and get results from this window:
-
-
 
 ```python
 import PySimpleGUI as sg
@@ -2384,15 +2469,15 @@ window = sg.Window('Robotics Remote Control', gui_rows)
 # your program's main loop
 while (True):
     # This is the code that reads and updates your window
-    event, values = window.Read(timeout=50)
+    event, values = window.read(timeout=50)
     print(event)
     if event in ('Quit', None):
         break
 
-window.Close()  # Don't forget to close your window!
+window.close()  # Don't forget to close your window!
 ```
 
-This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.Read` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the Read will return timeout events until a button is again clicked.
+This loop will read button values and print them.  When one of the Realtime buttons is clicked, the call to `window.read` will  return a button name matching the name on the button that was depressed or the key if there was a key assigned to the button.  It will continue to return values as long as the button remains depressed.  Once released, the Read will return timeout events until a button is again clicked.
 
 **File Types**
 The `FileBrowse` & `SaveAs` buttons have an additional setting named `file_types`.  This variable is used to filter the files shown in the file dialog box.  The default value for this setting is
@@ -2513,7 +2598,7 @@ If you are looking for a way to quickly add the ability to show scrolling text w
 
 **Anything "printed" will be displayed in this element.**  This is the "trivial" way to show scrolling text in your window.  It's as easy as dropping an Output Element into your window and then calling print as much as you want.  The user will see a scrolling area of text inside their window.
 
-***IMPORTANT***  You will NOT see what you `print` until you call either `window.Read` or `window.Refresh`.  If you want to immediately see what was printed, call `window.Refresh()` immediately after your print statement.
+***IMPORTANT***  You will NOT see what you `print` until you call either `window.read` or `window.Refresh`.  If you want to immediately see what was printed, call `window.Refresh()` immediately after your print statement.
 
 
 ```python
@@ -2596,7 +2681,7 @@ layout = [[sg.Slider(range=(1,100), default_value=10, orientation='v', size=(8,2
 
 window = sg.Window('Compact 1-line window with column', layout)
 event, values = window.read()
-window.Close()
+window.close()
 
 sg.Popup(event, values, line_width=200)
 
@@ -2798,7 +2883,7 @@ Table and Tree Elements are of the most complex in PySimpleGUI.  They have a lot
 
 ### `window.read()` return values from Table Element
 
-The values returned from a `Window.Read` call for the Table Element are a list of row numbers that are currently highlighted.
+The values returned from a `Window.read` call for the Table Element are a list of row numbers that are currently highlighted.
 
 ### The Qt `Table.Get()` call
 
@@ -3317,7 +3402,7 @@ If you're using a read with a timeout value, then an event value of None signifi
 If you wanted to test for "no event" in your loop, it would be written like this:
 ```python
 while True:
-    event, value = window.Read(timeout=10)
+    event, value = window.read(timeout=10)
     if event is None:
         break # the use has closed the window
     if event == sg.TIMEOUT_KEY:
@@ -3360,7 +3445,7 @@ There are 2 methods of interacting with non-blocking windows.
 1. Read the window just as you would a normal window
 2. "Refresh" the window's values without reading the window. It's a quick operation meant to show the user the latest values
 
- With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.Read` on a periodic basis.  Several times a second or more will produce a reasonably snappy GUI.
+ With asynchronous windows the window is shown, user input is read, but your code keeps right on chugging.  YOUR responsibility is to call `PySimpleGUI.read` on a periodic basis.  Several times a second or more will produce a reasonably snappy GUI.
 
  ## Exiting (Closing) a Persistent Window
 
@@ -3410,8 +3495,8 @@ sg.SetOptions(element_padding=(0, 0))
 
 layout = [[sg.Text('')],
          [sg.Text(size=(8, 2), font=('Helvetica', 20), justification='center', key='text')],
-         [sg.ReadButton('Pause', key='button', button_color=('white', '#001480')),
-          sg.ReadButton('Reset', button_color=('white', '#007339'), key='Reset'),
+         [sg.Button('Pause', key='button', button_color=('white', '#001480')),
+          sg.Button('Reset', button_color=('white', '#007339'), key='Reset'),
           sg.Exit(button_color=('white', 'firebrick4'), key='Exit')]]
 
 window = sg.Window('Running Timer', layout, no_titlebar=True, auto_size_buttons=False, keep_on_top=True, grab_anywhere=True)
@@ -3422,7 +3507,7 @@ paused = False
 start_time = int(round(time.time() * 100))
 while (True):
     # --------- Read and update window --------
-    event, values = window.Read(timeout=10)
+    event, values = window.read(timeout=10)
     current_time = int(round(time.time() * 100)) - start_time
     # --------- Display timer in window --------
     window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
@@ -3777,7 +3862,7 @@ win1 = sg.Window('Window 1', layout)
 
 win2_active = False
 while True:
-    ev1, vals1 = win1.Read(timeout=100)
+    ev1, vals1 = win1.read(timeout=100)
     win1['-OUTPUT-'].update(vals1[0])
     if ev1 is None or ev1 == 'Exit':
         break
@@ -3790,10 +3875,10 @@ while True:
         win2 = sg.Window('Window 2', layout2)
 
     if win2_active:
-        ev2, vals2 = win2.Read(timeout=100)
+        ev2, vals2 = win2.read(timeout=100)
         if ev2 is None or ev2 == 'Exit':
             win2_active  = False
-            win2.Close()
+            win2.close()
 ```
 
 
@@ -3812,7 +3897,7 @@ layout = [[ sg.Text('Window 1'),],
 win1 = sg.Window('Window 1', layout)
 win2_active=False
 while True:
-    ev1, vals1 = win1.Read(timeout=100)
+    ev1, vals1 = win1.read(timeout=100)
     if ev1 is None:
         break
     win1.FindElement('-OUTPUT-').update(vals1[0])
@@ -3825,9 +3910,9 @@ while True:
 
         win2 = sg.Window('Window 2', layout2)
         while True:
-            ev2, vals2 = win2.Read()
+            ev2, vals2 = win2.read()
             if ev2 is None or ev2 == 'Exit':
-                win2.Close()
+                win2.close()
                 win2_active = False
                 win1.UnHide()
                 break
@@ -3886,7 +3971,7 @@ while True:
 To this non-blocking:
 ```python
 while True:
-    event, values = window.Read(timeout=200)
+    event, values = window.read(timeout=200)
     if event == sg.TIMEOUT_KEY:
         continue
 ```
@@ -3897,7 +3982,7 @@ This timeout value of 200 means that your debugger GUI will be updated 5 times a
 
 ### What happens if you don't add a timeout
 
-Let's say you're in a situation where a very intermettent bug has just happened and the debugger would really help you, but you don't have a timeout on your `windows.Read()` call.  It's OK.  Recall that the way the debugger gets its "cycles" is to borrow from your `Read` calls.  What you need to do is alternate between using the debugger and then generating another pass through your event loop.
+Let's say you're in a situation where a very intermettent bug has just happened and the debugger would really help you, but you don't have a timeout on your `windows.read()` call.  It's OK.  Recall that the way the debugger gets its "cycles" is to borrow from your `Read` calls.  What you need to do is alternate between using the debugger and then generating another pass through your event loop.
 
 Maybe it's an OK button that will cause your loop to execute again (without exiting).  If so, you can use it to help move the debugger along.  
 
@@ -3913,13 +3998,13 @@ import PySimpleGUI as sg
 window = sg.Window('Testing the Debugger', [[sg.Text('Debugger Tester'), sg.In('Input here'), sg.B('Push Me')]])
 
 while True:
-    event, values = window.Read(timeout=500)
+    event, values = window.read(timeout=500)
     if event == sg.TIMEOUT_KEY:
         continue
     if event is None:
         break
     print(event, values)
-window.Close()
+window.close()
 ```
 
 ## Debugger Windows
@@ -3982,7 +4067,7 @@ There are 3 ways to open the Main Debugger Window
 
 ![SNAG-0440](https://user-images.githubusercontent.com/13696193/62797391-a01ceb80-baa9-11e9-845d-3cd02ca0dbcc.jpg)
 
-Notice the the "frame" surrounding this window is labelled "Auto Watches" in blue.  Like the Popup window, this debugger window also "Watches" variables, which means continuously updates them as often as you call `Window.Read`.
+Notice the the "frame" surrounding this window is labelled "Auto Watches" in blue.  Like the Popup window, this debugger window also "Watches" variables, which means continuously updates them as often as you call `Window.read`.
 
 The maximum number of "watches" you can have any any one time is 9.
 
@@ -4005,7 +4090,7 @@ In this example the Custom Watch entered was `values[0]`.  After clicking on the
 
 ![SNAG-0444](https://user-images.githubusercontent.com/13696193/62797514-e8d4a480-baa9-11e9-9a86-cfe99342dedb.jpg)
 
-We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.Read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
+We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
 
 
 
@@ -5494,7 +5579,7 @@ Without further delay... here are all of the Elements and the Window class
 ### update
 <!-- <+StatusBar.update+> -->
 
-## SystemTray Element 
+## SystemTray 
 <!-- <+SystemTray.doc+> -->
 <!-- <+SystemTray.__init__+> -->
 
@@ -5606,20 +5691,17 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+TabGroup.__init__+> -->
 
 
-
 ### FindKeyFromTabName
 <!-- <+TabGroup.FindKeyFromTabName+> -->
 
 ### Get
 <!-- <+TabGroup.Get+> -->
 
-
 ### SetFocus
 <!-- <+TabGroup.SetFocus+> -->
 
 ### SetTooltip
 <!-- <+TabGroup.SetTooltip+> -->
-
 
 ### bind
 <!-- <+TabGroup.bind+> -->
@@ -5807,7 +5889,7 @@ Without further delay... here are all of the Elements and the Window class
 ### update
 <!-- <+Tree.update+> -->
 
-## TreeData Element 
+## TreeData (for Tree Element) 
 <!-- <+TreeData.doc+> -->
 <!-- <+TreeData.__init__+> -->
 
@@ -6152,7 +6234,6 @@ Without further delay... here are all of the Elements and the Window class
 <!-- <+func.easy_print+> -->
 <!-- <+func.easy_print_close+> -->
 <!-- <+func.eprint+> -->
-<!-- <+func.print_to_element+> -->
 <!-- <+func.sgprint+> -->
 <!-- <+func.sgprint_close+> -->
 <!-- <+func.EasyPrint+> -->
