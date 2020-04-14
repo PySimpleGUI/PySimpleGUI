@@ -109,7 +109,7 @@ class GameOfLife:
             [self.graph],
             [sg.Button('Go!', key='-DONE-'),
              sg.Text('  Delay (ms)'),
-             sg.Slider([0, 800],
+             sg.Slider((0, 800), 100,
                        orientation='h',
                        key='-SLIDER-',
                        enable_events=True,
@@ -124,7 +124,7 @@ class GameOfLife:
              sg.Text('', size=(3, 1), key='-S2-OUT-')]
         ]
 
-        self.window = sg.Window('Window Title', layout, finalize=True)
+        self.window = sg.Window('John Conway\' Game of Life', layout, finalize=True)
         event, values = self.window.read(timeout=0)
         self.delay = values['-SLIDER-']
         self.window['-S1-OUT-'].update(values['-SLIDER-'])
