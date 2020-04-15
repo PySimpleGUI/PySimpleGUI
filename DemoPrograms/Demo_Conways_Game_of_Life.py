@@ -105,7 +105,7 @@ class GameOfLife:
                               background_color='lightblue')
         layout = [
             [sg.Text('Game of Life', font='ANY 15'),
-             sg.Text('', key='-OUTPUT-', size=(30, 1), font='ANY 15')],
+             sg.Text('Click below to place cells', key='-OUTPUT-', size=(30, 1), font='ANY 15')],
             [self.graph],
             [sg.Button('Go!', key='-DONE-'),
              sg.Text('  Delay (ms)'),
@@ -142,6 +142,8 @@ class GameOfLife:
                                               line_color='black', fill_color='yellow')
         event, values = self.window.read(timeout=self.delay)
         if event in (None, '-DONE-'):
+            sg.popup('Click OK to exit the program...')
+            self.window.close()
             exit()
         self.delay = values['-SLIDER-']
         self.T = int(values['-SLIDER2-'])
@@ -179,10 +181,14 @@ class GameOfLife:
                                                        line_color='black', fill_color='yellow')
                     ids[box_x][box_y] = id_val
                     self.old_grid[box_x][box_y] = 1
-        self.window['-DONE-'].update(text='Exit')
+        if event is None:
+            self.window.close()
+        else:
+            self.window['-DONE-'].update(text='Exit')
 
 
 if (__name__ == "__main__"):
     game = GameOfLife(N=35, T=200)
     game.play()
+    sg.popup('Completed running.', 'Click OK to exit the program')
     game.window.close()
