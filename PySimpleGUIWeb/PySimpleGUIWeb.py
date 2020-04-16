@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.36.4  Unreleased Fix for MultilineOutput not autoscrolling, image update flicker fix, print sep char fixed, fix for extra Tab, replaced SvgGroup with SvgSubcontainer, fixed Graph element (Thanks Davide from Remi!)"
+version = __version__ = "0.37.0  Released 14 Apr 2020"
 
 port = 'PySimpleGUIWeb'
 
@@ -318,7 +318,7 @@ POPUP_BUTTONS_NO_BUTTONS = 5
 # ------------------------------------------------------------------------- #
 class Element():
     def __init__(self, elem_type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None,
-                 key=None, pad=None, tooltip=None, visible=True, size_px=(None, None)):
+                 key=None, pad=None, tooltip=None, visible=True, size_px=(None, None), metadata=None):
 
         if elem_type != ELEM_TYPE_GRAPH:
             self.Size = convert_tkinter_size_to_Wx(size)
@@ -353,7 +353,7 @@ class Element():
         self.Tooltip = tooltip
         self.TooltipObject = None
         self.Visible = visible
-        self.metadata = None                # type: Any
+        self.metadata = metadata                # type: Any
 
 
     # -------------------------  REMI CHANGED CALLBACK -----------------------
@@ -912,7 +912,7 @@ class Multiline(Element):
         self.ParentForm.LastButtonClicked = chr(int(keycode))
         self.ParentForm.MessageQueue.put(self.ParentForm.LastButtonClicked)
 
-    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
+    def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None, autoscroll=None):
             if value is not None and not append:
                 self.Widget.set_value(value)
             elif value is not None and append:
@@ -997,7 +997,7 @@ class MultilineOutput(Element):
             self.Widget.set_value(str(value))
             self.CurrentValue = str(value)
         elif value is not None and append:
-            self.CurrentValue = self.CurrentValue + '\n' + str(value)
+            self.CurrentValue = self.CurrentValue + str(value)
             self.Widget.set_value(self.CurrentValue)
         self.Widget._set_updated()
         app = self.ParentForm.App
@@ -1032,7 +1032,7 @@ class MultilineOutput(Element):
 #                                       Text                             #
 # ---------------------------------------------------------------------- #
 class Text(Element):
-    def __init__(self, text='', size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None)):
+    def __init__(self, text='', size=(None, None),  auto_size_text=None, click_submits=None, enable_events=False, relief=None, border_width=None, font=None, text_color=None, background_color=None, justification=None, pad=None, margins=None, key=None, tooltip=None, visible=True, size_px=(None,None), metadata=None):
         """
         Text
         :param text:
@@ -1071,7 +1071,7 @@ class Text(Element):
         self.Widget = None      #type: remi.gui.Label
 
         super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
+                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible, metadata=metadata)
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
@@ -2595,7 +2595,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, return_key_down_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,margins=(None, None),
                  disable_minimize=False, background_image=None, finalize=False,
                  web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
         '''
@@ -5639,17 +5639,24 @@ def EasyPrintClose():
 # ------------------------------------------------------------------------------------------------ #
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
-
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
-    :param multiline_element: (Multiline) The multiline element to be output to
-    :param args: List[Any] The arguments to print
-    :param end: (str) The end char to use just like print uses
-    :param sep: (str) The separation character like print uses
-    :param text_color: The color of the text
+    :param multiline_element:  The multiline element to be output to
+    :type multiline_element: Multiline or MultilineOutput
+    :param args:  The arguments to print
+    :type args: List[Any]
+    :param end:  The end char to use just like print uses
+    :type end: (str)
+    :param sep:  The separation character like print uses
+    :type sep: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
     :param background_color: The background color of the line
+    :type background_color: (str)
+    :param autoscroll: If True (the default), the element will scroll to bottom after updating
+    :type autoscroll: Bool
     """
     end_str = str(end) if end is not None else '\n'
     sep_str = str(sep) if sep is not None else ' '
@@ -5658,11 +5665,11 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     num_args = len(args)
     for i, arg in enumerate(args):
         outstring += str(arg)
-        if i != num_args - 1:
+        if i != num_args-1:
             outstring += sep_str
     outstring += end_str
 
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+    multiline_element.update(outstring, append=True, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
 
 
 
@@ -7941,17 +7948,19 @@ def main():
         if event in (None, 'Exit'):
             break
         elif event == 'OK':
-            window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True, autoscroll=True)
+
+            window.Element('_MULTIOUT_').print('You clicked the OK button')
+            # window.Element('_MULTIOUT_').Update('You clicked the OK button', append=True, autoscroll=True)
             window.Element('_PySimpleGUIWeb_').Widget.style['background-image'] = "url('/my_resources:mine.png')"
 
         elif event == 'Values':
-            window.Element('_MULTIOUT_').Update(str(values), append=True)
-            nav = remi.gui.FileFolderNavigator(False,r'a:\TEMP', True, False)
+            window.Element('_MULTIOUT_').Update(str(values)+'\n', append=True)
+            # nav = remi.gui.FileFolderNavigator(False,r'a:\TEMP', True, False)
             # here is returned the Input Dialog widget, and it will be shown
             # fileselectionDialog.show(window.Element('_IN_').Widget)
 
         elif event != TIMEOUT_KEY:
-            window.Element('_MULTIOUT_').Update('EVENT: ' + str(event), append=True, autoscroll=True)
+            window.Element('_MULTIOUT_').print('EVENT: ' + str(event))
         if event == 'Popup':
             Popup('This is a popup!')
         if event == 'UnHide':
@@ -7963,4 +7972,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    exit(69)
+    exit(0)
