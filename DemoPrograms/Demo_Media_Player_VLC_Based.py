@@ -23,8 +23,9 @@ layout = [[sg.Input(default_text='Video URL or Local Path:', size=(30, 1), key='
           [btn('previous'), btn('play'), btn('next'), btn('pause'), btn('stop')],
           [sg.Text('Load media to start', key='-MESSAGE_AREA-')]]
 
-window = sg.Window('Mini Player', layout, element_justification='center', finalize=True)
+window = sg.Window('Mini Player', layout, element_justification='center', finalize=True, resizable=True)
 
+window['-VID_OUT-'].expand(True, True)                # type: sg.Element
 #------------ Media Player Setup ---------#
 
 inst = vlc.Instance()
