@@ -149,7 +149,7 @@ event, values = sg.Window('Login Window',
                   [[sg.T('Enter your Login ID'), sg.In(key='-ID-')],
                   [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
 
-login_id = values['-IN-']
+login_id = values['-ID-']
 ```
 
 The important part of this bit of code is `close=True`.  This is the parameter that instructs PySimpleGUI to close the window just before the read returns.
