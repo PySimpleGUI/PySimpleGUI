@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.37.0  Released 14 Apr 2020"
+version = __version__ = "0.37.0.1  Unreleased - Added close parameter to Window.read"
 
 port = 'PySimpleGUIWeb'
 
@@ -2785,7 +2785,28 @@ class Window:
 
 
 
-    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+
+    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
+        """
+        THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+            Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+            if no other GUI events happen first.
+        Use the close parameter to close the window after reading
+
+        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
+        :param close: (bool) if True the window will be closed prior to returning
+        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+        """
+        results = self._read(timeout=timeout, timeout_key=timeout_key)
+        if close:
+            self.close()
+
+        return results
+
+
+
+    def _read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         # if timeout == 0:  # timeout of zero runs the old readnonblocking
         #     event, values = self._ReadNonBlocking()
         #     if event is None:
