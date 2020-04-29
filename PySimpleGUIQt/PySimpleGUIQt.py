@@ -3427,6 +3427,7 @@ class Window:
             # print("quitting window")
             self.QTApplication.exit()  # kick the users out of the mainloop
 
+
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
         """
         THE biggest deal method in the Window class! This is how you get all of your data from your Window.
@@ -4798,6 +4799,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
         qt_row_layout = QHBoxLayout()
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_win  # save the button's parent form object
+            element.ParentRowFrame = qt_row_layout
             if toplevel_win.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_win.Font
                 element.Font = font
