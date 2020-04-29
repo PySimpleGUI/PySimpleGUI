@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.32.0. Released 04-Apr-2020"
+version = __version__ = "0.32.0.1 Unreleased - Experimental ability for user to add widgets to layout"
 
 port = 'PySimpleGUIQt'
 
@@ -3250,6 +3250,7 @@ class Window:
         self._Hidden = False
         self.QTApplication = None
         self.QT_QMainWindow = None
+        self.QTWindow = None        # type Window.QTMainWindow
         self._Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
@@ -4799,7 +4800,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
         qt_row_layout = QHBoxLayout()
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_win  # save the button's parent form object
-            element.ParentRowFrame = qt_row_layout
+            element.parent_row_frame = element.ParentRowFrame = qt_row_layout
             if toplevel_win.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_win.Font
                 element.Font = font
@@ -4860,7 +4861,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                 column_widget.setStyleSheet(style)
 
                 column_layout = QFormLayout()
-                column_vbox = QVBoxLayout()
+                element.vbox_layout = column_vbox = QVBoxLayout()
                 PackFormIntoFrame(element, column_layout, toplevel_win)
 
                 scroll = None
@@ -5931,6 +5932,13 @@ def stop_timer(timer):
 
 # ----====----====----====----====----==== STARTUP TK ====----====----====----====----====----#
 def StartupTK(window):
+    """
+    Does the building of the window with all the widgets
+    :param window:
+    :type window: Window
+    :return:
+    """
+
     global using_pyqt5
 
     ow = Window.NumOpenWindows
@@ -5941,7 +5949,6 @@ def StartupTK(window):
     window.QTApplication = Window.QTApplication
 
     Window.IncrementOpenCount()
-
 
     # window.QTWindow = QWidget()
 
