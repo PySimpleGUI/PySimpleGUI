@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.2.20  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi"
+version = __version__ = "4.18.2.21  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi, test for valid ttk_theme names, fix for Text.get docstring, added tuples to some docstrings"
 
 port = 'PySimpleGUI'
 
@@ -387,7 +387,9 @@ MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+CLOSED = EVENT_WINDOW_CLOSED = EVENT_WIN_CLOSED = WIN_CLOSED = WINDOW_CLOSED_EVENT = None
+
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 
@@ -1331,7 +1333,7 @@ class OptionMenu(Element):
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: Values to be displayed
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_value: the value to choose by default
         :type default_value: (Any)
         :param size: size in characters (wide) and rows (high)
@@ -1431,7 +1433,7 @@ class Listbox(Element):
                  visible=True, metadata=None):
         """
         :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_values: which values should be initially selected
         :type default_values: List[Any]
         :param select_mode: Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected.   Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED
@@ -1923,7 +1925,7 @@ class Spin(Element):
                  pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List of valid values
-        :type values: List[Any]
+        :type values: Tuple[Any] or List[Any]
         :param initial_value: Initial item to show in window. Choose from list of values supplied
         :type initial_value: (Any)
         :param disabled: set disable state
@@ -2229,8 +2231,8 @@ class Text(Element):
                  relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
-        :param text: The text to display. Can include /n to achieve multiple lines
-        :type text: (str)
+        :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
+        :type text: (Any)
         :param size: (width, height) width = characters-wide, height = rows-high
         :type size: Tuple[int, int]
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
@@ -2314,6 +2316,12 @@ class Text(Element):
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
     def Get(self):
+        """
+        Gets the current value of the displayed text
+
+        :return: The current value
+        :rtype: (str)
+        """
         return self.DisplayText
 
 
@@ -2817,6 +2825,7 @@ class Button(Element):
         self.calendar_month_names = None
         self.calendar_day_abbreviations = None
         self.calendar_title = ''
+        self.calendar_selection = None
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -2985,7 +2994,9 @@ class Button(Element):
                     print('Bad format string', e)
                     date_string = 'Bad format string'
 
-                target_element.update(date_string)
+                if target_element is not None:
+                    target_element.update(date_string)
+                self.calendar_selection = date_string
 
                 strvar.set(date_string)
                 self.TKStringVar.set(date_string)
@@ -7327,11 +7338,11 @@ class Window:
 
     def SaveToDisk(self, filename):
         """
-        Saves the values contained in each of the input areas of the form. Basically saves what would be returned
-        from a call to Read.  It takes these results and saves them to disk using pickle
+        Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
+         Note that every element in your layout that is to be saved must have a key assigned to it.
 
         :param filename: Filename to save the values to in pickled form
-        :type filename: (str)
+        :type filename: str
         """
         try:
             event, values = _BuildResults(self, False, self)
@@ -9001,7 +9012,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
+def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
@@ -9274,10 +9285,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                     if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
-                        try:
-                            value = element.TKCal.selection
-                        except:
-                            value = None
+                        value = element.calendar_selection
                     else:
                         try:
                             value = element.TKStringVar.get()
@@ -9691,6 +9699,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _string_width_in_pixels(font, string):
         return tkinter.font.Font(font=font).measure(string)  # single character width
 
+    def _valid_theme(style, theme_name):
+        if theme_name in style.theme_names():
+            return True
+        print('** Invalid ttk theme specified {} **'.format(theme_name),
+              '\nValid choices include: {}'.format(style.theme_names()))
+        return False
+
+
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -10021,7 +10037,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 style_name = str(element.Key) + 'custombutton.TButton'
                 button_style = ttk.Style()
-                button_style.theme_use(toplevel_form.TtkTheme)
+                if _valid_theme(button_style,toplevel_form.TtkTheme):
+                    button_style.theme_use(toplevel_form.TtkTheme)
                 button_style.configure(style_name, font=font)
 
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -10220,13 +10237,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 s = ttk.Style()
-                s.theme_use(toplevel_form.TtkTheme)
+                if _valid_theme(s,toplevel_form.TtkTheme):
+                    s.theme_use(toplevel_form.TtkTheme)
                 # s.theme_use('default')
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
                     style_name = str(element.Key) + '.TCombobox'
                     combostyle = ttk.Style()
-                    combostyle.theme_use(toplevel_form.TtkTheme)
+                    if _valid_theme(combostyle, toplevel_form.TtkTheme):
+                        combostyle.theme_use(toplevel_form.TtkTheme)
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
 
