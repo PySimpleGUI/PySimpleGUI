@@ -149,7 +149,7 @@ event, values = sg.Window('Login Window',
                   [[sg.T('Enter your Login ID'), sg.In(key='-ID-')],
                   [sg.B('OK'), sg.B('Cancel') ]]).read(close=True)
 
-login_id = values['-IN-']
+login_id = values['-ID-']
 ```
 
 The important part of this bit of code is `close=True`.  This is the parameter that instructs PySimpleGUI to close the window just before the read returns.
@@ -529,7 +529,7 @@ As you can see, a single entry in the Look and Feel dictionary is itself a dicti
 
 ---
 
-# Recipe - Modifying an existing Theme
+## Recipe - Modifying an existing Theme
 
 Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the theme at runtime.
 
@@ -601,7 +601,7 @@ This window demonstrates these settings.  As you can see, there is text showing 
 ![image](https://user-images.githubusercontent.com/46163555/68679617-35f36700-052e-11ea-93b3-4f8507e3f4ee.png)
 
 
-### Removing the Titlebar & Making Semi-Transparent
+# Recipe Removing the Titlebar & Making Semi-Transparent
 
 Both of these can be set when you create your window.  These 2 parameters are all you need - `no_titlebar` and `alpha_channel`.
 
@@ -616,7 +616,7 @@ window = sg.Window('PSG System Dashboard', layout, no_titlebar=True, alpha_chann
 ```
 
 
-### Replacing a Button with a Graphic
+## Recipe - Replacing a Button with a Graphic
 
 In PySimpleGUI you can use PNG and GIF image files as buttons.  You can also encode those files into Base64 strings and put them directly into your code.
 
