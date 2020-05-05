@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.2.22  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi, test for valid ttk_theme names, fix for Text.get docstring, added tuples to some docstrings, added code for better tag handling for Multiline elements, WIN_CLOSE & WINDOW_CLOSED added"
+version = __version__ = "4.19.0 Released 5-May-2020"
 
 port = 'PySimpleGUI'
 
@@ -307,7 +307,6 @@ DEFAULT_SCROLLBAR_COLOR = None
 # A transparent button is simply one that matches the background
 # TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 
-TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')  # Use (sg.theme_background_color(), sg.theme_background_color()) instead!!!
 
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
@@ -358,7 +357,7 @@ LISTBOX_SELECT_MODE_SINGLE = 'single'
 TABLE_SELECT_MODE_NONE = tk.NONE
 TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
-DEFAULT_TABLE_SECECT_MODE = TABLE_SELECT_MODE_EXTENDED
+DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
 TITLE_LOCATION_TOP = tk.N
 TITLE_LOCATION_BOTTOM = tk.S
@@ -589,9 +588,6 @@ class Element():
     The base class for all Elements.
     Holds the basic description of an Element like size and colors
     """
-
-    def testHook(self, e):
-        print("IN")
 
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
                  visible=True, metadata=None):
@@ -913,7 +909,6 @@ class Element():
         :type force: bool
         """
 
-        # print("FOCUS!")
         try:
             if force:
                 self.Widget.focus_force()
@@ -1493,13 +1488,6 @@ class Listbox(Element):
         self.NoScrollbar = no_scrollbar
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
-
-
-    def testHookList(self, e):
-        print("In listbox!")
-
-    def testUnhookList(self, e):
-        print("Left listbox!")
 
     def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
@@ -9661,10 +9649,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             pass
 
     # Chr0nic
-    def breakScroll(event):
-      print("[TOLD TO BREAK SCROLLING EVENT]")
-
-    # Chr0nic
     def testMouseHook2(em):
         combo = em.TKCombo
         combo.unbind_class("TCombobox", "<MouseWheel>")
@@ -13070,6 +13054,9 @@ def theme_background_color(color=None):
         set_options(background_color=color)
     return DEFAULT_BACKGROUND_COLOR
 
+# This "constant" is misleading but rather than remove and break programs, will try this method instead
+TRANSPARENT_BUTTON = (theme_background_color(), theme_background_color())  # replaces an older version that had hardcoded numbers
+
 
 def theme_element_background_color(color=None):
     """
@@ -15746,7 +15733,7 @@ def main():
             print(event, values)
             Print(event, text_color='white', background_color='red', end='')
             Print(values)
-        if event is None or event == 'Exit':
+        if event == WIN_CLOSED or event == 'Exit':
             break
         if i < 800:
             graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
