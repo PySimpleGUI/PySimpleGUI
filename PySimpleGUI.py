@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.2.21  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi, test for valid ttk_theme names, fix for Text.get docstring, added tuples to some docstrings"
+version = __version__ = "4.18.2.22  Unreleased - Print and MLine.Print fixed sep char handling, popup_get_date, icon parm popup_animated, popup button size (6,1), NEW CALENDAR chooser integrated, Graph.draw_lines, color chooser set parent window, scrollable column scrollwheel fixed, autoscroll parm for Multiline.print, fixed TabGroup border width, EXPERIMENTAL Scrollable Columns, fix for install from GitHub, fix for Column scrolling with comboboxes, Added Text.get, Spin.update fix, import typing again, fixes for Pi, test for valid ttk_theme names, fix for Text.get docstring, added tuples to some docstrings, added code for better tag handling for Multiline elements, WIN_CLOSE & WINDOW_CLOSED added"
 
 port = 'PySimpleGUI'
 
@@ -388,7 +388,7 @@ MESSAGE_BOX_LINE_WIDTH = 60
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
 EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
-CLOSED = EVENT_WINDOW_CLOSED = EVENT_WIN_CLOSED = WIN_CLOSED = WINDOW_CLOSED_EVENT = None
+WIN_CLOSED = WINDOW_CLOSED = None
 
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
@@ -2048,6 +2048,8 @@ class Multiline(Element):
     one up in the future too.
     """
 
+    tags = set()
+
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
@@ -2112,8 +2114,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
-               background_color_for_value=None, visible=None, autoscroll=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to display
@@ -2138,23 +2139,29 @@ class Multiline(Element):
             return
         if autoscroll is not None:
             self.Autoscroll = autoscroll
-        # Multicolored text
-        if text_color_for_value is not None:
-            self.TKText.tag_configure(str(self.TagCounter), foreground=text_color_for_value)
-        if background_color_for_value is not None:
-            self.TKText.tag_configure(str(self.TagCounter), background=background_color_for_value)
 
         if value is not None:
             value = str(value)
+            tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
+            if tag not in Multiline.tags:
+                Multiline.tags.add(tag)
+                if background_color_for_value is None:
+                    if text_color_for_value is None:
+                        self.TKText.tag_configure(tag)
+                    else:
+                        self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                else:
+                    if text_color_for_value is None:
+                        self.TKText.tag_configure(tag, background=background_color_for_value)
+                    else:
+                        self.TKText.tag_configure(tag, foreground=text_color_for_value, background=background_color_for_value)
+
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                if text_color_for_value is not None or background_color_for_value is not None:
-                    self.TKText.insert(tk.END, value, str(self.TagCounter))
-                else:
-                    self.TKText.insert(tk.END, value)
+                self.TKText.insert(tk.END, value, tag)
             except:
                 pass
             if self.Disabled:
@@ -2176,7 +2183,6 @@ class Multiline(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-        self.TagCounter += 1  # doesn't matter if the counter is bumped every call
 
     def Get(self):
         """
