@@ -7,8 +7,8 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWx_For_Python_3.x_Version-0.15.0-orange.svg?longCache=true&style=for-the-badge)        
-        
+      
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiwx/)         
                 
         
 # PySimpleGUIWx        
@@ -416,6 +416,16 @@ Themes!
 * Depricated the TRANSPARENT_BUTTON variable as it was being misunderstood by users and was misleading
 * BROWSE_FILES_DELIMITER can be changed to change the default ';' delimeter between filenames in FilesBrowse button
 * Frame Element!  BUT, it's only a partial solution as I am unable to set the background color (need to understand how panels work). It's better than nothing
+
+
+## 0.16.0 PySimpleGUIWx 6-May-2020
+
+* Added constants
+    * WIN_CLOSED and WINDOW_CLOSED
+    * EVENT_TIMEOUT and TIMEOUT_EVENT
+* Added Graph.change_coordinates method
+* Added close parameter to Window.read
+
 
 
 # Design        
