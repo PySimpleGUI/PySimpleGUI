@@ -220,7 +220,7 @@ Well, there are a few quirks, and problems of course.  Check the [GitHub Issues 
 
 As previously mentioned **this is where you should post all problems and enhancements.**
 
-Random crashes have been rared.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
+Random crashes have been rare.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
 
 
 ## MACS & tkinter
@@ -233,7 +233,7 @@ Users have recently reported the ability to install Python 3.7 from the Python.o
 
 Regardless of where you get your Python / tkinter, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
 
-Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get iumplemented on PySimpleGUI (tkinger version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get implemented on PySimpleGUI (tkinter version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
 
 
 ## Multiple threads
@@ -277,21 +277,37 @@ The sequence looks like this in code:
     gc.collect()
 ```
     
-This will ensure that the tkinter widgets are all deleted in the context of the mainthread and another thread won't accidently run the Garbage Collect
+This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidently run the Garbage Collect
 
 
 
-# Contributing
+# Contributing to PySimpleGUI
 
-## Write Applications
+### Open Source License, but Private Development
 
-The way for you to contribute to the PySimpleGUI is to create and share PySimpleGUI GUIs.  **Everyone** learns from seeing other peoples' implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project and helped to create thw you see today.
+PySimpleGUI is different than most projects on GitHub.  It is licensed using the "Open Source License" LGPL3.  However, the coding and development of the project is not "open source".
 
-## Pull Requests
+This project does not accept user submitted code.
 
-***PySimpleGUI changes/pull requests are not being accepted at this time.***
+#### Write Applications, Use PySimpleGUI, Write Tutorials, Teach Others
 
+These are a few of the ways you can directly contribute to PySimpleGUI.  Using the package to make cool stuff and helping others learn how to use it to make cool stuff and a big help to PySimpleGUI.   **Everyone** learns from seeing other people's implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project in the past.
+
+#### Pull Requests
+
+Pull requests are *not being accepted* for the project.  This includes sending code changes via other means than "pull requests".  Plainly put, core code you send will not be used.
+
+
+#### Bug Fixes
+
+If you file an Issue for a bug, have located the bug, and found a fix in 10 lines of code or less.... and you wish to share your fix with the community, then feel free to include it with the filed Issue.  If it's longer than 10 lines and wish to discuss it, then send an email to help@PySimpleGUI.org.
+
+## Thank You
+
+The support from the user community has been amazing.  Your passion for creating PySimpleGUI applications is infectious.  Every "thank you" is noticed and appreciated!  Your passion for wanting to see PySimpleGUI improve is neither ignored nor unappreciated.
+
+It's understood that this way of development of a Python package is unorthodox.  You may find it frustrating and slow, but hope you can respect the decision for it to operate in this manner and be supportive.
 
 ## GitHub Repos
 
-If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the annoucements. People *love* success stories and showing your GUI's screen visually communicates your success. 
+If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the announcements. People *love* success stories and showing your GUI's screen visually communicates your success. 

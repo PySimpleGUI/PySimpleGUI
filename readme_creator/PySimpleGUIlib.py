@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.18.0  Released 26 Mar 2020"
+version = __version__ = "4.19.0 Released 5-May-2020"
 
 port = 'PySimpleGUI'
 
@@ -118,16 +118,22 @@ import datetime
 import time
 import pickle
 import calendar
+import datetime
 import textwrap
 import inspect
-# from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 from random import randint
 import warnings
 from math import floor
 from math import fabs
 from functools import wraps
-from subprocess import run, PIPE
+try:        # Because Raspberry Pi is still on 3.4....
+    from subprocess import run, PIPE
+except:
+    pass
+
 from threading import Thread
+import itertools
 import os
 
 warnings.simplefilter('always', UserWarning)
@@ -275,7 +281,8 @@ COLOR_SYSTEM_DEFAULT = '1234567890'  # A Magic Number kind of signal to PySimple
 DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None) == System Default
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
 
-CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
+# The "default PySimpleGUI theme"
+CURRENT_LOOK_AND_FEEL = 'Dark Blue 3'
 
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
@@ -312,7 +319,7 @@ RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
 # These are the spepific themes that tkinter offers
-THEME_DEFAULT = 'default'
+THEME_DEFAULT = 'default'           # this is a TTK theme, not a PSG theme!!!
 THEME_WINNATIVE = 'winnative'
 THEME_CLAM = 'clam'
 THEME_ALT = 'alt'
@@ -380,7 +387,9 @@ MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+WIN_CLOSED = WINDOW_CLOSED = None
+
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 
@@ -622,7 +631,7 @@ class Element():
         self.TKImage = None
 
         self.ParentForm = None  # type: Window
-        self.ParentContainer = None  # will be a Form, Column, or Frame element
+        self.ParentContainer = None  # will be a Form, Column, or Frame element # UNBIND
         self.TextInputDefault = None
         self.Position = (0, 0)  # Default position Row 0, Col 0
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_ELEMENT_BACKGROUND_COLOR
@@ -1167,7 +1176,7 @@ class Combo(Element):
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values: values to choose. While displayed as text, the items returned are what the caller supplied, not text
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value: (Any)
         :param size: width = characters-wide, height = rows-high
@@ -1320,7 +1329,7 @@ class OptionMenu(Element):
                  background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: Values to be displayed
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_value: the value to choose by default
         :type default_value: (Any)
         :param size: size in characters (wide) and rows (high)
@@ -1420,7 +1429,7 @@ class Listbox(Element):
                  visible=True, metadata=None):
         """
         :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
-        :type values: List[Any]
+        :type values: List[Any] or Tuple[Any]
         :param default_values: which values should be initially selected
         :type default_values: List[Any]
         :param select_mode: Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected.   Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED
@@ -1905,7 +1914,7 @@ class Spin(Element):
                  pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List of valid values
-        :type values: List[Any]
+        :type values: Tuple[Any] or List[Any]
         :param initial_value: Initial item to show in window. Choose from list of values supplied
         :type initial_value: (Any)
         :param disabled: set disable state
@@ -1972,9 +1981,9 @@ class Spin(Element):
         if value is not None:
             try:
                 self.TKStringVar.set(value)
+                self.DefaultValue = value
             except:
                 pass
-        self.DefaultValue = value
         if disabled is not None:
             self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
         # if disabled == True:
@@ -2027,6 +2036,8 @@ class Multiline(Element):
     Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
     one up in the future too.
     """
+
+    tags = set()
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
@@ -2092,8 +2103,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None,
-               background_color_for_value=None, visible=None, autoscroll=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to display
@@ -2118,23 +2128,29 @@ class Multiline(Element):
             return
         if autoscroll is not None:
             self.Autoscroll = autoscroll
-        # Multicolored text
-        if text_color_for_value is not None:
-            self.TKText.tag_configure(str(self.TagCounter), foreground=text_color_for_value)
-        if background_color_for_value is not None:
-            self.TKText.tag_configure(str(self.TagCounter), background=background_color_for_value)
 
         if value is not None:
             value = str(value)
+            tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
+            if tag not in Multiline.tags:
+                Multiline.tags.add(tag)
+                if background_color_for_value is None:
+                    if text_color_for_value is None:
+                        self.TKText.tag_configure(tag)
+                    else:
+                        self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                else:
+                    if text_color_for_value is None:
+                        self.TKText.tag_configure(tag, background=background_color_for_value)
+                    else:
+                        self.TKText.tag_configure(tag, foreground=text_color_for_value, background=background_color_for_value)
+
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                if text_color_for_value is not None or background_color_for_value is not None:
-                    self.TKText.insert(tk.END, value, str(self.TagCounter))
-                else:
-                    self.TKText.insert(tk.END, value)
+                self.TKText.insert(tk.END, value, tag)
             except:
                 pass
             if self.Disabled:
@@ -2156,7 +2172,6 @@ class Multiline(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-        self.TagCounter += 1  # doesn't matter if the counter is bumped every call
 
     def Get(self):
         """
@@ -2170,7 +2185,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -2185,7 +2200,7 @@ class Multiline(Element):
         :param background_color: The background color of the line
         :type background_color: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
 
 
 
@@ -2211,8 +2226,8 @@ class Text(Element):
                  relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None,
                  right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
-        :param text: The text to display. Can include /n to achieve multiple lines
-        :type text: (str)
+        :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
+        :type text: (Any)
         :param size: (width, height) width = characters-wide, height = rows-high
         :type size: Tuple[int, int]
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
@@ -2295,6 +2310,18 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
+    def Get(self):
+        """
+        Gets the current value of the displayed text
+
+        :return: The current value
+        :rtype: (str)
+        """
+        return self.DisplayText
+
+
+
+    get = Get
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
     update = Update
@@ -2783,8 +2810,17 @@ class Button(Element):
         self.BindReturnKey = bind_return_key
         self.Focus = focus
         self.TKCal = None
-        self.CalendarCloseWhenChosen = None
-        self.DefaultDate_M_D_Y = (None, None, None)
+        self.calendar_default_date_M_D_Y = (None, None, None)
+        self.calendar_close_when_chosen = False
+        self.calendar_locale = None
+        self.calendar_format = None
+        self.calendar_location = (None, None)
+        self.calendar_no_titlebar = True
+        self.calendar_begin_at_sunday_plus = 0
+        self.calendar_month_names = None
+        self.calendar_day_abbreviations = None
+        self.calendar_title = ''
+        self.calendar_selection = None
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -2881,7 +2917,7 @@ class Button(Element):
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_COLOR_CHOOSER:
-            color = tk.colorchooser.askcolor()  # show the 'get file' dialog box
+            color = tk.colorchooser.askcolor(parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             color = color[1]  # save only the #RRGGBB portion
             strvar.set(color)
             self.TKStringVar.set(color)
@@ -2934,24 +2970,51 @@ class Button(Element):
                 self.ParentForm.TKroot.destroy()
                 Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
-            should_submit_window = False
-            root = tk.Toplevel()
-            root.title('Calendar Chooser')
-            root.wm_attributes("-topmost", 1)
-            self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element,
-                                    close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.DefaultDate_M_D_Y,
-                                    locale=self.CalendarLocale, format=self.CalendarFormat)
-            self.TKCal.pack(expand=1, fill='both')
-            root.update()
+            # ------------ new chooser code -------------
 
-            if type(Window._user_defined_icon) is bytes:
-                calendar_icon = tkinter.PhotoImage(data=Window._user_defined_icon)
+            if self.calendar_default_date_M_D_Y == (None, None, None):
+                now = datetime.datetime.now()
+                cur_month, cur_day, cur_year = now.month, now.day, now.year
             else:
-                calendar_icon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
-            try:
-                root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
-            except:
-                pass
+                cur_month, cur_day, cur_year = self.calendar_default_date_M_D_Y
+
+            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.calendar_close_when_chosen, no_titlebar=self.calendar_no_titlebar, begin_at_sunday_plus=self.calendar_begin_at_sunday_plus, locale=self.calendar_locale, location=self.calendar_location, month_names=self.calendar_month_names, day_abbreviations=self.calendar_day_abbreviations, title=self.calendar_title)
+            if date_chosen is not None:
+                month, day, year = date_chosen
+                now = datetime.datetime.now()
+                hour, minute, second = now.hour, now.minute, now.second
+                try:
+                    date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.calendar_format)
+                except Exception as e:
+                    print('Bad format string', e)
+                    date_string = 'Bad format string'
+
+                if target_element is not None:
+                    target_element.update(date_string)
+                self.calendar_selection = date_string
+
+                strvar.set(date_string)
+                self.TKStringVar.set(date_string)
+
+            # ------------ old chooser code -------------
+            # should_submit_window = False
+            # root = tk.Toplevel()
+            # root.title('Calendar Chooser')
+            # root.wm_attributes("-topmost", 1)
+            # self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element,
+            #                         close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.CalendarDefaultDate_M_D_Y,
+            #                         locale=self.CalendarLocale, format=self.CalendarFormat)
+            # self.TKCal.pack(expand=1, fill='both')
+            # root.update()
+            #
+            # if type(Window._user_defined_icon) is bytes:
+            #     calendar_icon = tkinter.PhotoImage(data=Window._user_defined_icon)
+            # else:
+            #     calendar_icon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+            # try:
+            #     root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
+            # except:
+            #     pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
             if self.ParentForm.DebuggerEnabled:
                 _Debugger.debugger._build_floating_window()
@@ -3710,6 +3773,30 @@ class Graph(Element):
             id = None
         return id
 
+    def DrawLines(self, points, color='black', width=1):
+        """
+        Draw a series of lines given list of points
+
+        :param points: list of points that define the polygon
+        :type points: List[Union[Tuple[int, int], Tuple[float, float]]]
+        :param color: Color of the line
+        :type color: (str)
+        :param width: width of line in pixels
+        :type width: (int)
+        :return: id returned from tktiner or None if user closed the window. id is used when you
+        :rtype: Union[int, None]
+        """
+        converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
+
+        try:  # in case window was closed with an X
+            id = self._TKCanvas2.create_line(*converted_points, width=width, fill=color)
+        except:
+            if self._TKCanvas2 is None:
+                print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
+                print('Call Window.Finalize() prior to this operation')
+            id = None
+        return id
+
     def DrawPoint(self, point, size=2, color='black'):
         """
         Draws a "dot" at the point you specify using the USER'S coordinate system
@@ -3881,7 +3968,7 @@ class Graph(Element):
 
     def DrawPolygon(self, points, fill_color=None, line_color=None, line_width=None):
         """
-        Draw a rectangle given 2 points. Can control the line and fill colors
+        Draw a polygon given list of points
 
         :param points: list of points that define the polygon
         :type points: List[Union[Tuple[int, int], Tuple[float, float]]]
@@ -4236,6 +4323,7 @@ class Graph(Element):
     draw_oval = DrawOval
     draw_point = DrawPoint
     draw_polygon = DrawPolygon
+    draw_lines = DrawLines
     draw_rectangle = DrawRectangle
     draw_text = DrawText
     get_figures_at_location = GetFiguresAtLocation
@@ -5045,6 +5133,9 @@ class TkScrollableFrame(tk.Frame):
         """
         tk.Frame.__init__(self, master, **kwargs)
         # create a canvas object and a vertical scrollbar for scrolling it
+
+        # Okay, we're gonna make a list. Containing the y-min, x-min, y-max, and x-max of the frame
+
         self.vscrollbar = tk.Scrollbar(self, orient=tk.VERTICAL)
         self.vscrollbar.pack(side='right', fill="y", expand="false")
 
@@ -5072,26 +5163,37 @@ class TkScrollableFrame(tk.Frame):
         self.TKFrame.config(borderwidth=0, highlightthickness=0)
         self.config(borderwidth=0, highlightthickness=0)
 
-        # scrollbar = tk.Scrollbar(frame)
-        # scrollbar.pack(side=tk.RIGHT, fill='y')
-        # scrollbar.config(command=treeview.yview)
-        # self.vscrollbar.config(command=self.TKFrame.yview)
-        # self.TKFrame.configure(yscrollcommand=self.vscrollbar.set)
+        # Canvas can be: master, canvas, TKFrame
+
+        # Chr0nic
+
+        self.TKFrame.bind("<Enter>", self.hookMouseWheel)
+        self.TKFrame.bind("<Leave>", self.unhookMouseWheel)
+
+        # self.canvas.bind_all('<4>', self.yscroll,  add='+')
+        # self.canvas.bind_all('<5>', self.yscroll,  add='+')
+        # self.canvas.bind_all("<MouseWheel>", self.yscroll,  add='+')
+        # self.canvas.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
 
         self.bind('<Configure>', self.set_scrollregion)
 
-        self.canvas.bind("<MouseWheel>", self.yscroll)  # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
-        self.canvas.bind("<Shift-MouseWheel>", self.xscroll)  # THIS IS IT! The line of code that enables the column to be scrolled with the mouse!
+    # Chr0nic
+    def hookMouseWheel(self, e):
+        #print("enter")
+        VarHolder.canvas_holder = self.canvas
+        self.TKFrame.bind_all('<4>', self.yscroll, add='+')
+        self.TKFrame.bind_all('<5>', self.yscroll, add='+')
+        self.TKFrame.bind_all("<MouseWheel>", self.yscroll, add='+')
+        self.TKFrame.bind_all("<Shift-MouseWheel>", self.xscroll, add='+')
 
-        # def _on_mousewheel(self, event):
-        #     self.canv.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-        # self.bind_mouse_scroll(self.canvas, self.yscroll)
-        # if not vertical_only:
-        #     self.bind_mouse_scroll(self.hscrollbar, self.xscroll)
-        # self.bind_mouse_scroll(self.vscrollbar, self.yscroll)
-        # self.bind_mouse_scroll(self.TKFrame, self.yscroll)
-        # self.bind_mouse_scroll(self, self.yscroll)
+    # Chr0nic
+    def unhookMouseWheel(self, e):
+        #print("leave")
+        VarHolder.canvas_holder = None
+        self.TKFrame.unbind_all('<4>')
+        self.TKFrame.unbind_all('<5>')
+        self.TKFrame.unbind_all("<MouseWheel>")
+        self.TKFrame.unbind_all("<Shift-MouseWheel>")
 
     def resize_frame(self, e):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
@@ -7231,11 +7333,11 @@ class Window:
 
     def SaveToDisk(self, filename):
         """
-        Saves the values contained in each of the input areas of the form. Basically saves what would be returned
-        from a call to Read.  It takes these results and saves them to disk using pickle
+        Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
+         Note that every element in your layout that is to be saved must have a key assigned to it.
 
         :param filename: Filename to save the values to in pickled form
-        :type filename: (str)
+        :type filename: str
         """
         try:
             event, values = _BuildResults(self, False, self)
@@ -7864,16 +7966,16 @@ class SystemTray:
     def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
         """
         SystemTray - create an icon in the system tray
-        :param menu: Menu definition
-        :type menu: ???
+        :param menu: Menu definition. Example - ['UNUSED', ['My', 'Simple', '---', 'Menu', 'Exit']]
+        :type menu: List[List[List[str] or str]]
         :param filename: filename for icon
-        :type filename: ????
-        :param data: in-ram image for icon
-        :type data: ???
-        :param data_base64: basee-64 data for icon
-        :type data_base64: ???
+        :type filename: str
+        :param data: in-ram image for icon (same as data_base64 parm)
+        :type data: bytes
+        :param data_base64: base-64 data for icon
+        :type data_base64: bytes
         :param tooltip: tooltip string
-        :type tooltip: (str)
+        :type tooltip: str
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: Any
         """
@@ -8905,25 +9007,35 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
+def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None, locale=None, format=None, metadata=None):
+                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
+                   no_titlebar=True, location=(None, None), metadata=None):
     """
+    Button that will show a calendar chooser window.  Fills in the target element with result
 
     :param button_text: text in the button
     :type button_text: (str)
-    :param target:
+    :param target: Key or "coordinate" (see docs) of target element
+    :type target: Union[(int, int), Any]
     :param close_when_date_chosen:  (Default = True)
-    :param default_date_m_d_y:  (Default = (None))
+    :type close_when_date_chosen:  bool
+    :param default_date_m_d_y:  Beginning date to show
+    :type default_date_m_d_y:  (int, int or None, int)
     :param image_filename: image filename if there is a button image
+    :type image_filename: image filename if there is a button image
     :param image_data: in-RAM image to be displayed on button
+    :type image_data: in-RAM image to be displayed on button
     :param image_size:  (Default = (None))
-    :param image_subsample:amount to reduce the size of the image
+    :type image_size:  (Default = (None))
+    :param image_subsample: amount to reduce the size of the image
+    :type image_subsample: amount to reduce the size of the image
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param border_width:  width of border around element
+    :type border_width:  width of border around element
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: Tuple[int, int]
     :param auto_size_button:  True if button size is determined by button text
@@ -8935,13 +9047,29 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param bind_return_key:  (Default = False)
+    :type bind_return_key: bool
     :param focus: if focus should be set to this
+    :type focus: bool
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
     :type key: Union[str, int, tuple]
-    :param locale:
-    :param format:
+    :param locale: defines the locale used to get day names
+    :type locale: str
+    :param format: formats result using this strftime format
+    :type format: str
+    :param month_names: optional list of month names to use (should be 12 items)
+    :type month_names: List[str]
+    :param day_abbreviations: optional list of abbreviations to display as the day of week
+    :type day_abbreviations: List[str]
+    :param title: Title shown on the date chooser window
+    :type title: str
+    :param no_titlebar: if True no titlebar will be shown on the date chooser window
+    :type no_titlebar: bool
+    :param location: Location on the screen (x,y) to show the calendar popup window
+    :type location: (int, int)
+    :param metadata: Anything you want to store along with this button
+    :type metadata: Any
     :return: returns a button
     :rtype: (Button)
     """
@@ -8950,10 +9078,17 @@ def CalendarButton(button_text, target=(None, None), close_when_date_chosen=True
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
-    button.CalendarCloseWhenChosen = close_when_date_chosen
-    button.DefaultDate_M_D_Y = default_date_m_d_y
-    button.CalendarLocale = locale
-    button.CalendarFormat = format
+    button.calendar_close_when_chosen = close_when_date_chosen
+    button.calendar_default_date_M_D_Y = default_date_m_d_y
+    button.calendar_locale = locale
+    button.calendar_format = format
+    button.calendar_no_titlebar = no_titlebar
+    button.calendar_location = location
+    button.calendar_begin_at_sunday_plus = begin_at_sunday_plus
+    button.calendar_month_names = month_names
+    button.calendar_day_abbreviations = day_abbreviations
+    button.calendar_title = title
+
     return button
 
 
@@ -9145,10 +9280,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                     if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
-                        try:
-                            value = element.TKCal.selection
-                        except:
-                            value = None
+                        value = element.calendar_selection
                     else:
                         try:
                             value = element.TKStringVar.get()
@@ -9474,6 +9606,12 @@ else:
 
 """
 
+# Chr0nic || This is probably *very* bad practice. But it works. Simple, but it works...
+class VarHolder(object):
+    canvas_holder = None
+    def __init__(self):
+        self.canvas_holder = None
+
 
 # Also, to get to the point in the code where each element's widget is created, look for element + "p lacement" (without the space)
 
@@ -9492,6 +9630,57 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     """
 
+    # Old bindings
+    def yscroll_old(event):
+        try:
+            if event.num == 5 or event.delta < 0:
+                VarHolder.canvas_holder.yview_scroll(1, "unit")
+            elif event.num == 4 or event.delta > 0:
+                VarHolder.canvas_holder.yview_scroll(-1, "unit")
+        except:
+            pass
+
+    def xscroll_old(event):
+        try:
+            if event.num == 5 or event.delta < 0:
+                VarHolder.canvas_holder.xview_scroll(1, "unit")
+            elif event.num == 4 or event.delta > 0:
+                VarHolder.canvas_holder.xview_scroll(-1, "unit")
+        except:
+            pass
+
+    # Chr0nic
+    def testMouseHook2(em):
+        combo = em.TKCombo
+        combo.unbind_class("TCombobox", "<MouseWheel>")
+        combo.unbind_class("TCombobox", "<ButtonPress-4>")
+        combo.unbind_class("TCombobox", "<ButtonPress-5>")
+        containing_frame.unbind_all('<4>')
+        containing_frame.unbind_all('<5>')
+        containing_frame.unbind_all("<MouseWheel>")
+        containing_frame.unbind_all("<Shift-MouseWheel>")
+
+    # Chr0nic
+    def testMouseUnhook2(em):
+        containing_frame.bind_all('<4>', yscroll_old, add="+")
+        containing_frame.bind_all('<5>', yscroll_old, add="+")
+        containing_frame.bind_all("<MouseWheel>", yscroll_old, add="+")
+        containing_frame.bind_all("<Shift-MouseWheel>", xscroll_old, add="+")
+
+    # Chr0nic
+    def testMouseHook(em):
+        containing_frame.unbind_all('<4>')
+        containing_frame.unbind_all('<5>')
+        containing_frame.unbind_all("<MouseWheel>")
+        containing_frame.unbind_all("<Shift-MouseWheel>")
+
+    # Chr0nic
+    def testMouseUnhook(em):
+        containing_frame.bind_all('<4>', yscroll_old, add="+")
+        containing_frame.bind_all('<5>', yscroll_old, add="+")
+        containing_frame.bind_all("<MouseWheel>", yscroll_old, add="+")
+        containing_frame.bind_all("<Shift-MouseWheel>", xscroll_old, add="+")
+
     def _char_width_in_pixels(font):
         return tkinter.font.Font(font=font).measure('A')  # single character width
 
@@ -9500,6 +9689,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     def _string_width_in_pixels(font, string):
         return tkinter.font.Font(font=font).measure(string)  # single character width
+
+    def _valid_theme(style, theme_name):
+        if theme_name in style.theme_names():
+            return True
+        print('** Invalid ttk theme specified {} **'.format(theme_name),
+              '\nValid choices include: {}'.format(style.theme_names()))
+        return False
+
 
     border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -9831,7 +10028,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 style_name = str(element.Key) + 'custombutton.TButton'
                 button_style = ttk.Style()
-                button_style.theme_use(toplevel_form.TtkTheme)
+                if _valid_theme(button_style,toplevel_form.TtkTheme):
+                    button_style.theme_use(toplevel_form.TtkTheme)
                 button_style.configure(style_name, font=font)
 
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -10030,13 +10228,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 s = ttk.Style()
-                s.theme_use(toplevel_form.TtkTheme)
+                if _valid_theme(s,toplevel_form.TtkTheme):
+                    s.theme_use(toplevel_form.TtkTheme)
                 # s.theme_use('default')
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
                     style_name = str(element.Key) + '.TCombobox'
                     combostyle = ttk.Style()
-                    combostyle.theme_use(toplevel_form.TtkTheme)
+                    if _valid_theme(combostyle, toplevel_form.TtkTheme):
+                        combostyle.theme_use(toplevel_form.TtkTheme)
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
 
@@ -10076,6 +10276,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width,
                                                                 textvariable=element.TKStringVar, font=font,
                                                                 style=style_name)
+
+
+                # Chr0nic
+                element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
+                element.TKCombo.bind("<Leave>", lambda event, em=element: testMouseUnhook2(em))
+
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 element.TKCombo['values'] = element.Values
@@ -10153,6 +10359,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
                     element.TKListbox.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
+
+                    # Chr0nic
+                    element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 element.TKListbox.pack(side=tk.LEFT)
                 if element.Visible is False:
@@ -10190,6 +10400,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKText.pack_forget()
+                else:
+                    # Chr0nic
+                    element.TKText.bind("<Enter>", lambda event, em=element: testMouseHook(em))
+                    element.TKText.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
                 if element.ChangeSubmits:
                     element.TKText.bind('<Key>', element._KeyboardHandler)
                 if element.EnterSubmits:
@@ -10525,6 +10739,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     state = 'disabled'
                 if element.Visible is False:
                     state = 'hidden'
+                # this code will add an image to the tab. Use it when adding the image on a tab enhancement
+                # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
+                # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
                 form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
                 form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
                 element.ParentNotebook = form.TKNotebook
@@ -10575,6 +10792,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(custom_style + '.Tab', background=element.TabBackgroundColor)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style.configure(custom_style + '.Tab', foreground=element.TextColor)
+                if element.BorderWidth is not None:
+                    style.configure(custom_style, borderwidth=element.BorderWidth)
+                    # style.configure(custom_style + '.Tab', borderwidth=0)       # if ever want to get rid of border around the TABS themselves
+
                 style.configure(custom_style + '.Tab', font=font)
 
                 element.TKNotebook = element.Widget = ttk.Notebook(tk_row_frame, style=custom_style)
@@ -10583,8 +10804,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.ChangeSubmits:
                     element.TKNotebook.bind('<<NotebookTabChanged>>', element._TabGroupSelectHandler)
-                if element.BorderWidth is not None:
-                    element.TKNotebook.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -11434,10 +11653,17 @@ class _DebugWin():
             event, values = self.window.Read(timeout=0)
         # print(f'Printing {ObjToStringSingleObj(self.output_element)}')
         if self.do_not_reroute_stdout:
+            end_str = str(end) if end is not None else '\n'
+            sep_str = str(sep) if sep is not None else ' '
+
             outstring = ''
-            for arg in args:
-                outstring += str(arg) + sepchar
-            outstring += endchar
+            num_args = len(args)
+            for i, arg in enumerate(args):
+                outstring += str(arg)
+                if i != num_args - 1:
+                    outstring += sep_str
+            outstring += end_str
+
             self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
         else:
             print(*args, sep=sepchar, end=endchar)
@@ -11513,7 +11739,7 @@ def EasyPrintClose():
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -11529,15 +11755,21 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :type text_color: (str)
     :param background_color: The background color of the line
     :type background_color: (str)
+    :param autoscroll: If True (the default), the element will scroll to bottom after updating
+    :type autoscroll: Bool
     """
-    sepchar = sep if sep is not None else ' '
-    endchar = end if end is not None else '\n'
+    end_str = str(end) if end is not None else '\n'
+    sep_str = str(sep) if sep is not None else ' '
 
     outstring = ''
-    for arg in args:
-        outstring += str(arg) + sepchar
-    outstring += endchar
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+    num_args = len(args)
+    for i, arg in enumerate(args):
+        outstring += str(arg)
+        if i != num_args-1:
+            outstring += sep_str
+    outstring += end_str
+
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll)
 
 
 # ============================== SetGlobalIcon ======#
@@ -12216,7 +12448,7 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                      'ACCENT3': '#889743'},
 
                        'LightGreen1': {'BACKGROUND': '#9FB8AD',
-                                       'TEXT': COLOR_SYSTEM_DEFAULT,
+                                       'TEXT': '#000000',
                                        'INPUT': '#F7F3EC', 'TEXT_INPUT': '#000000',
                                        'SCROLL': '#F7F3EC',
                                        'BUTTON': ('#FFFFFF', '#475841'),
@@ -12975,7 +13207,7 @@ def theme_list():
     Returns a sorted list of the currently available color themes
 
     :return: List[str] - A sorted list of the currently available color themes
-    :rtype: (str)
+    :rtype: List[str]
     """
     return list_of_look_and_feel_values()
 
@@ -14027,7 +14259,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'),
                FolderBrowse(initial_folder=initial_folder)],
-              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
@@ -14203,7 +14435,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
     layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
-              [Button('Ok', size=(5, 1), bind_return_key=True), Button('Cancel', size=(5, 1))]]
+              [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     no_titlebar=no_titlebar,
@@ -14219,9 +14451,159 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
         return path
 
 
+
+def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None):
+    """
+    Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
+
+    :param start_mon: The starting month
+    :type start_mon: int
+    :param start_day: The starting day - optional. Set to None or 0 if no date to be chosen at start
+    :type start_day: int or None
+    :param start_year: The starting year
+    :type start_year: int
+    :param begin_at_sunday_plus: Determines the left-most day in the display. 0=sunday, 1=monday, etc
+    :type begin_at_sunday_plus: int
+    :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :type icon: str
+    :param locale: locale used to get the day names
+    :type locale: str
+    :param month_names: optional list of month names to use (should be 12 items)
+    :type month_names: List[str]
+    :param day_abbreviations: optional list of abbreviations to display as the day of week
+    :type day_abbreviations: List[str]
+    :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
+    :rtype: None or (int, int, int)
+    """
+
+    if month_names is not None and len(month_names) != 12:
+        popup_error('Incorrect month names list specified. Must have 12 entries.', 'Your list:', month_names)
+
+    if day_abbreviations is not None and len(day_abbreviations) != 7:
+        popup_error('Incorrect day abbreviation list. Must have 7 entries.', 'Your list:', day_abbreviations)
+
+    day_font = 'TkFixedFont 9'
+    mon_year_font = 'TkFixedFont 10'
+    arrow_font = 'TkFixedFont 7'
+
+    now = datetime.datetime.now()
+    cur_month, cur_day, cur_year = now.month, now.day, now.year
+    cur_month = start_mon or cur_month
+    if start_mon is not None:
+        cur_day = start_day
+    else:
+        cur_day = cur_day
+    cur_year = start_year or cur_year
+
+
+    def update_days(window, month, year, begin_at_sunday_plus):
+        [window[(week, day)].update('') for day in range(7) for week in range(6)]
+        weeks = calendar.monthcalendar(year, month)
+        month_days = list(itertools.chain.from_iterable([[0 for _ in range(8 - begin_at_sunday_plus)]] + weeks))
+        if month_days[6] == 0:
+            month_days = month_days[7:]
+            if month_days[6] == 0:
+                month_days = month_days[7:]
+        for i, day in enumerate(month_days):
+            offset = i
+            if offset >= 6 * 7:
+                break
+            window[(offset // 7, offset % 7)].update(str(day) if day else '')
+
+    def make_days_layout():
+        days_layout = []
+        for week in range(6):
+            row = []
+            for day in range(7):
+                row.append(T('', size=(4, 1), justification='c', font=day_font, key=(week, day), enable_events=True, pad=(0, 0)))
+            days_layout.append(row)
+        return days_layout
+
+
+    # Create table of month names and week day abbreviations
+
+    if day_abbreviations is None or len(day_abbreviations) != 7:
+        fwday = calendar.SUNDAY
+        try:
+            if locale is not None:
+                _cal = calendar.LocaleTextCalendar(fwday, locale)
+            else:
+                _cal = calendar.TextCalendar(fwday)
+            day_names = _cal.formatweekheader(3).split()
+        except Exception as e:
+            print('Exception building day names from locale', locale,  e)
+            day_names = ('Sun', 'Mon', 'Tue', 'Wed', 'Th', 'Fri', 'Sat')
+    else:
+        day_names = day_abbreviations
+
+    mon_names = month_names if month_names is not None and len(month_names) == 12  else [calendar.month_name[i] for i in range(1,13)]
+    days_layout = make_days_layout()
+
+    layout = [[B('◄◄', font=arrow_font, border_width=0, key='-YEAR-DOWN-', pad=((10,2),2)),
+                B('◄', font=arrow_font, border_width=0, key='-MON-DOWN-', pad=(0,2)),
+               Text('{} {}'.format(mon_names[cur_month - 1], cur_year), size=(16, 1), justification='c', font=mon_year_font, key='-MON-YEAR-', pad=(0,2)),
+               B('►', font=arrow_font,border_width=0, key='-MON-UP-', pad=(0,2)),
+               B('►►', font=arrow_font,border_width=0, key='-YEAR-UP-', pad=(2,2))]]
+    layout += [[Col([[T(day_names[i - (7 - begin_at_sunday_plus) % 7], size=(4,1), font=day_font, background_color=theme_text_color(), text_color=theme_background_color(), pad=(0,0)) for i in range(7)]], background_color=theme_text_color(), pad=(0,0))]]
+    layout += days_layout
+    if not close_when_chosen:
+        layout += [[Button('Ok', border_width=0,font='TkFixedFont 8'), Button('Cancel',border_width=0, font='TkFixedFont 8')]]
+
+    window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=True, keep_on_top=keep_on_top, font='TkFixedFont 12', use_default_focus=False, location=location, finalize=True, icon=icon)
+
+    update_days(window, cur_month, cur_year, begin_at_sunday_plus)
+
+    prev_choice = chosen_mon_day_year = None
+
+    if cur_day:
+        chosen_mon_day_year = cur_month, cur_day, cur_year
+        for week in range(6):
+            for day in range(7):
+                if window[(week,day)].DisplayText == str(cur_day):
+                    window[(week,day)].update(background_color=theme_text_color(), text_color=theme_background_color())
+                    prev_choice = (week,day)
+                    break
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event in (None, 'Cancel'):
+            chosen_mon_day_year = None
+            break
+        if event == 'Ok':
+            break
+        if event in ('-MON-UP-', '-MON-DOWN-', '-YEAR-UP-','-YEAR-DOWN-'):
+            cur_month += (event == '-MON-UP-')
+            cur_month -= (event == '-MON-DOWN-')
+            cur_year += (event == '-YEAR-UP-')
+            cur_year -= (event == '-YEAR-DOWN-')
+            if cur_month > 12:
+                cur_month = 1
+                cur_year += 1
+            elif cur_month < 1:
+                cur_month = 12
+                cur_year -= 1
+            window['-MON-YEAR-'].update('{} {}'.format(mon_names[cur_month - 1], cur_year))
+            update_days(window, cur_month, cur_year, begin_at_sunday_plus)
+            if prev_choice:
+                window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
+        elif type(event) is tuple:
+            if window[event].DisplayText != "":
+                chosen_mon_day_year = cur_month, int(window[event].DisplayText), cur_year
+                if prev_choice:
+                    window[prev_choice].update(background_color=theme_background_color(), text_color=theme_text_color())
+                window[event].update(background_color=theme_text_color(), text_color=theme_background_color())
+                prev_choice = event
+                if close_when_chosen:
+                    break
+    window.close()
+    return chosen_mon_day_year
+
+
+
+
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title=''):
+def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -14254,6 +14636,8 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :type transparent_color: (str)
     :param title:  Title that will be shown on the window
     :type title: (str)
+    :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :type icon: str
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
@@ -14273,7 +14657,7 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
         window = Window(title, layout, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                         keep_on_top=keep_on_top, background_color=background_color, location=location,
                         alpha_channel=alpha_channel, element_padding=(0, 0), margins=(0, 0),
-                        transparent_color=transparent_color, finalize=True, element_justification='c')
+                        transparent_color=transparent_color, finalize=True, element_justification='c', icon=icon)
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
@@ -14352,7 +14736,7 @@ def _process_thread(*args):
     try:
         __shell_process__ = run(args, shell=True, stdout=PIPE)
     except Exception as e:
-        print(f'Exception running process args = {args}')
+        print('Exception running process args = {}'.format(args))
         __shell_process__ = None
 
 
@@ -14975,7 +15359,6 @@ def _refresh_debugger():
 # 888  888  888 .d888888 888 888  888
 # 888  888  888 888  888 888 888  888
 # 888  888  888 "Y888888 888 888  888
-
 import sys
 import site
 import shutil
@@ -14989,24 +15372,24 @@ import urllib.error
 
 def _install(files, url=None):
     """
-    install one file package from GitHub
+    install one file package from GitHub or current directory
 
     Parameters
     ----------
     files : list
         files to be installed
-        the first item (files[0]) will be used as the name of the package
-        optional files should be preceded wit an exclamation mark (!)
+        the first item (files[0]) will be used as the name of the package''
+        optional files should be preceded with an exclamation mark (!)
 
     url : str
         url of the location of the GitHub repository
         this will start usually with https://raw.githubusercontent.com/ and end with /master/
-        if omitted, the files will be copied from the current directory (no GitHub)
+        if omitted, the files will be copied from the current directory (not GitHub)
+
 
     Returns
     -------
     info : Info instance
-        with structure contains
         info.package : name of the package installed
         info.path : name where the package is installed in the site-packages
         info.version : version of the package (obtained from <package>.py)
@@ -15018,13 +15401,22 @@ def _install(files, url=None):
     <package><version>.dist-info folder with the usual files METADATA, INSTALLER and RECORDS.
     As the setup.py is not run, the METADATA is very limited, i.e. is contains just name and version.
 
-    If an __init__.py is in files that file will be used.
+    If a __init__.py is in files that file will be used.
     Otherwise, an __init__/py file will be generated. In thet case, if a __version__ = statement
     is found in the source file, the __version__ will be included in that __init__.py file.
 
     Version history
     ---------------
-    version 1.0.1  2020-03-04
+    version 1.0.4  2020-03-29
+        Linux and ios versions now search in sys.path for site-packages,
+        wheras other platforms now use site.getsitepackages().
+        This is to aavoid installation in a roaming directory on Windows.
+
+    version 1.0.2  2020-03-07
+        modified several open calls to be compatible with Python < 3.6
+        multipe installation for Pythonista removed. Now installs only in site-packages
+
+    version 1.0.1  2020-03-06
         now uses urllib instead of requests to avoid non standard libraries
         installation for Pythonista improved
 
@@ -15043,9 +15435,9 @@ def _install(files, url=None):
     info = Info()
     Pythonista = sys.platform == "ios"
     if not files:
-        raise ValueError('no files specified')
-    if files[0][0] == '!':
-        raise ValueError('first item in files (sourcefile) may not be optional')
+        raise ValueError("no files specified")
+    if files[0][0] == "!":
+        raise ValueError("first item in files (sourcefile) may not be optional")
     package = Path(files[0]).stem
     sourcefile = files[0]
 
@@ -15059,7 +15451,7 @@ def _install(files, url=None):
             try:
                 with urllib.request.urlopen(url + file) as response:
                     page = response.read()
-                #                page = requests.get(url + file)
+
                 file_contents[file] = page
                 exists = True
             except urllib.error.URLError:
@@ -15090,95 +15482,92 @@ def _install(files, url=None):
     info.files_copied = list(file_contents.keys())
     info.package = package
     info.version = version
-    paths = []
 
-    file = '__init__.py'
+    file = "__init__.py"
     if file not in file_contents:
         file_contents[file] = ("from ." + package + " import *\n").encode()
-        if version != 'unknown':
+        if version != "unknown":
             file_contents[file] += ("from ." + package + " import __version__\n").encode()
+    if sys.platform.startswith('linux') or (sys.platform == 'ios'):
+        search_in = sys.path
+    else:
+        search_in = site.getsitepackages()
+
+    for f in search_in:
+        sitepackages_path = Path(f)
+        if sitepackages_path.name == "site-packages" and sitepackages_path.is_dir():
+            break
+    else:
+        raise ModuleNotFoundError("can't find the site-packages folder")
+
+    path = sitepackages_path / package
+    info.path = str(path)
+
+    if path.is_file():
+        path.unlink()
+
+    if not path.is_dir():
+        path.mkdir()
+
+    for file, contents in file_contents.items():
+        with (path / file).open("wb") as f:
+            f.write(contents)
 
     if Pythonista:
-        cwd = Path.cwd()
-        parts1 = []
-        for part in cwd.parts:
-            parts1.append(part)
-            if part == "Documents":
-                break
-        else:
-            raise EnvironmentError("unable to install")
-
-        sitepackages_paths = [Path(*parts1) / ("site-packages" + ver) for ver in ("", "-2", "-3")]
+        pypi_packages = sitepackages_path / ".pypi_packages"
+        config = configparser.ConfigParser()
+        config.read(pypi_packages)
+        config[package] = {}
+        config[package]["url"] = "github"
+        config[package]["version"] = version
+        config[package]["summary"] = ""
+        config[package]["files"] = path.as_posix()
+        config[package]["dependency"] = ""
+        with pypi_packages.open("w") as f:
+            config.write(f)
     else:
-        sitepackages_paths = [Path(site.getsitepackages()[-1])]
+        for entry in sitepackages_path.glob("*"):
+            if entry.is_dir():
+                if entry.stem.startswith(package) and entry.suffix == ".dist-info":
+                    shutil.rmtree(entry)
+        path_distinfo = Path(str(path) + "-" + version + ".dist-info")
+        if not path_distinfo.is_dir():
+            path_distinfo.mkdir()
+        with (path_distinfo / "METADATA").open("w") as f:  # make a dummy METADATA file
+            f.write("Name: " + package + "\n")
+            f.write("Version: " + version + "\n")
 
-    for sitepackages_path in sitepackages_paths:
+        with (path_distinfo / "INSTALLER").open("w") as f:  # make a dummy METADATA file
+            f.write("github\n")
+        with (path_distinfo / "RECORD").open("w") as f:
+            pass  # just to create the file to be recorded
 
-        path = sitepackages_path / package
-        paths.append(str(path))
+        with (path_distinfo / "RECORD").open("w") as record_file:
 
-        if not path.is_dir():
-            path.mkdir()
+            for p in (path, path_distinfo):
+                for file in p.glob("**/*"):
 
-        for file, contents in file_contents.items():
-            with open(path / file, "wb") as f:
-                f.write(contents)
+                    if file.is_file():
+                        name = file.relative_to(sitepackages_path).as_posix()  # make sure we have slashes
+                        record_file.write(name + ",")
 
-        if Pythonista:
-            pypi_packages = sitepackages_path / '.pypi_packages'
-            config = configparser.ConfigParser()
-            config.read(pypi_packages)
-            config[package] = {}
-            config[package]['url'] = 'github'
-            config[package]['version'] = version
-            config[package]['summary'] = ''
-            config[package]['files'] = path.as_posix()
-            config[package]['dependency'] = ''
-            with pypi_packages.open('w') as f:
-                config.write(f)
-        else:
-            for entry in sitepackages_path.glob("*"):
-                if entry.is_dir():
-                    if entry.stem.startswith(package) and entry.suffix == ".dist-info":
-                        shutil.rmtree(entry)
-            path_distinfo = Path(str(path) + "-" + version + ".dist-info")
-            if not path_distinfo.is_dir():
-                path_distinfo.mkdir()
-            with open(path_distinfo / "METADATA", "w") as f:  # make a dummy METADATA file
-                f.write("Name: " + package + "\n")
-                f.write("Version: " + version + "\n")
+                        if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
+                            record_file.write(",")
+                        else:
+                            with file.open("rb") as f:
+                                file_contents = f.read()
+                                hash = "sha256=" + base64.urlsafe_b64encode(
+                                    hashlib.sha256(file_contents).digest()
+                                ).decode("latin1").rstrip("=")
+                                # hash calculation derived from wheel.py in pip
 
-            with open(path_distinfo / "INSTALLER", "w") as f:  # make a dummy METADATA file
-                f.write("github\n")
-            with open(path_distinfo / "RECORD", "w") as f:
-                pass  # just to create the file to be recorded
+                                length = str(len(file_contents))
+                                record_file.write(hash + "," + length)
 
-            with open(path_distinfo / "RECORD", "w") as record_file:
+                        record_file.write("\n")
 
-                for p in (path, path_distinfo):
-                    for file in p.glob("**/*"):
-
-                        if file.is_file():
-                            name = file.relative_to(sitepackages_path).as_posix()  # make sure we have slashes
-                            record_file.write(name + ",")
-
-                            if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
-                                record_file.write(",")
-                            else:
-                                with open(file, "rb") as f:
-                                    file_contents = f.read()
-                                    hash = "sha256=" + base64.urlsafe_b64encode(
-                                        hashlib.sha256(file_contents).digest()
-                                    ).decode("latin1").rstrip("=")
-                                    # hash calculation derived from wheel.py in pip
-
-                                    length = str(len(file_contents))
-                                    record_file.write(hash + "," + length)
-
-                            record_file.write("\n")
-
-    info.path = ','.join(paths)
     return info
+
 
 def _upgrade_from_github():
     info = _install(
@@ -15296,11 +15685,11 @@ def main():
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
+    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red', )
     tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
-                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]])
-    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red')
-    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red')
+                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]], )
+    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
+    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
 
     layout1 = [
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
@@ -15311,7 +15700,7 @@ def main():
          [Text('PySimpleGUI Location {}'.format(os.path.dirname(os.path.abspath(__file__))), size=(50, None), font='ANY 12')],
          [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
          [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
-        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_', )],
+        [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
@@ -15342,7 +15731,7 @@ def main():
             print(event, values)
             Print(event, text_color='white', background_color='red', end='')
             Print(values)
-        if event is None or event == 'Exit':
+        if event == WIN_CLOSED or event == 'Exit':
             break
         if i < 800:
             graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))

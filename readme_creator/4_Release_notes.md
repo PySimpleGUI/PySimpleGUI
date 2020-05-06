@@ -1173,6 +1173,47 @@ Emergency patch - f-string managed to get into the code resulting crashes on 3.5
 
 The Epic Fail release.... import error on 3.5 for subprocess.
 
+## 4.19.0 PySimpleGUI 5-May-2020
+
+New Date Chooser
+Scrollable columns with mousewheel!! (oh please work right!)
+WINDOW_CLOSE & WIN_CLOSE events
+Long list of stuff!
+
+* Imported from typing again to get correct docstrings
+* Print and MLine.Print fixed sep char handling 
+* New parameter to Muliline.print(autoscroll parameter)
+* New autoscroll parameter added to _print_to_element
+* popup_get_date 
+* Complete reworking on Calendar Chooser Button
+	* Has a LOT more paramteter
+	* Can set location!
+* icon parm popup_animated 
+* popup button size (6,1) for all popups
+* NEW CALENDAR chooser integrated 
+* Graph.draw_lines - new method to allow for multiline lines that may not be a full polygon
+* System Tray fixed the docstrings
+* color chooser set parent window (needed for icon?)
+* scrollable column scrollwheel fixed 
+* fixed TabGroup border width (wasn't getting set properly at all)
+* EXPERIMENTAL Scrollable Columns 
+* Fixed Debug Printing to work like a normal "print"
+* Fixed _print_to_element to work like a normal "print"
+* Fixed light green 1 theme definition - Text color wasn't being set
+* fix for install from GitHub 
+* fix for Column scrolling with comboboxes 
+* Added Text.get 
+* Spin.update fix 
+* import typing again 
+* fixes for Pi 
+* test for valid ttk_theme names 
+* fix for Text.get docstring 
+* added tuples to some docstrings 
+* added code for better tag handling for Multiline elements (fixes a potential memory leak... thanks Ruud)
+* WIN_CLOSE & WINDOW_CLOSED constants added.  Both are None
+* EVENT_TIMEOUT and TIMEOUT_EVENT constants added to both be the same as TIMEOUT_KEY
+* Some changes in test harness that tested recent changes (may still need shortening for trinket or others)
+* Changed the misleading TRANSPARENT_BUTTON constant with an attempt using themes calls
 
 
 ### Upcoming
@@ -1230,9 +1271,9 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
 The PySimpleGUI Organization
 
-This documentation as well as all PySimpleGUI code is Copyright 2018, 2019 by PySimpleGUI.org
+This documentation as well as all PySimpleGUI code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
 
-Send correspondance to PySimpleGUI@PySimpleGUI.com
+Send correspondence to PySimpleGUI@PySimpleGUI.com
 
 ## License
 
@@ -1243,3 +1284,9 @@ GNU Lesser General Public License (LGPL 3) +
 There are a number of people that have been key contributors to this project both directly and indirectly.  Paid professional help has been deployed a number of critical times in the project's history.  This happens in the life of software development from time to time.
 
 If you've helped, I sure hope that you feel like you've been properly thanked.  That you have been recognized.  If not, then say something.... drop an email to comments@PySimpleGUI.org. 
+
+## Support
+
+In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
+
+To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue, but until then we'll all enjoy the successes we're having.
