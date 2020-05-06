@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.32.0.1 Unreleased - Experimental ability for user to add widgets to layout"
+version = __version__ = "0.33.0 Released 6-May-2020"
 
 port = 'PySimpleGUIQt'
 
@@ -348,6 +348,8 @@ class Element():
         self.TooltipObject = None
         self.Visible = visible
         self.metadata = metadata                # type: Any
+        self.row_frame = None                   # type: QHBoxLayout
+
 
     def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
@@ -4800,7 +4802,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
         qt_row_layout = QHBoxLayout()
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_win  # save the button's parent form object
-            element.parent_row_frame = element.ParentRowFrame = qt_row_layout
+            element.row_frame = qt_row_layout
             if toplevel_win.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_win.Font
                 element.Font = font
@@ -8650,7 +8652,6 @@ def main():
         if event == 'About...':
             Popup('You are running PySimpleGUIQt', 'The version number is', version)
         if not graph_paused:
-            i += 1
 
             if i < 600:
                 graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1,
@@ -8662,6 +8663,7 @@ def main():
 
         window.FindElement('+PROGRESS+').UpdateBar(i % 600)
         window.FindElement('_PROGTEXT_').Update((i % 600) // 6)
+        i += 1
 
         # TimerStop()
     window.Close()

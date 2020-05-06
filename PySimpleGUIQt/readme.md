@@ -803,6 +803,18 @@ Highlights - Read with close (Single line GUIs!), Print to Multiline, Scrollable
 * Print (Multiline) added autoscroll parm
 
 
+## 0.33.0 PySimpleGUIQt 6-May-2020
+
+* Added constants
+  * WIN_CLOSED and WINDOW_CLOSED
+  * EVENT_TIMEOUT and TIMEOUT_EVENT
+* Added expansion capabilities
+  * Element.row_frame - The QHBoxLayout the element is contained within 
+  * Column.vbox_layout - The QVBoxLayout contained in Column element
+
+
+
+
 
 # Design        
  ## Author 
