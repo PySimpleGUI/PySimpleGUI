@@ -8,9 +8,8 @@
          
  ![Python Version](https://img.shields.io/badge/Python-3.x-yellow.svg)        
         
-![Python Version](https://img.shields.io/badge/PySimpleGUIWeb_-0.36.0-orange.svg?longCache=true&style=for-the-badge)        
-        
-                
+
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiweb/)                
         
 # PySimpleGUIWeb     
 
@@ -450,8 +449,32 @@ Themes +
 * Fix for Text element crashing following the Remi 2020.2.5 release
 	* Crash will show trying to use method "set_layout_orientation"
 	
+## 0.37.0 PySimpleGUIWeb 14-Apr-2020
 
-# Design        
+Catching up to latest Remi releases.
+
+* NO LONGER ADDING \n TO MULTILINE, MULTILINE_OUTPUT UPDATES
+	* This may cause some of your problems. Sorry about this, but it's the right thing to do so that prints work correctly
+* Multiline.print capability
+* MultilineOutput.print capability
+* Fix for MultilineOutput not autoscrolling
+* Fix for image update flicker
+* Printing sep char fixed
+* Fix for extra Tab
+* Replaced SvgGroup with SvgSubcontainer (Requires Remi 2020.3.10)
+* BIG Thank You owed to Remi creator Davide (for this and many other releases too)
+
+
+## 0.38.0 PySimpleGUIWeb 6-May-2020
+
+* Added constants
+  * WIN_CLOSED and WINDOW_CLOSED
+  * EVENT_TIMEOUT and TIMEOUT_EVENT
+
+
+
+# Design 
+
 # Author 
  Mike B.        
         
@@ -460,3 +483,4 @@ Themes +
  GNU Lesser General Public License (LGPL 3) +        
         
 # Acknowledgments
+This could not be possible without the Remi project!  Thank you Remi!!!!
