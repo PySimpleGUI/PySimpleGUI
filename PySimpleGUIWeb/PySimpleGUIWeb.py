@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.37.0.1  Unreleased - Added close parameter to Window.read"
+version = __version__ = "0.38.0  Released 06-May-2020"
 
 port = 'PySimpleGUIWeb'
 
@@ -210,7 +210,10 @@ MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+# Window closed event (user closed with X or destroyed using OS)
+WIN_CLOSED = WINDOW_CLOSED = None
+
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 

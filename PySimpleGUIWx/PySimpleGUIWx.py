@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.15.0  Released  24-Dec-2019 Themes"
+version = __version__ = "0.16.0  Released 06-May-2020"
 
 port = 'PySimpleGUIWx'
 
@@ -203,7 +203,10 @@ MESSAGE_BOX_LINE_WIDTH = 60
 
 # "Special" Key Values.. reserved
 # Key representing a Read timeout
-TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+# Window closed event (user closed with X or destroyed using OS)
+WIN_CLOSED = WINDOW_CLOSED = None
+
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
@@ -1792,6 +1795,18 @@ class Graph(Element):
             return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
+    def change_coordinates(self, graph_bottom_left, graph_top_right):
+        """
+        Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+        system - the bottom left and the top right values of your graph.
+
+        :param graph_bottom_left: Tuple[int, int] (x,y) The bottoms left corner of your coordinate system
+        :param graph_top_right: Tuple[int, int]  (x,y) The top right corner of  your coordinate system
+        """
+        self.BottomLeft = graph_bottom_left
+        self.TopRight = graph_top_right
+
+
     @property
     def TKCanvas(self):
         if self._TKCanvas2 is None:
@@ -3030,7 +3045,30 @@ class Window:
         if event.ClassName != 'wxMouseEvent':
             event.DoAllowNextEvent()
 
-    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY):
+
+
+    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
+        """
+        THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+            Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+            if no other GUI events happen first.
+        Use the close parameter to close the window after reading
+
+        :param timeout: (int) Milliseconds to wait until the Read will return IF no other GUI events happen first
+        :param timeout_key: (Any) The value that will be returned from the call if the timer expired
+        :param close: (bool) if True the window will be closed prior to returning
+        :return: Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] (event, values)
+        """
+        results = self._read(timeout=timeout, timeout_key=timeout_key)
+        if close:
+            self.close()
+
+        return results
+
+
+
+
+    def _read(self, timeout=None, timeout_key=TIMEOUT_KEY):
         if timeout == 0:  # timeout of zero runs the old readnonblocking
             event, values = self._ReadNonBlocking()
             if event is None:
