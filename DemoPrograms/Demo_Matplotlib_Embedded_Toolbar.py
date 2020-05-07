@@ -57,7 +57,7 @@ window = sg.Window('Graph with controls', layout)
 while True:
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):  # always,  always give a way out!
+    if event in (sg.WIN_CLOSED, 'Exit'):  # always,  always give a way out!
         break
     elif event is 'Plot':
         # ------------------------------- PASTE YOUR MATPLOTLIB CODE HERE

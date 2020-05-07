@@ -16,7 +16,6 @@ from numpy import cos
 
 x = pylab.linspace(-3, 3, 30)
 y = x**2
-
 pylab.plot(x, sin(x))
 pylab.plot(x, cos(x), 'r-')
 pylab.plot(x, -sin(x), 'g--')

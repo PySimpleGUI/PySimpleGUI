@@ -29,7 +29,7 @@ def main():
            [sg.R('Draw Rectangles', 1, key='-RECT-', enable_events=True)],
            [sg.R('Draw Circle', 1, key='-CIRCLE-', enable_events=True)],
            [sg.R('Draw Line', 1, key='-LINE-', enable_events=True)],
-           [sg.R('Draw point', 1,  key='-POINT-', enable_events=True)],
+           [sg.R('Draw points', 1,  key='-POINT-', enable_events=True)],
            [sg.R('Erase item', 1, key='-ERASE-', enable_events=True)],
            [sg.R('Erase all', 1, key='-CLEAR-', enable_events=True)],
            [sg.R('Send to back', 1, key='-BACK-', enable_events=True)],
@@ -40,14 +40,14 @@ def main():
            ]
 
     layout = [[sg.Graph(
-        canvas_size=(400, 400),
-        graph_bottom_left=(0, 0),
-        graph_top_right=(400, 400),
-        key="-GRAPH-",
-        change_submits=True,  # mouse click events
-        background_color='lightblue',
-        drag_submits=True), sg.Col(col) ],
-        [sg.Text(key='info', size=(60, 1))]]
+                canvas_size=(400, 400),
+                graph_bottom_left=(0, 0),
+                graph_top_right=(800, 800),
+                key="-GRAPH-",
+                enable_events=True,
+                background_color='lightblue',
+                drag_submits=True), sg.Col(col) ],
+            [sg.Text(key='info', size=(60, 1))]]
 
     window = sg.Window("Drawing and Moving Stuff Around", layout, finalize=True)
 
@@ -60,7 +60,8 @@ def main():
     graph.bind('<Button-3>', '+RIGHT+')
     while True:
         event, values = window.read()
-        if event is None:
+        print(event, values)
+        if event == sg.WIN_CLOSED:
             break  # exit
         if event in ('-MOVE-', '-MOVEALL-'):
             graph.Widget.config(cursor='fleur')
@@ -94,7 +95,7 @@ def main():
                 elif values['-LINE-']:
                     prior_rect = graph.draw_line(start_point, end_point, width=4)
                 elif values['-POINT-']:
-                    prior_rect = graph.draw_point(start_point, size=1)
+                    graph.draw_point((x,y), size=8)
                 elif values['-ERASE-']:
                     for figure in drag_figures:
                         graph.delete_figure(figure)

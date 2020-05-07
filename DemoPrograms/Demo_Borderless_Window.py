@@ -30,5 +30,5 @@ window = sg.Window("Borderless Window",
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break

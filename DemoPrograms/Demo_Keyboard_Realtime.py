@@ -18,7 +18,7 @@ while True:
             print('%s - %s' % (event, ord(event)))
         else:
             print(event)
-    elif event is None:
+    elif event == sg.WIN_CLOSED:
         break
 
 window.close()

@@ -23,7 +23,7 @@ while True:             # Event Loop
     event, values = window.read(timeout=100)
     if event != sg.TIMEOUT_KEY:
         print(i, event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event == 'Popup':
         sg.popup('This is a BLOCKING popup','all windows remain inactive while popup active')
@@ -44,7 +44,7 @@ while True:             # Event Loop
         # print("win2 ", event)
         if event != sg.TIMEOUT_KEY:
             print("win2 ", event)
-        if event == 'Exit' or event is None:
+        if event == 'Exit' or event == sg.WIN_CLOSED:
             # print("Closing window 2", event)
             win2_active = False
             window2.close()

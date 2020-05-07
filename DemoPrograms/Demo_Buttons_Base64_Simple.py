@@ -24,7 +24,7 @@ window = sg.Window('Window Title', layout)
 while True:                             # Event Loop
     event, values = window.read()       # type: str, dict
     print(event, values)
-    if event in (None, 'Exit'):         # If the user exits
+    if event in (sg.WIN_CLOSED, 'Exit'):         # If the user exits
         break
     window['-OUT-'].Update(event)       # Output the event to the window
 window.close(); del window              # Exiting so clean up

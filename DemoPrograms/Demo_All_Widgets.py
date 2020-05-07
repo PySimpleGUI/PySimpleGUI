@@ -5,8 +5,8 @@ Example of (almost) all widgets, that you can use in PySimpleGUI.
 
 import PySimpleGUI as sg
 
-# sg.theme('Dark Red')
-# sg.theme('Default1')
+
+sg.theme('Dark Red')
 # sg.set_options(text_color='black', background_color='#A6B2BE', text_element_background_color='#A6B2BE')
 # ------ Menu Definition ------ #
 menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
@@ -17,7 +17,7 @@ menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
 column1 = [[sg.Text('Column 1', justification='center', size=(10, 1))],
            [sg.Spin(values=('Spin Box 1', '2', '3'),
                     initial_value='Spin Box 1')],
-           [sg.Spin(values=('Spin Box 1', '2', '3'),
+           [sg.Spin(values=['Spin Box 1', '2', '3'],
                     initial_value='Spin Box 2')],
            [sg.Spin(values=('Spin Box 1', '2', '3'), initial_value='Spin Box 3')]]
 
@@ -50,10 +50,9 @@ layout = [
      sg.InputText('Default Folder'), sg.FolderBrowse()],
     [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()]]
 
-window = sg.Window('Everything bagel', layout, no_titlebar=True,
-    default_element_size=(40, 1), grab_anywhere=False)
+window = sg.Window('Everything bagel', layout)
 
-event, values = window.read()
+event, values = window.read(close=True)
 sg.popup('Title',
          'The results of the window.',
          'The button clicked was "{}"'.format(event),

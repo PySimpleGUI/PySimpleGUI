@@ -29,7 +29,7 @@ window = sg.Window('Keypad', layout,
 keys_entered = ''
 while True:
     event, values = window.read()  # read the form
-    if event is None:  # if the X button clicked, just exit
+    if event == sg.WIN_CLOSED:  # if the X button clicked, just exit
         break
     if event == 'Clear':  # clear keys if clear button
         keys_entered = ''

@@ -865,7 +865,7 @@ figure_agg = None
 while True:
     event, values = window.read()
     # print(event, values)                  # helps greatly when debugging
-    if event in (None, 'Exit'):             # if user closed window or clicked Exit button
+    if event in (sg.WIN_CLOSED, 'Exit'):             # if user closed window or clicked Exit button
         break
     if figure_agg:
         # ** IMPORTANT ** Clean up previous drawing before drawing again

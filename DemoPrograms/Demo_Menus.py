@@ -49,7 +49,7 @@ def test_menus():
     # ------ Loop & Process button menu choices ------ #
     while True:
         event, values = window.read()
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         print(event, values)
         # ------ Process menu choices ------ #

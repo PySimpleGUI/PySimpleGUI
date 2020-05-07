@@ -36,7 +36,7 @@ recording = have_data = False
 while True:
     event, values = window.read()
     print(event)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event == '-Start-':
         for key, state in {'-Start-': True, '-Stop-': False, '-Reset-': False, '-Submit-': True}.items():

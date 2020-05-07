@@ -115,7 +115,7 @@ def main():
         # --------- Read and update window once a second--------
         event, values = window.read(timeout=1000)
         # Be nice and give an exit, expecially since there is no titlebar
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         # ----- Network Graphs -----
         netio = psutil.net_io_counters()

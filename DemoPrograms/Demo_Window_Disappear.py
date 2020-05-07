@@ -11,7 +11,7 @@ window = sg.Window('My window', layout)
 
 while True:
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event == 'Disappear':
         window.disappear()

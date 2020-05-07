@@ -50,7 +50,7 @@ def main():
     timeout = 10                                  # start with 10ms delays between draws
     while True:                                 # ----- The event loop -----
         event, values = window.read(timeout=timeout)
-        if event is None:
+        if event == sg.WIN_CLOSED:
             break
         try:
             partially_sorted_list = bsort.__next__()

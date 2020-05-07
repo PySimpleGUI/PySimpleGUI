@@ -156,7 +156,7 @@ def pong():
         # ------------- Read the form, get keypresses -------------
         event, values = window.read(timeout=0)
         # ------------- If quit  -------------
-        if event is None or event == 'Quit':
+        if event == sg.WIN_CLOSED or event == 'Quit':
             break
         # ------------- Keypresses -------------
         if event is not None:

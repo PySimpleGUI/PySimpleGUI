@@ -54,7 +54,7 @@ reddit = praw.Reddit(**reddit_praw_parameters)
 
 while True:  # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     subs_to_read = values['-SUBS-']
     search_string = values['-SEARCH STRING-']
@@ -94,14 +94,14 @@ while True:  # Event Loop
                                                   non_blocking=True)
                             window.refresh()
                 event, values = window.read(timeout=0)
-                if event in (None, 'Exit'):
+                if event in (sg.WIN_CLOSED, 'Exit'):
                     break
-            if event in (None, 'Exit'):
+            if event in (sg.WIN_CLOSED, 'Exit'):
                 window['-OUT SUB-'].update('*** Aborted ***')
                 break
             else:
                 window['-OUT SUB-'].update('*** Done! ***')
-        if event is None:
+        if event == sg.WIN_CLOSED:
             break
 window.close()
 

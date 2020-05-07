@@ -20,7 +20,7 @@ window = sg.Window('Font string builder', layout)
 text_elem = window['-text-']
 while True:     # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     font_string = 'Helvitica '
     font_string += str(values['-slider-'])

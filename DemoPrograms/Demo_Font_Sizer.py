@@ -17,7 +17,7 @@ sz = fontSize
 window = sg.Window("Font size selector", layout, grab_anywhere=False)
 while True:
     event, values = window.read()
-    if event is None or event == 'Quit':
+    if event == sg.WIN_CLOSED or event == 'Quit':
         break
     sz_spin = int(values['spin'])
     sz_slider = int(values['slider'])

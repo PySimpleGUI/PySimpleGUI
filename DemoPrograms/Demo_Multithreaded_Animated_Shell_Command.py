@@ -2,6 +2,7 @@ import subprocess
 import PySimpleGUI as sg
 import threading
 
+
 """
     Demo - Run a shell command while displaying an animated GIF to inform the user the 
     program is still running.
@@ -32,5 +33,6 @@ while True:
 sg.popup_animated(None)
 
 output = proc.__str__().replace('\\r\\n', '\n')
-sg.popup_scrolled(output)
+sg.popup_scrolled(output, font='Courier 10')
+
 

@@ -34,7 +34,7 @@ pygame.display.update()
 
 while True:
     event, values = window.read(timeout=10)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event == 'Draw':
         pygame.draw.circle(screen, (0, 0, 0), (250, 250), 125)

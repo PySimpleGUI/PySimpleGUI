@@ -39,7 +39,7 @@ window = sg.Window('Window Title', layout, border_depth=5,
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Remove':
         window['-COL2-'].update(visible=False)

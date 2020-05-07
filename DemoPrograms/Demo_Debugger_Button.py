@@ -37,7 +37,7 @@ counter = 0
 
 while True:             # Your Event Loop
     event, values = window.read(timeout=100)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event == 'Enable':
         window.enable_debugger()

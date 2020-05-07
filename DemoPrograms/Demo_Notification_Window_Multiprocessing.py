@@ -3,17 +3,19 @@ import textwrap
 from multiprocessing import Process
 
 '''
-    Notification Window Demo Program
-    Shamelessly stolen from PySimpleGUI user ncotrb
+    Multiprocessing based Notification Window Demo Program
+    
+    The PySimpleGUI code for showing the windows themselves ovolved from code supplied by PySimpleGUI user ncotrb
 
     Displays a small informational window with an Icon and a message in the lower right corner of the display
     Option to fade in/out or immediatealy display.
     
-    You can click on the notification window to speed things along.  The idea is that if you click while fading in, you should immediately see the info. If
-    you click while info is displaying or while fading out, the window closes immediately.
+    You can click on the notification window to speed things along.  The idea is that if you click while fading in, you should immediately see the info. If you click while info is displaying or while fading out, the window closes immediately.
     
     Note - In order to import and use these calls, you must make the call from a "main program".
-
+    
+    Copyright 2020 PySimpleGUI
+    
 '''
 
 
@@ -37,10 +39,12 @@ image64_success = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb
 
 def _display_notification(title, message, icon=image64_success, display_duration_in_ms=DEFAULT_DISPLAY_DURATION_IN_MILLISECONDS, fade_in_duration=DEFAULT_FADE_IN_DURATION, alpha=0.9, location=None):
     """
+    The PROCESS that is started when a toaster message is to be displayed.
+    Note that this is not a user callable function.
+    It does the actual work of creating and showing the window on the screen
+
     Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
-    The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For
-        example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It
-        a way for the user to quickly dismiss the window.
+    The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
     :param title: (str) Text to be shown at the top of the window in a larger font
     :param message: (str) Text message that makes up the majority of the window
     :param icon: (base64) A base64 encoded PNG/GIF image that will be displayed in the window
@@ -94,9 +98,7 @@ def _display_notification(title, message, icon=image64_success, display_duration
 def display_notification(title, message, icon=image64_success, display_duration_in_ms=DEFAULT_DISPLAY_DURATION_IN_MILLISECONDS, fade_in_duration=DEFAULT_FADE_IN_DURATION, alpha=0.9, location=None):
     """
     Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
-    The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For
-        example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It
-        a way for the user to quickly dismiss the window.
+    The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
     :param title: (str) Text to be shown at the top of the window in a larger font
     :param message: (str) Text message that makes up the majority of the window
     :param icon: (base64) A base64 encoded PNG/GIF image that will be displayed in the window

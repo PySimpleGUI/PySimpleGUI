@@ -123,7 +123,7 @@ while True:
     event, values = window.read(timeout=100)
     zoom = 0
     force_page = False
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
 
     if event in ("Escape:27",):  # this spares me a 'Quit' button!

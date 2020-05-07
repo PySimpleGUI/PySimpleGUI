@@ -40,7 +40,7 @@ window = sg.Window('Demonstration of InputText with change_submits',
 while True:     # Event Loop
     event, values = window.read()
     print(event, values)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
 
 window.close()

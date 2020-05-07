@@ -43,7 +43,7 @@ multiline_font_size = 18
 while True:
     event, values = window.read(timeout=200)
     print(f'{event} - {values}') if event != sg.TIMEOUT_KEY else None
-    if event in (None, 'Exit'):  # always,  always give a way out!
+    if event in (sg.WIN_CLOSED, 'Exit'):  # always,  always give a way out!
         break
     elif event == RIGHT:
         window['-OUT2-'](text_color='blue')

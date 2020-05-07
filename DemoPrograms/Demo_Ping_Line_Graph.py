@@ -642,7 +642,7 @@ while True:
     time.sleep(.2)
 
     event, values = window.read(timeout=0)
-    if event == 'Quit' or event is None:
+    if event == 'Quit' or event == sg.WIN_CLOSED:
         break
 
     if g_response_time is None or prev_response_time == g_response_time:

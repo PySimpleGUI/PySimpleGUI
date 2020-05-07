@@ -88,7 +88,7 @@ class GUI():
                 self.keyboard.update(self.focus)
             if event == 'keyboard':
                 self.keyboard.togglevis()
-            elif event == 'close' or event is None:
+            elif event == 'close' or event == sg.WIN_CLOSED:
                 break
         self.keyboard.close()
         self.mainWindow.Close()

@@ -94,7 +94,7 @@ def main():
     while True:  # Event Loop
         event, values = window.read()
         # print(event, values)
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event == 'Run':
             runCommand(cmd=values['-IN-'], window=window)

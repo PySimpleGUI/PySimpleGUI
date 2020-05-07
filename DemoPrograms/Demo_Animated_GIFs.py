@@ -30,7 +30,7 @@ gifs = [ring_blue, red_dots_ring, ring_black_dots, ring_gray_segments, ring_line
 
 # first show how to use popup_animated using built-in GIF image
 for i in range(100000):
-    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', time_between_frames=100)
+    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, no_titlebar=False, background_color='white', time_between_frames=100)
 sg.popup_animated(None)      # close all Animated Popups
 
 # Next demo is to show how to create custom windows with animations
@@ -49,7 +49,7 @@ offset = 0
 gif = gifs[0]
 while True:                                     # Event Loop
     event, values = window.read(timeout=10)     # loop every 10 ms to show that the 100 ms value below is used for animation
-    if event in (None, 'Exit', 'Cancel'):
+    if event in (sg.WIN_CLOSED, 'Exit', 'Cancel'):
         break
 
     elif event == '-IMAGE-':                    # if clicked on the image

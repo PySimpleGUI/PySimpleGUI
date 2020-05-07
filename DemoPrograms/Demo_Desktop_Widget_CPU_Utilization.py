@@ -50,7 +50,7 @@ def main():
          sg.Spin([x+1 for x in range(10)], 3, key='spin')]
     ]
 
-    window = sg.Window('CPU Utilization', layout
+    window = sg.Window('CPU Utilization', layout,
                        no_titlebar=True, keep_on_top=True, alpha_channel=.8, grab_anywhere=True)
 
     # start cpu measurement thread
@@ -63,7 +63,7 @@ def main():
         # --------- Read and update window --------
         event, values = window.read(timeout=timeout_value, timeout_key='Timeout')
         # --------- Do Button Operations --------
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
 
         timeout_value = int(values['spin']) * 1000

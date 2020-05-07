@@ -46,7 +46,7 @@ def main():
 
         event, values = window.read()
         # --------------------- Button & Keyboard ---------------------
-        if event is None:
+        if event == sg.WIN_CLOSED:
             break
         elif event in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34') and i < len(png_files)-1:
             i += 1

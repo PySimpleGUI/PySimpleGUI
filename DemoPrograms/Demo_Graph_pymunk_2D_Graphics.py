@@ -74,7 +74,7 @@ area.add_balls()
 while True:  # Event Loop
     event, values = window.read(timeout=0)
     # print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     area.space.step(0.02)
 

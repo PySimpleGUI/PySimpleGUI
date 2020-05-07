@@ -12,7 +12,7 @@ cir = window['canvas'].TKCanvas.create_oval(50, 50, 100, 100)
 
 while True:
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event in ('Blue', 'Red'):
         window['canvas'].TKCanvas.itemconfig(cir, fill=event)

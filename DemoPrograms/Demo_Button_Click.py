@@ -12,7 +12,7 @@ window = sg.Window('Temperature Manager', layout, font='Default -24', return_key
 while True:             # Event Loop
     event, values = window.read(timeout=500)    # returns every 500 ms
     print(event, values) if event != sg.TIMEOUT_KEY else None       # a debug print
-    if event in (None, 'Quit'):
+    if event in (sg.WIN_CLOSED, 'Quit'):
         break
     if event == 'Set':
         print('setting temperature to ', values['-IN-'])

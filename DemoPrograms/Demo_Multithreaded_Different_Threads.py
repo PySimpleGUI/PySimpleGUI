@@ -115,7 +115,7 @@ def the_gui(gui_queue):
     while True:
         # wait for up to 100 ms for a GUI event
         event, values = window.read(timeout=100)
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         # --------------- Loop through all messages coming in from threads ---------------
         while True:                 # loop executes until runs out of messages in Queue

@@ -30,6 +30,6 @@ window['-IN-'].bind('<FocusIn>', '+INPUT FOCUS+')
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
 window.close()

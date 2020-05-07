@@ -33,7 +33,7 @@ start_point = end_point = prior_rect = None
 while True:
     event, values = window.read()
 
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break  # exit
 
     if event == "-GRAPH-":  # if there's a "Graph" event, then it's a mouse

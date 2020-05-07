@@ -19,7 +19,7 @@ def Timer():
 
     while True:
         # This is the code that reads and updates your window
-        button, values = window.read(timeout=0)
+        button, values = window.read(timeout=10)
         window['text'].update('{:02d}:{:02d}.{:02d}'.format(
             (i // 100) // 60, (i // 100) % 60, i % 100))
 

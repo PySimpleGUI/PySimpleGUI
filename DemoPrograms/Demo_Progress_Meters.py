@@ -2,6 +2,8 @@
 import PySimpleGUI as sg
 from time import sleep
 
+from docutils.nodes import title
+
 sg.theme('Dark Blue 3')
 
 """
@@ -36,6 +38,8 @@ def demo_one_line_progress_meter():
                                           'MY MESSAGE1',
                                           'MY MESSAGE 2',
                                           orientation='h',
+                                          no_titlebar=True,
+                                          grab_anywhere=True,
                                           bar_color=('white', 'red')):
             print('Hit the break')
             break
@@ -68,7 +72,7 @@ def demo_one_line_progress_meter():
 
     while True:
         event, values = window.read()
-        if event is None:
+        if event == sg.WIN_CLOSED:
             break
         if event == 'Show':
             max_outer = int(values['CountOuter'])
@@ -203,12 +207,12 @@ def demo_iterable_progress_bar():
 
     # first form takes an iterable and a key and will return a value from your iterable
     # and bump the progress meter at the same time
-    for value in progress_bar('bar1', my_list, ):
+    for value in progress_bar('bar1', my_list, title='First bar Test'):
         # do something useful with value, a value from your list.
         print(value)
 
     # Since the progress_bar is an iterator, you can use it within a list comprehension
-    my_list = [x for x in progress_bar('bar1', my_list)]
+    my_list = [x for x in progress_bar('bar1', my_list, title='Second bar Test')]
 
 
 demo_iterable_progress_bar()

@@ -32,7 +32,7 @@ tab_keys = ('-TAB1-','-TAB2-','-TAB3-', '-TAB4-')         # map from an input va
 while True:
     event, values = window.read()       # type: str, dict
     print(event, values)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     # handle button clicks
     if event == 'Invisible':

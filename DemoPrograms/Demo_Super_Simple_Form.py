@@ -1,5 +1,10 @@
 import PySimpleGUI as sg
 
+event, values = sg.Window('Window Title', [[sg.Text('Enter Something')], [sg.Input(key='-IN-'),],[sg.Button('OK'), sg.Button('Cancel')]]).read(close=True)
+
+sg.popup(event, values)
+
+
 # Basic Example
 
 layout = [[sg.Text('Please enter your Name, Address, Phone')],
@@ -9,7 +14,7 @@ layout = [[sg.Text('Please enter your Name, Address, Phone')],
           [sg.Button('Submit'), sg.Button('Cancel')]]
 
 window = sg.Window('Simple Data Entry Window', layout)
-event, values = window.read()
+event, values = window.read(close=True)
 print(event, values['-NAME-'], values['-ADDRESS-'], values['-PHONE-'])
-
+sg.popup('test')
 window.close()

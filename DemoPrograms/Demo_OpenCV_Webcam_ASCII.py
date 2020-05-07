@@ -59,7 +59,7 @@ cap = cv2.VideoCapture(0)
 while True:
     
     event, values = window.read(timeout=0)
-    if event in ('Exit', None):
+    if event in ('Exit', sg.WIN_CLOSED):
         break
     # Read image from capture device (camera)
     ret, frame = cap.read()

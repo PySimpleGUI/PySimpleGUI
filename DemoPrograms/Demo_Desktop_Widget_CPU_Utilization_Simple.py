@@ -26,7 +26,7 @@ while True:
     # --------- Read and update window --------
     event, values = window.read(timeout=interval)
     # --------- Do Button Operations --------
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
 
     interval = int(values['-spin-'])*1000
@@ -38,4 +38,4 @@ while True:
     window['-text-'].update(f'CPU {cpu_percent:02.0f}%')
 
 # Broke out of main loop. Close the window.
-window.CloseNonBlocking()
+window.close()

@@ -33,7 +33,7 @@ print('Are there enough tabs for you?')
 while True:
     event, values = window.read()
     print(event, values)
-    if event is None:           # always,  always give a way out!
+    if event == sg.WIN_CLOSED:           # always,  always give a way out!
         break
 
 window.close()

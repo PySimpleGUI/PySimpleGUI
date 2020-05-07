@@ -47,7 +47,7 @@ while True:
     else:
         event, values = window.read()
     # --------- Do Button Operations --------
-    if event in (None, 'Exit'):        # ALWAYS give a way out of program
+    if event in (sg.WIN_CLOSED, 'Exit'):        # ALWAYS give a way out of program
         break
     if event == '-RESET-':
         paused_time = start_time = time_as_int()

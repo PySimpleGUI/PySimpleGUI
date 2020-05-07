@@ -82,6 +82,21 @@ def check_progress(window, solution):
     return solved
 
 
+def create_and_show_puzzle(window):
+    # create and display a puzzle by updating the Input elements
+    rate = DEFAULT_MASK_RATE
+    if window['-RATE-'].get():
+        try:
+            rate = float(window['-RATE-'].get())
+        except:
+            pass
+    puzzle, solution = generate_sudoku(mask_rate=rate)
+    for r, row in enumerate(puzzle):
+        for c, col in enumerate(row):
+            window[r, c].update(puzzle[r][c] if puzzle[r][c] else '', background_color=sg.theme_input_background_color())
+    return puzzle, solution
+
+
 def main(mask_rate=0.7):
     """"
     The Main GUI - It does it all.
@@ -90,19 +105,7 @@ def main(mask_rate=0.7):
     addressing of the individual squares is via a key that's a tuple (0,0) to (8,8)
     """
 
-    def create_and_show_puzzle():
-        # create and display a puzzle by updating the Input elements
-        rate = mask_rate
-        if window['-RATE-'].get():
-            try:
-                rate = float(window['-RATE-'].get())
-            except:
-                pass
-        puzzle, solution = generate_sudoku(mask_rate=rate)
-        for r, row in enumerate(puzzle):
-            for c, col in enumerate(row):
-                window[r, c].update(puzzle[r][c] if puzzle[r][c] else '', background_color=sg.theme_input_background_color())
-        return puzzle, solution
+
 
 
     # It's 1 line of code to make a Sudoku board.  If you don't like it, then replace it.
@@ -111,16 +114,16 @@ def main(mask_rate=0.7):
     # Get an input element for a position using:    window[row, col]
     # To get a better understanding, take it apart. Spread it out. You'll learn in the process.
     window = sg.Window('Sudoku',
-                       [[sg.Frame('', [[sg.I(random.randint(1,9), justification='r', size=(3,1), key=(fr*3+r,fc*3+c)) for c in range(3)] for r in range(3)]) for fc in range(3)] for fr in range(3)] +
+                       [[sg.Frame('', [[sg.I(random.randint(1,9), justification='r', size=(3,1),enable_events=True, key=(fr*3+r,fc*3+c)) for c in range(3)] for r in range(3)]) for fc in range(3)] for fr in range(3)] +
                        [[sg.B('Solve'), sg.B('Check'), sg.B('Hint'), sg.B('New Game'), sg.T('Mask rate (0-1)'), sg.In(str(mask_rate), size=(3,1),key='-RATE-')],], finalize=True)
 
     # create and display a puzzle by updating the Input elements
 
-    puzzle, solution = create_and_show_puzzle()
-
+    puzzle, solution = create_and_show_puzzle(window)
+    check_showing = False
     while True:         # The Event Loop
         event, values = window.read()
-        if event is None:
+        if event == sg.WIN_CLOSED:
             break
 
         if event == 'Solve':
@@ -128,6 +131,7 @@ def main(mask_rate=0.7):
                 for c, col in enumerate(row):
                     window[r, c].update(solution[r][c], background_color=sg.theme_input_background_color())
         elif event == 'Check':
+            check_showing = True
             solved = check_progress(window, solution)
             if solved:
                 sg.popup('Solved! You have solved the puzzle correctly.')
@@ -138,11 +142,15 @@ def main(mask_rate=0.7):
             except:
                 pass        # Likely because an input element didn't have focus
         elif event == 'New Game':
-            puzzle, solution = create_and_show_puzzle()
-
+            puzzle, solution = create_and_show_puzzle(window)
+        elif check_showing:      # an input was changed, so clear any background colors from prior hints
+            check_showing = False
+            for r, row in enumerate(solution):
+                for c, col in enumerate(row):
+                    window[r, c].update(background_color=sg.theme_input_background_color())
     window.close()
 
 if __name__ == "__main__":
-    mask_rate = 0.7     # % Of cells to hide
-    main(mask_rate)
+    DEFAULT_MASK_RATE = 0.7     # % Of cells to hide
+    main(DEFAULT_MASK_RATE)
 

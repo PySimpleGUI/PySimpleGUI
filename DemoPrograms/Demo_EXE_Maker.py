@@ -46,7 +46,7 @@ def Launcher():
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
         file_to_remove = os.path.join(
             source_path, source_filename[:-3]+'.spec')
-        command_line = 'pyinstaller -wF "{}" {} {} {} {}'.format(
+        command_line = 'pyinstaller -wF --clean "{}" {} {} {} {}'.format(
             source_file, icon_option, workpath_option, dispath_option, specpath_option)
 
         if event == 'Make EXE':

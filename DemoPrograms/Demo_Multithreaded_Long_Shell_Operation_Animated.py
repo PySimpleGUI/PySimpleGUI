@@ -13,6 +13,8 @@ import PySimpleGUI as sg
 # Here we're running a simple "pip list" command and using the built-in animated GIF.
 
 output = sg.shell_with_animation('pip', ('list',), message='Loading...', font='Helvetica 15')
+sg.popup_scrolled(output, font='Courier 10')
+output = sg.shell_with_animation('dir', message='Loading...', font='Helvetica 15')
 # output = sg.shell_with_animation(r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", message='Loading...', font='Helvetica 15')
 
 sg.popup_scrolled(output, font='Courier 10')
