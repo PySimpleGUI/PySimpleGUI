@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
-import time
 import random
 import psutil
 from threading import Thread
@@ -57,8 +56,7 @@ def main():
     last_cpu = i = 0
     prev_x, prev_y = 0, 0
     while True:                                 # the Event Loop
-        time.sleep(.5)
-        event, values = window.read(timeout=0)
+        event, values = window.read(timeout=500)
         if event in ('Quit', None):  # always give ths user a way out
             break
         # do CPU measurement and graph it

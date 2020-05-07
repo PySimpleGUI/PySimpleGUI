@@ -71,7 +71,7 @@ def main():
     while True:
         # --------- Read and update window --------
         event, values = window.read()
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
 
         # skip mouse, control key and shift key events entirely
@@ -97,7 +97,7 @@ def main():
                 try:
                     kill_proc_tree(pid=pid)
                 except:
-                    sg.popup_no_wait('Error killing process', auto_close_duration=1, auto_close=True)
+                    sg.popup_no_wait('Error killing process', auto_close_duration=2, auto_close=True, keep_on_top=True)
         elif event == 'Sort by % CPU':
             psutil.cpu_percent(interval=.1)
             procs = psutil.process_iter()
@@ -114,7 +114,7 @@ def main():
                     if values['-filter-'] in line.lower():
                         new_output.append(line)
                 window['-processes-'].update(new_output)
-        window.close()
+    window.close()
 
 
 if __name__ == "__main__":

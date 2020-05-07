@@ -19,10 +19,10 @@ col2 = Column([[Frame('Accounts:', [[Column([[Listbox(['Account '+str(i) for i i
 
 col1 = Column([
     # Categories frame
-    [Frame('Categories:', [[Radio('Websites', 'radio1', default=True, key='-WEBSITES-', size=(10, 1)),
+    [Frame('Categories:', [[ Radio('Websites', 'radio1', default=True, key='-WEBSITES-', size=(10, 1)),
                             Radio('Software', 'radio1', key='-SOFTWARE-',  size=(10, 1))]],)],
     # Information frame
-    [Frame('Information:', [[Column([[Text('Account:')],
+    [Frame('Information:', [[Text(), Column([[Text('Account:')],
                                      [Input(key='-ACCOUNT-IN-', size=(19, 1))],
                                      [Text('User Id:')],
                                      [Input(key='-USERID-IN-', size=(19, 1)),
@@ -47,7 +47,7 @@ window = Window('Passwords', layout)
 while True:
     event, values = window.read()
     print(event, values)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
 
 window.close()

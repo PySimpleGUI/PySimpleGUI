@@ -13,7 +13,6 @@ import itertools
     Copyright 2020 PySimpleGUI
 """
 
-sg.theme('Dark Red')
 
 def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None):
     """
@@ -129,7 +128,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
 
     while True:             # Event Loop
         event, values = window.read()
-        if event in (None, 'Cancel'):
+        if event in (sg.WIN_CLOSED, 'Cancel'):
             chosen_mon_day_year = None
             break
         if event == 'Ok':

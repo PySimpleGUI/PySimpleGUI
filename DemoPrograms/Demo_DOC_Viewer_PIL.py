@@ -168,7 +168,7 @@ old_zoom = False
 
 while True:
     event, value = window.read()
-    if event is None and (value is None or value['-PageNumber-'] is None):
+    if event == sg.WIN_CLOSED and (value is None or value['-PageNumber-'] is None):
         break
     if event in quit_buttons:
         break

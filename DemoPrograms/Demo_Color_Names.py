@@ -696,7 +696,7 @@ window = sg.Window('Color Viewer', layout, font='Any 9', element_padding=(0,0), 
 # -- Event loop --
 while True:
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     # -- Create a secondary window that shows white and black text on chosen color
     layout2 = [[

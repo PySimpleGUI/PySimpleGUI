@@ -12,7 +12,7 @@ window = sg.Window('Window Title', layout)
 while True:
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Show':
         # change the "output" element to be the value of "input" element

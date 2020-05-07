@@ -35,7 +35,7 @@ window['Exit'].set_cursor(cursor='no')
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == '-LINK-':
         # if the text was clicked, open a browser using the text as the address

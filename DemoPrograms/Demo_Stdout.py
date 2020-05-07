@@ -22,7 +22,7 @@ window = sg.Window('Reroute stdout', layout)
 
 while True:     # Event Loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     print('You typed: ', values[0])
 window.close()

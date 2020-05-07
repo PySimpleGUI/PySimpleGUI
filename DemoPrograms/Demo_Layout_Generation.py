@@ -297,7 +297,7 @@ def layout8():
 
     while True:  # Event Loop
         event, values = window.read()
-        if event in (None, 'SUBMIT'):
+        if event in (sg.WIN_CLOSED, 'SUBMIT'):
             break
     sg.popup('The answers submitted were', values)
     window.close()

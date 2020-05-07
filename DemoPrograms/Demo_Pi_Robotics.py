@@ -83,7 +83,7 @@ def RemoteControlExample_NoGraphics():
         else:
             window['status'].update('')
         # if user clicked quit button OR closed the form using the X, then break out of loop
-        if event in (None, 'Quit'):
+        if event in (sg.WIN_CLOSED, 'Quit'):
             break
 
     window.close()

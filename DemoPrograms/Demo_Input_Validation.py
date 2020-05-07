@@ -14,7 +14,7 @@ window = sg.Window('Window Title', layout)
 
 while True:             # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # if last char entered not a digit
     if len(values['-INPUT-']) and values['-INPUT-'][-1] not in ('0123456789'):

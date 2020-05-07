@@ -24,7 +24,7 @@ def main():
 
     window = sg.Window('Enter graph size', layout)
     event, values = window.read()
-    if event is None or event == 'Cancel':
+    if event == sg.WIN_CLOSED or event == 'Cancel':
         return
 
     CANVAS_SIZE = int(values['w']), int(values['h'])
@@ -54,7 +54,7 @@ def main():
     figures = []
     while True:
         event, values = window.read(timeout=0)
-        if event == 'Quit' or event is None:
+        if event == 'Quit' or event == sg.WIN_CLOSED:
             break
 
         graph_offset = random.randint(-10, 10)

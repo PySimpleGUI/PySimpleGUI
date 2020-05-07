@@ -128,7 +128,7 @@ def led_clock():
     while True:
         # Wake up once a second to update the clock and weather
         event, values = gui.window.read(timeout=1000)
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         # update clock
         gui.update_clock()

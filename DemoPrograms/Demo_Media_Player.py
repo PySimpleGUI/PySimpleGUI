@@ -33,7 +33,7 @@ def MediaPlayerGUI():
 
     while True:
         event, values = window.read(timeout=100)
-        if event == 'Exit' or event is None:
+        if event == 'Exit' or event == sg.WIN_CLOSED:
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if event != sg.TIMEOUT_KEY:

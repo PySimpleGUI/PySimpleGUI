@@ -17,7 +17,7 @@ window = sg.Window('Window Title', layout)
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Invisible':
         window['-COL-'].update(visible=False)

@@ -52,7 +52,7 @@ for key in key_list:
 
 while True:
     event, values = window.read()
-    if event in (None, 'exit'):
+    if event in (sg.WIN_CLOSED, 'exit'):
         break
     elif event == 'Disable':
         for key in key_list:

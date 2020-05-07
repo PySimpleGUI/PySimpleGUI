@@ -41,7 +41,7 @@ else:
 #------------ The Event Loop ------------#
 while True:
     event, values = window.read(timeout=1000)       # run with a timeout so that current location can be updated
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
 
     if event == 'play':

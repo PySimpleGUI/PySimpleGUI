@@ -72,7 +72,7 @@ def the_gui():
     while True:
         # wait for up to 100 ms for a GUI event
         event, values = window.read(timeout=100)
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
             window['-OUTPUT-'].update('Starting long work %s' % work_id)

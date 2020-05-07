@@ -689,8 +689,8 @@ def popup_color_chooser(look_and_feel=None):
     color_chosen = None
     while True:  # Event Loop
         event, values = window.read()
-        if event in (None, 'OK'):
-            if event is None:
+        if event in (sg.WIN_CLOSED, 'OK'):
+            if event == sg.WIN_CLOSED:
                 color_chosen = None
             break
         window['-OUT-'](f'You chose {event[0]} : {event[1]}')
@@ -708,7 +708,7 @@ if __name__ == '__main__':
     window = sg.Window('My application', layout)
     while True:
         event, values = window.read()
-        if event in (None, 'Cancel'):
+        if event in (sg.WIN_CLOSED, 'Cancel'):
             break
         if event.startswith('Color'):
             window.hide()

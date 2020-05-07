@@ -27,7 +27,7 @@ window = sg.Window('My Window Title', layout)
 
 while True:                         # Event Loop
     event, values = window.read()
-    if event is None:               # if window closed with X
+    if event == sg.WIN_CLOSED:               # if window closed with X
         break
     print(event, values)
 

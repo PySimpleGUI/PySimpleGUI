@@ -24,7 +24,7 @@ window = sg.Window('Window Title', layout)
 
 while True:             # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # When choice has been made, then fill in the listbox with the choices
     if event == '-IN-':

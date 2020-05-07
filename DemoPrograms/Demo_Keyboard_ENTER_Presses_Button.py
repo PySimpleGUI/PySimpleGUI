@@ -29,7 +29,7 @@ window = sg.Window('My new window', layout,
                    return_keyboard_events=True)
 while True:             # Event Loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event in ('\r', QT_ENTER_KEY1, QT_ENTER_KEY2):         # Check for ENTER key
         # go find element with Focus

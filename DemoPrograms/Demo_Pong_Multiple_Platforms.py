@@ -167,7 +167,7 @@ def pong():
 
         event, values = window.read(
             timeout=sleep_time)         # type: str, str
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event.startswith('Up') or event.endswith('Up'):
             bat_2.up(5)

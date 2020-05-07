@@ -19,7 +19,7 @@ window = sg.Window('Look and Feel Browser', layout)
 
 while True:  # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     sg.theme(values['-LIST-'][0])
     sg.popup_get_text('This is {}'.format(values['-LIST-'][0]), default_text=values['-LIST-'][0])

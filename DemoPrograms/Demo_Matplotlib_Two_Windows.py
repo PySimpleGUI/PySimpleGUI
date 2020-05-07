@@ -20,7 +20,7 @@ window = sg.Window('Have some Matplotlib....', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Cancel'):
+    if event in (sg.WIN_CLOSED, 'Cancel'):
         break
     elif event == 'Plot':
         draw_plot()

@@ -24,7 +24,7 @@ i = 0
 mixer.init()
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # Get the text and convert to mp3 file
     tts = gTTS(text=values[0], lang='en',slow=False)

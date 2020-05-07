@@ -46,7 +46,7 @@ def Launcher():
     # ---===--- Loop taking in user input and executing appropriate program --- #
     while True:
         event, values = window.read()
-        if event == 'EXIT' or event is None:
+        if event == 'EXIT' or event == sg.WIN_CLOSED:
             break           # exit button clicked
         if event == 'Program 1':
             print('Run your program 1 here!')

@@ -44,7 +44,7 @@ layout = [[sg.Text('File and folder browser Test')],
                    headings=['Size', ],
                    auto_size_columns=True,
                    num_rows=20,
-                   col0_width=30,
+                   col0_width=40,
                    key='-TREE-',
                    show_expanded=False,
                    enable_events=True),
@@ -56,7 +56,7 @@ window = sg.Window('Tree Element Test', layout)
 
 while True:     # Event Loop
     event, values = window.read()
-    if event in (None, 'Cancel'):
+    if event in (sg.WIN_CLOSED, 'Cancel'):
         break
     print(event, values)
 window.close()

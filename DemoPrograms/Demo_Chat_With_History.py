@@ -48,7 +48,7 @@ def ChatBotWithHistory():
             window['query'].update('')
             window['history'].update('\n'.join(command_history[-3:]))
         
-        elif event in (None, 'EXIT'):            # quit if exit event or X
+        elif event in (sg.WIN_CLOSED, 'EXIT'):            # quit if exit event or X
             break
         
         elif 'Up' in event and len(command_history):

@@ -28,7 +28,7 @@ a_turtle.pendown()
 
 while True:     # Event Loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
 
     if event == 'F':

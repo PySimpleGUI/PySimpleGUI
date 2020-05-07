@@ -98,7 +98,7 @@ while True:
     event, values = window.read()
     display_index = values['-slider-']
     # --------------------- Button & Keyboard ---------------------
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event in ('MouseWheel:Down', 'Down:40',) and display_index < len(png_files)-1:
         display_index += 4

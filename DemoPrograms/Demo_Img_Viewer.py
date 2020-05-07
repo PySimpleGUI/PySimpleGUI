@@ -88,7 +88,7 @@ while True:
     event, values = window.read()
     print(event, values)
     # perform button and keyboard operations
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     elif event in ('Next', 'MouseWheel:Down', 'Down:40', 'Next:34'):
         i += 1

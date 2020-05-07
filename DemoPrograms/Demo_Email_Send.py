@@ -76,7 +76,7 @@ def main():
 
     while True:  # Event Loop
         event, values = window.read()
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == 'Send':
             if sg.__name__ != 'PySimpleGUIWeb':     # auto close popups not yet supported in PySimpleGUIWeb

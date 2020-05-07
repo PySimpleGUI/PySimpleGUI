@@ -1687,7 +1687,7 @@ def main():
         event, values = sg.Window('Color Demo', layout, auto_size_buttons=False).read()
 
         # -------  OUTPUT results portion  ------- #
-        if event == 'Quit' or event is None:
+        if event == 'Quit' or event == sg.WIN_CLOSED:
             exit(0)
         elif event == 'Many buttons':
                 show_all_colors_on_buttons()

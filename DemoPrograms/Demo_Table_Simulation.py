@@ -33,7 +33,7 @@ def TableSimulation():
     while True:
         event, values = window.read()
         # --- Process buttons --- #
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event == 'About...':
             sg.popup('Demo of table capabilities')

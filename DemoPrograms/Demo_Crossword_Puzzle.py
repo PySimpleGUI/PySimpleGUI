@@ -35,7 +35,7 @@ for row in range(16):
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     mouse = values['-GRAPH-']
 

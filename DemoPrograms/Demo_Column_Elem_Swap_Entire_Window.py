@@ -32,7 +32,7 @@ layout = 1  # The currently visible layout
 while True:
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Cycle Layout':
         window[f'-COL{layout}-'].update(visible=False)

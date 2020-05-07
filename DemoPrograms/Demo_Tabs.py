@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import PySimpleGUI as sg
+# import PySimpleGUIWeb as sg
 
 # Usage of Tabs in PSG
 #
@@ -34,13 +35,13 @@ layout = [[sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, background_color='darkslat
                        selected_title_color='green', tab_location='right'),
            sg.TabGroup([[sg.Tab('Tab 4', tab4_layout, background_color='darkseagreen', key='-mykey-'),
                          sg.Tab('Tab 5', tab5_layout)]], key='-group1-', tab_location='top', selected_title_color='purple')],
-          [sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, background_color='darkslateblue', key='-mykey-'),
-                         sg.Tab('Tab 2', tab2_layout, background_color='tan1'),
-                         sg.Tab('Tab 3', tab3_layout)]],
-                       key='-group3-', title_color='red',
-                       selected_title_color='green', tab_location='left'),
-           sg.TabGroup([[sg.Tab('Tab 4', tab4_layout, background_color='darkseagreen', key='-mykey-'),
-                         sg.Tab('Tab 5', tab5_layout)]], key='-group4-', tab_location='bottom', selected_title_color='purple')],
+          # [sg.TabGroup([[sg.Tab('Tab 1', tab1_layout, background_color='darkslateblue', key='-mykey-'),
+          #                sg.Tab('Tab 2', tab2_layout, background_color='tan1'),
+          #                sg.Tab('Tab 3', tab3_layout)]],
+          #              key='-group3-', title_color='red',
+          #              selected_title_color='green', tab_location='left'),
+          #  sg.TabGroup([[sg.Tab('Tab 4', tab4_layout, background_color='darkseagreen', key='-mykey-'),
+          #                sg.Tab('Tab 5', tab5_layout)]], key='-group4-', tab_location='bottom', selected_title_color='purple')],
           [sg.Button('Read')]]
 
 window = sg.Window('My window with tabs', layout,
@@ -51,6 +52,6 @@ while True:
     event, values = window.read()
     sg.popup_non_blocking(event, values)
     print(event, values)
-    if event is None:           # always,  always give a way out!
+    if event == sg.WIN_CLOSED:           # always,  always give a way out!
         break
 window.close()

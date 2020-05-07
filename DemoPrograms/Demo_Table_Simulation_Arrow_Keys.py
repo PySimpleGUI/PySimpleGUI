@@ -28,7 +28,7 @@ window = sg.Window('A Table Simulation', layout, default_element_size=(12, 1), e
 current_cell = (0, 0)
 while True:  # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):     # If user closed the window
+    if event in (sg.WIN_CLOSED, 'Exit'):     # If user closed the window
         break
     elem = window.find_element_with_focus()
     current_cell = elem.Key if elem and type(elem.Key) is tuple else (0, 0)

@@ -13,7 +13,7 @@ window = sg.Window('Listbox with Search', layout)
 # Event Loop
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):                # always check for closed window
+    if event in (sg.WIN_CLOSED, 'Exit'):                # always check for closed window
         break
     if values['-INPUT-'] != '':                         # if a keystroke entered in search field
         search = values['-INPUT-']

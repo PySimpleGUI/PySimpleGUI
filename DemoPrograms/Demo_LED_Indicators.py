@@ -35,7 +35,7 @@ window = sg.Window('My new window', layout, default_element_size=(12, 1), auto_s
 i = 0
 while True:  # Event Loop
     event, value = window.read(timeout=400)
-    if event == 'Exit' or event is None:
+    if event == 'Exit' or event == sg.WIN_CLOSED:
         break
     if value is None:
         break

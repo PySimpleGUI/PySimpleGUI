@@ -64,7 +64,7 @@ window = sg.Window('Raspberry Pi GUI', layout, grab_anywhere=False)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
 
     if event == 'Switch LED':

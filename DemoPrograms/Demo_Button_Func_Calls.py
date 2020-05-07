@@ -32,7 +32,7 @@ window = sg.Window('Button Callback Simulation', layout)
 
 while True:             # Event Loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     elif event == 'Button 1':
         callback_function1()        # call the "Callback" function

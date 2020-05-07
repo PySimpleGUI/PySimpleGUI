@@ -31,7 +31,7 @@ graphic_off = True
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     elif event == '-B-':                # if the normal button that changes color and text
         down = not down

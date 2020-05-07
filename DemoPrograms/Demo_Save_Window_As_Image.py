@@ -37,7 +37,7 @@ def main():
 
     while True:
         event, values = window.read()
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break  # exit
         elif event == 'Save':
             filename = sg.popup_get_file('Choose file (PNG, JPG, GIF) to save to', save_as=True)

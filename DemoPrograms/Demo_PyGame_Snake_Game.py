@@ -89,7 +89,7 @@ clock = pygame.time.Clock()
 
 while True:
     event, values = window.read(timeout=10)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     pygame.display.update()
 

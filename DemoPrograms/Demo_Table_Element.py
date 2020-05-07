@@ -24,7 +24,7 @@ def make_table(num_rows, num_cols):
 
 # ------ Make the Table Data ------
 data = make_table(num_rows=15, num_cols=6)
-headings = [str(data[0][x]) for x in range(len(data[0]))]
+headings = [str(data[0][x])+'     ..' for x in range(len(data[0]))]
 
 # ------ Window Layout ------
 layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
@@ -33,8 +33,9 @@ layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
                     display_row_numbers=True,
                     justification='right',
                     num_rows=20,
-                    # alternating_row_color='lightyellow',
+                    alternating_row_color='lightyellow',
                     key='-TABLE-',
+                    row_height=35,
                     tooltip='This is a table')],
           [sg.Button('Read'), sg.Button('Double'), sg.Button('Change Colors')],
           [sg.Text('Read = read which rows are selected')],
@@ -42,13 +43,15 @@ layout = [[sg.Table(values=data[1:][:], headings=headings, max_col_width=25,
           [sg.Text('Change Colors = Changes the colors of rows 8 and 9')]]
 
 # ------ Create Window ------
-window = sg.Window('The Table Element', layout)
+window = sg.Window('The Table Element', layout,
+                   # font='Helvetica 25',
+                   )
 
 # ------ Event Loop ------
 while True:
     event, values = window.read()
     print(event, values)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event == 'Double':
         for i in range(len(data)):

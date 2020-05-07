@@ -18,7 +18,7 @@ window = sg.Window('Chat window', layout, font=('Helvetica', ' 13'), default_but
 
 while True:     # The Event Loop
     event, value = window.read()
-    if event in (None, 'EXIT'):            # quit if exit button or X
+    if event in (sg.WIN_CLOSED, 'EXIT'):            # quit if exit button or X
         break
     if event == 'SEND':
         query = value['-QUERY-'].rstrip()

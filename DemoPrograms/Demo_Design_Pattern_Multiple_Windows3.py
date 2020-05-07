@@ -29,7 +29,7 @@ while True:
 
     if window2_active:
         event2 = window2.read()[0]
-        if event2 in (None, 'Exit', '< Prev'):
+        if event2 in (sg.WIN_CLOSED, 'Exit', '< Prev'):
             window2_active = False
             window2.close()
             window.un_hide()
@@ -48,7 +48,7 @@ while True:
             window3_active = False
             window2_active = True
             window2.un_hide()
-        elif ev3 in (None, 'Exit'):
+        elif ev3 in (sg.WIN_CLOSED, 'Exit'):
             break
 
 window.close()

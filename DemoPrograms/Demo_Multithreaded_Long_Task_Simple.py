@@ -64,7 +64,7 @@ def the_gui():
     # --------------------- EVENT LOOP ---------------------
     while True:
         event, values = window.read(timeout=100)
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event.startswith('Do') and not thread:
             print('Thread Starting! Long work....sending value of {} seconds'.format(float(values['-SECONDS-'])))

@@ -1423,7 +1423,7 @@ def mainMenu():
     while True:             # Event Loop
         event, values = window.read()
         # print(event, values)
-        if event is None or event == 'Exit':
+        if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Begin':
             window.Hide()
@@ -2945,7 +2945,7 @@ def mainMenu():
     while True:             # Event Loop
         event, values = window.read()
         # print(event, values)
-        if event is None or event == 'Exit':
+        if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Begin':
             window.Hide()

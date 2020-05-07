@@ -34,7 +34,7 @@ window = sg.Window('My new window', layout)
 
 while True:     # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     text_elem = window['-text-']
     print(event, values)

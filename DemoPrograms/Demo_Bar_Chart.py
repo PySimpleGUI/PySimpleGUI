@@ -37,7 +37,7 @@ window = sg.Window('Window Title', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
 
     graph.erase()

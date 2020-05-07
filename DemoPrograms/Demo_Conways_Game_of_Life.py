@@ -141,7 +141,7 @@ class GameOfLife:
                                                j * (BOX_SIZE) + BOX_SIZE),
                                               line_color='black', fill_color='yellow')
         event, values = self.window.read(timeout=self.delay)
-        if event in (None, '-DONE-'):
+        if event in (sg.WIN_CLOSED, '-DONE-'):
             sg.popup('Click OK to exit the program...')
             self.window.close()
             exit()
@@ -159,7 +159,7 @@ class GameOfLife:
                 ids[i].append(0)
         while True:  # Event Loop
             event, values = self.window.read()
-            if event is None or event == '-DONE-':
+            if event == sg.WIN_CLOSED or event == '-DONE-':
                 break
             self.window['-S1-OUT-'].update(values['-SLIDER-'])
             self.window['-S2-OUT-'].update(values['-SLIDER2-'])
@@ -181,7 +181,7 @@ class GameOfLife:
                                                        line_color='black', fill_color='yellow')
                     ids[box_x][box_y] = id_val
                     self.old_grid[box_x][box_y] = 1
-        if event is None:
+        if event == sg.WIN_CLOSED:
             self.window.close()
         else:
             self.window['-DONE-'].update(text='Exit')

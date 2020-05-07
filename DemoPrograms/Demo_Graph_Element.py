@@ -48,7 +48,7 @@ def main():
 
     while True:
         event, values = window.read(timeout=200)
-        if event == 'Quit' or event is None:
+        if event == 'Quit' or event == sg.WIN_CLOSED:
             break
         if g_response_time is None or prev_response_time == g_response_time:
             continue

@@ -22,7 +22,7 @@ i = 0
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == '-B1-':
         window.extend_layout(window['-COL1-'], [[sg.T('A New Input Line'), sg.I(key=f'-IN-{i}-')]])

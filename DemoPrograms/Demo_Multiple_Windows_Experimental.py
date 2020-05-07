@@ -28,19 +28,19 @@ window3 = sg.Window('My new window', layout3, location=(800,750), return_keyboar
 
 while True:     # Event Loop
     event, values = window1.read(timeout=0)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     elif event != '__timeout__':
         print(event, values)
 
     event, values = window2.read(timeout=0)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     elif event != '__timeout__':
         print(event, values)
 
     event, values = window3.read(timeout=0)
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     elif event != '__timeout__':
         print(event, values)

@@ -5,12 +5,12 @@ import re
     Demo of using a borderless window to show possible matches for autocomplete feature
 '''
 
+
 def autocomplete_popup_show(text_list):
     layout = [[ sg.Listbox(values=text_list,
                             size=(15, len(text_list)),
                             change_submits=True, bind_return_key=True,
                             key='-FLOATING-LISTBOX-', enable_events=True) ]]
-
     return sg.Window("Borderless Window",
                                    layout,
                                    default_element_size=(12, 1),
@@ -21,7 +21,6 @@ def autocomplete_popup_show(text_list):
                                    background_color='black',
                                    default_button_element_size=(12, 1),
                                    location=(1320, 622), finalize=True)
-
 
 def predict_text(input, lista):
     pattern = re.compile('.*' + input + '.*')
@@ -43,7 +42,7 @@ def main():
     while True:             # Event Loop
         event, values = window.read(timeout=500)
 
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
 
         if event != sg.TIMEOUT_KEY:
