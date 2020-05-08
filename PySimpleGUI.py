@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0 Released 5-May-2020"
+version = __version__ = "4.19.0.1 Unreleased - Window.set_title added"
 
 port = 'PySimpleGUI'
 
@@ -7808,6 +7808,17 @@ class Window:
         :return:
         """
         return
+
+
+    def set_title(self, title):
+        """
+        Change the title of the window
+
+        :param title: The string to set the title to
+        :type title: str
+        """
+
+        self.TKroot.wm_title(str(title))
 
     # def __enter__(self):
     #     """
