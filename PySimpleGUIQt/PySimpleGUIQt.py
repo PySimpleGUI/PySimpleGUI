@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.33.0 Released 6-May-2020"
+version = __version__ = "0.34.0 Released 10-May-2020"
 
 port = 'PySimpleGUIQt'
 
@@ -218,9 +218,11 @@ SYSTEM_TRAY_MESSAGE_ICON_CRITICAL = QSystemTrayIcon.Critical
 SYSTEM_TRAY_MESSAGE_ICON_NOICON = QSystemTrayIcon.NoIcon
 
 # "Special" Key Values.. reserved
-# Events that are pre-defined
 # Key representing a Read timeout
-TIMEOUT_KEY = '__TIMEOUT__'
+EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
+# Window closed event (user closed with X or destroyed using OS)
+WIN_CLOSED = WINDOW_CLOSED = None
+
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
 EVENT_SYSTEM_TRAY_ICON_DOUBLE_CLICKED = '__DOUBLE_CLICKED__'
@@ -2490,7 +2492,8 @@ class Column(Element):
         # self.ImageSize = image_size
         # self.ImageSubsample = image_subsample
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.Widget = self.QT_QGroupBox = None              # type: QGroupBox
+        self.Widget = self.QT_QGroupBox = None          # type: QGroupBox
+        self.vbox_layout = None                         # type: QVBoxLayout
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
@@ -8642,7 +8645,7 @@ def main():
     # window.Element('_LISTBOX_').SetValue(['Listbox 1','Listbox 3'])
     while True:  # Event Loop
         # TimerStart()
-        event, values = window.Read(timeout=10)
+        event, values = window.read(timeout=10)
         print(event, values) if event != TIMEOUT_KEY else None
         window['-MLINE-'].update(value=str(values), append=True) if event != TIMEOUT_KEY else None
         if event is None or event == 'Exit':
@@ -8666,7 +8669,7 @@ def main():
         i += 1
 
         # TimerStop()
-    window.Close()
+    window.close()
 
 
 
