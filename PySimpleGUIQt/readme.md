@@ -805,19 +805,24 @@ Highlights - Read with close (Single line GUIs!), Print to Multiline, Scrollable
 
 ## 0.33.0 PySimpleGUIQt 6-May-2020
 
-* Added constants
-  * WIN_CLOSED and WINDOW_CLOSED
-  * EVENT_TIMEOUT and TIMEOUT_EVENT
+
 * Added expansion capabilities
   * Element.row_frame - The QHBoxLayout the element is contained within 
   * Column.vbox_layout - The QVBoxLayout contained in Column element
 
+## 0.34.0 PySimpleGUIQt 10-May-2020
+
+This time for REAL added the constants.  I don't know how to changes got lost but they did.
+
+* Added constants
+  * WIN_CLOSED and WINDOW_CLOSED
+  * EVENT_TIMEOUT and TIMEOUT_EVENT
 
 
 
 
 # Design        
- ## Author 
+## Author 
  
 The PySimpleGUI Organization 
 PySimpleGUI.org
