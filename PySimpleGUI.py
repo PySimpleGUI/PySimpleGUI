@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.1 Unreleased - Window.set_title added"
+version = __version__ = "4.19.0.2 Unreleased - Window.set_title added, removed resetting stdout when flush happens"
 
 port = 'PySimpleGUI'
 
@@ -2591,10 +2591,11 @@ class TKOutput(tk.Frame):
 
     def flush(self):
         """
-        This doesn't look right.  This restores stdout and stderr to their old values
+        Flush parameter was passed into a print statement.
+        For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
         """
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
+        return
+
 
     def __del__(self):
         """
