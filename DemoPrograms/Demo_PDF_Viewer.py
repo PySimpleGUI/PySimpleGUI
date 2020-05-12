@@ -87,8 +87,6 @@ def get_page(pno, zoom=0):
     return pix.getPNGData()  # return the PNG image
 
 
-window = sg.Window(title, layout,
-                   return_keyboard_events=True, use_default_focus=False)
 
 cur_page = 0
 data = get_page(cur_page)  # show page 1 for start
@@ -114,6 +112,11 @@ layout = [
 my_keys = ("Next", "Next:34", "Prev", "Prior:33", "Top-L", "Top-R",
            "Bot-L", "Bot-R", "MouseWheel:Down", "MouseWheel:Up")
 zoom_buttons = ("Top-L", "Top-R", "Bot-L", "Bot-R")
+
+
+
+window = sg.Window(title, layout,
+                   return_keyboard_events=True, use_default_focus=False)
 
 old_page = 0
 old_zoom = 0  # used for zoom on/off
