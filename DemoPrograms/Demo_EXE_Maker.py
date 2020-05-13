@@ -1,14 +1,13 @@
 import PySimpleGUI as sg
 import subprocess
-from shutil import copyfile
 import shutil
 import os
-
+import sys
 '''
     Make a "Windows os" executable with PyInstaller
 '''
 
-def Launcher():
+def main():
     sg.theme('LightGreen')
 
     layout = [[sg.Text('PyInstaller EXE Creator', font='Any 15')],
@@ -18,16 +17,11 @@ def Launcher():
                sg.FileBrowse(file_types=(("Icon Files", "*.ico"),))],
               [sg.Frame('Output', font='Any 15', layout=[
                         [sg.Output(size=(65, 15), font='Courier 10')]])],
-              [sg.ReadFormButton('Make EXE', bind_return_key=True),
-               sg.SimpleButton('Quit', button_color=('white', 'firebrick3')), ]]
+              [sg.Button('Make EXE', bind_return_key=True),
+               sg.Button('Quit', button_color=('white', 'firebrick3')) ],
+              [sg.Text('Made with PySimpleGUI (www.PySimpleGUI.org)', auto_size_text=True, font='Courier 8')]]
 
-    window = sg.Window('PySimpleGUI EXE Maker',
-                       layout,
-                       auto_size_text=False,
-                       auto_size_buttons=False,
-                       default_element_size=(20, 1,),
-                       text_justification='right')
-
+    window = sg.Window('PySimpleGUI EXE Maker', layout, auto_size_text=False, auto_size_buttons=False, default_element_size=(20,1), text_justification='right')
     # ---===--- Loop taking in user input --- #
     while True:
 
@@ -44,39 +38,47 @@ def Launcher():
         dispath_option = '--distpath "{}"'.format(source_path)
         specpath_option = '--specpath "{}"'.format(source_path)
         folder_to_remove = os.path.join(source_path, source_filename[:-3])
-        file_to_remove = os.path.join(
-            source_path, source_filename[:-3]+'.spec')
-        command_line = 'pyinstaller -wF --clean "{}" {} {} {} {}'.format(
-            source_file, icon_option, workpath_option, dispath_option, specpath_option)
+        file_to_remove = os.path.join(source_path, source_filename[:-3]+'.spec')
+        command_line = 'pyinstaller -wF --clean "{}" {} {} {} {}'.format(source_file, icon_option, workpath_option, dispath_option, specpath_option)
 
         if event == 'Make EXE':
             try:
                 print(command_line)
-                print(
-                    'Making EXE...the program has NOT locked up...')
+                print('Making EXE...the program has NOT locked up...')
                 window.refresh()
                 # print('Running command {}'.format(command_line))
-                runCommand(command_line)
+                out, err = runCommand(command_line, window=window)
                 shutil.rmtree(folder_to_remove)
                 os.remove(file_to_remove)
                 print('**** DONE ****')
             except:
-                sg.popup_error('Something went wrong')
+                sg.PopupError('Something went wrong', 'close this window and copy command line from text printed out in main window','Here is the output from the run', out)
+                print('Copy and paste this line into the command prompt to manually run PyInstaller:\n\n', command_line)
 
 
-def runCommand(cmd, timeout=None):
-    """
-        run shell command
+def runCommand(cmd, timeout=None, window=None):
+    """ run shell command
 
-        @param cmd: command to execute
-        @param timeout: timeout for command execution
+	@param cmd: command to execute
+	@param timeout: timeout for command execution
 
-        @return: (return code from command, command output)
-    """
+	@return: (return code from command, command output)
+	"""
+
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    out, err = p.communicate()
-    p.wait(timeout)
-    return (out, err)
+    output = ''
+    for line in p.stdout:
+        line = line.decode(errors='replace' if (sys.version_info) < (3, 5)
+                           else 'backslashreplace').rstrip()
+        output += line
+        print(line)
+        if window:
+            window.Refresh()
+
+    retval = p.wait(timeout)
+
+    return (retval, output)
+
 
 if __name__ == '__main__':
-    Launcher()
+    main()
