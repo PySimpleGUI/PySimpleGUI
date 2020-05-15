@@ -1992,7 +1992,7 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 relief=DEFAULT_FRAME_RELIEF, element_justification='float', size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None, visible=True, size_px=(None,None), metadata=None):
         '''
         Frame Element
@@ -2023,6 +2023,7 @@ class Frame(Element):
         self.TitleLocation = title_location
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ElementJustification = element_justification
         self.Widget = self.QT_QGroupBox = None              # type: QGroupBox
         self.Layout(layout)
 
@@ -2107,7 +2108,7 @@ HSep = HorizontalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
+    def __init__(self, title, layout, title_color=None, element_justification='float', background_color=None, font=None, pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None, visible=True, metadata=None):
         '''
         Tab Element
@@ -2135,8 +2136,11 @@ class Tab(Element):
         self.Disabled = disabled
         self.ParentTabGroup = None                          # type: TabGroup
         self.TabID = None
+        self.ElementJustification = element_justification
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Widget = self.QT_QWidget = None                # type: QWidget
+
+
 
         self.Layout(layout)
 
@@ -2234,6 +2238,7 @@ class TabGroup(Element):
         self.TabLocation = tab_location
         self.TabList = []                                   # type: List[Tab]
         self.Widget = self.QT_QTabWidget = None             # type: QTabWidget
+        self.ElementJustification = 'float'                 # not actually used, but needed for packer to work
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_TAB_GROUP, background_color=self.BackgroundColor, text_color=title_color, font=font,
@@ -2468,7 +2473,7 @@ class Stretch(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, key=None, visible=True, metadata=None):
+    def __init__(self, layout, background_color=None, element_justification='float', size=(None, None), pad=None, scrollable=False, key=None, visible=True, metadata=None):
         '''
         Column Element
         :param layout:
@@ -2492,6 +2497,7 @@ class Column(Element):
         # self.ImageSize = image_size
         # self.ImageSubsample = image_subsample
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ElementJustification = element_justification
         self.Widget = self.QT_QGroupBox = None          # type: QGroupBox
         self.vbox_layout = None                         # type: QVBoxLayout
         self.Layout(layout)
@@ -3174,7 +3180,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
+                 element_justification='float', no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
         '''
 
         :param title:
@@ -3264,6 +3270,7 @@ class Window:
         self.DisableMinimize = disable_minimize
         self.UniqueKeyCounter = 0
         self.metadata = metadata
+        self.ElementJustification = element_justification
 
 
         if layout is not None:
@@ -4788,7 +4795,7 @@ class Style(object):
         return self.content
 
 
-def PackFormIntoFrame(window, containing_frame, toplevel_win):
+def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
     border_depth = toplevel_win.BorderDepth if toplevel_win.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -4798,11 +4805,17 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
     focus_set = False
     ######################### LOOP THROUGH ROWS #########################
     # *********** -------  Loop through ROWS  ------- ***********#
-    for row_num, flex_row in enumerate(window.Rows):
+    for row_num, flex_row in enumerate(container_elem.Rows):
         ######################### LOOP THROUGH ELEMENTS ON ROW #########################
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         qt_row_layout = QHBoxLayout()
+        if container_elem.ElementJustification.startswith('c'):
+            qt_row_layout.setAlignment(Qt.AlignCenter)
+        elif container_elem.ElementJustification.startswith('r'):
+            qt_row_layout.setAlignment(Qt.AlignRight)
+        elif container_elem.ElementJustification.startswith('l'):
+            qt_row_layout.setAlignment(Qt.AlignLeft)
         for col_num, element in enumerate(flex_row):
             element.ParentForm = toplevel_win  # save the button's parent form object
             element.row_frame = qt_row_layout
@@ -5598,7 +5611,7 @@ def PackFormIntoFrame(window, containing_frame, toplevel_win):
                     tab_widget.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QWidget.setVisible(False)
-                window.QT_QTabWidget.addTab(tab_widget, element.Title)
+                container_elem.QT_QTabWidget.addTab(tab_widget, element.Title)
             # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element       # type:TabGroup
