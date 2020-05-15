@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.34.0 Released 10-May-2020"
+version = __version__ = "0.34.0.1 Unreleased - Added element_justification parm to Column Frame Tab Window"
 
 port = 'PySimpleGUIQt'
 
