@@ -34,10 +34,7 @@ def main():
               [sg.Button('Exit', size=(7, 1), pad=((600, 0), 3), font='Helvetica 14')]]
 
     # create the window and show it without the plot
-    window = sg.Window('Demo Application - OpenCV Integration',
-                       layout,
-                       no_titlebar=False,
-                       location=(0, 0))
+    window = sg.Window('Demo Application - OpenCV Integration', layout, no_titlebar=False, location=(0, 0))
 
     # locate the elements we'll be updating. Does the search only 1 time
     image_elem = window['-image-']
