@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.2 Unreleased - Window.set_title added, removed resetting stdout when flush happens"
+version = __version__ = "4.19.0.3 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working"
 
 port = 'PySimpleGUI'
 
@@ -641,7 +641,7 @@ class Element():
         self.Visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
-        self.Tearoff = False
+        # self.Tearoff = False          # why was this here?? should already be in the Menubar element...confusing...
         self.ParentRowFrame = None  # type tk.Frame
         self.metadata = metadata  # type: Any
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
@@ -10684,6 +10684,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  MENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
+                print(f'Menu tearoff = {element.Tearoff}')
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot,
                                                           tearoff=element.Tearoff)  # create the menubar
