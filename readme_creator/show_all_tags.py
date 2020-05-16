@@ -1,5 +1,5 @@
-import inspect
-import PySimpleGUIlib
+import PySimpleGUIlib;sg = PySimpleGUIlib
+import datetime, inspect
 
 """ 
     Create All Possible Tags
@@ -8,12 +8,8 @@ import PySimpleGUIlib
     Displays the results in a PySimpleGUI window which can be used to copy and paste into other places.
 """
 
-layout = [[PySimpleGUIlib.Output(size=(80,40))]]
-window = PySimpleGUIlib.Window('Dump of tags', layout, resizable=True).Finalize()
-
-
-
-SHOW_UNDERSCORE_METHODS = not False
+messages = []; log = lambda x: messages.append(x) # logging utility
+SHOW_functionsNmethods_that_starts_with_UNDERSCORE = True
 
 def valid_field(pair):
     bad_fields = 'LOOK_AND_FEEL_TABLE copyright __builtins__'.split(' ')
@@ -29,10 +25,13 @@ def valid_field(pair):
 
     return True
 
-psg_members  = [i for i in inspect.getmembers(PySimpleGUIlib) if valid_field(i)]
-psg_funcs    = [o[0] for o in psg_members if inspect.isfunction(o[1])]
-psg_classes  = [o for o in psg_members if inspect.isclass(o[1])]
-# psg_props    = [o for o in psg_members if type(o[1]).__name__ == 'property']
+
+#                                                                                       # ]
+psg_members  = [i for i in inspect.getmembers(PySimpleGUIlib) if valid_field(i)]        # ] 
+psg_funcs    = [o[0] for o in psg_members if inspect.isfunction(o[1])]                  # ] Grabing PSG objects
+psg_classes  = [o for o in psg_members if inspect.isclass(o[1])]                        # ] 
+# psg_props    = [o for o in psg_members if type(o[1]).__name__ == 'property']          # ]
+
 
 # I don't know how this magic filtering works, I just know it works. "Private" stuff (begins with _) are somehow
 # excluded from the list with the following 2 lines of code.  Very nicely done Kol-ee-ya!
@@ -40,24 +39,62 @@ psg_classes = sorted(list(set([i[1] for i in psg_classes])), key=lambda x : x.__
 
 for aclass in psg_classes:
     class_name = aclass.__name__
-    if 'Tk' in class_name or 'TK' in class_name or 'Element' == class_name: # or 'Window' == class_name:
+    
+    # filter bad objects
+    if  'Tk' in class_name or 'TK' in class_name or\
+        'Element' == class_name: # or 'Window' == class_name:
         continue
-    print(f'### {class_name} Element ')
-    print(f'<!-- <+{class_name}.doc+> -->')
-    print(f'<!-- <+{class_name}.__init__+> -->\n')
-    print('\n'.join([f"#### {name}\n<!-- <+{class_name}.{name}+> -->\n" for name, obj in inspect.getmembers(aclass) if not name.startswith('_')  ]))
+    
+    # print standart things:
+    log(f'### {class_name} Element ')
+    log(f'<!-- <+{class_name}.doc+> -->')
+    log(f'<!-- <+{class_name}.__init__+> -->\n')
 
-print('\n------------------------- Functions start here -------------------------\n')
+    # print all public methods:
+    log('\n'.join([f"#### {name}\n<!-- <+{class_name}.{name}+> -->\n"
+                    for name, obj in inspect.getmembers(aclass)
+                    if not name.startswith('_')  ]))
 
-if SHOW_UNDERSCORE_METHODS:
+def get_filtered_funcs(psg_funcs, show_underscore=False):
+    space = '-'*30
+    curr_dt = today = datetime.datetime.today()
+    filtered = [f'{curr_dt}\n\n{space}Functions start here{space}\n']
     for i in psg_funcs:
-        if '_' in i:
-            print( f"<!-- <+func.{i}+> -->" )
-else:
-    for i in psg_funcs:
-        print( f"<!-- <+func.{i}+> -->" )
+        txt = f"<!-- <+func.{i}+> -->"
+
+        if i.startswith('_') and show_underscore:
+            filtered.append(txt); continue
+        filtered.append(txt)
+    return f'TOTAL funcs amount listed below: {len(filtered)}\n' + '\n'.join(filtered)
 
 
+###############################
+#      _____ _    _ _____     #
+#     / ____| |  | |_   _|    #
+#    | |  __| |  | | | |      #
+#    | | |_ | |  | | | |      #
+#    | |__| | |__| |_| |_     #
+#     \_____|\____/|_____|    #
+#                             #
+###############################
+window = sg.Window('Dump of tags', [
+    [sg.ML(size=(80,40), key='w'),
+    sg.Col([
+            [sg.ML(size=(80,40), key='w2')],
+            [sg.CB('show _ funcs&methods?', key='-_sc-', enable_events=True)]
+        ])]
+], resizable=True, finalize=True)
 
+window['w']('\n'.join(messages))
+window['w2'](get_filtered_funcs(psg_funcs, True))
 
-window.Read()
+while True:
+    event, values = window()
+    if event in ('Exit', None): break
+
+    print(event)
+    if event == '-_sc-':
+        filtered = get_filtered_funcs(psg_funcs, values['-_sc-'])
+        window['w2'](filtered)
+
+window.close()
