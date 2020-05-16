@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0 Released 5-May-2020"
+version = __version__ = "4.19.0.3 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working"
 
 port = 'PySimpleGUI'
 
@@ -307,7 +307,6 @@ DEFAULT_SCROLLBAR_COLOR = None
 # A transparent button is simply one that matches the background
 # TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
 
-TRANSPARENT_BUTTON = ('#F0F0F0', '#F0F0F0')  # Use (sg.theme_background_color(), sg.theme_background_color()) instead!!!
 
 # --------------------------------------------------------------------------------
 # Progress Bar Relief Choices
@@ -358,7 +357,7 @@ LISTBOX_SELECT_MODE_SINGLE = 'single'
 TABLE_SELECT_MODE_NONE = tk.NONE
 TABLE_SELECT_MODE_BROWSE = tk.BROWSE
 TABLE_SELECT_MODE_EXTENDED = tk.EXTENDED
-DEFAULT_TABLE_SECECT_MODE = TABLE_SELECT_MODE_EXTENDED
+DEFAULT_TABLE_SELECT_MODE = TABLE_SELECT_MODE_EXTENDED
 
 TITLE_LOCATION_TOP = tk.N
 TITLE_LOCATION_BOTTOM = tk.S
@@ -642,7 +641,7 @@ class Element():
         self.Visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
-        self.Tearoff = False
+        # self.Tearoff = False          # why was this here?? should already be in the Menubar element...confusing...
         self.ParentRowFrame = None  # type tk.Frame
         self.metadata = metadata  # type: Any
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
@@ -2592,10 +2591,11 @@ class TKOutput(tk.Frame):
 
     def flush(self):
         """
-        This doesn't look right.  This restores stdout and stderr to their old values
+        Flush parameter was passed into a print statement.
+        For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
         """
-        sys.stdout = self.previous_stdout
-        sys.stderr = self.previous_stderr
+        return
+
 
     def __del__(self):
         """
@@ -7809,6 +7809,17 @@ class Window:
         :return:
         """
         return
+
+
+    def set_title(self, title):
+        """
+        Change the title of the window
+
+        :param title: The string to set the title to
+        :type title: str
+        """
+
+        self.TKroot.wm_title(str(title))
 
     # def __enter__(self):
     #     """
@@ -13054,6 +13065,9 @@ def theme_background_color(color=None):
     if color is not None:
         set_options(background_color=color)
     return DEFAULT_BACKGROUND_COLOR
+
+# This "constant" is misleading but rather than remove and break programs, will try this method instead
+TRANSPARENT_BUTTON = (theme_background_color(), theme_background_color())  # replaces an older version that had hardcoded numbers
 
 
 def theme_element_background_color(color=None):

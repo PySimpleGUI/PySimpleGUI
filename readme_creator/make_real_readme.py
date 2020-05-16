@@ -1,6 +1,8 @@
 from inspect import getmembers, isfunction, isclass, getsource, signature, _empty, isdatadescriptor
 from datetime import datetime
 import PySimpleGUIlib, click, textwrap, logging, json, re, os
+import os
+cd = CD = os.path.dirname(os.path.abspath(__file__))
 
 from collections import namedtuple
 triplet = namedtuple('triplet', 'name value atype'.split(' '))
@@ -88,6 +90,8 @@ def get_return_part(code: str, line_break=None) -> str:
         return ''
 
 
+    
+        
     only_return = code[code.index(':return:')+len(':return:'):].strip().replace('\n', line_break)
     if ':rtype' in only_return:
         only_return = only_return.split(':rtype')[0]
@@ -198,6 +202,8 @@ def special_cases(function_name, function_obj, sig, doc_string, line_break=None)
 
 def get_doc_desc(doc, original_obj):
 
+    
+    
     return_in = ':return' in doc
     param_in = ':param' in doc
     
@@ -254,8 +260,11 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
 
 
     sig_content = f',\n{TAB_char}'.join(rows) if len(rows) > 2 else f', '.join(rows) if rows else ''
+    
     sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
 
+    
+    
     if is_method:
         if insert_md_section_for__class_methods:
             sign = "\n\n{0}\n\n```\n{1}({2})\n```".format(get_doc_desc(doc_string, function_obj), function_name, sig_content)
@@ -283,9 +292,7 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
 
     
     # 2
-    def make_md_table_from_docstring(docstring):
-        # print(f'docstring = {docstring}')
-        # print(f'docstring = {type(docstring)}')
+    def make_md_table_from_docstring(docstring, a_original_obj):
         row_n_type_regex = re.compile(r':param ([\s\S]*?):([\s\S]*?):type [\s\S]*?:([\d\D]*?)\n', flags=re.M|re.DOTALL)
         # row_n_type_regex = re.compile(r':param ([\d\w]+):([\d\D]*?):type [\w\d]+:([\d\D].*?)$', flags=re.M|re.DOTALL)
 
@@ -325,7 +332,7 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
         try:
             max_type_width, max_name_width = max([len(i.atype) for i in trips]), max([len(i.name) for i in trips])
         except Exception as e:
-            pass
+            logger.warning(f"ALERT ------ bug with max_type_width, max_name_width variables")
         row_template = f'| {{: ^{max_type_width}}} | {{: ^{max_name_width}}} | {{}} |'
 
         # rows, and finally table.
@@ -342,11 +349,12 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
             text, atype = aa.group(1).strip(), aa.group(2).strip()
 
             rows.append(f'| {atype} | **RETURN** | {text}')
-            
         except Exception as e:
-            print(e)
-            # print(f'docstring = {docstring}')
-            pass
+            padded_name = "{: <25}".format(f"'{a_original_obj.__name__}'")
+
+            logger.warning(f"ALERT ------  Hi, Mike! Please, fix ':return:' in {padded_name}"
+                    " \tIF you want to see 'return' row in 'signature table'")
+            # import pdb; pdb.set_trace();
 
         header = '\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n'
 
@@ -359,8 +367,9 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
 
     # 3
     try:
-        params_TABLE = md_table = make_md_table_from_docstring(doc_string)
+        params_TABLE = md_table = make_md_table_from_docstring(doc_string, function_obj)
     except Exception as e:
+        logger.warning(f'Boy=======    We got empty md_table for "{function_obj.__name__}"')
         params_TABLE = md_table = ''
 
     if not md_table.strip():
@@ -539,6 +548,8 @@ def main(do_full_readme=False,
     func_tags = [j for j in mark_points if 'func.' in j]
 
 
+
+    
     # 0===0 functions 0===0
     for tag in func_tags:
 
@@ -576,6 +587,7 @@ def main(do_full_readme=False,
                 logger.error(f' General error in parsing function tag: tag = "{tag}"; error="{str(e)}"')
             continue
 
+    injection_points.append('now, classes.')
     # 0===0 classes 0===0
     for tag in classes_method_tags:
         try:
@@ -637,24 +649,26 @@ def main(do_full_readme=False,
     # 8888888888888888888888888888888888888888888888888888888
 
 
+    bar_it = lambda x: '\n' + '='*len(x) + f'\nSTARTING TO INSERT markdown text into 2_readme.md\n' + '='*len(x) + '\n'
     # 1> log some data
     success_tags = []
     bad_tags = []
     for injection in injection_points:
+        if injection == 'now, classes.':
+            logger.info(bar_it('STARTING TO INSERT markdown text into 2_readme.md'))
+            continue
         
         # SPECIAL CASE: X.doc tag
         if injection['part2'] == 'doc':
             a_tag = injection['tag']
-            print(f'a_tag = {a_tag}')
-            print(f'a_tag = {type(a_tag)}')
+            logger.info(f'a_tag = {a_tag, type(a_tag).__name__}')
             doc_ = '' if not injection['parent_class'].__doc__ else injection['parent_class'].__doc__
             # if doc_ == None or a_tag == None:
-            #     import pdb; pdb.set_trace();
+            
                 
             readme = readme.replace(a_tag, doc_)
         
         else:
-
 
             content = render(injection, logger=logger, line_break=line_break,
                 insert_md_section_for__class_methods=insert_md_section_for__class_methods)
@@ -666,6 +680,7 @@ def main(do_full_readme=False,
                 bad_tags.append(f'{tag} - FAIL')
 
             readme = readme.replace(tag, content)
+
 
     bad_part = '''\n\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n\n'''
     readme = readme.replace(bad_part, '\n')
@@ -682,8 +697,6 @@ def main(do_full_readme=False,
 
         logger.info(good_message)
         logger.info(bad_message)
-
-    print(123)
 
 
     # 8888888888888888888888888888888888
@@ -733,8 +746,8 @@ def main(do_full_readme=False,
             if remove_repeated_sections_classmethods:
                 rega = re.compile(r'((\#+\s\w+)\n\s){2}', flags=re.MULTILINE)
                 for index, i in enumerate(re.finditer(rega, content)):
-                    print(f'{index} - > {i.group(0)}')
-                    print(f'{index} - > {i.group(1)}')
+                    logger.info(f'{index} - > {i.group(0)}')
+                    logger.info(f'{index} - > {i.group(1)}')
                     content = content.replace(i.group(0), i.group(1))
                 # re
                 # content = re.sub(rega, r'\1', content, flags=re.MULTILINE)
@@ -749,6 +762,9 @@ def main(do_full_readme=False,
 
     if logger:
         logger.error(f'Error in main')
+
+    logger.save_messages()
+
 
 
 @click.command()
@@ -772,7 +788,6 @@ def cli(no_log, delete_log, delete_html_comments, output_name, log_file):
     my_file = logging.FileHandler(log_file, mode='w')
     my_file.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s>%(levelname)s: %(message)s')
-
     my_file.setFormatter(formatter)
     logger.addHandler(my_file)
 
