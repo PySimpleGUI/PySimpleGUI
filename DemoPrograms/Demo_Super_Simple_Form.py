@@ -1,11 +1,9 @@
 import PySimpleGUI as sg
 
-event, values = sg.Window('Window Title', [[sg.Text('Enter Something')], [sg.Input(key='-IN-'),],[sg.Button('OK'), sg.Button('Cancel')]]).read(close=True)
-
-sg.popup(event, values)
-
-
-# Basic Example
+"""
+    Simple Form (a one-shot data entry window)
+    Use this design pattern to show a form one time to a user that is "submitted"
+"""
 
 layout = [[sg.Text('Please enter your Name, Address, Phone')],
           [sg.Text('Name', size=(10, 1)), sg.InputText(key='-NAME-')],
@@ -15,6 +13,8 @@ layout = [[sg.Text('Please enter your Name, Address, Phone')],
 
 window = sg.Window('Simple Data Entry Window', layout)
 event, values = window.read(close=True)
-print(event, values['-NAME-'], values['-ADDRESS-'], values['-PHONE-'])
-sg.popup('test')
-window.close()
+
+if event == 'Submit':
+    print('The events was ', event, 'You input', values['-NAME-'], values['-ADDRESS-'], values['-PHONE-'])
+else:
+    print('User cancelled')
