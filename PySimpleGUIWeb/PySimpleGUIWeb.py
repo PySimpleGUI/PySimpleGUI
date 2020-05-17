@@ -1910,7 +1910,7 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 relief=DEFAULT_FRAME_RELIEF, element_justification='left', size=(None, None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None):
         '''
         Frame Element
@@ -1942,6 +1942,8 @@ class Frame(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Justification = 'left'
+        self.ElementJustification = element_justification
+
 
         self.Layout(layout)
 
@@ -2001,8 +2003,7 @@ VSep = VerticalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None):
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False, element_justification='left', border_width=None, key=None, tooltip=None):
         '''
         Tab Element
         :param title:
@@ -2029,6 +2030,7 @@ class Tab(Element):
         self.Disabled = disabled
         self.ParentNotebook = None
         self.Justification = 'left'
+        self.ElementJustification = element_justification
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Widget = None          # type: remi.gui.HBox
@@ -2219,7 +2221,7 @@ class Slider(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, justification='left', key=None):
+    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, element_justification='left', key=None):
         '''
         Column Element
         :param layout:
@@ -2239,7 +2241,7 @@ class Column(Element):
         self.TKFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
-        self.Justification = justification
+        self.ElementJustification = element_justification
         # self.ImageFilename = image_filename
         # self.ImageData = image_data
         # self.ImageSize = image_size
@@ -2598,7 +2600,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, return_key_down_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,margins=(None, None),
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False,margins=(None, None), element_justification='left',
                  disable_minimize=False, background_image=None, finalize=False,
                  web_debug=False, web_ip='0.0.0.0', web_port=0, web_start_browser=True, web_update_interval=.0000001, web_multiple_instance=False ):
         '''
@@ -2693,6 +2695,7 @@ class Window:
         self.DisableMinimize = disable_minimize
         self.OutputElementForStdOut = None      # type: Output
         self.Justification = 'left'
+        self.ElementJustification = element_justification
         self.IgnoreClose = False
         self.thread_id = None
         self.App = None         # type: Window.MyApp
@@ -4201,13 +4204,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
         tk_row_frame = remi.gui.HBox()
-        if form.Justification.startswith('c'):
-            # print('Centering row')
-            tk_row_frame.style['align-items'] = 'center'
-            tk_row_frame.style['justify-content'] = 'center'
+        tk_row_frame.style['align-items'] = 'flex-start'
+        if form.ElementJustification.startswith('c'):
+            tk_row_frame.style['margin-left'] = 'auto'
+            tk_row_frame.style['margin-right'] = 'auto'
+        elif form.ElementJustification.startswith('r'):
+            tk_row_frame.style['margin-left'] = 'auto'
         else:
-            tk_row_frame.style['align-items'] = 'flex-start'
-            tk_row_frame.style['justify-content'] = 'flex-start'
+            tk_row_frame.style['margin-right'] = 'auto'
+
         if form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
             tk_row_frame.style['background-color'] = form.BackgroundColor
 
@@ -4253,13 +4258,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 element = element   # type: Column
                 element.Widget = column_widget = remi.gui.VBox()
-                if element.Justification.startswith('c'):
-                    # print('CENTERING')
-                    column_widget.style['align-items'] = 'center'
-                    column_widget.style['justify-content'] = 'center'
-                else:
-                    column_widget.style['justify-content'] = 'flex-start'
-                    column_widget.style['align-items'] = 'baseline'
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     column_widget.style['background-color'] = element.BackgroundColor
                 PackFormIntoFrame(element, column_widget, toplevel_form)
