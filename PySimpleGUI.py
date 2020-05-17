@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.3 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working"
+version = __version__ = "4.19.0.4 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs"
 
 port = 'PySimpleGUI'
 
@@ -2899,7 +2899,10 @@ class Button(Element):
                 pass
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
+            if sys.platform == 'darwin':        # macs don't like seeing the parent window (go firgure)
+                folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
+            else:
+                folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
             if folder_name:
                 try:
                     strvar.set(folder_name)
@@ -10684,7 +10687,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  MENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
-                print(f'Menu tearoff = {element.Tearoff}')
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot,
                                                           tearoff=element.Tearoff)  # create the menubar
