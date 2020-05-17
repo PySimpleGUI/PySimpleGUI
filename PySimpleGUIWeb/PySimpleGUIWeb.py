@@ -491,7 +491,7 @@ class InputText(Element):
                 params['ctrl']=event.ctrlKey;
                 params['shift']=event.shiftKey;
                 params['alt']=event.altKey;
-                sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
+                remi.sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
                 event.stopPropagation();event.preventDefault();return false;""")
         def onkeyup(self, key, keycode, ctrl, shift, alt):
             return (key, keycode, ctrl, shift, alt)
@@ -502,7 +502,7 @@ class InputText(Element):
                 params['ctrl']=event.ctrlKey;
                 params['shift']=event.shiftKey;
                 params['alt']=event.altKey;
-                sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
+                remi.sendCallbackParam('%(emitter_identifier)s','%(event_name)s',params);
                 event.stopPropagation();event.preventDefault();return false;""")
         def onkeydown(self, key, keycode, ctrl, shift, alt):
             return (key, keycode, ctrl, shift, alt)
@@ -5195,7 +5195,7 @@ def setup_remi_window(app:Window.MyApp, window:Window):
     if not window.DisableClose:
         # add the following 3 lines to your app and the on_window_close method to make the console close automatically
         tag = remi.gui.Tag(_type='script')
-        tag.add_child("javascript", """window.onunload=function(e){sendCallback('%s','%s');return "close?";};""" % (
+        tag.add_child("javascript", """window.onunload=function(e){remi.sendCallback('%s','%s');return "close?";};""" % (
             str(id(app)), "on_window_close"))
         master_widget.add_child("onunloadevent", tag)
 
