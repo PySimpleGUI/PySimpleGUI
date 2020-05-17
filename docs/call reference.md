@@ -1,7 +1,14 @@
+![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
 
 # ELEMENT AND FUNCTION CALL REFERENCE
 
-NOTE that this documentation section is created using the ***GitHUB released PySimpleGUI.py file***. This means you're seeing the tkinter port only and some of the changes might not yet be released on PyPI.   Some of the calls may not be available to you or your port (Qt, Wx, Web).  And some of the parameters may be different.  We're working on adding docstrings to all the ports which will enable this kind of document to be available for each port.
+Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
+
+## Currently PySimpleGUI (tkinter) only
+
+This documentation is created using the PySimpleGUI.py file which means it's based on the tkinter code. Some of the calls are different, might not exist at all, or there may be more methods/functions for the other PySimpleGUI ports (Qt, Wx, Web).  
+
+Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
@@ -12,9 +19,6 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ## Button Element 
 
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
-    
-
-
 
 ```
 Button(button_text="",
@@ -44,7 +48,6 @@ Button(button_text="",
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -77,10 +80,7 @@ Parameter Descriptions:
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
-
 ### Click
-
-
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -89,31 +89,17 @@ Generates a click of the button as if the user clicked the button
 Click()
 ```
 
-
-
-
-
-
 ### GetText
-
-
-
 
 Returns the current text shown on a button
 
 `GetText()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The text currently displayed on the button         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -121,16 +107,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -138,16 +121,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -163,7 +143,6 @@ Update(text=None,
     image_size=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -178,9 +157,7 @@ Parameter Descriptions:
 |        int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |  Tuple[int, int]  |      image_size       | Size of the image in pixels (width, height) |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -189,12 +166,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### click
-
-
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -203,13 +175,7 @@ Generates a click of the button as if the user clicked the button
 click()
 ```
 
-
-
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -219,48 +185,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### get_text
-
-
-
 
 Returns the current text shown on a button
 
 `get_text()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The text currently displayed on the button         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -269,13 +214,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -283,11 +222,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -295,16 +230,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -313,16 +245,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -330,16 +259,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -347,12 +273,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -361,13 +282,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -383,7 +298,6 @@ update(text=None,
     image_size=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -398,13 +312,9 @@ Parameter Descriptions:
 |        int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |  Tuple[int, int]  |      image_size       | Size of the image in pixels (width, height) |
 
-
 ## ButtonMenu Element 
 
     The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
-    
-
-
 
 ```
 ButtonMenu(button_text,
@@ -426,7 +336,6 @@ ButtonMenu(button_text,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -451,10 +360,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Click
-
-
 
 Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -463,13 +369,7 @@ Generates a click of the button as if the user clicked the button
 Click()
 ```
 
-
-
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -477,16 +377,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -494,23 +391,19 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 Update(menu_definition, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -519,9 +412,7 @@ Parameter Descriptions:
 | List[List] | menu_definition | (New menu definition (in menu definition format) |
 |    bool    |     visible     | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -530,11 +421,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -544,30 +431,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -576,13 +450,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -590,11 +458,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -602,16 +466,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -620,16 +481,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -637,16 +495,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -654,12 +509,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -668,20 +518,13 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 update(menu_definition, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -690,11 +533,7 @@ Parameter Descriptions:
 | List[List] | menu_definition | (New menu definition (in menu definition format) |
 |    bool    |     visible     | control visibility of element |
 
-
 ## Canvas Element 
-
-
-
 
 ```
 Canvas(canvas=None,
@@ -707,7 +546,6 @@ Canvas(canvas=None,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -723,9 +561,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -733,16 +569,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -750,33 +583,23 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### TKCanvas
-
-
 
 #### property: TKCanvas
 
 Returns the underlying tkiner Canvas widget
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The tkinter canvas widget         |
 
-
-
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -785,11 +608,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -799,30 +618,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -831,13 +637,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -845,11 +645,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -857,16 +653,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -875,16 +668,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -892,33 +682,23 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### tk_canvas
-
-
 
 #### property: tk_canvas
 
 Returns the underlying tkiner Canvas widget
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The tkinter canvas widget         |
 
-
-
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -926,12 +706,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -940,17 +715,9 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ## Checkbox Element 
 
     Checkbox Element - Displays a checkbox and text next to it
-    
-
-
 
 ```
 Checkbox(text,
@@ -969,7 +736,6 @@ Checkbox(text,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -991,27 +757,17 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Return the current state of this checkbox
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Current state of checkbox         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -1019,16 +775,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1036,16 +789,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
@@ -1059,7 +809,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -1071,9 +820,7 @@ Parameter Descriptions:
 | bool |     disabled     | disable or enable element |
 | bool |     visible      | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -1082,11 +829,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -1096,48 +839,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Return the current state of this checkbox
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Current state of checkbox         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -1146,13 +868,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -1160,11 +876,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -1172,16 +884,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -1190,16 +899,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1207,16 +913,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -1224,12 +927,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -1238,13 +936,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
 Note that changing visibility may cause element to change locations when made visible after invisible
@@ -1258,7 +950,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -1270,13 +961,9 @@ Parameter Descriptions:
 | bool |     disabled     | disable or enable element |
 | bool |     visible      | control visibility of element |
 
-
 ## Column Element 
 
     A container element that is used to create a layout within your window's layout
-    
-
-
 
 ```
 Column(layout,
@@ -1292,7 +979,6 @@ Column(layout,
     element_justification="left",
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -1311,9 +997,7 @@ Parameter Descriptions:
 |                                     str                                      | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
-
 ### AddRow
-
 
 Not recommended user call.  Used to add rows of Elements to the Column Element.
 
@@ -1321,23 +1005,19 @@ Not recommended user call.  Used to add rows of Elements to the Column Element.
 AddRow(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### Layout
-
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
 ```
 Layout(rows)
 ```
-
 
 Parameter Descriptions:
 
@@ -1346,9 +1026,7 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Column) | **RETURN** | Used for chaining
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -1356,16 +1034,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1373,16 +1048,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1390,16 +1062,13 @@ Changes some of the settings for the Column Element. Must call `Window.Read` or 
 Update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ### add_row
-
 
 Not recommended user call.  Used to add rows of Elements to the Column Element.
 
@@ -1407,16 +1076,13 @@ Not recommended user call.  Used to add rows of Elements to the Column Element.
 add_row(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -1425,11 +1091,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -1439,30 +1101,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -1471,20 +1120,13 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### layout
-
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
 ```
 layout(rows)
 ```
-
 
 Parameter Descriptions:
 
@@ -1493,9 +1135,7 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Column) | **RETURN** | Used for chaining
 
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -1503,11 +1143,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -1515,16 +1151,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -1533,16 +1166,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1550,16 +1180,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -1567,12 +1194,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -1581,13 +1203,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1595,20 +1211,15 @@ Changes some of the settings for the Column Element. Must call `Window.Read` or 
 update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ## Combo Element 
 
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
-    
-
-
 
 ```
 Combo(values,
@@ -1629,7 +1240,6 @@ Combo(values,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -1647,28 +1257,18 @@ Parameter Descriptions:
 |              bool               |     visible      | set visibility state of the element |
 |               Any               |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
 You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Returns the value of what is currently chosen         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -1676,16 +1276,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1693,16 +1290,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1716,7 +1310,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -1729,9 +1322,7 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |     font     | specifies the font family, size, etc |
 |            bool             |   visible    | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -1740,11 +1331,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -1754,49 +1341,28 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
 You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Returns the value of what is currently chosen         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -1805,13 +1371,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -1819,11 +1379,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -1831,16 +1387,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -1849,16 +1402,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1866,16 +1416,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -1883,12 +1430,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -1897,13 +1439,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1917,7 +1453,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -1930,14 +1465,9 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |     font     | specifies the font family, size, etc |
 |            bool             |   visible    | control visibility of element |
 
-
-
 ## Frame Element 
 
     A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
-    
-
-
 
 ```
 Frame(title,
@@ -1957,7 +1487,6 @@ Frame(title,
     element_justification="left",
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -1980,9 +1509,7 @@ Parameter Descriptions:
 |                                     str                                      | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
-
 ### AddRow
-
 
 Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -1990,23 +1517,19 @@ Not recommended user call.  Used to add rows of Elements to the Frame Element.
 AddRow(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### Layout
-
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
 ```
 Layout(rows)
 ```
-
 
 Parameter Descriptions:
 
@@ -2015,9 +1538,7 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Frame) | **RETURN** | Used for chaining
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -2025,16 +1546,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -2042,23 +1560,19 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 Update(value=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -2067,9 +1581,7 @@ Parameter Descriptions:
 | Any  |  value  | New text value to show on frame |
 | bool | visible | control visibility of element |
 
-
 ### add_row
-
 
 Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -2077,16 +1589,13 @@ Not recommended user call.  Used to add rows of Elements to the Frame Element.
 add_row(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -2095,11 +1604,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -2109,30 +1614,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -2141,20 +1633,13 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### layout
-
 
 Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
 ```
 layout(rows)
 ```
-
 
 Parameter Descriptions:
 
@@ -2163,9 +1648,7 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Frame) | **RETURN** | Used for chaining
 
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -2173,11 +1656,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -2185,16 +1664,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -2203,16 +1679,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -2220,16 +1693,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -2237,12 +1707,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -2251,13 +1716,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -2265,14 +1724,12 @@ Changes some of the settings for the Frame Element. Must call `Window.Read` or `
 update(value=None, visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Any  |  value  | New text value to show on frame |
 | bool | visible | control visibility of element |
-
 
 ## Graph Element 
 
@@ -2285,9 +1742,6 @@ Parameter Descriptions:
     You can also use float values. To do so, be sure and set the float_values parameter.
     Mouse click and drag events are possible and return the (x,y) coordinates of the mouse
     Drawing primitives return an "id" that is referenced when you want to operation on that item (e.g. to erase it)
-    
-
-
 
 ```
 Graph(canvas_size,
@@ -2305,7 +1759,6 @@ Graph(canvas_size,
     float_values=False,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -2326,9 +1779,7 @@ Parameter Descriptions:
 |                                     bool                                     |   float_values    | If True x,y coordinates are returned as floats, not ints |
 |                                     Any                                      |     metadata      | User metadata that can be set to ANYTHING |
 
-
 ### BringFigureToFront
-
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
@@ -2336,16 +1787,13 @@ Changes Z-order of figures on the Graph.  Brings the indicated figure to the fro
 BringFigureToFront(figure)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
 
-
 ### DeleteFigure
-
 
 Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
@@ -2353,16 +1801,13 @@ Remove from the Graph the figure represented by id. The id is given to you anyti
 DeleteFigure(id)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | id | the id returned to you when calling one of the drawing methods |
 
-
 ### DrawArc
-
 
 Draws different types of arcs.  Uses a "bounding box" to define location
 
@@ -2376,7 +1821,6 @@ DrawArc(top_left,
     line_width=1)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -2389,9 +1833,7 @@ Parameter Descriptions:
 |                     str                     |  arc_color   | color to draw arc with |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the arc
 
-
 ### DrawCircle
-
 
 Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
 
@@ -2402,7 +1844,6 @@ DrawCircle(center_location,
     line_color="black",
     line_width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2415,9 +1856,7 @@ Parameter Descriptions:
 |                     int                      |   line_width    | width of the line around the circle, the outline, in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the circle
 
-
 ### DrawImage
-
 
 Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
@@ -2429,7 +1868,6 @@ DrawImage(filename=None,
     font=None,
     angle=0)
 ```
-
 
 Parameter Descriptions:
 
@@ -2443,9 +1881,7 @@ Parameter Descriptions:
 |                    float                    |  angle   | Angle 0 to 360 to draw the text. Zero represents horizontal text |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
 
-
 ### DrawLine
-
 
 Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
 
@@ -2455,7 +1891,6 @@ DrawLine(point_from,
     color="black",
     width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2467,9 +1902,7 @@ Parameter Descriptions:
 |                     int                     |   width    | width of line in pixels |
 | Union[int, None] | **RETURN** | id returned from tktiner or None if user closed the window. id is used when you
 
-
 ### DrawOval
-
 
 Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
 
@@ -2480,7 +1913,6 @@ DrawOval(top_left,
     line_color=None,
     line_width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2493,9 +1925,7 @@ Parameter Descriptions:
 |                     int                     |  line_width  | width of the line around the oval, the outline, in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the oval
 
-
 ### DrawPoint
-
 
 Draws a "dot" at the point you specify using the USER'S coordinate system
 
@@ -2504,7 +1934,6 @@ DrawPoint(point,
     size=2,
     color="black")
 ```
-
 
 Parameter Descriptions:
 
@@ -2515,9 +1944,7 @@ Parameter Descriptions:
 |                     str                      | color | color of the point to draw |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the point
 
-
 ### DrawPolygon
-
 
 Draw a polygon given list of points
 
@@ -2527,7 +1954,6 @@ DrawPolygon(points,
     line_color=None,
     line_width=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -2539,9 +1965,7 @@ Parameter Descriptions:
 |                        int                        | line_width | width of the line in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the rectangle
 
-
 ### DrawRectangle
-
 
 Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -2552,7 +1976,6 @@ DrawRectangle(top_left,
     line_color=None,
     line_width=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -2565,9 +1988,7 @@ Parameter Descriptions:
 |                     int                     |  line_width  | width of the line in pixels |
 | Union[int, None] | **RETURN** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
 
-
 ### DrawText
-
 
 Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -2579,7 +2000,6 @@ DrawText(text,
     angle=0,
     text_location="center")
 ```
-
 
 Parameter Descriptions:
 
@@ -2593,10 +2013,7 @@ Parameter Descriptions:
 |                    enum                     | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
 
-
 ### Erase
-
-
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
 
@@ -2604,20 +2021,13 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 Erase()
 ```
 
-
-
-
-
-
 ### GetBoundingBox
-
 
 Given a figure, returns the upper left and lower right bounding box coordinates
 
 ```
 GetBoundingBox(figure)
 ```
-
 
 Parameter Descriptions:
 
@@ -2626,16 +2036,13 @@ Parameter Descriptions:
 | object | figure | a previously drawing figure |
 | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] | **RETURN** | upper left x, upper left y, lower right x, lower right y
 
-
 ### GetFiguresAtLocation
-
 
 Returns a list of figures located at a particular x,y location within the Graph
 
 ```
 GetFiguresAtLocation(location)
 ```
-
 
 Parameter Descriptions:
 
@@ -2644,16 +2051,13 @@ Parameter Descriptions:
 | Union[Tuple[int, int], Tuple[float, float]] | location | point to check |
 | List[int] | **RETURN** | a list of previously drawn "Figures" (returned from the drawing primitives)
 
-
 ### Move
-
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
 ```
 Move(x_direction, y_direction)
 ```
-
 
 Parameter Descriptions:
 
@@ -2662,9 +2066,7 @@ Parameter Descriptions:
 | Union[int, float] | x_direction | how far to move in the "X" direction in your coordinates |
 | Union[int, float] | y_direction | how far to move in the "Y" direction in your coordinates |
 
-
 ### MoveFigure
-
 
 Moves a previously drawn figure using a "delta" from current position
 
@@ -2674,7 +2076,6 @@ MoveFigure(figure,
     y_direction)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -2683,9 +2084,7 @@ Parameter Descriptions:
 | Union[int, float] | x_direction | delta to apply to position in the X direction |
 | Union[int, float] | y_direction | delta to apply to position in the Y direction |
 
-
 ### RelocateFigure
-
 
 Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
 uses absolute coordinates versus relative for Move
@@ -2696,7 +2095,6 @@ RelocateFigure(figure,
     y)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -2705,9 +2103,7 @@ Parameter Descriptions:
 | Union[int, float] |   x    | location on X axis (in user coords) to move the upper left corner of the figure |
 | Union[int, float] |   y    | location on Y axis (in user coords) to move the upper left corner of the figure |
 
-
 ### SendFigureToBack
-
 
 Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
 
@@ -2715,16 +2111,13 @@ Changes Z-order of figures on the Graph.  Sends the indicated figure to the back
 SendFigureToBack(figure)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -2732,16 +2125,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -2749,40 +2139,29 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### TKCanvas
-
-
 
 #### property: TKCanvas
 
 Returns the underlying tkiner Canvas widget
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The tkinter canvas widget         |
 
-
-
-
 ### Update
-
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 Update(background_color=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -2791,9 +2170,7 @@ Parameter Descriptions:
 | ???  | background_color | color of background |
 | bool |     visible      | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -2802,11 +2179,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### bring_figure_to_front
-
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
@@ -2814,16 +2187,13 @@ Changes Z-order of figures on the Graph.  Brings the indicated figure to the fro
 bring_figure_to_front(figure)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
 
-
 ### change_coordinates
-
 
 Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
 system - the bottom left and the top right values of your graph.
@@ -2832,7 +2202,6 @@ system - the bottom left and the top right values of your graph.
 change_coordinates(graph_bottom_left, graph_top_right)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -2840,9 +2209,7 @@ Parameter Descriptions:
 | Tuple[int, int] (x,y)  | graph_bottom_left | The bottoms left corner of your coordinate system |
 | Tuple[int, int]  (x,y) |  graph_top_right  | The top right corner of your coordinate system |
 
-
 ### delete_figure
-
 
 Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
@@ -2850,16 +2217,13 @@ Remove from the Graph the figure represented by id. The id is given to you anyti
 delete_figure(id)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | id | the id returned to you when calling one of the drawing methods |
 
-
 ### draw_arc
-
 
 Draws different types of arcs.  Uses a "bounding box" to define location
 
@@ -2873,7 +2237,6 @@ draw_arc(top_left,
     line_width=1)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -2886,9 +2249,7 @@ Parameter Descriptions:
 |                     str                     |  arc_color   | color to draw arc with |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the arc
 
-
 ### draw_circle
-
 
 Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
 
@@ -2899,7 +2260,6 @@ draw_circle(center_location,
     line_color="black",
     line_width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2912,9 +2272,7 @@ Parameter Descriptions:
 |                     int                      |   line_width    | width of the line around the circle, the outline, in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the circle
 
-
 ### draw_image
-
 
 Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
@@ -2926,7 +2284,6 @@ draw_image(filename=None,
     font=None,
     angle=0)
 ```
-
 
 Parameter Descriptions:
 
@@ -2940,9 +2297,7 @@ Parameter Descriptions:
 |                    float                    |  angle   | Angle 0 to 360 to draw the text. Zero represents horizontal text |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
 
-
 ### draw_line
-
 
 Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
 
@@ -2952,7 +2307,6 @@ draw_line(point_from,
     color="black",
     width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2964,9 +2318,7 @@ Parameter Descriptions:
 |                     int                     |   width    | width of line in pixels |
 | Union[int, None] | **RETURN** | id returned from tktiner or None if user closed the window. id is used when you
 
-
 ### draw_oval
-
 
 Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
 
@@ -2977,7 +2329,6 @@ draw_oval(top_left,
     line_color=None,
     line_width=1)
 ```
-
 
 Parameter Descriptions:
 
@@ -2990,9 +2341,7 @@ Parameter Descriptions:
 |                     int                     |  line_width  | width of the line around the oval, the outline, in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the oval
 
-
 ### draw_point
-
 
 Draws a "dot" at the point you specify using the USER'S coordinate system
 
@@ -3001,7 +2350,6 @@ draw_point(point,
     size=2,
     color="black")
 ```
-
 
 Parameter Descriptions:
 
@@ -3012,9 +2360,7 @@ Parameter Descriptions:
 |                     str                      | color | color of the point to draw |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the point
 
-
 ### draw_polygon
-
 
 Draw a polygon given list of points
 
@@ -3024,7 +2370,6 @@ draw_polygon(points,
     line_color=None,
     line_width=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -3036,9 +2381,7 @@ Parameter Descriptions:
 |                        int                        | line_width | width of the line in pixels |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the rectangle
 
-
 ### draw_rectangle
-
 
 Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -3049,7 +2392,6 @@ draw_rectangle(top_left,
     line_color=None,
     line_width=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -3062,9 +2404,7 @@ Parameter Descriptions:
 |                     int                     |  line_width  | width of the line in pixels |
 | Union[int, None] | **RETURN** | Union[int, None] id returned from tkinter that you'll need if you want to manipulate the rectangle
 
-
 ### draw_text
-
 
 Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -3076,7 +2416,6 @@ draw_text(text,
     angle=0,
     text_location="center")
 ```
-
 
 Parameter Descriptions:
 
@@ -3090,10 +2429,7 @@ Parameter Descriptions:
 |                    enum                     | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
 
-
 ### erase
-
-
 
 Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
 
@@ -3101,13 +2437,7 @@ Erase the Graph - Removes all figures previously "drawn" using the Graph methods
 erase()
 ```
 
-
-
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -3117,18 +2447,13 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_bounding_box
-
 
 Given a figure, returns the upper left and lower right bounding box coordinates
 
 ```
 get_bounding_box(figure)
 ```
-
 
 Parameter Descriptions:
 
@@ -3137,16 +2462,13 @@ Parameter Descriptions:
 | object | figure | a previously drawing figure |
 | Union[Tuple[int, int, int, int], Tuple[float, float, float, float]] | **RETURN** | upper left x, upper left y, lower right x, lower right y
 
-
 ### get_figures_at_location
-
 
 Returns a list of figures located at a particular x,y location within the Graph
 
 ```
 get_figures_at_location(location)
 ```
-
 
 Parameter Descriptions:
 
@@ -3155,28 +2477,17 @@ Parameter Descriptions:
 | Union[Tuple[int, int], Tuple[float, float]] | location | point to check |
 | List[int] | **RETURN** | a list of previously drawn "Figures" (returned from the drawing primitives)
 
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -3185,20 +2496,13 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### move
-
 
 Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
 ```
 move(x_direction, y_direction)
 ```
-
 
 Parameter Descriptions:
 
@@ -3207,9 +2511,7 @@ Parameter Descriptions:
 | Union[int, float] | x_direction | how far to move in the "X" direction in your coordinates |
 | Union[int, float] | y_direction | how far to move in the "Y" direction in your coordinates |
 
-
 ### move_figure
-
 
 Moves a previously drawn figure using a "delta" from current position
 
@@ -3219,7 +2521,6 @@ move_figure(figure,
     y_direction)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3228,9 +2529,7 @@ Parameter Descriptions:
 | Union[int, float] | x_direction | delta to apply to position in the X direction |
 | Union[int, float] | y_direction | delta to apply to position in the Y direction |
 
-
 ### relocate_figure
-
 
 Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
 uses absolute coordinates versus relative for Move
@@ -3241,7 +2540,6 @@ relocate_figure(figure,
     y)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3250,9 +2548,7 @@ Parameter Descriptions:
 | Union[int, float] |   x    | location on X axis (in user coords) to move the upper left corner of the figure |
 | Union[int, float] |   y    | location on Y axis (in user coords) to move the upper left corner of the figure |
 
-
 ### send_figure_to_back
-
 
 Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
 
@@ -3260,16 +2556,13 @@ Changes Z-order of figures on the Graph.  Sends the indicated figure to the back
 send_figure_to_back(figure)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
 
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -3277,11 +2570,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -3289,16 +2578,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -3307,16 +2593,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -3324,33 +2607,23 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### tk_canvas
-
-
 
 #### property: tk_canvas
 
 Returns the underlying tkiner Canvas widget
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The tkinter canvas widget         |
 
-
-
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -3358,12 +2631,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -3372,20 +2640,13 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 update(background_color=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -3394,13 +2655,9 @@ Parameter Descriptions:
 | ???  | background_color | color of background |
 | bool |     visible      | control visibility of element |
 
-
 ## Image Element 
 
     Image Element - show an image in the window. Should be a GIF or a PNG only
-    
-
-
 
 ```
 Image(filename=None,
@@ -3415,7 +2672,6 @@ Image(filename=None,
     enable_events=False,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -3433,9 +2689,7 @@ Parameter Descriptions:
 |                                     bool                                     |  enable_events   | Turns on the element specific events. For an Image element, the event is "image clicked" |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -3443,16 +2697,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -3460,16 +2711,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3480,7 +2728,6 @@ Update(filename=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3490,9 +2737,7 @@ Parameter Descriptions:
 |      Tuple[int,int]      |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
 |           bool           | visible  | control visibility of element |
 
-
 ### UpdateAnimation
-
 
 Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
 NOTE - does NOT perform a sleep call to delay
@@ -3501,7 +2746,6 @@ NOTE - does NOT perform a sleep call to delay
 UpdateAnimation(source, time_between_frames=0)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3509,9 +2753,7 @@ Parameter Descriptions:
 | Union[str,bytes] |       source        | Filename or Base64 encoded string containing Animated GIF |
 |       int        | time_between_frames | Number of milliseconds to wait between showing frames |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -3520,11 +2762,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -3534,30 +2772,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -3566,13 +2791,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -3580,11 +2799,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -3592,16 +2807,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -3610,16 +2822,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -3627,16 +2836,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -3644,12 +2850,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -3658,13 +2859,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3675,7 +2870,6 @@ update(filename=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3685,9 +2879,7 @@ Parameter Descriptions:
 |      Tuple[int,int]      |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
 |           bool           | visible  | control visibility of element |
 
-
 ### update_animation
-
 
 Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
 NOTE - does NOT perform a sleep call to delay
@@ -3696,7 +2888,6 @@ NOTE - does NOT perform a sleep call to delay
 update_animation(source, time_between_frames=0)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3704,9 +2895,7 @@ Parameter Descriptions:
 | Union[str,bytes] |       source        | Filename or Base64 encoded string containing Animated GIF |
 |       int        | time_between_frames | Number of milliseconds to wait between showing frames |
 
-
 ### update_animation_no_buffering
-
 
 Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
 NOTE - does NOT perform a sleep call to delay
@@ -3715,7 +2904,6 @@ NOTE - does NOT perform a sleep call to delay
 update_animation_no_buffering(source, time_between_frames=0)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3723,13 +2911,9 @@ Parameter Descriptions:
 | Union[str,bytes] |       source        | Filename or Base64 encoded string containing Animated GIF |
 |       int        | time_between_frames | Number of milliseconds to wait between showing frames |
 
-
 ## InputText Element 
 
     Display a single text input field.  Based on the tkinter Widget `Entry`
-    
-
-
 
 ```
 InputText(default_text="",
@@ -3752,7 +2936,6 @@ InputText(default_text="",
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -3778,27 +2961,17 @@ Parameter Descriptions:
 |                                     bool                                     |         visible          | set visibility state of the element (Default = True) |
 |                                     Any                                      |         metadata         | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | current value of Input field or '' if error encountered         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -3806,16 +2979,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -3823,16 +2993,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3846,7 +3013,6 @@ Update(value=None,
     move_cursor_to="end")
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -3859,9 +3025,7 @@ Parameter Descriptions:
 |       str       | background_color | change color of the background |
 | Union[int, str] |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -3870,11 +3034,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -3884,48 +3044,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | current value of Input field or '' if error encountered         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -3934,13 +3073,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -3948,11 +3081,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -3960,16 +3089,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -3978,16 +3104,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -3995,16 +3118,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -4012,12 +3132,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -4026,13 +3141,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4046,7 +3155,6 @@ update(value=None,
     move_cursor_to="end")
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -4059,14 +3167,10 @@ Parameter Descriptions:
 |       str       | background_color | change color of the background |
 | Union[int, str] |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 
-
 ## Listbox Element 
 
     A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
     when a window.Read() is executed.
-    
-
-
 
 ```
 Listbox(values,
@@ -4089,7 +3193,6 @@ Listbox(values,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -4114,45 +3217,27 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### GetIndexes
-
-
-
 
 Returns the items currently selected as a list of indexes
 
 `GetIndexes()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | A list of offsets into values that is currently selected         |
 
-
-
-
 ### GetListValues
-
-
-
 
 Returns list of Values provided by the user in the user's format
 
 `GetListValues()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | List of values. Can be any / mixed types -> []         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -4160,16 +3245,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -4177,16 +3259,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### SetValue
-
 
 Set listbox highlighted choices
 
@@ -4194,16 +3273,13 @@ Set listbox highlighted choices
 SetValue(values)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Any] | values | new values to choose based on previously set values |
 
-
 ### Update
-
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4216,7 +3292,6 @@ Update(values=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -4228,9 +3303,7 @@ Parameter Descriptions:
 |           str           |      mode       | changes the select mode according to tkinter's listbox widget |
 |          bool           |     visible     | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -4239,11 +3312,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -4253,85 +3322,48 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Returns the list of items currently selected in this listbox.  It should be identical
 to the value you would receive when performing a window.read() call.
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The list of currently selected items. The actual items are returned, not the indexes         |
 
-
-
-
 ### get_indexes
-
-
-
 
 Returns the items currently selected as a list of indexes
 
 `get_indexes()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | A list of offsets into values that is currently selected         |
 
-
-
-
 ### get_list_values
-
-
-
 
 Returns list of Values provided by the user in the user's format
 
 `get_list_values()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | List of values. Can be any / mixed types -> []         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -4340,13 +3372,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -4354,11 +3380,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -4366,16 +3388,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -4384,16 +3403,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -4401,16 +3417,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### set_value
-
 
 Set listbox highlighted choices
 
@@ -4418,16 +3431,13 @@ Set listbox highlighted choices
 set_value(values)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Any] | values | new values to choose based on previously set values |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -4435,12 +3445,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -4449,13 +3454,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4468,7 +3467,6 @@ update(values=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -4479,7 +3477,6 @@ Parameter Descriptions:
 |           int           | scroll_to_index | scroll the listbox so that this index is the first shown |
 |           str           |      mode       | changes the select mode according to tkinter's listbox widget |
 |          bool           |     visible     | control visibility of element |
-
 
 ## Menu Element 
 
@@ -4497,9 +3494,6 @@ Parameter Descriptions:
     Finally, "keys" can be added to entries so make them unique.  The "Save" entry has a key associated with it. You
     can see it has a "::" which signifies the beginning of a key.  The user will not see the key portion when the
     menu is shown.  The key portion is returned as part of the event.
-    
-
-
 
 ```
 Menu(menu_definition,
@@ -4512,7 +3506,6 @@ Menu(menu_definition,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -4527,9 +3520,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -4537,16 +3528,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -4554,23 +3542,19 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
 ```
 Update(menu_definition=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -4579,9 +3563,7 @@ Parameter Descriptions:
 | List[List[Tuple[str, List[str]]] | menu_definition | ??? |
 |               bool               |     visible     | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -4590,11 +3572,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -4604,30 +3582,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -4636,13 +3601,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -4650,11 +3609,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -4662,16 +3617,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -4680,16 +3632,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -4697,16 +3646,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -4714,12 +3660,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -4728,20 +3669,13 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
 ```
 update(menu_definition=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -4750,15 +3684,11 @@ Parameter Descriptions:
 | List[List[Tuple[str, List[str]]] | menu_definition | ??? |
 |               bool               |     visible     | control visibility of element |
 
-
 ## Multiline Element 
 
     Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
     Other PySimpleGUI ports have a separate MultilineInput and MultilineOutput elements.  May want to split this
     one up in the future too.
-    
-
-
 
 ```
 Multiline(default_text="",
@@ -4782,7 +3712,6 @@ Multiline(default_text="",
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -4809,27 +3738,17 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Return current contents of the Multiline Element
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | current contents of the Multiline Element (used as an input type of Multiline         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -4837,16 +3756,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -4854,16 +3770,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4880,7 +3793,6 @@ Update(value=None,
     autoscroll=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -4894,9 +3806,7 @@ Parameter Descriptions:
 |            bool             |     visible      | set visibility state of the element |
 |            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -4905,11 +3815,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -4919,48 +3825,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Return current contents of the Multiline Element
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | current contents of the Multiline Element (used as an input type of Multiline         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -4969,13 +3854,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### print
-
 
 Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -4988,7 +3867,6 @@ print(args=*<1 or N object>,
     autoscroll=True)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -4999,9 +3877,7 @@ Parameter Descriptions:
 |    str    |    text_color    | The color of the text |
 |    str    | background_color | The background color of the line |
 
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -5009,11 +3885,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -5021,16 +3893,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -5039,16 +3908,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5056,16 +3922,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -5073,12 +3936,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -5087,13 +3945,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5110,7 +3962,6 @@ update(value=None,
     autoscroll=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -5124,16 +3975,12 @@ Parameter Descriptions:
 |            bool             |     visible      | set visibility state of the element |
 |            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
 
-
 ## OptionMenu Element 
 
     Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
     to tkinter.  However, it looks much like a ComboBox.  Instead of an arrow to click to pull down the list of
     choices, another little graphic is shown on the widget to indicate where you click.  After clicking to activate,
     it looks like a Combo Box that you scroll to select a choice.
-    
-
-
 
 ```
 OptionMenu(values,
@@ -5149,7 +3996,6 @@ OptionMenu(values,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -5167,9 +4013,7 @@ Parameter Descriptions:
 |                                     str                                      |     tooltip      | (str) text that will appear when mouse hovers over this element |
 |                                     bool                                     |     visible      | (bool) set visibility state of the element |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -5177,16 +4021,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5194,16 +4035,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5214,7 +4052,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -5224,9 +4061,7 @@ Parameter Descriptions:
 |   bool    | disabled | disable or enable state of the element |
 |   bool    | visible  | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -5235,12 +4070,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5250,30 +4080,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -5282,13 +4099,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -5296,11 +4107,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -5308,16 +4115,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -5326,16 +4130,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5343,16 +4144,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -5360,12 +4158,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -5374,13 +4167,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5391,7 +4178,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -5401,13 +4187,9 @@ Parameter Descriptions:
 |   bool    | disabled | disable or enable state of the element |
 |   bool    | visible  | control visibility of element |
 
-
 ## Output Element 
 
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
-    
-
-
 
 ```
 Output(size=(None, None),
@@ -5421,7 +4203,6 @@ Output(size=(None, None),
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -5438,27 +4219,17 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Returns the current contents of the output.  Similar to Get method other Elements
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | the current value of the output         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -5466,16 +4237,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5483,40 +4251,29 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### TKOut
-
-
 
 #### property: TKOut
 
 Returns the TKOutput object used to create the element
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The TKOutput object         |
 
-
-
-
 ### Update
-
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 Update(value=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -5525,9 +4282,7 @@ Parameter Descriptions:
 | str  |  value  | string that will replace current contents of the output area |
 | bool | visible | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -5536,11 +4291,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5550,7 +4301,6 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -5558,28 +4308,17 @@ Parameter Descriptions:
 | Bool | expand_x | If True Element will expand in the Horizontal directions |
 | Bool | expand_y | If True Element will expand in the Vertical directions |
 
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -5588,13 +4327,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -5602,11 +4335,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -5614,16 +4343,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -5632,16 +4358,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5649,33 +4372,23 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### tk_out
-
-
 
 #### property: tk_out
 
 Returns the TKOutput object used to create the element
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The TKOutput object         |
 
-
-
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -5683,12 +4396,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -5697,20 +4405,13 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 update(value=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -5719,13 +4420,9 @@ Parameter Descriptions:
 | str  |  value  | string that will replace current contents of the output area |
 | bool | visible | control visibility of element |
 
-
 ## Pane Element 
 
     A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
-    
-
-
 
 ```
 Pane(pane_list,
@@ -5741,7 +4438,6 @@ Pane(pane_list,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -5760,9 +4456,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -5770,16 +4464,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5787,16 +4478,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5804,16 +4492,13 @@ Changes some of the settings for the Pane Element. Must call `Window.Read` or `W
 Update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -5822,11 +4507,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -5836,30 +4517,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -5868,13 +4536,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -5882,11 +4544,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -5894,16 +4552,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -5912,16 +4567,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -5929,16 +4581,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -5946,12 +4595,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -5960,13 +4604,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5974,20 +4612,15 @@ Changes some of the settings for the Pane Element. Must call `Window.Read` or `W
 update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ## ProgressBar Element 
 
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
-    
-
-
 
 ```
 ProgressBar(max_value,
@@ -6003,7 +4636,6 @@ ProgressBar(max_value,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6022,9 +4654,7 @@ Parameter Descriptions:
 |                                     bool                                     |    visible     | set visibility state of the element |
 |                                     Any                                      |    metadata    | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -6032,16 +4662,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6049,16 +4676,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6066,23 +4690,19 @@ Changes some of the settings for the ProgressBar Element. Must call `Window.Read
 Update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ### UpdateBar
-
 
 Change what the bar shows by changing the current count and optionally the max count
 
 ```
 UpdateBar(current_count, max=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6091,9 +4711,7 @@ Parameter Descriptions:
 | int | current_count | sets the current value |
 | int |      max      | changes the max value |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -6102,11 +4720,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6116,30 +4730,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -6148,13 +4749,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -6162,11 +4757,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -6174,16 +4765,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -6192,16 +4780,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6209,16 +4794,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -6226,12 +4808,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -6240,13 +4817,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6254,23 +4825,19 @@ Changes some of the settings for the ProgressBar Element. Must call `Window.Read
 update(visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | visible | control visibility of element |
 
-
 ### update_bar
-
 
 Change what the bar shows by changing the current count and optionally the max count
 
 ```
 update_bar(current_count, max=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6279,14 +4846,10 @@ Parameter Descriptions:
 | int | current_count | sets the current value |
 | int |      max      | changes the max value |
 
-
 ## Radio Element 
 
     Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
     1 choice in a list of choices.
-    
-
-
 
 ```
 Radio(text,
@@ -6306,7 +4869,6 @@ Radio(text,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6329,28 +4891,17 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 A snapshot of the value of Radio Button -> (bool)
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | True if this radio button is selected         |
 
-
-
-
 ### ResetGroup
-
-
 
 Sets all Radio Buttons in the group to not selected
 
@@ -6358,13 +4909,7 @@ Sets all Radio Buttons in the group to not selected
 ResetGroup()
 ```
 
-
-
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -6372,16 +4917,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6389,16 +4931,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6408,7 +4947,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -6417,9 +4955,7 @@ Parameter Descriptions:
 | bool | disabled | disable or enable state of the element |
 | bool | visible  | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -6428,11 +4964,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6442,48 +4974,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 A snapshot of the value of Radio Button -> (bool)
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | True if this radio button is selected         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -6492,14 +5003,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### reset_group
-
-
 
 Sets all Radio Buttons in the group to not selected
 
@@ -6507,13 +5011,7 @@ Sets all Radio Buttons in the group to not selected
 reset_group()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -6521,11 +5019,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -6533,16 +5027,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -6551,16 +5042,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6568,16 +5056,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -6585,12 +5070,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -6599,13 +5079,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6615,7 +5089,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -6624,13 +5097,9 @@ Parameter Descriptions:
 | bool | disabled | disable or enable state of the element |
 | bool | visible  | control visibility of element |
 
-
 ## Slider Element 
 
     A slider, horizontal or vertical
-    
-
-
 
 ```
 Slider(range=(None, None),
@@ -6654,7 +5123,6 @@ Slider(range=(None, None),
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6681,9 +5149,7 @@ Parameter Descriptions:
 |                                     bool                                     |        visible         | set visibility state of the element |
 |                                     Any                                      |        metadata        | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -6691,16 +5157,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6708,16 +5171,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6728,7 +5188,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -6738,9 +5197,7 @@ Parameter Descriptions:
 |                    bool                    | disabled | disable or enable state of the element |
 |                    bool                    | visible  | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -6749,11 +5206,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -6763,30 +5216,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -6795,13 +5235,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -6809,11 +5243,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -6821,16 +5251,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -6839,16 +5266,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -6856,16 +5280,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -6873,12 +5294,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -6887,13 +5303,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6904,7 +5314,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -6914,13 +5323,9 @@ Parameter Descriptions:
 |                    bool                    | disabled | disable or enable state of the element |
 |                    bool                    | visible  | control visibility of element |
 
-
 ## Spin Element 
 
     A spinner with up/down buttons and a single line of text. Choose 1 values from list
-    
-
-
 
 ```
 Spin(values,
@@ -6939,7 +5344,6 @@ Spin(values,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -6961,11 +5365,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Return the current chosen value showing in spinbox.
 This value will be the same as what was provided as list of choices.  If list items are ints, then the
@@ -6973,17 +5373,11 @@ item returned will be an int (not a string)
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The currently visible entry         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -6991,16 +5385,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7008,16 +5399,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7028,7 +5416,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7038,9 +5425,7 @@ Parameter Descriptions:
 |   bool    | disabled | disable or enable state of the element |
 |   bool    | visible  | control visibility of element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -7049,11 +5434,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7063,13 +5444,7 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Return the current chosen value showing in spinbox.
 This value will be the same as what was provided as list of choices.  If list items are ints, then the
@@ -7077,36 +5452,21 @@ item returned will be an int (not a string)
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The currently visible entry         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -7115,13 +5475,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -7129,11 +5483,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -7141,16 +5491,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -7159,16 +5506,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7176,16 +5520,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -7193,12 +5534,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -7207,13 +5543,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7224,7 +5554,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7234,13 +5563,9 @@ Parameter Descriptions:
 |   bool    | disabled | disable or enable state of the element |
 |   bool    | visible  | control visibility of element |
 
-
 ## StatusBar Element 
 
     A StatusBar Element creates the sunken text-filled strip at the bottom. Many Windows programs have this line
-    
-
-
 
 ```
 StatusBar(text,
@@ -7259,7 +5584,6 @@ StatusBar(text,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -7281,9 +5605,7 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -7291,16 +5613,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7308,16 +5627,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7329,7 +5645,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7340,9 +5655,7 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
 |            bool             |     visible      | set visibility state of the element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -7351,11 +5664,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7365,30 +5674,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -7397,13 +5693,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -7411,11 +5701,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -7423,16 +5709,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -7441,16 +5724,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7458,16 +5738,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -7475,12 +5752,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -7489,13 +5761,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7507,7 +5773,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7518,14 +5783,11 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
 |            bool             |     visible      | set visibility state of the element |
 
-
 ## SystemTray 
 
     A "Simulated System Tray" that duplicates the API calls available to PySimpleGUIWx and PySimpleGUIQt users.
 
     All of the functionality works. The icon is displayed ABOVE the system tray rather than inside of it.
-    
-
 
 SystemTray - create an icon in the system tray
 
@@ -7538,7 +5800,6 @@ SystemTray(menu=None,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7550,10 +5811,7 @@ Parameter Descriptions:
 |             str              |   tooltip   | tooltip string |
 |             Any              |  metadata   | User metadata that can be set to ANYTHING |
 
-
 ### Close
-
-
 
 Close the system tray window
 
@@ -7561,14 +5819,7 @@ Close the system tray window
 Close()
 ```
 
-
-
-
-
-
 ### Hide
-
-
 
 Hides the icon
 
@@ -7576,13 +5827,7 @@ Hides the icon
 Hide()
 ```
 
-
-
-
-
-
 ### Read
-
 
 Reads the context menu
 
@@ -7590,11 +5835,7 @@ Reads the context menu
 Read(timeout=None)
 ```
 
-
-
-
 ### ShowMessage
-
 
 Shows a balloon above icon in system tray
 
@@ -7608,7 +5849,6 @@ ShowMessage(title,
     time=(1000, 3000))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7621,10 +5861,7 @@ Parameter Descriptions:
 | Union[int, Tuple[int, int]] |    time     | Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration |
 | (Any) | **RETURN** | The event that happened during the display such as user clicked on message
 
-
 ### UnHide
-
-
 
 Restores a previously hidden icon
 
@@ -7632,13 +5869,7 @@ Restores a previously hidden icon
 UnHide()
 ```
 
-
-
-
-
-
 ### Update
-
 
 Updates the menu, tooltip or icon
 
@@ -7650,7 +5881,6 @@ Update(menu=None,
     data_base64=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7661,10 +5891,7 @@ Parameter Descriptions:
 | ??? |    data     | icon raw image |
 | ??? | data_base64 | icon base 64 image |
 
-
 ### close
-
-
 
 Close the system tray window
 
@@ -7672,14 +5899,7 @@ Close the system tray window
 close()
 ```
 
-
-
-
-
-
 ### hide
-
-
 
 Hides the icon
 
@@ -7687,13 +5907,7 @@ Hides the icon
 hide()
 ```
 
-
-
-
-
-
 ### notify
-
 
 Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message
 The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
@@ -7708,7 +5922,6 @@ notify(title,
     location=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7722,9 +5935,7 @@ Parameter Descriptions:
 |  Tuple[int, int]  |        location        | Location on the screen to display the window |
 | (int) | **RETURN** | (int) reason for returning
 
-
 ### read
-
 
 Reads the context menu
 
@@ -7732,11 +5943,7 @@ Reads the context menu
 read(timeout=None)
 ```
 
-
-
-
 ### show_message
-
 
 Shows a balloon above icon in system tray
 
@@ -7750,7 +5957,6 @@ show_message(title,
     time=(1000, 3000))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7763,10 +5969,7 @@ Parameter Descriptions:
 | Union[int, Tuple[int, int]] |    time     | Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration |
 | (Any) | **RETURN** | The event that happened during the display such as user clicked on message
 
-
 ### un_hide
-
-
 
 Restores a previously hidden icon
 
@@ -7774,13 +5977,7 @@ Restores a previously hidden icon
 un_hide()
 ```
 
-
-
-
-
-
 ### update
-
 
 Updates the menu, tooltip or icon
 
@@ -7792,7 +5989,6 @@ update(menu=None,
     data_base64=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -7803,14 +5999,10 @@ Parameter Descriptions:
 | ??? |    data     | icon raw image |
 | ??? | data_base64 | icon base 64 image |
 
-
 ## Tab Element 
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
     Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
-    
-
-
 
 ```
 Tab(title,
@@ -7828,7 +6020,6 @@ Tab(title,
     element_justification="left",
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -7849,9 +6040,7 @@ Parameter Descriptions:
 |                                     str                                      | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
-
 ### AddRow
-
 
 Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
@@ -7859,16 +6048,13 @@ Not recommended use call.  Used to add rows of Elements to the Frame Element.
 AddRow(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### Layout
-
 
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
@@ -7876,13 +6062,7 @@ Not user callable.  Use layout parameter instead. Creates the layout using the s
 Layout(rows) -> (Tab) used for chaining
 ```
 
-
-
-
-
 ### Select
-
-
 
 Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
 
@@ -7890,13 +6070,7 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 Select()
 ```
 
-
-
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -7904,16 +6078,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -7921,23 +6092,19 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 Update(disabled=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -7946,9 +6113,7 @@ Parameter Descriptions:
 | bool | disabled | disable or enable state of the element |
 | bool | visible  | control visibility of element |
 
-
 ### add_row
-
 
 Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
@@ -7956,16 +6121,13 @@ Not recommended use call.  Used to add rows of Elements to the Frame Element.
 add_row(args=*<1 or N object>)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | List[Element] | *args | The list of elements for this row |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -7974,11 +6136,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -7988,30 +6146,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -8020,13 +6165,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### layout
-
 
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
@@ -8034,13 +6173,7 @@ Not user callable.  Use layout parameter instead. Creates the layout using the s
 layout(rows) -> (Tab) used for chaining
 ```
 
-
-
-
-
 ### select
-
-
 
 Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
 
@@ -8048,13 +6181,7 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 select()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -8062,11 +6189,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -8074,16 +6197,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -8092,16 +6212,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8109,16 +6226,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -8126,12 +6240,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -8140,20 +6249,13 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
 ```
 update(disabled=None, visible=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -8162,13 +6264,9 @@ Parameter Descriptions:
 | bool | disabled | disable or enable state of the element |
 | bool | visible  | control visibility of element |
 
-
 ## TabGroup Element 
 
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
-    
-
-
 
 ```
 TabGroup(layout,
@@ -8189,7 +6287,6 @@ TabGroup(layout,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -8213,17 +6310,13 @@ Parameter Descriptions:
 |                                     bool                                     |          visible          | set visibility state of the element |
 |                                     Any                                      |         metadata          | User metadata that can be set to ANYTHING |
 
-
-
 ### FindKeyFromTabName
-
 
 Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
 ```
 FindKeyFromTabName(tab_name)
 ```
-
 
 Parameter Descriptions:
 
@@ -8232,11 +6325,7 @@ Parameter Descriptions:
 | str | tab_name | name of a tab |
 | Union[key, None] | **RETURN** | Returns the key or None if no key found
 
-
 ### Get
-
-
-
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
@@ -8245,17 +6334,11 @@ are using this method correctly?
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The key of the currently selected tab or the tab's text if it has no key         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -8263,16 +6346,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8280,16 +6360,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -8298,11 +6375,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8312,18 +6385,13 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### find_key_from_tab_name
-
 
 Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
 ```
 find_key_from_tab_name(tab_name)
 ```
-
 
 Parameter Descriptions:
 
@@ -8332,11 +6400,7 @@ Parameter Descriptions:
 | str | tab_name | name of a tab |
 | Union[key, None] | **RETURN** | Returns the key or None if no key found
 
-
 ### get
-
-
-
 
 Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
 the tab if no key is defined.  Returns None if an error occurs.
@@ -8345,36 +6409,21 @@ are using this method correctly?
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The key of the currently selected tab or the tab's text if it has no key         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -8383,14 +6432,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -8398,11 +6440,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -8410,16 +6448,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -8428,16 +6463,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8445,16 +6477,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -8462,12 +6491,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -8476,15 +6500,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ## Table Element 
-
-
-
 
 ```
 Table(values,
@@ -8520,7 +6536,6 @@ Table(values,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -8559,11 +6574,7 @@ Parameter Descriptions:
 |                                     bool                                     |         visible         | set visibility state of the element |
 |                                     Any                                      |        metadata         | User metadata that can be set to ANYTHING |
 
-
 ### Get
-
-
-
 
 Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
 edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
@@ -8571,17 +6582,11 @@ user when Table was created or Updated.
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | the current table values (for now what was originally provided up updated)         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -8589,16 +6594,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8606,16 +6608,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8628,7 +6627,6 @@ Update(values=None,
     row_colors=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -8640,9 +6638,7 @@ Parameter Descriptions:
 |                        str                        | alternating_row_color | the color to make every other row |
 | List[Union[Tuple[int, str], Tuple[Int, str, str]] |      row_colors       | list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color) |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -8651,12 +6647,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8666,13 +6657,7 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get
-
-
-
 
 Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
 edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
@@ -8680,36 +6665,21 @@ user when Table was created or Updated.
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | the current table values (for now what was originally provided up updated)         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -8718,13 +6688,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -8732,11 +6696,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -8744,16 +6704,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -8762,16 +6719,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8779,16 +6733,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -8796,12 +6747,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -8810,13 +6756,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8829,7 +6769,6 @@ update(values=None,
     row_colors=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -8841,13 +6780,9 @@ Parameter Descriptions:
 |                        str                        | alternating_row_color | the color to make every other row |
 | List[Union[Tuple[int, str], Tuple[Int, str, str]] |      row_colors       | list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color) |
 
-
 ## Text Element 
 
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
-    
-
-
 
 ```
 Text(text="",
@@ -8868,7 +6803,6 @@ Text(text="",
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -8892,27 +6826,17 @@ Parameter Descriptions:
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
-
 #### Get
-
-
-
 
 Gets the current value of the displayed text
 
 `Get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The current value         |
 
-
-
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -8920,16 +6844,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -8937,16 +6858,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -8958,7 +6876,6 @@ Update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -8969,9 +6886,7 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
 |            bool             |     visible      | set visibility state of the element |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -8980,11 +6895,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -8994,48 +6905,27 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 #### get
-
-
-
 
 Gets the current value of the displayed text
 
 `get()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The current value         |
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -9044,13 +6934,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -9058,11 +6942,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -9070,16 +6950,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -9088,16 +6965,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9105,16 +6979,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -9122,12 +6993,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -9136,13 +7002,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9154,7 +7014,6 @@ update(value=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -9165,15 +7024,10 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
 |            bool             |     visible      | set visibility state of the element |
 
-
-
 ## Tree Element 
 
     Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
     to hold the user's data and pass to the element for display.
-    
-
-
 
 ```
 Tree(data=None,
@@ -9204,7 +7058,6 @@ Tree(data=None,
     visible=True,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -9238,9 +7091,7 @@ Parameter Descriptions:
 |                                     bool                                     |         visible         | set visibility state of the element |
 |                                     Any                                      |        metadata         | User metadata that can be set to ANYTHING |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -9248,16 +7099,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9265,16 +7113,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### Update
-
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9287,7 +7132,6 @@ Update(values=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -9299,9 +7143,7 @@ Parameter Descriptions:
 | Union[bytes, str] |  icon   | can be either a base64 icon or a filename for the icon |
 |       bool        | visible | control visibility of element |
 
-
 ### add_treeview_data
-
 
 Not a user function.  Recursive method that inserts tree data into the tkinter treeview widget.
 
@@ -9309,16 +7151,13 @@ Not a user function.  Recursive method that inserts tree data into the tkinter t
 add_treeview_data(node)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | TreeData | node | The node to insert. Will insert all nodes from starting point downward, recursively |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -9327,11 +7166,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9341,30 +7176,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -9373,13 +7195,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -9387,11 +7203,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -9399,16 +7211,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -9417,16 +7226,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9434,16 +7240,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -9451,12 +7254,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -9465,13 +7263,7 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ### update
-
 
 Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -9484,7 +7276,6 @@ update(values=None,
     visible=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -9496,15 +7287,11 @@ Parameter Descriptions:
 | Union[bytes, str] |  icon   | can be either a base64 icon or a filename for the icon |
 |       bool        | visible | control visibility of element |
 
-
 ## TreeData (for Tree Element) 
 
     Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
     with possibly one or more children "Nodes".  Each Node contains a key, text to display, list of values to display
     and an icon.  The entire tree is built using a single method, Insert.  Nothing else is required to make the tree.
-    
-
-
 
 Instantiate the object, initializes the Tree Data, creates a root node for you
 
@@ -9512,13 +7299,7 @@ Instantiate the object, initializes the Tree Data, creates a root node for you
 TreeData()
 ```
 
-
-
-
-
-
 ### Insert
-
 
 Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
 This is the ONLY user callable method in the TreeData class
@@ -9531,7 +7312,6 @@ Insert(parent,
     icon=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -9542,9 +7322,7 @@ Parameter Descriptions:
 |     List[Any]     | values | The list of values that are displayed at this node |
 | Union[str, bytes] |  icon  | icon |
 
-
 ### Node
-
 
 Contains information about the individual node in the tree
 
@@ -9556,11 +7334,7 @@ Node(parent,
     icon=None)
 ```
 
-
-
-
 ### insert
-
 
 Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
 This is the ONLY user callable method in the TreeData class
@@ -9573,7 +7347,6 @@ insert(parent,
     icon=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -9584,19 +7357,14 @@ Parameter Descriptions:
 |     List[Any]     | values | The list of values that are displayed at this node |
 | Union[str, bytes] |  icon  | icon |
 
-
 ## VerticalSeparator Element 
 
     Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
     Column Element if extra height is needed
-    
-
-
 
 ```
 VerticalSeparator(pad=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -9604,9 +7372,7 @@ Parameter Descriptions:
 |--|--|--|
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | pad | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 
-
 ### SetFocus
-
 
 Sets the current focus to be on this element
 
@@ -9614,16 +7380,13 @@ Sets the current focus to be on this element
 SetFocus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### SetTooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9631,16 +7394,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 SetTooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### bind
-
 
 Used to add tkinter events to an Element.
 The tkinter specific data is in the Element's member variable user_bind_event
@@ -9649,11 +7409,7 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
-
-
-
 ### expand
-
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
 
@@ -9663,30 +7419,17 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
-
-
-
 ### get_size
-
-
-
 
 Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
 
 `get_size()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | width and height of the element         |
 
-
-
-
 ### hide_row
-
-
 
 Hide the entire row an Element is located on.
         Use this if you must have all space removed when you are hiding an element, including the row container
@@ -9695,13 +7438,7 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
-
-
-
-
-
 ### set_cursor
-
 
 Sets the cursor for the current Element.
 
@@ -9709,11 +7446,7 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
-
-
-
 ### set_focus
-
 
 Sets the current focus to be on this element
 
@@ -9721,16 +7454,13 @@ Sets the current focus to be on this element
 set_focus(force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | bool | force | if True will call focus_force otherwise calls focus_set |
 
-
 ### set_size
-
 
 Changes the size of an element to a specific size.
 It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
@@ -9739,16 +7469,13 @@ It's possible to specify None for one of sizes so that only 1 of the element's d
 set_size(size=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
 
-
 ### set_tooltip
-
 
 Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -9756,16 +7483,13 @@ Called by application to change the tooltip text for an Element.  Normally invok
 set_tooltip(tooltip_text)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
 
-
 ### unbind
-
 
 Removes a previously bound tkinter event from an Element.
 
@@ -9773,12 +7497,7 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
-
-
-
 ### unhide_row
-
-
 
 Unhides (makes visible again) the row container that the Element is located on.
         Note that it will re-appear at the bottom of the window / container, most likely.
@@ -9787,17 +7506,9 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
-
-
-
-
-
 ## Window 
 
     Represents a single Window
-    
-
-
 
 ```
 Window(title,
@@ -9838,7 +7549,6 @@ Window(title,
     use_ttk_buttons=None,
     metadata=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -9882,9 +7592,7 @@ Parameter Descriptions:
 |                   bool                    |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
 |                    Any                    |          metadata           | User metadata that can be set to ANYTHING |
 
-
 ### AddRow
-
 
 Adds a single row of elements to a window's self.Rows variables.
 Generally speaking this is NOT how users should be building Window layouts.
@@ -9894,11 +7602,7 @@ Users, create a single layout (a list of lists) and pass as a parameter to Windo
 AddRow(args=*<1 or N object>)
 ```
 
-
-
-
 ### AddRows
-
 
 Loops through a list of lists of elements and adds each row, list, to the layout.
 This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
@@ -9908,29 +7612,17 @@ it as a parameter to the Window call is better.
 AddRows(rows)
 ```
 
-
-
-
 ### AlphaChannel
-
-
 
 #### property: AlphaChannel
 
 A property that changes the current alpha channel value (internal value)
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
 
-
-
-
 ### BringToFront
-
-
 
 Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
@@ -9939,14 +7631,7 @@ Brings this window to the top of all other windows (perhaps may not be brought b
 BringToFront()
 ```
 
-
-
-
-
-
 ### Close
-
-
 
 Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
@@ -9955,32 +7640,17 @@ Closes window.  Users can safely call even if window has been destroyed.   Shoul
 Close()
 ```
 
-
-
-
-
-
 ### CurrentLocation
-
-
-
 
 Get the current location of the window's top left corner
 
 `CurrentLocation()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The x and y location in tuple form (x,y)         |
 
-
-
-
 ### Disable
-
-
 
 Disables window from taking any input from the user
 
@@ -9988,14 +7658,7 @@ Disables window from taking any input from the user
 Disable()
 ```
 
-
-
-
-
-
 ### DisableDebugger
-
-
 
 Disable the internal debugger. By default the debugger is ENABLED
 
@@ -10003,14 +7666,7 @@ Disable the internal debugger. By default the debugger is ENABLED
 DisableDebugger()
 ```
 
-
-
-
-
-
 ### Disappear
-
-
 
 Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
@@ -10020,13 +7676,7 @@ Causes a window to "disappear" from the screen, but remain on the taskbar. It do
 Disappear()
 ```
 
-
-
-
-
-
 ### Elem
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10051,7 +7701,6 @@ checked for.
 Elem(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10060,9 +7709,7 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### Element
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10087,7 +7734,6 @@ checked for.
 Element(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10096,10 +7742,7 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### Enable
-
-
 
 Re-enables window to take user input after having it be Disabled previously
 
@@ -10107,14 +7750,7 @@ Re-enables window to take user input after having it be Disabled previously
 Enable()
 ```
 
-
-
-
-
-
 ### EnableDebugger
-
-
 
 Enables the internal debugger. By default, the debugger IS enabled
 
@@ -10122,20 +7758,13 @@ Enables the internal debugger. By default, the debugger IS enabled
 EnableDebugger()
 ```
 
-
-
-
-
-
 ### Fill
-
 
 Fill in elements that are input fields with data based on a 'values dictionary'
 
 ```
 Fill(values_dict)
 ```
-
 
 Parameter Descriptions:
 
@@ -10144,11 +7773,7 @@ Parameter Descriptions:
 | (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
-
 ### Finalize
-
-
-
 
 Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
 Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
@@ -10156,17 +7781,11 @@ Lots of action!
 
 `Finalize()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)         |
 
-
-
-
 ### Find
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10191,7 +7810,6 @@ checked for.
 Find(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10200,9 +7818,7 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### FindElement
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10227,7 +7843,6 @@ checked for.
 FindElement(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10236,46 +7851,27 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### FindElementWithFocus
-
-
-
 
 Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
 
 `FindElementWithFocus()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | An Element if one has been found with focus or None if no element found         |
 
-
-
-
 ### GetScreenDimensions
-
-
-
 
 Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
 
 `GetScreenDimensions()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Tuple containing width and height of screen in pixels         |
 
-
-
-
 ### GrabAnyWhereOff
-
-
 
 Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -10284,14 +7880,7 @@ Turns off Grab Anywhere functionality AFTER a window has been created.  Don't tr
 GrabAnyWhereOff()
 ```
 
-
-
-
-
-
 ### GrabAnyWhereOn
-
-
 
 Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -10300,14 +7889,7 @@ Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try
 GrabAnyWhereOn()
 ```
 
-
-
-
-
-
 ### Hide
-
-
 
 Hides the window from the screen and the task bar
 
@@ -10315,13 +7897,7 @@ Hides the window from the screen and the task bar
 Hide()
 ```
 
-
-
-
-
-
 ### Layout
-
 
 Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
 a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
@@ -10332,7 +7908,6 @@ from history and replace with sending as a parameter to Window.
 Layout(rows)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10340,9 +7915,7 @@ Parameter Descriptions:
 | List[List[Elements]] | rows | Your entire layout |
 | (Window) | **RETURN** | self so that you can chain method calls
 
-
 ### LoadFromDisk
-
 
 Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
 
@@ -10350,17 +7923,13 @@ Restore values from a previous call to SaveToDisk which saves the returned value
 LoadFromDisk(filename)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | Pickle Filename to load |
 
-
 ### Maximize
-
-
 
 Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
@@ -10370,14 +7939,7 @@ Maximize the window. This is done differently on a windows system versus a linux
 Maximize()
 ```
 
-
-
-
-
-
 ### Minimize
-
-
 
 Minimize this window to the task bar
 
@@ -10385,20 +7947,13 @@ Minimize this window to the task bar
 Minimize()
 ```
 
-
-
-
-
-
 ### Move
-
 
 Move the upper left corner of this window to the x,y coordinates provided
 
 ```
 Move(x, y)
 ```
-
 
 Parameter Descriptions:
 
@@ -10407,10 +7962,7 @@ Parameter Descriptions:
 | int | x | x coordinate in pixels |
 | int | y | y coordinate in pixels |
 
-
 ### Normal
-
-
 
 Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
 
@@ -10418,13 +7970,7 @@ Restore a window to a non-maximized state.  Does different things depending on p
 Normal()
 ```
 
-
-
-
-
-
 ### Read
-
 
 THE biggest deal method in the Window class! This is how you get all of your data from your Window.
 Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -10436,7 +7982,6 @@ Read(timeout=None,
     close=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10446,10 +7991,7 @@ Parameter Descriptions:
 | bool |    close    | if True the window will be closed prior to returning |
 | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] | **RETURN** | (event, values)
 
-
 ### Reappear
-
-
 
 Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
 
@@ -10457,15 +7999,7 @@ Causes a window previously made to "Disappear" (using that method). Does this by
 Reappear()
 ```
 
-
-
-
-
-
 ### Refresh
-
-
-
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
@@ -10473,17 +8007,11 @@ Without this call your changes to a Window will not be visible to the user until
 
 `Refresh()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | `self` so that method calls can be easily "chained"         |
 
-
-
-
 ### SaveToDisk
-
 
 Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
  Note that every element in your layout that is to be saved must have a key assigned to it.
@@ -10492,17 +8020,13 @@ Saves the values contained in each of the input areas of the form. Basically sav
 SaveToDisk(filename)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | Filename to save the values to in pickled form |
 
-
 ### SendToBack
-
-
 
 Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
 
@@ -10510,13 +8034,7 @@ Pushes this window to the bottom of the stack of windows. It is the opposite of 
 SendToBack()
 ```
 
-
-
-
-
-
 ### SetAlpha
-
 
 Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
 
@@ -10524,16 +8042,13 @@ Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is comp
 SetAlpha(alpha)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | float | alpha | 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through) |
 
-
 ### SetIcon
-
 
 Changes the icon that is shown on the title bar and on the task bar.
 NOTE - The file type is IMPORTANT and depends on the OS!
@@ -10546,7 +8061,6 @@ Can pass in:
 SetIcon(icon=None, pngbase64=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10554,9 +8068,7 @@ Parameter Descriptions:
 | str |   icon    | Filename or bytes object |
 | str | pngbase64 | Base64 encoded image |
 
-
 ### SetTransparentColor
-
 
 Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
@@ -10564,34 +8076,23 @@ Set the color that will be transparent in your window. Areas with this color wil
 SetTransparentColor(color)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | color | Color string that defines the transparent color |
 
-
 ### Size
-
-
 
 #### property: Size
 
 Return the current size of the window in pixels
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | (width, height) of the window         |
 
-
-
-
 ### UnHide
-
-
 
 Used to bring back a window that was previously hidden using the Hide method
 
@@ -10599,32 +8100,18 @@ Used to bring back a window that was previously hidden using the Hide method
 UnHide()
 ```
 
-
-
-
-
-
 ### VisibilityChanged
-
-
-
 
 This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
 call and then have that same source run on plain PySimpleGUI.
 
 `VisibilityChanged()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** |  |
 
-
-
-
 ### add_row
-
 
 Adds a single row of elements to a window's self.Rows variables.
 Generally speaking this is NOT how users should be building Window layouts.
@@ -10634,11 +8121,7 @@ Users, create a single layout (a list of lists) and pass as a parameter to Windo
 add_row(args=*<1 or N object>)
 ```
 
-
-
-
 ### add_rows
-
 
 Loops through a list of lists of elements and adds each row, list, to the layout.
 This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
@@ -10648,28 +8131,17 @@ it as a parameter to the Window call is better.
 add_rows(rows)
 ```
 
-
-
-
 ### alpha_channel
-
-
 
 #### property: alpha_channel
 
 A property that changes the current alpha channel value (internal value)
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
 
-
-
-
 ### bind
-
 
 Used to add tkinter events to a Window.
 The tkinter specific data is in the Window's member variable user_bind_event
@@ -10678,7 +8150,6 @@ The tkinter specific data is in the Window's member variable user_bind_event
 bind(bind_string, key)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10686,10 +8157,7 @@ Parameter Descriptions:
 | str | bind_string | The string tkinter expected in its bind function |
 | Any |     key     | The event that will be generated when the tkinter event occurs |
 
-
 ### bring_to_front
-
-
 
 Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
@@ -10698,14 +8166,7 @@ Brings this window to the top of all other windows (perhaps may not be brought b
 bring_to_front()
 ```
 
-
-
-
-
-
 ### close
-
-
 
 Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
@@ -10714,32 +8175,17 @@ Closes window.  Users can safely call even if window has been destroyed.   Shoul
 close()
 ```
 
-
-
-
-
-
 ### current_location
-
-
-
 
 Get the current location of the window's top left corner
 
 `current_location()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The x and y location in tuple form (x,y)         |
 
-
-
-
 ### disable
-
-
 
 Disables window from taking any input from the user
 
@@ -10747,14 +8193,7 @@ Disables window from taking any input from the user
 disable()
 ```
 
-
-
-
-
-
 ### disable_debugger
-
-
 
 Disable the internal debugger. By default the debugger is ENABLED
 
@@ -10762,14 +8201,7 @@ Disable the internal debugger. By default the debugger is ENABLED
 disable_debugger()
 ```
 
-
-
-
-
-
 ### disappear
-
-
 
 Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
@@ -10779,13 +8211,7 @@ Causes a window to "disappear" from the screen, but remain on the taskbar. It do
 disappear()
 ```
 
-
-
-
-
-
 ### elem
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10810,7 +8236,6 @@ checked for.
 elem(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10819,9 +8244,7 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### element
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10846,7 +8269,6 @@ checked for.
 element(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10855,28 +8277,17 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### element_list
-
-
-
 
 Returns a list of all elements in the window
 
 `element_list()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | List of all elements in the window and container elements in the window         |
 
-
-
-
 ### enable
-
-
 
 Re-enables window to take user input after having it be Disabled previously
 
@@ -10884,14 +8295,7 @@ Re-enables window to take user input after having it be Disabled previously
 enable()
 ```
 
-
-
-
-
-
 ### enable_debugger
-
-
 
 Enables the internal debugger. By default, the debugger IS enabled
 
@@ -10899,20 +8303,13 @@ Enables the internal debugger. By default, the debugger IS enabled
 enable_debugger()
 ```
 
-
-
-
-
-
 ### extend_layout
-
 
 Adds new rows to an existing container element inside of this window
 
 ```
 extend_layout(container, rows)
 ```
-
 
 Parameter Descriptions:
 
@@ -10922,16 +8319,13 @@ Parameter Descriptions:
 |    (List[List[Element]])    |   rows    | (List[List[Element]]) - The layout to be added |
 | (Window) | **RETURN** | (Window) self so could be chained
 
-
 ### fill
-
 
 Fill in elements that are input fields with data based on a 'values dictionary'
 
 ```
 fill(values_dict)
 ```
-
 
 Parameter Descriptions:
 
@@ -10940,11 +8334,7 @@ Parameter Descriptions:
 | (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
-
 ### finalize
-
-
-
 
 Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
 Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
@@ -10952,17 +8342,11 @@ Lots of action!
 
 `finalize()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)         |
 
-
-
-
 ### find
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -10987,7 +8371,6 @@ checked for.
 find(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -10996,9 +8379,7 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### find_element
-
 
 Find element object associated with the provided key.
 THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -11023,7 +8404,6 @@ checked for.
 find_element(key, silent_on_error=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11032,45 +8412,27 @@ Parameter Descriptions:
 | bool | silent_on_error | If True do not display popup nor print warning of key errors |
 | Union[Element, Error Element, None] | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
 
-
 ### find_element_with_focus
-
-
-
 
 Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
 
 `find_element_with_focus()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | An Element if one has been found with focus or None if no element found         |
 
-
-
-
 ### get_screen_dimensions
-
-
-
 
 Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
 
 `get_screen_dimensions()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | Tuple containing width and height of screen in pixels         |
 
-
-
-
 ### get_screen_size
-
 
 Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
@@ -11078,13 +8440,7 @@ Returns the size of the "screen" as determined by tkinter.  This can vary depend
 get_screen_size() -> Tuple[int, int] - Size of the screen in pixels as determined by tkinter
 ```
 
-
-
-
-
 ### grab_any_where_off
-
-
 
 Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -11093,14 +8449,7 @@ Turns off Grab Anywhere functionality AFTER a window has been created.  Don't tr
 grab_any_where_off()
 ```
 
-
-
-
-
-
 ### grab_any_where_on
-
-
 
 Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -11109,15 +8458,7 @@ Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try
 grab_any_where_on()
 ```
 
-
-
-
-
-
-
 ### hide
-
-
 
 Hides the window from the screen and the task bar
 
@@ -11125,13 +8466,7 @@ Hides the window from the screen and the task bar
 hide()
 ```
 
-
-
-
-
-
 ### layout
-
 
 Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
 a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
@@ -11142,7 +8477,6 @@ from history and replace with sending as a parameter to Window.
 layout(rows)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11150,9 +8484,7 @@ Parameter Descriptions:
 | List[List[Elements]] | rows | Your entire layout |
 | (Window) | **RETURN** | self so that you can chain method calls
 
-
 ### load_from_disk
-
 
 Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
 
@@ -11160,17 +8492,13 @@ Restore values from a previous call to SaveToDisk which saves the returned value
 load_from_disk(filename)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | Pickle Filename to load |
 
-
 ### maximize
-
-
 
 Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
@@ -11180,14 +8508,7 @@ Maximize the window. This is done differently on a windows system versus a linux
 maximize()
 ```
 
-
-
-
-
-
 ### minimize
-
-
 
 Minimize this window to the task bar
 
@@ -11195,20 +8516,13 @@ Minimize this window to the task bar
 minimize()
 ```
 
-
-
-
-
-
 ### move
-
 
 Move the upper left corner of this window to the x,y coordinates provided
 
 ```
 move(x, y)
 ```
-
 
 Parameter Descriptions:
 
@@ -11217,10 +8531,7 @@ Parameter Descriptions:
 | int | x | x coordinate in pixels |
 | int | y | y coordinate in pixels |
 
-
 ### normal
-
-
 
 Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
 
@@ -11228,13 +8539,7 @@ Restore a window to a non-maximized state.  Does different things depending on p
 normal()
 ```
 
-
-
-
-
-
 ### read
-
 
 THE biggest deal method in the Window class! This is how you get all of your data from your Window.
 Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -11246,7 +8551,6 @@ read(timeout=None,
     close=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11256,10 +8560,7 @@ Parameter Descriptions:
 | bool |    close    | if True the window will be closed prior to returning |
 | Tuple[(Any), Union[Dict[Any:Any]], List[Any], None] | **RETURN** | (event, values)
 
-
 ### reappear
-
-
 
 Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
 
@@ -11267,15 +8568,7 @@ Causes a window previously made to "Disappear" (using that method). Does this by
 reappear()
 ```
 
-
-
-
-
-
 ### refresh
-
-
-
 
 Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
 Use this call when you want something to appear in your Window immediately (as soon as this function is called).
@@ -11283,17 +8576,11 @@ Without this call your changes to a Window will not be visible to the user until
 
 `refresh()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | `self` so that method calls can be easily "chained"         |
 
-
-
-
 ### save_to_disk
-
 
 Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
  Note that every element in your layout that is to be saved must have a key assigned to it.
@@ -11302,17 +8589,13 @@ Saves the values contained in each of the input areas of the form. Basically sav
 save_to_disk(filename)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | Filename to save the values to in pickled form |
 
-
 ### send_to_back
-
-
 
 Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
 
@@ -11320,13 +8603,7 @@ Pushes this window to the bottom of the stack of windows. It is the opposite of 
 send_to_back()
 ```
 
-
-
-
-
-
 ### set_alpha
-
 
 Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
 
@@ -11334,16 +8611,13 @@ Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is comp
 set_alpha(alpha)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | float | alpha | 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through) |
 
-
 ### set_icon
-
 
 Changes the icon that is shown on the title bar and on the task bar.
 NOTE - The file type is IMPORTANT and depends on the OS!
@@ -11356,7 +8630,6 @@ Can pass in:
 set_icon(icon=None, pngbase64=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11364,9 +8637,7 @@ Parameter Descriptions:
 | str |   icon    | Filename or bytes object |
 | str | pngbase64 | Base64 encoded image |
 
-
 ### set_transparent_color
-
 
 Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
@@ -11374,34 +8645,23 @@ Set the color that will be transparent in your window. Areas with this color wil
 set_transparent_color(color)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str | color | Color string that defines the transparent color |
 
-
 ### size
-
-
 
 #### property: size
 
 Return the current size of the window in pixels
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | (width, height) of the window         |
 
-
-
-
 ### un_hide
-
-
 
 Used to bring back a window that was previously hidden using the Hide method
 
@@ -11409,37 +8669,18 @@ Used to bring back a window that was previously hidden using the Hide method
 un_hide()
 ```
 
-
-
-
-
-
 ### visibility_changed
-
-
-
 
 This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
 call and then have that same source run on plain PySimpleGUI.
 
 `visibility_changed()`
 
-
-
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** |  |
 
-
-
-
-
 ## Function Reference
-
-
-
-
-
 
 ```
 CButton(button_text,
@@ -11461,7 +8702,6 @@ CButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11476,10 +8716,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
 
 Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -11514,7 +8750,6 @@ CalendarButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11548,11 +8783,6 @@ Parameter Descriptions:
 |                                     Any                                      |        metadata        | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
-
-
-
-
-
 ```
 Cancel(button_text="Cancel",
     size=(None, None),
@@ -11568,7 +8798,6 @@ Cancel(button_text="Cancel",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11581,11 +8810,6 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 CloseButton(button_text,
@@ -11607,7 +8831,6 @@ CloseButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11622,11 +8845,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 ColorChooserButton(button_text,
@@ -11649,7 +8867,6 @@ ColorChooserButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11664,11 +8881,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 Debug(button_text="",
@@ -11685,7 +8897,6 @@ Debug(button_text="",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11699,11 +8910,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 DummyButton(button_text,
@@ -11725,7 +8931,6 @@ DummyButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11740,11 +8945,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 Exit(button_text="Exit",
@@ -11761,7 +8961,6 @@ Exit(button_text="Exit",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11774,11 +8973,6 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 FileBrowse(button_text="Browse",
@@ -11798,7 +8992,6 @@ FileBrowse(button_text="Browse",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11812,11 +9005,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 FileSaveAs(button_text="Save As...",
@@ -11836,7 +9024,6 @@ FileSaveAs(button_text="Save As...",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11850,10 +9037,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
 
 Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
 BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
@@ -11876,7 +9059,6 @@ FilesBrowse(button_text="Browse",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11891,16 +9073,11 @@ Parameter Descriptions:
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
-
-
-
-
 Fills a window with values provided in a values dictionary { element_key : new_value }
 
 ```
 FillFormWithValues(window, values_dict)
 ```
-
 
 Parameter Descriptions:
 
@@ -11908,11 +9085,6 @@ Parameter Descriptions:
 |--|--|--|
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
-
-
-
-
-
 
 ```
 FolderBrowse(button_text="Browse",
@@ -11931,7 +9103,6 @@ FolderBrowse(button_text="Browse",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11941,11 +9112,6 @@ Parameter Descriptions:
 |       str        | initial_folder | starting path for folders and files |
 |       str        |    tooltip     | text, that will appear when mouse hovers over the element |
 | Tuple[int, int]  |      size      | (w,h) w=characters-wide, h=rows-high |
-
-
-
-
-
 
 ```
 Help(button_text="Help",
@@ -11962,7 +9128,6 @@ Help(button_text="Help",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -11976,11 +9141,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 No(button_text="No",
@@ -11997,7 +9157,6 @@ No(button_text="No",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12010,11 +9169,6 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 OK(button_text="OK",
@@ -12031,7 +9185,6 @@ OK(button_text="OK",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12046,16 +9199,11 @@ Parameter Descriptions:
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
-
-
-
-
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 
 ```
 ObjToString(obj, extra="    ")
 ```
-
 
 Parameter Descriptions:
 
@@ -12065,23 +9213,12 @@ Parameter Descriptions:
 | str | extra | (Default value = ' ') |
 | (str) | **RETURN** | Formatted output of the object's values
 
-
-
-
-
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 Returns only the top-most object's variables instead of drilling down to dispolay more
 
 ```
 ObjToStringSingleObj(obj)
 ```
-
-
-
-
-
-
-
 
 ```
 Ok(button_text="Ok",
@@ -12098,7 +9235,6 @@ Ok(button_text="Ok",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12112,11 +9248,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 Open(button_text="Open",
@@ -12133,7 +9264,6 @@ Open(button_text="Open",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12146,11 +9276,6 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 Quit(button_text="Quit",
@@ -12167,7 +9292,6 @@ Quit(button_text="Quit",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12181,11 +9305,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 RButton(button_text,
@@ -12207,7 +9326,6 @@ RButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12221,11 +9339,6 @@ Parameter Descriptions:
 |                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 ReadButton(button_text,
@@ -12247,7 +9360,6 @@ ReadButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12261,11 +9373,6 @@ Parameter Descriptions:
 |                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 RealtimeButton(button_text,
@@ -12287,7 +9394,6 @@ RealtimeButton(button_text,
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12301,11 +9407,6 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-
-
-
-
 
 ```
 Save(button_text="Save",
@@ -12322,7 +9423,6 @@ Save(button_text="Save",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12336,11 +9436,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 SaveAs(button_text="Save As...",
@@ -12360,7 +9455,6 @@ SaveAs(button_text="Save As...",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12374,10 +9468,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -12400,7 +9490,6 @@ ScrolledTextBox(args=*<1 or N object>,
     font=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12416,23 +9505,12 @@ Parameter Descriptions:
 |       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
-
-
-
-
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
 
 ```
 SetGlobalIcon(icon)
 ```
-
-
-
-
-
-
-
 
 ```
 SetOptions(icon=None,
@@ -12472,7 +9550,6 @@ SetOptions(icon=None,
     ttk_theme=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12507,11 +9584,6 @@ Parameter Descriptions:
 |                   bool                    |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                    str                    |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 
-
-
-
-
-
 ```
 Submit(button_text="Submit",
     size=(None, None),
@@ -12527,7 +9599,6 @@ Submit(button_text="Submit",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12541,11 +9612,6 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-
-
-
-
 
 ```
 Yes(button_text="Yes",
@@ -12562,7 +9628,6 @@ Yes(button_text="Yes",
     metadata=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12577,13 +9642,7 @@ Parameter Descriptions:
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
-
-
 ## Debug Window Output
-
-
-
-
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -12603,7 +9662,6 @@ easy_print(args=*<1 or N object>,
     background_color=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12623,21 +9681,11 @@ Parameter Descriptions:
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
 
-
-
-
-
 Close a previously opened EasyPrint window
 
 ```
 easy_print_close()
 ```
-
-
-
-
-
-
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -12657,7 +9705,6 @@ eprint(args=*<1 or N object>,
     background_color=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12676,10 +9723,6 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
-
-
-
-
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -12699,7 +9742,6 @@ sgprint(args=*<1 or N object>,
     background_color=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12719,21 +9761,11 @@ Parameter Descriptions:
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
 
-
-
-
-
 Close a previously opened EasyPrint window
 
 ```
 sgprint_close()
 ```
-
-
-
-
-
-
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -12753,7 +9785,6 @@ EasyPrint(args=*<1 or N object>,
     background_color=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12773,21 +9804,11 @@ Parameter Descriptions:
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
 
-
-
-
-
 Close a previously opened EasyPrint window
 
 ```
 EasyPrintClose()
 ```
-
-
-
-
-
-
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -12807,7 +9828,6 @@ Print(args=*<1 or N object>,
     background_color=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12827,26 +9847,13 @@ Parameter Descriptions:
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
 
-
-
-
-
 Close a previously opened EasyPrint window
 
 ```
 PrintClose()
 ```
 
-
-
-
-
 ## OneLineProgressMeter
-
-
-
-
-
 
 ```
 OneLineProgressMeter(title,
@@ -12863,7 +9870,6 @@ OneLineProgressMeter(title,
     no_titlebar=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12882,27 +9888,17 @@ Parameter Descriptions:
 |          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
 | (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
 
-
-
-
-
 Cancels and closes a previously created One Line Progress Meter window
 
 ```
 OneLineProgressMeterCancel(key)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | Any | key | Key used when meter was created |
-
-
-
-
-
 
 ```
 one_line_progress_meter(title,
@@ -12919,7 +9915,6 @@ one_line_progress_meter(title,
     no_titlebar=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -12938,16 +9933,11 @@ Parameter Descriptions:
 |          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
 | (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
 
-
-
-
-
 Cancels and closes a previously created One Line Progress Meter window
 
 ```
 one_line_progress_meter_cancel(key)
 ```
-
 
 Parameter Descriptions:
 
@@ -12955,13 +9945,7 @@ Parameter Descriptions:
 |--|--|--|
 | Any | key | Key used when meter was created |
 
-
-
 ## Popup Functions
-
-
-
-
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -12986,7 +9970,6 @@ Popup(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13008,10 +9991,6 @@ Parameter Descriptions:
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-
-
-
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
  and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -13035,7 +10014,6 @@ PopupAnimated(image_source,
     icon=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13054,10 +10032,6 @@ Parameter Descriptions:
 |        str        |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str        |        title        | Title that will be shown on the window |
 |        str        |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -13079,7 +10053,6 @@ PopupAnnoying(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13099,10 +10072,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Popup that closes itself after some time period
 
@@ -13125,7 +10094,6 @@ PopupAutoClose(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13147,10 +10115,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display Popup with "cancelled" button text
 
 ```
@@ -13171,7 +10135,6 @@ PopupCancel(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13191,10 +10154,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Popup with colored button and 'Error' as button text
 
@@ -13216,7 +10175,6 @@ PopupError(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13236,10 +10194,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -13265,7 +10219,6 @@ PopupGetFile(message,
     initial_folder=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13291,10 +10244,6 @@ Parameter Descriptions:
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
-
-
-
-
 Display popup with text entry field and browse button so that a folder can be chosen.
 
 ```
@@ -13314,7 +10263,6 @@ PopupGetFolder(message,
     location=(None, None),
     initial_folder=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -13337,10 +10285,6 @@ Parameter Descriptions:
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
-
-
-
-
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
 ```
@@ -13359,7 +10303,6 @@ PopupGetText(message,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -13381,10 +10324,6 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
-
-
-
-
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
@@ -13404,7 +10343,6 @@ PopupNoBorder(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -13426,10 +10364,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Show a Popup but without any buttons
 
 ```
@@ -13449,7 +10383,6 @@ PopupNoButtons(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13467,10 +10400,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -13492,7 +10421,6 @@ PopupNoFrame(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13512,10 +10440,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -13537,7 +10461,6 @@ PopupNoTitlebar(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13557,10 +10480,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window and immediately return (does not block)
 
@@ -13583,7 +10502,6 @@ PopupNoWait(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13603,10 +10521,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window and immediately return (does not block)
 
@@ -13629,7 +10543,6 @@ PopupNonBlocking(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13649,10 +10562,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display Popup with OK button only
 
@@ -13674,7 +10583,6 @@ PopupOK(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13695,10 +10603,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display popup with OK and Cancel buttons
 
 ```
@@ -13718,7 +10622,6 @@ PopupOKCancel(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -13741,10 +10644,6 @@ Parameter Descriptions:
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
-
-
-
-
 Show Popup box that doesn't block and closes itself
 
 ```
@@ -13766,7 +10665,6 @@ PopupQuick(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13786,10 +10684,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -13812,7 +10706,6 @@ PopupQuickMessage(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13832,10 +10725,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -13858,7 +10747,6 @@ PopupScrolled(args=*<1 or N object>,
     font=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13873,10 +10761,6 @@ Parameter Descriptions:
 |  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
 |       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-
-
-
 
 Popup that closes itself after some time period
 
@@ -13899,7 +10783,6 @@ PopupTimed(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -13921,10 +10804,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display Popup with Yes and No buttons
 
 ```
@@ -13944,7 +10823,6 @@ PopupYesNo(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -13967,13 +10845,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
-
-
 ## Popups PEP8 Versions
-
-
-
-
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -13998,7 +10870,6 @@ popup(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14020,10 +10891,6 @@ Parameter Descriptions:
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-
-
-
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
  and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -14047,7 +10914,6 @@ popup_animated(image_source,
     icon=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14066,10 +10932,6 @@ Parameter Descriptions:
 |        str        |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str        |        title        | Title that will be shown on the window |
 |        str        |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -14091,7 +10953,6 @@ popup_annoying(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14111,10 +10972,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Popup that closes itself after some time period
 
@@ -14137,7 +10994,6 @@ popup_auto_close(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14159,10 +11015,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display Popup with "cancelled" button text
 
 ```
@@ -14183,7 +11035,6 @@ popup_cancel(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14203,10 +11054,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Popup with colored button and 'Error' as button text
 
@@ -14228,7 +11075,6 @@ popup_error(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14249,10 +11095,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
 ```
@@ -14271,7 +11113,6 @@ popup_get_date(start_mon=None,
     day_abbreviations=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14285,10 +11126,6 @@ Parameter Descriptions:
 |  List[str]  |     month_names      | optional list of month names to use (should be 12 items) |
 |  List[str]  |  day_abbreviations   | optional list of abbreviations to display as the day of week |
 | None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
-
-
-
-
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -14314,7 +11151,6 @@ popup_get_file(message,
     initial_folder=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14340,10 +11176,6 @@ Parameter Descriptions:
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
-
-
-
-
 Display popup with text entry field and browse button so that a folder can be chosen.
 
 ```
@@ -14363,7 +11195,6 @@ popup_get_folder(message,
     location=(None, None),
     initial_folder=None)
 ```
-
 
 Parameter Descriptions:
 
@@ -14386,10 +11217,6 @@ Parameter Descriptions:
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
-
-
-
-
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
 ```
@@ -14408,7 +11235,6 @@ popup_get_text(message,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -14430,10 +11256,6 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
-
-
-
-
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
 ```
@@ -14453,7 +11275,6 @@ popup_no_border(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -14475,10 +11296,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Show a Popup but without any buttons
 
 ```
@@ -14498,7 +11315,6 @@ popup_no_buttons(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14516,10 +11332,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -14541,7 +11353,6 @@ popup_no_frame(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14561,10 +11372,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -14586,7 +11393,6 @@ popup_no_titlebar(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14606,10 +11412,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window and immediately return (does not block)
 
@@ -14632,7 +11434,6 @@ popup_no_wait(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14652,10 +11453,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window and immediately return (does not block)
 
@@ -14678,7 +11475,6 @@ popup_non_blocking(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14699,10 +11495,6 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
 
 The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
@@ -14719,7 +11511,6 @@ popup_notify(args=*<1 or N object>,
     location=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14732,10 +11523,6 @@ Parameter Descriptions:
 |       float       |         alpha          | (float) Alpha channel. 0 - invisible 1 - fully visible |
 |  Tuple[int, int]  |        location        | Location on the screen to display the window |
 | (int) | **RETURN** | reason for returning
-
-
-
-
 
 Display Popup with OK button only
 
@@ -14757,7 +11544,6 @@ popup_ok(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14778,10 +11564,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display popup with OK and Cancel buttons
 
 ```
@@ -14801,7 +11583,6 @@ popup_ok_cancel(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -14824,10 +11605,6 @@ Parameter Descriptions:
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
-
-
-
-
 Show Popup box that doesn't block and closes itself
 
 ```
@@ -14849,7 +11626,6 @@ popup_quick(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14869,10 +11645,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -14895,7 +11667,6 @@ popup_quick_message(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14915,10 +11686,6 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
-
-
-
-
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -14941,7 +11708,6 @@ popup_scrolled(args=*<1 or N object>,
     font=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -14956,10 +11722,6 @@ Parameter Descriptions:
 |  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
 |       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-
-
-
 
 Popup that closes itself after some time period
 
@@ -14982,7 +11744,6 @@ popup_timed(args=*<1 or N object>,
     location=(None, None))
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -15004,10 +11765,6 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 
-
-
-
-
 Display Popup with Yes and No buttons
 
 ```
@@ -15027,7 +11784,6 @@ popup_yes_no(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None))
 ```
-
 
 Parameter Descriptions:
 
@@ -15050,21 +11806,13 @@ Parameter Descriptions:
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
-
-
 ## PEP8 Function Bindings
-
-
-
-
-
 
 Fills a window with values provided in a values dictionary { element_key : new_value }
 
 ```
 fill_form_with_values(window, values_dict)
 ```
-
 
 Parameter Descriptions:
 
@@ -15073,28 +11821,17 @@ Parameter Descriptions:
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 
-
-
-
-
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
 
 ```
 main()
 ```
 
-
-
-
-
-
-
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 
 ```
 obj_to_string(obj, extra="    ")
 ```
-
 
 Parameter Descriptions:
 
@@ -15104,10 +11841,6 @@ Parameter Descriptions:
 | str | extra | (Default value = ' ') |
 | (str) | **RETURN** | Formatted output of the object's values
 
-
-
-
-
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 Returns only the top-most object's variables instead of drilling down to dispolay more
 
@@ -15115,25 +11848,12 @@ Returns only the top-most object's variables instead of drilling down to dispola
 obj_to_string_single_obj(obj)
 ```
 
-
-
-
-
-
-
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
 
 ```
 set_global_icon(icon)
 ```
-
-
-
-
-
-
-
 
 ```
 set_options(icon=None,
@@ -15173,7 +11893,6 @@ set_options(icon=None,
     ttk_theme=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -15208,16 +11927,11 @@ Parameter Descriptions:
 |                   bool                    |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                    str                    |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 
-
-
-
-
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
 ```
 show_debugger_popout_window(location=(None, None), args=*<1 or N object>)
 ```
-
 
 Parameter Descriptions:
 
@@ -15225,21 +11939,11 @@ Parameter Descriptions:
 |--|--|--|
 | Tuple[int, int] | location | Locations (x,y) on the screen to place upper left corner of the window |
 
-
-
-
-
 Shows the large main debugger window
 
 ```
 show_debugger_window(location=(None, None), args=*<1 or N object>)
 ```
-
-
-
-
-
-
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -15262,7 +11966,6 @@ sprint(args=*<1 or N object>,
     font=None)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -15278,25 +11981,13 @@ Parameter Descriptions:
 |       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
-
-
-
-
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
 
 ```
 test()
 ```
 
-
-
-
-
 ## Themes
-
-
-
-
 
 Sets / Gets the current Theme.  If none is specified then returns the current theme.
 This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
@@ -15305,26 +11996,12 @@ This call replaces the ChangeLookAndFeel / change_look_and_feel call which only 
 theme(new_theme=None) -> (str) the currently selected theme
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the background color currently in use
 Used for Windows and containers (Column, Frame, Tab) and tables
 
 ```
 theme_background_color(color=None) -> (str) - color string of the background color currently in use    
 ```
-
-
-
-
-
-
-
 
 Sets/Returns the border width currently in use
 Used by non ttk elements at the moment
@@ -15333,25 +12010,11 @@ Used by non ttk elements at the moment
 theme_border_width(border_width=None) -> (int) - border width currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the button color currently in use
 
 ```
 theme_button_color(color=None) -> Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)    
 ```
-
-
-
-
-
-
-
 
 Sets/Returns the background color currently in use for all elements except containers
 
@@ -15359,25 +12022,11 @@ Sets/Returns the background color currently in use for all elements except conta
 theme_element_background_color(color=None) -> (str) - color string of the element background color currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the text color used by elements that have text as part of their display (Tables, Trees and Sliders)
 
 ```
 theme_element_text_color(color=None) -> (str) - color string currently in use    
 ```
-
-
-
-
-
-
-
 
 Sets/Returns the input element background color currently in use
 
@@ -15385,25 +12034,11 @@ Sets/Returns the input element background color currently in use
 theme_input_background_color(color=None) -> (str) - color string of the input element background color currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the input element entry color (not the text but the thing that's displaying the text)
 
 ```
 theme_input_text_color(color=None) -> (str) - color string of the input element color currently in use    
 ```
-
-
-
-
-
-
-
 
 Returns a sorted list of the currently available color themes
 
@@ -15411,24 +12046,11 @@ Returns a sorted list of the currently available color themes
 theme_list() -> List[str] - A sorted list of the currently available color themes    
 ```
 
-
-
-
-
-
-
-
 Show a window with all of the color themes - takes a while so be patient
 
 ```
 theme_previewer(columns=12)
 ```
-
-
-
-
-
-
 
 Sets/Returns the progress meter border width currently in use
 
@@ -15436,25 +12058,11 @@ Sets/Returns the progress meter border width currently in use
 theme_progress_bar_border_width(border_width=None) -> (int) - border width currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the progress bar colors by the current color theme
 
 ```
 theme_progress_bar_color(color=None) -> Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)    
 ```
-
-
-
-
-
-
-
 
 Sets/Returns the slider border width currently in use
 
@@ -15462,25 +12070,11 @@ Sets/Returns the slider border width currently in use
 theme_slider_border_width(border_width=None) -> (int) - border width currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the slider color (used for sliders)
 
 ```
 theme_slider_color(color=None) -> (str) - color string of the slider color currently in use    
 ```
-
-
-
-
-
-
-
 
 Sets/Returns the text color currently in use
 
@@ -15488,29 +12082,13 @@ Sets/Returns the text color currently in use
 theme_text_color(color=None) -> (str) - color string of the text color currently in use    
 ```
 
-
-
-
-
-
-
-
 Sets/Returns the background color for text elements
 
 ```
 theme_text_element_background_color(color=None) -> (str) - color string of the text background color currently in use    
 ```
 
-
-
-
-
-
 ## Old Themes (Look and Feel) - Replaced by theme()
-
-
-
-
 
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
@@ -15529,7 +12107,6 @@ Default1 = The full system default including the button (everything's gray... ho
 ChangeLookAndFeel(index, force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
@@ -15537,22 +12114,11 @@ Parameter Descriptions:
 | str  | index | the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy") |
 | bool | force | no longer used |
 
-
-
-
-
 Get a list of the valid values to pass into your call to change_look_and_feel
 
 ```
 ListOfLookAndFeelValues() -> List[str] - list of valid string values
 ```
-
-
-
-
-
-
-
 
 Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
 They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
@@ -15561,24 +12127,11 @@ They are sorted alphabetically.  The legacy color names are mixed in, but otherw
 preview_all_look_and_feel_themes(columns=12)
 ```
 
-
-
-
-
-
-
 Get a list of the valid values to pass into your call to change_look_and_feel
 
 ```
 list_of_look_and_feel_values() -> List[str] - list of valid string values
 ```
-
-
-
-
-
-
-
 
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
@@ -15597,12 +12150,9 @@ Default1 = The full system default including the button (everything's gray... ho
 change_look_and_feel(index, force=False)
 ```
 
-
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
 | str  | index | the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy") |
 | bool | force | no longer used |
-
-
