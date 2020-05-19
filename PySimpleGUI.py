@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.5 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem"
+version = __version__ = "4.19.0.6 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font"
 
 port = 'PySimpleGUI'
 
@@ -264,6 +264,7 @@ MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_TOOLTIP_OFFSET = (0, -20)
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
+TOOLTIP_FONT = None
 #################### COLOR STUFF ####################
 BLUES = ("#082567", "#0A37A3", "#00345B")
 PURPLES = ("#480656", "#4F2398", "#380474")
@@ -560,8 +561,11 @@ class ToolTip:
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
         self.tipwindow.wm_attributes("-topmost", 1)
 
+
         label = ttk.Label(self.tipwindow, text=self.text, justify=tk.LEFT,
                           background=TOOLTIP_BACKGROUND_COLOR, relief=tk.SOLID, borderwidth=1)
+        if TOOLTIP_FONT is not None:
+            label.config(font=TOOLTIP_FONT)
         label.pack()
 
     def hidetip(self):
@@ -11813,7 +11817,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, use_ttk_buttons=None, ttk_theme=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
@@ -11877,12 +11881,15 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type error_button_color: ???
     :param tooltip_time:  time in milliseconds to wait before showing a tooltip. Default is 400ms
     :type tooltip_time: (int)
+    :param tooltip_font:  font to use for all tooltips
+    :type tooltip_font: str or Tuple[str, int] or Tuple[str, int, str]
     :param use_ttk_buttons: if True will cause all buttons to be ttk buttons
     :type use_ttk_buttons: (bool)
     :param ttk_theme:  (str) Theme to use with ttk widgets.  Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
     :type ttk_theme:  (str)
     ==============
     """
+
     global DEFAULT_ELEMENT_SIZE
     global DEFAULT_BUTTON_ELEMENT_SIZE
     global DEFAULT_MARGINS  # Margins for each LEFT/RIGHT margin is first term
@@ -11917,6 +11924,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global DEFAULT_ERROR_BUTTON_COLOR
     global DEFAULT_TTK_THEME
     global USE_TTK_BUTTONS
+    global TOOLTIP_FONT
     # global _my_windows
 
     if icon:
@@ -12025,6 +12033,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if use_ttk_buttons is not None:
         USE_TTK_BUTTONS = use_ttk_buttons
+
+    if tooltip_font is not None:
+        TOOLTIP_FONT = tooltip_font
 
     return True
 
@@ -15709,7 +15720,7 @@ def main():
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
 
     layout1 = [
-        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
+        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
          Text('You are running the PySimpleGUI.py file instead of importing it.\nAnd are thus seeing a test harness instead of your code', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
         [Frame('Input Text Group', frame1, title_color='red')],
