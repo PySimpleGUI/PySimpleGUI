@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.4 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs"
+version = __version__ = "4.19.0.5 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem"
 
 port = 'PySimpleGUI'
 
@@ -2036,8 +2036,6 @@ class Multiline(Element):
     one up in the future too.
     """
 
-    tags = set()
-
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
@@ -2098,6 +2096,7 @@ class Multiline(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TagCounter = 0
         self.TKText = self.Widget = None  # type: tkst.ScrolledText
+        self.tags = set()
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
@@ -2130,26 +2129,25 @@ class Multiline(Element):
 
         if value is not None:
             value = str(value)
-            tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
-            if tag not in Multiline.tags:
-                Multiline.tags.add(tag)
-                if background_color_for_value is None:
-                    if text_color_for_value is None:
-                        self.TKText.tag_configure(tag)
-                    else:
-                        self.TKText.tag_configure(tag, foreground=text_color_for_value)
-                else:
-                    if text_color_for_value is None:
-                        self.TKText.tag_configure(tag, background=background_color_for_value)
-                    else:
-                        self.TKText.tag_configure(tag, foreground=text_color_for_value, background=background_color_for_value)
-
+            if background_color_for_value is not None or text_color_for_value is not None:
+                tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
+                if  tag not in self.tags:
+                    self.tags.add(tag)
+                if background_color_for_value is not None:
+                    self.TKText.tag_configure(tag, background=background_color_for_value)
+                if text_color_for_value is not None:
+                    self.TKText.tag_configure(tag, foreground=text_color_for_value)
+            else:
+                tag = None
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                self.TKText.insert(tk.END, value, tag)
+                if tag is not None:
+                    self.TKText.insert(tk.END, value, tag)
+                else:
+                    self.TKText.insert(tk.END, value)
             except:
                 pass
             if self.Disabled:
@@ -2159,8 +2157,10 @@ class Multiline(Element):
             self.TKText.see(tk.END)
         if disabled is True:
             self.TKText.configure(state='disabled')
+            self.Disabled = True
         elif disabled is False:
             self.TKText.configure(state='normal')
+            self.Disabled = False
         if background_color is not None:
             self.TKText.configure(background=background_color)
         if text_color is not None:
