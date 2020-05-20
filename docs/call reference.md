@@ -9546,6 +9546,7 @@ SetOptions(icon=None,
     window_location=(None, None),
     error_button_color=(None, None),
     tooltip_time=None,
+    tooltip_font=None,
     use_ttk_buttons=None,
     ttk_theme=None)
 ```
@@ -9554,35 +9555,36 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             Union[bytes, str]             |              icon               | filename or base64 string to be used for the window's icon |
-|              Tuple[str, str]              |          button_color           | Color of the button (text, background) |
-|              Tuple[int, int]              |          element_size           | element size (width, height) in characters |
-|              Tuple[int, int]              |       button_element_size       | Size of button |
-|              Tuple[int, int]              |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-| Tuple[int, int] or ((int, int),(int,int)) |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                   bool                    |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
-|                   bool                    |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|        Union[str, Tuple[str, int]]        |              font               | specifies the font family, size, etc |
-|                    int                    |          border_width           | width of border around element |
-|                    ???                    |       slider_border_width       | ??? |
-|                    ???                    |          slider_relief          | ??? |
-|                    ???                    |       slider_orientation        | ??? |
-|                    ???                    |         autoclose_time          | ??? |
-|                    ???                    |     message_box_line_width      | ??? |
-|                    ???                    |   progress_meter_border_depth   | ??? |
-|                    ---                    |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                    str                    |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
-|                    str                    |        background_color         | color of background |
-|                    str                    |    element_background_color     | element background color |
-|                    str                    |  text_element_background_color  | text element background color |
-|                    str                    | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
-|                    ???                    |       element_text_color        | ??? |
-|              Tuple[int, int]              |         debug_win_size          | (Default = (None)) |
-|                    ???                    |         window_location         | (Default = (None)) |
-|                    ???                    |       error_button_color        | (Default = (None)) |
-|                    int                    |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
-|                   bool                    |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                    str                    |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
+|                Tuple[str, str]                 |          button_color           | Color of the button (text, background) |
+|                Tuple[int, int]                 |          element_size           | element size (width, height) in characters |
+|                Tuple[int, int]                 |       button_element_size       | Size of button |
+|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
+|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
+|                      int                       |          border_width           | width of border around element |
+|                      ???                       |       slider_border_width       | ??? |
+|                      ???                       |          slider_relief          | ??? |
+|                      ???                       |       slider_orientation        | ??? |
+|                      ???                       |         autoclose_time          | ??? |
+|                      ???                       |     message_box_line_width      | ??? |
+|                      ???                       |   progress_meter_border_depth   | ??? |
+|                      ---                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      str                       |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
+|                      str                       |        background_color         | color of background |
+|                      str                       |    element_background_color     | element background color |
+|                      str                       |  text_element_background_color  | text element background color |
+|                      str                       | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
+|                      ???                       |       element_text_color        | ??? |
+|                Tuple[int, int]                 |         debug_win_size          | (Default = (None)) |
+|                      ???                       |         window_location         | (Default = (None)) |
+|                      ???                       |       error_button_color        | (Default = (None)) |
+|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
+| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
+|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
+|                      str                       |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 
 ```
 Submit(button_text="Submit",
@@ -11889,6 +11891,7 @@ set_options(icon=None,
     window_location=(None, None),
     error_button_color=(None, None),
     tooltip_time=None,
+    tooltip_font=None,
     use_ttk_buttons=None,
     ttk_theme=None)
 ```
@@ -11897,35 +11900,36 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             Union[bytes, str]             |              icon               | filename or base64 string to be used for the window's icon |
-|              Tuple[str, str]              |          button_color           | Color of the button (text, background) |
-|              Tuple[int, int]              |          element_size           | element size (width, height) in characters |
-|              Tuple[int, int]              |       button_element_size       | Size of button |
-|              Tuple[int, int]              |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-| Tuple[int, int] or ((int, int),(int,int)) |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                   bool                    |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
-|                   bool                    |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|        Union[str, Tuple[str, int]]        |              font               | specifies the font family, size, etc |
-|                    int                    |          border_width           | width of border around element |
-|                    ???                    |       slider_border_width       | ??? |
-|                    ???                    |          slider_relief          | ??? |
-|                    ???                    |       slider_orientation        | ??? |
-|                    ???                    |         autoclose_time          | ??? |
-|                    ???                    |     message_box_line_width      | ??? |
-|                    ???                    |   progress_meter_border_depth   | ??? |
-|                    ---                    |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                    str                    |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
-|                    str                    |        background_color         | color of background |
-|                    str                    |    element_background_color     | element background color |
-|                    str                    |  text_element_background_color  | text element background color |
-|                    str                    | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
-|                    ???                    |       element_text_color        | ??? |
-|              Tuple[int, int]              |         debug_win_size          | (Default = (None)) |
-|                    ???                    |         window_location         | (Default = (None)) |
-|                    ???                    |       error_button_color        | (Default = (None)) |
-|                    int                    |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
-|                   bool                    |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                    str                    |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
+|                Tuple[str, str]                 |          button_color           | Color of the button (text, background) |
+|                Tuple[int, int]                 |          element_size           | element size (width, height) in characters |
+|                Tuple[int, int]                 |       button_element_size       | Size of button |
+|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
+|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
+|                      int                       |          border_width           | width of border around element |
+|                      ???                       |       slider_border_width       | ??? |
+|                      ???                       |          slider_relief          | ??? |
+|                      ???                       |       slider_orientation        | ??? |
+|                      ???                       |         autoclose_time          | ??? |
+|                      ???                       |     message_box_line_width      | ??? |
+|                      ???                       |   progress_meter_border_depth   | ??? |
+|                      ---                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      str                       |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
+|                      str                       |        background_color         | color of background |
+|                      str                       |    element_background_color     | element background color |
+|                      str                       |  text_element_background_color  | text element background color |
+|                      str                       | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
+|                      ???                       |       element_text_color        | ??? |
+|                Tuple[int, int]                 |         debug_win_size          | (Default = (None)) |
+|                      ???                       |         window_location         | (Default = (None)) |
+|                      ???                       |       error_button_color        | (Default = (None)) |
+|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
+| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
+|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
+|                      str                       |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.6 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font"
+version = __version__ = "4.19.0.7 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional"
 
 port = 'PySimpleGUI'
 
@@ -121,7 +121,10 @@ import calendar
 import datetime
 import textwrap
 import inspect
-from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+try:        # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
+    from typing import List, Any, Union, Tuple, Dict    # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+except:
+    print('*** Skipping import of Typing module. "pip3 install typing" to remove this warning ***')
 from random import randint
 import warnings
 from math import floor
