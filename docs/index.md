@@ -21,6 +21,8 @@
 
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
+## <span>The Call Reference Section Moved to <a href="https://pysimplegui.readthedocs.io/en/latest/call%20reference/">here</a></span>
+
 ### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
 ---
 
@@ -135,6 +137,13 @@ and returns the value input as well as the button clicked.
 
 [ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
 
+[The Call Reference](http://calls.PySimpleGUI.org) documentation is located on the same ReadTheDocs page as the main documentation, but it's on another tab that you'll find across the top of the page.
+
+The quick way to remember the documentation addresses is to use these addresses:
+
+http://docs.PySimpleGUI.org
+http://calls.PySimpleGUI.org
+
 #### Quick Links To Help and The Latest News and Releases
 
 [Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)  Easy to remember: PySimpleGUI.com
@@ -155,7 +164,7 @@ and returns the value input as well as the button clicked.
 
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
-The YouTube videos - If you like instructional videos, there are over 15 videos made by PySimpleGUI project over the first 18 months.
+[The YouTube videos](http://YouTube.PySimpleGUI.org) - If you like instructional videos, there are over 15 videos made by PySimpleGUI project over the first 18 months.
 In 2020 a new series was begun.  As of May 2020 there are 12 videos completed so far with many more to go....
 - [PySimpleGUI 2020 - The most up to date information about PySimpleGUI](https://www.youtube.com/playlist?list=PLl8dD0doyrvFfzzniWS7FXrZefWWExJ2e)
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
@@ -1100,6 +1109,12 @@ For python 3
 
 More information about installing tkinter can be found here: https://www.techinfected.net/2015/09/how-to-install-and-use-tkinter-in-ubuntu-debian-linux-mint.html
 
+### Installing typing module for Python 3.4 (Raspberry Pi)
+
+In order for the docstrings to work correctly the `typing` module is used.  In Python version 3.4 the typing module is not part of Python and must be installed separately. You'll see a warning printed on the console if this module isn't installed.
+
+You can pip install `typing` just like PySimpleGUI.  However it's not a requirement as PySimpleGUI will run fine without typing installed as it's only used by the docstrings.
+
 ### Installing for Python 2.7
 
 **IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
@@ -1192,7 +1207,7 @@ You can also test by using the REPL....
 >>> PySimpleGUI.main()
 ```
 
-You will see a "test harness" that exercises the SDK, tells you the version number, allows you to try 
+You will see a "test harness" that exercises the SDK, tells you the version number, allows you to try a number of features as well as access the built-in GitHub upgrade utility.
 
 ### Finding Out Where Your PySimpleGUI Is Coming From
 
