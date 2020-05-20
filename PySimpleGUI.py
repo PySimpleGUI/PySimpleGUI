@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.7 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional"
+version = __version__ = "4.19.0.8 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring"
 
 port = 'PySimpleGUI'
 
@@ -13774,6 +13774,8 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return None
+    :rtype: None
     """
     Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
@@ -14669,6 +14671,8 @@ def PopupAnimated(image_source, message=None, background_color=None, text_color=
     :type title: (str)
     :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon: str
+    :return: No return value
+    :rtype: None
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
