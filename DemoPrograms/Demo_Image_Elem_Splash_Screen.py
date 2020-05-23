@@ -1,5 +1,4 @@
 import PySimpleGUI as sg
-import PIL.Image
 
 """
     Demo - Splash Screen
