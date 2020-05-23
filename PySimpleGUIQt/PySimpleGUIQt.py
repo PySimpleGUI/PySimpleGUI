@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.34.0.1 Unreleased - Added element_justification parm to Column Frame Tab Window"
+version = __version__ = "0.34.0.2 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get"
 
 port = 'PySimpleGUIQt'
 
@@ -1064,7 +1064,7 @@ class Multiline(Element):
 
 
     def Get(self):
-        self.QT_TextEdit.toPlainText()
+        return self.QT_TextEdit.toPlainText()
 
     def SetFocus(self):
         self.QT_TextEdit.setFocus()
@@ -1148,7 +1148,7 @@ class MultilineOutput(Element):
 
 
     def Get(self):
-        self.QT_TextBrowser.toPlainText()
+        return self.QT_TextBrowser.toPlainText()
 
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
@@ -3176,11 +3176,7 @@ class Window:
     active_popups = {}
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
-                 progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
-                 auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False,
-                 alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 element_justification='float', no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False, alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None, element_justification='float', no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
         '''
 
         :param title:
@@ -4874,6 +4870,10 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     style = style_entry(background_color=element.BackgroundColor)
                     # style += 'background-color: %s;' % element.BackgroundColor
                 style += style_entry(border='0px solid gray')
+                # style += style_entry(margin='{}px {}px {}px {}px'.format(*full_element_pad))
+                # style += style_entry(margin='0px 0px 0px 0px')
+                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
+
                 # style += 'border: 0px solid gray; '
                 style = style_generate('QGroupBox', style)
                 column_widget.setStyleSheet(style)
