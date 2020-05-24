@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.16.0  Released 06-May-2020"
+version = __version__ = "0.16.0.1  Unreleased - Finally addition of element_justification to Window & Container elements"
 
 port = 'PySimpleGUIWx'
 
@@ -16,6 +16,10 @@ import pickle
 import os
 import time
 from random import randint
+
+RUN_INSPECTION_TOOL = False
+
+
 
 ######           #####                                       #####   #     #  ###  #     #
 #     #  #   #  #     #  #  #    #  #####   #       ######  #     #  #     #   #   #  #  #  #    #
@@ -53,7 +57,6 @@ g_time_start = 0
 g_time_end = 0
 g_time_delta = 0
 
-RUN_INSPECTION_TOOL = False
 
 # Because looks matter...
 DEFAULT_BASE64_ICON = b'iVBORw0KGgoAAAANSUhEUgAAACEAAAAgCAMAAACrZuH4AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFAAAAMGmYMGqZMWqaMmubMmycM22dNGuZNm2bNm6bNG2dN26cNG6dNG6eNW+fN3CfOHCeOXGfNXCgNnGhN3KiOHOjOXSjOHSkOnWmOnamOnanPHSiPXakPnalO3eoPnimO3ioPHioPHmpPHmqPXqqPnurPnusPnytP3yuQHimQnurQn2sQH2uQX6uQH6vR32qRn+sSXujSHynTH2mTn+nSX6pQH6wTIGsTYKuTYSvQoCxQoCyRIK0R4S1RYS2Roa4SIe4SIe6SIi7Soq7SYm8SYq8Sou+TY2/UYStUYWvVIWtUYeyVoewUIi0VIizUI6+Vo+8WImxXJG5YI2xZI+xZ5CzZJC0ZpG1b5a3apW4aZm/cZi4dJ2/eJ69fJ+9XZfEZZnCZJzHaZ/Jdp/AeKTI/tM8/9Q7/9Q8/9Q9/9Q+/tQ//9VA/9ZA/9ZB/9ZC/9dD/9ZE/tdJ/9dK/9hF/9hG/9hH/9hI/9hJ/9hK/9lL/9pK/9pL/thO/9pM/9pN/9tO/9tP/9xP/tpR/9xQ/9xR/9xS/9xT/91U/91V/t1W/95W/95X/95Y/95Z/99a/99b/txf/txh/txk/t5l/t1q/t5v/+Bb/+Bc/+Bd/+Be/+Bf/+Bg/+Fh/+Fi/+Jh/+Ji/uJk/uJl/+Jm/+Rm/uJo/+Ro/+Rr/+Zr/+Vs/+Vu/+Zs/+Zu/uF0/uVw/+dw/+dz/+d2/uB5/uB6/uJ9/uR7/uR+/uV//+hx/+hy/+h0/+h2/+l4/+l7/+h8gKXDg6vLgazOhKzMiqrEj6/KhK/Qka/Hk7HJlLHJlLPMmLTLmbbOkLXSmLvXn77XoLrPpr/Tn8DaocLdpcHYrcjdssfZus/g/uOC/uOH/uaB/uWE/uaF/uWK/+qA/uqH/uqI/uuN/uyM/ueS/ueW/ueY/umQ/uqQ/uuS/uuW/uyU/uyX/uqa/uue/uye/uyf/u6f/uyq/u+r/u+t/vCm/vCp/vCu/vCy/vC2/vK2/vO8/vO/wtTjwtXlzdrl/vTA/vPQAAAAiNpY5gAAAQB0Uk5T////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////AFP3ByUAAAAJcEhZcwAAFw8AABcPASe7rwsAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuMWMqnEsAAAKUSURBVDhPhdB3WE1xHMdxt5JV0dANoUiyd8kqkey996xclUuTlEKidO3qVnTbhIyMW/bee5NskjJLmR/f3++cK/94vP76Ps/n/Zx7z6mE/6koJowcK154vvHOL/GsKCZXkUgkWlf4vWGWq5tsDz+JWIzSokAiqXGe7nWu3HxhEYof7fhOqp1GtptQuMruVhQdxZ05U5G47tYUHbQ4oah6Fg9Z4ubm7i57JhQjdHS0RSzUPoG17u6zZTKZh8c8XlytqW9YWUOH1LqFOZ6enl5ec+XybFb0rweM1tPTM6yuq6vLs0lYJJfLvb19fHwDWGF0jh5lYNAe4/QFemOwxtfXz8/fPyBgwVMqzAcCF4ybAZ2MRCexJGBhYGBQUHDw4u1UHDG1G2ZqB/Q1MTHmzAE+kpCwL1RghlTaBt/6SaXS2kx9YH1IaOjSZST8vfA9JtoDnSngGgL7wkg4WVkofA9mcF1Sx8zMzBK4v3wFiYiMVLxlEy9u21syFhYNmgN7IyJXEYViNZvEYoCVVWOmUVvgQVSUQqGIjolRFvOAFd8HWVs34VoA+6OjY2JjY5Vxm4BC1UuhGG5jY9OUaQXci1MqlfHx8YmqjyhOViW9ZsUN29akJRmPFwkJCZsTSXIpilJffXiTzorLXYgtcxRJKpUqKTklJQ0oSt9FP/EonxVdNY4jla1kK4q2ZB6mIr+AipvduzFUzMSOtLT09IyMzMxtJKug/F0u/6dTexAWDcXXLGEjapKjfsILOLKEuYiSnTQeYCt3UHhbwEHjGMrETfBJU5zq5dSTcXC8hLJccSWP2cgLXHPu7cQNAcpyxF1dyjehAKb0cSYUAOXCUw6V8OFPgevTXFymC+fPPLU677Nw/1X8A/AbfAKGulaqFlIAAAAASUVORK5CYII='
@@ -1857,7 +1860,7 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,element_justification='left',
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), size_px=(None,None), font=None, pad=None, border_width=None, key=None,
                  tooltip=None):
         '''
@@ -1889,6 +1892,7 @@ class Frame(Element):
         self.TitleLocation = title_location
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ElementJustification = element_justification
 
         self._Layout(layout)
 
@@ -1973,7 +1977,7 @@ HSep = HorizontalSeparator
 #                           Tab                                          #
 # ---------------------------------------------------------------------- #
 class Tab(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, element_justification='left', pad=None, disabled=False,
                  border_width=None, key=None, tooltip=None):
         '''
         Tab Element
@@ -2002,6 +2006,7 @@ class Tab(Element):
         self.ParentNotebook = None
         self.TabID = None
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.ElementJustification = element_justification
 
         self._Layout(layout)
 
@@ -2191,7 +2196,7 @@ class Slider(Element):
 #                           Column                                       #
 # ---------------------------------------------------------------------- #
 class Column(Element):
-    def __init__(self, layout, background_color=None, size=(None, None), size_px=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
+    def __init__(self, layout, background_color=None, element_justification='left', size=(None, None), size_px=(None, None), pad=None, scrollable=False, vertical_scroll_only=False, right_click_menu=None, key=None, visible=True):
         '''
         Column Element
         :param layout:
@@ -2215,6 +2220,7 @@ class Column(Element):
         self.WxBoxSizer = None      # type: wx.BoxSizer
         self.WxHSizer = None        # type: wx.BoxSizer
         self._Layout(layout)
+        self.ElementJustification = element_justification
         tsize = size_px if size_px != (None, None) else size
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=background_color, size_px=tsize, pad=pad, key=key, visible=visible)
@@ -2790,7 +2796,7 @@ class Window:
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
-                 auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False,
+                 auto_close_duration=None, icon=DEFAULT_BASE64_ICON, force_toplevel=False, element_justification='left',
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False):
         '''
@@ -2876,6 +2882,7 @@ class Window:
         self._Size=size
         self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
         self.FocusElement = None
+        self.ElementJustification = element_justification
         self.BackgroundImage = background_image
         self.XFound = False
         self.DisableMinimize = disable_minimize
@@ -4303,7 +4310,17 @@ else:
 # ------------------------------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------------------------------ #
 
-def PackFormIntoFrame(form, containing_frame, toplevel_form):
+def PackFormIntoFrame(container_elem, containing_frame, toplevel_form):
+    """
+
+    :param container_elem:
+    :type container_elem: Window or Column or Tab or Frame
+    :param containing_frame:
+    :type containing_frame: wx.BoxSizer
+    :param toplevel_form:
+    :type toplevel_form: Window
+    :return:
+    """
     def pad_widget(widget):
         lrsizer = wx.BoxSizer(wx.HORIZONTAL)
         if full_element_pad[1] == full_element_pad[3]:  # if right = left
@@ -4351,7 +4368,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     focus_set = False
     ######################### LOOP THROUGH ROWS #########################
     # *********** -------  Loop through ROWS  ------- ***********#
-    for row_num, flex_row in enumerate(form.Rows):
+    for row_num, flex_row in enumerate(container_elem.Rows):
         ######################### LOOP THROUGH ELEMENTS ON ROW #########################
         # *********** -------  Loop through ELEMENTS  ------- ***********#
         # *********** Make TK Row                             ***********#
@@ -5322,17 +5339,18 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 sizer = pad_widget(static_line)
 
                 hsizer.Add(sizer, 0)
-        #         separator = ttk.Separator(tk_row_frame, orient=element.Orientation, )
-        #         separator.pack(side=tk.LEFT, padx=element.Pad[0], pady=element.Pad[1], fill='both', expand=True)
-        #
-        # # ............................DONE WITH ROW pack the row of widgets ..........................#
-        # done with row, pack the row of widgets
-        containing_frame.Add(hsizer,0, wx.TOP|wx.BOTTOM, border=0)
-        # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
-        # tk_row_frame.pack(side=tk.TOP, anchor='nw', padx=DEFAULT_MARGINS[0], expand=False)
-        # if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-        #     tk_row_frame.configure(background=form.BackgroundColor)
-        # toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
+
+        #.................DONE WITH ROW pack the row of widgets ..................#
+
+        # Add the row to the layout.  Justify the row depending on the settings for its container
+        if container_elem.ElementJustification.startswith('c'):
+            containing_frame.Add(hsizer, 0,wx.ALIGN_CENTER, border=0)
+        elif container_elem.ElementJustification.startswith('r'):
+            containing_frame.Add(hsizer,0, wx.ALIGN_RIGHT, border=0)
+        else:
+            containing_frame.Add(hsizer, 0, wx.TOP|wx.BOTTOM, border=0)
+
+
     return
 
 
@@ -7955,13 +7973,14 @@ theme(CURRENT_LOOK_AND_FEEL)
 def main():
     # ChangeLookAndFeel('Light Brown 11')
     frame_contents = [[T('Inside my frame')],
-                      [CB('Checkbox in the frame too')]]
+                      [Input(size=(5,1))],
+                      [Input()]]
     layout = [
               [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='red')],
               [Text('You are running version {}'.format(version), font='Arial 20', text_color='red')],
               [Text('You should be importing this module rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
-                [Frame('This is a FRAME!', frame_contents)],
+                [Frame('FRAME with Centered Contents', frame_contents, element_justification='c')],
               [InputText('Source', focus=True, size_px=(200,80)), FileBrowse()],
               [InputText('Dest'), FolderBrowse()],
               [Checkbox('Checkbox 1', size=(15,1)), Checkbox('Checkbox 2')],
@@ -7983,6 +8002,7 @@ def main():
                     disable_close=False,
                     disable_minimize=True,
                     grab_anywhere=True,
+                    # element_justification='r'
                     )
 
     while True:
