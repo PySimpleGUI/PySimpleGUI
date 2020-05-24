@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.8 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring"
+version = __version__ = "4.19.0.9 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update"
 
 port = 'PySimpleGUI'
 
@@ -648,7 +648,7 @@ class Element():
         self.Visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
-        # self.Tearoff = False          # why was this here?? should already be in the Menubar element...confusing...
+        self.Tearoff = False          # needed because of right click menu code
         self.ParentRowFrame = None  # type tk.Frame
         self.metadata = metadata  # type: Any
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
@@ -1710,10 +1710,12 @@ class Radio(Element):
             return
         if value is not None:
             try:
-                if value:
+                if value is True:
                     self.TKIntVar.set(self.EncodedRadioValue)
+                elif value is False:
+                    self.TKIntVar.set(0)
             except:
-                pass
+                print('Error updating Radio')
             self.InitialState = value
         if disabled == True:
             self.TKRadio['state'] = 'disabled'
@@ -2443,6 +2445,8 @@ class StatusBar(Element):
 
 class TKProgressBar():
 
+    uniqueness_counter = 0
+
     def __init__(self, root, max, length=400, width=DEFAULT_PROGRESS_BAR_SIZE[1], style=DEFAULT_TTK_THEME,
                  relief=DEFAULT_PROGRESS_BAR_RELIEF, border_width=DEFAULT_PROGRESS_BAR_BORDER_WIDTH,
                  orientation='horizontal', BarColor=(None, None), key=None):
@@ -2475,31 +2479,38 @@ class TKProgressBar():
         self.Orientation = orientation
         self.Count = None
         self.PriorCount = 0
+        self.StyleName = ''
+
+        TKProgressBar.uniqueness_counter += 1
 
         if orientation.lower().startswith('h'):
             s = ttk.Style()
             s.theme_use(style)
+
+            self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Horizontal.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", background=BarColor[0], troughcolor=BarColor[1],
+                s.configure(self.style_name, background=BarColor[0], troughcolor=BarColor[1],
                             troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(str(key) + "my.Horizontal.TProgressbar", troughrelief=relief, borderwidth=border_width,
+                s.configure(self.style_name, troughrelief=relief, borderwidth=border_width,
                             thickness=width)
 
             self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(key) + 'my.Horizontal.TProgressbar', length=length,
+                                                        style=self.style_name, length=length,
                                                         orient=tk.HORIZONTAL, mode='determinate')
         else:
             s = ttk.Style()
             s.theme_use(style)
+            self.style_name = str(key) + str(TKProgressBar.uniqueness_counter) + "my.Vertical.TProgressbar"
             if BarColor != COLOR_SYSTEM_DEFAULT:
-                s.configure(str(key) + "my.Vertical.TProgressbar", background=BarColor[0],
+
+                s.configure(self.style_name, background=BarColor[0],
                             troughcolor=BarColor[1], troughrelief=relief, borderwidth=border_width, thickness=width)
             else:
-                s.configure(str(key) + "my.Vertical.TProgressbar", troughrelief=relief,
+                s.configure(self.style_name, troughrelief=relief,
                             borderwidth=border_width, thickness=width)
             self.TKProgressBarForReal = ttk.Progressbar(root, maximum=self.Max,
-                                                        style=str(key) + 'my.Vertical.TProgressbar',
+                                                        style=self.style_name,
                                                         length=length, orient=tk.VERTICAL, mode='determinate')
 
     def Update(self, count=None, max=None):
@@ -3225,14 +3236,14 @@ class ButtonMenu(Element):
         self.Disabled = disabled
         self.IsButtonMenu = True
         self.MenuItemChosen = None
-        self.Tearoff = tearoff
         self.TKButtonMenu = None  # type: tk.Menubutton
         self.TKMenu = None  # type: tk.Menu
         # self.temp_size = size if size != (NONE, NONE) else
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
-        return
+        self.Tearoff = tearoff
+
 
     def _MenuItemChosenCallback(self, item_chosen):  # ButtonMenu Menu Item Chosen Callback
         """
@@ -4699,10 +4710,12 @@ class Tab(Element):
         return self
 
 
-    def Update(self, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
+    def Update(self, title=None, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
+        :param title: tab title
+        :type title: (str)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param visible: control visibility of element
@@ -4719,6 +4732,11 @@ class Tab(Element):
         if visible is False:
             state = 'hidden'
         self.ParentNotebook.tab(self.TabID, state=state)
+
+        if title is not None:
+            self.Title = str(title)
+            self.ParentNotebook.tab(self.ContainerElemementNumber-1, text=self.Title)
+
         # if visible is False:
         #     self.ParentNotebook.pack_forget()
         # elif visible is True:
@@ -4750,6 +4768,7 @@ class Tab(Element):
             self.ParentNotebook.select(self.TabID)
         except Exception as e:
             print('Exception Selecting Tab {}'.format(e))
+
 
     add_row = AddRow
     layout = Layout
@@ -5758,11 +5777,14 @@ class Menu(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.Widget = self.TKMenu = None  # type: tk.Menu
-        self.Tearoff = tearoff
         self.MenuItemChosen = None
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key,
                          visible=visible, font=font, metadata=metadata)
+
+        self.Tearoff = tearoff
+
+
         return
 
     def _MenuItemChosenCallback(self, item_chosen):  # Menu Menu Item Chosen Callback
@@ -10294,10 +10316,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
                     combostyle.configure(style_name, selectforeground=element.TextColor)
 
+                # Strange code that is needed to set the font for the drop-down list
+                element._newfont = tkinter.font.Font(font=font)
+                tk_row_frame.option_add("*TCombobox*Listbox*Font", element._newfont)
+
                 element.TKCombo = element.Widget = ttk.Combobox(tk_row_frame, width=width,
                                                                 textvariable=element.TKStringVar, font=font,
                                                                 style=style_name)
-
 
                 # Chr0nic
                 element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
@@ -13543,6 +13568,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         message = str(message)
         if message.count('\n'):
             message_wrapped = message
+            # message_wrapped = textwrap.fill(message, local_line_width)
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
         message_wrapped_lines = message_wrapped.count('\n') + 1
@@ -15687,6 +15713,7 @@ def main():
 
         [Listbox(['Listbox 1', 'Listbox 2', 'Listbox 3'], select_mode=SELECT_MODE_EXTENDED, size=(20, 5), no_scrollbar=True)],
         [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), default_value='Combo item 2', key='_COMBO1_', )],
+        [Combo(['Combo item %s' % i for i in range(5)], size=(20, 3), font='Courier 20', default_value='Combo item 2', key='_COMBO2_', )],
         # [Combo(['Combo item 1', 2,3,4], size=(20, 3), readonly=False, text_color='blue', background_color='red', key='_COMBO2_')],
         [Spin([1, 2, 3, 'a', 'b', 'c'], initial_value='a', size=(4, 3))],
     ]
@@ -15735,6 +15762,7 @@ def main():
          [Text('PySimpleGUI Location {}'.format(os.path.dirname(os.path.abspath(__file__))), size=(50, None), font='ANY 12')],
          [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
          [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
+
         [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
