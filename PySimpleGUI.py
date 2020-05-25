@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.10 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button"
+version = __version__ = "4.19.0.11 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button, fix for Menu.update losing font setting"
 
 port = 'PySimpleGUI'
 
@@ -5820,6 +5820,8 @@ class Menu(Element):
             for menu_entry in menu_definition:
                 # print(f'Adding a Menubar ENTRY {menu_entry}')
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff)
+                if self.Font is not None:
+                    baritem.config(font=self.Font)
                 pos = menu_entry[0].find('&')
                 # print(pos)
                 if pos != -1:
