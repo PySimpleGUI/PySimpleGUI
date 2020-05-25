@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.9 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update"
+version = __version__ = "4.19.0.10 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button"
 
 port = 'PySimpleGUI'
 
@@ -9510,123 +9510,65 @@ def _FindElementWithFocusInSubForm(form):
     return None
 
 
-if sys.version_info[0] >= 3:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        """
-        Only to be used internally. Not user callable
-        :param top_menu: ???
-        :param sub_menu_info: ???
-        :param element: ???
-        :param is_sub_menu:  (Default = False)
-        :param skip:  (Default = False)
+def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+    """
+    Only to be used internally. Not user callable
+    :param top_menu: ???
+    :param sub_menu_info: ???
+    :param element: ???
+    :param is_sub_menu:  (Default = False)
+    :param skip:  (Default = False)
 
-        """
-        return_val = None
-        if type(sub_menu_info) is str:
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
+    """
+    return_val = None
+    if type(sub_menu_info) is str:
+        if not is_sub_menu and not skip:
+            pos = sub_menu_info.find('&')
+            if pos != -1:
+                if pos == 0 or sub_menu_info[pos - 1] != "\\":
+                    sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
+            if sub_menu_info == '---':
+                top_menu.add('separator')
+            else:
+                try:
+                    item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
+                except:
+                    item_without_key = sub_menu_info
+
+                if item_without_key[0] == MENU_DISABLED_CHARACTER:
+                    top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                                         command=lambda: element._MenuItemChosenCallback(sub_menu_info))
+                    top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                 else:
-                    try:
-                        item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
-                    except:
-                        item_without_key = sub_menu_info
-
-                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
-                        top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
-                        top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
+                    top_menu.add_command(label=item_without_key, underline=pos,
+                                         command=lambda: element._MenuItemChosenCallback(sub_menu_info))
+    else:
+        i = 0
+        while i < (len(sub_menu_info)):
+            item = sub_menu_info[i]
+            if i != len(sub_menu_info) - 1:
+                if type(sub_menu_info[i + 1]) == list:
+                    new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
+                    if element.Font is not None:
+                        new_menu.config(font=element.Font)
+                    return_val = new_menu
+                    pos = sub_menu_info[i].find('&')
+                    if pos != -1:
+                        if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
+                            sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
+                    if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
+                        top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu,
+                                             underline=pos, state='disabled')
                     else:
-                        top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if type(sub_menu_info[i + 1]) == list:
-                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                        if element.Font is not None:
-                            new_menu.config(font=element.Font)
-                        return_val = new_menu
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
-                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu,
-                                                 underline=pos, state='disabled')
-                        else:
-                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
-                    else:
-                        AddMenuItem(top_menu, item, element)
+                        top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
+                    AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                    i += 1  # skip the next one
                 else:
                     AddMenuItem(top_menu, item, element)
-                i += 1
-        return return_val
-else:
-    def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
-        """
-
-        :param top_menu: ???
-        :param sub_menu_info: ???
-        :param element: ???
-        :param is_sub_menu:  (Default = False)
-        :param skip:  (Default = False)
-
-        """
-        if not isinstance(sub_menu_info, list):
-            if not is_sub_menu and not skip:
-                # print(f'Adding command {sub_menu_info}')
-                pos = sub_menu_info.find('&')
-                if pos != -1:
-                    if pos == 0 or sub_menu_info[pos - 1] != "\\":
-                        sub_menu_info = sub_menu_info[:pos] + sub_menu_info[pos + 1:]
-                if sub_menu_info == '---':
-                    top_menu.add('separator')
-                else:
-                    try:
-                        item_without_key = sub_menu_info[:sub_menu_info.index(MENU_KEY_SEPARATOR)]
-                    except:
-                        item_without_key = sub_menu_info
-
-                    if item_without_key[0] == MENU_DISABLED_CHARACTER:
-                        top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
-                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
-                        top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
-                    else:
-                        top_menu.add_command(label=item_without_key, underline=pos,
-                                             command=lambda: element._MenuItemChosenCallback(sub_menu_info))
-        else:
-            i = 0
-            while i < (len(sub_menu_info)):
-                item = sub_menu_info[i]
-                if i != len(sub_menu_info) - 1:
-                    if isinstance(sub_menu_info[i + 1], list):
-                        new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                        pos = sub_menu_info[i].find('&')
-                        if pos != -1:
-                            if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
-                                sub_menu_info[i] = sub_menu_info[i][:pos] + sub_menu_info[i][pos + 1:]
-                        if sub_menu_info[i][0] == MENU_DISABLED_CHARACTER:
-                            top_menu.add_cascade(label=sub_menu_info[i][len(MENU_DISABLED_CHARACTER):], menu=new_menu,
-                                                 underline=pos, state='disabled')
-                        else:
-                            top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                        AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
-                        i += 1  # skip the next one
-                    else:
-                        AddMenuItem(top_menu, item, element)
-                else:
-                    AddMenuItem(top_menu, item, element)
-                i += 1
+            else:
+                AddMenuItem(top_menu, item, element)
+            i += 1
+    return return_val
 
 # 888    888      d8b          888
 # 888    888      Y8P          888
@@ -10201,7 +10143,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 menu_def = element.MenuDefinition
 
-                top_menu = tk.Menu(tkbutton, tearoff=False)
+                top_menu = tk.Menu(tkbutton, tearoff=False, font=font)
                 AddMenuItem(top_menu, menu_def[1], element)
 
                 tkbutton.configure(menu=top_menu)
