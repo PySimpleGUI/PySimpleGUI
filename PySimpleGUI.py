@@ -9489,6 +9489,10 @@ def _FindElementWithFocusInSubForm(form):
                 matching_elem = _FindElementWithFocusInSubForm(element)
                 if matching_elem is not None:
                     return matching_elem
+            elif element.Type == ELEM_TYPE_PANE:
+                matching_elem = _FindElementWithFocusInSubForm(element)
+                if matching_elem is not None:
+                    return matching_elem
             elif element.Type == ELEM_TYPE_INPUT_TEXT:
                 if element.TKEntry is not None:
                     if element.TKEntry is element.TKEntry.focus_get():
