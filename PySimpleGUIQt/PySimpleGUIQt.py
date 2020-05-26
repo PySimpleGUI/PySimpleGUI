@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.34.0.2 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get"
+version = __version__ = "0.34.0.3 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get, Radio.update can clear all radio buttons by usetting any in the group to False"
 
 port = 'PySimpleGUIQt'
 
@@ -771,6 +771,7 @@ class Radio(Element):
         self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.Widget = self.QT_Radio_Button = None           # type: QRadioButton
+        self.QT_RadioButtonGroup = None                     # type: QButtonGroup
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -783,8 +784,13 @@ class Radio(Element):
             self.QT_Radio_Button.setDisabled(True)
         else:
             self.QT_Radio_Button.setDisabled(False)
-        if value:
+        if value is True:
             self.QT_Radio_Button.setChecked(True)
+        if value is False:          # If setting this button to false, then set them ALL to false too
+            self.QT_Radio_Button.setChecked(True)
+            self.QT_RadioButtonGroup.setExclusive(False)
+            self.QT_Radio_Button.setChecked(False)
+            self.QT_RadioButtonGroup.setExclusive(True)
         super().Update(self.QT_Radio_Button, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
@@ -5334,12 +5340,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                         element.QT_Radio_Button.setFixedHeight(element_size[1])
 
                 if element.GroupID in toplevel_win.RadioDict:
-                    QT_RadioButtonGroup = toplevel_win.RadioDict[element.GroupID]
+                    element.QT_RadioButtonGroup = toplevel_win.RadioDict[element.GroupID]
                 else:
-                    QT_RadioButtonGroup = QButtonGroup(toplevel_win.QTApplication)
-                    toplevel_win.RadioDict[element.GroupID] = QT_RadioButtonGroup
+                    element.QT_RadioButtonGroup = QButtonGroup(toplevel_win.QTApplication)
+                    toplevel_win.RadioDict[element.GroupID] = element.QT_RadioButtonGroup
+                    element.QT_RadioButtonGroup.setExclusive(True)
 
-                QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
+                element.QT_RadioButtonGroup.addButton(element.QT_Radio_Button)
 
                 if element.ChangeSubmits:
                     element.QT_Radio_Button.toggled.connect(element._QtCallbackValueChanged)
