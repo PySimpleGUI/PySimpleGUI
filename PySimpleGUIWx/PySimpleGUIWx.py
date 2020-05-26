@@ -803,9 +803,10 @@ class Radio(Element):
 
 
     def Update(self, value=None, disabled=None, background_color=None, text_color=None, font=None, visible=None):
-        if value:
+        if value is True:
             self.WxRadioButton.SetValue(True)
         elif value is False:
+            self.WxRadioButton.SetValue(True)
             self.WxRadioButton.SetValue(False)
         super().Update(self.WxRadioButton, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
@@ -4908,6 +4909,8 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_form):
                 hsizer.Add(sizer, 0)
                 if element.InitialState:
                     widget.SetValue(True)
+                else:
+                    widget.SetValue(False)
 
                 # -------------------------  INPUT SPINNER element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
