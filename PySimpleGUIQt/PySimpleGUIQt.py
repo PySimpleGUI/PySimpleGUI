@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.34.0.3 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get, Radio.update can clear all radio buttons by usetting any in the group to False"
+version = __version__ = "0.34.0.4 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get, Radio.update can clear all radio buttons by usetting any in the group to False, expanded Table element to handle header color andatustyling according to theme, fixed frame background color bug"
 
 port = 'PySimpleGUIQt'
 
@@ -2609,7 +2609,7 @@ class Menu(Element):
 class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
-                 font=None, justification='right', text_color=None, background_color=None, alternating_row_color=None,
+                 font=None, justification='right',header_text_color=None, header_background_color=None, header_font=None,  text_color=None, background_color=None, alternating_row_color=None,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, key=None, tooltip=None, visible=True, size_px=(None,None), metadata=None):
         '''
         Table Element
@@ -2640,6 +2640,9 @@ class Table(Element):
         self.AutoSizeColumns = auto_size_columns
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.TextColor = text_color
+        self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
+        self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
+        self.HeaderFont = header_font
         self.Justification = justification
         self.InitialState = None
         self.SelectMode = select_mode
@@ -5572,7 +5575,6 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     style += 'background-color: %s;' % element.BackgroundColor
                 # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 # style += 'border: {}px solid gray; '.format(border_depth)
-
                 column_widget.setStyleSheet(style)
 
                 column_widget.setTitle(element.Title)
@@ -5749,12 +5751,19 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if element.NumRows is not None:
                     element.QT_TableWidget.setFixedHeight(element.NumRows*35+25)
                 # element.QT_TableWidget = QTableWidget()
-                style = 'QTableWidget {'
+                style = ''
+                if element.HeaderBackgroundColor is not None:
+                    style += 'QHeaderView::section {background-color: %s;}\n' % element.HeaderBackgroundColor
+                if element.HeaderTextColor is not None:
+                    style += 'QHeaderView::section {color: %s;}\n' % element.HeaderTextColor
+                style += 'QTableWidget {'
                 style += create_style_from_font(font)
                 if element.TextColor is not None:
                     style += 'color: %s;\n' % element.TextColor
                 if element.BackgroundColor is not None:
                     style += 'background-color: %s;' % element.BackgroundColor
+
+
                 style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 style += 'border: {}px solid gray; '.format(border_depth)
                 style += '}'
@@ -5765,7 +5774,6 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                             margin: 0px 0px 0px 0px;
                         } """
                 element.QT_TableWidget.setStyleSheet(style)
-
                 if element.ChangeSubmits:
                     element.QT_TableWidget.itemSelectionChanged.connect(element._QtCallbackCellActivated)
                 element.QT_TableWidget.setRowCount(len(element.Values))
