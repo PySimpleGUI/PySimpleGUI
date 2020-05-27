@@ -7,10 +7,10 @@
 It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.        
 # The PySimpleGUI Cookbook      
       
-Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  It's purpose is to give you a jump start.      
+Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  Its purpose is to give you a jump start.      
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of some design patterns to follow.
 
-This document is not a replacement for the main documentation at http://www.PySimpleGUI.org.  If you're looking for answers, they're most likely there in the detailed explanations and call defintions.  That document is updated much more frequently than this one.
+This document is not a replacement for the main documentation at http://www.PySimpleGUI.org.  If you're looking for answers, they're most likely there in the detailed explanations and call definitions.  That document is updated much more frequently than this one.
   
 See the main doc on installation.  Typically it's `pip install pysimplegui` to install.
   
