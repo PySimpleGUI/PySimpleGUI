@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.11 Unreleased - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button, fix for Menu.update losing font setting"
+version = __version__ = "4.19.0.12 Unreleased \n - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button, fix for Menu.update losing font setting, display detailed tkinter version, fix table/tree padding"
 
 port = 'PySimpleGUI'
 
@@ -10970,7 +10970,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.Visible is False:
                     element.TKTreeview.pack_forget()
-                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
+                frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -11074,7 +11074,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.Visible is False:
                     element.TKTreeview.pack_forget()
-                frame.pack(side=tk.LEFT, expand=True, padx=0, pady=0)
+                frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -15627,8 +15627,12 @@ def main():
     except:
         ver = version
 
-    print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tkinter.TclVersion),
-          'tkinter version = {}'.format(tkinter.TkVersion), '\nPython Version {}'.format(sys.version))
+    tkversion = tkinter.TkVersion
+    tclversion = tkinter.TclVersion
+    tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
+
+    print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tclversion),
+          'tkinter version = {}'.format(tkversion), '\nPython Version {}'.format(sys.version))
 
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
@@ -15701,15 +15705,20 @@ def main():
     tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
 
+    def VerLine(version, description, justification='r', size=(30,1)):
+        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), T(description, font='Any 12')]
+
     layout1 = [
-        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'), Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
-         Text('You are running the PySimpleGUI.py file instead of importing it.\nAnd are thus seeing a test harness instead of your code', font='ANY 15',
+        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
+         Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
+         Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
         [Frame('Input Text Group', frame1, title_color='red')],
-         [Text('PySimpleGUI Version {}'.format(ver), size=(50, None), font='ANY 12')],
-         [Text('PySimpleGUI Location {}'.format(os.path.dirname(os.path.abspath(__file__))), size=(50, None), font='ANY 12')],
-         [Text('Python Version {}'.format(sys.version), size=(50, None), font='ANY 12')],
-         [Text('TK / TCL Versions {} / {}'.format(tk.TkVersion, tk.TclVersion), size=(50, None), font='ANY 12')],
+         VerLine(ver, 'PySimpleGUI Version'),
+         VerLine('{}/{}'.format(tkversion,tclversion),'TK/TCL Versions'),
+         VerLine(tclversion_detailed, 'detailed tkinter version'),
+         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location',justification='l',size=(30,2)),
+         VerLine(sys.version, 'Python Version', justification='l', size=(40, 2)),
 
         [TabGroup([[tab1, tab2, tab3, tab4]], key='_TAB_GROUP_')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
