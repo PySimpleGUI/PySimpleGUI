@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.38.0  Released 06-May-2020"
+version = __version__ = "0.38.0.1  Unreleased\n Addition of Frame (but without a label)"
 
 port = 'PySimpleGUIWeb'
 
@@ -19,6 +19,8 @@ import base64, binascii
 import mimetypes
 from random import randint
 import time
+import pkg_resources
+
 
 # from typing import List, Any, Union, Tuple, Dict    # For doing types in comments. perhaps not required
 
@@ -1908,6 +1910,22 @@ class Graph(Element):
 # ---------------------------------------------------------------------- #
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
+
+# First the REMI implementation of a frame
+
+class CLASSframe( remi.gui.VBox ):
+    def __init__(self, title, *args, **kwargs):
+        super( CLASSframe, self ).__init__(*args, **kwargs)
+        self.style.update({"overflow":"visible","border-width":"1px","border-style":"solid","border-color":"#7d7d7d"})
+        self.frame_label = remi.gui.Label('frame label')
+        self.frame_label.style.update({"position":"relative","overflow":"auto","background-color":"#ffffff","border-width":"1px","border-style":"solid","top":"-7px","width":"0px","height":"0px","left":"10px"})
+        self.append(self.frame_label,'frame_label')
+        self.set_title(title)
+
+    def set_title(self, title):
+        self.frame_label.set_text(title)
+
+
 class Frame(Element):
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, element_justification='left', size=(None, None), font=None, pad=None, border_width=None, key=None,
@@ -1943,6 +1961,8 @@ class Frame(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.Justification = 'left'
         self.ElementJustification = element_justification
+        self.Widget = None          # type: CLASSframe
+
 
 
         self.Layout(layout)
@@ -4146,6 +4166,9 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
 # ===================================== REMI CODE STARTS HERE ================================================ #
 # ------------------------------------------------------------------------------------------------------------ #
 
+
+
+
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def CharWidthInPixels():
         return tkinter.font.Font().measure('A')  # single character width
@@ -4208,9 +4231,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         if form.ElementJustification.startswith('c'):
             tk_row_frame.style['margin-left'] = 'auto'
             tk_row_frame.style['margin-right'] = 'auto'
+            # tk_row_frame.style['justify-content'] = 'center'
         elif form.ElementJustification.startswith('r'):
+            # tk_row_frame.style['justify-content'] = 'flex-end'
             tk_row_frame.style['margin-left'] = 'auto'
-        else:
+        else:       # everything else is left justified
+            # tk_row_frame.style['justify-content'] = 'flex-flexstart'
             tk_row_frame.style['margin-right'] = 'auto'
 
         if form.BackgroundColor not in(None, COLOR_SYSTEM_DEFAULT):
@@ -4757,19 +4783,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             # -------------------------  Frame element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
-                element = element  # type: Frame
-                element.Widget = column_widget = remi.gui.VBox()
-                if element.Justification.startswith('c'):
-                    # print('CENTERING')
-                    column_widget.style['align-items'] = 'center'
-                    column_widget.style['justify-content'] = 'center'
-                else:
-                    column_widget.style['justify-content'] = 'flex-start'
-                    column_widget.style['align-items'] = 'baseline'
+                element = element   # type: Frame
+                # element.Widget = column_widget = remi.gui.VBox()
+                element.Widget = column_widget = CLASSframe(element.Title)
                 if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
                     column_widget.style['background-color'] = element.BackgroundColor
                 PackFormIntoFrame(element, column_widget, toplevel_form)
                 tk_row_frame.append(element.Widget)
+
+                #
+                # element = element  # type: Frame
+                # element.Widget = column_widget = remi.gui.VBox()
+                # if element.Justification.startswith('c'):
+                #     column_widget.style['align-items'] = 'center'
+                #     column_widget.style['justify-content'] = 'center'
+                # else:
+                #     column_widget.style['justify-content'] = 'flex-start'
+                #     column_widget.style['align-items'] = 'baseline'
+                # if element.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT):
+                #     column_widget.style['background-color'] = element.BackgroundColor
+                # PackFormIntoFrame(element, column_widget, toplevel_form)
+                # tk_row_frame.append(element.Widget)
 
                 # labeled_frame = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 # PackFormIntoFrame(element, labeled_frame, toplevel_form)
@@ -7916,6 +7950,15 @@ def main():
     #            FolderBrowse()],
     #           [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
     #           [Ok(), Cancel(disabled=True), Exit(tooltip='Exit button'), Button('Hidden Button', visible=False)]]
+    try:
+        ver = version[:version.index('\n')]
+    except:
+        ver = version
+
+
+    def VerLine(version, description, size=(30,1)):
+        return [Column([[T(description, font='Courier 18', text_color='yellow')], [T(version, font='Courier 18', size=size)]])]
+
 
     menu_def = [['&File', ['&Open', '&Save', 'E&xit', 'Properties']],
                 ['&Edit', ['Paste', ['Special', 'Normal', ], '!Undo'], ],
@@ -7933,12 +7976,16 @@ def main():
     layout = [
         [Menu(menu_def, key='_MENU_', text_color='yellow', background_color='#475841',  font='Courier 14')],
         # [T('123435', size=(1,8))],
-        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='red', enable_events=False, key='_PySimpleGUIWeb_')],
+        [Text('PySimpleGUIWeb Welcomes You...', tooltip='text', font=('Comic sans ms', 20),size=(40,1), text_color='yellow', enable_events=False, key='_PySimpleGUIWeb_')],
         # [OptionMenu([])],
         [T('System platform = %s'%sys.platform)],
         [Image(data=DEFAULT_BASE64_ICON, enable_events=False)],
         # [Image(filename=r'C:\Python\PycharmProjects\GooeyGUI\logo500.png', key='-IMAGE-')],
-        [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
+        VerLine(ver, 'PySimpleGUI Version'),
+        VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location'),
+        VerLine(sys.version, 'Python Version', size=(60,2)),
+        VerLine(pkg_resources.get_distribution("remi").version, 'Remi Version'),
+        # [Text('VERSION {}'.format(version), text_color='red', font='Courier 24')],
         [T('Current Time '), Text('Text', key='_TEXT_', font='Arial 18', text_color='black', size=(30,1)), Column(col1, background_color='red')],
         [T('Up Time'), Text('Text', key='_TEXT_UPTIME_', font='Arial 18', text_color='black', size=(30,1))],
         [Input('Single Line Input', do_not_clear=True, enable_events=False, size=(30, 1), text_color='red', key='_IN_')],
