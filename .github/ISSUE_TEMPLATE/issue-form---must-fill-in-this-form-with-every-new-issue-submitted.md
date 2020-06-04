@@ -39,7 +39,7 @@ _________ Have used another Python GUI Framework (tkinter, Qt, etc) previously (
 - [ ] Note that there are also Demo Programs under each port on GitHub
 - [ ] Run your program outside of your debugger (from a command line)
 - [ ] Searched through Issues (open and closed) to see if already reported
-
+- [ ] Try again by upgrading your PySimpleGUI.py file to use the current one on GitHub. Your problem may have already been fixed but is not yet on PyPI.
 
 ### Description of Problem / Question / Details
 
