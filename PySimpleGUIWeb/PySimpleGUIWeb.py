@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.38.0.1  Unreleased\n Addition of Frame (but without a label)"
+version = __version__ = "0.39.0  Released 6-Jun-2020"
 
 port = 'PySimpleGUIWeb'
 
@@ -7950,10 +7950,8 @@ def main():
     #            FolderBrowse()],
     #           [Text('Destination Folder', justification='right', size=(40,1)), InputText('Dest'), FolderBrowse()],
     #           [Ok(), Cancel(disabled=True), Exit(tooltip='Exit button'), Button('Hidden Button', visible=False)]]
-    try:
-        ver = version[:version.index('\n')]
-    except:
-        ver = version
+
+    ver = version.split('\n')[0]
 
 
     def VerLine(version, description, size=(30,1)):

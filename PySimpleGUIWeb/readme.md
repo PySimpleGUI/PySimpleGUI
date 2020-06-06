@@ -473,6 +473,21 @@ Catching up to latest Remi releases.
 
 
 
+## 0.39.0 PySimpleGUIWeb 6-Jun-2020
+
+Element justification within Window and Containers!  Finally a unified justification
+
+* Frame support, but without any labels yet.... only makes a frame... hey, it's a start
+* element_jutification added so that all elements inside these will be justified accordingly.
+	* For PySimpleGUIQt only, the default is "float" which sets nothing. Buttons will stretch across the window as result
+	* Valid values are 'l', 'r', 'c'.  You can spell it out, but only first letter is used.
+	* Window
+	* Frame
+	* Column
+	* Tab
+* New main() that shows Remi version and more info	
+
+
 # Design 
 
 # Author 
