@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.34.0.4 Unreleased - Added element_justification parm to Column Frame Tab Window, fix for Multiline.get, MultilineOutput.get, Radio.update can clear all radio buttons by usetting any in the group to False, expanded Table element to handle header color andatustyling according to theme, fixed frame background color bug"
+version = __version__ = "0.35.0 Released 6-Jun-2020"
 
 port = 'PySimpleGUIQt'
 
