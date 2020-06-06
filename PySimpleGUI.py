@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.19.0.12 Unreleased \n - Window.set_title added, removed resetting stdout when flush happens, fixed MenuBar tearoff not working, fixed get folder for Macs, fixed multiline color problem, option to set tooltip font, make typing module import optional, docstring, combobox drop-down portion font change, ability to have multiple progress bar themes at one time, setting radio button to False will clear entire group, added changing title to Tab update, ButtonMenu - font for menu set to same as button, fix for Menu.update losing font setting, display detailed tkinter version, fix table/tree padding"
+version = __version__ = "4.20.0 Released 6-Jun-2020"
 
 port = 'PySimpleGUI'
 
@@ -13516,7 +13516,6 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         message = str(message)
         if message.count('\n'):
             message_wrapped = message
-            # message_wrapped = textwrap.fill(message, local_line_width)
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
         message_wrapped_lines = message_wrapped.count('\n') + 1
@@ -15622,10 +15621,7 @@ def main():
     # theme('dark brown 2')
     # theme('dark red')
     # theme('Light Green 6')
-    try:
-        ver = version[:version.index('\n')]
-    except:
-        ver = version
+    ver = version.split('\n')[0]
 
     tkversion = tkinter.TkVersion
     tclversion = tkinter.TclVersion
