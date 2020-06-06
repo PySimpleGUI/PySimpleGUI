@@ -427,6 +427,18 @@ Themes!
 * Added close parameter to Window.read
 
 
+## 0.17.0 PySimpleGUIWx 6-Jun-2020
+
+Element justification within Window and Containers!  Finally a unified justification
+
+* When any Radio element is updated to be False, the entire GROUP is reset so nothing is selected
+* element_jutification added so that all elements inside these will be justified accordingly.
+	* For PySimpleGUIQt only, the default is "float" which sets nothing. Buttons will stretch across the window as result
+	* Valid values are 'l', 'r', 'c'.  You can spell it out, but only first letter is used.
+	* Window
+	* Frame
+	* Column
+	* Tab
 
 # Design        
 # Author 
