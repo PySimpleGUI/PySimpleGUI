@@ -7,10 +7,10 @@
 It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.        
 # The PySimpleGUI Cookbook      
       
-Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  It's purpose is to give you a jump start.      
+Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  Its purpose is to give you a jump start.      
 You'll find that starting with a Recipe will give you a big jump-start on creating your custom GUI.  Copy and paste one of these Recipes and modify it to match your requirements.  Study them to get an idea of some design patterns to follow.
 
-This document is not a replacement for the main documentation at http://www.PySimpleGUI.org.  If you're looking for answers, they're most likely there in the detailed explanations and call defintions.  That document is updated much more frequently than this one.
+This document is not a replacement for the main documentation at http://www.PySimpleGUI.org.  If you're looking for answers, they're most likely there in the detailed explanations and call definitions.  That document is updated much more frequently than this one.
   
 See the main doc on installation.  Typically it's `pip install pysimplegui` to install.
   
@@ -97,7 +97,7 @@ This will be the most common pattern you'll follow if you are not using an "even
     
 When you "read" a window, you are returned a tuple consisting of an `event` and a dictionary of `values`.  
 
-The`event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or `None` if the user closes the window using the X.
+The `event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or `None` if the user closes the window using the X.
 
 The `values` is a dictionary of values of all the input-style elements.  Dictionaries use keys to define entries. If your elements do not specificy a key, one is provided for you. These auto-numbered keys are ints starting at zero.
 
@@ -240,7 +240,7 @@ window = sg.Window('Pattern 2B', layout)
 while True:  # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in  (None, 'Exit'):
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == 'Show':
         # Update the "output" text element to be the value of "input" element
@@ -257,9 +257,9 @@ The way we're achieving output here is by changing a Text Element with this stat
 window['-OUTPUT-'].update(values['-IN-'])
 ```
 
-`window['-OUTPUT-']` returns the element that has the key `'-OUTPUT-'`.  Then the `update` method for that element is called so that the value of the Text Element is modified.
+`window['-OUTPUT-']` returns the element that has the key `'-OUTPUT-'`.  Then the `update` method for that element is called so that the value of the Text Element is modified.  Be sure you have supplied a `size` that is large enough to display your output. If the size is too small, the output will be truncated. 
 
-Note - if you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first.
+If you need to interact with elements prior to calling `window.read()` you will need to "finalize" your window first using the `finalize` parameter when you create your `Window`. "Interacting" means calling that element's methods such as `update`, `draw_line`, etc.
 
 ------------
 
