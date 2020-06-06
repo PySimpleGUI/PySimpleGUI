@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.16.0.1  Unreleased - Finally addition of element_justification to Window & Container elements"
+version = __version__ = "0.17.0 Released 6-Jun-2020"
 
 port = 'PySimpleGUIWx'
 
@@ -7974,13 +7974,22 @@ theme(CURRENT_LOOK_AND_FEEL)
 
 
 def main():
+
+    def VerLine(version, description, justification='r', size=(30,1)):
+        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), T(description, font='Any 12')]
+    ver = version.split('\n')[0]
+
     # ChangeLookAndFeel('Light Brown 11')
     frame_contents = [[T('Inside my frame')],
                       [Input(size=(5,1))],
                       [Input()]]
     layout = [
-              [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='red')],
-              [Text('You are running version {}'.format(version), font='Arial 20', text_color='red')],
+              [Text('Welcome to PySimpleGUI!', font='Arial 15', text_color='yellow')],
+                VerLine(ver, 'PySimpleGUI Version'),
+
+                VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', justification='l', size=(30, 2)),
+                VerLine(sys.version, 'Python Version', justification='l', size=(40, 2)),
+
               [Text('You should be importing this module rather than running it', justification='l', size=(50, 1))],
               [Text('Here is your sample input window....')],
                 [Frame('FRAME with Centered Contents', frame_contents, element_justification='c')],
