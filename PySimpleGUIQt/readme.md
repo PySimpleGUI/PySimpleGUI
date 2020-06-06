@@ -1,12 +1,4 @@
-
-  
-  
-    
-      
-        
-        
-        
-        
+ 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)        
         
 [![Downloads](http://pepy.tech/badge/pysimpleguiqt)](http://pepy.tech/project/pysimplegui)        
@@ -19,10 +11,7 @@
 PySimpleGUIQt on PyPI...
         
 [![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) 
-     
-        
-        
-        
+
         
 # PySimpleGUIQt        
 
@@ -123,7 +112,7 @@ PySide2 or PyQt5   (experimental)
 
 For the primary PySimpleGUI documentation go to http://www.PySimpleGUI.org.  HOWEVER, bear in mind that is the tkinter version.  But it's the best documentation for the package at the moment.  Docstrings are coming to this Qt Release, but it's going to take some time to get them done.  When they are, then this readme will also be fabulous.s
   
-### FEATURE COMPLETE!   
+### FEATURE COMPLETE! (Sorta... all elements are available)  
 All of the major features are DONE.  They may not have all of their options working, but they can be added to your windows.  It's been an amazing week to get here.  
   
 I hope you enjoy this ALPHA release!  Please post a screenshot on the GitHub site.  There is an Issue where users have been posting their applications.  It's a place for you to show-off and a place for others to learn from your designs.  Your window does not have to be complex.... all GUIs, no matter how simple, are something we can learn from.  
@@ -819,9 +808,29 @@ This time for REAL added the constants.  I don't know how to changes got lost bu
   * EVENT_TIMEOUT and TIMEOUT_EVENT
 
 
+## 0.35.0 PySimpleGUIQt 6-Jun-2020
 
+Element justification within Window and Containers!  Finally a unified justification
+
+* When any Radio element is updated to be False, the entire GROUP is reset so nothing is selected
+* Fixed Multiline.get so that it correctly returns the value, was always returning None
+* Fixed MultilineOutput.get so that it correctly returns the value, was always returning None
+* Notes say I fixed a Frame Element background color bug but I don't see where / how
+* element_jutification added so that all elements inside these will be justified accordingly.
+	* For PySimpleGUIQt only, the default is "float" which sets nothing. Buttons will stretch across the window as result
+	* Valid values are 'l', 'r', 'c'.  You can spell it out, but only first letter is used.
+	* Window
+	* Frame
+	* Column
+	* Tab
+* Table Element addition
+	* Header background color
+	* Header text color
+	* Header Font (not yet hooked up)
+	
 
 # Design        
+
 ## Author 
  
 The PySimpleGUI Organization 
@@ -830,8 +839,9 @@ PySimpleGUI.org
 # Demo Code Contributors        
    
 # License        
+
 GNU Lesser General Public License (LGPL 3) +        
 
-Copytight 2018, 2019 PySimpleGUI
+Copytight 2018, 2019, 2020 PySimpleGUI
 
 # Acknowledgments
