@@ -64,7 +64,7 @@ Keys are used to:
 * change an element's value or settings
 * communicate their value when performing a `window.read()`
 
-**Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, lists, objects, ....)
+**Important** - while they are shown as strings in many examples, they can be ANYTHING (ints, tuples, objects).  Anything **EXCEPT Lists**.  Lists are not valid Keys because in Python lists are not hashable and thus cannot be used as keys in dictionaries.  Tuples, however, can.
 
 Keys are specified when you create an element using the `key` keyword parameter.  They are used to "find elements" so that you can perform actions on them.
 
@@ -97,7 +97,7 @@ This will be the most common pattern you'll follow if you are not using an "even
     
 When you "read" a window, you are returned a tuple consisting of an `event` and a dictionary of `values`.  
 
-The `event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or `None` if the user closes the window using the X.
+The `event` is what caused the read to return. It could be a button press, some text clicked, a list item chosen, etc, or `WIN_CLOSED` if the user closes the window using the X.
 
 The `values` is a dictionary of values of all the input-style elements.  Dictionaries use keys to define entries. If your elements do not specificy a key, one is provided for you. These auto-numbered keys are ints starting at zero.
 
@@ -187,7 +187,7 @@ window = sg.Window('Window that stays open', layout)
 while True:                             # The Event Loop
     event, values = window.read() 
     print(event, values)       
-    if event in (None, 'Exit'):      
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break      
 
 window.close()
@@ -212,7 +212,7 @@ If the window was close using the X, then the output of the code will be:
 None {'-IN-': None}
 ```
 
-The `event` returned from the read is set to `None` and so are the input fields in the window.  This `None` event is super-important to check for.  It must be detected in your windows or else you'll be trying to work with a window that's been destroyed and your code will crash.  This is why you will find this check after ***every*** `window.read()` call you'll find in sample PySimpleGUI code.
+The `event` returned from the read is set to `None` (the variable `WIN_CLOSED`) and so are the input fields in the window.  This `None` event is super-important to check for.  It must be detected in your windows or else you'll be trying to work with a window that's been destroyed and your code will crash.  This is why you will find this check after ***every*** `window.read()` call you'll find in sample PySimpleGUI code.
 
 In some cirsumstances when a window is closed with an X, both of the return values from `window.read()` will be `None`.  This is why it's important to check for `event is None` before attempting to access anything in the `values` variable.
 
@@ -297,9 +297,19 @@ window[my_key].set_tooltip('New Tooltip')
 For persistent windows, you will find this if statement immediately following every `window.read` call you'll find in this document and likely all of the demo programs:
 
 ```python
-if event in (None, 'Quit'):
+if event in (sg.WIN_CLOSED, 'Quit'):
     break
 ```
+
+or this version which is easier for beginners to understand.  They perfect exactly the same check.
+
+
+```python
+if event == sg.WIN_CLOSED or event == 'Quit':
+    break
+```
+
+
 
 This is your user's "way out".  **Always** give a way out to your user or else they will be using task manager or something else, all the while cursing you.
 
@@ -307,13 +317,13 @@ Beginners to Python may not understand this statement and it's important to unde
 
 The if statment is identical to this if statement:
 ```python
-if event is None or event == 'Quit':
+if event == sg.WIN_CLOSED or event == 'Quit':
     break
 ```
 
-The `event in (None, 'Quit')` simply means is the value of the `event` variable in the list of choices shown, in this case `None` or `Quit`.  If so, then break out of the Event Loop and likely exit the program when that happens for simple programs.
+The `event in (sg.WIN_CLOSED, 'Quit')` simply means is the value of the `event` variable in the list of choices shown, in this case `WIN_CLOSED` or `Quit`.  If so, then break out of the Event Loop and likely exit the program when that happens for simple programs.
 
-You may find 'Exit' instead of 'Quit' in some programs.  Or may find only `None` is checked.  Exit & Quit in this case refer to a Quit/Exit button being clicked. If your program doesn't have one, then you don't need to include it.
+You may find 'Exit' instead of 'Quit' in some programs.  Or may find only `WIN_CLOSED` is checked.  Exit & Quit in this case refer to a Quit/Exit button being clicked. If your program doesn't have one, then you don't need to include it.
 
 
 ## Close Your Windows
@@ -459,6 +469,44 @@ If you guess incorrectly, then you'll be treated to a random theme instead of so
 
 ---
 
+# Recipe - Post your screen-shots (PLEASE!)
+This is an odd recipe, but it's an important one and has nothing to do with your coding PySimpleGUI code.  Instead is has to do with modifying youre readme.md file on your GitHub so you can share with the world your creation.  Doon't be shy.  We all stated with "hello world" and your first GUI is likely to be primitive, but it's very important you post it any way.
+
+In case you've not noticed, you, the now fancy Python GUI programmer that you are, are a rare person in the Python world.  The VAST majority of Python projects posted on GitHub do not contain a GUI.  This GUI thing is kinda new and novel for Python pbeginning rogrammers.
+
+## People / visitors **love pictures**
+They don't have to be what you consider to be "pretty pictures" or of a "compex GUI".  GUIs from beginners should be shown as proudly developed creations you've completed or are in the process of completion.
+
+Your GitHub visitors may never have made a GUI and need to see a beginner GUI just as much as they need to see more complex GUIs.  It gives them a target. It shows them someone they may be able to achieve.  
+
+## The GitHub Issue Technique
+
+This is one of the easiest / laziest / quickest ways of adding a screenshot to your Readme.md and this post on your project's main page.
+
+Here'show you do it:
+
+1. Open a "Screenshots" Issue somehwere in GitHub.  It sdoesn't matter which project you open it under.  
+2. Copy and paste your image into the Issue's comment section.  OR Drag and drop your image info the comment section.  OR click the upload diaload box by clickin at the bottom on the words "Attach files by dragging & dropping, selecting or pasting them.
+3. A line of code will be inserted when you add a the image to your GitHub Issue's comment.  The line of code will resemble this:
+```
+![image](https://user-images.githubusercontent.com/46163555/76170712-d6633c00-615a-11ea-866a-11d0b94a1b64.png)
+```
+4. Copy the line of code that is created in the comment.  You can see this line when in the "Write" mode for the Issue.. If you want to see how it'll look, switch to the preview tab.
+5. Paste the line of code from the Issue Comment into your readme.md file located in your mtop-level FirHub folder
+
+That's it.
+
+Note, if you simply copy the link to the image that's created, in your readme.md file you will see only the link.  The image will not be embedded into the page, only the link will be shown  The thing you paste into your readme needs to have this format, theat starts with `![filename]`.
+
+Pasting the above line directly into this Cookbook resulted in this Weahter Widget posted::
+
+![image](https://user-images.githubusercontent.com/46163555/76170712-d6633c00-615a-11ea-866a-11d0b94a1b64.png)
+
+## The Image Hosted Elsehwere Technique
+
+The same technique is used as above, except in the line of code, you'll insert the URL of your image where every that may be inside the `( )`
+
+`![image](http://YourLinkToYourImage.jpg)`
 
 # Recipe - Theme Browser
 
@@ -495,7 +543,7 @@ window = sg.Window('Theme Browser', layout)
 
 while True:  # Event Loop
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     sg.theme(values['-LIST-'][0])
     sg.popup_get_text('This is {}'.format(values['-LIST-'][0]))
@@ -698,7 +746,7 @@ window = sg.Window('Window Title', layout, no_titlebar=True)
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
 window.close()
 ```
@@ -866,7 +914,7 @@ window = sg.Window('Pick a color', layout)
 
 while True:                  # the event loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if event == 'Ok':
         if values['-COLOR-']:    # if something is highlighted in the list
@@ -899,7 +947,7 @@ window = sg.Window('Pick a color', layout)
 
 while True:                  # the event loop
     event, values = window.read()
-    if event is None:
+    if event == sg.WIN_CLOSED:
         break
     if values['-COLOR-']:    # if something is highlighted in the list
         sg.popup(f"Your favorite color is {values['-COLOR-'][0]}")
@@ -940,7 +988,7 @@ window = sg.Window('Floating point input validation', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # if last character in input element is invalid, remove it
     if event == '-IN-' and values['-IN-'] and values['-IN-'][-1] not in ('0123456789.-'):
@@ -970,7 +1018,7 @@ window = sg.Window('Floating point input validation', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # if last character in input element is invalid, remove it
     if event == '-IN-' and values['-IN-']:
@@ -1076,7 +1124,7 @@ window = sg.Window('Window Title', layout)
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Clear':
         window['-OUTPUT-'].update('')
@@ -1144,7 +1192,7 @@ counter = 0
 
 while True:             # Event Loop
     event, values = window.read(timeout=100)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Go':
         window['-ML1-'+sg.WRITE_ONLY_KEY].print(event, values, text_color='red')
@@ -1211,7 +1259,7 @@ print = lambda *args, **kwargs: window['-ML2-' + sg.WRITE_ONLY_KEY].print(*args,
 
 while True:             # Event Loop
     event, values = window.read(timeout=100)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == 'Go':
         print(event, values, text_color='red')
@@ -1355,7 +1403,7 @@ def main():
             window = create_main_window(settings)
 
         event, values = window.read()
-        if event in (None, 'Exit'):
+        if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == 'Change Settings':
             event, values = create_settings_window(settings).read(close=True)
@@ -1550,7 +1598,7 @@ timer_running, counter = True, 0
 
 while True:                                 # Event Loop
     event, values = window.read(timeout=10) # Please try and use as high of a timeout value as you can
-    if event in (None, 'Quit'):             # if user closed the window using X or clicked Quit button
+    if event in (sg.WIN_CLOSED, 'Quit'):             # if user closed the window using X or clicked Quit button
         break
     elif event == 'Start/Stop':
         timer_running = not timer_running
@@ -1597,7 +1645,7 @@ window = sg.Window('Button callback example', layout)
 while True:
     # Read the Window
     event, value = window.read()
-    if event in ('Quit', None):
+    if event in ('Quit', sg.WIN_CLOSED):
         break
     # Lookup event in function dictionary
     if event in dispatch_dictionary:
@@ -1654,7 +1702,7 @@ window = sg.Window('Minesweeper', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
     # window[(row, col)].update('New text')   # To change a button's text, use this pattern
     # For this example, change the text of the button to the board's value and turn color black
@@ -1737,7 +1785,7 @@ def MediaPlayerGUI():
     # Our event loop
     while(True):
         event, values = window.read(timeout=100)        # Poll every 100 ms
-        if event == 'Exit' or event is None:
+        if event == 'Exit' or event == sg.WIN_CLOSED:
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if event != sg.TIMEOUT_KEY:
@@ -1782,7 +1830,7 @@ This Window doesn't close after button clicks.  To achieve this the buttons are 
       
     while True:      
       (event, value) = window.read()      
-      if event == 'EXIT'  or event is None:      
+      if event == 'EXIT'  or event == sg.WIN_CLOSED:      
           break # exit button clicked      
       if event == 'script1':      
           ExecuteCommandSubprocess('pip', 'list')      
@@ -1813,7 +1861,7 @@ window = sg.Window('Window Title', layuout)
 while True:             # Event Loop  
   event, values = window.read()  
     print(event, values)  
-    if event is None or event == 'Exit':  
+    if event == sg.WIN_CLOSED or event == 'Exit':  
         break  
  if event == 'Chrome':  
         sp = subprocess.Popen([CHROME, values['_URL_']], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)  
@@ -1881,7 +1929,7 @@ window = sg.Window('Custom Progress Meter', layout)
 for i in range(1000):
     # check to see if the cancel button was clicked and exit loop if clicked
     event, values = window.read(timeout=0)
-    if event == 'Cancel' or event is None:
+    if event == 'Cancel' or event == sg.WIN_CLOSED:
         break
         # update bar with loop value +1 so that bar eventually reaches the maximum
     window['progbar'].update_bar(i + 1)
@@ -1956,7 +2004,7 @@ window = sg.Window('Math', layout)
 while True:      
     event, values = window.read()      
     
-    if event is not None:      
+    if event != sg.WIN_CLOSED:      
         try:      
             numerator = float(values['numerator'])      
             denominator = float(values['denominator'])      
@@ -1989,7 +2037,7 @@ window = sg.Window('Window Title', layout)
 while True:             # Event Loop  
   event, values = window.read()  
     print(event, values)  
-    if event is None or event == 'Exit':  
+    if event == sg.WIN_CLOSED or event == 'Exit':  
         break  
   window['_LEFT_'].update(values['_SLIDER_'])  
     window['_RIGHT_'].update(values['_SLIDER_'])  
@@ -2019,7 +2067,7 @@ win1 = sg.Window('Window 1', layout)
 win2_active=False  
 while True:  
     ev1, vals1 = win1.Read(timeout=100)  
-    if ev1 is None:  
+    if ev1 == sg.WIN_CLOSED:  
         break  
   win1.['_OUTPUT_'].update(vals1[0])  
   
@@ -2032,7 +2080,7 @@ while True:
         win2 = sg.Window('Window 2', layout2)  
         while True:  
             ev2, vals2 = win2.Read()  
-            if ev2 is None or ev2 == 'Exit':  
+            if ev2 == sg.WIN_CLOSED or ev2 == 'Exit':  
                 win2.Close()  
                 win2_active = False  
   win1.UnHide()  
@@ -2069,7 +2117,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
       
     while True:      
         event, values = window.read()      
-        if event is None:      
+        if event == sg.WIN_CLOSED:      
             break      
         if event == 'Blue':      
             canvas.TKCanvas.itemconfig(cir, fill="Blue")      
@@ -2103,7 +2151,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
       
     while True:      
         event, values = window.read()      
-        if event is None:      
+        if event == sg.WIN_CLOSED:      
             break      
         if event is 'Blue':      
             graph.TKCanvas.itemconfig(circle, fill = "Blue")      
@@ -2147,7 +2195,7 @@ window = sg.Window('Keypad', layout, default_button_element_size=(5,2), auto_siz
 keys_entered = ''
 while True:
     event, values = window.read()  # read the window
-    if event is None:  # if the X button clicked, just exit
+    if event == sg.WIN_CLOSED:  # if the X button clicked, just exit
         break
     if event == 'Clear':  # clear keys if clear button
         keys_entered = ''
@@ -2201,7 +2249,7 @@ window = sg.Window('Have some Matplotlib....', layout)
 
 while True:
     event, values = window.read()
-    if event in (None, 'Cancel'):
+    if event in (sg.WIN_CLOSED, 'Cancel'):
         break
     elif event == 'Plot':
         draw_plot()
@@ -2257,7 +2305,7 @@ dpts = [randint(0, 10) for x in range(10000)]
 # Our event loop      
 for i in range(len(dpts)):
     event, values = window.read(timeout=20)
-    if event == 'Exit' or event is None:
+    if event == 'Exit' or event == sg.WIN_CLOSED:
         exit(69)
 
     ax.cla()
@@ -2322,7 +2370,7 @@ In other GUI frameworks this program would be most likely "event driven" with ca
     while True:      
         event, values = window.read()      
         print(event)      
-        if event is None:      
+        if event == sg.WIN_CLOSED:
             exit(69)      
         if event is 'Start':      
             window['Start'].update(disabled=True)      
@@ -2387,7 +2435,7 @@ Use the upper half to generate your hash code.  Then paste it into the code in t
       
         while True:      
             event, values = window.read()      
-            if event is None:      
+            if event ==  sg.WIN_CLOSED:      
                   exit(69)      
       
             password = values['password']      
@@ -2483,7 +2531,7 @@ You can easily change colors to match your background by changing a couple of pa
         # ---===--- Loop taking in user input (events) --- #      
         while True:      
             (event, value) = window.read()      
-            if event ==  'EXIT'  or event is None:      
+            if event ==  'EXIT'  or event == sg.WIN_CLOSED:      
                 break # exit button clicked      
             if event ==  'Program 1':      
                 print('Run your program 1 here!')      
@@ -2578,7 +2626,7 @@ while (True):
     if event == 'button':
         event = window[event).GetText()
     # --------- Do Button Operations --------
-    if event is None or event == 'Exit':        # ALWAYS give a way out of program
+    if event == sg.WIN_CLOSED or event == 'Exit':        # ALWAYS give a way out of program
         break
     if event is 'Reset':
         start_time = int(round(time.time() * 100))
@@ -2633,7 +2681,7 @@ while (True):
     event, values = window.read(timeout=0)
 
     # --------- Do Button Operations --------
-    if event is None or event == 'Exit':
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break
     try:
         interval = int(values['spin'])
@@ -2685,7 +2733,7 @@ If you double click the dashed line at the top of the list of choices, that menu
     # ------ Loop & Process button menu choices ------ #      
     while True:      
         event, values = window.read()      
-        if event == None or event == 'Exit':      
+        if event == sg.WIN_CLOSED or event == 'Exit':      
             break      
         print('Button = ', event)      
         # ------ Process menu choices ------ #      
@@ -2764,7 +2812,7 @@ window = sg.Window('My window with tabs', layout, default_element_size=(12,1))
 while True:    
     event, values = window.read()    
     print(event,values)    
-    if event is None:           # always,  always give a way out!    
+    if event == sg.WIN_CLOSED:           # always,  always give a way out!    
         break  
 ```
   
@@ -2792,3 +2840,12 @@ That's all... Run your `my_program.exe` file on the Windows machine of your choo
 (famous last words that screw up just about anything being referenced)      
       
 Your EXE file should run without creating a "shell window".  Only the GUI window should show up on your taskbar.
+
+
+# Author & Owner
+
+The PySimpleGUI Organization
+
+This documentation as well as all PySimpleGUI code and documentation is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+
+Send correspondence to PySimpleGUI@PySimpleGUI.com prior to use of documentation
