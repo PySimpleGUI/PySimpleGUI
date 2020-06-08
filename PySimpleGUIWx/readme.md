@@ -440,6 +440,11 @@ Element justification within Window and Containers!  Finally a unified justifica
 	* Column
 	* Tab
 
+## 0.17.1 PySimpleGUIWx 7-Jun-2020
+
+* Quick patch of Multiline.update so that newlines are recognized correctly
+
+
 # Design        
 # Author 
  Mike B.        

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.0.1 Unreleased\n Multiline update changed to SetValue"
+version = __version__ = "0.17.1 Released 7-Jun-2020"
 
 port = 'PySimpleGUIWx'
 
