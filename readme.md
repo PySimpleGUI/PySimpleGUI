@@ -182,25 +182,11 @@ YouTube Videos made by others.  These have much higher production values than th
 
 This User's Manual (also the project's readme) is one ***vital*** part of the PySimpleGUI programming environment.  The best place to read it is at http://www.PySimpleGUI.org
 
-If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development.  You can skip this bit.... look for the bold "**GO TO HERE**" below.
-
-RTFM is not a new acronym. It stretches back to 1979, the dawn of the computer-era and in particular the microprocessor.  The point is that this is not a new problem.  It's a very old problem.
-
-Bluntness is required here as the subtle approach has not worked in the past:
+If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development. Use it, please.
 
 ***It WILL be required, at times, for you to read or search this document in order to be successful.***
 
-Re-read that statement.  This **will** be a serious problem for you if you're the type of person that finds it "quicker and easier to post on StackOverflow rather than reading documentation".  
-
-If you have not yet matured to the point you are able to understand this skill or choose to not follow it, then please save ***everyone*** the pain of doing **for you** what you, as a developer, software engineer, or wanna be coder, must do on your own.  It's a vital skill for you to learn.  
-
-Want to be a "real engineer"? Then follow "real engineering practices" such as "reading".  You are learning a NEW GUI package.  You've not seen anything like it.  Don't be so arrogant as to believe you will never need to read documentation.
-
-UGH, why does this need to be said?
-
-***GO TO HERE*** if instructed above.
-
-I apologize to the other 95% of you that this..... pathetic.... reminder needs to be added, but sadly there's a need for it.
+Using Stack Overflow and other sites to post your questions has resulted in advice given by a lot of users that have never looked at the package and are sometimes just flat bad advice.  When possible, post an Issue on this GitHub. Definitely go through the Issue checklist.  Take a look through the docs, again.
 
 There are 5 resources that work together to provide to you the fastest path to success.  They are:
 
