@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.0 Released 6-Jun-2020"
+version = __version__ = "0.17.0.1 Unreleased\n Multiline update changed to SetValue"
 
 port = 'PySimpleGUIWx'
 
@@ -990,7 +990,7 @@ class Multiline(Element):
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
             try:        # added in case the widget has already been deleted for some readon.
                 if value is not None and not append:
-                    self.WxTextCtrl.SetLabel(value)
+                    self.WxTextCtrl.SetValue(value)
                 elif value is not None and append:
                     self.WxTextCtrl.AppendText(value)
                 if background_color is not None:
