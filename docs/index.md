@@ -7277,11 +7277,11 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
-## Author & Owner
+# Author & Owner
 
-The PySimpleGUI Organization
+Written and owned by The PySimpleGUI Organization
 
-This documentation as well as all PySimpleGUI code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
 
 Send correspondence to PySimpleGUI@PySimpleGUI.com
 
