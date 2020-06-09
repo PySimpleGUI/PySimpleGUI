@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0 Released 6-Jun-2020"
+version = __version__ = "4.20.0.1 Unreleased\n Ability to add your own theme easier using theme_add_new"
 
 port = 'PySimpleGUI'
 
@@ -13224,6 +13224,25 @@ def theme_previewer(columns=12):
     """
     preview_all_look_and_feel_themes(columns)
 
+
+def theme_add_new(new_theme_name, new_theme_dict):
+    """
+    Add a new theme to the dictionary of themes
+
+    :param new_theme_name: text to display in eleemnt
+    :type new_theme_name: (str)
+    :param new_theme_dict: text to display in eleemnt
+    :type new_theme_dict: (dict)
+    """
+    global LOOK_AND_FEEL_TABLE
+    try:
+        LOOK_AND_FEEL_TABLE[new_theme_name] = new_theme_dict
+    except Exception as e:
+        print('Exception during adding new theme {}'.format(e))
+
+
+
+
 def ChangeLookAndFeel(index, force=False):
     """
     Change the "color scheme" of all future PySimpleGUI Windows.
@@ -13253,7 +13272,6 @@ def ChangeLookAndFeel(index, force=False):
     theme = index
     # normalize available l&f values
     lf_values = [item.lower() for item in list_of_look_and_feel_values()]
-
     # option 1
     opt1 = theme.replace(' ', '').lower()
 
