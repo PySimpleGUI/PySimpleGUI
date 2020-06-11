@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 
 """
     Dashboard using blocks of information.
-    Requires 4.20.0.1 PySimpleGUI.py file so can add the new theme
 
     Copyright 2020 PySimpleGUI.org
 """
@@ -17,7 +16,8 @@ theme_dict = {'BACKGROUND': '#2B475D',
                 'PROGRESS': ('#FFFFFF', '#C7D5E0'),
                 'BORDER': 1,'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0}
 
-sg.theme_add_new('Dashboard', theme_dict)
+# sg.theme_add_new('Dashboard', theme_dict)     # if using 4.20.0.1+
+sg.LOOK_AND_FEEL_TABLE['Dashboard'] = theme_dict
 sg.theme('Dashboard')
 
 BORDER_COLOR = '#C7D5E0'
