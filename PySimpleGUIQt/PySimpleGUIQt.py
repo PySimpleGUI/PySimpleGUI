@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.1 Unreleased\n Big update of docstrings"
+version = __version__ = "0.35.0.2 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up"
 
 port = 'PySimpleGUIQt'
 
@@ -3123,7 +3123,7 @@ class Table(Element):
         :param values: ???
         :type values: List[List[Union[str, int, float]]]
         :param headings: The headings to show on the top line
-        :type headings: List[str]
+        :type headings: Union[List[str], Tuple[str]]
         :param visible_column_map: One entry for each column. False indicates the column is not shown
         :type visible_column_map: List[bool]
         :param col_widths: Number of characters that each column will occupy
@@ -3771,7 +3771,7 @@ class Window:
     active_popups = {}
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE, default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False, alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None, element_justification='float', no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None), element_padding=None, margins=(None, None),button_color=None, font=None, progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False, auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=DEFAULT_WINDOW_ICON, force_toplevel=False, alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None, element_justification='float', no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=True, disable_close=False, disable_minimize=False, background_image=None, finalize=False, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -3791,6 +3791,8 @@ class Window:
         :type size: Tuple[int, int]
         :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
         :type element_padding: Tuple[int, int] or ((int, int),(int,int))
+        :param margins: (left/right, top/bottom) Not yet implemented!  Parameter here for potability purposes.
+        :type margins: Tuple[int, int]
         :param button_color: Default button colors for all buttons in the window
         :type button_color: Tuple[str, str] == (text color, button color)
         :param font: specifies the font family, size, etc
