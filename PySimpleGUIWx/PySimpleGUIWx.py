@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.1 Released 7-Jun-2020"
+version = __version__ = "0.17.1.1 Unreleased\n VSeparator added (spelling error)"
 
 port = 'PySimpleGUIWx'
 
@@ -1946,7 +1946,8 @@ class VerticalSeparator(Element):
 
 
 
-VSeperator = VerticalSeparator
+VSeparator = VerticalSeparator
+VSeparator = VerticalSeparator
 VSep = VerticalSeparator
 
 
@@ -5049,7 +5050,6 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_form):
                 # element.panel = panel = wx.Panel(toplevel_form.MasterFrame)
                 element.WxBoxSizer = vsizer = wx.StaticBoxSizer(orient=wx.VERTICAL, parent=toplevel_form.MasterFrame.panel, label=element.Title)
                 element.WxHSizer = hsizer
-
                 PackFormIntoFrame(element, vsizer, toplevel_form)
 
                 hsizer.Add(pad_widget(vsizer), 0)
