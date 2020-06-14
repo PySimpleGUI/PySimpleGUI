@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.2 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up"
+version = __version__ = "0.35.0.3 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error)"
 
 port = 'PySimpleGUIQt'
 
@@ -2489,6 +2489,7 @@ class VerticalSeparator(Element):
 
 
 VSeperator = VerticalSeparator
+VSeparator = VerticalSeparator
 VSep = VerticalSeparator
 
 

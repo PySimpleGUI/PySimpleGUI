@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0  Released 6-Jun-2020"
+version = __version__ = "0.39.0.1  Unreleased\n , VSeparator added (spelling error)"
 
 port = 'PySimpleGUIWeb'
 
@@ -2016,6 +2016,7 @@ class VerticalSeparator(Element):
 
 
 VSeperator = VerticalSeparator
+VSeparator = VerticalSeparator
 VSep = VerticalSeparator
 
 

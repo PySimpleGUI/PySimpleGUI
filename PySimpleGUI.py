@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.1 Unreleased\n Ability to add your own theme easier using theme_add_new"
+version = __version__ = "4.20.0.3 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error)"
 
 port = 'PySimpleGUI'
 
@@ -4580,6 +4580,7 @@ class VerticalSeparator(Element):
 
 
 VSeperator = VerticalSeparator
+VSeparator = VerticalSeparator
 VSep = VerticalSeparator
 
 
