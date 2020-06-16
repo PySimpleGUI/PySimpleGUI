@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.3 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error)"
+version = __version__ = "4.20.0.4 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group)"
 
 port = 'PySimpleGUI'
 
@@ -213,6 +213,10 @@ def _timeit_summary(func):
 
     return wrapper
 
+
+# Handy python statements to increment and decrement with wrapping that I don't want to forget
+# count = (count + (MAX - 1)) % MAX           # Decrement - roll over to MAX from 0
+# count = (count + 1) % MAX                   # Increment to MAX then roll over to 0
 
 """
     Welcome to the "core" PySimpleGUI code....
@@ -1723,7 +1727,8 @@ class Radio(Element):
                 if value is True:
                     self.TKIntVar.set(self.EncodedRadioValue)
                 elif value is False:
-                    self.TKIntVar.set(0)
+                    if self.TKIntVar.get() == self.EncodedRadioValue:
+                        self.TKIntVar.set(0)
             except:
                 print('Error updating Radio')
             self.InitialState = value
@@ -4183,8 +4188,7 @@ class Graph(Element):
         shift_converted = self._convert_xy_to_canvas_xy(x_direction, y_direction)
         shift_amount = (shift_converted[0] - zero_converted[0], shift_converted[1] - zero_converted[1])
         if figure is None:
-            print('*** WARNING - Your figure is None. It most likely means your did not Finalize your Window ***')
-            print('Call Window.Finalize() prior to all graph operations')
+            print('* move_figure warning - your figure is None *')
             return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
