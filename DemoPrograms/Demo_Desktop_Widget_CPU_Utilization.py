@@ -46,12 +46,14 @@ def main():
               text_color=sg.YELLOWS[0], justification='center', key='text')],
         [sg.Text('', size=(30, 8), font=('Courier New', 12),
               text_color='white', justification='left', key='processes')],
-        [sg.Exit(button_color=('white', 'firebrick4'), pad=((15, 0), 0), size=(9, 1)),
-         sg.Spin([x+1 for x in range(10)], 3, key='spin')]
+        [sg.Text('Update every '),
+         sg.Spin([x+1 for x in range(10)], 3, key='spin'), sg.T('seconds       '),
+         sg.Text('❎', enable_events=True, key='Exit')
+         ]
     ]
 
     window = sg.Window('CPU Utilization', layout,
-                       no_titlebar=True, keep_on_top=True, alpha_channel=.8, grab_anywhere=True)
+                       no_titlebar=True, keep_on_top=True, use_default_focus=False, alpha_channel=.8, grab_anywhere=True)
 
     # start cpu measurement thread
     thread = Thread(target=CPU_thread, args=(None,))
@@ -61,12 +63,12 @@ def main():
     # ----------------  main loop  ----------------
     while True:
         # --------- Read and update window --------
-        event, values = window.read(timeout=timeout_value, timeout_key='Timeout')
+        event, values = window.read(timeout_value)
         # --------- Do Button Operations --------
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
 
-        timeout_value = int(values['spin']) * 1000
+        timeout_value = int(values['spin']) * 1000      # for now on, use spinner for timeout
 
         cpu_percent = g_cpu_percent
         display_string = ''
