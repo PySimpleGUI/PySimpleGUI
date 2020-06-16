@@ -5,6 +5,7 @@ import PIL
 import io
 import base64
 import os
+from typing import Union, Tuple
 
 """
     Demo Image Album.... displays images on Graph Element and transitions
@@ -18,27 +19,22 @@ import os
 
 G_SIZE = (800,600)
 
-def get_img_filename(f, resize=None):
-    """
-    Resizes an image file and returns the result as a byte string which can be used to update a PySimpleGUI Element
-    """
-    img = PIL.Image.open(f)
-    return resize_pil_image(img, resize)
 
+def convert_to_bytes(file_or_bytes, resize=None):
+    '''
+    Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
+    :param file_or_bytes: either a string filename or a bytes base64 image object
+    :type file_or_bytes:  (Union[str, bytes])
+    :param resize:  optional new size
+    :type resize: (Tuple[int, int] or None)
+    :return: (bytes) a byte-string object
+    :rtype: (bytes)
+    '''
+    if isinstance(file_or_bytes, str):
+        img = PIL.Image.open(file_or_bytes)
+    else:
+        img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
 
-def get_img_data(data, resize=None):
-    """Generate PIL.Image data using PIL
-    """
-    img = PIL.Image.open(io.BytesIO(base64.b64decode(data)))
-    return resize_pil_image(img, resize)
-
-def resize_pil_image(img, resize=None):
-    """
-    Resizes a PIL image to a new size or just converts to PNG as a byte string
-    :param img:
-    :param resize:
-    :return:
-    """
     cur_width, cur_height = img.size
     if resize:
         new_width, new_height = resize
@@ -63,10 +59,11 @@ layout = [[graph]]
 
 window = sg.Window('Scrolling Image Viewer', layout, margins=(0,0), element_padding=(0,0), use_default_focus=False, finalize=True)
 
+window.read()
 offset, move_amount, direction  = 0, 5, 'left'
 while True:
     file_to_display = os.path.join(folder, fnames[offset])
-    img_data = get_img_filename(file_to_display, resize=G_SIZE)
+    img_data = convert_to_bytes(file_to_display, resize=G_SIZE)
     id = graph.draw_image(data=img_data, location=(0, G_SIZE[1]))
 
     event, values = window.read()
