@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.1.1 Unreleased\n VSeparator added (spelling error)"
+version = __version__ = "0.17.1.2 Unreleased\n VSeparator added (spelling error), Radio.reset_group added and removed the clearing all when one cleared"
 
 port = 'PySimpleGUIWx'
 
@@ -806,10 +806,13 @@ class Radio(Element):
         if value is True:
             self.WxRadioButton.SetValue(True)
         elif value is False:
-            self.WxRadioButton.SetValue(True)
             self.WxRadioButton.SetValue(False)
         super().Update(self.WxRadioButton, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
+
+    def reset_group(self):
+        self.WxRadioButton.SetValue(True)
+        self.WxRadioButton.SetValue(False)
 
     update = Update
 

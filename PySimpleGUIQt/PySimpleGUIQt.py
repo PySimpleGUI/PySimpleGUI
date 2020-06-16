@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.3 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error)"
+version = __version__ = "0.35.0.4 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change)"
 
 port = 'PySimpleGUIQt'
 
@@ -933,12 +933,18 @@ class Radio(Element):
             self.QT_Radio_Button.setDisabled(False)
         if value is True:
             self.QT_Radio_Button.setChecked(True)
-        if value is False:          # If setting this button to false, then set them ALL to false too
-            self.QT_Radio_Button.setChecked(True)
+        if value is False:
             self.QT_RadioButtonGroup.setExclusive(False)
             self.QT_Radio_Button.setChecked(False)
             self.QT_RadioButtonGroup.setExclusive(True)
         super().Update(self.QT_Radio_Button, background_color=background_color, text_color=text_color, font=font, visible=visible)
+
+
+    def reset_group(self):
+        self.QT_Radio_Button.setChecked(True)
+        self.QT_RadioButtonGroup.setExclusive(False)
+        self.QT_Radio_Button.setChecked(False)
+        self.QT_RadioButtonGroup.setExclusive(True)
 
 
     def _QtCallbackValueChanged(self, value):
