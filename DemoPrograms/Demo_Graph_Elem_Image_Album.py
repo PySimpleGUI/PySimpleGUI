@@ -16,38 +16,34 @@ import os
     Copyright 2020 PySimpleGUI.org
 """
 
-G_SIZE = (400,400)
+G_SIZE = (800,600)
 
 def get_img_filename(f, resize=None):
-    """Generate image data using PIL
+    """
+    Resizes an image file and returns the result as a byte string which can be used to update a PySimpleGUI Element
     """
     img = PIL.Image.open(f)
-    cur_width, cur_height = img.size
-    if resize:
-        new_width, new_height = resize
-        if cur_width > cur_height:
-            new_height = int(new_height * cur_height/cur_width)
-        else:
-            new_width = int(new_width * cur_width/cur_height)
-        img = img.resize((new_width, new_height), PIL.Image.ANTIALIAS)
-    bio = io.BytesIO()
-    img.save(bio, format="PNG")
-    del img
-    return bio.getvalue()
+    return resize_pil_image(img, resize)
 
 
 def get_img_data(data, resize=None):
     """Generate PIL.Image data using PIL
     """
     img = PIL.Image.open(io.BytesIO(base64.b64decode(data)))
+    return resize_pil_image(img, resize)
+
+def resize_pil_image(img, resize=None):
+    """
+    Resizes a PIL image to a new size or just converts to PNG as a byte string
+    :param img:
+    :param resize:
+    :return:
+    """
     cur_width, cur_height = img.size
     if resize:
         new_width, new_height = resize
-        if cur_width > cur_height:
-            new_height = int(new_height * cur_height/cur_width)
-        else:
-            new_width = int(new_width * cur_width/cur_height)
-        img = img.resize((new_width, new_height), PIL.Image.ANTIALIAS)
+        scale = min(new_height/cur_height, new_width/cur_width)
+        img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     del img
@@ -59,7 +55,7 @@ if not folder:
 
 file_list = os.listdir(folder)
 fnames = [f for f in file_list if os.path.isfile(
-    os.path.join(folder, f)) and f.lower().endswith((".png", ".jpg", "jpeg", ".tiff", ".bmp"))]
+    os.path.join(folder, f)) and f.lower().endswith((".png", ".jpg", "jpeg", ".tiff", ".bmp", ".gif", ".ico"))]
 num_files = len(fnames)
 
 graph = sg.Graph(canvas_size=G_SIZE, graph_bottom_left=(0, 0), graph_top_right=G_SIZE, enable_events=True, key='-GRAPH-')
