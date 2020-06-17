@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.4 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group)"
+version = __version__ = "4.20.0.5 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY)"
 
 port = 'PySimpleGUI'
 
@@ -1020,6 +1020,18 @@ class Element():
             self.Widget.config(cursor=cursor)
         except Exception as e:
             print('Warning bad cursor specified ', cursor)
+            print(e)
+
+    def set_vscroll_position(self, percent_from_top):
+        """
+        Attempts to set the vertical scroll postition for an element's Widget
+        :param percent_from_top: From 0 to 1.0, the percentage from the top to move scrollbar to
+        :type percent_from_top: (float)
+        """
+        try:
+            self.Widget.yview_moveto(percent_from_top)
+        except Exception as e:
+            print('Warning setting the vertical scroll (yview_moveto failed)')
             print(e)
 
 
@@ -4579,13 +4591,36 @@ class VerticalSeparator(Element):
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-
 
 VSeperator = VerticalSeparator
 VSeparator = VerticalSeparator
 VSep = VerticalSeparator
+
+
+# ---------------------------------------------------------------------- #
+#                           Horizontal Separator                           #
+# ---------------------------------------------------------------------- #
+class HorizontalSeparator(Element):
+    """
+    Horizontal Separator Element draws a Horizontal line at the given location. 
+    """
+
+    def __init__(self, pad=None):
+        """
+        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        """
+
+        self.Orientation = 'horizontal'  # for now only vertical works
+
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+
+
+
+HSeparator = HorizontalSeparator
+HSep = HorizontalSeparator
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -11216,6 +11251,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
+                if element.Orientation.startswith('h'):
+                    row_should_expand = True
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
@@ -14431,7 +14468,9 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
             root.withdraw()
         except:
             pass
-        folder_name = tk.filedialog.askdirectory()  # show the 'get folder' dialog box
+        folder_name = tk.filedialog.askdirectory(
+                                    initialdir=initial_folder,
+                                )  # show the 'get folder' dialog box
 
         root.destroy()
         if Window.NumOpenWindows == 1:
@@ -14533,14 +14572,17 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        initialdir=initial_folder,
+                                                       initialfile=default_path,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             filename = tk.filedialog.askopenfilenames(filetypes=file_types,
                                                       initialdir=initial_folder,
+                                                      initialfile=default_path,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             filename = tk.filedialog.askopenfilename(filetypes=file_types,
                                                      initialdir=initial_folder,
+                                                     initialfile=default_path,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
 
         root.destroy()
