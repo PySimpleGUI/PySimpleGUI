@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.6 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators"
+version = __version__ = "4.20.0.7 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color)"
 
 port = 'PySimpleGUI'
 
@@ -4581,14 +4581,14 @@ class VerticalSeparator(Element):
     Column Element if extra height is needed
     """
 
-    def __init__(self, pad=None, key=None):
+    def __init__(self, color=None, pad=None, key=None):
         """
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         """
 
         self.Orientation = 'vertical'  # for now only vertical works
-
+        self.color = color if color is not None else theme_text_color()
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
@@ -4605,14 +4605,14 @@ class HorizontalSeparator(Element):
     Horizontal Separator Element draws a Horizontal line at the given location.
     """
 
-    def __init__(self, pad=None, key=None):
+    def __init__(self, color=None, pad=None, key=None):
         """
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         """
 
         self.Orientation = 'horizontal'  # for now only vertical works
-
+        self.color = color if color is not None else theme_text_color()
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
@@ -7366,7 +7366,7 @@ class Window:
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
                                         ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
                                         ELEM_TYPE_INPUT_RADIO, ELEM_TYPE_INPUT_TEXT, ELEM_TYPE_PROGRESS_BAR,
-                                        ELEM_TYPE_TAB_GROUP):
+                                        ELEM_TYPE_TAB_GROUP, ELEM_TYPE_SEPARATOR):
                         element.Key = top_window.DictionaryKeyCounter
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
@@ -11250,9 +11250,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
+                style_name = str(element.Key) + "Line.TSeparator"
+                style = ttk.Style()
+                style.theme_use(toplevel_form.TtkTheme)
+                if element.color is not None:
+                    style.configure(style_name, background=element.color)
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 if element.Orientation.startswith('h'):
                     row_should_expand = True
+                element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
                 separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
