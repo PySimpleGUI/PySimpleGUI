@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.5 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY)"
+version = __version__ = "4.20.0.6 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators"
 
 port = 'PySimpleGUI'
 
@@ -4581,7 +4581,7 @@ class VerticalSeparator(Element):
     Column Element if extra height is needed
     """
 
-    def __init__(self, pad=None):
+    def __init__(self, pad=None, key=None):
         """
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -4589,7 +4589,7 @@ class VerticalSeparator(Element):
 
         self.Orientation = 'vertical'  # for now only vertical works
 
-        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
 VSeperator = VerticalSeparator
@@ -4602,10 +4602,10 @@ VSep = VerticalSeparator
 # ---------------------------------------------------------------------- #
 class HorizontalSeparator(Element):
     """
-    Horizontal Separator Element draws a Horizontal line at the given location. 
+    Horizontal Separator Element draws a Horizontal line at the given location.
     """
 
-    def __init__(self, pad=None):
+    def __init__(self, pad=None, key=None):
         """
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -4613,7 +4613,7 @@ class HorizontalSeparator(Element):
 
         self.Orientation = 'horizontal'  # for now only vertical works
 
-        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad)
+        super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
 
