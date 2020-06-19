@@ -1,4 +1,4 @@
-import PySimpleGUIWx as sg
+import PySimpleGUI as sg
 
 """
     Demo - Separator Elements
