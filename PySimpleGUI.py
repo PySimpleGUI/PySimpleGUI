@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.7 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color)"
+version = __version__ = "4.20.0.8 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size"
 
 port = 'PySimpleGUI'
 
@@ -608,7 +608,7 @@ class Element():
         :param type: The type of element. These constants all start with "ELEM_TYPE_"
         :type type: (int) (could be enum)
         :param size: w=characters-wide, h=rows-high
-        :type size: Tuple[int, int]  (width, height)
+        :type size: (int, int)  (width, height)
         :param auto_size_text: True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text: bool
         :param font: specifies the font family, size, etc (see docs for exact formats)
@@ -936,7 +936,7 @@ class Element():
         It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
 
         :param size: The size in characters, rows typically. In some cases they are pixels
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         """
         try:
             if size[0] != None:
@@ -1068,7 +1068,7 @@ class InputText(Element):
         :param default_text: Text initially shown in the input box as a default value(Default value = '')
         :type default_text: (str)
         :param size: w=characters-wide, h=rows-high
-        :type size: Tuple[int, int]  (width, height)
+        :type size: (int, int)  (width, height)
         :param disabled: set disable state for element (Default = False)
         :type disabled: (bool)
         :param password_char: Password character if this is a password field (Default value = '')
@@ -1208,7 +1208,7 @@ class Combo(Element):
         :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value: (Any)
         :param size: width = characters-wide, height = rows-high
-        :type size: Tuple[int, int] (width, height)
+        :type size: (int, int) (width, height)
         :param auto_size_text: True if element should be the same size as the contents
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -1361,7 +1361,7 @@ class OptionMenu(Element):
         :param default_value: the value to choose by default
         :type default_value: (Any)
         :param size: size in characters (wide) and rows (high)
-        :type size: Tuple[int, int] (width, height)
+        :type size: (int, int) (width, height)
         :param disabled: control enabled / disabled
         :type disabled: (bool)
         :param auto_size_text: True if size of Element should match the contents of the items
@@ -1670,7 +1670,7 @@ class Radio(Element):
         :param disabled: set disable state
         :type disabled: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -1797,7 +1797,7 @@ class Checkbox(Element):
         :param default: Set to True if you want this checkbox initially checked
         :type default: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
@@ -1959,7 +1959,7 @@ class Spin(Element):
         :param enable_events: Turns on the element specific events. Spin events happen when an item changes
         :type enable_events: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
@@ -2088,7 +2088,7 @@ class Multiline(Element):
         :param border_width: width of border around element in pixels
         :type border_width: (int)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -2262,9 +2262,9 @@ class Text(Element):
                  right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
-        :type text: (Any)
+        :type text: Any
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :type auto_size_text: (bool)
         :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -2663,7 +2663,7 @@ class Output(Element):
                  key=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param size: (width, height) w=characters-wide, h=rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text
@@ -2807,13 +2807,13 @@ class Button(Element):
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data: Union[bytes, str]
         :param image_size: Size of the image in pixels (width, height)
-        :type image_size: Tuple[int, int]
+        :type image_size: (int, int)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample: (int)
         :param border_width: width of border around button in pixels
         :type border_width: (int)
         :param size: (width, height) of the button in characters wide, rows high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
@@ -3097,7 +3097,7 @@ class Button(Element):
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample: (int)
         :param image_size: Size of the image in pixels (width, height)
-        :type image_size: Tuple[int, int]
+        :type image_size: (int, int)
         """
 
         if self.Widget is None:
@@ -3224,13 +3224,13 @@ class ButtonMenu(Element):
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data: Union[bytes, str]
         :param image_size: Size of the image in pixels (width, height)
-        :type image_size: Tuple[int, int]
+        :type image_size: (int, int)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
         :type image_subsample: (int)
         :param border_width: width of border around button in pixels
         :type border_width: (int)
         :param size:(width, height) of the button in characters wide, rows high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
@@ -3343,7 +3343,7 @@ class ProgressBar(Element):
         :param orientation: 'horizontal' or 'vertical'
         :type orientation: (str)
         :param size: Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param auto_size_text: Not sure why this is here
         :type auto_size_text: (bool)
         :param bar_color: The 2 colors that make up a progress bar. One is the background, the other is the bar
@@ -3442,7 +3442,7 @@ class Image(Element):
         :param background_color: color of background
         :type background_color:
         :param size: (width, height) size of image in pixels
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
@@ -3702,7 +3702,7 @@ class Graph(Element):
                  right_click_menu=None, visible=True, float_values=False, metadata=None):
         """
         :param canvas_size: size of the canvas area in pixels
-        :type canvas_size: Tuple[int, int]
+        :type canvas_size: (int, int)
         :param graph_bottom_left: (x,y) The bottoms left corner of your coordinate system
         :type graph_bottom_left: Tuple[int, int]
         :param graph_top_right: (x,y) The top right corner of  your coordinate system
@@ -4412,7 +4412,7 @@ class Frame(Element):
         :param relief: relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief: (enum)
         :param size: (width, height) (note this parameter may not always work)
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -5072,7 +5072,7 @@ class Slider(Element):
         :param disabled: set disable state for element
         :type disabled: (bool)
         :param size: (w=characters-wide, h=rows-high)
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param background_color: color of slider's background
@@ -5318,7 +5318,7 @@ class Column(Element):
         :param background_color: color of background of entire Column
         :type background_color: (str)
         :param size: (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param scrollable: if True then scrollbars will be added to the column
@@ -5497,7 +5497,7 @@ class Pane(Element):
         :param background_color: color of background
         :type background_color: (str)
         :param size: (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param orientation: 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
@@ -5812,7 +5812,7 @@ class Menu(Element):
         :param background_color: color of the background
         :type background_color: (str)
         :param size: Not used in the tkinter port
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
         :type tearoff: (bool)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -5959,7 +5959,7 @@ class Table(Element):
         :param hide_vertical_scroll: if True vertical scrollbar will be hidden
         :type hide_vertical_scroll: (bool)
         :param size: DO NOT USE! Use num_rows instead
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. Table events happen when row is clicked
@@ -6557,9 +6557,9 @@ class Window:
         :param layout: The layout for the window. Can also be specified in the Layout method
         :type layout: List[List[Elements]]
         :param default_element_size: size in characters (wide) and rows (high) for all elements in this window
-        :type default_element_size: Tuple[int, int] - (width, height)
+        :type default_element_size: (int, int) - (width, height)
         :param default_button_element_size: (width, height) size in characters (wide) and rows (high) for all Button elements in this window
-        :type default_button_element_size: Tuple[int, int]
+        :type default_button_element_size: (int, int)
         :param auto_size_text: True if Elements in Window should be sized to exactly fir the length of text
         :type auto_size_text: (bool)
         :param auto_size_buttons: True if Buttons in this Window should be sized to exactly fit the text on this.
@@ -6567,7 +6567,7 @@ class Window:
         :param location: (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
         :type location: Tuple[int, int]
         :param size: (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
         :type element_padding: Tuple[int, int] or ((int, int),(int,int))
         :param margins: (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
@@ -6742,9 +6742,10 @@ class Window:
     @classmethod
     def get_screen_size(self):
         """
+        This is a "Class Method" meaning you call it by writing: width, height = Window.get_screen_size()
         Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
-        :return: Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+        :return: (int, int) - Size of the screen in pixels as determined by tkinter
         """
         root = tk.Tk()
         screen_width = root.winfo_screenwidth()  # get window info to move to middle of screen
@@ -7785,7 +7786,7 @@ class Window:
         Changes the size of the window, if possible
 
         :param size: (width, height) of the desired window size
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         """
         try:
             self.TKroot.geometry("%sx%s" % (size[0], size[1]))
@@ -8346,7 +8347,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param tooltip:  text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8386,7 +8387,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8433,7 +8434,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8475,7 +8476,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8517,7 +8518,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8549,7 +8550,7 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :param button_text: text in the button (Default value = 'Save')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8584,7 +8585,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :param button_text: text in the button (Default value = 'Submit')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8620,7 +8621,7 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :param button_text: text in the button (Default value = 'Open')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8654,7 +8655,7 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :param button_text: text in the button (Default value = 'OK')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8689,7 +8690,7 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :param button_text: text in the button (Default value = 'Ok')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8724,7 +8725,7 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :param button_text: text in the button (Default value = 'Cancel')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8757,7 +8758,7 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :param button_text: text in the button (Default value = 'Quit')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8791,7 +8792,7 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :param button_text: text in the button (Default value = 'Exit')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8824,7 +8825,7 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :param button_text: text in the button (Default value = 'Yes')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8858,7 +8859,7 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :param button_text: text in the button (Default value = 'No')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8891,7 +8892,7 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :param button_text: text in the button (Default value = 'Help')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8925,7 +8926,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :param button_text: text in the button (Default value = '')
     :type button_text: (str)
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -8973,7 +8974,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9019,7 +9020,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9067,7 +9068,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9119,7 +9120,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9167,7 +9168,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9229,7 +9230,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param border_width:  width of border around element
     :type border_width:  width of border around element
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -9301,7 +9302,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
     :type image_data: Union[bytes, str]
     :param image_size: Size of the image in pixels (width, height)
-    :type image_size: Tuple[int, int]
+    :type image_size: (int, int)
     :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
     :type image_subsample: (int)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9309,7 +9310,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :param border_width:  width of border around element
     :type border_width: (int)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11582,7 +11583,7 @@ class QuickMeter(object):
         :param button_color: button color (foreground, background)
         :type button_color: Tuple[str, str]
         :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param border_width:  width of border around element
         :type border_width: (int)
         :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
@@ -11695,7 +11696,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     :param button_color: button color (foreground, background)
     :type button_color: Tuple[str, str]
     :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param border_width:  width of border around element
     :type border_width: (int)
     :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
@@ -11762,7 +11763,7 @@ class _DebugWin():
         """
 
         :param size:  (w,h) w=characters-wide, h=rows-high
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         :param location:  Location of upper left corner of the window
         :type location: Tuple[int, int]
         :param font:  specifies the font family, size, etc
@@ -11860,7 +11861,7 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     :param *args: stuff to output
     :type *args: (Any)
     :param size: (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param sep: end character
     :type end: (str)
     :param sep: separator character
@@ -11977,9 +11978,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :param button_color: Color of the button (text, background)
     :type button_color: Tuple[str, str]
     :param element_size: element size (width, height) in characters
-    :type element_size: Tuple[int, int]
+    :type element_size: (int, int)
     :param button_element_size: Size of button
-    :type button_element_size: Tuple[int, int]
+    :type button_element_size: (int, int)
     :param margins: (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
     :type margins: Tuple[int, int]
     :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -13813,7 +13814,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
     :type auto_close_duration: Union[int, float]
     :param size:  (w,h) w=characters-wide, h=rows-high
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param location:  Location on the screen to place the upper left corner of the window
     :type location: Tuple[int, int]
     :param non_blocking: if True the call will immediately return rather than waiting on user input
@@ -14430,7 +14431,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :param no_window:  if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window: (bool)
     :param size: (width, height) of the InputText Element
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param button_color:  button color (foreground, background)
     :type button_color: Tuple[str, str]
     :param background_color: color of background
@@ -14531,7 +14532,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :param no_window:  if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:  (bool)
     :param size: (width, height) of the InputText Element
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param button_color: Color of the button (text, background)
     :type button_color: Tuple[str, str]
     :param background_color: background color of the entire window
@@ -14643,7 +14644,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :param password_char: character to be shown instead of actually typed characters
     :type password_char: (str)
     :param size: (width, height) of the InputText Element
-    :type size: Tuple[int, int]
+    :type size: (int, int)
     :param button_color:  Color of the button (text, background)
     :type button_color: Tuple[str, str]
     :param background_color: background color of the entire window
