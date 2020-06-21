@@ -39,6 +39,7 @@ while True:  # Event Loop
     rect_height = int(GSIZE[1] * float(cpu_percent) / 100)
     rect_id = graph.draw_rectangle((0, rect_height), (GSIZE[0], 0), fill_color=sg.theme_button_color()[1], line_width=0)
     # Draw the % used text and the close "X" on bottom
+    text_id1 = graph.draw_text(f'{int(cpu_percent)}%', (GSIZE[0] // 2, GSIZE[1] // 2), font='Any 40', text_location=sg.TEXT_LOCATION_CENTER, color=sg.theme_button_color()[0])
     text_id3 = graph.draw_text('❎', (0, 0), font='Any 8', text_location=sg.TEXT_LOCATION_BOTTOM_LEFT, color=sg.theme_button_color()[0])
     # put the bar behind everything else
     graph.send_figure_to_back(rect_id)
