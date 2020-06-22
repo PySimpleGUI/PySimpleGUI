@@ -1,31 +1,27 @@
+#!/usr/bin/env python
+import sys
 import PySimpleGUI as sg
-from random import randint
 
-sg.theme('Dark Blue 3')
+if not sys.platform.startswith('win'):
+    sg.popup_error('Sorry, you gotta be on Windows')
+    sys.exit()
+import winsound
 
-layout = [  [sg.Text('Temperature'), sg.T(' '*30), sg.Text(size=(8,1), key='-TEMP OUT-')],
-            [sg.Text('Set Temp'), sg.T(' '*8), sg.Input(size=(8,1), key='-IN-'), sg.T(' '*10), sg.Button('Set')],
-            [sg.Button('Off'), sg.T(' '*13), sg.Button('Turn relay on', button_color=('white', 'red')),sg.T(' '*5), sg.Button('Quit')]  ]
+layout = [
+          [sg.Button('Start', button_color=('white', 'black'), key='start'),
+           sg.Button('Stop', button_color=('white', 'black'), key='stop'),
+           sg.Button('Reset', button_color=('white', 'firebrick3'), key='reset'),
+           sg.Button('Submit', button_color=('white', 'springgreen4'), key='submit')]
+          ]
 
-window = sg.Window('Temperature Manager', layout, font='Default -24', return_keyboard_events=True, no_titlebar=True)
+window = sg.Window("Button Click", layout, auto_size_buttons=False, default_button_element_size=(12,1), use_default_focus=False, finalize=True)
 
-while True:             # Event Loop
-    event, values = window.read(timeout=500)    # returns every 500 ms
-    print(event, values) if event != sg.TIMEOUT_KEY else None       # a debug print
-    if event in (sg.WIN_CLOSED, 'Quit'):
+window['submit'].update(disabled=True)
+
+recording = have_data = False
+while True:
+    event, values = window.read(timeout=100)
+    if event == sg.WINDOW_CLOSED:
         break
-    if event == 'Set':
-        print('setting temperature to ', values['-IN-'])
-        window['-TEMP OUT-'].update(values['-IN-'] + ' C')
-    elif event.startswith('Turn'):
-        print('Turning on the relay')
-    elif event == 'Off':
-        print('Turning off sensor')
-    elif event.startswith('F11'):
-        window.maximize()
-    elif event.startswith('Escape'):
-        window.normal()
-
-    window['-TEMP OUT-'].update(str(randint(2,70)) + ' C')
-
+    winsound.PlaySound("ButtonClick.wav", 1) if event != sg.TIMEOUT_KEY else None
 window.close()
