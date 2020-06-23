@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.1.3 Unreleased\n VSeparator added (spelling error), Radio.reset_group added and removed the clearing all when one cleared, added default key for one_line_progress_meter"
+version = __version__ = "0.17.1.4 Unreleased\n VSeparator added (spelling error), Radio.reset_group added and removed the clearing all when one cleared, added default key for one_line_progress_meter, auto-add keys to tables & trees"
 
 port = 'PySimpleGUIWx'
 
@@ -3259,6 +3259,7 @@ class Window:
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
                                         ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
+                                        ELEM_TYPE_TABLE, ELEM_TYPE_TREE,
                                         ELEM_TYPE_INPUT_TEXT):
                         element.Key = top_window.DictionaryKeyCounter
                         top_window.DictionaryKeyCounter += 1
