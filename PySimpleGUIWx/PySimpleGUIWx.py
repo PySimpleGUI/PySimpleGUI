@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.17.1.2 Unreleased\n VSeparator added (spelling error), Radio.reset_group added and removed the clearing all when one cleared"
+version = __version__ = "0.17.1.3 Unreleased\n VSeparator added (spelling error), Radio.reset_group added and removed the clearing all when one cleared, added default key for one_line_progress_meter"
 
 port = 'PySimpleGUIWx'
 
@@ -5639,7 +5639,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
+def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
     if key not in QuickMeter.active_meters:
         meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color,
@@ -5652,7 +5652,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
     return rc == METER_OK
 
-def OneLineProgressMeterCancel(key):
+def OneLineProgressMeterCancel(key='OK for 1 meter'):
     try:
         meter = QuickMeter.active_meters[key]
         meter.window.Close()

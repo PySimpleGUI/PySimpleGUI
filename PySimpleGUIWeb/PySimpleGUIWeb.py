@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0.1  Unreleased\n , VSeparator added (spelling error)"
+version = __version__ = "0.39.0.2  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter"
 
 port = 'PySimpleGUIWeb'
 
@@ -5554,7 +5554,7 @@ _one_line_progress_meters = {}
 
 
 # ============================== OneLineProgressMeter  =====#
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation=None, bar_color=(None, None),
+def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation=None, bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
     global _one_line_progress_meters
 
@@ -5596,7 +5596,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     return rc  # return whatever the update told us
 
 
-def OneLineProgressMeterCancel(key):
+def OneLineProgressMeterCancel(key='OK for 1 meter'):
     global _one_line_progress_meters
 
     try:

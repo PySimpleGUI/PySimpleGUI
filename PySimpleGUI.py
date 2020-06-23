@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.8 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size"
+version = __version__ = "4.20.0.9 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter"
 
 port = 'PySimpleGUI'
 
@@ -11677,7 +11677,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
+def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
     """
     :param title: text to display in eleemnt
     :type title: (str)
@@ -11685,7 +11685,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     :type current_value: (int)
     :param max_value: max value of QuickMeter
     :type max_value: (int)
-    :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :param key:  Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
     :type key: Union[str, int, tuple]
     :param *args: stuff to output
     :type *args: (Any)
@@ -11717,7 +11717,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     return rc == METER_OK
 
 
-def OneLineProgressMeterCancel(key):
+def OneLineProgressMeterCancel(key='OK for 1 meter'):
     """
     Cancels and closes a previously created One Line Progress Meter window
 
