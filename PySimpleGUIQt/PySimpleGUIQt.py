@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.4 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change)"
+version = __version__ = "0.35.0.5 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter"
 
 port = 'PySimpleGUIQt'
 
@@ -7034,7 +7034,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def OneLineProgressMeter(title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None),
+def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None),
                          button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False):
     """
     :param orientation: 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
@@ -7063,7 +7063,7 @@ def OneLineProgressMeter(title, current_value, max_value, key, *args, orientatio
     OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter,'exit_reasons', QuickMeter.exit_reasons)
     return rc == METER_OK
 
-def OneLineProgressMeterCancel(key):
+def OneLineProgressMeterCancel(key='OK for 1 meter'):
     try:
         meter = QuickMeter.active_meters[key]
         meter.window.Close()
