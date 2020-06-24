@@ -7897,14 +7897,6 @@ class Window:
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
 
-    def VisibilityChanged(self):
-        """
-        This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
-        call and then have that same source run on plain PySimpleGUI.
-        :return:
-        """
-        return
-
 
     def set_title(self, title):
         """
