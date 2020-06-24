@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.10 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees"
+version = __version__ = "4.20.0.11 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud)"
 
 port = 'PySimpleGUI'
 
@@ -15646,10 +15646,13 @@ def _install(files, url=None):
 
     Version history
     ---------------
+    version 1.0.5  2020-06-24
+        Bug with removing the dist-info of packages starting with the same name fixed.
+
     version 1.0.4  2020-03-29
         Linux and ios versions now search in sys.path for site-packages,
-        wheras other platforms now use site.getsitepackages().
-        This is to aavoid installation in a roaming directory on Windows.
+        whereas other platforms now use site.getsitepackages().
+        This is to avoid installation in a roaming directory on Windows.
 
     version 1.0.2  2020-03-07
         modified several open calls to be compatible with Python < 3.6
@@ -15727,7 +15730,7 @@ def _install(files, url=None):
         file_contents[file] = ("from ." + package + " import *\n").encode()
         if version != "unknown":
             file_contents[file] += ("from ." + package + " import __version__\n").encode()
-    if sys.platform.startswith('linux') or (sys.platform == 'ios'):
+    if sys.platform.startswith("linux") or (sys.platform == "ios"):
         search_in = sys.path
     else:
         search_in = site.getsitepackages()
@@ -15767,7 +15770,7 @@ def _install(files, url=None):
     else:
         for entry in sitepackages_path.glob("*"):
             if entry.is_dir():
-                if entry.stem.startswith(package) and entry.suffix == ".dist-info":
+                if entry.stem.startswith(package + "-") and entry.suffix == ".dist-info":
                     shutil.rmtree(entry)
         path_distinfo = Path(str(path) + "-" + version + ".dist-info")
         if not path_distinfo.is_dir():
@@ -15812,18 +15815,11 @@ def _upgrade_from_github():
     info = _install(
         files="PySimpleGUI.py !init.py".split(), url="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
     )
-    """
-    info = install(
-        files="salabim.py !calibri.ttf !mplus-1m-regular.ttf !license.txt !DejaVuSansMono.ttf !changelog.txt".split(),
-        url="https://raw.githubusercontent.com/salabim/salabim/master/",
-    )
-    """
-
     # print(info.package + " " + info.version + " successfully installed in " + info.path)
-    # print("files copied: ", info.files_copied)
+    # print("files copied: ", ", ".join(info.files_copied))
 
-    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.files_copied,
-          keep_on_top=True, background_color='red', text_color='white')
+
+    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.files_copied, keep_on_top=True, background_color='red', text_color='white')
 
 
 def _upgrade_gui():
