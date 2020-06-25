@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.11 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud)"
+version = __version__ = "4.20.0.13 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only"
 
 port = 'PySimpleGUI'
 
@@ -4319,7 +4319,11 @@ class Graph(Element):
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
         if self.DragSubmits:
-            self.ParentForm.LastButtonClicked += '+UP'
+            if isinstance(self.ParentForm.LastButtonClicked, str):
+                self.ParentForm.LastButtonClicked = self.ParentForm.LastButtonClicked + '+UP'
+            else:
+                self.ParentForm.LastButtonClicked = (self.ParentForm.LastButtonClicked, '+UP')
+            # self.ParentForm.LastButtonClicked += '+UP'        # this is the old method that required string key
         self.MouseButtonDown = False
 
     # button callback
