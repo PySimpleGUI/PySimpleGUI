@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.13 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only"
+version = __version__ = "4.20.0.15 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed "
 
 port = 'PySimpleGUI'
 
@@ -96,23 +96,16 @@ The User Manual and the Cookbook are both designed to paint some nice looking GU
 
 """
 
-# do the Python 2 or 3 check so the right tkinter stuff can get pulled in
 import sys
 
-if sys.version_info[0] >= 3:
-    import tkinter as tk
-    from tkinter import filedialog
-    from tkinter.colorchooser import askcolor
-    from tkinter import ttk
-    import tkinter.scrolledtext as tkst
-    import tkinter.font
-else:  # Do NOT remove any of these regardless of what your IDE or lint says. They are transformed in the 3 to 2 process
-    import Tkinter as tk
-    import tkFileDialog
-    import ttk
-    import tkColorChooser
-    import tkFont
-    import ScrolledText
+# all of the tkinter involved imports
+import tkinter as tk
+from tkinter import filedialog
+from tkinter.colorchooser import askcolor
+from tkinter import ttk
+import tkinter.scrolledtext as tkst
+import tkinter.font
+# end of tkitner specific imports
 
 import datetime
 import time
@@ -9563,8 +9556,9 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     element.Type != ELEM_TYPE_OUTPUT and \
                     element.Type != ELEM_TYPE_PROGRESS_BAR and \
                     element.Type != ELEM_TYPE_COLUMN and \
-                    element.Type != ELEM_TYPE_FRAME \
-                    and element.Type != ELEM_TYPE_TAB:
+                    element.Type != ELEM_TYPE_FRAME and \
+                    element.Type != ELEM_TYPE_SEPARATOR and \
+                    element.Type != ELEM_TYPE_TAB:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and
