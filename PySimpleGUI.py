@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.15 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed "
+version = __version__ = "4.20.0.17 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, new cprint capability (print in color to a multiline using a single function call)"
 
 port = 'PySimpleGUI'
 
@@ -2170,13 +2170,16 @@ class Multiline(Element):
         if value is not None:
             value = str(value)
             if background_color_for_value is not None or text_color_for_value is not None:
-                tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
-                if  tag not in self.tags:
-                    self.tags.add(tag)
-                if background_color_for_value is not None:
-                    self.TKText.tag_configure(tag, background=background_color_for_value)
-                if text_color_for_value is not None:
-                    self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                try:
+                    tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
+                    if  tag not in self.tags:
+                        self.tags.add(tag)
+                    if background_color_for_value is not None:
+                        self.TKText.tag_configure(tag, background=background_color_for_value)
+                    if text_color_for_value is not None:
+                        self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                except Exception as e:
+                    print('* Multiline.update - bad color likely specified')
             else:
                 tag = None
             if self.Disabled:
@@ -10334,7 +10337,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
 
-
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
@@ -10342,8 +10344,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar = tk.StringVar()
                 element.TKStringVar.set(default_text)
                 show = element.PasswordCharacter if element.PasswordCharacter else ""
-                # bd = element.BorderDepth if element.BorderDepth is not None else border_depth
-                print(f'Input border depth = {border_depth}')
                 bd = border_depth
                 if element.Justification is not None:
                     justification = element.Justification
@@ -11881,7 +11881,7 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     :type *args: (Any)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
-    :param sep: end character
+    :param end: end character
     :type end: (str)
     :param sep: separator character
     :type sep: (str)
@@ -11924,6 +11924,89 @@ def EasyPrintClose():
     if _DebugWin.debug_window is not None:
         _DebugWin.debug_window.Close()
         _DebugWin.debug_window = None
+
+
+CPRINT_DESTINATION_WINDOW = None
+CPRINT_DESTINATION_MULTILINE_ELMENT_KEY = None
+
+def cprint_set_output_destination(window, multiline_key):
+    """
+    Sets up the color print (cprint) output destination
+    :param window: The window that the cprint call will route the output to
+    :type window: (Window)
+    :param multiline_key: Key for the Multiline Element where output will be sent
+    :type multiline_key: (Any)
+    """
+
+    global CPRINT_DESTINATION_WINDOW, CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
+
+    CPRINT_DESTINATION_WINDOW = window
+    CPRINT_DESTINATION_MULTILINE_ELMENT_KEY = multiline_key
+
+
+
+def cprint(*args, **kwargs):
+    """
+    Color print to a multiline element in a window of your choice.
+    Must have called cprint_set_output_destination prior ot making this call so that the
+    window and element key can be saved and used here to route the output
+    kwargs can be any of these keywords:
+        end - The end char to use just like print uses
+        sep - The separation character like print uses
+        text_color - The color of the text
+        t - An alias for color of the text (makes for shorter calls)
+        background_color - The color of the background
+        b - An alias for the background_color parameter
+        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned). (think of "," as "On")
+    With these aliases it's possible to write the same print but in more compact ways:
+    cprint('This will print white text on red background', c=('white', 'red'))
+    cprint('This will print white text on red background', text_color='red', background_color='white')
+    cprint('This will print white text on red background', t='red', b='white')
+
+    :param *args: stuff to output
+    :type *args: (Any)
+    :param text_color: Color of the text
+    :type text_color: (str)
+    :param background_color: The background color of the line
+    :type background_color: (str)
+    :param t: Color of the text
+    :type t: (str)
+    :param b: The background color of the line
+    :type b: (str)
+    :param b: The background color of the line
+    :type b: (str)
+    :param end: end character
+    :type end: (str)
+    :param sep: separator character
+    :type sep: (str)
+    """
+    if CPRINT_DESTINATION_WINDOW is None or CPRINT_DESTINATION_MULTILINE_ELMENT_KEY is None:
+        print('** Warning ** Attempting to perform a cprint without first setting up the output window and element', 'Will instead print on Console')
+        print(*args)
+        return
+
+    new_kwargs = {}
+    for arg in kwargs:
+        if arg == 't':
+            new_kwargs['text_color'] = kwargs[arg]
+        elif arg == 'b':
+            new_kwargs['background_color'] = kwargs[arg]
+        elif arg == 'c':
+            new_kwargs['text_color'] = kwargs[arg][0]
+            new_kwargs['background_color'] = kwargs[arg][1]
+        else:
+            new_kwargs[arg] = kwargs[arg]
+    # Special code to control the "end".  If no end is specified then the ENTIRE LINE will be displayed with
+    # the background color spanning across the entire width of the element.  This is likely not the desired
+    # outcome the user was hoping for. So, thi code provides that behavior of only the portion of the line
+    # with text will have a background color change
+    if new_kwargs.get('end', None) is None:
+        new_kwargs['end'] = ''
+        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print(*args, **new_kwargs)
+        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print('')
+    else:
+        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print(*args, **new_kwargs)
+
 
 # ------------------------------------------------------------------------------------------------ #
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
