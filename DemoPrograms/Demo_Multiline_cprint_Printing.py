@@ -9,10 +9,11 @@ import PySimpleGUI as sg
     There is an initial call - cprint_set_output_destination, where you set the output window and the key
     for the Multiline Element.
 
-    There are THREE different ways to indicate the color, doinfrom verbose to the mowst minimal are:
+    There are FOUR different ways to indicate the color, from verbose to the most minimal are:
     1. Specify text_color and background_color in the cprint call
     2. Specify t, b paramters when calling cprint
-    3. Specify c parameter a tuple with (text color, background color)
+    3. Specify c/colors parameter a tuple with (text color, background color)
+    4. Specify c/colors parameter as a string "text on background"  e.g.  "white on red"
 
     Copyright 2020 PySimpleGUI.org
 """
@@ -26,7 +27,8 @@ def main():
                 [sg.Text('Text color:'), sg.Combo(list(color_map.keys()), size=(12,20), key='-TEXT COLOR-'),
                  sg.Text('Background color:'), sg.Combo(list(color_map.keys()), size=(12,20), key='-BG COLOR-')],
                 [sg.Input('Type text to output here', size=(80,1), key='-IN-')],
-                [sg.Button('Print', bind_return_key=True), sg.Button('Print short'), sg.Button('Exit')]  ]
+                [sg.Button('Print', bind_return_key=True), sg.Button('Print short'),
+                 sg.Button('Use Input for colors'), sg.Button('Exit')]  ]
 
     window = sg.Window('Window Title', layout)
 
@@ -41,6 +43,8 @@ def main():
             sg.cprint(values['-IN-'], text_color=values['-TEXT COLOR-'], background_color=values['-BG COLOR-'])
         elif event == 'Print short':
             sg.cprint(values['-IN-'], c=(values['-TEXT COLOR-'], values['-BG COLOR-']))
+        elif event.startswith('Use Input'):
+            sg.cprint(values['-IN-'], colors=values['-IN-'])
     window.close()
 
 
