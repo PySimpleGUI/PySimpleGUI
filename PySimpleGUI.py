@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.17 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, new cprint capability (print in color to a multiline using a single function call)"
+version = __version__ = "4.20.0.18 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, new cprint capability (print in color to a multiline using a single function call), added 'fg on bg' format for cprint c parameter."
 
 port = 'PySimpleGUI'
 
@@ -11957,9 +11957,11 @@ def cprint(*args, **kwargs):
         t - An alias for color of the text (makes for shorter calls)
         background_color - The color of the background
         b - An alias for the background_color parameter
-        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned). (think of "," as "On")
+        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+            str - can also be a string of the format "foreground on background"  ("white on red")
     With these aliases it's possible to write the same print but in more compact ways:
     cprint('This will print white text on red background', c=('white', 'red'))
+    cprint('This will print white text on red background', c='white on red')
     cprint('This will print white text on red background', text_color='red', background_color='white')
     cprint('This will print white text on red background', t='red', b='white')
 
@@ -11975,6 +11977,8 @@ def cprint(*args, **kwargs):
     :type b: (str)
     :param b: The background color of the line
     :type b: (str)
+    :param c: Either a tuple or a string that has both the text and background colors
+    :type c: (str) or Tuple[str, str]
     :param end: end character
     :type end: (str)
     :param sep: separator character
@@ -11991,9 +11995,17 @@ def cprint(*args, **kwargs):
             new_kwargs['text_color'] = kwargs[arg]
         elif arg == 'b':
             new_kwargs['background_color'] = kwargs[arg]
-        elif arg == 'c':
-            new_kwargs['text_color'] = kwargs[arg][0]
-            new_kwargs['background_color'] = kwargs[arg][1]
+        elif arg == 'c' or arg == 'colors':
+            try:
+                if isinstance(kwargs[arg], tuple):
+                    new_kwargs['text_color'] = kwargs[arg][0]
+                    new_kwargs['background_color'] = kwargs[arg][1]
+                elif isinstance(kwargs[arg],str):
+                    colors = kwargs[arg].split(' on ')
+                    new_kwargs['text_color'] = colors[0]
+                    new_kwargs['background_color'] = colors[1]
+            except Exception as e:
+                print('* cprint warning * you messed up with color formatting', e)
         else:
             new_kwargs[arg] = kwargs[arg]
     # Special code to control the "end".  If no end is specified then the ENTIRE LINE will be displayed with
