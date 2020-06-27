@@ -36,7 +36,7 @@ def main():
         event, values = window.read()
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        sg.cprint(event, values)
+        sg.cprint(event, values, colors='white on red')
         if event == 'Print':
             sg.cprint(values['-IN-'], text_color=values['-TEXT COLOR-'], background_color=values['-BG COLOR-'])
         elif event == 'Print short':
