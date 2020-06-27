@@ -16,7 +16,6 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue)
 [![Commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
 [![Last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
-![CodeFactor](https://www.codefactor.io/repository/github/PySimpleGUI/PySimpleGUI/badge)
 
 # PySimpleGUI User's Manual
 
@@ -1470,6 +1469,7 @@ Parameter Descriptions:
 |                     bool                     |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -1515,15 +1515,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        Any        |        *args        | Variable number of items to display |
-|        str        |        title        | Title to display in the window. |
-|  Tuple[str, str]  |    button_color     | button color (foreground, background) |
-|       bool        |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|       bool        |     auto_close      | if True window will close itself |
-| Union[int, float] | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|  Tuple[int, int]  |        size         | (w,h) w=characters-wide, h=rows-high |
-|  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
-|       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             Any             |        *args        | Variable number of items to display |
+|             str             |        title        | Title to display in the window. |
+|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|            bool             |     auto_close      | if True window will close itself |
+|      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         (int, int)          |        size         | (w,h) w=characters-wide, h=rows-high |
+|       Tuple[int, int]       |      location       | Location on the screen to place the upper left corner of the window |
+|            bool             |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             str             |  background_color   | color of background |
+|             str             |     text_color      | color of the text |
+|            bool             |     no_titlebar     | If True no titlebar will be shown |
+|            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
+| Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Typical usage:
@@ -1586,6 +1592,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None] | **RETURN** | Reason for popup closing
 
 The `popup` call `popup_no_wait` or `popup_non_blocking` will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
 
@@ -1631,19 +1638,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             str             |     message      | (str) message displayed to user |
-|             str             |      title       | (str) Window title |
-|             str             |   default_text   | (str) default value to put into input area |
-|             str             |  password_char   | (str) character to be shown instead of actually typed characters |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|             str             |     message      | message displayed to user |
+|             str             |      title       | Window title |
+|             str             |   default_text   | default value to put into input area |
+|             str             |  password_char   | character to be shown instead of actually typed characters |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | Color of the button (text, background) |
-|             str             | background_color | (str) background color of the entire window |
-|             str             |    text_color    | (str) color of the message text |
+|             str             | background_color | background color of the entire window |
+|             str             |    text_color    | color of the message text |
 |      Union[bytes, str]      |       icon       | filename or base64 string to be used for the window's icon |
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
-|            bool             |   no_titlebar    | (bool) If True no titlebar will be shown |
-|            bool             |  grab_anywhere   | (bool) If True can click and drag anywhere in the window to move the window |
-|            bool             |   keep_on_top    | (bool) If True the window will remain above all current windows |
+|            bool             |   no_titlebar    | If True no titlebar will be shown |
+|            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
@@ -1697,7 +1704,7 @@ Parameter Descriptions:
 |            bool             |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
 |    Tuple[Tuple[str,str]]    |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
 |            bool             |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size        | (width, height) of the InputText Element |
+|         (int, int)          |       size        | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color    | Color of the button (text, background) |
 |             str             | background_color  | background color of the entire window |
 |             str             |    text_color     | color of the text |
@@ -1761,7 +1768,7 @@ Parameter Descriptions:
 |             str             |      title       | Window title |
 |             str             |   default_path   | path to display to user as starting point (filled into the input field) |
 |            bool             |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | button color (foreground, background) |
 |             str             | background_color | color of background |
 |             str             |    text_color    | color of the text |
@@ -1840,7 +1847,7 @@ We all have loops in our code.  'Isn't it joyful waiting, watching a counter scr
 one_line_progress_meter(title,
     current_value,
     max_value,
-    key,
+    key="OK for 1 meter",
     args=*<1 or N object>,
     orientation="v",
     bar_color=(None, None),
@@ -1858,12 +1865,12 @@ Parameter Descriptions:
 |          str           |     title     | text to display in eleemnt |
 |          int           | current_value | current value |
 |          int           |   max_value   | max value of QuickMeter |
-| Union[str, int, tuple] |      key      | Used with window.FindElement and with return values to uniquely identify this element |
+| Union[str, int, tuple] |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |          Any           |     *args     | stuff to output |
 |          str           |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |    Tuple(str, str)     |   bar_color   | color of a bar line |
 |    Tuple[str, str]     | button_color  | button color (foreground, background) |
-|    Tuple[int, int]     |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|       (int, int)       |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
 |          int           | border_width  | width of border around element |
 |          bool          | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
 |          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
@@ -5815,6 +5822,10 @@ Run this command on your Mac
 
 > pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
 
+Another also mentioned it may be helpful to add the "windowed" option so that a console is not opened.  That should make the command:
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --windowed --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
 This info was located on Reddit with the source traced back to:
 https://github.com/pyinstaller/pyinstaller/issues/1350
 
@@ -7227,11 +7238,35 @@ Fixes and new features... broad range
 * Tree now uses the element's padding rather than 0,0
 * set_options - added ability to set the tooltip font
 * Fixed a couple of docstrings
-* Reworked main() test harness to dispay DETAILED tkinter info and use bettter colors
+* Reworked main() test harness to display DETAILED tkinter info and use better colors
+
+## 4.21.0 PySimpleGUI 27-Jun-2020
+
+Horizontal Separator, cprint, docstrings
+
+* New color printing function cprint - enables easy color printing to an element
+* Tons of docstring fixups (300+ changes)
+* Removed old Python2 checks
+* Added Element.set_vscroll_position - scroll to a particular % of the way into a scrollable widget
+* Input Text - new parameters
+	* border_width
+	* read_only (for tkinter will have to be disabled OR readonly.  Cannot be both)
+	* disabled_readonly_background_color
+	* disabled_readonly_text_color
+* Radio - Backed out the change that cleared all buttons in group because already have that ability using reset_group
+* Graph drag mouse up events returned as either a string + "+UP" (as before) or as a tuple with "+UP" being added onto a tuple key
+* Vertical separator - added key and color - color defaults to text color
+* Horizontal separator!  (FINALLY). Color defaults to text color
+* Fix for Table and Tree elements not automatically getting a key generated if one wasn't supplied
+* Made key parameter for one_line_progress_meter have a default value so don't have to specify it when you have only 1 running
+* theme_add_new - adds a new theme entry given a theme name and a dictionary entry. This way you don't have to directly modify the theme dictionary
+* Added initial_folder to popup_get_folder when there is no window
+* Added default_path to popup_get_file when there is no window
+* Fix for removing too many PySimpleGUI installs when using the GitHub upgrade tooltip
 
 ### Upcoming
 
-There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
+There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
 
 The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
 
@@ -7247,7 +7282,7 @@ In addition to the ports there is ongoing work with educators that want to bring
 
 It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the enternally facing interfaces all adhere to PEP8 names.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the externally facing interfaces all adhere to PEP8 names.
 
 Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
@@ -7299,4 +7334,4 @@ If you've helped, I sure hope that you feel like you've been properly thanked.  
 
 In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
 
-To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue, but until then we'll all enjoy the successes we're having.
+To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free, but until then we'll all enjoy the successes we're having.
