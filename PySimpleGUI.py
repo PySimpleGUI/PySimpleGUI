@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.20.0.18 Unreleased\n Ability to add your own theme easier using theme_add_new, VSeparator added (spelling error), removed Radio update clearing all if one is cleared (forgot about reset_group), new Element.set_vscroll_position method, added initial_folder to popup_get_folder and default_path to no_window version of popup_get_file, HorizontalSeparator (FINALLY), added keys to separators, added color parameter to Separators (defaults to theme text color), docstring for Window.get_screen_size, added default key for one_line_progress_meter, auto-add keys to tables & trees, update of GitHub install code (thanks Ruud), graph +UP events are added as string or a tuple rather than string only, removed Python2 Tkinter imports, exclude separators from being auto-keyed, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, new cprint capability (print in color to a multiline using a single function call), added 'fg on bg' format for cprint c parameter."
+version = __version__ = "4.21.0 Released 27-Jun-2020"
 
 port = 'PySimpleGUI'
 
@@ -8366,7 +8366,8 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param pad:  Amount of padding to put around element
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
-    :return: (Button)
+    :return: The Button created
+    :rtype: (Button)
     """
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
@@ -8644,7 +8645,8 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
     :type key: Union[str, int, tuple]
-
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8747,7 +8749,8 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
     :type key: Union[str, int, tuple]
-
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8814,7 +8817,8 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
     :type key: Union[str, int, tuple]
-
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -8881,7 +8885,8 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
     :type key: Union[str, int, tuple]
-
+    :return: returns a button
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
@@ -9093,7 +9098,10 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type border_width: (int)
     :param metadata: Anything you want to store along with this button
     :type metadata: (Any)
+    :return: Button created
+    :rtype: (Button)
     '''
+
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
@@ -9145,6 +9153,8 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type border_width: (int)
     :param metadata: Anything you want to store along with this button
     :type metadata: (Any)
+    :return: Button created
+    :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -11800,7 +11810,7 @@ class _DebugWin():
         :type location: Tuple[int, int]
         :param do_not_reroute_stdout: bool value
         :type do_not_reroute_stdout: (bool)
-
+        :rtype: (None)
         """
         # Show a form that's a running counter
         self.size = size
@@ -11920,6 +11930,9 @@ eprint = EasyPrint
 def EasyPrintClose():
     """
     Close a previously opened EasyPrint window
+
+    :return:
+    :rtype:
     """
     if _DebugWin.debug_window is not None:
         _DebugWin.debug_window.Close()
@@ -11983,6 +11996,8 @@ def cprint(*args, **kwargs):
     :type end: (str)
     :param sep: separator character
     :type sep: (str)
+    :return:
+    :rtype:
     """
     if CPRINT_DESTINATION_WINDOW is None or CPRINT_DESTINATION_MULTILINE_ELMENT_KEY is None:
         print('** Warning ** Attempting to perform a cprint without first setting up the output window and element', 'Will instead print on Console')
@@ -14033,7 +14048,8 @@ def PopupNoButtons(*args, title=None, background_color=None, text_color=None, au
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
-    """
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]    """
     Popup(*args, title=title, button_color=None, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
@@ -14080,10 +14096,11 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
-    :return None
-    :rtype: None
+    :return: Reason for popup closing
+    :rtype: Union[str, None]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+
+    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -14133,9 +14150,11 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
-
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+
+    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -14183,8 +14202,10 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -14229,8 +14250,10 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -14282,9 +14305,11 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
-
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
-    Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+
+    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
@@ -14331,6 +14356,8 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
     tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
@@ -14377,6 +14404,8 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
                  text_color=text_color,
@@ -14422,6 +14451,8 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
+    :rtype: Union[str, None, TIMEOUT_KEY]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,

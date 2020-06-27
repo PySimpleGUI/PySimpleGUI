@@ -60,16 +60,16 @@ Parameter Descriptions:
 |                         Tuple[Tuple[str, str], ...]                          |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
 |                                     str                                      |    initial_folder     | starting path for folders and files |
 |                                     bool                                     |       disabled        | If True button will be created disabled |
-|                                     bool                                     |     click_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                     bool                                     |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
 |                                     str                                      |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
 |                              Union[bytes, str]                               |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                               Tuple[int, int]                                |      image_size       | Size of the image in pixels (width, height) |
+|                                  (int, int)                                  |      image_size       | Size of the image in pixels (width, height) |
 |                                     int                                      |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |                                     int                                      |     border_width      | width of border around button in pixels |
-|                               Tuple[int, int]                                |         size          | (width, height) of the button in characters wide, rows high |
+|                                  (int, int)                                  |         size          | (width, height) of the button in characters wide, rows high |
 |                                     bool                                     |   auto_size_button    | if True the button size is sized to fit the text |
-|                               Tuple[str, str]                                |     button_color      | (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
+|              Tuple[str, str] == (text color, background color)               |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
 |                               Tuple[str, str]                                | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
 |                                     bool                                     |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
 |                         Union[str, Tuple[str, int]]                          |         font          | specifies the font family, size, etc |
@@ -147,15 +147,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        str        |         text          | sets button text |
-|  Tuple[str, str]  |     button_color      | (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|       bool        |       disabled        | disable or enable state of the element |
-| Union[bytes, str] |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|        str        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|  Tuple[str, str]  | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|       bool        |        visible        | control visibility of element |
-|        int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|  Tuple[int, int]  |      image_size       | Size of the image in pixels (width, height) |
+|                        str                        |         text          | sets button text |
+| Tuple[str, str] == (text color, background color) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|                       bool                        |       disabled        | disable or enable state of the element |
+|                 Union[bytes, str]                 |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                        str                        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                  Tuple[str, str]                  | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                       bool                        |        visible        | control visibility of element |
+|                        int                        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                    (int, int)                     |      image_size       | Size of the image in pixels (width, height) |
 
 ### bind
 
@@ -165,6 +165,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 ```
 bind(bind_string, key_modifier)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
 
 ### click
 
@@ -184,6 +190,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -222,6 +236,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -249,7 +269,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -264,6 +284,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -302,15 +336,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        str        |         text          | sets button text |
-|  Tuple[str, str]  |     button_color      | (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|       bool        |       disabled        | disable or enable state of the element |
-| Union[bytes, str] |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|        str        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|  Tuple[str, str]  | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|       bool        |        visible        | control visibility of element |
-|        int        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|  Tuple[int, int]  |      image_size       | Size of the image in pixels (width, height) |
+|                        str                        |         text          | sets button text |
+| Tuple[str, str] == (text color, background color) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|                       bool                        |       disabled        | disable or enable state of the element |
+|                 Union[bytes, str]                 |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                        str                        |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                  Tuple[str, str]                  | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                       bool                        |        visible        | control visibility of element |
+|                        int                        |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                    (int, int)                     |      image_size       | Size of the image in pixels (width, height) |
 
 ## ButtonMenu Element 
 
@@ -347,12 +381,12 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | If True button will be created disabled |
 |                                     str                                      |  image_filename  | image filename if there is a button image. GIFs and PNGs only. |
 |                              Union[bytes, str]                               |    image_data    | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                               Tuple[int, int]                                |    image_size    | Size of the image in pixels (width, height) |
+|                                  (int, int)                                  |    image_size    | Size of the image in pixels (width, height) |
 |                                     int                                      | image_subsample  | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
 |                                     int                                      |   border_width   | width of border around button in pixels |
-|                               Tuple[int, int]                                |       size       | (width, height) of the button in characters wide, rows high |
+|                                  (int, int)                                  |       size       | (width, height) of the button in characters wide, rows high |
 |                                     bool                                     | auto_size_button | if True the button size is sized to fit the text |
-|                               Tuple[str, str]                                |   button_color   | (text color, background color) of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|              Tuple[str, str] == (text color, background color)               |   button_color   | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
@@ -421,6 +455,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -430,6 +470,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -458,6 +506,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -485,7 +539,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -508,6 +562,20 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unhide_row
 
@@ -608,6 +676,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -617,6 +691,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -645,6 +727,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -672,7 +760,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -743,7 +831,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                     str                                      |       text       | Text to display next to checkbox |
 |                                     bool                                     |     default      | Set to True if you want this checkbox initially checked |
-|                               Tuple[int, int]                                |       size       | (width, height) width = characters-wide, height = rows-high |
+|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     str                                      | background_color | color of background |
@@ -829,6 +917,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -838,6 +932,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -876,6 +978,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -903,7 +1011,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -986,12 +1094,12 @@ Parameter Descriptions:
 |--|--|--|
 |                             List[List[Element]]                              |        layout         | Layout that will be shown in the Column container |
 |                                     str                                      |   background_color    | color of background of entire Column |
-|                               Tuple[int, int]                                |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter |
+|                                  (int, int)                                  |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     bool                                     |      scrollable       | if True then scrollbars will be added to the column |
 |                                     bool                                     | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                     any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     str                                      |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
 |                                     str                                      | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
@@ -1091,6 +1199,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -1100,6 +1214,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -1143,6 +1265,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -1170,7 +1298,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -1193,6 +1321,20 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unhide_row
 
@@ -1244,18 +1386,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|     List[Any] or Tuple[Any]     |      values      | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
-|               Any               |  default_value   | Choice to be displayed as initial value. Must match one of values variable contents |
-| Tuple[int, int] (width, height) |       size       | width = characters-wide, height = rows-high |
-|              bool               |  auto_size_text  | True if element should be the same size as the contents |
-|               str               | background_color | color of background |
-|               str               |    text_color    | color of the text |
-|              bool               |  change_submits  | DEPRICATED DO NOT USE. Use `enable_events` instead |
-|              bool               |  enable_events   | Turns on the element specific events. Combo event is when a choice is made |
-|              bool               |     disabled     | set disable state for element |
-|   Union[str, Tuple[str, int]]   |       font       | specifies the font family, size, etc |
-|              bool               |     visible      | set visibility state of the element |
-|               Any               |     metadata     | User metadata that can be set to ANYTHING |
+|                           List[Any] or Tuple[Any]                            |      values      | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
+|                                     Any                                      |  default_value   | Choice to be displayed as initial value. Must match one of values variable contents |
+|                          (int, int) (width, height)                          |       size       | width = characters-wide, height = rows-high |
+|                                     bool                                     |  auto_size_text  | True if element should be the same size as the contents |
+|                                     str                                      | background_color | color of background |
+|                                     str                                      |    text_color    | color of the text |
+|                                     bool                                     |  change_submits  | DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                     bool                                     |  enable_events   | Turns on the element specific events. Combo event is when a choice is made |
+|                                     bool                                     |     disabled     | set disable state for element |
+|                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     str                                      |     tooltip      | text that will appear when mouse hovers over this element |
+|                                     bool                                     |     readonly     | make element readonly (user can't change). True means user cannot change |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     bool                                     |     visible      | set visibility state of the element |
+|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
 ### Get
 
@@ -1331,6 +1477,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -1340,6 +1492,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -1379,6 +1539,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -1406,7 +1572,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -1498,11 +1664,11 @@ Parameter Descriptions:
 |                                     str                                      |   background_color    | background color of the Frame |
 |                                     enum                                     |    title_location     | location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT |
 |                                     enum                                     |        relief         | relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                               Tuple[int, int]                                |         size          | (width, height) (note this parameter may not always work) |
+|                                  (int, int)                                  |         size          | (width, height) (note this parameter may not always work) |
 |                         Union[str, Tuple[str, int]]                          |         font          | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     int                                      |     border_width      | width of border around element in pixels |
-|                                     any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     str                                      |        tooltip        | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |        visible        | set visibility state of the element |
@@ -1604,6 +1770,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -1613,6 +1785,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -1656,6 +1836,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -1683,7 +1869,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -1764,15 +1950,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |    canvas_size    | (width, height) size of the canvas area in pixels |
+|                                  (int, int)                                  |    canvas_size    | size of the canvas area in pixels |
 |                               Tuple[int, int]                                | graph_bottom_left | (x,y) The bottoms left corner of your coordinate system |
 |                               Tuple[int, int]                                |  graph_top_right  | (x,y) The top right corner of your coordinate system |
 |                                     str                                      | background_color  | background color of the drawing area |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                     bool                                     |  change_submits   | * DEPRICATED DO NOT USE! Same as enable_events |
+|                                     bool                                     |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                     bool                                     |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
 |                                     bool                                     |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
-|                                     any                                      |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     str                                      |      tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |      visible      | set visibility state of the element (Default = True) |
@@ -2179,6 +2365,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### bring_figure_to_front
 
 Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
@@ -2447,6 +2639,14 @@ expand(expand_x=False,
     expand_row=True)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
+
 ### get_bounding_box
 
 Given a figure, returns the upper left and lower right bounding box coordinates
@@ -2570,6 +2770,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -2597,7 +2803,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -2655,6 +2861,176 @@ Parameter Descriptions:
 | ???  | background_color | color of background |
 | bool |     visible      | control visibility of element |
 
+## HorizontalSeparator Element 
+
+    Horizontal Separator Element draws a Horizontal line at the given location.
+
+```
+HorizontalSeparator(color=None,
+    pad=None,
+    key=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | pad | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force=False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
+### expand
+
+Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
+
+```
+expand(expand_x=False,
+    expand_y=False,
+    expand_row=True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|<type>| **return** | width and height of the element         |
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### set_cursor
+
+Sets the cursor for the current Element.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force=False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size=(None, None))
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
+
 ## Image Element 
 
     Image Element - show an image in the window. Should be a GIF or a PNG only
@@ -2680,7 +3056,7 @@ Parameter Descriptions:
 |                                     str                                      |     filename     | image filename if there is a button image. GIFs and PNGs only. |
 |                              Union[bytes, str]                               |       data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
 |                                                                              | background_color | color of background |
-|                               Tuple[int, int]                                |       size       | (width, height) size of image in pixels |
+|                                  (int, int)                                  |       size       | (width, height) size of image in pixels |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
@@ -2762,6 +3138,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -2771,6 +3153,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -2799,6 +3189,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -2826,7 +3222,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -2925,6 +3321,7 @@ InputText(default_text="",
     text_color=None,
     font=None,
     tooltip=None,
+    border_width=None,
     change_submits=False,
     enable_events=False,
     do_not_clear=True,
@@ -2932,6 +3329,9 @@ InputText(default_text="",
     focus=False,
     pad=None,
     use_readonly_for_disable=True,
+    readonly=False,
+    disabled_readonly_background_color=None,
+    disabled_readonly_text_color=None,
     right_click_menu=None,
     visible=True,
     metadata=None)
@@ -2941,25 +3341,29 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |       default_text       | Text initially shown in the input box as a default value(Default value = '') |
-|                       Tuple[int, int]  (width, height)                       |           size           | w=characters-wide, h=rows-high |
-|                                     bool                                     |         disabled         | set disable state for element (Default = False) |
-|                                     char                                     |      password_char       | Password character if this is a password field (Default value = '') |
-|                                     str                                      |      justification       | justification for data display. Valid choices - left, right, center |
-|                                     str                                      |     background_color     | color of background in one of the color formats |
-|                                     str                                      |        text_color        | color of the text |
-|                         Union[str, Tuple[str, int]]                          |           font           | specifies the font family, size, etc |
-|                                     str                                      |         tooltip          | text, that will appear when mouse hovers over the element |
-|                                     bool                                     |      change_submits      | * DEPRICATED DO NOT USE! Same as enable_events |
-|                                     bool                                     |      enable_events       | If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False) |
-|                                     bool                                     |       do_not_clear       | If False then the field will be set to blank after ANY event (button, any event) (Default = True) |
-|                                     any                                      |           key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                                     bool                                     |          focus           | Determines if initial focus should go to this element. |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |           pad            | . Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)) |
-|                                     bool                                     | use_readonly_for_disable | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
-|                       List[List[Union[List[str],str]]]                       |     right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                     bool                                     |         visible          | set visibility state of the element (Default = True) |
-|                                     Any                                      |         metadata         | User metadata that can be set to ANYTHING |
+|                                     str                                      |            default_text            | Text initially shown in the input box as a default value(Default value = '') |
+|                         (int, int)  (width, height)                          |                size                | w=characters-wide, h=rows-high |
+|                                     bool                                     |              disabled              | set disable state for element (Default = False) |
+|                                     char                                     |           password_char            | Password character if this is a password field (Default value = '') |
+|                                     str                                      |           justification            | justification for data display. Valid choices - left, right, center |
+|                                     str                                      |          background_color          | color of background in one of the color formats |
+|                                     str                                      |             text_color             | color of the text |
+|                         Union[str, Tuple[str, int]]                          |                font                | specifies the font family, size, etc |
+|                                     str                                      |              tooltip               | text, that will appear when mouse hovers over the element |
+|                                     int                                      |            border_width            | width of border around element in pixels |
+|                                     bool                                     |           change_submits           | * DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                     bool                                     |           enable_events            | If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False) |
+|                                     bool                                     |            do_not_clear            | If False then the field will be set to blank after ANY event (button, any event) (Default = True) |
+|                                     Any                                      |                key                 | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     bool                                     |               focus                | Determines if initial focus should go to this element. |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |                pad                 | Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)) |
+|                                     bool                                     |      use_readonly_for_disable      | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
+|                                     bool                                     |              readonly              | If True tkinter state set to 'readonly'. Use this in place of use_readonly_for_disable as another way of achieving readonly. Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag |
+|                                     str                                      | disabled_readonly_background_color | If state is set to readonly or disabled, the color to use for the background |
+|                                     str                                      |    disabled_readonly_text_color    | If state is set to readonly or disabled, the color to use for the text |
+|                       List[List[Union[List[str],str]]]                       |          right_click_menu          | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                     bool                                     |              visible               | set visibility state of the element (Default = True) |
+|                                     Any                                      |              metadata              | User metadata that can be set to ANYTHING |
 
 ### Get
 
@@ -3034,6 +3438,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -3043,6 +3453,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -3081,6 +3499,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -3108,7 +3532,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -3208,6 +3632,7 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | set disable state for element |
 |                                     bool                                     |  auto_size_text  | True if element should be the same size as the contents |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                  ??? (bool)                                  |       font       | specifies the font family, size, etc :param no_scrollbar: ??? |
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
@@ -3312,6 +3737,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -3321,6 +3752,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -3380,6 +3819,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -3407,7 +3852,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -3436,6 +3881,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | List[Any] | values | new values to choose based on previously set values |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -3513,10 +3972,10 @@ Parameter Descriptions:
 |--|--|--|
 |                       List[List[Tuple[str, List[str]]]                       | menu_definition  | ??? |
 |                                     str                                      | background_color | color of the background |
-|                               Tuple[int, int]                                |       size       | Not used in the tkinter port |
+|                                  (int, int)                                  |       size       | Not used in the tkinter port |
 |                                     bool                                     |     tearoff      | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                     any                                      |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         Union[str, Tuple[str, int]]                          |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window :param font: specifies the font family, size, etc |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
@@ -3572,6 +4031,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -3581,6 +4046,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -3609,6 +4082,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -3636,7 +4115,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -3722,11 +4201,11 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | set disable state |
 |                                     bool                                     |    autoscroll    | If True the contents of the element will automatically scroll as more data added to the end |
 |                                     int                                      |   border_width   | width of border around element in pixels |
-|                                  Tuple[int,                                  |       size       | int] (width, height) width = characters-wide, height = rows-high |
+|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
-|                                     bool                                     | chfange_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                     bool                                     |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
 |                                     bool                                     |   do_not_clear   | if False the element will be cleared any time the Window.Read call returns |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
@@ -3815,6 +4294,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -3824,6 +4309,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -3885,6 +4378,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -3912,7 +4411,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -3927,6 +4426,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -4003,15 +4516,16 @@ Parameter Descriptions:
 |--|--|--|
 |                           List[Any] or Tuple[Any]                            |      values      | Values to be displayed |
 |                                     Any                                      |  default_value   | the value to choose by default |
-|                       Tuple[int, int] (width, height)                        |       size       | size in characters (wide) and rows (high) |
+|                          (int, int) (width, height)                          |       size       | size in characters (wide) and rows (high) |
 |                                     bool                                     |     disabled     | control enabled / disabled |
 |                                     bool                                     |  auto_size_text  | True if size of Element should match the contents of the items |
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                     str                                      |     tooltip      | (str) text that will appear when mouse hovers over this element |
-|                                     bool                                     |     visible      | (bool) set visibility state of the element |
+|                                     str                                      |     tooltip      | text that will appear when mouse hovers over this element |
+|                                     bool                                     |     visible      | set visibility state of the element |
+|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
 ### SetFocus
 
@@ -4070,6 +4584,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -4079,6 +4599,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -4107,6 +4635,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -4134,7 +4668,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -4149,6 +4683,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -4208,7 +4756,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |       size       | (width, height) w=characters-wide, h=rows-high |
+|                                  (int, int)                                  |       size       | (width, height) w=characters-wide, h=rows-high |
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -4291,6 +4839,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -4305,8 +4859,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Bool | expand_x | If True Element will expand in the Horizontal directions |
-| Bool | expand_y | If True Element will expand in the Vertical directions |
+| bool | expand_x | If True Element will expand in the Horizontal directions |
+| bool | expand_y | If True Element will expand in the Vertical directions |
 
 ### get_size
 
@@ -4335,6 +4889,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -4362,7 +4922,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -4387,6 +4947,20 @@ Returns the TKOutput object used to create the element
 |Type|Name|Meaning|
 |---|---|---|
 |<type>| **return** | The TKOutput object         |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -4445,14 +5019,14 @@ Parameter Descriptions:
 |--|--|--|
 |                                 List[Column]                                 |    pane_list     | Must be a list of Column Elements. Each Column supplied becomes one pane that's shown |
 |                                     str                                      | background_color | color of background |
-|                               Tuple[int, int]                                |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
+|                                  (int, int)                                  |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |   orientation    | 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide |
 |                                     bool                                     |   show_handle    | if True, the handle is drawn that makes it easier to grab and slide |
 |                                     enum                                     |      relief      | relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
 |                                     int                                      |   handle_size    | Size of the handle in pixels |
 |                                     int                                      |   border_width   | width of border around element in pixels |
-|                                     any                                      |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
@@ -4507,6 +5081,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -4516,6 +5096,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -4544,6 +5132,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -4571,7 +5165,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -4643,7 +5237,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                     int                                      |   max_value    | max value of progressbar |
 |                                     str                                      |  orientation   | 'horizontal' or 'vertical' |
-|                               Tuple[int, int]                                |      size      | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
+|                                  (int, int)                                  |      size      | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
 |                                     bool                                     | auto_size_text | Not sure why this is here |
 |                               Tuple[str, str]                                |   bar_color    | The 2 colors that make up a progress bar. One is the background, the other is the bar |
 |                                     str                                      |     style      | Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
@@ -4720,6 +5314,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -4729,6 +5329,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -4757,6 +5365,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -4784,7 +5398,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -4878,7 +5492,7 @@ Parameter Descriptions:
 |                                     Any                                      |     group_id     | Groups together multiple Radio Buttons. Any type works |
 |                                     bool                                     |     default      | Set to True for the one element of the group you want initially selected |
 |                                     bool                                     |     disabled     | set disable state |
-|                                  Tuple[int,                                  |       size       | int] (width, height) width = characters-wide, height = rows-high |
+|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
@@ -4964,6 +5578,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -4973,6 +5593,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -5019,6 +5647,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -5046,7 +5680,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -5136,14 +5770,14 @@ Parameter Descriptions:
 |                                     bool                                     | disable_number_display | if True no number will be displayed by the Slider Element |
 |                                     int                                      |      border_width      | width of border around element in pixels |
 |                                     enum                                     |         relief         | relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                     bool                                     |     change_submits     | * DEPRICATED DO NOT USE! Same as enable_events |
+|                                     bool                                     |     change_submits     | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                     bool                                     |     enable_events      | If True then moving the slider will generate an Event |
 |                                     bool                                     |        disabled        | set disable state for element |
-|                               Tuple[int, int]                                |          size          | (w=characters-wide, h=rows-high) |
+|                                  (int, int)                                  |          size          | (w=characters-wide, h=rows-high) |
 |                         Union[str, Tuple[str, int]]                          |          font          | specifies the font family, size, etc |
 |                                     str                                      |    background_color    | color of slider's background |
 |                                     str                                      |       text_color       | color of the slider's text |
-|                                     any                                      |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |        tooltip         | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |        visible         | set visibility state of the element |
@@ -5206,6 +5840,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5215,6 +5855,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -5243,6 +5891,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -5270,7 +5924,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -5354,7 +6008,7 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | set disable state |
 |                                     bool                                     |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
-|                               Tuple[int, int]                                |       size       | (width, height) width = characters-wide, height = rows-high |
+|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     str                                      | background_color | color of background |
@@ -5434,6 +6088,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5443,6 +6103,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -5483,6 +6151,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -5510,7 +6184,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -5664,6 +6338,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -5673,6 +6353,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -5701,6 +6389,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -5728,7 +6422,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -6033,7 +6727,7 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     bool                                     |       disabled        | If True button will be created disabled |
 |                                     int                                      |     border_width      | width of border around element in pixels |
-|                                     any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     str                                      |        tooltip        | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |        visible        | set visibility state of the element |
@@ -6059,8 +6753,14 @@ Parameter Descriptions:
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
 ```
-Layout(rows) -> (Tab) used for chaining
+Layout(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Element]] | rows | List[List[Element]] The list of rows |
 
 ### Select
 
@@ -6139,6 +6839,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6148,6 +6854,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -6173,8 +6887,14 @@ hide_row()
 Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
 ```
-layout(rows) -> (Tab) used for chaining
+layout(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Element]] | rows | List[List[Element]] The list of rows |
 
 ### select
 
@@ -6191,6 +6911,12 @@ Sets the cursor for the current Element.
 ```
 set_cursor(cursor)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
 
 ### set_focus
 
@@ -6219,7 +6945,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -6306,12 +7032,12 @@ Parameter Descriptions:
 |                                     str                                      | selected_background_color | color of tab when it is selected |
 |                                     str                                      |     background_color      | color of background area that tabs are located on |
 |                         Union[str, Tuple[str, int]]                          |           font            | specifies the font family, size, etc |
-|                                     bool                                     |      change_submits       | * DEPRICATED DO NOT USE! Same as enable_events |
+|                                     bool                                     |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                     bool                                     |       enable_events       | If True then switching tabs will generate an Event |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |            pad            | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     int                                      |       border_width        | width of border around element in pixels |
 |                                     enum                                     |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
-|                                     any                                      |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                                     str                                      |          tooltip          | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |          visible          | set visibility state of the element |
 |                                     Any                                      |         metadata          | User metadata that can be set to ANYTHING |
@@ -6381,6 +7107,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6390,6 +7122,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### find_key_from_tab_name
 
@@ -6446,6 +7186,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -6473,7 +7219,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -6488,6 +7234,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -6569,7 +7329,7 @@ Parameter Descriptions:
 |              List[Union[Tuple[int, str], Tuple[Int, str, str]]               |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
 |                                     bool                                     |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
 |                                     bool                                     |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
-|                               Tuple[int, int]                                |          size           | DO NOT USE! Use num_rows instead |
+|                                  (int, int)                                  |          size           | DO NOT USE! Use num_rows instead |
 |                                     bool                                     |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
 |                                     bool                                     |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
@@ -6653,6 +7413,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6662,6 +7428,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get
 
@@ -6702,6 +7476,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -6729,7 +7509,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -6815,7 +7595,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                                     Any                                      |       text       | The text to display. Can include /n to achieve multiple lines. Will convert (optional) parameter into a string |
-|                               Tuple[int, int]                                |       size       | (width, height) width = characters-wide, height = rows-high |
+|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True size of the Text Element will be sized to fit the string provided in 'text' parm |
 |                                     bool                                     |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
@@ -6901,6 +7681,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -6910,6 +7696,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 #### get
 
@@ -6948,6 +7742,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -6975,7 +7775,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -7093,7 +7893,7 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |           key           | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
 |                                     str                                      |         tooltip         | text, that will appear when mouse hovers over the element |
-|                                  List[List                                   |    right_click_menu     | [Union[List[str],str]]] A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                           [Union[List[str],str]]]                            |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |         visible         | set visibility state of the element |
 |                                     Any                                      |        metadata         | User metadata that can be set to ANYTHING |
 
@@ -7172,6 +7972,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7181,6 +7987,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -7209,6 +8023,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -7236,7 +8056,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -7251,6 +8071,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
 
 ### unbind
 
@@ -7369,7 +8203,9 @@ Parameter Descriptions:
     Column Element if extra height is needed
 
 ```
-VerticalSeparator(pad=None)
+VerticalSeparator(color=None,
+    pad=None,
+    key=None)
 ```
 
 Parameter Descriptions:
@@ -7415,6 +8251,12 @@ The tkinter specific data is in the Element's member variable user_bind_event
 bind(bind_string, key_modifier)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -7424,6 +8266,14 @@ expand(expand_x=False,
     expand_y=False,
     expand_row=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
 
 ### get_size
 
@@ -7452,6 +8302,12 @@ Sets the cursor for the current Element.
 set_cursor(cursor)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
 ### set_focus
 
 Sets the current focus to be on this element
@@ -7479,7 +8335,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Tuple[int, int] | size | The size in characters, rows typically. In some cases they are pixels |
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
 
 ### set_tooltip
 
@@ -7560,43 +8416,43 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                    str                    |            title            | The title that will be displayed in the Titlebar and on the Taskbar |
-|           List[List[Elements]]            |           layout            | The layout for the window. Can also be specified in the Layout method |
-|              Tuple[int, int]              |    default_element_size     | (width, height) size in characters (wide) and rows (high) for all elements in this window |
-|              Tuple[int, int]              | default_button_element_size | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
-|                   bool                    |       auto_size_text        | True if Elements in Window should be sized to exactly fir the length of text |
-|                   bool                    |      auto_size_buttons      | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|              Tuple[int, int]              |          location           | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
-|              Tuple[int, int]              |            size             | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
-| Tuple[int, int] or ((int, int),(int,int)) |       element_padding       | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|              Tuple[int, int]              |           margins           | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|              Tuple[str, str]              |        button_color         | (text color, button color) Default button colors for all buttons in the window |
-|        Union[str, Tuple[str, int]]        |            font             | specifies the font family, size, etc |
-|              Tuple[str, str]              |     progress_bar_color      | (bar color, background color) Sets the default colors for all progress bars in the window |
-|                    str                    |      background_color       | color of background |
-|                    int                    |        border_depth         | Default border depth (width) for all elements in the window |
-|                   bool                    |         auto_close          | If True, the window will automatically close itself |
-|                    int                    |     auto_close_duration     | Number of seconds to wait before closing the window |
-|              Union[str, str]              |            icon             | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-|                   bool                    |       force_toplevel        | If True will cause this window to skip the normal use of a hidden master window |
-|                   float                   |        alpha_channel        | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
-|                   bool                    |   return_keyboard_events    | if True key presses on the keyboard will be returned as Events from Read calls |
-|                   bool                    |      use_default_focus      | If True will use the default focus algorithm to set the focus to the "Correct" element |
-|                    str                    |     text_justification      | Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
-|                   bool                    |         no_titlebar         | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
-|                   bool                    |        grab_anywhere        | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
-|                   bool                    |         keep_on_top         | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
-|                   bool                    |          resizable          | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
-|                   bool                    |        disable_close        | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
-|                   bool                    |      disable_minimize       | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
-|     List[List[Union[List[str],str]]]      |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                    str                    |      transparent_color      | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
-|                   bool                    |      debugger_enabled       | If True then the internal debugger will be enabled |
-|                   bool                    |          finalize           | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
-|                    str                    |    element_justification    | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
-|                    str                    |          ttk_theme          | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
-|                   bool                    |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
-|                    Any                    |          metadata           | User metadata that can be set to ANYTHING |
+|                      str                      |            title            | The title that will be displayed in the Titlebar and on the Taskbar |
+|             List[List[Elements]]              |           layout            | The layout for the window. Can also be specified in the Layout method |
+|         (int, int) - (width, height)          |    default_element_size     | size in characters (wide) and rows (high) for all elements in this window |
+|                  (int, int)                   | default_button_element_size | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
+|                     bool                      |       auto_size_text        | True if Elements in Window should be sized to exactly fir the length of text |
+|                     bool                      |      auto_size_buttons      | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|                Tuple[int, int]                |          location           | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|                  (int, int)                   |            size             | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
+|   Tuple[int, int] or ((int, int),(int,int))   |       element_padding       | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                Tuple[int, int]                |           margins           | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+| Tuple[str, str] == (text color, button color) |        button_color         | Default button colors for all buttons in the window |
+|          Union[str, Tuple[str, int]]          |            font             | specifies the font family, size, etc |
+|                Tuple[str, str]                |     progress_bar_color      | (bar color, background color) Sets the default colors for all progress bars in the window |
+|                      str                      |      background_color       | color of background |
+|                      int                      |        border_depth         | Default border depth (width) for all elements in the window |
+|                     bool                      |         auto_close          | If True, the window will automatically close itself |
+|                      int                      |     auto_close_duration     | Number of seconds to wait before closing the window |
+|                Union[str, str]                |            icon             | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|                     bool                      |       force_toplevel        | If True will cause this window to skip the normal use of a hidden master window |
+|                     float                     |        alpha_channel        | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
+|                     bool                      |   return_keyboard_events    | if True key presses on the keyboard will be returned as Events from Read calls |
+|                     bool                      |      use_default_focus      | If True will use the default focus algorithm to set the focus to the "Correct" element |
+|       Union['left', 'right', 'center']        |     text_justification      | Default text justification for all Text Elements in window |
+|                     bool                      |         no_titlebar         | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
+|                     bool                      |        grab_anywhere        | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                     bool                      |         keep_on_top         | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
+|                     bool                      |          resizable          | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
+|                     bool                      |        disable_close        | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
+|                     bool                      |      disable_minimize       | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
+|       List[List[Union[List[str],str]]]        |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                      str                      |      transparent_color      | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
+|                     bool                      |      debugger_enabled       | If True then the internal debugger will be enabled |
+|                     bool                      |          finalize           | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
+|                      str                      |    element_justification    | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
+|                      str                      |          ttk_theme          | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
+|                     bool                      |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
+|                      Any                      |          metadata           | User metadata that can be set to ANYTHING |
 
 ### AddRow
 
@@ -7617,6 +8473,12 @@ it as a parameter to the Window call is better.
 ```
 AddRows(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | A list of a list of elements |
 
 ### AlphaChannel
 
@@ -7776,7 +8638,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
+| (Dict[Any:Any]) - {Element_key : value} | values_dict | pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
 ### Finalize
@@ -8108,14 +8970,13 @@ UnHide()
 
 ### VisibilityChanged
 
-This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
-call and then have that same source run on plain PySimpleGUI.
+Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
 
-`VisibilityChanged()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|<type>| **return** |  |
+```python
+VisibilityChanged()
+```
 
 ### add_row
 
@@ -8136,6 +8997,12 @@ it as a parameter to the Window call is better.
 ```
 add_rows(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | A list of a list of elements |
 
 ### alpha_channel
 
@@ -8321,8 +9188,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Union[Frame, Column, Tab]) | container | (Union[Frame, Column, Tab]) - The container Element the layout will be placed inside of |
-|    (List[List[Element]])    |   rows    | (List[List[Element]]) - The layout to be added |
+| (Union[Frame, Column, Tab]) | container | The container Element the layout will be placed inside of |
+|    (List[List[Element]])    |   rows    | The layout to be added |
 | (Window) | **RETURN** | (Window) self so could be chained
 
 ### fill
@@ -8337,7 +9204,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
+| (Dict[Any:Any]) - {Element_key : value} | values_dict | pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
 ### finalize
@@ -8440,10 +9307,11 @@ Get the screen dimensions.  NOTE - you must have a window already open for this 
 
 ### get_screen_size
 
+This is a "Class Method" meaning you call it by writing: width, height = Window.get_screen_size()
 Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
 ```
-get_screen_size() -> Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+get_screen_size() -> (int, int) - Size of the screen in pixels as determined by tkinter
 ```
 
 ### grab_any_where_off
@@ -8691,14 +9559,13 @@ un_hide()
 
 ### visibility_changed
 
-This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
-call and then have that same source run on plain PySimpleGUI.
+Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
 
-`visibility_changed()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|<type>| **return** |  |
+```python
+visibility_changed()
+```
 
 ## Window 
 
@@ -8748,43 +9615,43 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                    str                    |            title            | The title that will be displayed in the Titlebar and on the Taskbar |
-|           List[List[Elements]]            |           layout            | The layout for the window. Can also be specified in the Layout method |
-|              Tuple[int, int]              |    default_element_size     | (width, height) size in characters (wide) and rows (high) for all elements in this window |
-|              Tuple[int, int]              | default_button_element_size | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
-|                   bool                    |       auto_size_text        | True if Elements in Window should be sized to exactly fir the length of text |
-|                   bool                    |      auto_size_buttons      | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|              Tuple[int, int]              |          location           | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
-|              Tuple[int, int]              |            size             | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
-| Tuple[int, int] or ((int, int),(int,int)) |       element_padding       | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|              Tuple[int, int]              |           margins           | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|              Tuple[str, str]              |        button_color         | (text color, button color) Default button colors for all buttons in the window |
-|        Union[str, Tuple[str, int]]        |            font             | specifies the font family, size, etc |
-|              Tuple[str, str]              |     progress_bar_color      | (bar color, background color) Sets the default colors for all progress bars in the window |
-|                    str                    |      background_color       | color of background |
-|                    int                    |        border_depth         | Default border depth (width) for all elements in the window |
-|                   bool                    |         auto_close          | If True, the window will automatically close itself |
-|                    int                    |     auto_close_duration     | Number of seconds to wait before closing the window |
-|              Union[str, str]              |            icon             | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-|                   bool                    |       force_toplevel        | If True will cause this window to skip the normal use of a hidden master window |
-|                   float                   |        alpha_channel        | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
-|                   bool                    |   return_keyboard_events    | if True key presses on the keyboard will be returned as Events from Read calls |
-|                   bool                    |      use_default_focus      | If True will use the default focus algorithm to set the focus to the "Correct" element |
-|                    str                    |     text_justification      | Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
-|                   bool                    |         no_titlebar         | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
-|                   bool                    |        grab_anywhere        | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
-|                   bool                    |         keep_on_top         | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
-|                   bool                    |          resizable          | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
-|                   bool                    |        disable_close        | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
-|                   bool                    |      disable_minimize       | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
-|     List[List[Union[List[str],str]]]      |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                    str                    |      transparent_color      | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
-|                   bool                    |      debugger_enabled       | If True then the internal debugger will be enabled |
-|                   bool                    |          finalize           | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
-|                    str                    |    element_justification    | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
-|                    str                    |          ttk_theme          | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
-|                   bool                    |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
-|                    Any                    |          metadata           | User metadata that can be set to ANYTHING |
+|                      str                      |            title            | The title that will be displayed in the Titlebar and on the Taskbar |
+|             List[List[Elements]]              |           layout            | The layout for the window. Can also be specified in the Layout method |
+|         (int, int) - (width, height)          |    default_element_size     | size in characters (wide) and rows (high) for all elements in this window |
+|                  (int, int)                   | default_button_element_size | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
+|                     bool                      |       auto_size_text        | True if Elements in Window should be sized to exactly fir the length of text |
+|                     bool                      |      auto_size_buttons      | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|                Tuple[int, int]                |          location           | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|                  (int, int)                   |            size             | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
+|   Tuple[int, int] or ((int, int),(int,int))   |       element_padding       | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                Tuple[int, int]                |           margins           | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+| Tuple[str, str] == (text color, button color) |        button_color         | Default button colors for all buttons in the window |
+|          Union[str, Tuple[str, int]]          |            font             | specifies the font family, size, etc |
+|                Tuple[str, str]                |     progress_bar_color      | (bar color, background color) Sets the default colors for all progress bars in the window |
+|                      str                      |      background_color       | color of background |
+|                      int                      |        border_depth         | Default border depth (width) for all elements in the window |
+|                     bool                      |         auto_close          | If True, the window will automatically close itself |
+|                      int                      |     auto_close_duration     | Number of seconds to wait before closing the window |
+|                Union[str, str]                |            icon             | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|                     bool                      |       force_toplevel        | If True will cause this window to skip the normal use of a hidden master window |
+|                     float                     |        alpha_channel        | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
+|                     bool                      |   return_keyboard_events    | if True key presses on the keyboard will be returned as Events from Read calls |
+|                     bool                      |      use_default_focus      | If True will use the default focus algorithm to set the focus to the "Correct" element |
+|       Union['left', 'right', 'center']        |     text_justification      | Default text justification for all Text Elements in window |
+|                     bool                      |         no_titlebar         | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
+|                     bool                      |        grab_anywhere        | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                     bool                      |         keep_on_top         | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
+|                     bool                      |          resizable          | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
+|                     bool                      |        disable_close        | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
+|                     bool                      |      disable_minimize       | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
+|       List[List[Union[List[str],str]]]        |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                      str                      |      transparent_color      | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
+|                     bool                      |      debugger_enabled       | If True then the internal debugger will be enabled |
+|                     bool                      |          finalize           | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
+|                      str                      |    element_justification    | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
+|                      str                      |          ttk_theme          | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
+|                     bool                      |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
+|                      Any                      |          metadata           | User metadata that can be set to ANYTHING |
 
 ### AddRow
 
@@ -8805,6 +9672,12 @@ it as a parameter to the Window call is better.
 ```
 AddRows(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | A list of a list of elements |
 
 ### AlphaChannel
 
@@ -8964,7 +9837,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
+| (Dict[Any:Any]) - {Element_key : value} | values_dict | pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
 ### Finalize
@@ -9296,14 +10169,13 @@ UnHide()
 
 ### VisibilityChanged
 
-This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
-call and then have that same source run on plain PySimpleGUI.
+Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
 
-`VisibilityChanged()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|<type>| **return** |  |
+```python
+VisibilityChanged()
+```
 
 ### add_row
 
@@ -9324,6 +10196,12 @@ it as a parameter to the Window call is better.
 ```
 add_rows(rows)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | A list of a list of elements |
 
 ### alpha_channel
 
@@ -9509,8 +10387,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Union[Frame, Column, Tab]) | container | (Union[Frame, Column, Tab]) - The container Element the layout will be placed inside of |
-|    (List[List[Element]])    |   rows    | (List[List[Element]]) - The layout to be added |
+| (Union[Frame, Column, Tab]) | container | The container Element the layout will be placed inside of |
+|    (List[List[Element]])    |   rows    | The layout to be added |
 | (Window) | **RETURN** | (Window) self so could be chained
 
 ### fill
@@ -9525,7 +10403,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (Dict[Any:Any]) | values_dict | {Element key : value} pairs |
+| (Dict[Any:Any]) - {Element_key : value} | values_dict | pairs |
 | (Window) | **RETURN** | returns self so can be chained with other methods
 
 ### finalize
@@ -9628,10 +10506,11 @@ Get the screen dimensions.  NOTE - you must have a window already open for this 
 
 ### get_screen_size
 
+This is a "Class Method" meaning you call it by writing: width, height = Window.get_screen_size()
 Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
 ```
-get_screen_size() -> Tuple[int, int] - Size of the screen in pixels as determined by tkinter
+get_screen_size() -> (int, int) - Size of the screen in pixels as determined by tkinter
 ```
 
 ### grab_any_where_off
@@ -9865,51 +10744,19 @@ un_hide()
 
 ### visibility_changed
 
-This is a completely dummy method that does nothing. It is here so that PySimpleGUIQt programs can make this
-call and then have that same source run on plain PySimpleGUI.
+Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
+        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
 
-`visibility_changed()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|<type>| **return** |  |
+```python
+visibility_changed()
+```
 
 ## Function Reference
 
-```
-CButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
+These are the functions available for you to call
 
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-| (Button) | **RETURN** | returns a button
+## Button Related
 
 Button that will show a calendar chooser window.  Fills in the target element with result
 
@@ -9954,16 +10801,16 @@ Parameter Descriptions:
 |                           (int, int or None, int)                            |   default_date_m_d_y   | Beginning date to show |
 |                  image filename if there is a button image                   |     image_filename     | image filename if there is a button image |
 |                    in-RAM image to be displayed on button                    |       image_data       | in-RAM image to be displayed on button |
-|                              (Default = (None))                              |       image_size       | (Default = (None)) |
+|                              (Default = (None))                              |       image_size       | image size (O.K.) |
 |                    amount to reduce the size of the image                    |    image_subsample     | amount to reduce the size of the image |
 |                                     str                                      |        tooltip         | text, that will appear when mouse hovers over the element |
 |                        width of border around element                        |      border_width      | width of border around element |
-|                               Tuple[int, int]                                |          size          | (w,h) w=characters-wide, h=rows-high |
+|                                  (int, int)                                  |          size          | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     |    auto_size_button    | True if button size is determined by button text |
 |                               Tuple[str, str]                                |      button_color      | button color (foreground, background) |
 |                                     bool                                     |        disabled        | set disable state for element (Default = False) |
 |                         Union[str, Tuple[str, int]]                          |          font          | specifies the font family, size, etc |
-|                                     bool                                     |    bind_return_key     | (Default = False) |
+|                                     bool                                     |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                     bool                                     |         focus          | if focus should be set to this |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |          key           | key for uniquely identify this element (for window.FindElement) |
@@ -9996,46 +10843,14 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Cancel') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Cancel') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-```
-CloseButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
@@ -10066,14 +10881,23 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |      target      | :param image_filename: image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: (Default = (None)) :param image_subsample:amount to reduce the size of the image :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |   border_width   | width of border around element :param size: (w,h) w=characters-wide, h=rows-high |
+|                         Union[str, Tuple[int, int]]                          |      target      | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
+|                                     str                                      |  image_filename  | image filename if there is a button image. GIFs and PNGs only. |
+|                              Union[bytes, str]                               |    image_data    | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                  (int, int)                                  |    image_size    | Size of the image in pixels (width, height) |
+|                                     int                                      | image_subsample  | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                     int                                      |   border_width   | width of border around element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |      focus       | Determines if initial focus should go to this element. |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -10095,14 +10919,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = '') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = '') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     Any                                      |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -10130,14 +10957,22 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     Any                                      |     metadata     | Anything you want to store along with this button |
+|                                     int                                      |   border_width   | width of border around element |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -10159,14 +10994,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Exit') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Exit') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+| (Button) | **RETURN** | returns a button
 
 ```
 FileBrowse(button_text="Browse",
@@ -10190,11 +11028,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |   button_text    | text in the button (Default value = 'Browse') :param target: key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) :param initial_folder: starting path for folders and files :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Browse') |
+|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: filter file types (Default value = (("ALL Files", "*.*"))) |
+|                                     str                                      |  initial_folder  | starting path for folders and files :param tooltip: text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |  change_submits  | If True, pressing Enter key submits window (Default = False) :param enable_events: Turns on the element specific events.(Default = False) :param font: specifies the font family, size, etc |
+|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
@@ -10222,12 +11064,16 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     bool                                     |   button_text    | text in the button (Default value = 'Save As...') :param target: key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) :param initial_folder: starting path for folders and files :param disabled: set disable state for element (Default = False) |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Save As...') |
+|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
+|                                     bool                                     |  initial_folder  | starting path for folders and files :param disabled: set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |  change_submits  | If True, pressing Enter key submits window (Default = False) :param enable_events: Turns on the element specific events.(Default = False) :param font: specifies the font family, size, etc |
+|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
@@ -10257,28 +11103,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     bool                                     |   button_text    | text in the button (Default value = 'Browse') :param target: key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) :param disabled: set disable state for element (Default = False) |
-|                                     str                                      |  initial_folder  | starting path for folders and files :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Browse') |
+|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
+|                                     str                                      |  initial_folder  | starting path for folders and files |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |  change_submits  | If True, pressing Enter key submits window (Default = False) :param enable_events: Turns on the element specific events.(Default = False) :param font: specifies the font family, size, etc |
+|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-Fills a window with values provided in a values dictionary { element_key : new_value }
-
-```
-FillFormWithValues(window, values_dict)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|     Window      |   window    | The window object to fill |
-| (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 
 ```
 FolderBrowse(button_text="Browse",
@@ -10301,11 +11139,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |  button_text   | text in the button (Default value = 'Browse') |
-| key or (row,col) |     target     | target for the button (Default value = (ThisRow, -1)) |
-|       str        | initial_folder | starting path for folders and files |
-|       str        |    tooltip     | text, that will appear when mouse hovers over the element |
-| Tuple[int, int]  |      size      | (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Browse') |
+|                               key or (row,col)                               |      target      | target for the button (Default value = (ThisRow, -1)) |
+|                                     str                                      |  initial_folder  | starting path for folders and files |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button | True if button size is determined by button text |
+|                                     bool                                     |   button_color   | button color (foreground, background) :param disabled: set disable state for element (Default = False) |
+|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
+| (Button) | **RETURN** | The Button created
 
 ```
 Help(button_text="Help",
@@ -10326,13 +11171,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Help') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Help') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10355,14 +11202,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'No') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'No') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+| (Button) | **RETURN** | returns a button
 
 ```
 OK(button_text="OK",
@@ -10383,13 +11233,16 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'OK') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'OK') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-|                                     str                                      | bind_return_key  | (Default = True) :param tooltip: text, that will appear when mouse hovers over the element |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10404,7 +11257,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Any |  obj  | The object to display |
-| str | extra | (Default value = ' ') |
+| str | extra | extra stuff (Default value = ' ') |
 | (str) | **RETURN** | Formatted output of the object's values
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -10413,6 +11266,13 @@ Returns only the top-most object's variables instead of drilling down to dispola
 ```
 ObjToStringSingleObj(obj)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | obj | The object to display |
+| (str) | **RETURN** | Formatted output of the object's values
 
 ```
 Ok(button_text="Ok",
@@ -10433,13 +11293,16 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Ok') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Ok') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-|                                     str                                      | bind_return_key  | (Default = True) :param tooltip: text, that will appear when mouse hovers over the element |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10462,14 +11325,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Open') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Open') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-|                                     str                                      | bind_return_key  | (Default = True) :param tooltip: text, that will appear when mouse hovers over the element |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+| (Button) | **RETURN** | returns a button
 
 ```
 Quit(button_text="Quit",
@@ -10490,83 +11357,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Quit') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Quit') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-```
-RButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
-
-```
-ReadButton(button_text,
-    image_filename=None,
-    image_data=None,
-    image_size=(None, None),
-    image_subsample=None,
-    border_width=None,
-    tooltip=None,
-    size=(None, None),
-    auto_size_button=None,
-    button_color=None,
-    font=None,
-    bind_return_key=False,
-    disabled=False,
-    focus=False,
-    pad=None,
-    key=None,
-    metadata=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                                     bool                                     | bind_return_key  | (Default = False) :param disabled: set disable state for element (Default = False) |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 
 ```
 RealtimeButton(button_text,
@@ -10593,14 +11394,23 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |                                     str                                      |   button_text    | text in the button |
-|                                     str                                      |  image_filename  | image filename if there is a button image :param image_data: in-RAM image to be displayed on button :param image_size: size of button image in pixels :param image_subsample:amount to reduce the size of the image :param border_width: width of border around element :param tooltip: text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = False) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     int                                      |   border_width   | width of border around element |
+|                                     Any                                      |     metadata     | Anything you want to store along with this button |
+| (Button) | **RETURN** | Button created
 
 ```
 Save(button_text="Save",
@@ -10621,13 +11431,16 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Save') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Save') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                                     bool                                     | bind_return_key  | (Default = True) :param disabled: set disable state for element (Default = False) |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10653,132 +11466,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     bool                                     |   button_text    | text in the button (Default value = 'Save As...') :param target: key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) :param initial_folder: starting path for folders and files :param disabled: set disable state for element (Default = False) |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Save As...') |
+|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
+|                                     bool                                     |  initial_folder  | starting path for folders and files :param disabled: set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                               Tuple[int, int]                                |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
-|                         Union[str, Tuple[str, int]]                          |  change_submits  | If True, pressing Enter key submits window (Default = False) :param enable_events: Turns on the element specific events.(Default = False) :param font: specifies the font family, size, etc |
+|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-ScrolledTextBox(args=*<1 or N object>,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    yes_no=False,
-    auto_close=False,
-    auto_close_duration=None,
-    size=(None, None),
-    location=(None, None),
-    non_blocking=False,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    font=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|        Any        |        *args        | Variable number of items to display |
-|        str        |        title        | Title to display in the window. |
-|  Tuple[str, str]  |    button_color     | button color (foreground, background) |
-|       bool        |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|       bool        |     auto_close      | if True window will close itself |
-| Union[int, float] | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|  Tuple[int, int]  |        size         | (w,h) w=characters-wide, h=rows-high |
-|  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
-|       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Sets the icon which will be used any time a window is created if an icon is not provided when the
-window is created.
-
-```
-SetGlobalIcon(icon)
-```
-
-```
-SetOptions(icon=None,
-    button_color=None,
-    element_size=(None, None),
-    button_element_size=(None, None),
-    margins=(None, None),
-    element_padding=(None, None),
-    auto_size_text=None,
-    auto_size_buttons=None,
-    font=None,
-    border_width=None,
-    slider_border_width=None,
-    slider_relief=None,
-    slider_orientation=None,
-    autoclose_time=None,
-    message_box_line_width=None,
-    progress_meter_border_depth=None,
-    progress_meter_style=None,
-    progress_meter_relief=None,
-    progress_meter_color=None,
-    progress_meter_size=None,
-    text_justification=None,
-    background_color=None,
-    element_background_color=None,
-    text_element_background_color=None,
-    input_elements_background_color=None,
-    input_text_color=None,
-    scrollbar_color=None,
-    text_color=None,
-    element_text_color=None,
-    debug_win_size=(None, None),
-    window_location=(None, None),
-    error_button_color=(None, None),
-    tooltip_time=None,
-    tooltip_font=None,
-    use_ttk_buttons=None,
-    ttk_theme=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
-|                Tuple[str, str]                 |          button_color           | Color of the button (text, background) |
-|                Tuple[int, int]                 |          element_size           | element size (width, height) in characters |
-|                Tuple[int, int]                 |       button_element_size       | Size of button |
-|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
-|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
-|                      int                       |          border_width           | width of border around element |
-|                      ???                       |       slider_border_width       | ??? |
-|                      ???                       |          slider_relief          | ??? |
-|                      ???                       |       slider_orientation        | ??? |
-|                      ???                       |         autoclose_time          | ??? |
-|                      ???                       |     message_box_line_width      | ??? |
-|                      ???                       |   progress_meter_border_depth   | ??? |
-|                      ---                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                      str                       |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
-|                      str                       |        background_color         | color of background |
-|                      str                       |    element_background_color     | element background color |
-|                      str                       |  text_element_background_color  | text element background color |
-|                      str                       | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
-|                      ???                       |       element_text_color        | ??? |
-|                Tuple[int, int]                 |         debug_win_size          | (Default = (None)) |
-|                      ???                       |         window_location         | (Default = (None)) |
-|                      ???                       |       error_button_color        | (Default = (None)) |
-|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
-| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
-|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                      str                       |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 
 ```
 Submit(button_text="Submit",
@@ -10799,13 +11499,16 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Submit') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Submit') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
-|                                     str                                      | bind_return_key  | (Default = True) :param tooltip: text, that will appear when mouse hovers over the element |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10828,13 +11531,188 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               Tuple[int, int]                                |   button_text    | text in the button (Default value = 'Yes') :param size: (w,h) w=characters-wide, h=rows-high |
+|                                     str                                      |   button_text    | text in the button (Default value = 'Yes') |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                     bool                                     | auto_size_button | True if button size is determined by button text |
 |                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
 |                                     bool                                     |     disabled     | set disable state for element (Default = False) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | bind_return_key  | (Default = True) :param focus: if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                                     bool                                     | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+| (Button) | **RETURN** | returns a button
+
+## Button No Longer To Be Used
+
+Note - These are no longer recommended! 
+They are shown here in case you run into them in some old code.
+
+```
+RButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                                     str                                      |   button_text    | text in the button |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button | True if button size is determined by button text |
+|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     int                                      |   border_width   | width of border around element |
+|                                     Any                                      |     metadata     | Anything you want to store along with this button |
+| (Button) | **RETURN** | Button created
+
+```
+ReadButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                                     str                                      |   button_text    | text in the button |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button | True if button size is determined by button text |
+|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+|                                     int                                      |   border_width   | width of border around element |
+|                                     Any                                      |     metadata     | Anything you want to store along with this button |
+| (Button) | **RETURN** | Button created
+
+```
+CButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                                     str                                      |   button_text    | text in the button |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button | True if button size is determined by button text |
+|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
+| (Button) | **RETURN** | returns a button
+
+```
+CloseButton(button_text,
+    image_filename=None,
+    image_data=None,
+    image_size=(None, None),
+    image_subsample=None,
+    border_width=None,
+    tooltip=None,
+    size=(None, None),
+    auto_size_button=None,
+    button_color=None,
+    font=None,
+    bind_return_key=False,
+    disabled=False,
+    focus=False,
+    pad=None,
+    key=None,
+    metadata=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                                     str                                      |   button_text    | text in the button |
+|                  image filename if there is a button image                   |  image_filename  | image filename if there is a button image |
+|                    in-RAM image to be displayed on button                    |    image_data    | in-RAM image to be displayed on button |
+|                              (Default = (None))                              |    image_size    | image size (O.K.) |
+|                    amount to reduce the size of the image                    | image_subsample  | amount to reduce the size of the image |
+|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button | True if button size is determined by button text |
+|                               Tuple[str, str]                                |   button_color   | button color (foreground, background) |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     bool                                     | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                     bool                                     |     disabled     | set disable state for element (Default = False) |
+|                                idk_yetReally                                 |      focus       | if focus should be set to this |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                            Union[str, int, tuple]                            |       key        | key for uniquely identify this element (for window.FindElement) |
 | (Button) | **RETURN** | returns a button
 
@@ -10863,8 +11741,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |             Any             |         *args         | stuff to output |
-|       Tuple[int, int]       |         size          | (w,h) w=characters-wide, h=rows-high |
-|             str             |          sep          | end character |
+|         (int, int)          |         size          | (w,h) w=characters-wide, h=rows-high |
+|             str             |          end          | end character |
 |             str             |          sep          | separator character |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 | Union[str, Tuple[str, int]] |         font          | specifies the font family, size, etc |
@@ -10906,8 +11784,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |             Any             |         *args         | stuff to output |
-|       Tuple[int, int]       |         size          | (w,h) w=characters-wide, h=rows-high |
-|             str             |          sep          | end character |
+|         (int, int)          |         size          | (w,h) w=characters-wide, h=rows-high |
+|             str             |          end          | end character |
 |             str             |          sep          | separator character |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 | Union[str, Tuple[str, int]] |         font          | specifies the font family, size, etc |
@@ -10943,8 +11821,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |             Any             |         *args         | stuff to output |
-|       Tuple[int, int]       |         size          | (w,h) w=characters-wide, h=rows-high |
-|             str             |          sep          | end character |
+|         (int, int)          |         size          | (w,h) w=characters-wide, h=rows-high |
+|             str             |          end          | end character |
 |             str             |          sep          | separator character |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 | Union[str, Tuple[str, int]] |         font          | specifies the font family, size, etc |
@@ -10986,8 +11864,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |             Any             |         *args         | stuff to output |
-|       Tuple[int, int]       |         size          | (w,h) w=characters-wide, h=rows-high |
-|             str             |          sep          | end character |
+|         (int, int)          |         size          | (w,h) w=characters-wide, h=rows-high |
+|             str             |          end          | end character |
 |             str             |          sep          | separator character |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 | Union[str, Tuple[str, int]] |         font          | specifies the font family, size, etc |
@@ -11029,8 +11907,8 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 |             Any             |         *args         | stuff to output |
-|       Tuple[int, int]       |         size          | (w,h) w=characters-wide, h=rows-high |
-|             str             |          sep          | end character |
+|         (int, int)          |         size          | (w,h) w=characters-wide, h=rows-high |
+|             str             |          end          | end character |
 |             str             |          sep          | separator character |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 | Union[str, Tuple[str, int]] |         font          | specifies the font family, size, etc |
@@ -11049,13 +11927,65 @@ Close a previously opened EasyPrint window
 PrintClose()
 ```
 
+## Color Printing to Multiline Element of a Window
+
+Color print to a multiline element in a window of your choice.
+Must have called cprint_set_output_destination prior ot making this call so that the
+window and element key can be saved and used here to route the output
+kwargs can be any of these keywords:
+end - The end char to use just like print uses
+sep - The separation character like print uses
+text_color - The color of the text
+t - An alias for color of the text (makes for shorter calls)
+background_color - The color of the background
+b - An alias for the background_color parameter
+c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+str - can also be a string of the format "foreground on background"  ("white on red")
+With these aliases it's possible to write the same print but in more compact ways:
+cprint('This will print white text on red background', c=('white', 'red'))
+cprint('This will print white text on red background', c='white on red')
+cprint('This will print white text on red background', text_color='red', background_color='white')
+cprint('This will print white text on red background', t='red', b='white')
+
+```
+cprint(args=*<1 or N object>, kwargs)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|           Any           |      *args       | stuff to output |
+|           str           |    text_color    | Color of the text |
+|           str           | background_color | The background color of the line |
+|           str           |        t         | Color of the text |
+|           str           |        b         | The background color of the line |
+|           str           |        b         | The background color of the line |
+| str) or Tuple[str, str] |        c         | Either a tuple or a string that has both the text and background colors |
+|           str           |       end        | end character |
+|           str           |       sep        | separator character |
+|  | **RETURN** | 
+
+Sets up the color print (cprint) output destination
+
+```
+cprint_set_output_destination(window, multiline_key)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Window |    window     | The window that the cprint call will route the output to |
+|  Any   | multiline_key | Key for the Multiline Element where output will be sent |
+
 ## OneLineProgressMeter
 
 ```
 OneLineProgressMeter(title,
     current_value,
     max_value,
-    key,
+    key="OK for 1 meter",
     args=*<1 or N object>,
     orientation="v",
     bar_color=(None, None),
@@ -11073,12 +12003,12 @@ Parameter Descriptions:
 |          str           |     title     | text to display in eleemnt |
 |          int           | current_value | current value |
 |          int           |   max_value   | max value of QuickMeter |
-| Union[str, int, tuple] |      key      | Used with window.FindElement and with return values to uniquely identify this element |
+| Union[str, int, tuple] |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |          Any           |     *args     | stuff to output |
 |          str           |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |    Tuple(str, str)     |   bar_color   | color of a bar line |
 |    Tuple[str, str]     | button_color  | button color (foreground, background) |
-|    Tuple[int, int]     |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|       (int, int)       |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
 |          int           | border_width  | width of border around element |
 |          bool          | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
 |          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
@@ -11087,7 +12017,7 @@ Parameter Descriptions:
 Cancels and closes a previously created One Line Progress Meter window
 
 ```
-OneLineProgressMeterCancel(key)
+OneLineProgressMeterCancel(key="OK for 1 meter")
 ```
 
 Parameter Descriptions:
@@ -11100,7 +12030,7 @@ Parameter Descriptions:
 one_line_progress_meter(title,
     current_value,
     max_value,
-    key,
+    key="OK for 1 meter",
     args=*<1 or N object>,
     orientation="v",
     bar_color=(None, None),
@@ -11118,12 +12048,12 @@ Parameter Descriptions:
 |          str           |     title     | text to display in eleemnt |
 |          int           | current_value | current value |
 |          int           |   max_value   | max value of QuickMeter |
-| Union[str, int, tuple] |      key      | Used with window.FindElement and with return values to uniquely identify this element |
+| Union[str, int, tuple] |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |          Any           |     *args     | stuff to output |
 |          str           |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |    Tuple(str, str)     |   bar_color   | color of a bar line |
 |    Tuple[str, str]     | button_color  | button color (foreground, background) |
-|    Tuple[int, int]     |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|       (int, int)       |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
 |          int           | border_width  | width of border around element |
 |          bool          | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
 |          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
@@ -11132,7 +12062,7 @@ Parameter Descriptions:
 Cancels and closes a previously created One Line Progress Meter window
 
 ```
-one_line_progress_meter_cancel(key)
+one_line_progress_meter_cancel(key="OK for 1 meter")
 ```
 
 Parameter Descriptions:
@@ -11186,6 +12116,7 @@ Parameter Descriptions:
 |                     bool                     |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -11269,6 +12200,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
 
@@ -11311,6 +12243,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
 
@@ -11351,6 +12284,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
 
@@ -11391,6 +12325,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -11428,7 +12363,7 @@ Parameter Descriptions:
 |            bool             |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
 |    Tuple[Tuple[str,str]]    |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
 |            bool             |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size        | (width, height) of the InputText Element |
+|         (int, int)          |       size        | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color    | Color of the button (text, background) |
 |             str             | background_color  | background color of the entire window |
 |             str             |    text_color     | color of the text |
@@ -11469,7 +12404,7 @@ Parameter Descriptions:
 |             str             |      title       | Window title |
 |             str             |   default_path   | path to display to user as starting point (filled into the input field) |
 |            bool             |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | button color (foreground, background) |
 |             str             | background_color | color of background |
 |             str             |    text_color    | color of the text |
@@ -11505,19 +12440,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             str             |     message      | (str) message displayed to user |
-|             str             |      title       | (str) Window title |
-|             str             |   default_text   | (str) default value to put into input area |
-|             str             |  password_char   | (str) character to be shown instead of actually typed characters |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|             str             |     message      | message displayed to user |
+|             str             |      title       | Window title |
+|             str             |   default_text   | default value to put into input area |
+|             str             |  password_char   | character to be shown instead of actually typed characters |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | Color of the button (text, background) |
-|             str             | background_color | (str) background color of the entire window |
-|             str             |    text_color    | (str) color of the message text |
+|             str             | background_color | background color of the entire window |
+|             str             |    text_color    | color of the message text |
 |      Union[bytes, str]      |       icon       | filename or base64 string to be used for the window's icon |
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
-|            bool             |   no_titlebar    | (bool) If True no titlebar will be shown |
-|            bool             |  grab_anywhere   | (bool) If True can click and drag anywhere in the window to move the window |
-|            bool             |   keep_on_top    | (bool) If True the window will remain above all current windows |
+|            bool             |   no_titlebar    | If True no titlebar will be shown |
+|            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
@@ -11560,6 +12495,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
 
@@ -11597,6 +12533,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -11637,6 +12574,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -11677,6 +12615,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
 
@@ -11718,6 +12657,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None] | **RETURN** | Reason for popup closing
 
 Show Popup window and immediately return (does not block)
 
@@ -11759,6 +12699,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None] | **RETURN** | Reason for popup closing
 
 Display Popup with OK button only
 
@@ -11799,6 +12740,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
 
@@ -11880,7 +12822,9 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -11911,6 +12855,7 @@ Parameter Descriptions:
 |             str             |        title        | Title to display in the window. |
 |             int             |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
 |       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |             str             |  background_color   | color of background |
 |             str             |     text_color      | color of the text |
 |            bool             |     auto_close      | if True window will close itself |
@@ -11922,6 +12867,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -11948,15 +12894,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        Any        |        *args        | Variable number of items to display |
-|        str        |        title        | Title to display in the window. |
-|  Tuple[str, str]  |    button_color     | button color (foreground, background) |
-|       bool        |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|       bool        |     auto_close      | if True window will close itself |
-| Union[int, float] | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|  Tuple[int, int]  |        size         | (w,h) w=characters-wide, h=rows-high |
-|  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
-|       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             Any             |        *args        | Variable number of items to display |
+|             str             |        title        | Title to display in the window. |
+|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|            bool             |     auto_close      | if True window will close itself |
+|      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         (int, int)          |        size         | (w,h) w=characters-wide, h=rows-high |
+|       Tuple[int, int]       |      location       | Location on the screen to place the upper left corner of the window |
+|            bool             |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             str             |  background_color   | color of background |
+|             str             |     text_color      | color of the text |
+|            bool             |     no_titlebar     | If True no titlebar will be shown |
+|            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
+| Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -12000,6 +12952,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
 
@@ -12087,6 +13040,7 @@ Parameter Descriptions:
 |                     bool                     |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -12170,6 +13124,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
 
@@ -12212,6 +13167,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
 
@@ -12252,6 +13208,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
 
@@ -12292,6 +13249,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -12315,14 +13273,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|     int     |      start_mon       | The starting month |
-| int or None |      start_day       | The starting day - optional. Set to None or 0 if no date to be chosen at start |
-|     int     |      start_year      | The starting year |
-|     int     | begin_at_sunday_plus | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
-|     str     |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-|     str     |        locale        | locale used to get the day names |
-|  List[str]  |     month_names      | optional list of month names to use (should be 12 items) |
-|  List[str]  |  day_abbreviations   | optional list of abbreviations to display as the day of week |
+|       int        |      start_mon       | The starting month |
+| Union[int, None] |      start_day       | The starting day - optional. Set to None or 0 if no date to be chosen at start |
+|       int        |      start_year      | The starting year |
+|       int        | begin_at_sunday_plus | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
+|       str        |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|    (int, int)    |       location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       str        |        title         | Title that will be shown on the window |
+|       bool       |  close_when_chosen   | MIKE_please_add_text_here |
+|       str        |        locale        | locale used to get the day names |
+|       bool       |     no_titlebar      | If True no titlebar will be shown |
+|       bool       |     keep_on_top      | If True the window will remain above all current windows |
+|    List[str]     |     month_names      | optional list of month names to use (should be 12 items) |
+|    List[str]     |  day_abbreviations   | optional list of abbreviations to display as the day of week |
 | None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -12361,7 +13324,7 @@ Parameter Descriptions:
 |            bool             |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
 |    Tuple[Tuple[str,str]]    |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
 |            bool             |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size        | (width, height) of the InputText Element |
+|         (int, int)          |       size        | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color    | Color of the button (text, background) |
 |             str             | background_color  | background color of the entire window |
 |             str             |    text_color     | color of the text |
@@ -12402,7 +13365,7 @@ Parameter Descriptions:
 |             str             |      title       | Window title |
 |             str             |   default_path   | path to display to user as starting point (filled into the input field) |
 |            bool             |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | button color (foreground, background) |
 |             str             | background_color | color of background |
 |             str             |    text_color    | color of the text |
@@ -12438,19 +13401,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             str             |     message      | (str) message displayed to user |
-|             str             |      title       | (str) Window title |
-|             str             |   default_text   | (str) default value to put into input area |
-|             str             |  password_char   | (str) character to be shown instead of actually typed characters |
-|       Tuple[int, int]       |       size       | (width, height) of the InputText Element |
+|             str             |     message      | message displayed to user |
+|             str             |      title       | Window title |
+|             str             |   default_text   | default value to put into input area |
+|             str             |  password_char   | character to be shown instead of actually typed characters |
+|         (int, int)          |       size       | (width, height) of the InputText Element |
 |       Tuple[str, str]       |   button_color   | Color of the button (text, background) |
-|             str             | background_color | (str) background color of the entire window |
-|             str             |    text_color    | (str) color of the message text |
+|             str             | background_color | background color of the entire window |
+|             str             |    text_color    | color of the message text |
 |      Union[bytes, str]      |       icon       | filename or base64 string to be used for the window's icon |
 | Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
-|            bool             |   no_titlebar    | (bool) If True no titlebar will be shown |
-|            bool             |  grab_anywhere   | (bool) If True can click and drag anywhere in the window to move the window |
-|            bool             |   keep_on_top    | (bool) If True the window will remain above all current windows |
+|            bool             |   no_titlebar    | If True no titlebar will be shown |
+|            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
@@ -12493,6 +13456,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
 
@@ -12530,6 +13494,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -12570,6 +13535,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -12610,6 +13576,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
 
@@ -12651,6 +13618,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None] | **RETURN** | Reason for popup closing
 
 Show Popup window and immediately return (does not block)
 
@@ -12692,6 +13660,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None] | **RETURN** | Reason for popup closing
 
 Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
 
@@ -12713,12 +13682,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        str        |         title          | (str) Text to be shown at the top of the window in a larger font |
-|        str        |        message         | (str) Text message that makes up the majority of the window |
+|        str        |         title          | Text to be shown at the top of the window in a larger font |
+|        str        |        message         | Text message that makes up the majority of the window |
 | Union[bytes, str] |          icon          | A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window |
-|        int        | display_duration_in_ms | (int) Number of milliseconds to show the window |
-|        int        |    fade_in_duration    | (int) Number of milliseconds to fade window in and out |
-|       float       |         alpha          | (float) Alpha channel. 0 - invisible 1 - fully visible |
+|        int        | display_duration_in_ms | Number of milliseconds to show the window |
+|        int        |    fade_in_duration    | Number of milliseconds to fade window in and out |
+|       float       |         alpha          | Alpha channel. 0 - invisible 1 - fully visible |
 |  Tuple[int, int]  |        location        | Location on the screen to display the window |
 | (int) | **RETURN** | reason for returning
 
@@ -12761,6 +13730,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
 
@@ -12842,7 +13812,9 @@ Parameter Descriptions:
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -12873,6 +13845,7 @@ Parameter Descriptions:
 |             str             |        title        | Title to display in the window. |
 |             int             |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
 |       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |             str             |  background_color   | color of background |
 |             str             |     text_color      | color of the text |
 |            bool             |     auto_close      | if True window will close itself |
@@ -12884,6 +13857,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
 want, just like a print statement.
@@ -12910,15 +13884,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|        Any        |        *args        | Variable number of items to display |
-|        str        |        title        | Title to display in the window. |
-|  Tuple[str, str]  |    button_color     | button color (foreground, background) |
-|       bool        |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|       bool        |     auto_close      | if True window will close itself |
-| Union[int, float] | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|  Tuple[int, int]  |        size         | (w,h) w=characters-wide, h=rows-high |
-|  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
-|       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             Any             |        *args        | Variable number of items to display |
+|             str             |        title        | Title to display in the window. |
+|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|            bool             |     auto_close      | if True window will close itself |
+|      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         (int, int)          |        size         | (w,h) w=characters-wide, h=rows-high |
+|       Tuple[int, int]       |      location       | Location on the screen to place the upper left corner of the window |
+|            bool             |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             str             |  background_color   | color of background |
+|             str             |     text_color      | color of the text |
+|            bool             |     no_titlebar     | If True no titlebar will be shown |
+|            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
+| Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -12962,6 +13942,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
 
@@ -13004,26 +13985,93 @@ Parameter Descriptions:
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
-## PEP8 Function Bindings
+Same as popup_scrolled
 
-Fills a window with values provided in a values dictionary { element_key : new_value }
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
 
 ```
-fill_form_with_values(window, values_dict)
+sprint(args=*<1 or N object>,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|     Window      |   window    | The window object to fill |
-| (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
+|             Any             |        *args        | Variable number of items to display |
+|             str             |        title        | Title to display in the window. |
+|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|            bool             |     auto_close      | if True window will close itself |
+|      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         (int, int)          |        size         | (w,h) w=characters-wide, h=rows-high |
+|       Tuple[int, int]       |      location       | Location on the screen to place the upper left corner of the window |
+|            bool             |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             str             |  background_color   | color of background |
+|             str             |     text_color      | color of the text |
+|            bool             |     no_titlebar     | If True no titlebar will be shown |
+|            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
+| Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
-The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
 
 ```
-main()
+ScrolledTextBox(args=*<1 or N object>,
+    title=None,
+    button_color=None,
+    background_color=None,
+    text_color=None,
+    yes_no=False,
+    auto_close=False,
+    auto_close_duration=None,
+    size=(None, None),
+    location=(None, None),
+    non_blocking=False,
+    no_titlebar=False,
+    grab_anywhere=False,
+    keep_on_top=False,
+    font=None)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|             Any             |        *args        | Variable number of items to display |
+|             str             |        title        | Title to display in the window. |
+|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|            bool             |     auto_close      | if True window will close itself |
+|      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         (int, int)          |        size         | (w,h) w=characters-wide, h=rows-high |
+|       Tuple[int, int]       |      location       | Location on the screen to place the upper left corner of the window |
+|            bool             |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|             str             |  background_color   | color of background |
+|             str             |     text_color      | color of the text |
+|            bool             |     no_titlebar     | If True no titlebar will be shown |
+|            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|            bool             |     keep_on_top     | If True the window will remain above all current windows |
+| Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+## PEP8 Function Bindings
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 
@@ -13036,7 +14084,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Any |  obj  | The object to display |
-| str | extra | (Default value = ' ') |
+| str | extra | extra stuff (Default value = ' ') |
 | (str) | **RETURN** | Formatted output of the object's values
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -13046,12 +14094,27 @@ Returns only the top-most object's variables instead of drilling down to dispola
 obj_to_string_single_obj(obj)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | obj | The object to display |
+| (str) | **RETURN** | Formatted output of the object's values
+
+## Settings 
+
 Sets the icon which will be used any time a window is created if an icon is not provided when the
 window is created.
 
 ```
 set_global_icon(icon)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[bytes, str] | icon | Either a Base64 byte string or a filename |
 
 ```
 set_options(icon=None,
@@ -13098,8 +14161,8 @@ Parameter Descriptions:
 |--|--|--|
 |               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
 |                Tuple[str, str]                 |          button_color           | Color of the button (text, background) |
-|                Tuple[int, int]                 |          element_size           | element size (width, height) in characters |
-|                Tuple[int, int]                 |       button_element_size       | Size of button |
+|                   (int, int)                   |          element_size           | element size (width, height) in characters |
+|                   (int, int)                   |       button_element_size       | Size of button |
 |                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
 |   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
@@ -13112,20 +14175,139 @@ Parameter Descriptions:
 |                      ???                       |         autoclose_time          | ??? |
 |                      ???                       |     message_box_line_width      | ??? |
 |                      ???                       |   progress_meter_border_depth   | ??? |
-|                      ---                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                      str                       |      progress_meter_relief      | :param progress_meter_color: :param progress_meter_size: :param text_justification: Union ['left', 'right', 'center'] Default text justification for all Text Elements in window |
+|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      ???                       |      progress_meter_relief      |  |
+|                      ???                       |      progress_meter_color       | ??? |
+|                      ???                       |       progress_meter_size       | ??? |
+|        Union['left', 'right', 'center']        |       text_justification        | Default text justification for all Text Elements in window |
 |                      str                       |        background_color         | color of background |
 |                      str                       |    element_background_color     | element background color |
 |                      str                       |  text_element_background_color  | text element background color |
-|                      str                       | input_elements_background_color | :param input_text_color: :param scrollbar_color: :param text_color: color of the text |
+|                 idk_yetReally                  | input_elements_background_color | ??? |
+|                      ???                       |        input_text_color         | ??? |
+|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       |           text_color            | color of the text |
 |                      ???                       |       element_text_color        | ??? |
-|                Tuple[int, int]                 |         debug_win_size          | (Default = (None)) |
+|                Tuple[int, int]                 |         debug_win_size          | window size |
 |                      ???                       |         window_location         | (Default = (None)) |
 |                      ???                       |       error_button_color        | (Default = (None)) |
 |                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
 | str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
 |                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                      str                       |            ttk_theme            | (str) Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+
+### Non PEP8 version (same as PEP8 version)
+
+Sets the icon which will be used any time a window is created if an icon is not provided when the
+window is created.
+
+```
+SetGlobalIcon(icon)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[bytes, str] | icon | Either a Base64 byte string or a filename |
+
+```
+SetOptions(icon=None,
+    button_color=None,
+    element_size=(None, None),
+    button_element_size=(None, None),
+    margins=(None, None),
+    element_padding=(None, None),
+    auto_size_text=None,
+    auto_size_buttons=None,
+    font=None,
+    border_width=None,
+    slider_border_width=None,
+    slider_relief=None,
+    slider_orientation=None,
+    autoclose_time=None,
+    message_box_line_width=None,
+    progress_meter_border_depth=None,
+    progress_meter_style=None,
+    progress_meter_relief=None,
+    progress_meter_color=None,
+    progress_meter_size=None,
+    text_justification=None,
+    background_color=None,
+    element_background_color=None,
+    text_element_background_color=None,
+    input_elements_background_color=None,
+    input_text_color=None,
+    scrollbar_color=None,
+    text_color=None,
+    element_text_color=None,
+    debug_win_size=(None, None),
+    window_location=(None, None),
+    error_button_color=(None, None),
+    tooltip_time=None,
+    tooltip_font=None,
+    use_ttk_buttons=None,
+    ttk_theme=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
+|                Tuple[str, str]                 |          button_color           | Color of the button (text, background) |
+|                   (int, int)                   |          element_size           | element size (width, height) in characters |
+|                   (int, int)                   |       button_element_size       | Size of button |
+|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
+|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
+|                      int                       |          border_width           | width of border around element |
+|                      ???                       |       slider_border_width       | ??? |
+|                      ???                       |          slider_relief          | ??? |
+|                      ???                       |       slider_orientation        | ??? |
+|                      ???                       |         autoclose_time          | ??? |
+|                      ???                       |     message_box_line_width      | ??? |
+|                      ???                       |   progress_meter_border_depth   | ??? |
+|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      ???                       |      progress_meter_relief      |  |
+|                      ???                       |      progress_meter_color       | ??? |
+|                      ???                       |       progress_meter_size       | ??? |
+|        Union['left', 'right', 'center']        |       text_justification        | Default text justification for all Text Elements in window |
+|                      str                       |        background_color         | color of background |
+|                      str                       |    element_background_color     | element background color |
+|                      str                       |  text_element_background_color  | text element background color |
+|                 idk_yetReally                  | input_elements_background_color | ??? |
+|                      ???                       |        input_text_color         | ??? |
+|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       |           text_color            | color of the text |
+|                      ???                       |       element_text_color        | ??? |
+|                Tuple[int, int]                 |         debug_win_size          | window size |
+|                      ???                       |         window_location         | (Default = (None)) |
+|                      ???                       |       error_button_color        | (Default = (None)) |
+|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
+| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
+|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
+|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+
+## The Test Harness
+
+Used to test the installation, get information about the versions, upgrade from GitHub
+
+The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+
+```
+main()
+```
+
+The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+
+```
+test()
+```
+
+## Debugger
 
 Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
@@ -13145,48 +14327,6 @@ Shows the large main debugger window
 show_debugger_window(location=(None, None), args=*<1 or N object>)
 ```
 
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-sprint(args=*<1 or N object>,
-    title=None,
-    button_color=None,
-    background_color=None,
-    text_color=None,
-    yes_no=False,
-    auto_close=False,
-    auto_close_duration=None,
-    size=(None, None),
-    location=(None, None),
-    non_blocking=False,
-    no_titlebar=False,
-    grab_anywhere=False,
-    keep_on_top=False,
-    font=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|        Any        |        *args        | Variable number of items to display |
-|        str        |        title        | Title to display in the window. |
-|  Tuple[str, str]  |    button_color     | button color (foreground, background) |
-|       bool        |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|       bool        |     auto_close      | if True window will close itself |
-| Union[int, float] | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|  Tuple[int, int]  |        size         | (w,h) w=characters-wide, h=rows-high |
-|  Tuple[int, int]  |      location       | Location on the screen to place the upper left corner of the window |
-|       bool        |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-| Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
-
-```
-test()
-```
-
 ## Themes
 
 Sets / Gets the current Theme.  If none is specified then returns the current theme.
@@ -13195,6 +14335,19 @@ This call replaces the ChangeLookAndFeel / change_look_and_feel call which only 
 ```
 theme(new_theme=None) -> (str) the currently selected theme
 ```
+
+Add a new theme to the dictionary of themes
+
+```
+theme_add_new(new_theme_name, new_theme_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str  | new_theme_name | text to display in eleemnt |
+| dict | new_theme_dict | text to display in eleemnt |
 
 Sets/Returns the background color currently in use
 Used for Windows and containers (Column, Frame, Tab) and tables
@@ -13252,6 +14405,12 @@ Show a window with all of the color themes - takes a while so be patient
 theme_previewer(columns=12)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | columns | number of themes in a single row |
+
 Sets/Returns the progress meter border width currently in use
 
 ```
@@ -13287,6 +14446,34 @@ Sets/Returns the background color for text elements
 ```
 theme_text_element_background_color(color=None) -> (str) - color string of the text background color currently in use    
 ```
+
+## Misc
+
+Fills a window with values provided in a values dictionary { element_key : new_value }
+
+```
+FillFormWithValues(window, values_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     Window      |   window    | The window object to fill |
+| (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
+
+Fills a window with values provided in a values dictionary { element_key : new_value }
+
+```
+fill_form_with_values(window, values_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     Window      |   window    | The window object to fill |
+| (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
@@ -13326,6 +14513,12 @@ They are sorted alphabetically.  The legacy color names are mixed in, but otherw
 ```
 preview_all_look_and_feel_themes(columns=12)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | columns | The number of themes to display per row |
 
 Get a list of the valid values to pass into your call to change_look_and_feel
 
