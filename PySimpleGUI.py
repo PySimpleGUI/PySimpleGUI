@@ -1053,10 +1053,9 @@ class InputText(Element):
     """
 
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
-                 justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-
+                 justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
-                 use_readonly_for_disable=True, right_click_menu=None, visible=True, metadata=None):
+                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Text initially shown in the input box as a default value(Default value = '')
         :type default_text: (str)
@@ -1076,6 +1075,8 @@ class InputText(Element):
         :type font: Union[str, Tuple[str, int]]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
         :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
@@ -1090,6 +1091,12 @@ class InputText(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param use_readonly_for_disable: If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
         :type use_readonly_for_disable: (bool)
+        :param readonly: If True tkinter state set to 'readonly'.  Use this in place of use_readonly_for_disable as another way of achieving readonly.  Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag
+        :type readonly: (bool)
+        :param disabled_readonly_background_color: If state is set to readonly or disabled, the color to use for the background
+        :type disabled_readonly_background_color: (str)
+        :param disabled_readonly_text_color: If state is set to readonly or disabled, the color to use for the text
+        :type disabled_readonly_text_color: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param visible: set visibility state of the element (Default = True)
@@ -1108,6 +1115,10 @@ class InputText(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
         self.UseReadonlyForDisable = use_readonly_for_disable
+        self.disabled_readonly_background_color = disabled_readonly_background_color
+        self.disabled_readonly_text_color = disabled_readonly_text_color
+        self.ReadOnly = readonly
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TKEntry = self.Widget = None  # type: tk.Entry
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -9843,7 +9854,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         return False
 
 
-    border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
+
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
     # Building is done row by row.                                                #
@@ -9887,6 +9898,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element_size = toplevel_form.DefaultButtonElementSize
             else:
                 auto_size_text = False  # if user has specified a size then it shouldn't autosize
+
+            border_depth = toplevel_form.BorderDepth if toplevel_form.BorderDepth is not None else DEFAULT_BORDER_WIDTH
+            try:
+                if element.BorderWidth is not None:
+                    border_depth = element.BorderWidth
+            except:
+                pass
             # -------------------------  COLUMN placement element  ------------------------- #
             if element_type == ELEM_TYPE_COLUMN:
                 element = element  # type: Column
@@ -10325,6 +10343,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKStringVar.set(default_text)
                 show = element.PasswordCharacter if element.PasswordCharacter else ""
                 # bd = element.BorderDepth if element.BorderDepth is not None else border_depth
+                print(f'Input border depth = {border_depth}')
                 bd = border_depth
                 if element.Justification is not None:
                     justification = element.Justification
@@ -10342,6 +10361,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.configure(background=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKEntry.configure(fg=text_color)
+
+                if element.disabled_readonly_background_color is not None:
+                    element.TKEntry.config(readonlybackground=element.disabled_readonly_background_color)
+                if element.disabled_readonly_text_color is not None:
+                    element.TKEntry.config(fg=element.disabled_readonly_text_color)
+
                 element.Widget.config(highlightthickness=0)
 
                 element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
@@ -10352,6 +10377,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.focus_set()
                 if element.Disabled:
                     element.TKEntry['state'] = 'readonly' if element.UseReadonlyForDisable else 'disabled'
+                if element.ReadOnly:
+                    element.TKEntry['state'] = 'readonly'
+
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.RightClickMenu or toplevel_form.RightClickMenu:
