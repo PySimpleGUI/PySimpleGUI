@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.6 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees"
+version = __version__ = "0.35.0.7 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter"
 
 port = 'PySimpleGUIQt'
 
@@ -452,8 +452,8 @@ class Element():
 # ---------------------------------------------------------------------- #
 class InputText(Element):
     def __init__(self, default_text='', size=(None,None), disabled=False, password_char='',
-                 justification=None, background_color=None, text_color=None, font=None, tooltip=None,
-                 change_submits=False, enable_events=False,
+                 justification=None, background_color=None, text_color=None, font=None, tooltip=None, disabled_readonly_background_color=None, disabled_readonly_text_color=None,
+                 change_submits=False, enable_events=False, readonly=False, border_width=None,
                  do_not_clear=True, key=None, focus=False, pad=None, visible=True, size_px=(None,None), metadata=None):
         """
         Input a line of text Element
@@ -475,12 +475,20 @@ class InputText(Element):
         :type font: Union[str, Tuple[str, int]]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param disabled_readonly_background_color: If state is set to readonly or disabled, the color to use for the background
+        :type disabled_readonly_background_color: (str)
+        :param disabled_readonly_text_color: If state is set to readonly or disabled, the color to use for the text
+        :type disabled_readonly_text_color: (str)
         :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
         :type enable_events: (bool)
         :param do_not_clear: If False then the field will be set to blank after ANY event (button, any event) (Default = True)
         :type do_not_clear: (bool)
+        :param readonly: If True then the user cannot modify the field (Default = False)
+        :type readonly: (bool)
+        :param border_width: width of border around element in pixels
+        :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
         :param focus: Determines if initial focus should go to this element.
@@ -502,7 +510,11 @@ class InputText(Element):
         self.do_not_clear = do_not_clear
         self.Justification = justification or 'left'
         self.Disabled = disabled
+        self.ReadOnly = readonly
+        self.disabled_readonly_background_color = disabled_readonly_background_color
+        self.disabled_readonly_text_color = disabled_readonly_text_color
         self.ChangeSubmits = change_submits or enable_events
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.Widget = self.QT_QLineEdit = None          # type: QLineEdit
         self.ValueWasChanged = False
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
@@ -5802,6 +5814,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_QPushButton)
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
+                element = element       # type: InputText
                 default_text = element.DefaultText
                 element.Widget = element.QT_QLineEdit = qlineedit = QLineEdit()
 
@@ -5817,8 +5830,18 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
                 style = Style('QLineEdit')
                 style.append(create_style_from_font(font))
-                style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
-                style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                if element.Disabled or element.ReadOnly:
+                    if element.disabled_readonly_background_color:
+                        style.add(background_color=(element.disabled_readonly_background_color, COLOR_SYSTEM_DEFAULT))
+                    else:
+                        style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                    if element.disabled_readonly_text_color:
+                        style.add(color=(element.disabled_readonly_text_color, COLOR_SYSTEM_DEFAULT))
+                    else:
+                        style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
+                else:
+                    style.add(background_color=(element.BackgroundColor, COLOR_SYSTEM_DEFAULT))
+                    style.add(color=(element.TextColor, COLOR_SYSTEM_DEFAULT))
                 style.add(margin='{}px {}px {}px {}px'.format(*full_element_pad))
                 style.add(border='{}px solid gray '.format(border_depth))
                 element.QT_QLineEdit.setStyleSheet(style.content)
@@ -5835,6 +5858,9 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
                 if element.Disabled:
                     element.QT_QLineEdit.setDisabled(True)
+
+                if element.ReadOnly:
+                    element.QT_QLineEdit.setReadOnly(True)
 
                 if element.ChangeSubmits:
                     element.QT_QLineEdit.textChanged.connect(element._QtCallbackFocusInEvent)
