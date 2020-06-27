@@ -19,7 +19,7 @@ import PySimpleGUI as sg
 
 def main():
 
-    MLINE_KEY = '-ML-'+sg.WRITE_ONLY_KEY        # multiline element's key. Indicate tis'an output only element
+    MLINE_KEY = '-ML-'+sg.WRITE_ONLY_KEY        # multiline element's key. Indicate it's an output only element
 
     layout = [  [sg.Text('Multiline Color Print Demo', font='Any 18')],
                 [sg.Multiline(size=(80,20), key=MLINE_KEY)],
