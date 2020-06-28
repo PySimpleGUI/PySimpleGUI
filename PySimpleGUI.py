@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.21.0.1 Unreleased\n cprint expanded using optional key and optional window"
+version = __version__ = "4.22.0 Released 28-Jun-2020"
 
 port = 'PySimpleGUI'
 
@@ -11609,7 +11609,7 @@ class QuickMeter(object):
         :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
         :type orientation: (str)
         :param bar_color:  color of a bar line
-        :type bar_color: str
+        :type bar_color: Tuple[str, str]
         :param button_color: button color (foreground, background)
         :type button_color: Tuple[str, str]
         :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
@@ -11964,22 +11964,32 @@ def cprint_set_output_destination(window, multiline_key):
 def cprint(*args, **kwargs):
     """
     Color print to a multiline element in a window of your choice.
-    Must have called cprint_set_output_destination prior ot making this call so that the
-    window and element key can be saved and used here to route the output
+    Must have EITHER called cprint_set_output_destination prior to making this call so that the
+    window and element key can be saved and used here to route the output, OR used the window
+    and key parameters to the cprint function to specicy these items.
+
+    args is a variable number of things you want to print.
+
     kwargs can be any of these keywords:
         end - The end char to use just like print uses
         sep - The separation character like print uses
         text_color - The color of the text
-        t - An alias for color of the text (makes for shorter calls)
+                key - overrides the previously defined Multiline key
+        window - overrides the previously defined window to output to
         background_color - The color of the background
+        colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+        There are also "aliases" for text_color, background_color and colors (t, b, c)
+        t - An alias for color of the text (makes for shorter calls)
         b - An alias for the background_color parameter
         c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
             str - can also be a string of the format "foreground on background"  ("white on red")
-    With these aliases it's possible to write the same print but in more compact ways:
+
+    With the aliases it's possible to write the same print but in more compact ways:
     cprint('This will print white text on red background', c=('white', 'red'))
     cprint('This will print white text on red background', c='white on red')
-    cprint('This will print white text on red background', text_color='red', background_color='white')
-    cprint('This will print white text on red background', t='red', b='white')
+    cprint('This will print white text on red background', text_color='white', background_color='red')
+    cprint('This will print white text on red background', t='white', b='red')
 
     :param *args: stuff to output
     :type *args: (Any)
@@ -12001,21 +12011,19 @@ def cprint(*args, **kwargs):
     :type sep: (str)
     :param key: key of multiline to output to (if you want to override the one previously set)
     :type key: (Any)
-    :param window: key of multiline to output to (if you want to override the one previously set)
+    :param window: Window containing the multiline to output to (if you want to override the one previously set)
     :type window: (Window)
     """
-
 
     destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
     window = CPRINT_DESTINATION_WINDOW
 
-    if window is None or destination_key is None:
-        if 'key' not in kwargs and 'window' not in kwargs:
-            print('** Warning ** Attempting to perform a cprint without first setting up the output window and element',
-                  'Will instead print on Console',
-                  'You can also use the window, key arguments to route the output')
-            print(*args)
-            return
+    if (window is None and 'window' not in kwargs) or (destination_key is None and 'key' not in kwargs):
+        print('** Warning ** Attempting to perform a cprint without a valid window & key',
+              'Will instead print on Console',
+              'You can specify window and key in this cprint call, or set ahead of time using cprint_set_output_destination')
+        print(*args)
+        return
 
 
 

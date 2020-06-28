@@ -170,7 +170,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### click
 
@@ -306,6 +306,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -459,7 +465,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -562,6 +568,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### set_vscroll_position
 
@@ -680,7 +692,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -793,6 +805,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -921,7 +939,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -1034,6 +1052,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -1203,7 +1227,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -1321,6 +1345,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### set_vscroll_position
 
@@ -1481,7 +1511,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -1595,6 +1625,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -1774,7 +1810,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -1892,6 +1928,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -2369,7 +2411,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### bring_figure_to_front
 
@@ -2837,6 +2879,12 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -2918,7 +2966,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -3021,6 +3069,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -3142,7 +3196,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -3245,6 +3299,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -3442,7 +3502,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -3555,6 +3615,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -3741,7 +3807,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -3904,6 +3970,12 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -4035,7 +4107,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -4138,6 +4210,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -4298,7 +4376,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -4449,6 +4527,12 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -4588,7 +4672,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -4705,6 +4789,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -4843,7 +4933,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -4970,6 +5060,12 @@ Removes a previously bound tkinter event from an Element.
 unbind(bind_string)
 ```
 
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
+
 ### unhide_row
 
 Unhides (makes visible again) the row container that the Element is located on.
@@ -5085,7 +5181,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -5188,6 +5284,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -5318,7 +5420,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -5421,6 +5523,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -5582,7 +5690,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -5703,6 +5811,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -5844,7 +5958,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -5947,6 +6061,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -6092,7 +6212,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -6207,6 +6327,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -6342,7 +6468,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -6445,6 +6571,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -6843,7 +6975,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -6968,6 +7100,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -7111,7 +7249,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -7256,6 +7394,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -7417,7 +7561,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -7532,6 +7676,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -7685,7 +7835,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -7798,6 +7948,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -7976,7 +8132,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -8093,6 +8249,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -8255,7 +8417,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Mike_please_insert_type_here | bind_string | The string tkinter expected in its bind function |
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### expand
 
@@ -8358,6 +8520,12 @@ Removes a previously bound tkinter event from an Element.
 ```
 unbind(bind_string)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
 
 ### unhide_row
 
@@ -11754,6 +11922,7 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
+|  | **RETURN** | 
 
 Close a previously opened EasyPrint window
 
@@ -11797,6 +11966,7 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
+|  | **RETURN** | 
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -11834,6 +12004,7 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
+|  | **RETURN** | 
 
 Close a previously opened EasyPrint window
 
@@ -11877,6 +12048,7 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
+|  | **RETURN** | 
 
 Close a previously opened EasyPrint window
 
@@ -11920,6 +12092,7 @@ Parameter Descriptions:
 |            bool             |      keep_on_top      | If True the window will remain above all current windows |
 |       Tuple[int, int]       |       location        | Location of upper left corner of the window |
 |            bool             | do_not_reroute_stdout | do not reroute stdout |
+|  | **RETURN** | 
 
 Close a previously opened EasyPrint window
 
@@ -11930,22 +12103,32 @@ PrintClose()
 ## Color Printing to Multiline Element of a Window
 
 Color print to a multiline element in a window of your choice.
-Must have called cprint_set_output_destination prior ot making this call so that the
-window and element key can be saved and used here to route the output
+Must have EITHER called cprint_set_output_destination prior to making this call so that the
+window and element key can be saved and used here to route the output, OR used the window
+and key parameters to the cprint function to specicy these items.
+
+args is a variable number of things you want to print.
+
 kwargs can be any of these keywords:
 end - The end char to use just like print uses
 sep - The separation character like print uses
 text_color - The color of the text
-t - An alias for color of the text (makes for shorter calls)
+key - overrides the previously defined Multiline key
+window - overrides the previously defined window to output to
 background_color - The color of the background
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+There are also "aliases" for text_color, background_color and colors (t, b, c)
+t - An alias for color of the text (makes for shorter calls)
 b - An alias for the background_color parameter
 c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
 str - can also be a string of the format "foreground on background"  ("white on red")
-With these aliases it's possible to write the same print but in more compact ways:
+
+With the aliases it's possible to write the same print but in more compact ways:
 cprint('This will print white text on red background', c=('white', 'red'))
 cprint('This will print white text on red background', c='white on red')
-cprint('This will print white text on red background', text_color='red', background_color='white')
-cprint('This will print white text on red background', t='red', b='white')
+cprint('This will print white text on red background', text_color='white', background_color='red')
+cprint('This will print white text on red background', t='white', b='red')
 
 ```
 cprint(args=*<1 or N object>, kwargs)
@@ -11958,13 +12141,14 @@ Parameter Descriptions:
 |           Any           |      *args       | stuff to output |
 |           str           |    text_color    | Color of the text |
 |           str           | background_color | The background color of the line |
+| str) or Tuple[str, str] |      colors      | Either a tuple or a string that has both the text and background colors |
 |           str           |        t         | Color of the text |
-|           str           |        b         | The background color of the line |
 |           str           |        b         | The background color of the line |
 | str) or Tuple[str, str] |        c         | Either a tuple or a string that has both the text and background colors |
 |           str           |       end        | end character |
 |           str           |       sep        | separator character |
-|  | **RETURN** | 
+|           Any           |       key        | key of multiline to output to (if you want to override the one previously set) |
+|         Window          |      window      | Window containing the multiline to output to (if you want to override the one previously set) |
 
 Sets up the color print (cprint) output destination
 
@@ -14326,6 +14510,12 @@ Shows the large main debugger window
 ```
 show_debugger_window(location=(None, None), args=*<1 or N object>)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] | location | Locations (x,y) on the screen to place upper left corner of the window |
 
 ## Themes
 
