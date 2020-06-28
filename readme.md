@@ -7264,6 +7264,15 @@ Horizontal Separator, cprint, docstrings
 * Added default_path to popup_get_file when there is no window
 * Fix for removing too many PySimpleGUI installs when using the GitHub upgrade tooltip
 
+## 4.22.0 PySimpleGUI 28-Jun-2020
+
+More cprint stuff
+
+* Additional window and key parameter to cprint
+	* May seem like a small change, but the results are powerful
+	* Can now easily "print" to anywhere, in color!
+	
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
