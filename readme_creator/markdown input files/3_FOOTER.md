@@ -95,6 +95,11 @@ Run this command on your Mac
 
 > pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
 
+Another also mentioned it may be helpful to add the "windowed" option so that a console is not opened.  That should make the command:
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --windowed --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
+
 
 This info was located on Reddit with the source traced back to:
 https://github.com/pyinstaller/pyinstaller/issues/1350

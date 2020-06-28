@@ -1216,9 +1216,65 @@ Long list of stuff!
 * Changed the misleading TRANSPARENT_BUTTON constant with an attempt using themes calls
 
 
+## 4.20.0 PySimpleGUI 6-Jun-2020
+
+Fixes and new features... broad range
+
+* Fix for Typing import for Pi (3.4) users.  Now "tries" to import typing
+* Tooltip fonts - can change the font for tooltips
+* Fixed tearoff for Menus.  Had stoppped working
+* Radio - If element is updated to False, the entire group of radio buttons will be set to false tooltips
+* Multiline - fix for colors. Only set tags for output that has specific colors
+* Multiline - keeping track of disabled with Disabled mumber variable
+* Progress bar
+	* Added class variable "uniqueness counter" so that every bar will have its own settings
+	* Needed in case the same key is used in another window
+* Fix for stdout being reset if someone sets flush on their call to print
+* Mac special case added to tkfiledialog.askdirectory just like on askopenfilename
+* Tab - can "update" the title
+* Menu update - was not applying font when updating the menu
+* Window.set_title - allows you to change the title for a window
+* Added searching through Panes when looking for element with focus
+* Removed Python 2 Add Menu Item code
+* Added font to buttonmenu.
+* Added font to the combobox drop-down list (wow what a pain)
+* Table now uses the element's padding rather than 0,0
+* Tree now uses the element's padding rather than 0,0
+* set_options - added ability to set the tooltip font
+* Fixed a couple of docstrings
+* Reworked main() test harness to display DETAILED tkinter info and use better colors
+
+
+## 4.21.0 PySimpleGUI 27-Jun-2020
+
+Horizontal Separator, cprint, docstrings
+
+* New color printing function cprint - enables easy color printing to an element
+* Tons of docstring fixups (300+ changes)
+* Removed old Python2 checks
+* Added Element.set_vscroll_position - scroll to a particular % of the way into a scrollable widget
+* Input Text - new parameters
+	* border_width
+	* read_only (for tkinter will have to be disabled OR readonly.  Cannot be both)
+	* disabled_readonly_background_color
+	* disabled_readonly_text_color
+* Radio - Backed out the change that cleared all buttons in group because already have that ability using reset_group
+* Graph drag mouse up events returned as either a string + "+UP" (as before) or as a tuple with "+UP" being added onto a tuple key
+* Vertical separator - added key and color - color defaults to text color
+* Horizontal separator!  (FINALLY). Color defaults to text color
+* Fix for Table and Tree elements not automatically getting a key generated if one wasn't supplied
+* Made key parameter for one_line_progress_meter have a default value so don't have to specify it when you have only 1 running
+* theme_add_new - adds a new theme entry given a theme name and a dictionary entry. This way you don't have to directly modify the theme dictionary
+* Added initial_folder to popup_get_folder when there is no window
+* Added default_path to popup_get_file when there is no window
+* Fix for removing too many PySimpleGUI installs when using the GitHub upgrade tooltip
+
+
+
+
 ### Upcoming
 
-There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the currnt ports that are underway.
+There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
 
 The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
 
@@ -1236,7 +1292,7 @@ In addition to the ports there is ongoing work with educators that want to bring
 
 It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the enternally facing interfaces all adhere to PEP8 names.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the externally facing interfaces all adhere to PEP8 names.
 
 Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
@@ -1267,11 +1323,11 @@ tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, 
 From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
 
 
-## Author & Owner
+# Author & Owner
 
-The PySimpleGUI Organization
+Written and owned by The PySimpleGUI Organization
 
-This documentation as well as all PySimpleGUI code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
 
 Send correspondence to PySimpleGUI@PySimpleGUI.com
 
@@ -1289,4 +1345,4 @@ If you've helped, I sure hope that you feel like you've been properly thanked.  
 
 In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
 
-To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue, but until then we'll all enjoy the successes we're having.
+To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free, but until then we'll all enjoy the successes we're having.

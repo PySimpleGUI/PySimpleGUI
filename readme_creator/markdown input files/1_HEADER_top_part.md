@@ -51,6 +51,8 @@ HOW DO I INSERT IMAGES ???
 
 ## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
+## <span>The Call Reference Section Moved to <a href="https://pysimplegui.readthedocs.io/en/latest/call%20reference/">here</a></span>
+
 ### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
 ---
 
@@ -80,7 +82,7 @@ window = sg.Window('Window Title', layout)
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
     event, values = window.read()
-    if event in (None, 'Cancel'):	# if user closes window or clicks cancel
+    if event == sg.WIN_CLOSED or event == 'Cancel':	# if user closes window or clicks cancel
         break
     print('You entered ', values[0])
 
@@ -138,8 +140,6 @@ and returns the value input as well as the button clicked.
 * 170+ Demo Programs teach you how to integrate with many popular packages like OpenCV, Matplotlib, PyGame, etc. 
 * 200 pages of documentation, a Cookbook, built-in help using docstrings, in short it's heavily documented
 
-#### July-2019 Note - This readme is being generated from the PySimpleGUI.py file located on GitHub.  As a result, some of the calls or parameters may not match the PySimpleGUI that you pip installed.
-
 ## GUI Development does not have to be difficult nor painful.  It can be (and is) FUN
 
 #### What users are saying about PySimpleGUI
@@ -169,6 +169,14 @@ and returns the value input as well as the button clicked.
 
 [ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
 
+[The Call Reference](http://calls.PySimpleGUI.org) documentation is located on the same ReadTheDocs page as the main documentation, but it's on another tab that you'll find across the top of the page.
+
+The quick way to remember the documentation addresses is to use these addresses:
+
+http://docs.PySimpleGUI.org
+http://calls.PySimpleGUI.org
+
+
 #### Quick Links To Help and The Latest News and Releases
 
 
@@ -191,7 +199,7 @@ and returns the value input as well as the button clicked.
 [How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
 
 
-The YouTube videos - If you like instructional videos, there are over 15 videos made by PySimpleGUI project over the first 18 months.
+[The YouTube videos](http://YouTube.PySimpleGUI.org) - If you like instructional videos, there are over 15 videos made by PySimpleGUI project over the first 18 months.
 In 2020 a new series was begun.  As of May 2020 there are 12 videos completed so far with many more to go....
 - [PySimpleGUI 2020 - The most up to date information about PySimpleGUI](https://www.youtube.com/playlist?list=PLl8dD0doyrvFfzzniWS7FXrZefWWExJ2e)
 - [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
@@ -210,25 +218,11 @@ YouTube Videos made by others.  These have much higher production values than th
 
 This User's Manual (also the project's readme) is one ***vital*** part of the PySimpleGUI programming environment.  The best place to read it is at http://www.PySimpleGUI.org
 
-If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development.  You can skip this bit.... look for the bold "**GO TO HERE**" below.
-
-RTFM is not a new acronym. It stretches back to 1979, the dawn of the computer-era and in particular the microprocessor.  The point is that this is not a new problem.  It's a very old problem.
-
-Bluntness is required here as the subtle approach has not worked in the past:
+If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development. Use it, please.
 
 ***It WILL be required, at times, for you to read or search this document in order to be successful.***
 
-Re-read that statement.  This **will** be a serious problem for you if you're the type of person that finds it "quicker and easier to post on StackOverflow rather than reading documentation".  
-
-If you have not yet matured to the point you are able to understand this skill or choose to not follow it, then please save ***everyone*** the pain of doing **for you** what you, as a developer, software engineer, or wanna be coder, must do on your own.  It's a vital skill for you to learn.  
-
-Want to be a "real engineer"? Then follow "real engineering practices" such as "reading".  You are learning a NEW GUI package.  You've not seen anything like it.  Don't be so arrogant as to believe you will never need to read documentation.
-
-UGH, why does this need to be said?
-
-***GO TO HERE*** if instructed above.
-
-I apologize to the other 95% of you that this..... pathetic.... reminder needs to be added, but sadly there's a need for it.
+Using Stack Overflow and other sites to post your questions has resulted in advice given by a lot of users that have never looked at the package and are sometimes just flat bad advice.  When possible, post an Issue on this GitHub. Definitely go through the Issue checklist.  Take a look through the docs, again.
 
 There are 5 resources that work together to provide to you the fastest path to success.  They are:
 
@@ -325,7 +319,7 @@ window = sg.Window('Window Title', layout)
 # Event Loop to process "events"
 while True:             
     event, values = window.read()
-    if event in (None, 'Cancel'):
+    if event in (sg.WIN_CLOSED, 'Cancel'):
         break
 
 window.close()
@@ -468,7 +462,7 @@ import tkinter
 import cv2, PySimpleGUI as sg
 USE_CAMERA = 0      # change to 1 for front facing camera
 window, cap = sg.Window('Demo Application - OpenCV Integration', [[sg.Image(filename='', key='image')], ], location=(0, 0), grab_anywhere=True), cv2.VideoCapture(USE_CAMERA)
-while window(timeout=20)[0] is not None:
+while window(timeout=20)[0] != sg.WIN_CLOSED:
     window['image'](data=cv2.imencode('.png', cap.read()[1])[1].tobytes())
 ```
 
@@ -1176,6 +1170,13 @@ For python 3
 More information about installing tkinter can be found here: https://www.techinfected.net/2015/09/how-to-install-and-use-tkinter-in-ubuntu-debian-linux-mint.html
 
 
+### Installing typing module for Python 3.4 (Raspberry Pi)
+
+In order for the docstrings to work correctly the `typing` module is used.  In Python version 3.4 the typing module is not part of Python and must be installed separately. You'll see a warning printed on the console if this module isn't installed.
+
+You can pip install `typing` just like PySimpleGUI.  However it's not a requirement as PySimpleGUI will run fine without typing installed as it's only used by the docstrings.
+
+
 ### Installing for Python 2.7
 
 **IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
@@ -1273,7 +1274,7 @@ You can also test by using the REPL....
 >>> PySimpleGUI.main()
 ```
 
-You will see a "test harness" that exercises the SDK, tells you the version number, allows you to try 
+You will see a "test harness" that exercises the SDK, tells you the version number, allows you to try a number of features as well as access the built-in GitHub upgrade utility.
 
 ### Finding Out Where Your PySimpleGUI Is Coming From
 

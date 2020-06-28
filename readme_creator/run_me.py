@@ -1,17 +1,38 @@
-import datetime,time,os
-cd = CD = os.path.dirname(os.path.abspath(__file__))
+import re,datetime,time,os,platform,json,PySimpleGUI as sg; from subprocess import Popen; from make_real_readme import main
+cd = os.path.dirname(os.path.abspath(__file__))
 
-from make_real_readme import main
 def readfile(filename):
     with open(filename, 'r', encoding='utf-8') as ff: return ff.read()
 def writefile(fpath, content):
     with open(fpath, 'w', encoding='utf-8') as ff: ff.write(content)
-import json
 def writejson(a_path:str, a_dict:dict) -> None:
-    with open(a_path, 'w', encoding='utf-8') as output_file:
-        json.dump(a_dict, output_file, ensure_ascii=False, indent=2)
+    with open(a_path, 'w', encoding='utf-8') as output_file: json.dump(a_dict, output_file, ensure_ascii=False, indent=2)
 def readjson(a_path:str) -> dict:
     with open(a_path, 'r', encoding='utf-8') as f: return json.load(f)
+
+
+def openfile(a_path):
+    # File exists?
+    if not os.path.exists(a_path): return sg.Popup(f"Error! This file doesn't exists: {a_path}")
+
+    # check: OS
+    if 'Windows' in platform.system():
+        os.startfile(a_path)
+
+    elif 'Linux' in platform.system():
+        Popen(f'exo-open "{a_path}"', shell=True)
+
+def opendir(a_path):
+    # Folder exists?
+    if not os.path.exists(a_path): return sg.Popup(f"Error! This directory doesn't exists: {a_path}")
+
+    # check: OS
+    if 'Windows' in platform.system():
+        os.startfile(a_path)
+
+    elif 'Linux' in platform.system():
+        Popen(f'exo-open --launch FileManager --working-directory "{a_path}"', shell=True)
+
 
 ########################################################################
 #                              __ _            _                       #
@@ -23,56 +44,22 @@ def readjson(a_path:str) -> dict:
 #                                    __/ |                             #
 #                                   |___/                              #
 ########################################################################
-OUTPUT_FILENAME = 'readme.md'
+def load_configs(): return readjson(os.path.join(cd, 'app_configs.json'))
+def save_configs(a_config:dict): writejson(os.path.join(cd, 'app_configs.json'), a_config)
 
-##-#-#-# ##-#-#-#
-# Pre-process logic
-##-#-#-# ##-#-#-#
 
-line_break = '<br>'
-# line_break can be:
-# - '<br>'
-# - ' \n '
 
-method = 'with logs'
-# method can be:
-# - 'simple, no log'
-# - 'with logs'
+APP_CONFIGS = load_configs()
+README_OFILENAME = APP_CONFIGS['README_FILENAME']
+CALL_REFERENCE_OFILENAME = APP_CONFIGS['CALL_REFERENCE_FILENAME']
 
 
 ##-#-#-# ##-#-#-#
 # Post-process logic
 ##-#-#-# ##-#-#-#
-enable_popup = True
 insert_md_section_for__class_methods = False
 remove_repeated_sections_classmethods = False
 
-
-
-##############
-#     __     #
-#    /_ |    #
-#     | |    #
-#     | |    #
-#     | |    #
-#     |_|    #
-##############
-if method == 'simple, no log':
-    main(logger=None,
-         insert_md_section_for__class_methods=insert_md_section_for__class_methods,
-         remove_repeated_sections_classmethods=remove_repeated_sections_classmethods,
-         files_to_include=[0, 1, 2, 3],
-         output_name=OUTPUT_FILENAME,
-         delete_html_comments=True)
-
-################
-#     ___      #
-#    |__ \     #
-#       ) |    #
-#      / /     #
-#     / /_     #
-#    |____|    #
-################
 class BESTLOG(object):
     def __init__(self, filename):
         # my_file = logging.FileHandler(filename, mode='w')
@@ -187,24 +174,42 @@ class BESTLOG(object):
 
         return error_list, warning_list, info_list, debug_list, warning_info_
 
-def compile_all_stuff(**kw):
-    # import logging
+def compile_call_ref(output_filename='output/LoG_call_ref', **kw):
+    ''' Compile a "5_call_reference.md" file'''
 
-    log_file = os.path.join(cd, 'LoG')
-    log_obj = BESTLOG(log_file)
+    log_obj = BESTLOG(os.path.join(cd, output_filename))
+    
+    main(logger=log_obj,
+         main_md_file='markdown input files/5_call_reference.md',
+         insert_md_section_for__class_methods=insert_md_section_for__class_methods,
+         remove_repeated_sections_classmethods=remove_repeated_sections_classmethods,
+         files_to_include=[],
+         output_name=CALL_REFERENCE_OFILENAME,
+         delete_html_comments=True)
+    log_obj.save()
+    return log_obj.load(**kw)
+
+def compile_readme(output_filename='output/LoG', **kw):
+    ''' Compile a "2_readme.md" file'''
+    log_obj = BESTLOG(os.path.join(cd, output_filename))
     main(logger=log_obj,
          insert_md_section_for__class_methods=insert_md_section_for__class_methods,
          remove_repeated_sections_classmethods=remove_repeated_sections_classmethods,
          files_to_include=[0, 1, 2, 3],
-         output_name=OUTPUT_FILENAME,
+         output_name=README_OFILENAME,
          delete_html_comments=True)
     log_obj.save()
-
-    # cd = CD = os.path.dirname(os.path.abspath(__file__))
-    # log_file = os.path.join(cd, 'usage.log.txt')
     return log_obj.load(**kw)
 
-# if method == 'with logs': compile_all_stuff()
+def compile_all_stuff(**kw):
+    '''
+        Compile a "2_ and 5_" .md filess
+        return output from them
+    '''
+    result_readme  = compile_readme(**kw)
+    result_call_ref = compile_call_ref(**kw)
+    return result_readme, result_call_ref
+
 
 ########################################
 #     _____                            #
@@ -216,76 +221,161 @@ def compile_all_stuff(**kw):
 #               | |         | |        #
 #               |_|         |_|        #
 ########################################
+
+def md2psg(target_text):
+    # target = 'This is **bold** and *italic* words'
+    #              V
+    # sg.T('This is '), sg.T('bold', font=...bold), ...'
+
+    # imports
+    from collections import namedtuple
+    spec = namedtuple('spec', 'char text'.split(' '))
+
+    # START
+    # =====
+    parts = re.compile(r'([\*]{1,2})([\s\S]*?)([\*]{1,2})', flags=re.M|re.DOTALL).split(target_text)
+    chuncks, skip_this = [], 0
+    for index, part in enumerate(parts):
+        if skip_this != 0:
+            skip_this -= 1; continue
+
+        if part not in ['*', '**']: chuncks.append(part)
+        else:
+            skip_this = 2
+            chuncks.append(spec(part, parts[index+1]))
+
+    font_norm = ('Mono 13 ')     # (*sg.DEFAULT_FONT, 'italic')
+    font_bold = ('Mono 13 italic')     # (*sg.DEFAULT_FONT, 'italic')
+    font_ita  = ('Mono 13 bold')       # (*sg.DEFAULT_FONT, 'bold')
+    
+    list_of_Ts = []
+    for chunck in chuncks:
+        if type(chunck) is str:     list_of_Ts.append(sg.T(chunck, font=font_norm, size=(len(chunck), 1), pad=(0,0)))
+        elif type(chunck) is spec:
+            if chunck.char == '*':  list_of_Ts.append(sg.T(chunck.text, font=font_ita, pad=(0,0), size=(len(chunck.text), 1)))
+            if chunck.char == '**': list_of_Ts.append(sg.T(chunck.text, font=font_bold,  pad=(0,0), size=(len(chunck.text), 1)))
+    return list_of_Ts
+
+
 def mini_GUI():
     my_font = ("Helvetica", 12)
     my_font2 = ("Helvetica", 12, "bold")
     my_font3 = ("Helvetica", 15, "bold")
+    my_font4 = ("Mono", 18, "bold")
 
-
-    layout = [
-       [
-           sg.Column(layout=[
+    def make_tab(word):
+        return [[
+            sg.Column(layout=[
                 [sg.T('debug', font=my_font, text_color='blue')],
-                [sg.ML(size=(70-15,20), key='debug')],
+                [sg.ML(size=(70-15, 15), key=f'-{word}-debug-')],
                 [sg.T('error', font=my_font, text_color='red')],
-                [sg.ML(size=(70-15,20), key='error')],
-            ])
-           ,sg.T('            ')
-           ,sg.Column(layout=[
+                [sg.ML(size=(70-15, 15), key=f'-{word}-error-')],
+            ]),
+            sg.T('            '), sg.Column(layout=[
                 [sg.T('warning', font=my_font2)],
-                [sg.ML(size=(70-12,20), key='warning')],
+                [sg.ML(size=(70-12, 15), key=f'-{word}-warning-')],
                 [sg.T('info', font=my_font2)],
-                [sg.ML(size=(70-12,20), key='info')],
+                [sg.ML(size=(70-12, 15), key=f'-{word}-info-')],
             ]),
-           sg.Column(layout=[
+            sg.Column(layout=[
                 [sg.T('warning_info', font=my_font3)],
-                [sg.ML(size=(110,42), key='warning_info')],
+                [sg.ML(size=(110, 42-8), key=f'-{word}-warning_info-')],
             ]),
-           
+        ]]
+    layout = [
+        [ sg.TabGroup(  [[
+                            sg.Tab('README', make_tab('README')),
+                            sg.Tab('CALL_REF', make_tab('CALL_REF'))
+                        ]]
+                     )
         ]
     ]
-    window = sg.Window('We are live! Again! --- ' + 'Completed making {}'.format(OUTPUT_FILENAME), [
-        [sg.T(size=(25,1), font=my_font, key='-compile-time-')]
-        ,[  
+
+    window = sg.Window('We are live! Again! --- ' + 'Completed making            {}, {}'.format(os.path.basename(README_OFILENAME), os.path.basename(CALL_REFERENCE_OFILENAME)), [
+        [sg.T(size=(25,1), font=my_font, key='-compile-time-')],
+        [sg.T(f'The PySimpleGUI module being processed is {sg}')],
+        [  
             sg.B('Run again (F1)', key='-run-')
             ,sg.CB('show time in logs (F2)', False, key='show_time')
             ,sg.CB('Logs with Color (F3)', True, key='use_psg_color')
+            ,sg.B('open call ref', key='-open_call_ref-')
+            ,sg.B('open readme.txt', key='-open_readme.txt-')
+            ,sg.B('open "db folder"', key='-open_db_folder-')
+            ,sg.T(' '*30)
+            ,sg.Col([
+                    # [sg.T('output name for call_ref markdown file', key=(15,1)), sg.I(key='')],
+                    [*md2psg('markdown outputFileName *FOR* **readme  **: '), sg.I(README_OFILENAME, key='md1'), sg.B('open in explorer', key='open in explorer_readme')],
+                    [*md2psg('markdown outputFileName *FOR* **call ref**: '), sg.I(CALL_REFERENCE_OFILENAME, key='md2'), sg.B('open in explorer', key='open in explorer_calref')]
+                ])
         ]
         ,*layout
     ], resizable=True, finalize=True, location=(0,0), return_keyboard_events = True)
+    
+    def update_time_in_GUI(): window['-compile-time-'](datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S.%f'))
 
     def update_compilation_in_psg(values):
         # get results
-        results = compile_all_stuff(use_psg_color=values['use_psg_color'], show_time=values['show_time'])
+        result_readme, result_call_ref = compile_all_stuff(use_psg_color=values['use_psg_color'], show_time=values['show_time'])
 
-        # UPDATE GUI
-        curr_time = lambda : datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S.%f')
-        window['-compile-time-'](curr_time())
-        for key, txt in zip('error warning info debug'.split(' '), results[:4]):
-            window[key]('\n'.join(txt))
-        # colors warning_info
-        window['warning_info'].update('')
+        # DO 2_readme
+        window['-README-error-']('\n'.join(result_readme[0]))
+        window['-README-warning-']('\n'.join(result_readme[1]))
+        window['-README-info-']('\n'.join(result_readme[2]))
+        window['-README-debug-']('\n'.join(result_readme[3]))
+        # /// colors warning_info
+        window['-README-warning_info-'].update('')
         if values['use_psg_color']:
-            for text, color in results[-1]:
-                window['warning_info'].print(text, text_color=color)
+            for text, color in result_readme[-1]:
+                window['-README-warning_info-'].print(text, text_color=color)
         else:
-            window['warning_info']('\n'.join(results[-1]))
+            window['-README-warning_info-']('\n'.join(result_readme[-1]))
+        
+        # DO 5_cal_ref
+        window['-CALL_REF-error-']('\n'.join(result_call_ref[0]))
+        window['-CALL_REF-warning-']('\n'.join(result_call_ref[1]))
+        window['-CALL_REF-info-']('\n'.join(result_call_ref[2]))
+        window['-CALL_REF-debug-']('\n'.join(result_call_ref[3]))
+        # /// colors warning_info
+        window['-CALL_REF-warning_info-'].update('')
+        if values['use_psg_color']:
+            for text, color in result_call_ref[-1]:
+                window['-CALL_REF-warning_info-'].print(text, text_color=color)
+        else:
+            window['-CALL_REF-warning_info-']('\n'.join(result_call_ref[-1]))
+
+        # ~~~~~~~~~~~~
+        # GUI updating
+        # ~~~~~~~~~~~~
+        update_time_in_GUI()
 
     update_compilation_in_psg({'use_psg_color':not False, 'show_time':False})
     while True:
         event, values = window()
-        if event in ('Exit', None): break
 
-        # print(event)
-        if event == '-run-' or 'F1' in event: update_compilation_in_psg(values)
+        # print(values)
+        if event in ('Exit', None):
+            APP_CONFIGS['README_FILENAME'], APP_CONFIGS['CALL_REFERENCE_FILENAME'] = window['md1'].get(), window['md2'].get()
+            save_configs(APP_CONFIGS)
+            break
+        
+        print('PSG event>', event)
+
+        # buttons
+        if event == '-run-':              update_compilation_in_psg(values)
+        if event == '-open_readme.txt-':  openfile(README_OFILENAME)
+        if event == '-open_call_ref-':    openfile(CALL_REFERENCE_OFILENAME)
+        if event == '-open_db_folder-':   opendir(cd)
+        if event == '-open_github_gallery-':   opendir(cd)
+        if event == 'open in explorer_readme':    opendir(os.path.dirname(os.path.join(cd, values['md1'])))
+        if event == 'open in explorer_calref':   opendir(os.path.dirname(os.path.join(cd, values['md2'])))
+        # hotkeys
+        if 'F1' in event: update_compilation_in_psg(values)
         if 'F2' in event: window['show_time'](not values['show_time'])
         if 'F3' in event: window['use_psg_color'](not values['use_psg_color'])
 
     window.close()
 
 
-if enable_popup:
-    import PySimpleGUI as sg
-
+if __name__ == '__main__':
     mini_GUI()
-    # sg.PopupScrolled('Completed making {}'.format(OUTPUT_FILENAME), ''.join(lines), size=(80,50))
+    # sg.PopupScrolled('Completed making {}'.format(README_OFILENAME), ''.join(lines), size=(80,50))
