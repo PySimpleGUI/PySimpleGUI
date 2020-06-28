@@ -1,9 +1,11 @@
-import PySimpleGUIlib;sg = PySimpleGUIlib
+import PySimpleGUI as sg
 import datetime, inspect
+
+module_to_process = sg
 
 """ 
     Create All Possible Tags
-    Will output to STDOUT all of the different tags for classes, members and functions for a given PySimpleGUIlib.py
+    Will output to STDOUT all of the different tags for classes, members and functions for a given PySimpleGUI.py
     file.  Functions that begin with _ are filtered out from the list.
     Displays the results in a PySimpleGUI window which can be used to copy and paste into other places.
 """
@@ -27,7 +29,7 @@ def valid_field(pair):
 
 
 #                                                                                       # ]
-psg_members  = [i for i in inspect.getmembers(PySimpleGUIlib) if valid_field(i)]        # ] 
+psg_members  = [i for i in inspect.getmembers(module_to_process) if valid_field(i)]        # ]
 psg_funcs    = [o[0] for o in psg_members if inspect.isfunction(o[1])]                  # ] Grabing PSG objects
 psg_classes  = [o for o in psg_members if inspect.isclass(o[1])]                        # ] 
 # psg_props    = [o for o in psg_members if type(o[1]).__name__ == 'property']          # ]
@@ -46,12 +48,12 @@ for aclass in psg_classes:
         continue
     
     # print standart things:
-    log(f'### {class_name} Element ')
+    log(f'## {class_name} Element ')
     log(f'<!-- <+{class_name}.doc+> -->')
     log(f'<!-- <+{class_name}.__init__+> -->\n')
 
     # print all public methods:
-    log('\n'.join([f"#### {name}\n<!-- <+{class_name}.{name}+> -->\n"
+    log('\n'.join([f"### {name}\n<!-- <+{class_name}.{name}+> -->\n"
                     for name, obj in inspect.getmembers(aclass)
                     if not name.startswith('_')  ]))
 

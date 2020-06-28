@@ -1,0 +1,352 @@
+[
+  {
+    "message_type": "info",
+    "message_text": "STARTING",
+    "message_time": 2
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"EasyPrintClose\"",
+    "message_time": 3
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"PrintClose\"",
+    "message_time": 4
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"EasyPrintClose\"",
+    "message_time": 5
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"PrintClose\"",
+    "message_time": 6
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"main\"",
+    "message_time": 7
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"main\"",
+    "message_time": 8
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme\"",
+    "message_time": 9
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_background_color\"",
+    "message_time": 10
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_border_width\"",
+    "message_time": 11
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_button_color\"",
+    "message_time": 12
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_element_background_color\"",
+    "message_time": 13
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_element_text_color\"",
+    "message_time": 14
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_input_background_color\"",
+    "message_time": 15
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_input_text_color\"",
+    "message_time": 16
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_list\"",
+    "message_time": 17
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_progress_bar_border_width\"",
+    "message_time": 18
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_progress_bar_color\"",
+    "message_time": 19
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_slider_border_width\"",
+    "message_time": 20
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_slider_color\"",
+    "message_time": 21
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_text_color\"",
+    "message_time": 22
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"theme_text_element_background_color\"",
+    "message_time": 23
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"ListOfLookAndFeelValues\"",
+    "message_time": 24
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"ListOfLookAndFeelValues\"",
+    "message_time": 25
+  },
+  {
+    "message_type": "info",
+    "message_text": "\n=================================================\nSTARTING TO INSERT markdown text into 2_readme.md\n=================================================\n",
+    "message_time": 26
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Button.doc+> -->', 'str')",
+    "message_time": 27
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+ButtonMenu.doc+> -->', 'str')",
+    "message_time": 28
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Canvas.doc+> -->', 'str')",
+    "message_time": 29
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Checkbox.doc+> -->', 'str')",
+    "message_time": 30
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Column.doc+> -->', 'str')",
+    "message_time": 31
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Combo.doc+> -->', 'str')",
+    "message_time": 32
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Frame.doc+> -->', 'str')",
+    "message_time": 33
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Graph.doc+> -->', 'str')",
+    "message_time": 34
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+HorizontalSeparator.doc+> -->', 'str')",
+    "message_time": 35
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Image.doc+> -->', 'str')",
+    "message_time": 36
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+InputText.doc+> -->', 'str')",
+    "message_time": 37
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Listbox.doc+> -->', 'str')",
+    "message_time": 38
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Menu.doc+> -->', 'str')",
+    "message_time": 39
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Multiline.doc+> -->', 'str')",
+    "message_time": 40
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+OptionMenu.doc+> -->', 'str')",
+    "message_time": 41
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Output.doc+> -->', 'str')",
+    "message_time": 42
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Pane.doc+> -->', 'str')",
+    "message_time": 43
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+ProgressBar.doc+> -->', 'str')",
+    "message_time": 44
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Radio.doc+> -->', 'str')",
+    "message_time": 45
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Slider.doc+> -->', 'str')",
+    "message_time": 46
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Spin.doc+> -->', 'str')",
+    "message_time": 47
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+StatusBar.doc+> -->', 'str')",
+    "message_time": 48
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+SystemTray.doc+> -->', 'str')",
+    "message_time": 49
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"Read\"",
+    "message_time": 50
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"Read\"",
+    "message_time": 51
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Tab.doc+> -->', 'str')",
+    "message_time": 52
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+TabGroup.doc+> -->', 'str')",
+    "message_time": 53
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Table.doc+> -->', 'str')",
+    "message_time": 54
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Text.doc+> -->', 'str')",
+    "message_time": 55
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Tree.doc+> -->', 'str')",
+    "message_time": 56
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+TreeData.doc+> -->', 'str')",
+    "message_time": 57
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"Node\"",
+    "message_time": 58
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+VerticalSeparator.doc+> -->', 'str')",
+    "message_time": 59
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Window.doc+> -->', 'str')",
+    "message_time": 60
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"AddRow\"",
+    "message_time": 61
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"AddRow\"",
+    "message_time": 62
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"get_screen_size\"",
+    "message_time": 63
+  },
+  {
+    "message_type": "info",
+    "message_text": "a_tag = ('<!-- <+Window.doc+> -->', 'str')",
+    "message_time": 64
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"AddRow\"",
+    "message_time": 65
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"AddRow\"",
+    "message_time": 66
+  },
+  {
+    "message_type": "warning",
+    "message_text": "Boy=======    We got empty md_table for \"get_screen_size\"",
+    "message_time": 67
+  },
+  {
+    "message_type": "info",
+    "message_text": "DONE 829 TAGS:\n<!-- <+func.CalendarButton+> --> - COMPLETE\n<!-- <+func.Cancel+> --> - COMPLETE\n<!-- <+func.ColorChooserButton+> --> - COMPLETE\n<!-- <+func.Debug+> --> - COMPLETE\n<!-- <+func.DummyButton+> --> - COMPLETE\n<!-- <+func.Exit+> --> - COMPLETE\n<!-- <+func.FileBrowse+> --> - COMPLETE\n<!-- <+func.FileSaveAs+> --> - COMPLETE\n<!-- <+func.FilesBrowse+> --> - COMPLETE\n<!-- <+func.FolderBrowse+> --> - COMPLETE\n<!-- <+func.Help+> --> - COMPLETE\n<!-- <+func.No+> --> - COMPLETE\n<!-- <+func.OK+> --> - COMPLETE\n<!-- <+func.ObjToString+> --> - COMPLETE\n<!-- <+func.ObjToStringSingleObj+> --> - COMPLETE\n<!-- <+func.Ok+> --> - COMPLETE\n<!-- <+func.Open+> --> - COMPLETE\n<!-- <+func.Quit+> --> - COMPLETE\n<!-- <+func.RealtimeButton+> --> - COMPLETE\n<!-- <+func.Save+> --> - COMPLETE\n<!-- <+func.SaveAs+> --> - COMPLETE\n<!-- <+func.Submit+> --> - COMPLETE\n<!-- <+func.Yes+> --> - COMPLETE\n<!-- <+func.RButton+> --> - COMPLETE\n<!-- <+func.ReadButton+> --> - COMPLETE\n<!-- <+func.CButton+> --> - COMPLETE\n<!-- <+func.CloseButton+> --> - COMPLETE\n<!-- <+func.easy_print+> --> - COMPLETE\n<!-- <+func.easy_print_close+> --> - COMPLETE\n<!-- <+func.eprint+> --> - COMPLETE\n<!-- <+func.sgprint+> --> - COMPLETE\n<!-- <+func.sgprint_close+> --> - COMPLETE\n<!-- <+func.EasyPrint+> --> - COMPLETE\n<!-- <+func.EasyPrintClose+> --> - COMPLETE\n<!-- <+func.Print+> --> - COMPLETE\n<!-- <+func.PrintClose+> --> - COMPLETE\n<!-- <+func.cprint+> --> - COMPLETE\n<!-- <+func.cprint_set_output_destination+> --> - COMPLETE\n<!-- <+func.OneLineProgressMeter+> --> - COMPLETE\n<!-- <+func.OneLineProgressMeterCancel+> --> - COMPLETE\n<!-- <+func.one_line_progress_meter+> --> - COMPLETE\n<!-- <+func.one_line_progress_meter_cancel+> --> - COMPLETE\n<!-- <+func.Popup+> --> - COMPLETE\n<!-- <+func.PopupAnimated+> --> - COMPLETE\n<!-- <+func.PopupAnnoying+> --> - COMPLETE\n<!-- <+func.PopupAutoClose+> --> - COMPLETE\n<!-- <+func.PopupCancel+> --> - COMPLETE\n<!-- <+func.PopupError+> --> - COMPLETE\n<!-- <+func.PopupGetFile+> --> - COMPLETE\n<!-- <+func.PopupGetFolder+> --> - COMPLETE\n<!-- <+func.PopupGetText+> --> - COMPLETE\n<!-- <+func.PopupNoBorder+> --> - COMPLETE\n<!-- <+func.PopupNoButtons+> --> - COMPLETE\n<!-- <+func.PopupNoFrame+> --> - COMPLETE\n<!-- <+func.PopupNoTitlebar+> --> - COMPLETE\n<!-- <+func.PopupNoWait+> --> - COMPLETE\n<!-- <+func.PopupNonBlocking+> --> - COMPLETE\n<!-- <+func.PopupOK+> --> - COMPLETE\n<!-- <+func.PopupOKCancel+> --> - COMPLETE\n<!-- <+func.PopupQuick+> --> - COMPLETE\n<!-- <+func.PopupQuickMessage+> --> - COMPLETE\n<!-- <+func.PopupScrolled+> --> - COMPLETE\n<!-- <+func.PopupTimed+> --> - COMPLETE\n<!-- <+func.PopupYesNo+> --> - COMPLETE\n<!-- <+func.popup+> --> - COMPLETE\n<!-- <+func.popup_animated+> --> - COMPLETE\n<!-- <+func.popup_annoying+> --> - COMPLETE\n<!-- <+func.popup_auto_close+> --> - COMPLETE\n<!-- <+func.popup_cancel+> --> - COMPLETE\n<!-- <+func.popup_error+> --> - COMPLETE\n<!-- <+func.popup_get_date+> --> - COMPLETE\n<!-- <+func.popup_get_file+> --> - COMPLETE\n<!-- <+func.popup_get_folder+> --> - COMPLETE\n<!-- <+func.popup_get_text+> --> - COMPLETE\n<!-- <+func.popup_no_border+> --> - COMPLETE\n<!-- <+func.popup_no_buttons+> --> - COMPLETE\n<!-- <+func.popup_no_frame+> --> - COMPLETE\n<!-- <+func.popup_no_titlebar+> --> - COMPLETE\n<!-- <+func.popup_no_wait+> --> - COMPLETE\n<!-- <+func.popup_non_blocking+> --> - COMPLETE\n<!-- <+func.popup_notify+> --> - COMPLETE\n<!-- <+func.popup_ok+> --> - COMPLETE\n<!-- <+func.popup_ok_cancel+> --> - COMPLETE\n<!-- <+func.popup_quick+> --> - COMPLETE\n<!-- <+func.popup_quick_message+> --> - COMPLETE\n<!-- <+func.popup_scrolled+> --> - COMPLETE\n<!-- <+func.popup_timed+> --> - COMPLETE\n<!-- <+func.popup_yes_no+> --> - COMPLETE\n<!-- <+func.sprint+> --> - COMPLETE\n<!-- <+func.ScrolledTextBox+> --> - COMPLETE\n<!-- <+func.obj_to_string+> --> - COMPLETE\n<!-- <+func.obj_to_string_single_obj+> --> - COMPLETE\n<!-- <+func.set_global_icon+> --> - COMPLETE\n<!-- <+func.set_options+> --> - COMPLETE\n<!-- <+func.SetGlobalIcon+> --> - COMPLETE\n<!-- <+func.SetOptions+> --> - COMPLETE\n<!-- <+func.main+> --> - COMPLETE\n<!-- <+func.test+> --> - COMPLETE\n<!-- <+func.show_debugger_popout_window+> --> - COMPLETE\n<!-- <+func.show_debugger_window+> --> - COMPLETE\n<!-- <+func.theme+> --> - COMPLETE\n<!-- <+func.theme_add_new+> --> - COMPLETE\n<!-- <+func.theme_background_color+> --> - COMPLETE\n<!-- <+func.theme_border_width+> --> - COMPLETE\n<!-- <+func.theme_button_color+> --> - COMPLETE\n<!-- <+func.theme_element_background_color+> --> - COMPLETE\n<!-- <+func.theme_element_text_color+> --> - COMPLETE\n<!-- <+func.theme_input_background_color+> --> - COMPLETE\n<!-- <+func.theme_input_text_color+> --> - COMPLETE\n<!-- <+func.theme_list+> --> - COMPLETE\n<!-- <+func.theme_previewer+> --> - COMPLETE\n<!-- <+func.theme_progress_bar_border_width+> --> - COMPLETE\n<!-- <+func.theme_progress_bar_color+> --> - COMPLETE\n<!-- <+func.theme_slider_border_width+> --> - COMPLETE\n<!-- <+func.theme_slider_color+> --> - COMPLETE\n<!-- <+func.theme_text_color+> --> - COMPLETE\n<!-- <+func.theme_text_element_background_color+> --> - COMPLETE\n<!-- <+func.FillFormWithValues+> --> - COMPLETE\n<!-- <+func.fill_form_with_values+> --> - COMPLETE\n<!-- <+func.ChangeLookAndFeel+> --> - COMPLETE\n<!-- <+func.ListOfLookAndFeelValues+> --> - COMPLETE\n<!-- <+func.preview_all_look_and_feel_themes+> --> - COMPLETE\n<!-- <+func.list_of_look_and_feel_values+> --> - COMPLETE\n<!-- <+func.change_look_and_feel+> --> - COMPLETE\n<!-- <+Button.__init__+> --> - COMPLETE\n<!-- <+Button.Click+> --> - COMPLETE\n<!-- <+Button.GetText+> --> - COMPLETE\n<!-- <+Button.SetFocus+> --> - COMPLETE\n<!-- <+Button.SetTooltip+> --> - COMPLETE\n<!-- <+Button.Update+> --> - COMPLETE\n<!-- <+Button.bind+> --> - COMPLETE\n<!-- <+Button.click+> --> - COMPLETE\n<!-- <+Button.expand+> --> - COMPLETE\n<!-- <+Button.get_size+> --> - COMPLETE\n<!-- <+Button.get_text+> --> - COMPLETE\n<!-- <+Button.hide_row+> --> - COMPLETE\n<!-- <+Button.set_cursor+> --> - COMPLETE\n<!-- <+Button.set_focus+> --> - COMPLETE\n<!-- <+Button.set_size+> --> - COMPLETE\n<!-- <+Button.set_tooltip+> --> - COMPLETE\n<!-- <+Button.set_vscroll_position+> --> - COMPLETE\n<!-- <+Button.unbind+> --> - COMPLETE\n<!-- <+Button.unhide_row+> --> - COMPLETE\n<!-- <+Button.update+> --> - COMPLETE\n<!-- <+ButtonMenu.__init__+> --> - COMPLETE\n<!-- <+ButtonMenu.Click+> --> - COMPLETE\n<!-- <+ButtonMenu.SetFocus+> --> - COMPLETE\n<!-- <+ButtonMenu.SetTooltip+> --> - COMPLETE\n<!-- <+ButtonMenu.Update+> --> - COMPLETE\n<!-- <+ButtonMenu.bind+> --> - COMPLETE\n<!-- <+ButtonMenu.expand+> --> - COMPLETE\n<!-- <+ButtonMenu.get_size+> --> - COMPLETE\n<!-- <+ButtonMenu.hide_row+> --> - COMPLETE\n<!-- <+ButtonMenu.set_cursor+> --> - COMPLETE\n<!-- <+ButtonMenu.set_focus+> --> - COMPLETE\n<!-- <+ButtonMenu.set_size+> --> - COMPLETE\n<!-- <+ButtonMenu.set_tooltip+> --> - COMPLETE\n<!-- <+ButtonMenu.unbind+> --> - COMPLETE\n<!-- <+ButtonMenu.set_vscroll_position+> --> - COMPLETE\n<!-- <+ButtonMenu.unhide_row+> --> - COMPLETE\n<!-- <+ButtonMenu.update+> --> - COMPLETE\n<!-- <+Canvas.__init__+> --> - COMPLETE\n<!-- <+Canvas.SetFocus+> --> - COMPLETE\n<!-- <+Canvas.SetTooltip+> --> - COMPLETE\n<!-- <+Canvas.TKCanvas+> --> - COMPLETE\n<!-- <+Canvas.bind+> --> - COMPLETE\n<!-- <+Canvas.expand+> --> - COMPLETE\n<!-- <+Canvas.get_size+> --> - COMPLETE\n<!-- <+Canvas.hide_row+> --> - COMPLETE\n<!-- <+Canvas.set_cursor+> --> - COMPLETE\n<!-- <+Canvas.set_focus+> --> - COMPLETE\n<!-- <+Canvas.set_size+> --> - COMPLETE\n<!-- <+Canvas.set_tooltip+> --> - COMPLETE\n<!-- <+Canvas.tk_canvas+> --> - COMPLETE\n<!-- <+Canvas.unbind+> --> - COMPLETE\n<!-- <+Canvas.unhide_row+> --> - COMPLETE\n<!-- <+Checkbox.__init__+> --> - COMPLETE\n<!-- <+Checkbox.Get+> --> - COMPLETE\n<!-- <+Checkbox.SetFocus+> --> - COMPLETE\n<!-- <+Checkbox.SetTooltip+> --> - COMPLETE\n<!-- <+Checkbox.Update+> --> - COMPLETE\n<!-- <+Checkbox.bind+> --> - COMPLETE\n<!-- <+Checkbox.expand+> --> - COMPLETE\n<!-- <+Checkbox.get+> --> - COMPLETE\n<!-- <+Checkbox.get_size+> --> - COMPLETE\n<!-- <+Checkbox.hide_row+> --> - COMPLETE\n<!-- <+Checkbox.set_cursor+> --> - COMPLETE\n<!-- <+Checkbox.set_focus+> --> - COMPLETE\n<!-- <+Checkbox.set_size+> --> - COMPLETE\n<!-- <+Checkbox.set_tooltip+> --> - COMPLETE\n<!-- <+Checkbox.unbind+> --> - COMPLETE\n<!-- <+Checkbox.unhide_row+> --> - COMPLETE\n<!-- <+Checkbox.update+> --> - COMPLETE\n<!-- <+Column.__init__+> --> - COMPLETE\n<!-- <+Column.AddRow+> --> - COMPLETE\n<!-- <+Column.Layout+> --> - COMPLETE\n<!-- <+Column.SetFocus+> --> - COMPLETE\n<!-- <+Column.SetTooltip+> --> - COMPLETE\n<!-- <+Column.Update+> --> - COMPLETE\n<!-- <+Column.add_row+> --> - COMPLETE\n<!-- <+Column.bind+> --> - COMPLETE\n<!-- <+Column.expand+> --> - COMPLETE\n<!-- <+Column.get_size+> --> - COMPLETE\n<!-- <+Column.hide_row+> --> - COMPLETE\n<!-- <+Column.layout+> --> - COMPLETE\n<!-- <+Column.set_cursor+> --> - COMPLETE\n<!-- <+Column.set_focus+> --> - COMPLETE\n<!-- <+Column.set_size+> --> - COMPLETE\n<!-- <+Column.set_tooltip+> --> - COMPLETE\n<!-- <+Column.unbind+> --> - COMPLETE\n<!-- <+Column.set_vscroll_position+> --> - COMPLETE\n<!-- <+Column.unhide_row+> --> - COMPLETE\n<!-- <+Column.update+> --> - COMPLETE\n<!-- <+Combo.__init__+> --> - COMPLETE\n<!-- <+Combo.Get+> --> - COMPLETE\n<!-- <+Combo.SetFocus+> --> - COMPLETE\n<!-- <+Combo.SetTooltip+> --> - COMPLETE\n<!-- <+Combo.Update+> --> - COMPLETE\n<!-- <+Combo.bind+> --> - COMPLETE\n<!-- <+Combo.expand+> --> - COMPLETE\n<!-- <+Combo.get+> --> - COMPLETE\n<!-- <+Combo.get_size+> --> - COMPLETE\n<!-- <+Combo.hide_row+> --> - COMPLETE\n<!-- <+Combo.set_cursor+> --> - COMPLETE\n<!-- <+Combo.set_focus+> --> - COMPLETE\n<!-- <+Combo.set_size+> --> - COMPLETE\n<!-- <+Combo.set_tooltip+> --> - COMPLETE\n<!-- <+Combo.unbind+> --> - COMPLETE\n<!-- <+Combo.unhide_row+> --> - COMPLETE\n<!-- <+Combo.update+> --> - COMPLETE\n<!-- <+Frame.__init__+> --> - COMPLETE\n<!-- <+Frame.AddRow+> --> - COMPLETE\n<!-- <+Frame.Layout+> --> - COMPLETE\n<!-- <+Frame.SetFocus+> --> - COMPLETE\n<!-- <+Frame.SetTooltip+> --> - COMPLETE\n<!-- <+Frame.Update+> --> - COMPLETE\n<!-- <+Frame.add_row+> --> - COMPLETE\n<!-- <+Frame.bind+> --> - COMPLETE\n<!-- <+Frame.expand+> --> - COMPLETE\n<!-- <+Frame.get_size+> --> - COMPLETE\n<!-- <+Frame.hide_row+> --> - COMPLETE\n<!-- <+Frame.layout+> --> - COMPLETE\n<!-- <+Frame.set_cursor+> --> - COMPLETE\n<!-- <+Frame.set_focus+> --> - COMPLETE\n<!-- <+Frame.set_size+> --> - COMPLETE\n<!-- <+Frame.set_tooltip+> --> - COMPLETE\n<!-- <+Frame.unbind+> --> - COMPLETE\n<!-- <+Frame.unhide_row+> --> - COMPLETE\n<!-- <+Frame.update+> --> - COMPLETE\n<!-- <+Graph.__init__+> --> - COMPLETE\n<!-- <+Graph.BringFigureToFront+> --> - COMPLETE\n<!-- <+Graph.DeleteFigure+> --> - COMPLETE\n<!-- <+Graph.DrawArc+> --> - COMPLETE\n<!-- <+Graph.DrawCircle+> --> - COMPLETE\n<!-- <+Graph.DrawImage+> --> - COMPLETE\n<!-- <+Graph.DrawLine+> --> - COMPLETE\n<!-- <+Graph.DrawOval+> --> - COMPLETE\n<!-- <+Graph.DrawPoint+> --> - COMPLETE\n<!-- <+Graph.DrawPolygon+> --> - COMPLETE\n<!-- <+Graph.DrawRectangle+> --> - COMPLETE\n<!-- <+Graph.DrawText+> --> - COMPLETE\n<!-- <+Graph.Erase+> --> - COMPLETE\n<!-- <+Graph.GetBoundingBox+> --> - COMPLETE\n<!-- <+Graph.GetFiguresAtLocation+> --> - COMPLETE\n<!-- <+Graph.Move+> --> - COMPLETE\n<!-- <+Graph.MoveFigure+> --> - COMPLETE\n<!-- <+Graph.RelocateFigure+> --> - COMPLETE\n<!-- <+Graph.SendFigureToBack+> --> - COMPLETE\n<!-- <+Graph.SetFocus+> --> - COMPLETE\n<!-- <+Graph.SetTooltip+> --> - COMPLETE\n<!-- <+Graph.TKCanvas+> --> - COMPLETE\n<!-- <+Graph.Update+> --> - COMPLETE\n<!-- <+Graph.bind+> --> - COMPLETE\n<!-- <+Graph.bring_figure_to_front+> --> - COMPLETE\n<!-- <+Graph.change_coordinates+> --> - COMPLETE\n<!-- <+Graph.delete_figure+> --> - COMPLETE\n<!-- <+Graph.draw_arc+> --> - COMPLETE\n<!-- <+Graph.draw_circle+> --> - COMPLETE\n<!-- <+Graph.draw_image+> --> - COMPLETE\n<!-- <+Graph.draw_line+> --> - COMPLETE\n<!-- <+Graph.draw_oval+> --> - COMPLETE\n<!-- <+Graph.draw_point+> --> - COMPLETE\n<!-- <+Graph.draw_polygon+> --> - COMPLETE\n<!-- <+Graph.draw_rectangle+> --> - COMPLETE\n<!-- <+Graph.draw_text+> --> - COMPLETE\n<!-- <+Graph.erase+> --> - COMPLETE\n<!-- <+Graph.expand+> --> - COMPLETE\n<!-- <+Graph.get_bounding_box+> --> - COMPLETE\n<!-- <+Graph.get_figures_at_location+> --> - COMPLETE\n<!-- <+Graph.get_size+> --> - COMPLETE\n<!-- <+Graph.hide_row+> --> - COMPLETE\n<!-- <+Graph.move+> --> - COMPLETE\n<!-- <+Graph.move_figure+> --> - COMPLETE\n<!-- <+Graph.relocate_figure+> --> - COMPLETE\n<!-- <+Graph.send_figure_to_back+> --> - COMPLETE\n<!-- <+Graph.set_cursor+> --> - COMPLETE\n<!-- <+Graph.set_focus+> --> - COMPLETE\n<!-- <+Graph.set_size+> --> - COMPLETE\n<!-- <+Graph.set_tooltip+> --> - COMPLETE\n<!-- <+Graph.tk_canvas+> --> - COMPLETE\n<!-- <+Graph.unbind+> --> - COMPLETE\n<!-- <+Graph.unhide_row+> --> - COMPLETE\n<!-- <+Graph.update+> --> - COMPLETE\n<!-- <+HorizontalSeparator.__init__+> --> - COMPLETE\n<!-- <+HorizontalSeparator.SetFocus+> --> - COMPLETE\n<!-- <+HorizontalSeparator.SetTooltip+> --> - COMPLETE\n<!-- <+HorizontalSeparator.bind+> --> - COMPLETE\n<!-- <+HorizontalSeparator.expand+> --> - COMPLETE\n<!-- <+HorizontalSeparator.get_size+> --> - COMPLETE\n<!-- <+HorizontalSeparator.hide_row+> --> - COMPLETE\n<!-- <+HorizontalSeparator.set_cursor+> --> - COMPLETE\n<!-- <+HorizontalSeparator.set_focus+> --> - COMPLETE\n<!-- <+HorizontalSeparator.set_size+> --> - COMPLETE\n<!-- <+HorizontalSeparator.set_tooltip+> --> - COMPLETE\n<!-- <+HorizontalSeparator.unbind+> --> - COMPLETE\n<!-- <+HorizontalSeparator.unhide_row+> --> - COMPLETE\n<!-- <+Image.__init__+> --> - COMPLETE\n<!-- <+Image.SetFocus+> --> - COMPLETE\n<!-- <+Image.SetTooltip+> --> - COMPLETE\n<!-- <+Image.Update+> --> - COMPLETE\n<!-- <+Image.UpdateAnimation+> --> - COMPLETE\n<!-- <+Image.bind+> --> - COMPLETE\n<!-- <+Image.expand+> --> - COMPLETE\n<!-- <+Image.get_size+> --> - COMPLETE\n<!-- <+Image.hide_row+> --> - COMPLETE\n<!-- <+Image.set_cursor+> --> - COMPLETE\n<!-- <+Image.set_focus+> --> - COMPLETE\n<!-- <+Image.set_size+> --> - COMPLETE\n<!-- <+Image.set_tooltip+> --> - COMPLETE\n<!-- <+Image.unbind+> --> - COMPLETE\n<!-- <+Image.unhide_row+> --> - COMPLETE\n<!-- <+Image.update+> --> - COMPLETE\n<!-- <+Image.update_animation+> --> - COMPLETE\n<!-- <+Image.update_animation_no_buffering+> --> - COMPLETE\n<!-- <+InputText.__init__+> --> - COMPLETE\n<!-- <+InputText.Get+> --> - COMPLETE\n<!-- <+InputText.SetFocus+> --> - COMPLETE\n<!-- <+InputText.SetTooltip+> --> - COMPLETE\n<!-- <+InputText.Update+> --> - COMPLETE\n<!-- <+InputText.bind+> --> - COMPLETE\n<!-- <+InputText.expand+> --> - COMPLETE\n<!-- <+InputText.get+> --> - COMPLETE\n<!-- <+InputText.get_size+> --> - COMPLETE\n<!-- <+InputText.hide_row+> --> - COMPLETE\n<!-- <+InputText.set_cursor+> --> - COMPLETE\n<!-- <+InputText.set_focus+> --> - COMPLETE\n<!-- <+InputText.set_size+> --> - COMPLETE\n<!-- <+InputText.set_tooltip+> --> - COMPLETE\n<!-- <+InputText.unbind+> --> - COMPLETE\n<!-- <+InputText.unhide_row+> --> - COMPLETE\n<!-- <+InputText.update+> --> - COMPLETE\n<!-- <+Listbox.__init__+> --> - COMPLETE\n<!-- <+Listbox.GetIndexes+> --> - COMPLETE\n<!-- <+Listbox.GetListValues+> --> - COMPLETE\n<!-- <+Listbox.SetFocus+> --> - COMPLETE\n<!-- <+Listbox.SetTooltip+> --> - COMPLETE\n<!-- <+Listbox.SetValue+> --> - COMPLETE\n<!-- <+Listbox.Update+> --> - COMPLETE\n<!-- <+Listbox.bind+> --> - COMPLETE\n<!-- <+Listbox.expand+> --> - COMPLETE\n<!-- <+Listbox.get+> --> - COMPLETE\n<!-- <+Listbox.get_indexes+> --> - COMPLETE\n<!-- <+Listbox.get_list_values+> --> - COMPLETE\n<!-- <+Listbox.get_size+> --> - COMPLETE\n<!-- <+Listbox.hide_row+> --> - COMPLETE\n<!-- <+Listbox.set_cursor+> --> - COMPLETE\n<!-- <+Listbox.set_focus+> --> - COMPLETE\n<!-- <+Listbox.set_size+> --> - COMPLETE\n<!-- <+Listbox.set_tooltip+> --> - COMPLETE\n<!-- <+Listbox.set_value+> --> - COMPLETE\n<!-- <+Listbox.set_vscroll_position+> --> - COMPLETE\n<!-- <+Listbox.unbind+> --> - COMPLETE\n<!-- <+Listbox.unhide_row+> --> - COMPLETE\n<!-- <+Listbox.update+> --> - COMPLETE\n<!-- <+Menu.__init__+> --> - COMPLETE\n<!-- <+Menu.SetFocus+> --> - COMPLETE\n<!-- <+Menu.SetTooltip+> --> - COMPLETE\n<!-- <+Menu.Update+> --> - COMPLETE\n<!-- <+Menu.bind+> --> - COMPLETE\n<!-- <+Menu.expand+> --> - COMPLETE\n<!-- <+Menu.get_size+> --> - COMPLETE\n<!-- <+Menu.hide_row+> --> - COMPLETE\n<!-- <+Menu.set_cursor+> --> - COMPLETE\n<!-- <+Menu.set_focus+> --> - COMPLETE\n<!-- <+Menu.set_size+> --> - COMPLETE\n<!-- <+Menu.set_tooltip+> --> - COMPLETE\n<!-- <+Menu.unbind+> --> - COMPLETE\n<!-- <+Menu.unhide_row+> --> - COMPLETE\n<!-- <+Menu.update+> --> - COMPLETE\n<!-- <+Multiline.__init__+> --> - COMPLETE\n<!-- <+Multiline.Get+> --> - COMPLETE\n<!-- <+Multiline.SetFocus+> --> - COMPLETE\n<!-- <+Multiline.SetTooltip+> --> - COMPLETE\n<!-- <+Multiline.Update+> --> - COMPLETE\n<!-- <+Multiline.bind+> --> - COMPLETE\n<!-- <+Multiline.expand+> --> - COMPLETE\n<!-- <+Multiline.get+> --> - COMPLETE\n<!-- <+Multiline.get_size+> --> - COMPLETE\n<!-- <+Multiline.hide_row+> --> - COMPLETE\n<!-- <+Multiline.print+> --> - COMPLETE\n<!-- <+Multiline.set_cursor+> --> - COMPLETE\n<!-- <+Multiline.set_focus+> --> - COMPLETE\n<!-- <+Multiline.set_size+> --> - COMPLETE\n<!-- <+Multiline.set_tooltip+> --> - COMPLETE\n<!-- <+Multiline.set_vscroll_position+> --> - COMPLETE\n<!-- <+Multiline.unbind+> --> - COMPLETE\n<!-- <+Multiline.unhide_row+> --> - COMPLETE\n<!-- <+Multiline.update+> --> - COMPLETE\n<!-- <+OptionMenu.__init__+> --> - COMPLETE\n<!-- <+OptionMenu.SetFocus+> --> - COMPLETE\n<!-- <+OptionMenu.SetTooltip+> --> - COMPLETE\n<!-- <+OptionMenu.Update+> --> - COMPLETE\n<!-- <+OptionMenu.bind+> --> - COMPLETE\n<!-- <+OptionMenu.expand+> --> - COMPLETE\n<!-- <+OptionMenu.get_size+> --> - COMPLETE\n<!-- <+OptionMenu.hide_row+> --> - COMPLETE\n<!-- <+OptionMenu.set_cursor+> --> - COMPLETE\n<!-- <+OptionMenu.set_focus+> --> - COMPLETE\n<!-- <+OptionMenu.set_size+> --> - COMPLETE\n<!-- <+OptionMenu.set_tooltip+> --> - COMPLETE\n<!-- <+OptionMenu.set_vscroll_position+> --> - COMPLETE\n<!-- <+OptionMenu.unbind+> --> - COMPLETE\n<!-- <+OptionMenu.unhide_row+> --> - COMPLETE\n<!-- <+OptionMenu.update+> --> - COMPLETE\n<!-- <+Output.__init__+> --> - COMPLETE\n<!-- <+Output.Get+> --> - COMPLETE\n<!-- <+Output.SetFocus+> --> - COMPLETE\n<!-- <+Output.SetTooltip+> --> - COMPLETE\n<!-- <+Output.TKOut+> --> - COMPLETE\n<!-- <+Output.Update+> --> - COMPLETE\n<!-- <+Output.bind+> --> - COMPLETE\n<!-- <+Output.expand+> --> - COMPLETE\n<!-- <+Output.get_size+> --> - COMPLETE\n<!-- <+Output.hide_row+> --> - COMPLETE\n<!-- <+Output.set_cursor+> --> - COMPLETE\n<!-- <+Output.set_focus+> --> - COMPLETE\n<!-- <+Output.set_size+> --> - COMPLETE\n<!-- <+Output.set_tooltip+> --> - COMPLETE\n<!-- <+Output.tk_out+> --> - COMPLETE\n<!-- <+Output.set_vscroll_position+> --> - COMPLETE\n<!-- <+Output.unbind+> --> - COMPLETE\n<!-- <+Output.unhide_row+> --> - COMPLETE\n<!-- <+Output.update+> --> - COMPLETE\n<!-- <+Pane.__init__+> --> - COMPLETE\n<!-- <+Pane.SetFocus+> --> - COMPLETE\n<!-- <+Pane.SetTooltip+> --> - COMPLETE\n<!-- <+Pane.Update+> --> - COMPLETE\n<!-- <+Pane.bind+> --> - COMPLETE\n<!-- <+Pane.expand+> --> - COMPLETE\n<!-- <+Pane.get_size+> --> - COMPLETE\n<!-- <+Pane.hide_row+> --> - COMPLETE\n<!-- <+Pane.set_cursor+> --> - COMPLETE\n<!-- <+Pane.set_focus+> --> - COMPLETE\n<!-- <+Pane.set_size+> --> - COMPLETE\n<!-- <+Pane.set_tooltip+> --> - COMPLETE\n<!-- <+Pane.unbind+> --> - COMPLETE\n<!-- <+Pane.unhide_row+> --> - COMPLETE\n<!-- <+Pane.update+> --> - COMPLETE\n<!-- <+ProgressBar.__init__+> --> - COMPLETE\n<!-- <+ProgressBar.SetFocus+> --> - COMPLETE\n<!-- <+ProgressBar.SetTooltip+> --> - COMPLETE\n<!-- <+ProgressBar.Update+> --> - COMPLETE\n<!-- <+ProgressBar.UpdateBar+> --> - COMPLETE\n<!-- <+ProgressBar.bind+> --> - COMPLETE\n<!-- <+ProgressBar.expand+> --> - COMPLETE\n<!-- <+ProgressBar.get_size+> --> - COMPLETE\n<!-- <+ProgressBar.hide_row+> --> - COMPLETE\n<!-- <+ProgressBar.set_cursor+> --> - COMPLETE\n<!-- <+ProgressBar.set_focus+> --> - COMPLETE\n<!-- <+ProgressBar.set_size+> --> - COMPLETE\n<!-- <+ProgressBar.set_tooltip+> --> - COMPLETE\n<!-- <+ProgressBar.unbind+> --> - COMPLETE\n<!-- <+ProgressBar.unhide_row+> --> - COMPLETE\n<!-- <+ProgressBar.update+> --> - COMPLETE\n<!-- <+ProgressBar.update_bar+> --> - COMPLETE\n<!-- <+Radio.__init__+> --> - COMPLETE\n<!-- <+Radio.Get+> --> - COMPLETE\n<!-- <+Radio.ResetGroup+> --> - COMPLETE\n<!-- <+Radio.SetFocus+> --> - COMPLETE\n<!-- <+Radio.SetTooltip+> --> - COMPLETE\n<!-- <+Radio.Update+> --> - COMPLETE\n<!-- <+Radio.bind+> --> - COMPLETE\n<!-- <+Radio.expand+> --> - COMPLETE\n<!-- <+Radio.get+> --> - COMPLETE\n<!-- <+Radio.get_size+> --> - COMPLETE\n<!-- <+Radio.hide_row+> --> - COMPLETE\n<!-- <+Radio.reset_group+> --> - COMPLETE\n<!-- <+Radio.set_cursor+> --> - COMPLETE\n<!-- <+Radio.set_focus+> --> - COMPLETE\n<!-- <+Radio.set_size+> --> - COMPLETE\n<!-- <+Radio.set_tooltip+> --> - COMPLETE\n<!-- <+Radio.unbind+> --> - COMPLETE\n<!-- <+Radio.unhide_row+> --> - COMPLETE\n<!-- <+Radio.update+> --> - COMPLETE\n<!-- <+Slider.__init__+> --> - COMPLETE\n<!-- <+Slider.SetFocus+> --> - COMPLETE\n<!-- <+Slider.SetTooltip+> --> - COMPLETE\n<!-- <+Slider.Update+> --> - COMPLETE\n<!-- <+Slider.bind+> --> - COMPLETE\n<!-- <+Slider.expand+> --> - COMPLETE\n<!-- <+Slider.get_size+> --> - COMPLETE\n<!-- <+Slider.hide_row+> --> - COMPLETE\n<!-- <+Slider.set_cursor+> --> - COMPLETE\n<!-- <+Slider.set_focus+> --> - COMPLETE\n<!-- <+Slider.set_size+> --> - COMPLETE\n<!-- <+Slider.set_tooltip+> --> - COMPLETE\n<!-- <+Slider.unbind+> --> - COMPLETE\n<!-- <+Slider.unhide_row+> --> - COMPLETE\n<!-- <+Slider.update+> --> - COMPLETE\n<!-- <+Spin.__init__+> --> - COMPLETE\n<!-- <+Spin.Get+> --> - COMPLETE\n<!-- <+Spin.SetFocus+> --> - COMPLETE\n<!-- <+Spin.SetTooltip+> --> - COMPLETE\n<!-- <+Spin.Update+> --> - COMPLETE\n<!-- <+Spin.bind+> --> - COMPLETE\n<!-- <+Spin.expand+> --> - COMPLETE\n<!-- <+Spin.get+> --> - COMPLETE\n<!-- <+Spin.get_size+> --> - COMPLETE\n<!-- <+Spin.hide_row+> --> - COMPLETE\n<!-- <+Spin.set_cursor+> --> - COMPLETE\n<!-- <+Spin.set_focus+> --> - COMPLETE\n<!-- <+Spin.set_size+> --> - COMPLETE\n<!-- <+Spin.set_tooltip+> --> - COMPLETE\n<!-- <+Spin.unbind+> --> - COMPLETE\n<!-- <+Spin.unhide_row+> --> - COMPLETE\n<!-- <+Spin.update+> --> - COMPLETE\n<!-- <+StatusBar.__init__+> --> - COMPLETE\n<!-- <+StatusBar.SetFocus+> --> - COMPLETE\n<!-- <+StatusBar.SetTooltip+> --> - COMPLETE\n<!-- <+StatusBar.Update+> --> - COMPLETE\n<!-- <+StatusBar.bind+> --> - COMPLETE\n<!-- <+StatusBar.expand+> --> - COMPLETE\n<!-- <+StatusBar.get_size+> --> - COMPLETE\n<!-- <+StatusBar.hide_row+> --> - COMPLETE\n<!-- <+StatusBar.set_cursor+> --> - COMPLETE\n<!-- <+StatusBar.set_focus+> --> - COMPLETE\n<!-- <+StatusBar.set_size+> --> - COMPLETE\n<!-- <+StatusBar.set_tooltip+> --> - COMPLETE\n<!-- <+StatusBar.unbind+> --> - COMPLETE\n<!-- <+StatusBar.unhide_row+> --> - COMPLETE\n<!-- <+StatusBar.update+> --> - COMPLETE\n<!-- <+SystemTray.__init__+> --> - COMPLETE\n<!-- <+SystemTray.Close+> --> - COMPLETE\n<!-- <+SystemTray.Hide+> --> - COMPLETE\n<!-- <+SystemTray.Read+> --> - COMPLETE\n<!-- <+SystemTray.ShowMessage+> --> - COMPLETE\n<!-- <+SystemTray.UnHide+> --> - COMPLETE\n<!-- <+SystemTray.Update+> --> - COMPLETE\n<!-- <+SystemTray.close+> --> - COMPLETE\n<!-- <+SystemTray.hide+> --> - COMPLETE\n<!-- <+SystemTray.notify+> --> - COMPLETE\n<!-- <+SystemTray.read+> --> - COMPLETE\n<!-- <+SystemTray.show_message+> --> - COMPLETE\n<!-- <+SystemTray.un_hide+> --> - COMPLETE\n<!-- <+SystemTray.update+> --> - COMPLETE\n<!-- <+Tab.__init__+> --> - COMPLETE\n<!-- <+Tab.AddRow+> --> - COMPLETE\n<!-- <+Tab.Layout+> --> - COMPLETE\n<!-- <+Tab.Select+> --> - COMPLETE\n<!-- <+Tab.SetFocus+> --> - COMPLETE\n<!-- <+Tab.SetTooltip+> --> - COMPLETE\n<!-- <+Tab.Update+> --> - COMPLETE\n<!-- <+Tab.add_row+> --> - COMPLETE\n<!-- <+Tab.bind+> --> - COMPLETE\n<!-- <+Tab.expand+> --> - COMPLETE\n<!-- <+Tab.get_size+> --> - COMPLETE\n<!-- <+Tab.hide_row+> --> - COMPLETE\n<!-- <+Tab.layout+> --> - COMPLETE\n<!-- <+Tab.select+> --> - COMPLETE\n<!-- <+Tab.set_cursor+> --> - COMPLETE\n<!-- <+Tab.set_focus+> --> - COMPLETE\n<!-- <+Tab.set_size+> --> - COMPLETE\n<!-- <+Tab.set_tooltip+> --> - COMPLETE\n<!-- <+Tab.unbind+> --> - COMPLETE\n<!-- <+Tab.unhide_row+> --> - COMPLETE\n<!-- <+Tab.update+> --> - COMPLETE\n<!-- <+TabGroup.__init__+> --> - COMPLETE\n<!-- <+TabGroup.FindKeyFromTabName+> --> - COMPLETE\n<!-- <+TabGroup.Get+> --> - COMPLETE\n<!-- <+TabGroup.SetFocus+> --> - COMPLETE\n<!-- <+TabGroup.SetTooltip+> --> - COMPLETE\n<!-- <+TabGroup.bind+> --> - COMPLETE\n<!-- <+TabGroup.expand+> --> - COMPLETE\n<!-- <+TabGroup.find_key_from_tab_name+> --> - COMPLETE\n<!-- <+TabGroup.get+> --> - COMPLETE\n<!-- <+TabGroup.get_size+> --> - COMPLETE\n<!-- <+TabGroup.hide_row+> --> - COMPLETE\n<!-- <+TabGroup.set_cursor+> --> - COMPLETE\n<!-- <+TabGroup.set_focus+> --> - COMPLETE\n<!-- <+TabGroup.set_size+> --> - COMPLETE\n<!-- <+TabGroup.set_tooltip+> --> - COMPLETE\n<!-- <+Table.set_vscroll_position+> --> - COMPLETE\n<!-- <+TabGroup.unbind+> --> - COMPLETE\n<!-- <+TabGroup.unhide_row+> --> - COMPLETE\n<!-- <+Table.__init__+> --> - COMPLETE\n<!-- <+Table.Get+> --> - COMPLETE\n<!-- <+Table.SetFocus+> --> - COMPLETE\n<!-- <+Table.SetTooltip+> --> - COMPLETE\n<!-- <+Table.Update+> --> - COMPLETE\n<!-- <+Table.bind+> --> - COMPLETE\n<!-- <+Table.expand+> --> - COMPLETE\n<!-- <+Table.get+> --> - COMPLETE\n<!-- <+Table.get_size+> --> - COMPLETE\n<!-- <+Table.hide_row+> --> - COMPLETE\n<!-- <+Table.set_cursor+> --> - COMPLETE\n<!-- <+Table.set_focus+> --> - COMPLETE\n<!-- <+Table.set_size+> --> - COMPLETE\n<!-- <+Table.set_tooltip+> --> - COMPLETE\n<!-- <+Table.unbind+> --> - COMPLETE\n<!-- <+Table.unhide_row+> --> - COMPLETE\n<!-- <+Table.update+> --> - COMPLETE\n<!-- <+Text.__init__+> --> - COMPLETE\n<!-- <+Text.Get+> --> - COMPLETE\n<!-- <+Text.SetFocus+> --> - COMPLETE\n<!-- <+Text.SetTooltip+> --> - COMPLETE\n<!-- <+Text.Update+> --> - COMPLETE\n<!-- <+Text.bind+> --> - COMPLETE\n<!-- <+Text.expand+> --> - COMPLETE\n<!-- <+Text.get+> --> - COMPLETE\n<!-- <+Text.get_size+> --> - COMPLETE\n<!-- <+Text.hide_row+> --> - COMPLETE\n<!-- <+Text.set_cursor+> --> - COMPLETE\n<!-- <+Text.set_focus+> --> - COMPLETE\n<!-- <+Text.set_size+> --> - COMPLETE\n<!-- <+Text.set_tooltip+> --> - COMPLETE\n<!-- <+Text.unbind+> --> - COMPLETE\n<!-- <+Text.unhide_row+> --> - COMPLETE\n<!-- <+Text.update+> --> - COMPLETE\n<!-- <+Tree.__init__+> --> - COMPLETE\n<!-- <+Tree.SetFocus+> --> - COMPLETE\n<!-- <+Tree.SetTooltip+> --> - COMPLETE\n<!-- <+Tree.Update+> --> - COMPLETE\n<!-- <+Tree.add_treeview_data+> --> - COMPLETE\n<!-- <+Tree.bind+> --> - COMPLETE\n<!-- <+Tree.expand+> --> - COMPLETE\n<!-- <+Tree.get_size+> --> - COMPLETE\n<!-- <+Tree.hide_row+> --> - COMPLETE\n<!-- <+Tree.set_cursor+> --> - COMPLETE\n<!-- <+Tree.set_focus+> --> - COMPLETE\n<!-- <+Tree.set_size+> --> - COMPLETE\n<!-- <+Tree.set_tooltip+> --> - COMPLETE\n<!-- <+Tree.set_vscroll_position+> --> - COMPLETE\n<!-- <+Tree.unbind+> --> - COMPLETE\n<!-- <+Tree.unhide_row+> --> - COMPLETE\n<!-- <+Tree.update+> --> - COMPLETE\n<!-- <+TreeData.__init__+> --> - COMPLETE\n<!-- <+TreeData.Insert+> --> - COMPLETE\n<!-- <+TreeData.Node+> --> - COMPLETE\n<!-- <+TreeData.insert+> --> - COMPLETE\n<!-- <+VerticalSeparator.__init__+> --> - COMPLETE\n<!-- <+VerticalSeparator.SetFocus+> --> - COMPLETE\n<!-- <+VerticalSeparator.SetTooltip+> --> - COMPLETE\n<!-- <+VerticalSeparator.bind+> --> - COMPLETE\n<!-- <+VerticalSeparator.expand+> --> - COMPLETE\n<!-- <+VerticalSeparator.get_size+> --> - COMPLETE\n<!-- <+VerticalSeparator.hide_row+> --> - COMPLETE\n<!-- <+VerticalSeparator.set_cursor+> --> - COMPLETE\n<!-- <+VerticalSeparator.set_focus+> --> - COMPLETE\n<!-- <+VerticalSeparator.set_size+> --> - COMPLETE\n<!-- <+VerticalSeparator.set_tooltip+> --> - COMPLETE\n<!-- <+VerticalSeparator.unbind+> --> - COMPLETE\n<!-- <+VerticalSeparator.unhide_row+> --> - COMPLETE\n<!-- <+Window.__init__+> --> - COMPLETE\n<!-- <+Window.AddRow+> --> - COMPLETE\n<!-- <+Window.AddRows+> --> - COMPLETE\n<!-- <+Window.AlphaChannel+> --> - COMPLETE\n<!-- <+Window.BringToFront+> --> - COMPLETE\n<!-- <+Window.Close+> --> - COMPLETE\n<!-- <+Window.CurrentLocation+> --> - COMPLETE\n<!-- <+Window.Disable+> --> - COMPLETE\n<!-- <+Window.DisableDebugger+> --> - COMPLETE\n<!-- <+Window.Disappear+> --> - COMPLETE\n<!-- <+Window.Elem+> --> - COMPLETE\n<!-- <+Window.Element+> --> - COMPLETE\n<!-- <+Window.Enable+> --> - COMPLETE\n<!-- <+Window.EnableDebugger+> --> - COMPLETE\n<!-- <+Window.Fill+> --> - COMPLETE\n<!-- <+Window.Finalize+> --> - COMPLETE\n<!-- <+Window.Find+> --> - COMPLETE\n<!-- <+Window.FindElement+> --> - COMPLETE\n<!-- <+Window.FindElementWithFocus+> --> - COMPLETE\n<!-- <+Window.GetScreenDimensions+> --> - COMPLETE\n<!-- <+Window.GrabAnyWhereOff+> --> - COMPLETE\n<!-- <+Window.GrabAnyWhereOn+> --> - COMPLETE\n<!-- <+Window.Hide+> --> - COMPLETE\n<!-- <+Window.Layout+> --> - COMPLETE\n<!-- <+Window.LoadFromDisk+> --> - COMPLETE\n<!-- <+Window.Maximize+> --> - COMPLETE\n<!-- <+Window.Minimize+> --> - COMPLETE\n<!-- <+Window.Move+> --> - COMPLETE\n<!-- <+Window.Normal+> --> - COMPLETE\n<!-- <+Window.Read+> --> - COMPLETE\n<!-- <+Window.Reappear+> --> - COMPLETE\n<!-- <+Window.Refresh+> --> - COMPLETE\n<!-- <+Window.SaveToDisk+> --> - COMPLETE\n<!-- <+Window.SendToBack+> --> - COMPLETE\n<!-- <+Window.SetAlpha+> --> - COMPLETE\n<!-- <+Window.SetIcon+> --> - COMPLETE\n<!-- <+Window.SetTransparentColor+> --> - COMPLETE\n<!-- <+Window.Size+> --> - COMPLETE\n<!-- <+Window.UnHide+> --> - COMPLETE\n<!-- <+Window.VisibilityChanged+> --> - COMPLETE\n<!-- <+Window.add_row+> --> - COMPLETE\n<!-- <+Window.add_rows+> --> - COMPLETE\n<!-- <+Window.alpha_channel+> --> - COMPLETE\n<!-- <+Window.bind+> --> - COMPLETE\n<!-- <+Window.bring_to_front+> --> - COMPLETE\n<!-- <+Window.close+> --> - COMPLETE\n<!-- <+Window.current_location+> --> - COMPLETE\n<!-- <+Window.disable+> --> - COMPLETE\n<!-- <+Window.disable_debugger+> --> - COMPLETE\n<!-- <+Window.disappear+> --> - COMPLETE\n<!-- <+Window.elem+> --> - COMPLETE\n<!-- <+Window.element+> --> - COMPLETE\n<!-- <+Window.element_list+> --> - COMPLETE\n<!-- <+Window.enable+> --> - COMPLETE\n<!-- <+Window.enable_debugger+> --> - COMPLETE\n<!-- <+Window.extend_layout+> --> - COMPLETE\n<!-- <+Window.fill+> --> - COMPLETE\n<!-- <+Window.finalize+> --> - COMPLETE\n<!-- <+Window.find+> --> - COMPLETE\n<!-- <+Window.find_element+> --> - COMPLETE\n<!-- <+Window.find_element_with_focus+> --> - COMPLETE\n<!-- <+Window.get_screen_dimensions+> --> - COMPLETE\n<!-- <+Window.get_screen_size+> --> - COMPLETE\n<!-- <+Window.grab_any_where_off+> --> - COMPLETE\n<!-- <+Window.grab_any_where_on+> --> - COMPLETE\n<!-- <+Window.hide+> --> - COMPLETE\n<!-- <+Window.layout+> --> - COMPLETE\n<!-- <+Window.load_from_disk+> --> - COMPLETE\n<!-- <+Window.maximize+> --> - COMPLETE\n<!-- <+Window.minimize+> --> - COMPLETE\n<!-- <+Window.move+> --> - COMPLETE\n<!-- <+Window.normal+> --> - COMPLETE\n<!-- <+Window.read+> --> - COMPLETE\n<!-- <+Window.reappear+> --> - COMPLETE\n<!-- <+Window.refresh+> --> - COMPLETE\n<!-- <+Window.save_to_disk+> --> - COMPLETE\n<!-- <+Window.send_to_back+> --> - COMPLETE\n<!-- <+Window.set_alpha+> --> - COMPLETE\n<!-- <+Window.set_icon+> --> - COMPLETE\n<!-- <+Window.set_title+> --> - COMPLETE\n<!-- <+Window.set_transparent_color+> --> - COMPLETE\n<!-- <+Window.size+> --> - COMPLETE\n<!-- <+Window.un_hide+> --> - COMPLETE\n<!-- <+Window.visibility_changed+> --> - COMPLETE\n<!-- <+Window.__init__+> --> - COMPLETE\n<!-- <+Window.AddRow+> --> - COMPLETE\n<!-- <+Window.AddRows+> --> - COMPLETE\n<!-- <+Window.AlphaChannel+> --> - COMPLETE\n<!-- <+Window.BringToFront+> --> - COMPLETE\n<!-- <+Window.Close+> --> - COMPLETE\n<!-- <+Window.CurrentLocation+> --> - COMPLETE\n<!-- <+Window.Disable+> --> - COMPLETE\n<!-- <+Window.DisableDebugger+> --> - COMPLETE\n<!-- <+Window.Disappear+> --> - COMPLETE\n<!-- <+Window.Elem+> --> - COMPLETE\n<!-- <+Window.Element+> --> - COMPLETE\n<!-- <+Window.Enable+> --> - COMPLETE\n<!-- <+Window.EnableDebugger+> --> - COMPLETE\n<!-- <+Window.Fill+> --> - COMPLETE\n<!-- <+Window.Finalize+> --> - COMPLETE\n<!-- <+Window.Find+> --> - COMPLETE\n<!-- <+Window.FindElement+> --> - COMPLETE\n<!-- <+Window.FindElementWithFocus+> --> - COMPLETE\n<!-- <+Window.GetScreenDimensions+> --> - COMPLETE\n<!-- <+Window.GrabAnyWhereOff+> --> - COMPLETE\n<!-- <+Window.GrabAnyWhereOn+> --> - COMPLETE\n<!-- <+Window.Hide+> --> - COMPLETE\n<!-- <+Window.Layout+> --> - COMPLETE\n<!-- <+Window.LoadFromDisk+> --> - COMPLETE\n<!-- <+Window.Maximize+> --> - COMPLETE\n<!-- <+Window.Minimize+> --> - COMPLETE\n<!-- <+Window.Move+> --> - COMPLETE\n<!-- <+Window.Normal+> --> - COMPLETE\n<!-- <+Window.Read+> --> - COMPLETE\n<!-- <+Window.Reappear+> --> - COMPLETE\n<!-- <+Window.Refresh+> --> - COMPLETE\n<!-- <+Window.SaveToDisk+> --> - COMPLETE\n<!-- <+Window.SendToBack+> --> - COMPLETE\n<!-- <+Window.SetAlpha+> --> - COMPLETE\n<!-- <+Window.SetIcon+> --> - COMPLETE\n<!-- <+Window.SetTransparentColor+> --> - COMPLETE\n<!-- <+Window.Size+> --> - COMPLETE\n<!-- <+Window.UnHide+> --> - COMPLETE\n<!-- <+Window.VisibilityChanged+> --> - COMPLETE\n<!-- <+Window.add_row+> --> - COMPLETE\n<!-- <+Window.add_rows+> --> - COMPLETE\n<!-- <+Window.alpha_channel+> --> - COMPLETE\n<!-- <+Window.bind+> --> - COMPLETE\n<!-- <+Window.bring_to_front+> --> - COMPLETE\n<!-- <+Window.close+> --> - COMPLETE\n<!-- <+Window.current_location+> --> - COMPLETE\n<!-- <+Window.disable+> --> - COMPLETE\n<!-- <+Window.disable_debugger+> --> - COMPLETE\n<!-- <+Window.disappear+> --> - COMPLETE\n<!-- <+Window.elem+> --> - COMPLETE\n<!-- <+Window.element+> --> - COMPLETE\n<!-- <+Window.element_list+> --> - COMPLETE\n<!-- <+Window.enable+> --> - COMPLETE\n<!-- <+Window.enable_debugger+> --> - COMPLETE\n<!-- <+Window.extend_layout+> --> - COMPLETE\n<!-- <+Window.fill+> --> - COMPLETE\n<!-- <+Window.finalize+> --> - COMPLETE\n<!-- <+Window.find+> --> - COMPLETE\n<!-- <+Window.find_element+> --> - COMPLETE\n<!-- <+Window.find_element_with_focus+> --> - COMPLETE\n<!-- <+Window.get_screen_dimensions+> --> - COMPLETE\n<!-- <+Window.get_screen_size+> --> - COMPLETE\n<!-- <+Window.grab_any_where_off+> --> - COMPLETE\n<!-- <+Window.grab_any_where_on+> --> - COMPLETE\n<!-- <+Window.hide+> --> - COMPLETE\n<!-- <+Window.layout+> --> - COMPLETE\n<!-- <+Window.load_from_disk+> --> - COMPLETE\n<!-- <+Window.maximize+> --> - COMPLETE\n<!-- <+Window.minimize+> --> - COMPLETE\n<!-- <+Window.move+> --> - COMPLETE\n<!-- <+Window.normal+> --> - COMPLETE\n<!-- <+Window.read+> --> - COMPLETE\n<!-- <+Window.reappear+> --> - COMPLETE\n<!-- <+Window.refresh+> --> - COMPLETE\n<!-- <+Window.save_to_disk+> --> - COMPLETE\n<!-- <+Window.send_to_back+> --> - COMPLETE\n<!-- <+Window.set_alpha+> --> - COMPLETE\n<!-- <+Window.set_icon+> --> - COMPLETE\n<!-- <+Window.set_transparent_color+> --> - COMPLETE\n<!-- <+Window.size+> --> - COMPLETE\n<!-- <+Window.un_hide+> --> - COMPLETE\n<!-- <+Window.visibility_changed+> --> - COMPLETE",
+    "message_time": 68
+  },
+  {
+    "message_type": "info",
+    "message_text": "No bad tags, YES!",
+    "message_time": 69
+  },
+  {
+    "message_type": "info",
+    "message_text": "Deleting html comments",
+    "message_time": 70
+  },
+  {
+    "message_type": "info",
+    "message_text": "ending. writing to a file///////////////",
+    "message_time": 71
+  }
+]

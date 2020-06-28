@@ -1,8 +1,11 @@
 from inspect import getmembers, isfunction, isclass, getsource, signature, _empty, isdatadescriptor
 from datetime import datetime
-import PySimpleGUIlib, click, textwrap, logging, json, re, os
+import click, textwrap, logging, json, re, os
 import os
 cd = CD = os.path.dirname(os.path.abspath(__file__))
+import PySimpleGUI as sg
+
+module_to_process = sg
 
 from collections import namedtuple
 triplet = namedtuple('triplet', 'name value atype'.split(' '))
@@ -351,9 +354,10 @@ def get_sig_table_parts(function_obj, function_name, doc_string,
             rows.append(f'| {atype} | **RETURN** | {text}')
         except Exception as e:
             padded_name = "{: <25}".format(f"'{a_original_obj.__name__}'")
+            # TODO - Mike changed this!
+            # logger.warning(f"ALERT ------  Hi, Mike! Please, fix ':return:' in {padded_name}"
+            #         " \tIF you want to see 'return' row in 'signature table'")
 
-            logger.warning(f"ALERT ------  Hi, Mike! Please, fix ':return:' in {padded_name}"
-                    " \tIF you want to see 'return' row in 'signature table'")
             # import pdb; pdb.set_trace();
 
         header = '\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n'
@@ -432,6 +436,7 @@ def main(do_full_readme=False,
         insert_md_section_for__class_methods:bool=True,
         remove_repeated_sections_classmethods:bool=False,
         output_repeated_tags:bool=False,
+        main_md_file='markdown input files/2_readme.md',
         skip_dunder_method:bool=True):
     """
     Goal is:
@@ -462,7 +467,7 @@ def main(do_full_readme=False,
     # ===========  1 loading files =========== #
     # ===========  2 GET classes, funcions, varialbe a.k.a. memes =========== #
     # 8888888888888888888888888888888888888888888888888888888888888888888888888
-    readme  = readfile('2_readme.md')
+    readme  = readfile(main_md_file)
 
     def valid_field(pair):
         bad_fields = 'LOOK_AND_FEEL_TABLE copyright __builtins__ icon'.split(' ')
@@ -478,7 +483,7 @@ def main(do_full_readme=False,
         return True
 
         
-    psg_members  = [i for i in getmembers(PySimpleGUIlib) if valid_field(i)] # variables, functions, classes
+    psg_members  = [i for i in getmembers(module_to_process) if valid_field(i)] # variables, functions, classes
     # psg_members  = getmembers(PySimpleGUIlib) # variables, functions, classes
     psg_funcs = [o for o in psg_members if isfunction(o[1])] # only functions
     psg_classes = [o for o in psg_members if isclass(o[1])]  # only classes
@@ -622,7 +627,7 @@ def main(do_full_readme=False,
                 continue
             except Exception as e:
                 if logger:
-                    logger.error(f'Error in finding the METHOD: {str(e)}')
+                    logger.error(f' General error in parsing class_method tag: tag = "{tag}"; error="{str(e)}"')
                 continue
 
             # {{{{{{{{{ collect }}}}}}}}}
@@ -697,17 +702,22 @@ def main(do_full_readme=False,
 
         logger.info(good_message)
         logger.info(bad_message)
+        
+        bad_part = '''\n\nParameter Descriptions:\n\n|Type|Name|Meaning|\n|--|--|--|\n\n'''
+        readme = readme.replace(bad_part, '\n')
 
 
     # 8888888888888888888888888888888888
     # ===========  6 join  =========== #
     # 8888888888888888888888888888888888
 
+
+
     files = []
-    if 0 in files_to_include: files.append(readfile('1_HEADER_top_part.md'))
+    if 0 in files_to_include: files.append(readfile('markdown input files/1_HEADER_top_part.md'))
     if 1 in files_to_include: files.append(readme)
-    if 2 in files_to_include: files.append(readfile('3_FOOTER.md'))
-    if 3 in files_to_include: files.append(readfile('4_Release_notes.md'))
+    if 2 in files_to_include: files.append(readfile('markdown input files/3_FOOTER.md'))
+    if 3 in files_to_include: files.append(readfile('markdown input files/4_Release_notes.md'))
 
     Joined_MARKDOWN = '\n\n'.join(files) if do_full_readme or files else readme
 
@@ -763,7 +773,7 @@ def main(do_full_readme=False,
     if logger:
         logger.error(f'Error in main')
 
-    logger.save_messages()
+    logger.save()
 
 
 

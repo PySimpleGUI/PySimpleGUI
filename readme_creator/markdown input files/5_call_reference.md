@@ -1,7 +1,14 @@
+![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
 
 # ELEMENT AND FUNCTION CALL REFERENCE
 
-NOTE that this documentation section is created using the ***GitHUB released PySimpleGUI.py file***. This means you're seeing the tkinter port only and some of the changes might not yet be released on PyPI.   Some of the calls may not be available to you or your port (Qt, Wx, Web).  And some of the parameters may be different.  We're working on adding docstrings to all the ports which will enable this kind of document to be available for each port.
+Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
+
+## Currently PySimpleGUI (tkinter) only
+
+This documentation is created using the PySimpleGUI.py file which means it's based on the tkinter code. Some of the calls are different, might not exist at all, or there may be more methods/functions for the other PySimpleGUI ports (Qt, Wx, Web).  
+
+Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
@@ -58,6 +65,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_tooltip
 <!-- <+Button.set_tooltip+> -->
 
+### set_vscroll_position
+<!-- <+Button.set_vscroll_position+> -->
+
 ### unbind
 <!-- <+Button.unbind+> -->
 
@@ -110,6 +120,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### unbind
 <!-- <+ButtonMenu.unbind+> -->
 
+### set_vscroll_position
+<!-- <+ButtonMenu.set_vscroll_position+> -->
+
 ### unhide_row
 <!-- <+ButtonMenu.unhide_row+> -->
 
@@ -158,6 +171,7 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### unbind
 <!-- <+Canvas.unbind+> -->
+
 
 ### unhide_row
 <!-- <+Canvas.unhide_row+> -->
@@ -265,6 +279,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### unbind
 <!-- <+Column.unbind+> -->
+
+### set_vscroll_position
+<!-- <+Column.set_vscroll_position+> -->
 
 ### unhide_row
 <!-- <+Column.unhide_row+> -->
@@ -546,6 +563,50 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Graph.update+> -->
 
+
+
+## HorizontalSeparator Element 
+<!-- <+HorizontalSeparator.doc+> -->
+<!-- <+HorizontalSeparator.__init__+> -->
+
+### SetFocus
+<!-- <+HorizontalSeparator.SetFocus+> -->
+
+### SetTooltip
+<!-- <+HorizontalSeparator.SetTooltip+> -->
+
+### bind
+<!-- <+HorizontalSeparator.bind+> -->
+
+### expand
+<!-- <+HorizontalSeparator.expand+> -->
+
+### get_size
+<!-- <+HorizontalSeparator.get_size+> -->
+
+### hide_row
+<!-- <+HorizontalSeparator.hide_row+> -->
+
+### set_cursor
+<!-- <+HorizontalSeparator.set_cursor+> -->
+
+### set_focus
+<!-- <+HorizontalSeparator.set_focus+> -->
+
+### set_size
+<!-- <+HorizontalSeparator.set_size+> -->
+
+### set_tooltip
+<!-- <+HorizontalSeparator.set_tooltip+> -->
+
+### unbind
+<!-- <+HorizontalSeparator.unbind+> -->
+
+### unhide_row
+<!-- <+HorizontalSeparator.unhide_row+> -->
+
+
+
 ## Image Element 
 <!-- <+Image.doc+> -->
 <!-- <+Image.__init__+> -->
@@ -711,6 +772,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_value
 <!-- <+Listbox.set_value+> -->
 
+### set_vscroll_position
+<!-- <+Listbox.set_vscroll_position+> -->
+
 ### unbind
 <!-- <+Listbox.unbind+> -->
 
@@ -812,6 +876,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_tooltip
 <!-- <+Multiline.set_tooltip+> -->
 
+### set_vscroll_position
+<!-- <+Multiline.set_vscroll_position+> -->
+
 ### unbind
 <!-- <+Multiline.unbind+> -->
 
@@ -858,6 +925,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### set_tooltip
 <!-- <+OptionMenu.set_tooltip+> -->
+
+### set_vscroll_position
+<!-- <+OptionMenu.set_vscroll_position+> -->
 
 ### unbind
 <!-- <+OptionMenu.unbind+> -->
@@ -913,6 +983,11 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### tk_out
 <!-- <+Output.tk_out+> -->
+
+
+### set_vscroll_position
+<!-- <+Output.set_vscroll_position+> -->
+
 
 ### unbind
 <!-- <+Output.unbind+> -->
@@ -1378,6 +1453,10 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_tooltip
 <!-- <+TabGroup.set_tooltip+> -->
 
+### set_vscroll_position
+<!-- <+Table.set_vscroll_position+> -->
+
+
 ### unbind
 <!-- <+TabGroup.unbind+> -->
 
@@ -1530,6 +1609,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_tooltip
 <!-- <+Tree.set_tooltip+> -->
 
+### set_vscroll_position
+<!-- <+Tree.set_vscroll_position+> -->
+
 ### unbind
 <!-- <+Tree.unbind+> -->
 
@@ -1591,6 +1673,264 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### unhide_row
 <!-- <+VerticalSeparator.unhide_row+> -->
+
+
+## Window 
+<!-- <+Window.doc+> -->
+<!-- <+Window.__init__+> -->
+
+### AddRow
+<!-- <+Window.AddRow+> -->
+
+### AddRows
+<!-- <+Window.AddRows+> -->
+
+### AlphaChannel
+<!-- <+Window.AlphaChannel+> -->
+
+### BringToFront
+<!-- <+Window.BringToFront+> -->
+
+### Close
+<!-- <+Window.Close+> -->
+
+### CurrentLocation
+<!-- <+Window.CurrentLocation+> -->
+
+### Disable
+<!-- <+Window.Disable+> -->
+
+### DisableDebugger
+<!-- <+Window.DisableDebugger+> -->
+
+### Disappear
+<!-- <+Window.Disappear+> -->
+
+### Elem
+<!-- <+Window.Elem+> -->
+
+### Element
+<!-- <+Window.Element+> -->
+
+### Enable
+<!-- <+Window.Enable+> -->
+
+### EnableDebugger
+<!-- <+Window.EnableDebugger+> -->
+
+### Fill
+<!-- <+Window.Fill+> -->
+
+### Finalize
+<!-- <+Window.Finalize+> -->
+
+### Find
+<!-- <+Window.Find+> -->
+
+### FindElement
+<!-- <+Window.FindElement+> -->
+
+### FindElementWithFocus
+<!-- <+Window.FindElementWithFocus+> -->
+
+### GetScreenDimensions
+<!-- <+Window.GetScreenDimensions+> -->
+
+### GrabAnyWhereOff
+<!-- <+Window.GrabAnyWhereOff+> -->
+
+### GrabAnyWhereOn
+<!-- <+Window.GrabAnyWhereOn+> -->
+
+### Hide
+<!-- <+Window.Hide+> -->
+
+### Layout
+<!-- <+Window.Layout+> -->
+
+### LoadFromDisk
+<!-- <+Window.LoadFromDisk+> -->
+
+### Maximize
+<!-- <+Window.Maximize+> -->
+
+### Minimize
+<!-- <+Window.Minimize+> -->
+
+### Move
+<!-- <+Window.Move+> -->
+
+### Normal
+<!-- <+Window.Normal+> -->
+
+### Read
+<!-- <+Window.Read+> -->
+
+### Reappear
+<!-- <+Window.Reappear+> -->
+
+### Refresh
+<!-- <+Window.Refresh+> -->
+
+### SaveToDisk
+<!-- <+Window.SaveToDisk+> -->
+
+### SendToBack
+<!-- <+Window.SendToBack+> -->
+
+### SetAlpha
+<!-- <+Window.SetAlpha+> -->
+
+### SetIcon
+<!-- <+Window.SetIcon+> -->
+
+### SetTransparentColor
+<!-- <+Window.SetTransparentColor+> -->
+
+### Size
+<!-- <+Window.Size+> -->
+
+### UnHide
+<!-- <+Window.UnHide+> -->
+
+### VisibilityChanged
+<!-- <+Window.VisibilityChanged+> -->
+
+### add_row
+<!-- <+Window.add_row+> -->
+
+### add_rows
+<!-- <+Window.add_rows+> -->
+
+### alpha_channel
+<!-- <+Window.alpha_channel+> -->
+
+### bind
+<!-- <+Window.bind+> -->
+
+### bring_to_front
+<!-- <+Window.bring_to_front+> -->
+
+### close
+<!-- <+Window.close+> -->
+
+### current_location
+<!-- <+Window.current_location+> -->
+
+### disable
+<!-- <+Window.disable+> -->
+
+### disable_debugger
+<!-- <+Window.disable_debugger+> -->
+
+### disappear
+<!-- <+Window.disappear+> -->
+
+### elem
+<!-- <+Window.elem+> -->
+
+### element
+<!-- <+Window.element+> -->
+
+### element_list
+<!-- <+Window.element_list+> -->
+
+### enable
+<!-- <+Window.enable+> -->
+
+### enable_debugger
+<!-- <+Window.enable_debugger+> -->
+
+### extend_layout
+<!-- <+Window.extend_layout+> -->
+
+### fill
+<!-- <+Window.fill+> -->
+
+### finalize
+<!-- <+Window.finalize+> -->
+
+### find
+<!-- <+Window.find+> -->
+
+### find_element
+<!-- <+Window.find_element+> -->
+
+### find_element_with_focus
+<!-- <+Window.find_element_with_focus+> -->
+
+### get_screen_dimensions
+<!-- <+Window.get_screen_dimensions+> -->
+
+### get_screen_size
+<!-- <+Window.get_screen_size+> -->
+
+### grab_any_where_off
+<!-- <+Window.grab_any_where_off+> -->
+
+### grab_any_where_on
+<!-- <+Window.grab_any_where_on+> -->
+
+### hide
+<!-- <+Window.hide+> -->
+
+### layout
+<!-- <+Window.layout+> -->
+
+### load_from_disk
+<!-- <+Window.load_from_disk+> -->
+
+### maximize
+<!-- <+Window.maximize+> -->
+
+### minimize
+<!-- <+Window.minimize+> -->
+
+### move
+<!-- <+Window.move+> -->
+
+### normal
+<!-- <+Window.normal+> -->
+
+### read
+<!-- <+Window.read+> -->
+
+### reappear
+<!-- <+Window.reappear+> -->
+
+### refresh
+<!-- <+Window.refresh+> -->
+
+### save_to_disk
+<!-- <+Window.save_to_disk+> -->
+
+### send_to_back
+<!-- <+Window.send_to_back+> -->
+
+### set_alpha
+<!-- <+Window.set_alpha+> -->
+
+### set_icon
+<!-- <+Window.set_icon+> -->
+
+### set_title
+<!-- <+Window.set_title+> -->
+
+### set_transparent_color
+<!-- <+Window.set_transparent_color+> -->
+
+### size
+<!-- <+Window.size+> -->
+
+### un_hide
+<!-- <+Window.un_hide+> -->
+
+### visibility_changed
+<!-- <+Window.visibility_changed+> -->
+
+
+
+
 
 ## Window 
 <!-- <+Window.doc+> -->
@@ -1846,10 +2186,12 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ## Function Reference
 
-<!-- <+func.CButton+> -->
+These are the functions available for you to call
+
+## Button Related
+
 <!-- <+func.CalendarButton+> -->
 <!-- <+func.Cancel+> -->
-<!-- <+func.CloseButton+> -->
 <!-- <+func.ColorChooserButton+> -->
 <!-- <+func.Debug+> -->
 <!-- <+func.DummyButton+> -->
@@ -1857,7 +2199,6 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 <!-- <+func.FileBrowse+> -->
 <!-- <+func.FileSaveAs+> -->
 <!-- <+func.FilesBrowse+> -->
-<!-- <+func.FillFormWithValues+> -->
 <!-- <+func.FolderBrowse+> -->
 <!-- <+func.Help+> -->
 <!-- <+func.No+> -->
@@ -1867,16 +2208,21 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 <!-- <+func.Ok+> -->
 <!-- <+func.Open+> -->
 <!-- <+func.Quit+> -->
-<!-- <+func.RButton+> -->
-<!-- <+func.ReadButton+> -->
 <!-- <+func.RealtimeButton+> -->
 <!-- <+func.Save+> -->
 <!-- <+func.SaveAs+> -->
-<!-- <+func.ScrolledTextBox+> -->
-<!-- <+func.SetGlobalIcon+> -->
-<!-- <+func.SetOptions+> -->
 <!-- <+func.Submit+> -->
 <!-- <+func.Yes+> -->
+
+## Button No Longer To Be Used
+
+Note - These are no longer recommended! 
+They are shown here in case you run into them in some old code.
+
+<!-- <+func.RButton+> -->
+<!-- <+func.ReadButton+> -->
+<!-- <+func.CButton+> -->
+<!-- <+func.CloseButton+> -->
 
 
 ## Debug Window Output
@@ -1891,6 +2237,11 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 <!-- <+func.Print+> -->
 <!-- <+func.PrintClose+> -->
 
+
+## Color Printing to Multiline Element of a Window
+
+<!-- <+func.cprint+> -->
+<!-- <+func.cprint_set_output_destination+> -->
 
 ## OneLineProgressMeter
 
@@ -1953,25 +2304,48 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 <!-- <+func.popup_timed+> -->
 <!-- <+func.popup_yes_no+> -->
 
+Same as popup_scrolled
+
+<!-- <+func.sprint+> -->
+<!-- <+func.ScrolledTextBox+> -->
+
 
 ## PEP8 Function Bindings
 
-
-<!-- <+func.fill_form_with_values+> -->
-<!-- <+func.main+> -->
 <!-- <+func.obj_to_string+> -->
 <!-- <+func.obj_to_string_single_obj+> -->
+
+## Settings 
+
 <!-- <+func.set_global_icon+> -->
 <!-- <+func.set_options+> -->
+
+
+### Non PEP8 version (same as PEP8 version)
+
+<!-- <+func.SetGlobalIcon+> -->
+<!-- <+func.SetOptions+> -->
+
+
+## The Test Harness
+
+Used to test the installation, get information about the versions, upgrade from GitHub
+
+<!-- <+func.main+> -->
+<!-- <+func.test+> -->
+
+
+## Debugger
+
 <!-- <+func.show_debugger_popout_window+> -->
 <!-- <+func.show_debugger_window+> -->
-<!-- <+func.sprint+> -->
-<!-- <+func.test+> -->
+
 
 
 ## Themes
 
 <!-- <+func.theme+> -->
+<!-- <+func.theme_add_new+> -->
 <!-- <+func.theme_background_color+> -->
 <!-- <+func.theme_border_width+> -->
 <!-- <+func.theme_button_color+> -->
@@ -1987,6 +2361,12 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 <!-- <+func.theme_slider_color+> -->
 <!-- <+func.theme_text_color+> -->
 <!-- <+func.theme_text_element_background_color+> -->
+
+
+## Misc
+
+<!-- <+func.FillFormWithValues+> -->
+<!-- <+func.fill_form_with_values+> -->
 
 
 ## Old Themes (Look and Feel) - Replaced by theme()
