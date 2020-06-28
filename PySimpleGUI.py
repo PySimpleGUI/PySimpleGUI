@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.21.0 Released 27-Jun-2020"
+version = __version__ = "4.21.0.1 Unreleased\n cprint expanded using optional key and optional window"
 
 port = 'PySimpleGUI'
 
@@ -868,7 +868,7 @@ class Element():
         Used to add tkinter events to an Element.
         The tkinter specific data is in the Element's member variable user_bind_event
         :param bind_string: The string tkinter expected in its bind function
-        :type bind_string: Mike_please_insert_type_here
+        :type bind_string: (str)
         :param key_modifier: Additional data to be added to the element's key when event is returned
         """
         self.Widget.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
@@ -879,6 +879,7 @@ class Element():
         """
         Removes a previously bound tkinter event from an Element.
         :param bind_string: The string tkinter expected in its bind function
+        :type bind_string: (str)
         """
         self.Widget.unbind(bind_string)
         self.user_bind_dict.pop(bind_string, None)
@@ -907,6 +908,7 @@ class Element():
         """
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
+
     def SetFocus(self, force=False):
         """
         Sets the current focus to be on this element
@@ -922,6 +924,7 @@ class Element():
                 self.Widget.focus_set()
         except:
             print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
+
 
     def set_size(self, size=(None, None)):
         """
@@ -7039,7 +7042,6 @@ class Window:
 
     # @_timeit_summary
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
-        # type: (int, Any, bool) -> Tuple[Any, Union[Dict, List]]
         """
         THE biggest deal method in the Window class! This is how you get all of your data from your Window.
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -7066,7 +7068,6 @@ class Window:
 
     # @_timeit
     def _read(self, timeout=None, timeout_key=TIMEOUT_KEY):
-        # type: (int, Any) -> Tuple[Any, Union[Dict, List]]
         """
         THE biggest deal method in the Window class! This is how you get all of your data from your Window.
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -11915,6 +11916,8 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     :type location: Tuple[int, int]
     :param do_not_reroute_stdout: do not reroute stdout
     :type do_not_reroute_stdout: (bool)
+    :return:
+    :rtype:
     """
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
@@ -11984,10 +11987,10 @@ def cprint(*args, **kwargs):
     :type text_color: (str)
     :param background_color: The background color of the line
     :type background_color: (str)
+    :param colors: Either a tuple or a string that has both the text and background colors
+    :type colors: (str) or Tuple[str, str]
     :param t: Color of the text
     :type t: (str)
-    :param b: The background color of the line
-    :type b: (str)
     :param b: The background color of the line
     :type b: (str)
     :param c: Either a tuple or a string that has both the text and background colors
@@ -11996,14 +11999,28 @@ def cprint(*args, **kwargs):
     :type end: (str)
     :param sep: separator character
     :type sep: (str)
-    :return:
-    :rtype:
+    :param key: key of multiline to output to (if you want to override the one previously set)
+    :type key: (Any)
+    :param window: key of multiline to output to (if you want to override the one previously set)
+    :type window: (Window)
     """
-    if CPRINT_DESTINATION_WINDOW is None or CPRINT_DESTINATION_MULTILINE_ELMENT_KEY is None:
-        print('** Warning ** Attempting to perform a cprint without first setting up the output window and element', 'Will instead print on Console')
-        print(*args)
-        return
 
+
+    destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
+    window = CPRINT_DESTINATION_WINDOW
+
+    if window is None or destination_key is None:
+        if 'key' not in kwargs and 'window' not in kwargs:
+            print('** Warning ** Attempting to perform a cprint without first setting up the output window and element',
+                  'Will instead print on Console',
+                  'You can also use the window, key arguments to route the output')
+            print(*args)
+            return
+
+
+
+    # loop through all keyword args.  Some will be passed on to the print function, others control
+    # the location to send the print
     new_kwargs = {}
     for arg in kwargs:
         if arg == 't':
@@ -12021,19 +12038,29 @@ def cprint(*args, **kwargs):
                     new_kwargs['background_color'] = colors[1]
             except Exception as e:
                 print('* cprint warning * you messed up with color formatting', e)
+        elif arg == 'key':
+            destination_key = kwargs[arg]
+        elif arg == 'window':
+            window = kwargs[arg]
         else:
             new_kwargs[arg] = kwargs[arg]
     # Special code to control the "end".  If no end is specified then the ENTIRE LINE will be displayed with
     # the background color spanning across the entire width of the element.  This is likely not the desired
     # outcome the user was hoping for. So, thi code provides that behavior of only the portion of the line
     # with text will have a background color change
-    if new_kwargs.get('end', None) is None:
-        new_kwargs['end'] = ''
-        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print(*args, **new_kwargs)
-        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print('')
-    else:
-        CPRINT_DESTINATION_WINDOW[CPRINT_DESTINATION_MULTILINE_ELMENT_KEY].print(*args, **new_kwargs)
+    if window is None or destination_key is None:
+        print('** cprint Warning - Missing information. Window or Key is None **')
+        return
 
+    try:
+        if new_kwargs.get('end', None) is None:
+            new_kwargs['end'] = ''
+            window[destination_key].print(*args, **new_kwargs)
+            window[destination_key].print('')
+        else:
+            window[destination_key].print(*args, **new_kwargs)
+    except Exception as e:
+        print('** cprint error trying to print to the multiline **', e)
 
 # ------------------------------------------------------------------------------------------------ #
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
@@ -15674,7 +15701,7 @@ def show_debugger_window(location=(None, None), *args):
     """
     Shows the large main debugger window
     :param location:  Locations (x,y) on the screen to place upper left corner of the window
-    :ttype location: Tuple[int, int]
+    :type location: Tuple[int, int]
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
