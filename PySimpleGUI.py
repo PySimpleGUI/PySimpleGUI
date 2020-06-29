@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.1 Unreleased\n Added a bunch of warnings for windows operations to check for root being None"
+version = __version__ = "4.22.0.2 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9"
 
 port = 'PySimpleGUI'
 
@@ -9923,7 +9923,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
               '\nValid choices include: {}'.format(style.theme_names()))
         return False
 
+    def _fixed_map(style, style_name, option):
+        # Fix for setting text colour for Tkinter 8.6.9
+        # From: https://core.tcl.tk/tk/info/509cafafae
+        #
+        # Returns the style map for 'option' with any styles starting with
+        # ('!disabled', '!selected', ...) filtered out.
 
+        # style.map() returns an empty list for missing options, so this
+        # should be future-safe.
+        return [elm for elm in style.map(style_name, query_opt=option) if
+                elm[:2] != ('!disabled', '!selected')]
+
+
+    tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -11178,6 +11191,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ------ Do Styling of Colors -----
                 style_name = str(element.Key) + 'customtable.Treeview'
                 table_style = ttk.Style()
+                if tclversion_detailed == '8.6.9':
+                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    table_style.map(style_name, foreground=_fixed_map(table_style, style_name, 'foreground'), background=_fixed_map(table_style, style_name, 'background'))
+
                 table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
@@ -11298,6 +11315,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ----- configure colors -----
                 style_name = str(element.Key) + '.Treeview'
                 tree_style = ttk.Style()
+                if tclversion_detailed == '8.6.9':
+                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    tree_style.map(style_name, foreground=_fixed_map(tree_style, style_name, 'foreground'), background=_fixed_map(tree_style, style_name, 'background'))
                 tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, background=element.BackgroundColor,
@@ -16099,7 +16119,7 @@ def main():
 
     print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tclversion),
           'tkinter version = {}'.format(tkversion), '\nPython Version {}'.format(sys.version))
-
+    print('tcl detailed version = {}'.format(tclversion_detailed))
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
