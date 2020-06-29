@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0 Released 28-Jun-2020"
+version = __version__ = "4.22.0.1 Unreleased\n Added a bunch of warnings for windows operations to check for root being None"
 
 port = 'PySimpleGUI'
 
@@ -7478,7 +7478,8 @@ class Window:
         :return: Tuple containing width and height of screen in pixels
         :rtype: Union[Tuple[None, None], Tuple[width, height]]
         """
-        if self.TKrootDestroyed:
+
+        if self.TKrootDestroyed or self.TKroot is None:
             return Window.get_screen_size()
         screen_width = self.TKroot.winfo_screenwidth()  # get window info to move to middle of screen
         screen_height = self.TKroot.winfo_screenheight()
@@ -7501,6 +7502,9 @@ class Window:
         """
         Minimize this window to the task bar
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.iconify()
 
     def Maximize(self):
@@ -7509,6 +7513,10 @@ class Window:
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
         The reason for the difference is the title bar is removed in some cases when using fullscreen option
         """
+
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         if sys.platform != 'linux':
             self.TKroot.state('zoomed')
         else:
@@ -7520,6 +7528,9 @@ class Window:
         """
         Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         if self.TKroot.state() == 'iconic':
             self.TKroot.deiconify()
         else:
@@ -7674,6 +7685,9 @@ class Window:
         """
         Disables window from taking any input from the user
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.attributes('-disabled', 1)
         # self.TKroot.grab_set_global()
 
@@ -7681,6 +7695,9 @@ class Window:
         """
         Re-enables window to take user input after having it be Disabled previously
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.attributes('-disabled', 0)
         # self.TKroot.grab_release()
 
@@ -7688,6 +7705,9 @@ class Window:
         """
         Hides the window from the screen and the task bar
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self._Hidden = True
         self.TKroot.withdraw()
 
@@ -7695,6 +7715,9 @@ class Window:
         """
         Used to bring back a window that was previously hidden using the Hide method
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         if self._Hidden:
             self.TKroot.deiconify()
             self._Hidden = False
@@ -7705,12 +7728,18 @@ class Window:
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
         platforms.  The Raspberry Pi for example does not have an alpha setting
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.attributes('-alpha', 0)
 
     def Reappear(self):
         """
         Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.attributes('-alpha', 255)
 
     def SetAlpha(self, alpha):
@@ -7720,8 +7749,9 @@ class Window:
         :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         :type alpha: (float)
         """
-        # Change the window's transparency
-        # :param alpha: From 0 to 1 with 0 being completely transparent
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
@@ -7741,6 +7771,9 @@ class Window:
         :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         :type alpha: (float)
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
@@ -7749,6 +7782,9 @@ class Window:
         Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         if sys.platform.startswith('win'):
             try:
                 self.TKroot.wm_attributes("-topmost", 0)
@@ -7767,6 +7803,9 @@ class Window:
         """
         Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         try:
             self.TKroot.lower()
         except:
@@ -7779,6 +7818,9 @@ class Window:
         :return: The x and y location in tuple form (x,y)
         :rtype: Tuple[(int), (int)]
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
     @property
@@ -7789,6 +7831,9 @@ class Window:
         :return: (width, height) of the window
         :rtype: Tuple[(int), (int)]
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
         return win_width, win_height
@@ -7823,6 +7868,9 @@ class Window:
         :param color: Color string that defines the transparent color
         :type color: (str)
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         try:
             self.TKroot.attributes('-transparentcolor', color)
         except:
@@ -7833,6 +7881,9 @@ class Window:
         Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.bind("<ButtonPress-1>", self._StartMove)
         self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
         self.TKroot.bind("<B1-Motion>", self._OnMotion)
@@ -7842,6 +7893,9 @@ class Window:
         Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
@@ -7874,6 +7928,9 @@ class Window:
         :param key: The event that will be generated when the tkinter event occurs
         :type key: (Any)
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
         self.user_bind_dict[bind_string] = key
 
@@ -7897,6 +7954,9 @@ class Window:
         """
         Enables the internal debugger. By default, the debugger IS enabled
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.bind('<Cancel>', self._callback_main_debugger_window_create_keystroke)
         self.TKroot.bind('<Pause>', self._callback_popout_window_create_keystroke)
         self.DebuggerEnabled = True
@@ -7905,6 +7965,9 @@ class Window:
         """
         Disable the internal debugger. By default the debugger is ENABLED
         """
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.unbind("<Cancel>")
         self.TKroot.unbind("<Pause>")
         self.DebuggerEnabled = False
@@ -7917,7 +7980,9 @@ class Window:
         :param title: The string to set the title to
         :type title: (str)
         """
-
+        if self.TKroot is None:
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a finalize parameter to your Window creation will fix this', UserWarning)
+            return
         self.TKroot.wm_title(str(title))
 
     # def __enter__(self):
