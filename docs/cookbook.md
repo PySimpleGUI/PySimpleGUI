@@ -1057,7 +1057,7 @@ There are at least 3 ways to transform your `print` statements that we'll explor
 The various forms of "print" you'll be introduced to all support the `sep` and `end` parameters that you find on normal print statements.
 
 
-## Recipe - #1/3 Printing to Debug Window
+## Recipe Printing - #1/4 Printing to Debug Window
 
 The debug window acts like a virtual console.  There are 2 operating modes for the debug window.  One re-routes stdout to the window, the other does not.
 
@@ -1103,7 +1103,7 @@ sg.Print('\nThis line has no color.')
 
 --------
 
-## Recipe - #2/3 Print to `Output` Element
+## Recipe Printing - #2/4 Print to `Output` Element
 
 If you want to re-route your standard out to your window, then placing an `Output` Element in your layout will do just that.  When you call "print", your text will be routed to that `Output` Element.  Note you can only have 1 of these in your layout because there's only 1 stdout.
 
@@ -1135,7 +1135,7 @@ window.close()
 
 -----------------
 
-## Recipe - #3/3 Print to `Multiline` Element
+## Recipe Printing - #3/4 Print to `Multiline` Element
 
 Beginning in 4.18.0 you can "print" to any `Multiline` Element in your layouts.  The `Multiline.print` method acts similar to the `Print` function described earlier.  It has the normal print parameters `sep` & `end` and also has color options.  It's like a super-charged `print` statement.
 
@@ -1267,6 +1267,98 @@ while True:             # Event Loop
     counter += 1
 window.close()
 
+```
+
+## Recipe Printing - #4/4 using `cprint` function (color printing) to print to Multiline
+
+
+This method was added to PySimpleGUI tkinter port in June 2020 and needs to be ported to the other ports still. 
+
+The idea is have a function, `cprint` that looks and acts like a normal print.... except, you can "route" it to any multiline element.  There are 2 ways to do routing.  
+
+1. Call `cprint_set_output_destination(window, multiline_key)` to tell PySimpleGUI where the output should go
+2. Indicate the output location directly in the `cprint` call itself
+
+#### Color
+
+The color portion of the cprint call is achieved through additional parameters that are not normally present on a call to print. This means that if you use these color parameters, you cannot simply rename your `cprint` calls to be `print` calls.  Of course you can safely go the other direction, renaming your `print` calls to call `cprint`.
+
+#### The Aliasing Shortcut Trick
+
+So that you don't have to type: `sg.cprint` every time you want to print, you can add this statement to the top of your code:
+
+`cprint = sg.cprint`
+
+Now you can simply call `cprint` directly.   You will still get the docstrings if you're running PyCharm so you're not losing anything there.
+
+
+This Recipe shows many of the concepts and parameters. There is also one located in the Demo Programs area on GitHub (http://Demos.PySimpleGUI.org).
+
+```python
+import PySimpleGUI as sg
+
+"""
+    Demo - cprint usage
+
+    "Print" to any Multiline Element in any of your windows.
+
+    cprint in a really handy way to "print" to any multiline element in any one of your windows.
+    There is an initial call - cprint_set_output_destination, where you set the output window and the key
+    for the Multiline Element.
+
+    There are FOUR different ways to indicate the color, from verbose to the most minimal are:
+    1. Specify text_color and background_color in the cprint call
+    2. Specify t, b paramters when calling cprint
+    3. Specify c/colors parameter a tuple with (text color, background color)
+    4. Specify c/colors parameter as a string "text on background"  e.g.  "white on red"
+
+    Copyright 2020 PySimpleGUI.org
+"""
+
+def main():
+    cprint = sg.cprint
+
+    MLINE_KEY = '-ML-'+sg.WRITE_ONLY_KEY   # multiline element's key. Indicate it's an output only element
+    MLINE_KEY2 = '-ML2-'+sg.WRITE_ONLY_KEY # multiline element's key. Indicate it's an output only element
+
+    output_key = MLINE_KEY
+
+    layout = [  [sg.Text('Multiline Color Print Demo', font='Any 18')],
+                [sg.Multiline('Multiline\n', size=(80,20), key=MLINE_KEY)],
+                [sg.Multiline('Multiline2\n', size=(80,20), key=MLINE_KEY2)],
+                [sg.Text('Text color:'), sg.Input(size=(12,1), key='-TEXT COLOR-'),
+                 sg.Text('on Background color:'), sg.Input(size=(12,1), key='-BG COLOR-')],
+                [sg.Input('Type text to output here', size=(80,1), key='-IN-')],
+                [sg.Button('Print', bind_return_key=True), sg.Button('Print short'),
+                 sg.Button('Force 1'), sg.Button('Force 2'),
+                 sg.Button('Use Input for colors'), sg.Button('Toggle Output Location'), sg.Button('Exit')]  ]
+
+    window = sg.Window('Window Title', layout)
+
+    sg.cprint_set_output_destination(window, output_key)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+        if event == 'Print':
+            cprint(values['-IN-'], text_color=values['-TEXT COLOR-'], background_color=values['-BG COLOR-'])
+        elif event == 'Print short':
+            cprint(values['-IN-'], c=(values['-TEXT COLOR-'], values['-BG COLOR-']))
+        elif event.startswith('Use Input'):
+            cprint(values['-IN-'], colors=values['-IN-'])
+        elif event.startswith('Toggle'):
+            output_key = MLINE_KEY if output_key == MLINE_KEY2 else MLINE_KEY2
+            sg.cprint_set_output_destination(window, output_key)
+            cprint('Switched to this output element', c='white on red')
+        elif event == 'Force 1':
+            cprint(values['-IN-'], c=(values['-TEXT COLOR-'], values['-BG COLOR-']), key=MLINE_KEY)
+        elif event == 'Force 2':
+            cprint(values['-IN-'], c=(values['-TEXT COLOR-'], values['-BG COLOR-']), key=MLINE_KEY2)
+    window.close()
+
+if __name__ == '__main__':
+    main()
 ```
 
 
