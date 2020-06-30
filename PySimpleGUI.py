@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.2 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9"
+version = __version__ = "4.22.0.4 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac"
 
 port = 'PySimpleGUI'
 
@@ -557,7 +557,8 @@ class ToolTip:
         x = self.widget.winfo_rootx() + self.x + DEFAULT_TOOLTIP_OFFSET[0]
         y = self.widget.winfo_rooty() + self.y + DEFAULT_TOOLTIP_OFFSET[1]
         self.tipwindow = tk.Toplevel(self.widget)
-        self.tipwindow.wm_overrideredirect(True)
+        if not sys.platform.startswith('darwin'):
+            self.tipwindow.wm_overrideredirect(True)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
         self.tipwindow.wm_attributes("-topmost", 1)
 
@@ -11529,8 +11530,8 @@ def StartupTK(my_flex_form):
         Window._IncrementOpenCount()
         Window.hidden_master_root = tk.Tk()
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-        Window.hidden_master_root.wm_overrideredirect(True)
-        Window.hidden_master_root.withdraw()
+        if not sys.platform.startswith('darwin'):
+            Window.hidden_master_root.wm_overrideredirect(True)
         root = tk.Toplevel()
     else:
         root = tk.Toplevel()
@@ -14721,13 +14722,15 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
             Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            Window.hidden_master_root.wm_overrideredirect(True)
+            if not sys.platform.startswith('darwin'):
+                Window.hidden_master_root.wm_overrideredirect(True)
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            root.wm_overrideredirect(True)
+            if not sys.platform.startswith('darwin'):
+                root.wm_overrideredirect(True)
             root.withdraw()
         except:
             pass
@@ -14821,13 +14824,15 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            Window.hidden_master_root.wm_overrideredirect(True)
+            if not sys.platform.startswith('darwin'):
+                Window.hidden_master_root.wm_overrideredirect(True)
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            root.wm_overrideredirect(True)
+            if not sys.platform.startswith('darwin'):
+                root.wm_overrideredirect(True)
             root.withdraw()
         except:
             pass
@@ -16224,7 +16229,7 @@ def main():
                     keep_on_top=True,
                     element_justification='left',
                     metadata='My window metadata',
-                    # ttk_theme=THEME_VISTA,
+                    # ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO
                     )
     # graph_elem.DrawCircle((200, 200), 50, 'blue')
