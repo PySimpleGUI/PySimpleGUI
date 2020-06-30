@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.4 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac"
+version = __version__ = "4.22.0.5 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key)"
 
 port = 'PySimpleGUI'
 
@@ -1058,7 +1058,7 @@ class InputText(Element):
 
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
-                 change_submits=False, enable_events=False, do_not_clear=True, key=None, focus=False, pad=None,
+                 change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
                  use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Text initially shown in the input box as a default value(Default value = '')
@@ -1089,6 +1089,8 @@ class InputText(Element):
         :type do_not_clear: (bool)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param focus: Determines if initial focus should go to this element.
         :type focus: (bool)
         :param pad: Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
@@ -1124,6 +1126,7 @@ class InputText(Element):
         self.ReadOnly = readonly
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TKEntry = self.Widget = None  # type: tk.Entry
+        key = key if key is not None else k
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
@@ -1208,7 +1211,7 @@ class Combo(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values: values to choose. While displayed as text, the items returned are what the caller supplied, not text
@@ -1231,6 +1234,8 @@ class Combo(Element):
         :type disabled: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text that will appear when mouse hovers over this element
@@ -1252,6 +1257,7 @@ class Combo(Element):
         self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -1362,7 +1368,7 @@ class OptionMenu(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: Values to be displayed
         :type values: List[Any] or Tuple[Any]
@@ -1380,6 +1386,8 @@ class OptionMenu(Element):
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text that will appear when mouse hovers over this element
@@ -1395,6 +1403,7 @@ class OptionMenu(Element):
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -1462,7 +1471,7 @@ class Listbox(Element):
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
-                 background_color=None, text_color=None, key=None, pad=None, tooltip=None, right_click_menu=None,
+                 background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, right_click_menu=None,
                  visible=True, metadata=None):
         """
         :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
@@ -1494,6 +1503,8 @@ class Listbox(Element):
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1527,6 +1538,8 @@ class Listbox(Element):
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None  # type: tk.Listbox
         self.NoScrollbar = no_scrollbar
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
@@ -1666,7 +1679,7 @@ class Radio(Element):
     """
 
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, pad=None, tooltip=None,
+                 background_color=None, text_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True, metadata=None):
         """
         :param text: Text to display next to button
@@ -1689,6 +1702,8 @@ class Radio(Element):
         :type font: Union[str, Tuple[str, int]]
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1724,6 +1739,8 @@ class Radio(Element):
             self.CircleBackgroundColor = background_color if background_color else theme_background_color()
         self.ChangeSubmits = change_submits or enable_events
         self.EncodedRadioValue = None
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -1797,8 +1814,7 @@ class Checkbox(Element):
     """
 
     def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, pad=None,
-                 tooltip=None, visible=True, metadata=None):
+                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: Text to display next to checkbox
         :type text: (str)
@@ -1822,6 +1838,8 @@ class Checkbox(Element):
         :type disabled: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1853,6 +1871,7 @@ class Checkbox(Element):
             self.CheckboxBackgroundColor = background_color if background_color else theme_background_color()
 
         self.ChangeSubmits = change_submits or enable_events
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -1953,8 +1972,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False,
-                 size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None,
-                 pad=None, tooltip=None, visible=True, metadata=None):
+                 size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List of valid values
         :type values: Tuple[Any] or List[Any]
@@ -1978,6 +1996,8 @@ class Spin(Element):
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1995,6 +2015,7 @@ class Spin(Element):
         self.Disabled = disabled
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2082,7 +2103,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, focus=False, font=None, pad=None, tooltip=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2111,6 +2132,8 @@ class Multiline(Element):
         :type do_not_clear: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2141,6 +2164,8 @@ class Multiline(Element):
         self.TagCounter = 0
         self.TKText = self.Widget = None  # type: tkst.ScrolledText
         self.tags = set()
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
@@ -2269,8 +2294,7 @@ class Text(Element):
     """
 
     def __init__(self, text='', size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
-                 relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None,
-                 right_click_menu=None, tooltip=None, visible=True, metadata=None):
+                 relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text: Any
@@ -2298,6 +2322,8 @@ class Text(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2320,9 +2346,9 @@ class Text(Element):
         self.RightClickMenu = right_click_menu
         self.TKRightClickMenu = None
         self.BorderWidth = border_width
+        key = key if key is not None else k
 
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
@@ -2389,7 +2415,7 @@ class StatusBar(Element):
 
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
-                 key=None, tooltip=None, visible=True, metadata=None):
+                 key=None, k=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: Text that is to be displayed in the widget
         :type text: (str)
@@ -2415,6 +2441,8 @@ class StatusBar(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -2433,6 +2461,8 @@ class StatusBar(Element):
         else:
             bg = background_color
         self.TKText = self.Widget = None  # type: tk.Label
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg,
                          font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip,
                          visible=visible, metadata=metadata)
@@ -2671,7 +2701,7 @@ class Output(Element):
     """
 
     def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param size: (width, height) w=characters-wide, h=rows-high
         :type size: (int, int)
@@ -2687,6 +2717,8 @@ class Output(Element):
         :type tooltip: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param visible: set visibility state of the element
@@ -2699,6 +2731,7 @@ class Output(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.RightClickMenu = right_click_menu
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, metadata=metadata)
@@ -2792,8 +2825,7 @@ class Button(Element):
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
-                 use_ttk_buttons=None,
-                 font=None, bind_return_key=False, focus=False, pad=None, key=None, visible=True, metadata=None):
+                 use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -2843,6 +2875,8 @@ class Button(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -2885,6 +2919,8 @@ class Button(Element):
             self.UseTtkButtons = True
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -3219,8 +3255,7 @@ class ButtonMenu(Element):
 
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
-                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None,
-                 tearoff=False, visible=True, metadata=None):
+                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -3252,6 +3287,8 @@ class ButtonMenu(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tearoff: Determines if menus should allow them to be torn off
         :type tearoff: (bool)
         :param visible: set visibility state of the element
@@ -3277,6 +3314,7 @@ class ButtonMenu(Element):
         self.TKButtonMenu = None  # type: tk.Menubutton
         self.TKMenu = None  # type: tk.Menu
         # self.temp_size = size if size != (NONE, NONE) else
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
@@ -3347,7 +3385,7 @@ class ProgressBar(Element):
     """
 
     def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None,
-                 key=None, pad=None, visible=True, metadata=None):
+                 key=None, k=None, pad=None, visible=True, metadata=None):
         """
         :param max_value: max value of progressbar
         :type max_value: (int)
@@ -3367,6 +3405,8 @@ class ProgressBar(Element):
         :type relief: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param visible: set visibility state of the element
@@ -3385,6 +3425,8 @@ class ProgressBar(Element):
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad,
                          visible=visible, metadata=metadata)
 
@@ -3443,8 +3485,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None,
-                 tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
         """
         :param filename: image filename if there is a button image. GIFs and PNGs only.
         :type filename: (str)
@@ -3458,6 +3499,8 @@ class Image(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3483,6 +3526,7 @@ class Image(Element):
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
         self.Source = filename if filename is not None else data
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -3643,7 +3687,7 @@ class Image(Element):
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
 
-    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, tooltip=None,
+    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param canvas: Your own tk.Canvas if you already created it. Leave blank to create a Canvas
@@ -3656,6 +3700,8 @@ class Canvas(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3669,6 +3715,7 @@ class Canvas(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
         self.RightClickMenu = right_click_menu
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -3709,7 +3756,7 @@ class Graph(Element):
     """
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
-                 change_submits=False, drag_submits=False, enable_events=False, key=None, tooltip=None,
+                 change_submits=False, drag_submits=False, enable_events=False, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, float_values=False, metadata=None):
         """
         :param canvas_size: size of the canvas area in pixels
@@ -3730,6 +3777,8 @@ class Graph(Element):
         :type enable_events: (bool)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3754,6 +3803,7 @@ class Graph(Element):
         self.Images = {}
         self.RightClickMenu = right_click_menu
         self.FloatValues = float_values
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -4411,7 +4461,7 @@ class Frame(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
                  tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
         :param title: text that is displayed as the Frame's "label" or title
@@ -4436,6 +4486,8 @@ class Frame(Element):
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -4466,6 +4518,7 @@ class Frame(Element):
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         self.Layout(layout)
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
                          font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -4596,11 +4649,18 @@ class VerticalSeparator(Element):
     Column Element if extra height is needed
     """
 
-    def __init__(self, color=None, pad=None, key=None):
+    def __init__(self, color=None, pad=None, key=None, k=None):
         """
+        :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
+        :type color: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         """
+        key = key if key is not None else k
 
         self.Orientation = 'vertical'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
@@ -4620,14 +4680,22 @@ class HorizontalSeparator(Element):
     Horizontal Separator Element draws a Horizontal line at the given location.
     """
 
-    def __init__(self, color=None, pad=None, key=None):
+    def __init__(self, color=None, pad=None, key=None, k=None):
         """
+        :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
+        :type color: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+        :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         """
 
         self.Orientation = 'horizontal'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
 
@@ -4648,7 +4716,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
+                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
         """
         :param title: text to show on the tab
         :type title: (str)
@@ -4668,6 +4736,8 @@ class Tab(Element):
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -4697,11 +4767,11 @@ class Tab(Element):
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
+        key = key if key is not None else k
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def AddRow(self, *args):
@@ -4855,7 +4925,7 @@ class TabGroup(Element):
     def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
                  background_color=None,
                  font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
-                 key=None, tooltip=None, visible=True, metadata=None):
+                 key=None, k=None, tooltip=None, visible=True, metadata=None):
         """
         :param layout: Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :type layout: List[List[Tab]]
@@ -4885,6 +4955,8 @@ class TabGroup(Element):
         :type theme: (enum)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -4913,6 +4985,7 @@ class TabGroup(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
         self.ElementJustification = 'left'
+        key = key if key is not None else k
 
         self.Layout(layout)
 
@@ -5062,7 +5135,7 @@ class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
-                 text_color=None, key=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param range: slider's range (min value, max value)
         :type range: Union[Tuple[int, int], Tuple[float, float]]
@@ -5096,6 +5169,8 @@ class Slider(Element):
         :type text_color: (str)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -5121,6 +5196,7 @@ class Slider(Element):
         temp_size = size
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -5326,7 +5402,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, visible=True, justification='left', element_justification='left', metadata=None):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification='left', element_justification='left', metadata=None):
         """
         :param layout: Layout that will be shown in the Column container
         :type layout: List[List[Element]]
@@ -5344,6 +5420,8 @@ class Column(Element):
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param justification: set justification for the Column itself. Note entire row containing the Column will be affected
@@ -5371,6 +5449,8 @@ class Column(Element):
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         self.Justification = justification
+        key = key if key is not None else k
+
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
@@ -5505,7 +5585,7 @@ class Pane(Element):
     """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
-                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, visible=True, metadata=None):
+                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None, visible=True, metadata=None):
         """
         :param pane_list: Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
         :type pane_list: List[Column]
@@ -5527,6 +5607,8 @@ class Pane(Element):
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -5551,6 +5633,7 @@ class Pane(Element):
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
 
         self.Rows = [pane_list]
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
         return
@@ -5819,8 +5902,7 @@ class Menu(Element):
     menu is shown.  The key portion is returned as part of the event.
     """
 
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None,
-                 visible=True, metadata=None):
+    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None, k=None, visible=True, metadata=None):
         """
         :param menu_definition: ???
         :type menu_definition: List[List[Tuple[str, List[str]]]
@@ -5832,10 +5914,12 @@ class Menu(Element):
         :type tearoff: (bool)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
+        :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -5846,6 +5930,7 @@ class Menu(Element):
         self.MenuDefinition = menu_definition
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
+        key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key,
                          visible=visible, font=font, metadata=metadata)
@@ -5927,7 +6012,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
-                 key=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param values: ???
         :type values: List[List[Union[str, int, float]]]
@@ -5985,6 +6070,8 @@ class Table(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -6025,6 +6112,8 @@ class Table(Element):
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
+        key = key if key is not None else k
+
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
@@ -6170,7 +6259,7 @@ class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
-                 background_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, tooltip=None,
+                 background_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param data: The data represented using a PySimpleGUI provided TreeData class
@@ -6219,6 +6308,8 @@ class Tree(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: (Any)
+        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k: (Any)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -6255,9 +6346,9 @@ class Tree(Element):
         self.IconList = {}
         self.IdToKey = {'': ''}
         self.KeyToID = {'': ''}
+        key = key if key is not None else k
 
-        super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad,
-                         key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def _treeview_selected(self, event):
