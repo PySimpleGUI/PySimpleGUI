@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.5 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key)"
+version = __version__ = "4.22.0.6 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied"
 
 port = 'PySimpleGUI'
 
@@ -11283,9 +11283,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ------ Do Styling of Colors -----
                 style_name = str(element.Key) + 'customtable.Treeview'
                 table_style = ttk.Style()
-                if tclversion_detailed == '8.6.9':
-                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
-                    table_style.map(style_name, foreground=_fixed_map(table_style, style_name, 'foreground'), background=_fixed_map(table_style, style_name, 'background'))
 
                 table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -11338,6 +11335,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
+
+                if tclversion_detailed == '8.6.9':
+                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    table_style.map(style_name, foreground=_fixed_map(table_style, style_name, 'foreground'), background=_fixed_map(table_style, style_name, 'background'))
+
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element  # type: Tree
@@ -11407,9 +11409,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # ----- configure colors -----
                 style_name = str(element.Key) + '.Treeview'
                 tree_style = ttk.Style()
-                if tclversion_detailed == '8.6.9':
-                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
-                    tree_style.map(style_name, foreground=_fixed_map(tree_style, style_name, 'foreground'), background=_fixed_map(tree_style, style_name, 'background'))
                 tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, background=element.BackgroundColor,
@@ -11446,6 +11445,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
+                if tclversion_detailed == '8.6.9':
+                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    tree_style.map(style_name, foreground=_fixed_map(tree_style, style_name, 'foreground'), background=_fixed_map(tree_style, style_name, 'background'))
+
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
