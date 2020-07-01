@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.6 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied"
+version = __version__ = "4.22.0.7 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup"
 
 port = 'PySimpleGUI'
 
@@ -13994,9 +13994,7 @@ def ObjToString(obj, extra='    '):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
-          auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=False, location=(None, None)):
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -14035,6 +14033,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type location: Tuple[int, int]
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
+    :param any_key_closes: If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
+    :type any_key_closes: (bool)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None]
     """
@@ -14050,7 +14050,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     _title = title if title is not None else args_to_print[0]
     window = Window(_title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes)
     max_line_total, total_lines = 0, 0
     for message in args_to_print:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
