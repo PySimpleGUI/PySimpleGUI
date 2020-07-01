@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.7 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup"
+version = __version__ = "4.22.0.8 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error"
 
 port = 'PySimpleGUI'
 
@@ -245,6 +245,9 @@ DEFAULT_BASE64_ICON = b'R0lGODlhIQAgAPcAAAAAADBpmDBqmTFqmjJrmzJsnDNtnTRrmTZtmzZu
 DEFAULT_BASE64_LOADING_GIF = b'R0lGODlhQABAAKUAAAQCBJyenERCRNTS1CQiJGRmZLS2tPTy9DQyNHR2dAwODKyqrFRSVNze3GxubMzKzPz6/Dw6PAwKDKSmpExKTNza3CwqLLy+vHx+fBQWFLSytAQGBKSipERGRNTW1CQmJGxqbLy6vPT29DQ2NHx6fBQSFKyurFRWVOTi5HRydPz+/Dw+PP7+/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCQAsACwAAAAAQABAAAAG/kCWcEgsGo/IpHLJbDqf0CjxwEmkJgepdrvIAL6A0mJLdi7AaMC4zD4eSmlwKduuCwNxdMDOfEw4D0oOeWAOfEkmBGgEJkgphF8ph0cYhCRHeJB7SCgJAgIJKFpnkGtTCoQKdEYGEmgSBlEqipAEEEakcROcqGkSok8PkGCBRhNwcrtICYQJUJnDm0YHASkpAatHK4Qrz8Nf0mTbed3B3wDFZY95kk8QtIS2bQ29r8BPE8PKbRquYBuxpJCwdKhBghUrQpFZAA8AgX2T7DwIACiixYsYM2rc+OSAhwrZOEa5QGHDlw0dLoiEAqEAoQK3VjJxCQmEzCUhzgXciOKE/gIFJ+4NEXBOAEcPyL6UqEBExLkvIjYyiMOAyICnAAZs9IdGgVWsWjWaTON1yAGsUTVOTUOhyLhh5TQi7cqUyIVzKjmiYCBBQtAjNAnZvKmk5cuYhJVc6DAWZd7ETTx6CAm5suXLRQY4sPDTQoqwmIlAADE2DYi0oUUQhbQC8WUQ5wZf9oDVA58KdaPAflqgTgMEXxA0iPIB64c6I9AgiFL624Y2FeLkbtJ82HM2tNPYfmLBOHLlUQJ/6z0POADhUa4+3V7HA/vw58gfEaFBA+qMIt6Su9/UPAL+F4mwWxwwJZGLGitp9kFfHzgAGhIHmhKaESIkB8AIrk1YBAQmDJiQoYYghijiiFAEAQAh+QQJCQApACwAAAAAQABAAIUEAgSEgoREQkTU0tRkYmQ0MjSkpqTs6ux0cnQUEhSMjozc3ty0trT09vRUUlRsamw8OjwMCgxMSkx8fnwcGhyUlpTk5uS8vrz8/vwEBgSMioxERkTc2txkZmQ0NjS0srT08vR0dnQUFhSUkpTk4uS8urz8+vxsbmw8Pjz+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/sCUcEgsGo/IpHLJbDqf0Kh0Sl0aPACAx1DtOh/ZMODhLSMNYjHXzBZi01lPm42BizHz5CAk2YQGSSYZdll4eUUYCHAhJkhvcAWHRiGECGeEa0gNAR4QEw1TA4RZgEcdcB1KBwViBQdSiqOWZ6wABZlIE3ATUhujAAJsj2FyUQK/wWbDcVInvydsumm8UaKjpWWrra+whNBtDRMeHp9UJs5pJ4aSXgMnGxsI2Oz09fb3+Pn6+/xEJh8KRjBo1M/JiARiEowoyIQAIQIMk1T4tXAfBw6aEI5KAArfgjcFFhj58CsLg3zDIhXRUBKABnwc4GAkoqDly3vWxMxLQbLk/kl8tbKoJAJCIyGO+RbUCnlkxC8F/DjsLOLQDsSISRREEBMBKlYlDRgoUMCg49ezaNOqVQJCqtm1Qy5IGAQgw4YLcFOYOGWnA8G0fAmRSVui5c+zx0omM2NBgwYLUhq0zPKWSIMFHCojsUAhiwjIUHKWnPpBAF27H5YEEBOg2mQA80A4ICQBRBJpWVpDAfHabAMUv1BoFkJChGcSUoCXREGEUslZRxoHAB3lQku8Qg7Q/ZWB26HAdgYLmTi5Aru9hPwSqdryKrsLG07fNTJ7soN7IAZwsH2EfUn3ETk1WUVYWbDdKBlQh1Usv0D3VQPLpOHBcAyBIAFt/K31AQrbBqGQWhtBAAAh+QQJCQAyACwAAAAAQABAAIUEAgSEgoTEwsREQkTk4uQsLiykoqRkYmQUEhTU0tRUUlT08vS0srSMjox8enwMCgzMysw8OjwcGhxcWlz8+vy8urxMSkzs6uysqqxsamzc2tyUlpQEBgSMiozExsTk5uQ0NjSkpqRkZmQUFhRUVlT09vS0trSUkpR8fnwMDgzMzsw8PjwcHhxcXlz8/vy8vrxMTkzc3tz+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/kCZcEgsGo/IpHLJbDqf0Kh0Sq1ar8nEgMOxqLBgZCIFKAMeibB6aDGbB2u1i+Muc1xxJSWmoSwpdHUcfnlGJSgIZSkoJUptdXCFRRQrdQArhEcqD24PX0wUmVMOlmUOSiqPXkwLLQ8PLQtTFCOlAAiiVyRuJFMatmVpYIB1jVEJwADCWCWBdsZQtLa4artmvaO2p2oXrhyxVCWVdSvQahR4ViUOZAApDuaSVhQaGvHy+Pn6+/z9/v8AAzrxICJCBBEeBII6YOnAPYVDWthqAfGIgGQC/H3o0OEDEonAKPL7IKHMCI9GQCQD0S+AmwBHVAJjyQ/FyyMgJ/YjUAvA/ggCFjFqDNAxSc46IitOOlqmRS6lQwSIABHhwAuoWLNq3cq1ogcHLVqgyFiFAoMGJ0w8teJBphsQCaWcaFcGwYkwITiV4hAiCsNSB7B4cLYXwpMNye5WcVEgWZkC6ZaUSAQMwUMnFRybqdCEgWYTVUhpBrBtSQfNHZC48BDCgIfIRKxpxrakAWojLjaUNCNhA2wZsh3TVuLZMWgiJRTYgiFKtObSShbQLZUinohkIohkHs25yYnERVRo/iSDQmPHBdYi+Wsp6ZDrjrNH1Uz2SYPpKRocOZ+sQJEQhLnBgQFTlHBWAyZcxoJmEhjRliVw4cMfMP4ZQYEADpDQggMvJ/yWB3zYYQWBZnFBxV4p8mFVAgzLqacQBSf0ZNIJLla0mgGu1ThFEAAh+QQJCQAqACwAAAAAQABAAIUEAgSUkpRERkTMyswkIiTs6uy0trRkZmQ0MjTU1tQcGhykpqRUVlT09vTEwsQsKix8enwMCgycnpzU0tS8vrw8Ojzc3txcXlz8/vwEBgSUlpRMSkzMzswkJiT08vS8urxsamw0NjTc2twcHhysqqz8+vzExsQsLix8fnxkYmT+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/kCVcEgsGo/IpHLJbDqf0Kh0Sq1ar8tEAstdWk4AwMnSLRfBYbF5nUint+tu2w2Ax5OFghMdPt2TBg9hDwZMImgnIn9HH3QAhUxaTw0LCw1WHY4dax6CAA8eVAWOYXplEm4SoqQApl2oaapUmXSbZgW0HaFUBo6QZpQLu1UGub+LWHnIy8zNzs/Q0dLTzSYQFxcoDtRMAwiOCCZJDRwDl88kGawZC0YlEOoAGRDnywPx6wNEHnxpJ8N/SvRjdaLEkAOsDiyjwMrRByEe8NHJADAOhIZ0IAgZgFHcIgYY3TAQYqIjMpAhw4xUEXFdxTUXUwLQKAQhKYXIGsl8CHGg/piXa0p4wvgAA5EG8MLMq4esZEiPRRoMMMGU2QKJbthxQ2LiG51wW5NgcACBwQUIFIyGXcu2bdgGGjZ06LBBQ1UoJg5UqHAAKhcTBByN8OukRApHKe5OcYA1TQbCTC6wuoClQeCGIxQjcYBxm5UAKQM8kdyQshUBKQU8CYERwZURKUc88crKNZIJZRlAmIAEdkjZTkhPPtLAppsDd1GHVO2Ec0PPREoodyTAIBHQIUWPHm5EA0btQxoowKgAaJISwtNcsF7ENyvgRCg0Vgq5iYMDISqkoIDEQkoyRZjgXhojQHcHRyHpYwRcAhBAgAB2LeNfSACyNaBgbqngXUPgGLElHSvVZahCA4fRcYFma3GQGwQciAhNEAAh+QQJCQAwACwAAAAAQABAAIUEAgSEgoTEwsRERkTk4uQkIiSkpqRsamwUEhTU0tT08vSUkpRUUlQ0MjS0trQMCgzMyszs6ux8enwcGhzc2tz8+vyMioxMTkysrqw8OjwEBgSEhoTExsRMSkzk5uQkJiSsqqxsbmwUFhTU1tT09vSUlpRUVlQ0NjS8vrwMDgzMzszs7ux8fnwcHhzc3tz8/vz+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/kCYcEgsGo/IpHLJbDqf0Kh0Sq1ar9hs1sNiebRgowsBACBczJcKA1K9wkxWucxSVgKTOUC0qcCTcnN1SBEnenoZX39iZAApaEcVhod6J35SFSgoJE4EXYpHFpSUAVIqBWUFKlkVIqOHIpdOJHlzE5xXEK+UHFAClChYBruHBlAowMLEesZPtHoiuFa6y2W9UBAtZS2rWK3VsVIkmtJYosuDi1Ekk68n5epPhe4R8VR3rnN8svZTLxAg2vDrR7CgwYMItZAo0eHDhw4l4CVMwgHVoRbXjrygMOLNQQEaXmnISARErQnNCFbQtqsFPBCUUtpbUG0BkRe19EzwaG9A/rUBREa8GkHQIrEWRCgMJcjyKJFvsHjG87kMaMmYBWkus1nEwEmZ9p7tmqBA44gRA/uhCDlq5MQlHJrOaSHgLZOFAwoUGBDRrt+/gAMLhkMiwYiyV0iogCARCwUTbDWYoHBPQmQJjak4eEDpgQMpKxpQarAiCwXOox4QhXLg1YEsDIgxgKKALSUNiKvUXpb5CLVXJKeoqNatCQdiwY2QyH0kAfEnu9syJ0Jiw4dUGxorqNb7SOtRr4+saDeH9BETsqOEHl36yIVXF46MQN15NRQSlstowIzk+K7kMGzW2WdUKAABB90FQEwp8l1g2wX2xfOda0oolkB3YWyw4GBCIfgHHIdCvDdKByAKsd4h5pUIAwkBsNRCdioWoUB7MRoUBAAh+QQJCQAuACwAAAAAQABAAIUEAgSEhoTMzsxMSkykpqQcHhz08vRkYmQUEhSUlpS0trTc3twsLixsbmwMCgzU1tSsrqz8+vycnpyMjoxUUlQkJiRsamwcGhy8vrw0NjR0dnQEBgTU0tSsqqz09vRkZmQUFhScmpy8urzk5uQ0MjR0cnQMDgzc2ty0srT8/vykoqSUkpRUVlQsKiz+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/kCXcEgsGo8RRWlAaSgix6h0Sp2KKoCstiKqer/fkHasTYDP6KFoQ25303BqBNsmV6DxvBFSr0P0gEMNfW0WgYEDhGQDRwsTFhYTC4dTiYpajEQeB2xjBx6URxaXWoZDHiR9JKChRHykAH9DB4oHcQIlJQJRc6R3Qwukk2gcnRscUSKkb0ITpBNpo6VSCZ11ZkS0l7Zo0lmmUQp0YxUKRtq1aQLGyFNJDUxOeEXOl9DqDbqhJ6QnrYDo6nD7l8cDgz4MWBHMYyBglgMGFh46MeHDhwn+JGrcyLGjx48gO3rg8CBiSDQnWBhjkfFkFQUO2jgwF8UACgUmPz6IWcfB/oMjGBBkQYABJAVFFIwYMDEGQc6NBqz1USjk1RhZHAWQ2kUERRsUHrVe4jpk6RgTTzV6IEVVCAamAEwU/XiUUNIjNlGk5bizj0+XVGDKpAl4yoO6WSj8LOzFgwAObRlLnky5suXLEg2o0FCCwF40KU48SEGwg1AtCDrk6XAhywUCrTr0UZ1GNhnYhwycbuMUdGsyF0gHkqBIApoHfRYDKqGoAcrkhzQoKoEmAog2IIRHSSEiQAAR84wQJ2Qcje0xuKOcaDGmhfIiZuughUPg9+spI66TATEiyvnbeaTwwAPhidLHB1IQsBsACKS3kX7YTWGABLlI8BlBEShSIGUQIO6HmRDekIHgh/lh19+HLjzA3hbvfZiEdwpoh+KMjAUBACH5BAkJACYALAAAAABAAEAAhQQCBISGhMzKzERCRDQyNKSmpOzq7GRiZBQSFHRydJyanNTW1LS2tPz6/Dw6PAwODLSytPTy9GxubBweHHx6fKSipNze3AQGBIyKjMzOzExOTDQ2NKyqrOzu7GRmZBQWFHR2dJyenNza3Ly+vPz+/Dw+PP7+/gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAb+QJNwSCwaj8ikcslsmjoYx+fjwHSc2KyS8QF4vwiGdjxmXL5or5jMXnYQ6TTi2q4bA/F4wM60UDZTGxQWRw55aRt8SSQUhyAkRQ+HaA+KRw0akwAaDUSSmgCVRg0hA1MDCp1ZIKAACUQbrYlFBrGIBlgirV4LQ3ige0QNtnEbqkwSuwASQ2+aD3RDCpoKTgTKBEQMmmtEhpMlTp+tokMMcGkP3UToh+VL46DvQh0BGwgIGwHRkc/W2HW+HQrXJNkuZm2mTarWZIGyXm2GHTKGhRWoV3ZqFcOFBZMmTooaKCiBr0SqMQ0sxgFxzJIiESAI4CMAQoTLmzhz6tzJs6f+z59Ah0SoACJBgQhByXDoAoZD0iwcDjlFIuDAAQFPOzCNM+dIhjMALmRIGkJTiCMe0BxIavAQwiIH1CZNoAljka9exJI1iySDVaxJneV5gPQpk6h5Chh2UqAdAASKFzvpEKJoCH6SM2vezLmz58+gQ7fhsOHCBQeR20SAwKDwzbZf3o4ZgQ7BiJsFDqXOEiFeV0sCEZGBEGcqHxKaIGkhngaCJRJg41xQnkWwF8IuiQknM+LTg9tMBAQIADhJ7sRtOrDGfIRE3C8HWhqB7UV2Twx6lhQofWHDbp8TxDGBaEIgl4d8nwWYxoAEmvALGsEQ6J5aCIYmHnkNZqghgUEBAAAh+QQJCQAnACwAAAAAQABAAIUEAgSEgoRERkTEwsTk4uRkYmQ0MjQUFhRUVlTU1tT08vSkpqQMCgxMTkzMysxsbmz8+vzs6uwcHhxcXlzc3tysrqwEBgSEhoRMSkzExsRkZmQ8OjwcGhxcWlzc2tz09vSsqqwMDgxUUlTMzsx0dnT8/vzs7uz+/v4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/sCTcEgsGo/IpHLJbA5NjozJSa02RxiAFiAYWb/g08Ky3VoW4TRzxCiXLV613Jh1lwVzJ4RCgCQjdnZTeUkZImQAFiIZRxmBbgOERyUkjyQlRQOPZZFIFCAVHmGVmyRFgJtag0UUAncUVpqpAJ1Drpt4RhQHdgewVHWpGEUOiHZwR7d2uU0fbbMWfkRjx2hGHqkJTtizWqLEylwOSAup1kzc3d9GERlSShWpIE4fxpvRaumB2k7BuHPh7lSRlapWml29flEhZYkQARF31lGBwNANCWmEPIAAwS9MhgaILDQwKEnSHgoYS6pcqRJCSpZzMhTgBeBAAZIwrXzo8AjB/oecXxQYSGVgFdAmCLohODoEhAELFjacE+KoGy2mD+w8IJLU6lKgIB6d42C15tENjwwMKatFQc4SqTCdYAvALcwS9t7IpdntwNGhgdQK4en1aNhA5wjOwrkyq5utXJUyFbLgqQUDU4UIJWp3MhMFXe0gMOqZyYAJZAFwmMC4dBMIP13Lnk27tu3buHPnSYABKoaOYRwUKMBIZYJnWhgAtzIiZBxJ/rQw+6KhTIGSEPImkvulgPWSeI+9pNJcC7KS0bmoGTFhwnNJx8sod10BAYIKTRLcErD86IUyAeiGhAn2WECagCeMYMd7CJ5A4BsHIhgAgA0eUd99FWao4YYcAy4RBAA7OEloRWRqYW9jdzhOTjdUeHV4MTVCcmpRRWxDKzdGSWtiWnV5UUlCY0t5QTlKYmUzU25OM3ArSDd0K3JOMEtOTw=='
 
 PSG_DEBUGGER_LOGO = b'R0lGODlhMgAtAPcAAAAAADD/2akK/4yz0pSxyZWyy5u3zZ24zpW30pG52J250J+60aC60KS90aDC3a3E163F2K3F2bPI2bvO3rzP3qvJ4LHN4rnR5P/zuf/zuv/0vP/0vsDS38XZ6cnb6f/xw//zwv/yxf/1w//zyP/1yf/2zP/3z//30wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAyAC0AAAj/AP8JHEiwoMGDCBMqXMiwoUOFAiJGXBigYoAPDxlK3CigwUGLIAOEyIiQI8cCBUOqJFnQpEkGA1XKZPlPgkuXBATK3JmRws2bB3TuXNmQw8+jQoeCbHj0qIGkSgNobNoUqlKIVJs++BfV4oiEWalaHVpyosCwJidw7Sr1YMQFBDn+y4qSbUW3AiDElXiWqoK1bPEKGLixr1jAXQ9GuGn4sN22Bl02roo4Kla+c8OOJbsQM9rNPJlORlr5asbPpTk/RP2YJGu7rjWnDm2RIQLZrSt3zgp6ZmqwmkHAng3ccWDEMe8Kpnw8JEHlkXnPdh6SxHPILaU/dp60LFUP07dfRq5aYntohAO0m+c+nvT6pVMPZ3jv8AJu8xktyNbw+ATJDtKFBx9NlA20gWU0DVQBYwZhsJMICRrkwEYJJGRCSBtEqGGCAQEAOw=='
+
+
+FACE_PALM = b'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA8CAMAAAAdQmecAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAAB8SDx4UEiAUDyAUEiMZFSUbGSsUEy8aFiwbGTsUFTkdICwiHTIjHDQrHzsiGysjIjIlIDMqIzMsKjsgIzotID0uKT01IzszMUkYHE0ZIFkbKEQhHkUqH0sgHUUgI0MtIkUoKEsmIEwqIkwqL00rM0I1I0s1JEswKE04J0w7LUc9OVYpJ1omMVM0JVQ1K1I4JVU7KlszK1k6J1s7KVw4NGEdLmQeMWghNmE5LWQ4NXIiPWs2RHkkQnAzRVRENVNDOF1ENFxEOVpKOWNDM2NHPWNMPGxFOWxKPG9QPnJKPHVQP05HRFJMSltUUWpLQ2lUQ2NcWndNQndIU3JUQ3JUSHRZTHxSRHxVSHxZSnlaVH1YYmZgX39gVmZjYnZran14doFURoNWSYNbTYNeUoleUItbaYRgT4VhU4JiWIVoXIpjVIxlWo1oVo1pWpFiVpFlWZJsXZRxX4JmZYVsY4trY4pzaoN9e5NtYpRtaJltY5ZxYpRyaZpzZZx1ap14a5N4eJx1cJp3eJ15cZp6eqB2a6J6baN8cqJ7eax9cah+epx7hImBf5uBeqWAdKOCe6qCdKqDequJfbKJfY2EgpmIiZqVk52Zk6SBhKaFiKyDgqqFiayJgqyNi6aLkayNlKGQi6uRja+QlqySm6qZlLKMhLKOi7SRi76Th7qTi7KTk7KVm7KYk7SZm7iWk7yZk7ucm7Sco7ScqbqeorOfsK2knrmhnKukoqyop7GrqrqhpLqlq7mup7urqrSosbKuubqjsrymubyps7qqub6xrbSxsLizvbe1wr68ycKYi8OcmsCmo8KmqcGup8Ooq8qqqcersMGvv8yutMKxu8uwtM2zusy+v9G3usCwwsS0yca8xsW7y82/x8m9ysm90Ne8wMjAvMPCxsLAyc3Ax8vAy8/IzMbD0c3F08zK2NPLx9DJztnBydLO09LL2tPS19TS29rU29bU4dnT5NzV6NvZ4+Hf5uDd6+Pi7eXj8ejl9Ozp9/Lw+wAAAAAAAAAAAAAAAErQjXwAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAHU0lEQVRYR5WWf1gbZx3A8bw2y7nJVq00ZM9Eq63t0o3QFNKkrLbjoRjXsWFHCI+T0gNNe2nWm4Ndm9xFTLmj1UFONsUU1s2aZRRxdP7otNZN1Omc1inTdbad06danzlkVoR2/hG/7w8gNG/Y9iE/uPf9vp/7vt/37r0UZPLx34nxiYmJNybp4VuSxzQ9MXn5zempqelLlybfpotteu31ifFzfzp7/sL45PT09MS/aPOCME1jZ8+fGxs9Njw0fGLswuT01D/+SjsWgmU6fnJs7IUTx7410N8/MDx64eKlqV++DRXD9M2BkZOnfjicTvV0d/f0Hx09f/HNf//iL7QzP7mmn0XN9BMjR9PpfhOpkkdHz0z97+9PT9DuvOSa7gvHus2vYEzT6E4MDP10/PKlM0/T7rzkmoLBeyORWMwwzf6UaZowvydPX7z8nzPP0v585JhO7pIkWZbvVXUzlUomzYNmcui7L49fvPDs6zQiDzmmr9UHg7vDu8MRVTcOHESq5KEjz7z8yitnfkwj8pBr2njHNjEo7ZbliGFAQsk+eB155vTpc6f/RkPY5JiOr7i1uh5UYUVROw4ehEolk1193zj2k9+NLpxUbsWXrt5YfdfnpDAUS9UgLaCrq2/g6JETT9IINrmmJStWb9wUCKK6K0h1wDCMDs1IHjr8Tk23F63aeOsdooSXUNU6O7QOTdM7937x0NAbNIRJrumrS4tWb64OiFKrJEshWdnXqWr7QqGO/fuHztIQJrmmzKKiFauc9aLYIkp7xHvkfXtCLSG5Y+TU1w8foRFMGKat7y1asbLaH/CLkNeO5h2trZJk/Oq3I/uHh/9IQ1gwTD+4qnBpkbPK5xf9zTua/c1+fyT1WLLnvi+8MPwoDWHBMEWDjuuFpc5P+Hz3iM3Ndb5mPZVOKfU93xnqj/2GxjDINb3q8PicJYUly2vkutZWURR1PdErtwz8+vloQPk+DWLAyMnjWb58ZUnhrsf3SJ9s8fl1TVWlwODzI/HaxrYFpscw1fscxY7Slc7Yc5LkatDhTpZE3YzH133+1EsP0RgGDNOPqm74cJWrtHRbond9Q0LVdSmsmWa4rf3Ffw4/QmMYMEyZ9rIy502u0hpDlRK6HtNN40BCjI68+IeBtndWp0xmU5VrpWttFdqiensff27QjIuxwf6+/Y13v0YjGDBNr25yrV3rqoL7t7fX1A/0Girs6Eqw7fcPfJlGMGCaMt+rdt7k3Natqwkjpmnm4BNpQ27o+fNLD7yL4xYt+/RxGjYPtimTKSxxqYluEOm63psaTBtB89tDfe2LeY7neW7xnT+ncXPkMT109aoaJaYaugY7CmxSj6UHU12haNPV4EFw3I00cpY8psWLVlcHIxFdVTUtFod9Lm0aO+/adSMVAZy1icZSmKb738fzSzY1yJCRYcBGF48qWpdW11j/AapBQMW203gMw7SVRG4ORBKaqsXjWjSqaRGldkvV5utIF8JqFazWB+kQRI5pK4eLyvPVElQbyqRF92rxDll0rK+pXQRd8LK+/6MbNtzidrvXHKOjgCtMTVTD8++uDet6J1RJaVOie5XglrK6xlrUYf3QOo8HLG6v1+uuOEwHXmHajs45w05Fhx3c0JRQOBRUAi7P+pprIJuPrHHY7cXwZ3eAraJ8Nqss01NLqANzTbumxLSIrijhnTvDQWepq+x6oVAQBAuCh7dgs9sryj10dJbpttmJYT7eDlWOaJEwiO5uuRlJLNDMcSgK3lBOjkeyE3Q8NW1fNk8D1WiD9YJnZ1gOB1sCH0MK2oO/LYIF0gO3RWgkBmJ6cG51yRk5vkbR1IgcDisxWWwoIX0ILBAEm2AjCPx7sIeYbpvLx3odmgLPCaFIREY/WGDnrYOM5sAqUNgJNkEgImRaTGN44YPF0AFYhJsDIXicS/I+EC2n3QBHc7LZYO0q0KXgtttmTdfijDhLMQAiGxxYINK3Ax6ccqcq3jCzVrBaWAKdOKNyckk56N5esJ3UBqLQrAGYHg531CGV5ENtuAEDuSDWVKCMvN5Kb6X7s9R0O8poZvZ4FB0n2MrqGhr8vjLSij5JnYnMDSpIqbLS66amZbOiOSB9PNzmqdtSVVhL2rAcXtCHTeVIVQl4yfQKrs0WoWuNDKLp2dZ5eCvVzkGSmlWRpMCEhtORxIqj8TEBH88ja4IoKfxrqAC2wbmxUG0O7id6NAM+no+9GMuo6hZs+gxZKQQaRTPMFjFMUCuaFlo/Mr2CJkgJReNPfIFfmRM+ZIBVFfhS+BLOCZWb3C7kPofLEkM0CNqQy4zKuwGZ7iTRWIURIPW3mt0MMyo0vYL7s64luCt4Hu6ZeR4EHcgAuaBYcJ0XZPATAC0ampyAJ0fHz0IGZTPXiFTgQiYyJwAnh+pNd4QsZrcjgDYB5Bir7BvAhB5vKCvUZ+F4vMQ4cB54EP0/C2ik9/TDBZmnyG6BGqHuWJR9XvqdD2yCXcq+Dna6JtpIYJ15QWB+5W6v+1P/B0gPXHqaGwimAAAAAElFTkSuQmCC'
 
 DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
 
@@ -1003,6 +1006,8 @@ class Element():
         else:
             return
 
+        if not self._widget_was_created():
+            return
         self.Widget.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
 
@@ -1030,6 +1035,21 @@ class Element():
         except Exception as e:
             print('Warning setting the vertical scroll (yview_moveto failed)')
             print(e)
+
+
+    def _widget_was_created(self):
+        """
+        Determines if a Widget was created for this element.
+
+        :return: True if a Widget has been created previously (Widget is not None)
+        :rtype: (bool)
+        """
+        if self.Widget is not None:
+            return True
+        else:
+            popup_error('You cannot perform operations on an Element until Window is read or finalized.',
+                         'Adding a "finalize=True" parameter to your Window creation will likely fix this.', image=FACE_PALM)
+            return False
 
 
     def __call__(self, *args, **kwargs):
@@ -8097,9 +8117,10 @@ class Window:
             warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a "finalize=True" parameter to your Window creation will fix this', UserWarning)
             popup_error('You cannot perform operations on a Window until it is read or finalized.',
                         'Yea, I know, it\'s a weird thing, but just fix it and keep going.... ',
-                         'Adding a "finalize=True" parameter to your Window creation will likely fix this')
+                         'Adding a "finalize=True" parameter to your Window creation will likely fix this', image=FACE_PALM)
             return False
         return True
+
 
 
 
@@ -13994,7 +14015,7 @@ def ObjToString(obj, extra='    '):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False):
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -14035,6 +14056,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type keep_on_top: (bool)
     :param any_key_closes: If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
     :type any_key_closes: (bool)
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None]
     """
@@ -14052,6 +14075,11 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes)
     max_line_total, total_lines = 0, 0
+    if image is not None:
+        if isinstance(image, str):
+            window.add_row(Image(filename=image))
+        else:
+            window.add_row(Image(data=image))
     for message in args_to_print:
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
@@ -14528,7 +14556,7 @@ PopupTimed = PopupAutoClose
 # --------------------------- PopupError ---------------------------
 def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Popup with colored button and 'Error' as button text
 
@@ -14562,6 +14590,8 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14570,7 +14600,7 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
                  auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location)
+                 keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupCancel ---------------------------
