@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.8 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error"
+version = __version__ = "4.22.0.9 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error, image parameter added to all popups, added caching to tree icons"
 
 port = 'PySimpleGUI'
 
@@ -985,6 +985,7 @@ class Element():
             self.ParentRowFrame.pack()
         except:
             print('Warning, error hiding element row for key =', self.Key)
+
 
     def expand(self, expand_x=False, expand_y=False, expand_row=True):
         """
@@ -6276,6 +6277,8 @@ class Tree(Element):
     to hold the user's data and pass to the element for display.
     """
 
+    image_dict = {}
+
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
@@ -6403,10 +6406,15 @@ class Tree(Element):
         if node.key != '':
             if node.icon:
                 try:
-                    if type(node.icon) is bytes:
-                        photo = tk.PhotoImage(data=node.icon)
+                    if node.icon not in Tree.image_dict:
+                        if type(node.icon) is bytes:
+                            photo = tk.PhotoImage(data=node.icon)
+                        else:
+                            photo = tk.PhotoImage(file=node.icon)
+                        Tree.image_dict[node.icon] = photo
                     else:
-                        photo = tk.PhotoImage(file=node.icon)
+                        photo = Tree.image_dict.get(node.icon)
+
                     node.photo = photo
                     id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
                                                 values=node.values, open=self.ShowExpanded, image=node.photo)
@@ -11407,10 +11415,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
                         if node.icon:
-                            if type(node.icon) is bytes:
-                                photo = tk.PhotoImage(data=node.icon)
+
+                            if node.icon not in Tree.image_dict:
+                                if type(node.icon) is bytes:
+                                    photo = tk.PhotoImage(data=node.icon)
+                                else:
+                                    photo = tk.PhotoImage(file=node.icon)
+                                Tree.image_dict[node.icon] = photo
                             else:
-                                photo = tk.PhotoImage(file=node.icon)
+                                photo = Tree.image_dict.get(node.icon)
+
                             node.photo = photo
                             id = treeview.insert(element.KeyToID[node.parent], 'end', iid=None, text=node.text, values=node.values,
                                                  open=element.ShowExpanded, image=node.photo)
@@ -14025,7 +14039,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param title:   Optional title for the window. If none provided, the first arg will be used instead.
     :type title: (str)
     :param button_color: Color of the buttons shown (text color, button color)
-    :type button_color: Tuple[str, str]
+    :type button_color: Union[Tuple[str, str], None]
     :param background_color:  Window's background color
     :type background_color: (str)
     :param text_color:  text color
@@ -14159,7 +14173,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None):
+                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
@@ -14194,6 +14208,8 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     :type keep_on_top: (bool)
     :param font: specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14253,7 +14269,7 @@ sprint = ScrolledTextBox
 # --------------------------- PopupNoButtons ---------------------------
 def PopupNoButtons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """Show a Popup but without any buttons
 
     :param *args: Variable number of items to display
@@ -14282,21 +14298,22 @@ def PopupNoButtons(*args, title=None, background_color=None, text_color=None, au
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]    """
-    Popup(*args, title=title, button_color=None, background_color=background_color, text_color=text_color,
+    Popup(*args, title=title, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
 def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
-                     text_color=None,
-                     auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
+                     text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                     location=(None, None)):
+                     location=(None, None), image=None):
     """
     Show Popup window and immediately return (does not block)
 
@@ -14330,6 +14347,8 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Reason for popup closing
     :rtype: Union[str, None]
     """
@@ -14338,7 +14357,7 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 PopupNoWait = PopupNonBlocking
@@ -14346,9 +14365,8 @@ PopupNoWait = PopupNonBlocking
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
 def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
-               text_color=None,
-               auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-               font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+               text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
+               font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Show Popup box that doesn't block and closes itself
 
@@ -14384,6 +14402,8 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14392,15 +14412,13 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
-                      text_color=None,
-                      auto_close=True, auto_close_duration=2, non_blocking=True, icon=None,
-                      line_width=None,
-                      font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                      text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
+                      font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -14436,6 +14454,8 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
     :type grab_anywhere: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14443,14 +14463,13 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
 def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
-                    text_color=None,
-                    auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
-                    line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None)):
+                    text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
+                    line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None), image=None):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -14484,6 +14503,8 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14491,7 +14512,7 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 PopupNoFrame = PopupNoTitlebar
@@ -14500,11 +14521,10 @@ PopupAnnoying = PopupNoTitlebar
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
-                   text_color=None,
+def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                    auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                   location=(None, None)):
+                   location=(None, None), image=None):
     """Popup that closes itself after some time period
 
     :param *args: Variable number of items to display
@@ -14539,6 +14559,8 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14547,7 +14569,7 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 PopupTimed = PopupAutoClose
@@ -14606,7 +14628,7 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
 # --------------------------- PopupCancel ---------------------------
 def PopupCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Display Popup with "cancelled" button text
 
@@ -14640,6 +14662,8 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14647,13 +14671,13 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location)
+                 keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupOK ---------------------------
 def PopupOK(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
             auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-            no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+            no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Display Popup with OK button only
 
@@ -14687,19 +14711,21 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location)
+                 keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupOKCancel ---------------------------
 def PopupOKCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                   auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
-                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Display popup with OK and Cancel buttons
 
@@ -14733,6 +14759,8 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: clicked button
     :rtype: Union["OK", "Cancel", None]
     """
@@ -14740,13 +14768,13 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 # --------------------------- PopupYesNo ---------------------------
 def PopupYesNo(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None)):
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Display Popup with Yes and No buttons
 
@@ -14780,6 +14808,8 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     :type keep_on_top: (bool)
     :param location:  Location of upper left corner of the window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: clicked button
     :rtype: Union["Yes", "No", None]
     """
@@ -14787,7 +14817,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
 
 
 ##############################################################################
@@ -14799,7 +14829,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
 
 def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None):
+                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
 
@@ -14833,6 +14863,8 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :type location: Tuple[int, int]
     :param initial_folder:  location in filesystem to begin browsing
     :type initial_folder: (str)
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: string representing the path chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
     """
@@ -14870,7 +14902,14 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
 
         return folder_name
 
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
+    if image is not None:
+        if isinstance(image, str):
+            layout = [[Image(filename=image)]]
+        else:
+            layout = [[Image(data=image)]]
+    else:
+        layout = [[]]
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'),
                FolderBrowse(initial_folder=initial_folder)],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
@@ -14894,7 +14933,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                  file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None), initial_folder=None):
+                 location=(None, None), initial_folder=None, image=None):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -14936,6 +14975,8 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :type location: Tuple[int, int]
     :param initial_folder:  location in filesystem to begin browsing
     :type initial_folder: (str)
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: string representing the file(s) chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
     """
@@ -14994,7 +15035,16 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     else:
         browse_button = FileBrowse(file_types=file_types, initial_folder=initial_folder)
 
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
+
+    if image is not None:
+        if isinstance(image, str):
+            layout = [[Image(filename=image)]]
+        else:
+            layout = [[Image(data=image)]]
+    else:
+        layout = [[]]
+
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
               [InputText(default_text=default_path, size=size, key='_INPUT_'), browse_button],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
@@ -15016,7 +15066,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
 
 def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                 grab_anywhere=False, keep_on_top=False, location=(None, None)):
+                 grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
@@ -15048,11 +15098,22 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :type keep_on_top: (bool)
     :param location: (x,y) Location on screen to display the upper left corner of window
     :type location: Tuple[int, int]
+    :param image:  Image to include at the top of the popup window
+    :type image: (str) or (bytes)
     :return: Text entered or None if window was closed or cancel button clicked
     :rtype: Union[str, None]
     """
 
-    layout = [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
+
+    if image is not None:
+        if isinstance(image, str):
+            layout = [[Image(filename=image)]]
+        else:
+            layout = [[Image(data=image)]]
+    else:
+        layout = [[]]
+
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color, font=font)],
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
