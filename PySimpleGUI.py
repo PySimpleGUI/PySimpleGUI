@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.23.0 Released 3-Jul-2020"
+version = __version__ = "4.24.0 Released 3-Jul-2020"
 
 port = 'PySimpleGUI'
 
@@ -400,6 +400,8 @@ MENU_KEY_SEPARATOR = '::'
 ENABLE_TK_WINDOWS = False
 
 SUPPRESS_ERROR_POPUPS = False
+
+ENABLE_TREEVIEW_869_PATCH = False
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
@@ -11372,9 +11374,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
 
-                if tclversion_detailed == '8.6.9':
+                if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
-                    table_style.map(style_name, foreground=_fixed_map(table_style, style_name, 'foreground'), background=_fixed_map(table_style, style_name, 'background'))
+                    table_style.map(style_name,
+                                    foreground=_fixed_map(table_style, style_name, 'foreground'),
+                                    background=_fixed_map(table_style, style_name, 'background'),)
 
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
@@ -11489,9 +11493,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
-                if tclversion_detailed == '8.6.9':
+                if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
-                    tree_style.map(style_name, foreground=_fixed_map(tree_style, style_name, 'foreground'), background=_fixed_map(tree_style, style_name, 'background'))
+                    tree_style.map(style_name,
+                                   foreground=_fixed_map(tree_style, style_name, 'foreground'),
+                                   background=_fixed_map(tree_style, style_name, 'background'),
+                                   )
+
+
 
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
@@ -12359,7 +12368,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, enable_treeview_869_patch=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
@@ -12476,6 +12485,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global USE_TTK_BUTTONS
     global TOOLTIP_FONT
     global SUPPRESS_ERROR_POPUPS
+    global ENABLE_TREEVIEW_869_PATCH
     # global _my_windows
 
     if icon:
@@ -12590,6 +12600,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if suppress_error_popups is not None:
         SUPPRESS_ERROR_POPUPS = suppress_error_popups
+
+    if enable_treeview_869_patch is not None:
+        ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
 
     return True
 
@@ -16585,7 +16598,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'upgrade':
         _upgrade_gui()
         exit(0)
-
     main()
     exit(0)
 
