@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.12 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error, image parameter added to all popups, added caching to tree icons, error icons, added back a widthdrawal call that broke the Pi release"
+version = __version__ = "4.23.0 Released 3-Jul-2020"
 
 port = 'PySimpleGUI'
 
@@ -9810,6 +9810,8 @@ def FillFormWithValues(window, values_dict):
     :type window: (Window)
     :param values_dict:  A dictionary with element keys as key and value is values parm for Update call
     :type values_dict: (Dict[Any:Any])
+    :return: None
+    :rtype: None
     """
 
     for element_key in values_dict:
@@ -11810,7 +11812,7 @@ class QuickMeter(object):
     def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
         """
 
-        :param title: text to display in eleemnt
+        :param title: text to display in element
         :type title: (str)
         :param current_value: current value
         :type current_value: (int)
@@ -11967,6 +11969,8 @@ def OneLineProgressMeterCancel(key='OK for 1 meter'):
 
     :param key:  Key used when meter was created
     :type key: (Any)
+    :return: None
+    :rtype: None
     """
     try:
         meter = QuickMeter.active_meters[key]
@@ -12166,6 +12170,8 @@ def cprint_set_output_destination(window, multiline_key):
     :type window: (Window)
     :param multiline_key: Key for the Multiline Element where output will be sent
     :type multiline_key: (Any)
+    :return: None
+    :rtype: None
     """
 
     global CPRINT_DESTINATION_WINDOW, CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
@@ -12227,6 +12233,8 @@ def cprint(*args, **kwargs):
     :type key: (Any)
     :param window: Window containing the multiline to output to (if you want to override the one previously set)
     :type window: (Window)
+    :return: None
+    :rtype: None
     """
 
     destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
@@ -12331,6 +12339,8 @@ def SetGlobalIcon(icon):
 
     :param icon: Either a Base64 byte string or a filename
     :type icon: Union[bytes, str]
+    :return: None
+    :rtype: None
     """
 
     Window._user_defined_icon = icon
@@ -12426,7 +12436,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type ttk_theme:  (str)
     :param suppress_error_popups: If True then error popups will not be shown if generated internally to PySimpleGUI
     :type suppress_error_popups:  (bool)
-    ==============
+    :return: None
+    :rtype: None
     """
 
     global DEFAULT_ELEMENT_SIZE
@@ -13593,8 +13604,11 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
 def ListOfLookAndFeelValues():
     """
     Get a list of the valid values to pass into your call to change_look_and_feel
-    :return: List[str] - list of valid string values
+
+    :return: list of valid string values
+    :rtype: List[str]
     """
+
     return sorted(list(LOOK_AND_FEEL_TABLE.keys()))
 
 
@@ -13604,7 +13618,9 @@ def theme(new_theme=None):
     This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
 
     :param new_theme: the new theme name to use
-    :return: (str) the currently selected theme
+    :type new_theme: (str)
+    :return: the currently selected theme
+    :rtype: (str)
     """
     if new_theme is not None:
         change_look_and_feel(new_theme)
@@ -13616,7 +13632,9 @@ def theme_background_color(color=None):
     Sets/Returns the background color currently in use
     Used for Windows and containers (Column, Frame, Tab) and tables
 
-    :return: (str) - color string of the background color currently in use
+    :param color: new background color to use (optional)
+    :type color: (str)
+    :return: color string of the background color currently in use
     :rtype: (str)
     """
     if color is not None:
@@ -13829,6 +13847,8 @@ def ChangeLookAndFeel(index, force=False):
     :type index: (str)
     :param force:  no longer used
     :type force: (bool)
+    :return: None
+    :rtype: None
     """
 
     global CURRENT_LOOK_AND_FEEL
@@ -13898,6 +13918,8 @@ def preview_all_look_and_feel_themes(columns=12):
     They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
     :param columns: The number of themes to display per row
     :type columns: (int)
+    :return: None
+    :rtype: None
     """
 
     # Show a "splash" type message so the user doesn't give up waiting
@@ -15992,6 +16014,8 @@ def show_debugger_window(location=(None, None), *args):
     Shows the large main debugger window
     :param location:  Locations (x,y) on the screen to place upper left corner of the window
     :type location: Tuple[int, int]
+    :return: None
+    :rtype: None
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -16016,6 +16040,8 @@ def show_debugger_popout_window(location=(None, None), *args):
 
     :param location:  Locations (x,y) on the screen to place upper left corner of the window
     :type location: Tuple[int, int]
+    :return: None
+    :rtype: None
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -16039,7 +16065,8 @@ def _refresh_debugger():
     """
     Refreshes the debugger windows. USERS should NOT be calling this function. Within PySimpleGUI it is called for the USER every time the Window.Read function is called.
 
-    :return: rc (bool) False if user closed the main debugger window.
+    :return: return code False if user closed the main debugger window.
+    :rtype: (bool)
     """
     if _Debugger.debugger is None:
         _Debugger.debugger = _Debugger()
@@ -16492,7 +16519,7 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
         elif event == 'About...':
-            popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program')
+            popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program', keep_on_top=True, image=DEFAULT_BASE64_ICON)
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
         elif event == '-INSTALL-':

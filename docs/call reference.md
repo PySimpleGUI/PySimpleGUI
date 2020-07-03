@@ -45,6 +45,7 @@ Button(button_text="",
     focus=False,
     pad=None,
     key=None,
+    k=None,
     visible=True,
     metadata=None)
 ```
@@ -77,6 +78,7 @@ Parameter Descriptions:
 |                                     bool                                     |         focus         | if True, initial focus will be put on this button |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |          key          | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
@@ -372,6 +374,7 @@ ButtonMenu(button_text,
     font=None,
     pad=None,
     key=None,
+    k=None,
     tearoff=False,
     visible=True,
     metadata=None)
@@ -396,6 +399,7 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |     tearoff      | Determines if menus should allow them to be torn off |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -621,6 +625,7 @@ Canvas(canvas=None,
     size=(None, None),
     pad=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -636,6 +641,7 @@ Parameter Descriptions:
 |                                Tuple[int,int]                                |       size       | (width in char, height in rows) size in pixels to make canvas |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -837,6 +843,7 @@ Checkbox(text,
     enable_events=False,
     disabled=False,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     visible=True,
@@ -858,6 +865,7 @@ Parameter Descriptions:
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Checkbox events happen when an item changes |
 |                                     bool                                     |     disabled     | set disable state |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -1106,6 +1114,7 @@ Column(layout,
     vertical_scroll_only=False,
     right_click_menu=None,
     key=None,
+    k=None,
     visible=True,
     justification="left",
     element_justification="left",
@@ -1124,6 +1133,7 @@ Parameter Descriptions:
 |                                     bool                                     | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     str                                      |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
 |                                     str                                      | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
@@ -1404,6 +1414,7 @@ Combo(values,
     enable_events=False,
     disabled=False,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     readonly=False,
@@ -1426,6 +1437,7 @@ Parameter Descriptions:
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Combo event is when a choice is made |
 |                                     bool                                     |     disabled     | set disable state for element |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text that will appear when mouse hovers over this element |
 |                                     bool                                     |     readonly     | make element readonly (user can't change). True means user cannot change |
@@ -1683,6 +1695,7 @@ Frame(title,
     pad=None,
     border_width=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -1705,6 +1718,7 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     int                                      |     border_width      | width of border around element in pixels |
 |                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |        tooltip        | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |        visible        | set visibility state of the element |
@@ -1981,6 +1995,7 @@ Graph(canvas_size,
     drag_submits=False,
     enable_events=False,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -2001,6 +2016,7 @@ Parameter Descriptions:
 |                                     bool                                     |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
 |                                     bool                                     |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
 |                                     Any                                      |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |      tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |      visible      | set visibility state of the element (Default = True) |
@@ -2916,14 +2932,18 @@ Parameter Descriptions:
 ```
 HorizontalSeparator(color=None,
     pad=None,
-    key=None)
+    key=None,
+    k=None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | pad | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     str                                      | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     Any                                      |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### SetFocus
 
@@ -3096,6 +3116,7 @@ Image(filename=None,
     size=(None, None),
     pad=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -3113,6 +3134,7 @@ Parameter Descriptions:
 |                                  (int, int)                                  |       size       | (width, height) size of image in pixels |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -3386,6 +3408,7 @@ InputText(default_text="",
     enable_events=False,
     do_not_clear=True,
     key=None,
+    k=None,
     focus=False,
     pad=None,
     use_readonly_for_disable=True,
@@ -3415,6 +3438,7 @@ Parameter Descriptions:
 |                                     bool                                     |           enable_events            | If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False) |
 |                                     bool                                     |            do_not_clear            | If False then the field will be set to blank after ANY event (button, any event) (Default = True) |
 |                                     Any                                      |                key                 | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |                 k                  | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |               focus                | Determines if initial focus should go to this element. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |                pad                 | Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)) |
 |                                     bool                                     |      use_readonly_for_disable      | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
@@ -3677,6 +3701,7 @@ Listbox(values,
     background_color=None,
     text_color=None,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     right_click_menu=None,
@@ -3702,6 +3727,7 @@ Parameter Descriptions:
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -4034,6 +4060,7 @@ Menu(menu_definition,
     font=None,
     pad=None,
     key=None,
+    k=None,
     visible=True,
     metadata=None)
 ```
@@ -4047,7 +4074,9 @@ Parameter Descriptions:
 |                                  (int, int)                                  |       size       | Not used in the tkinter port |
 |                                     bool                                     |     tearoff      | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                         Union[str, Tuple[str, int]]                          |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window :param font: specifies the font family, size, etc |
+|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                                     Any                                      |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
@@ -4261,6 +4290,7 @@ Multiline(default_text="",
     enable_events=False,
     do_not_clear=True,
     key=None,
+    k=None,
     focus=False,
     font=None,
     pad=None,
@@ -4287,6 +4317,7 @@ Parameter Descriptions:
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
 |                                     bool                                     |   do_not_clear   | if False the element will be cleared any time the Window.Read call returns |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |      focus       | if True initial focus will go to this element |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -4588,6 +4619,7 @@ OptionMenu(values,
     background_color=None,
     text_color=None,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     visible=True,
@@ -4606,6 +4638,7 @@ Parameter Descriptions:
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text that will appear when mouse hovers over this element |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -4837,6 +4870,7 @@ Output(size=(None, None),
     font=None,
     tooltip=None,
     key=None,
+    k=None,
     right_click_menu=None,
     visible=True,
     metadata=None)
@@ -4853,6 +4887,7 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -5105,6 +5140,7 @@ Pane(pane_list,
     handle_size=None,
     border_width=None,
     key=None,
+    k=None,
     visible=True,
     metadata=None)
 ```
@@ -5123,6 +5159,7 @@ Parameter Descriptions:
 |                                     int                                      |   handle_size    | Size of the handle in pixels |
 |                                     int                                      |   border_width   | width of border around element in pixels |
 |                                     Any                                      |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
@@ -5328,6 +5365,7 @@ ProgressBar(max_value,
     border_width=None,
     relief=None,
     key=None,
+    k=None,
     pad=None,
     visible=True,
     metadata=None)
@@ -5346,6 +5384,7 @@ Parameter Descriptions:
 |                                     int                                      |  border_width  | The amount of pixels that go around the outside of the bar |
 |                                     str                                      |     relief     | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF) |
 |                                     Any                                      |      key       | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |       k        | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |      pad       | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     bool                                     |    visible     | set visibility state of the element |
 |                                     Any                                      |    metadata    | User metadata that can be set to ANYTHING |
@@ -5584,6 +5623,7 @@ Radio(text,
     text_color=None,
     font=None,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     change_submits=False,
@@ -5606,6 +5646,7 @@ Parameter Descriptions:
 |                                     str                                      |    text_color    | color of the text |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
@@ -5866,6 +5907,7 @@ Slider(range=(None, None),
     background_color=None,
     text_color=None,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     visible=True,
@@ -5892,6 +5934,7 @@ Parameter Descriptions:
 |                                     str                                      |    background_color    | color of slider's background |
 |                                     str                                      |       text_color       | color of the slider's text |
 |                                     Any                                      |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |        tooltip         | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |        visible         | set visibility state of the element |
@@ -6113,6 +6156,7 @@ Spin(values,
     background_color=None,
     text_color=None,
     key=None,
+    k=None,
     pad=None,
     tooltip=None,
     visible=True,
@@ -6134,6 +6178,7 @@ Parameter Descriptions:
 |                                     str                                      | background_color | color of background |
 |                                     str                                      |    text_color    | color of the text |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -6380,6 +6425,7 @@ StatusBar(text,
     justification=None,
     pad=None,
     key=None,
+    k=None,
     tooltip=None,
     visible=True,
     metadata=None)
@@ -6401,6 +6447,7 @@ Parameter Descriptions:
 |                                     str                                      |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -6840,6 +6887,7 @@ Tab(title,
     disabled=False,
     border_width=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -6860,6 +6908,7 @@ Parameter Descriptions:
 |                                     bool                                     |       disabled        | If True button will be created disabled |
 |                                     int                                      |     border_width      | width of border around element in pixels |
 |                                     Any                                      |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |        tooltip        | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |        visible        | set visibility state of the element |
@@ -7153,6 +7202,7 @@ TabGroup(layout,
     border_width=None,
     theme=None,
     key=None,
+    k=None,
     tooltip=None,
     visible=True,
     metadata=None)
@@ -7176,6 +7226,7 @@ Parameter Descriptions:
 |                                     int                                      |       border_width        | width of border around element in pixels |
 |                                     enum                                     |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
 |                                     Any                                      |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |          tooltip          | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |          visible          | set visibility state of the element |
 |                                     Any                                      |         metadata          | User metadata that can be set to ANYTHING |
@@ -7441,6 +7492,7 @@ Table(values,
     bind_return_key=False,
     pad=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -7479,6 +7531,7 @@ Parameter Descriptions:
 |                                     bool                                     |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |           key           | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |         tooltip         | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |         visible         | set visibility state of the element |
@@ -7734,6 +7787,7 @@ Text(text="",
     justification=None,
     pad=None,
     key=None,
+    k=None,
     right_click_menu=None,
     tooltip=None,
     visible=True,
@@ -7757,6 +7811,7 @@ Parameter Descriptions:
 |                                     str                                      |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
@@ -8015,6 +8070,7 @@ Tree(data=None,
     row_height=None,
     pad=None,
     key=None,
+    k=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
@@ -8048,6 +8104,7 @@ Parameter Descriptions:
 |                                     int                                      |       row_height        | height of a single row in pixels |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     Any                                      |           key           | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                                     Any                                      |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                     str                                      |         tooltip         | text, that will appear when mouse hovers over the element |
 |                           [Union[List[str],str]]]                            |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |         visible         | set visibility state of the element |
@@ -8367,14 +8424,18 @@ Parameter Descriptions:
 ```
 VerticalSeparator(color=None,
     pad=None,
-    key=None)
+    key=None,
+    k=None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | pad | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     str                                      | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     Any                                      |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                                     Any                                      |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### SetFocus
 
@@ -9479,7 +9540,7 @@ This is a "Class Method" meaning you call it by writing: width, height = Window.
 Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
 ```
-get_screen_size() -> (int, int) - Size of the screen in pixels as determined by tkinter
+get_screen_size() -> Size of the screen in pixels as determined by tkinter        
 ```
 
 ### grab_any_where_off
@@ -10678,7 +10739,7 @@ This is a "Class Method" meaning you call it by writing: width, height = Window.
 Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
 
 ```
-get_screen_size() -> (int, int) - Size of the screen in pixels as determined by tkinter
+get_screen_size() -> Size of the screen in pixels as determined by tkinter        
 ```
 
 ### grab_any_where_off
@@ -12149,6 +12210,7 @@ Parameter Descriptions:
 |           str           |       sep        | separator character |
 |           Any           |       key        | key of multiline to output to (if you want to override the one previously set) |
 |         Window          |      window      | Window containing the multiline to output to (if you want to override the one previously set) |
+| None | **RETURN** | None
 
 Sets up the color print (cprint) output destination
 
@@ -12162,6 +12224,7 @@ Parameter Descriptions:
 |--|--|--|
 | Window |    window     | The window that the cprint call will route the output to |
 |  Any   | multiline_key | Key for the Multiline Element where output will be sent |
+| None | **RETURN** | None
 
 ## OneLineProgressMeter
 
@@ -12209,6 +12272,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Any | key | Key used when meter was created |
+| None | **RETURN** | None
 
 ```
 one_line_progress_meter(title,
@@ -12254,6 +12318,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Any | key | Key used when meter was created |
+| None | **RETURN** | None
 
 ## Popup Functions
 
@@ -12277,7 +12342,9 @@ Popup(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    any_key_closes=False,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12286,7 +12353,7 @@ Parameter Descriptions:
 |--|--|--|
 |                     Any                      |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
 |                     str                      |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
-|               Tuple[str, str]                |    button_color     | Color of the buttons shown (text color, button color) |
+|         Union[Tuple[str, str], None]         |    button_color     | Color of the buttons shown (text color, button color) |
 |                     str                      |  background_color   | Window's background color |
 |                     str                      |     text_color      | text color |
 |                     int                      |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
@@ -12301,6 +12368,8 @@ Parameter Descriptions:
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
+|                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|                str) or (bytes                |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -12362,7 +12431,8 @@ PopupAnnoying(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12384,6 +12454,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -12404,7 +12475,8 @@ PopupAutoClose(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12427,6 +12499,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -12446,7 +12519,8 @@ PopupCancel(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12468,6 +12542,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -12487,7 +12562,8 @@ PopupError(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12509,6 +12585,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -12532,7 +12609,8 @@ PopupGetFile(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12558,6 +12636,7 @@ Parameter Descriptions:
 |            bool             |    keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
+|       str) or (bytes        |       image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -12577,7 +12656,8 @@ PopupGetFolder(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12599,6 +12679,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -12617,7 +12698,8 @@ PopupGetText(message,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12638,6 +12720,7 @@ Parameter Descriptions:
 |            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12657,7 +12740,8 @@ PopupNoBorder(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12679,6 +12763,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
@@ -12697,7 +12782,8 @@ PopupNoButtons(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12717,6 +12803,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12736,7 +12823,8 @@ PopupNoFrame(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12758,6 +12846,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12777,7 +12866,8 @@ PopupNoTitlebar(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12799,6 +12889,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -12819,7 +12910,8 @@ PopupNoWait(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12841,6 +12933,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 Show Popup window and immediately return (does not block)
@@ -12861,7 +12954,8 @@ PopupNonBlocking(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12883,6 +12977,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 Display Popup with OK button only
@@ -12902,7 +12997,8 @@ PopupOK(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12924,6 +13020,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -12943,7 +13040,8 @@ PopupOKCancel(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -12965,6 +13063,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -12985,7 +13084,8 @@ PopupQuick(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13008,6 +13108,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
@@ -13028,7 +13129,8 @@ PopupQuickMessage(args=*<1 or N object>,
     no_titlebar=True,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13051,6 +13153,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -13071,7 +13174,8 @@ PopupScrolled(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    font=None)
+    font=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13093,6 +13197,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -13113,7 +13218,8 @@ PopupTimed(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13136,6 +13242,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -13155,7 +13262,8 @@ PopupYesNo(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13177,6 +13285,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
 ## Popups PEP8 Versions
@@ -13201,7 +13310,9 @@ popup(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    any_key_closes=False,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13210,7 +13321,7 @@ Parameter Descriptions:
 |--|--|--|
 |                     Any                      |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
 |                     str                      |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
-|               Tuple[str, str]                |    button_color     | Color of the buttons shown (text color, button color) |
+|         Union[Tuple[str, str], None]         |    button_color     | Color of the buttons shown (text color, button color) |
 |                     str                      |  background_color   | Window's background color |
 |                     str                      |     text_color      | text color |
 |                     int                      |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
@@ -13225,6 +13336,8 @@ Parameter Descriptions:
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
+|                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|                str) or (bytes                |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -13286,7 +13399,8 @@ popup_annoying(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13308,6 +13422,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -13328,7 +13443,8 @@ popup_auto_close(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13351,6 +13467,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -13370,7 +13487,8 @@ popup_cancel(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13392,6 +13510,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -13411,7 +13530,8 @@ popup_error(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13433,6 +13553,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
@@ -13493,7 +13614,8 @@ popup_get_file(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13519,6 +13641,7 @@ Parameter Descriptions:
 |            bool             |    keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
+|       str) or (bytes        |       image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -13538,7 +13661,8 @@ popup_get_folder(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13560,6 +13684,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -13578,7 +13703,8 @@ popup_get_text(message,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13599,6 +13725,7 @@ Parameter Descriptions:
 |            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13618,7 +13745,8 @@ popup_no_border(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13640,6 +13768,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
@@ -13658,7 +13787,8 @@ popup_no_buttons(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13678,6 +13808,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13697,7 +13828,8 @@ popup_no_frame(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13719,6 +13851,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13738,7 +13871,8 @@ popup_no_titlebar(args=*<1 or N object>,
     font=None,
     grab_anywhere=True,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13760,6 +13894,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -13780,7 +13915,8 @@ popup_no_wait(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13802,6 +13938,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 Show Popup window and immediately return (does not block)
@@ -13822,7 +13959,8 @@ popup_non_blocking(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13844,6 +13982,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
@@ -13892,7 +14031,8 @@ popup_ok(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13914,6 +14054,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -13933,7 +14074,8 @@ popup_ok_cancel(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13955,6 +14097,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -13975,7 +14118,8 @@ popup_quick(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -13998,6 +14142,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
@@ -14018,7 +14163,8 @@ popup_quick_message(args=*<1 or N object>,
     no_titlebar=True,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14041,6 +14187,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -14061,7 +14208,8 @@ popup_scrolled(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    font=None)
+    font=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14083,6 +14231,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -14103,7 +14252,8 @@ popup_timed(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14126,6 +14276,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -14145,7 +14296,8 @@ popup_yes_no(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14167,6 +14319,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
 Same as popup_scrolled
@@ -14189,7 +14342,8 @@ sprint(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    font=None)
+    font=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14211,6 +14365,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -14231,7 +14386,8 @@ ScrolledTextBox(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    font=None)
+    font=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -14253,6 +14409,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 ## PEP8 Function Bindings
@@ -14299,6 +14456,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Union[bytes, str] | icon | Either a Base64 byte string or a filename |
+| None | **RETURN** | None
 
 ```
 set_options(icon=None,
@@ -14336,7 +14494,8 @@ set_options(icon=None,
     tooltip_time=None,
     tooltip_font=None,
     use_ttk_buttons=None,
-    ttk_theme=None)
+    ttk_theme=None,
+    suppress_error_popups=None)
 ```
 
 Parameter Descriptions:
@@ -14379,6 +14538,8 @@ Parameter Descriptions:
 | str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
 |                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+| None | **RETURN** | None
 
 ### Non PEP8 version (same as PEP8 version)
 
@@ -14394,6 +14555,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Union[bytes, str] | icon | Either a Base64 byte string or a filename |
+| None | **RETURN** | None
 
 ```
 SetOptions(icon=None,
@@ -14431,7 +14593,8 @@ SetOptions(icon=None,
     tooltip_time=None,
     tooltip_font=None,
     use_ttk_buttons=None,
-    ttk_theme=None)
+    ttk_theme=None,
+    suppress_error_popups=None)
 ```
 
 Parameter Descriptions:
@@ -14474,6 +14637,8 @@ Parameter Descriptions:
 | str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
 |                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+| None | **RETURN** | None
 
 ## The Test Harness
 
@@ -14504,6 +14669,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | location | Locations (x,y) on the screen to place upper left corner of the window |
+| None | **RETURN** | None
 
 Shows the large main debugger window
 
@@ -14516,6 +14682,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | Tuple[int, int] | location | Locations (x,y) on the screen to place upper left corner of the window |
+| None | **RETURN** | None
 
 ## Themes
 
@@ -14523,8 +14690,15 @@ Sets / Gets the current Theme.  If none is specified then returns the current th
 This call replaces the ChangeLookAndFeel / change_look_and_feel call which only sets the theme.
 
 ```
-theme(new_theme=None) -> (str) the currently selected theme
+theme(new_theme=None)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | new_theme | the new theme name to use |
+| (str) | **RETURN** | the currently selected theme
 
 Add a new theme to the dictionary of themes
 
@@ -14543,8 +14717,15 @@ Sets/Returns the background color currently in use
 Used for Windows and containers (Column, Frame, Tab) and tables
 
 ```
-theme_background_color(color=None) -> (str) - color string of the background color currently in use    
+theme_background_color(color=None)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | color | new background color to use (optional) |
+| (str) | **RETURN** | color string of the background color currently in use
 
 Sets/Returns the border width currently in use
 Used by non ttk elements at the moment
@@ -14651,6 +14832,7 @@ Parameter Descriptions:
 |--|--|--|
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
+| None | **RETURN** | None
 
 Fills a window with values provided in a values dictionary { element_key : new_value }
 
@@ -14664,6 +14846,7 @@ Parameter Descriptions:
 |--|--|--|
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
+| None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
@@ -14690,11 +14873,12 @@ Parameter Descriptions:
 |--|--|--|
 | str  | index | the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy") |
 | bool | force | no longer used |
+| None | **RETURN** | None
 
 Get a list of the valid values to pass into your call to change_look_and_feel
 
 ```
-ListOfLookAndFeelValues() -> List[str] - list of valid string values
+ListOfLookAndFeelValues() -> list of valid string values    
 ```
 
 Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
@@ -14709,11 +14893,12 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | int | columns | The number of themes to display per row |
+| None | **RETURN** | None
 
 Get a list of the valid values to pass into your call to change_look_and_feel
 
 ```
-list_of_look_and_feel_values() -> List[str] - list of valid string values
+list_of_look_and_feel_values() -> list of valid string values    
 ```
 
 Change the "color scheme" of all future PySimpleGUI Windows.
@@ -14739,3 +14924,4 @@ Parameter Descriptions:
 |--|--|--|
 | str  | index | the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy") |
 | bool | force | no longer used |
+| None | **RETURN** | None
