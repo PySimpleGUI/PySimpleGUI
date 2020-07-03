@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.22.0.10 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error, image parameter added to all popups, added caching to tree icons, error icons"
+version = __version__ = "4.22.0.12 Unreleased\n Added a bunch of warnings for windows operations to check for root being None, fix for table and tree colors due to tkinter bug in version 8.6.9, don't call overrideredirect if running on Mac, new shortcut parm k added to all elements (use interachgably with key), moved when 8.6.9 patch is applied, any_key_closes parameter added to popup, image parameter added to popup & popup_error, image parameter added to all popups, added caching to tree icons, error icons, added back a widthdrawal call that broke the Pi release"
 
 port = 'PySimpleGUI'
 
@@ -11668,6 +11668,7 @@ def StartupTK(my_flex_form):
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
         if not sys.platform.startswith('darwin'):
             Window.hidden_master_root.wm_overrideredirect(True)
+        Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
     else:
         root = tk.Toplevel()
