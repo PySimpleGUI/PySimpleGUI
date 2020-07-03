@@ -1446,7 +1446,9 @@ Popup(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    any_key_closes=False,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1455,7 +1457,7 @@ Parameter Descriptions:
 |--|--|--|
 |                     Any                      |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
 |                     str                      |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
-|               Tuple[str, str]                |    button_color     | Color of the buttons shown (text color, button color) |
+|         Union[Tuple[str, str], None]         |    button_color     | Color of the buttons shown (text color, button color) |
 |                     str                      |  background_color   | Window's background color |
 |                     str                      |     text_color      | text color |
 |                     int                      |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
@@ -1470,6 +1472,8 @@ Parameter Descriptions:
 |                     bool                     |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               Tuple[int, int]                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
+|                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|                str) or (bytes                |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -1508,7 +1512,8 @@ popup_scrolled(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    font=None)
+    font=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1530,6 +1535,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Typical usage:
@@ -1570,7 +1576,8 @@ popup_no_wait(args=*<1 or N object>,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1592,6 +1599,7 @@ Parameter Descriptions:
 |            bool             |     no_titlebar     | If True no titlebar will be shown |
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
+|       str) or (bytes        |        image        | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 The `popup` call `popup_no_wait` or `popup_non_blocking` will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
@@ -1631,7 +1639,8 @@ popup_get_text(message,
     no_titlebar=False,
     grab_anywhere=False,
     keep_on_top=False,
-    location=(None, None))
+    location=(None, None),
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1652,6 +1661,7 @@ Parameter Descriptions:
 |            bool             |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 ```python
@@ -1689,7 +1699,8 @@ popup_get_file(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1715,6 +1726,7 @@ Parameter Descriptions:
 |            bool             |    keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
+|       str) or (bytes        |       image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
@@ -1757,7 +1769,8 @@ popup_get_folder(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    initial_folder=None)
+    initial_folder=None,
+    image=None)
 ```
 
 Parameter Descriptions:
@@ -1779,6 +1792,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
+|       str) or (bytes        |      image       | Image to include at the top of the popup window |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 This is a typical call
@@ -7271,6 +7285,33 @@ More cprint stuff
 * Additional window and key parameter to cprint
 	* May seem like a small change, but the results are powerful
 	* Can now easily "print" to anywhere, in color!
+	
+
+## 4.23.0 PySimpleGUI 3-Jul-2020
+
+Table Colors Fix - workaround for problems with tables and tree colors in Python 3.7.2 to 3.9+
+Mac crash fixed - tkinter.TclError: expected boolean value but got "" (hopefully)
+New shortcut "k" parameter for all elements that is the same as "key" - may be experimental / temporary if not well received
+More error checks
+popup extensions
+
+* Fix for missing Table and Tree colors created in tk 8.6.9
+	* This is a problem in all versions of  Python 3.7.2 - 3.9.0 with no target fix date published
+	* As a result of no fixes in sight, added a fix in PySimpleGUI if the tk version is 8.6.9
+* New Element creation parameter "k" - exact same thing as "key" but shorter. Helps with complex layouts
+* New error reporting on all element.update calls - checks to see if element has been fully created
+* set_options - new option to supress popup_errors coming from PySimpleGUI.py
+* Mac specific crash fix - if on a Mac, no longer calling wm_overrideredirect as it crashes the Mac now
+* Additional error checking (shows error instead of asserting:
+	* Check for Widget creation before widget operations like bind, unbind, expand
+	* Check for window finalize / read before some window operations like maximize, hide, etc
+* docstrings - more added.  Fixed up a number of missing / erroneous ones
+* Tree element - caches images so that will not create new ones if previously used on another Tree item
+* popup - two new options
+	* any_key_closes - bool.  If True, any key pressed will close the window
+	* image - can be a bytes (base64) or string (filename). Image will be shown at top of the popup
+* all popups - new image parameter (base64 or string)
+* a few new built-in icons
 	
 
 ### Upcoming
