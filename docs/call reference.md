@@ -14495,7 +14495,8 @@ set_options(icon=None,
     tooltip_font=None,
     use_ttk_buttons=None,
     ttk_theme=None,
-    suppress_error_popups=None)
+    suppress_error_popups=None,
+    enable_treeview_869_patch=None)
 ```
 
 Parameter Descriptions:
@@ -14594,7 +14595,8 @@ SetOptions(icon=None,
     tooltip_font=None,
     use_ttk_buttons=None,
     ttk_theme=None,
-    suppress_error_popups=None)
+    suppress_error_popups=None,
+    enable_treeview_869_patch=None)
 ```
 
 Parameter Descriptions:

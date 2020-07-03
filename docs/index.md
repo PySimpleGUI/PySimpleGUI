@@ -7314,6 +7314,14 @@ popup extensions
 * a few new built-in icons
 	
 
+## 4.24.0 PySimpleGUI 3-Jul-2020
+
+Selective control over tk 8.6.9 treeview color patch
+
+* Disabled the code that patched the problem with background colors for Tree and Table elements
+* Can enable the patched code by calling set_options
+	* To enable set parameter enable_treeview_869_patch = True (defaults to false)
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
