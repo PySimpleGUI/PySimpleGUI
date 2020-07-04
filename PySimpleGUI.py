@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0 Released 3-Jul-2020"
+version = __version__ = "4.24.0.1 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys"
 
 port = 'PySimpleGUI'
 
@@ -115,10 +115,9 @@ import datetime
 import textwrap
 import inspect
 try:        # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
-    from typing import List, Any, Union, Tuple, Dict, SupportsAbs  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+    from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 except:
     print('*** Skipping import of Typing module. "pip3 install typing" to remove this warning ***')
-from random import randint
 import random
 import warnings
 from math import floor
@@ -616,7 +615,7 @@ class Element():
         :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
         :type text_color: (str)
         :param key: Identifies an Element. Should be UNIQUE to this window.
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1118,9 +1117,9 @@ class InputText(Element):
         :param do_not_clear: If False then the field will be set to blank after ANY event (button, any event) (Default = True)
         :type do_not_clear: (bool)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param focus: Determines if initial focus should go to this element.
         :type focus: (bool)
         :param pad: Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
@@ -1262,9 +1261,9 @@ class Combo(Element):
         :param disabled: set disable state for element
         :type disabled: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text that will appear when mouse hovers over this element
@@ -1412,9 +1411,9 @@ class OptionMenu(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text that will appear when mouse hovers over this element
@@ -1528,9 +1527,9 @@ class Listbox(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1727,9 +1726,9 @@ class Radio(Element):
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -1863,9 +1862,9 @@ class Checkbox(Element):
         :param disabled: set disable state
         :type disabled: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2021,9 +2020,9 @@ class Spin(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2157,9 +2156,9 @@ class Multiline(Element):
         :param do_not_clear: if False the element will be cleared any time the Window.Read call returns
         :type do_not_clear: (bool)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2348,9 +2347,9 @@ class Text(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2466,9 +2465,9 @@ class StatusBar(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -2564,7 +2563,7 @@ class TKProgressBar():
         :param BarColor: The 2 colors that make up a progress bar. One is the background, the other is the bar
         :type BarColor: Tuple[str, str]
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         """
 
         self.Length = length
@@ -2742,9 +2741,9 @@ class Output(Element):
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param visible: set visibility state of the element
@@ -2900,9 +2899,9 @@ class Button(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -3312,9 +3311,9 @@ class ButtonMenu(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tearoff: Determines if menus should allow them to be torn off
         :type tearoff: (bool)
         :param visible: set visibility state of the element
@@ -3430,9 +3429,9 @@ class ProgressBar(Element):
         :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
         :type relief: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param visible: set visibility state of the element
@@ -3524,9 +3523,9 @@ class Image(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3725,9 +3724,9 @@ class Canvas(Element):
         :param pad:  Amount of padding to put around element
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -3802,9 +3801,9 @@ class Graph(Element):
         :param enable_events: If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits
         :type enable_events: (bool)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -4510,9 +4509,9 @@ class Frame(Element):
         :param border_width: width of border around element in pixels
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -4682,9 +4681,9 @@ class VerticalSeparator(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         """
         key = key if key is not None else k
 
@@ -4713,9 +4712,9 @@ class HorizontalSeparator(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         """
 
         self.Orientation = 'horizontal'  # for now only vertical works
@@ -4761,9 +4760,9 @@ class Tab(Element):
         :param border_width: width of border around element in pixels
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -4981,9 +4980,9 @@ class TabGroup(Element):
         :param theme: DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
         :type theme: (enum)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -5195,9 +5194,9 @@ class Slider(Element):
         :param text_color: color of the slider's text
         :type text_color: (str)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -5446,9 +5445,9 @@ class Column(Element):
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param justification: set justification for the Column itself. Note entire row containing the Column will be affected
@@ -5633,9 +5632,9 @@ class Pane(Element):
         :param border_width: width of border around element in pixels
         :type border_width: (int)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -5944,9 +5943,9 @@ class Menu(Element):
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -6096,9 +6095,9 @@ class Table(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -6336,9 +6335,9 @@ class Tree(Element):
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: (Any)
+        :type k: Union[str, int, tuple, object]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -6444,7 +6443,7 @@ class Tree(Element):
         :param values: Representation of the tree
         :type values: (TreeData)
         :param key: identifies a particular item in tree to update
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param value: sets the node identified by key to a particular value
         :type value: (Any)
         :param text: sets the node identified by ket to this string
@@ -6522,7 +6521,7 @@ class TreeData(object):
             :param parent: The parent Node
             :type parent: (TreeData.Node)
             :param key: Used to uniquely identify this node
-            :type key: (Any)
+            :type key: Union[str, int, tuple, object]
             :param text: The text that is displayed at this node's location
             :type text: (str)
             :param values: The list of values that are displayed at this node
@@ -6568,7 +6567,7 @@ class TreeData(object):
         :param parent: the parent Node
         :type parent: (Node)
         :param key: Used to uniquely identify this node
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param text: The text that is displayed at this node's location
         :type text: (str)
         :param values: The list of values that are displayed at this node
@@ -7428,7 +7427,7 @@ class Window:
         checked for.
 
         :param key: Used with window.FindElement and with return values to uniquely identify this element
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :param silent_on_error: If True do not display popup nor print warning of key errors
         :type silent_on_error: (bool)
         :return:  Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
@@ -8035,7 +8034,7 @@ class Window:
         :param bind_string: The string tkinter expected in its bind function
         :type bind_string: (str)
         :param key: The event that will be generated when the tkinter event occurs
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         """
         if not self._is_window_created():
             return
@@ -8105,7 +8104,7 @@ class Window:
         window['element key'].Update
 
         :param key: The key to find
-        :type key: (Any)
+        :type key: Union[str, int, tuple, object]
         :return: The element found or None if no element was found
         :rtype: Union[Element, None]
         """
@@ -8525,7 +8524,7 @@ def Sizer(h_pixels=0, v_pixels=0):
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
-                 font=None, pad=None, key=None, metadata=None):
+                 font=None, pad=None, key=None, k=None, metadata=None):
     """
     :param button_text: text in the button (Default value = 'Browse')
     :type button_text: (str)
@@ -8551,6 +8550,9 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param pad:  Amount of padding to put around element
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:  Used with window.FindElement and with return values to uniquely identify this element
+    :type key: Union[str, int, tuple, object]  
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: The Button created
     :rtype: (Button)
     """
@@ -8558,7 +8560,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
@@ -8593,21 +8595,23 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
-                  button_color=button_color, font=font, pad=pad, key=key, metadata=metadata)
+                  button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, key=None, metadata=None):
+                font=None, pad=None, key=None, k=None, metadata=None):
     """
     Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
     BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
@@ -8638,21 +8642,23 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                   tooltip=tooltip, size=size, auto_size_button=auto_size_button,
-                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, metadata=metadata)
+                  disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
-               pad=None, key=None, metadata=None):
+               pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save As...')
@@ -8680,21 +8686,23 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
-           pad=None, key=None, metadata=None):
+           pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save As...')
@@ -8722,19 +8730,21 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
-         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Save')
@@ -8758,18 +8768,20 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Submit')
@@ -8793,19 +8805,21 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Open')
@@ -8829,18 +8843,20 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'OK')
@@ -8864,18 +8880,20 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Ok')
@@ -8899,18 +8917,20 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Cancel')
@@ -8933,18 +8953,20 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Quit')
@@ -8967,18 +8989,20 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Exit')
@@ -9001,18 +9025,20 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None, metadata=None):
+        font=None, bind_return_key=True, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Yes')
@@ -9035,18 +9061,20 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-       font=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+       font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'No')
@@ -9069,18 +9097,20 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = 'Help')
@@ -9103,18 +9133,20 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button (Default value = '')
@@ -9137,7 +9169,9 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param metadata: Anything you want to store along with this button
     :type metadata: (Any)
     :return: returns a button
@@ -9145,14 +9179,14 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, image_data=PSG_DEBUGGER_LOGO,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
                   image_subsample=4, border_width=0, metadata=metadata)
 
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
+                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -9184,7 +9218,9 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
@@ -9192,13 +9228,13 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
+                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -9230,7 +9266,9 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :return: returns a button
     :rtype: (Button)
     """
@@ -9238,7 +9276,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 CButton = CloseButton
@@ -9247,7 +9285,7 @@ CButton = CloseButton
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-               bind_return_key=False, disabled=False, focus=False, pad=None, key=None, metadata=None):
+               bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     '''
     :param button_text: text in the button
     :type button_text: (str)
@@ -9278,7 +9316,9 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param border_width: width of border around element
     :type border_width: (int)
     :param metadata: Anything you want to store along with this button
@@ -9291,7 +9331,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 ReadFormButton = ReadButton
@@ -9301,7 +9341,7 @@ RButton = ReadFormButton
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
-                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -9333,7 +9373,9 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param border_width: width of border around element
     :type border_width: (int)
     :param metadata: Anything you want to store along with this button
@@ -9345,13 +9387,13 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
-                disabled=False, bind_return_key=False, focus=False, pad=None, key=None, metadata=None):
+                disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -9383,7 +9425,9 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param metadata: Anything you want to store along with this button
     :type metadata: (Any)
     :param border_width: width of border around element
@@ -9395,7 +9439,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
-                  pad=pad, key=key, metadata=metadata)
+                  pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
@@ -9403,7 +9447,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                   key=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
+                   key=None, k=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
                    no_titlebar=True, location=(None, None), metadata=None):
     """
     Button that will show a calendar chooser window.  Fills in the target element with result
@@ -9445,7 +9489,9 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param locale: defines the locale used to get day names
     :type locale: str
     :param format: formats result using this strftime format
@@ -9469,7 +9515,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
     button.calendar_close_when_chosen = close_when_date_chosen
     button.calendar_default_date_M_D_Y = default_date_m_d_y
     button.calendar_locale = locale
@@ -9488,7 +9534,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 def ColorChooserButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
-                       key=None, metadata=None):
+                       key=None, k=None, metadata=None):
     """
 
     :param button_text: text in the button
@@ -9525,7 +9571,9 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key: key for uniquely identify this element (for window.FindElement)
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: Union[str, int, tuple, object]
     :param metadata: User metadata that can be set to ANYTHING
     :type metadata: (Any)
     :return: returns a button
@@ -9535,7 +9583,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 #####################################  -----  RESULTS   ------ ##################################################
@@ -11828,7 +11876,7 @@ class QuickMeter(object):
         :param max_value: max value of QuickMeter
         :type max_value: (int)
         :param key:  Used with window.FindElement and with return values to uniquely identify this element
-        :type key: Union[str, int, tuple]
+        :type key: Union[str, int, tuple, object]
         :param *args: stuff to output
         :type *args: (Any)
         :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
@@ -11941,7 +11989,7 @@ def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', 
     :param max_value: max value of QuickMeter
     :type max_value: (int)
     :param key:  Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
-    :type key: Union[str, int, tuple]
+    :type key: Union[str, int, tuple, object]
     :param *args: stuff to output
     :type *args: (Any)
     :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
@@ -13887,7 +13935,7 @@ def ChangeLookAndFeel(index, force=False):
     elif opt2 in lf_values:
         ix = lf_values.index(opt2)
     else:
-        ix = randint(0, len(lf_values) - 1)
+        ix = random.randint(0, len(lf_values) - 1)
         print('** Warning - {} Theme is not a valid theme. Change your theme call. **'.format(index))
         print('valid values are', list_of_look_and_feel_values())
         print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
@@ -14147,8 +14195,11 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
         # fancy code to check if string and convert if not is not need. Just always convert to string :-)
         # if not isinstance(message, str): message = str(message)
         message = str(message)
-        if message.count('\n'):
-            message_wrapped = message
+        if message.count('\n'):         # if there are line breaks, then wrap each segment separately
+            # message_wrapped = message         # used to just do this, but now breaking into smaller pieces
+            message_wrapped = ''
+            msg_list = message.split('\n')      # break into segments that will each be wrapped
+            message_wrapped = '\n'.join([textwrap.fill(msg, local_line_width) for msg in msg_list])
         else:
             message_wrapped = textwrap.fill(message, local_line_width)
         message_wrapped_lines = message_wrapped.count('\n') + 1
@@ -16379,7 +16430,6 @@ def main():
     """
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
     """
-    from random import randint
 
     # theme('dark blue 3')
     # theme('dark brown 2')
@@ -16514,10 +16564,10 @@ def main():
         if event == WIN_CLOSED or event == 'Exit':
             break
         if i < 800:
-            graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
+            graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
         else:
             graph_elem.Move(-1, 0)
-            graph_elem.DrawLine((i, 0), (i, randint(0, 300)), width=1, color='#{:06x}'.format(randint(0, 0xffffff)))
+            graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
         window['+PROGRESS+'].UpdateBar(i % 800)
         window.Element('_IMAGE_').UpdateAnimation(DEFAULT_BASE64_LOADING_GIF, time_between_frames=50)
         i += 1
