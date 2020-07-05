@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0.3  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees"
+version = __version__ = "0.39.0.4  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image"
 
 port = 'PySimpleGUIWeb'
 
@@ -877,7 +877,7 @@ class Spin(Element):
 class Multiline(Element):
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, size=(None, None),
                  auto_size_text=None, background_color=None, text_color=None, change_submits=False, enable_events=False, do_not_clear=True,
-                 key=None, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
+                 key=None, write_only=False, focus=False, font=None, pad=None, tooltip=None, visible=True, size_px=(None,None)):
         '''
         Multiline Element
         :param default_text:
@@ -904,6 +904,7 @@ class Multiline(Element):
         self.Autoscroll = autoscroll
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
+        self.WriteOnly = write_only
         if size[0] is not None and size[0] < 100:
             size = size[0]*DEFAULT_PIXELS_TO_CHARS_SCALING[0], size[1]*DEFAULT_PIXELS_TO_CHARS_SCALING[1]
         self.Widget = None      # type: remi.gui.TextInput
@@ -951,6 +952,9 @@ class Multiline(Element):
 
 
     update = Update
+
+ML = Multiline
+MLine = Multiline
 
 
 # ---------------------------------------------------------------------- #
@@ -1742,7 +1746,8 @@ class Graph(Element):
         rpoint = remi.gui.SvgImage('', converted_point[0], converted_point[0], size[0], size[1])
 
         if type(image_source) is bytes or len(image_source) > 200:
-            rpoint.set_image("data:image/svg;base64,%s"%image_source)
+            # rpoint.set_image("data:image/svg;base64,%s"%image_source)
+            rpoint.image_data = "data:image/svg;base64,%s"%image_source
         else:
             mimetype, encoding = mimetypes.guess_type(image_source)
             with open(image_source, 'rb') as f:
@@ -1750,7 +1755,8 @@ class Graph(Element):
             b64 = base64.b64encode(data)
             b64_str = b64.decode("utf-8")
             image_string = "data:image/svg;base64,%s"%b64_str
-            rpoint.set_image(image_string)
+            # rpoint.set_image(image_string)
+            rpoint.image_data = image_string
         self.SvgGroup.append([rpoint,])
         rpoint.redraw()
         self.SvgGroup.redraw()
@@ -3934,6 +3940,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
                     element = element # type: Multiline
+                    if element.WriteOnly:
+                        continue
                     value = element.Widget.get_value()
                 elif element.Type == ELEM_TYPE_TAB_GROUP:
                     try:
@@ -5692,6 +5700,133 @@ def EasyPrintClose():
     if _easy_print_data is not None:
         _easy_print_data.Close()
         _easy_print_data = None
+
+
+#                            d8b          888
+#                            Y8P          888
+#                                         888
+#   .d8888b 88888b.  888d888 888 88888b.  888888
+#  d88P"    888 "88b 888P"   888 888 "88b 888
+#  888      888  888 888     888 888  888 888
+#  Y88b.    888 d88P 888     888 888  888 Y88b.
+#   "Y8888P 88888P"  888     888 888  888  "Y888
+#           888
+#           888
+#           888
+
+
+CPRINT_DESTINATION_WINDOW = None
+CPRINT_DESTINATION_MULTILINE_ELMENT_KEY = None
+
+def cprint_set_output_destination(window, multiline_key):
+    """
+    Sets up the color print (cprint) output destination
+    :param window: The window that the cprint call will route the output to
+    :type window: (Window)
+    :param multiline_key: Key for the Multiline Element where output will be sent
+    :type multiline_key: (Any)
+    :return: None
+    :rtype: None
+    """
+
+    global CPRINT_DESTINATION_WINDOW, CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
+
+    CPRINT_DESTINATION_WINDOW = window
+    CPRINT_DESTINATION_MULTILINE_ELMENT_KEY = multiline_key
+
+
+
+# def cprint(*args, **kwargs):
+def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None):
+    """
+    Color print to a multiline element in a window of your choice.
+    Must have EITHER called cprint_set_output_destination prior to making this call so that the
+    window and element key can be saved and used here to route the output, OR used the window
+    and key parameters to the cprint function to specicy these items.
+
+    args is a variable number of things you want to print.
+
+    end - The end char to use just like print uses
+    sep - The separation character like print uses
+    text_color - The color of the text
+            key - overrides the previously defined Multiline key
+    window - overrides the previously defined window to output to
+    background_color - The color of the background
+    colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+    There are also "aliases" for text_color, background_color and colors (t, b, c)
+    t - An alias for color of the text (makes for shorter calls)
+    b - An alias for the background_color parameter
+    c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+    c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+    With the aliases it's possible to write the same print but in more compact ways:
+    cprint('This will print white text on red background', c=('white', 'red'))
+    cprint('This will print white text on red background', c='white on red')
+    cprint('This will print white text on red background', text_color='white', background_color='red')
+    cprint('This will print white text on red background', t='white', b='red')
+
+    :param *args: stuff to output
+    :type *args: (Any)
+    :param text_color: Color of the text
+    :type text_color: (str)
+    :param background_color: The background color of the line
+    :type background_color: (str)
+    :param colors: Either a tuple or a string that has both the text and background colors
+    :type colors: (str) or Tuple[str, str]
+    :param t: Color of the text
+    :type t: (str)
+    :param b: The background color of the line
+    :type b: (str)
+    :param c: Either a tuple or a string that has both the text and background colors
+    :type c: (str) or Tuple[str, str]
+    :param end: end character
+    :type end: (str)
+    :param sep: separator character
+    :type sep: (str)
+    :param key: key of multiline to output to (if you want to override the one previously set)
+    :type key: (Any)
+    :param window: Window containing the multiline to output to (if you want to override the one previously set)
+    :type window: (Window)
+    :return: None
+    :rtype: None
+    """
+
+    destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY if key is None else key
+    destination_window = window or CPRINT_DESTINATION_WINDOW
+
+    if (destination_window is None and window is None) or (destination_key is None and key is None):
+        print('** Warning ** Attempting to perform a cprint without a valid window & key',
+              'Will instead print on Console',
+              'You can specify window and key in this cprint call, or set ahead of time using cprint_set_output_destination')
+        print(*args)
+        return
+
+    kw_text_color = text_color or t
+    kw_background_color = background_color or b
+    dual_color = colors or c
+    try:
+        if isinstance(dual_color, tuple):
+            kw_text_color = dual_color[0]
+            kw_background_color = dual_color[1]
+        elif isinstance(dual_color, str):
+            kw_text_color = dual_color.split(' on ')[0]
+            kw_background_color = dual_color.split(' on ')[1]
+    except Exception as e:
+        print('* cprint warning * you messed up with color formatting', e)
+
+    mline = destination_window.find_element(destination_key, silent_on_error=True)      # type: Multiline
+    try:
+        # mline = destination_window[destination_key]     # type: Multiline
+        if end is None:
+            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep)
+            mline.print('')
+        else:
+            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep)
+    except Exception as e:
+        print('** cprint error trying to print to the multiline. Printing to console instead **', e)
+        print(*args, end=end, sep=sep)
+
 
 
 # ------------------------------------------------------------------------------------------------ #
