@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.1 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys"
+version = __version__ = "4.24.0.2 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red')"
 
 port = 'PySimpleGUI'
 
@@ -2885,7 +2885,7 @@ class Button(Element):
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
-        :type button_color: Tuple[str, str] == (text color, background color)
+        :type button_color: Tuple[str, str] or (str) == (text color, background color)
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color: Tuple[str, str]
         :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
@@ -2914,7 +2914,16 @@ class Button(Element):
         self.Widget = self.TKButton = None  # type: tk.Button
         self.Target = target
         self.ButtonText = str(button_text)
-        self.ButtonColor = button_color if button_color != None else DEFAULT_BUTTON_COLOR
+        # Button colors can be a tuple (text, background) or a string with format "text on background"
+        if button_color is None:
+            button_color = DEFAULT_BUTTON_COLOR
+        else:
+            try:
+                if isinstance(button_color,str):
+                    button_color = button_color.split(' on ')
+            except Exception as e:
+                print('* cprint warning * you messed up with color formatting', e)
+        self.ButtonColor = button_color
         self.DisabledButtonColor = disabled_button_color if disabled_button_color is not None else (None, None)
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -3155,7 +3164,7 @@ class Button(Element):
         :param text: sets button text
         :type text: (str)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color: Tuple[str, str] == (text color, background color)
+        :type button_color: Tuple[str, str] or (str)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -3182,6 +3191,11 @@ class Button(Element):
             self.TKButton.configure(text=text)
             self.ButtonText = text
         if button_color != (None, None):
+            if isinstance(button_color, str):
+                try:
+                    button_color = button_color.split(' on ')
+                except Exception as e:
+                    print('** Error in formatting your button color **', button_color, e)
             if self.UseTtkButtons:
                 if button_color[0] is not None:
                     button_style.configure(style_name, foreground=button_color[0])
@@ -16534,7 +16548,7 @@ def main():
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Install PySimpleGUI from GitHub', button_color=('white', 'red') ,key='-INSTALL-'),
+         Button('Install PySimpleGUI from GitHub', button_color='white on red' ,key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
     ]
 
