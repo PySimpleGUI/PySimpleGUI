@@ -27,7 +27,7 @@ sg.theme(THEME)
 graph = sg.Graph(GSIZE, (0, 0), GSIZE, key='-GRAPH-', enable_events=True)
 layout = [[graph]]
 
-window = sg.Window('CPU Usage', layout, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True)
+window = sg.Window('CPU Usage Widget Square', layout, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True)
 
 text_id2 = graph.draw_text(f'CPU', (GSIZE[0] // 2, GSIZE[1] // 4), font='Any 20', text_location=sg.TEXT_LOCATION_CENTER,                               color=sg.theme_button_color()[0])
 
