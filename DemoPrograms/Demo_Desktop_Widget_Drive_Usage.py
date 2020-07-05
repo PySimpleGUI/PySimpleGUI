@@ -58,7 +58,7 @@ def main():
     layout += [[sg.Text('Refresh', font='Any 8', key='-REFRESH-', enable_events=True), sg.Text('❎', enable_events=True, key='Exit Text')]]
 
     # ----------------  Create Window  ----------------
-    window = sg.Window('Drive status', layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True, alpha_channel=ALPHA, use_default_focus=False,
+    window = sg.Window('Drive Status Widget', layout, keep_on_top=True, grab_anywhere=True, no_titlebar=True, alpha_channel=ALPHA, use_default_focus=False,
                        finalize=True)
 
     update_window(window)  # sets the progress bars

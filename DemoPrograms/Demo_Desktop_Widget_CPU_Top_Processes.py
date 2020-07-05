@@ -52,7 +52,7 @@ def main():
          ]
     ]
 
-    window = sg.Window('CPU Utilization', layout,
+    window = sg.Window('Top CPU Processes', layout,
                        no_titlebar=True, keep_on_top=True, use_default_focus=False, alpha_channel=.8, grab_anywhere=True)
 
     # start cpu measurement thread
