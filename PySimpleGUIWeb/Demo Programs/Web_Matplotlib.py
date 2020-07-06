@@ -142,24 +142,34 @@ def create_pyplot_scales():
                         wspace=0.35)
     return plt.gcf()
 
+# ----------------------------- The draw figure helpful function -----------------------------
 
 def draw_figure(fig, element):
+    """
+    Draws the previously created "figure" in the supplied Image Element
+
+    :param fig: a Matplotlib figure
+    :param element: an Image Element
+    :return: The figure canvas
+    """
+
+    plt.close('all')        # erases previously drawn plots
     canv = FigureCanvasAgg(fig)
     buf = io.BytesIO()
     canv.print_figure(buf, format='png')
-
     if buf is None:
         return None
     buf.seek(0)
-    data = buf.read()
-    element.update(data=data)
+    element.update(data=buf.read())
+    return canv
 
-dictionary_of_figures = {'Axis Grid': create_axis_grid,
-                   'Subplot 3D': create_subplot_3d,
-                   'Scales' : create_pyplot_scales,
-                   'Basic Figure': create_figure}
+# ----------------------------- The GUI Section -----------------------------
 
 def main():
+    dictionary_of_figures = {'Axis Grid': create_axis_grid,
+                             'Subplot 3D': create_subplot_3d,
+                             'Scales': create_pyplot_scales,
+                             'Basic Figure': create_figure}
 
     layout = [
                 [sg.T('Matplotlib Example', font='Any 20')],
