@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.2 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red')"
+version = __version__ = "4.24.0.4 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide"
 
 port = 'PySimpleGUI'
 
@@ -2128,7 +2128,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, focus=False, font=None, pad=None, tooltip=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2159,6 +2159,8 @@ class Multiline(Element):
         :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: Union[str, int, tuple, object]
+        :param write_only: If True then no entry will be added to the values dictionary when the window is read
+        :type write_only: bool
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2189,6 +2191,7 @@ class Multiline(Element):
         self.TagCounter = 0
         self.TKText = self.Widget = None  # type: tkst.ScrolledText
         self.tags = set()
+        self.WriteOnly = write_only
         key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
@@ -2287,7 +2290,7 @@ class Multiline(Element):
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
         :param args: The arguments to print
-        :type args: List[Any]
+        :type args: (Any)
         :param end: The end char to use just like print uses
         :type end: (str)
         :param sep: The separation character like print uses
@@ -2885,7 +2888,7 @@ class Button(Element):
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
-        :type button_color: Tuple[str, str] or (str) == (text color, background color)
+        :type button_color: Tuple[str, str] or str
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color: Tuple[str, str]
         :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
@@ -3319,7 +3322,7 @@ class ButtonMenu(Element):
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color: Tuple[str, str] == (text color, background color)
+        :type button_color: Tuple[str, str] or str
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -6296,7 +6299,6 @@ class Tree(Element):
     to hold the user's data and pass to the element for display.
     """
 
-    image_dict = {}
 
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
@@ -6362,6 +6364,8 @@ class Tree(Element):
         :type metadata: (Any)
         """
 
+        self.image_dict = {}
+
         self.TreeData = data
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -6425,14 +6429,14 @@ class Tree(Element):
         if node.key != '':
             if node.icon:
                 try:
-                    if node.icon not in Tree.image_dict:
+                    if node.icon not in self.image_dict:
                         if type(node.icon) is bytes:
                             photo = tk.PhotoImage(data=node.icon)
                         else:
                             photo = tk.PhotoImage(file=node.icon)
-                        Tree.image_dict[node.icon] = photo
+                        self.image_dict[node.icon] = photo
                     else:
-                        photo = Tree.image_dict.get(node.icon)
+                        photo = self.image_dict.get(node.icon)
 
                     node.photo = photo
                     id = self.TKTreeview.insert(self.KeyToID[node.parent], 'end', iid=None, text=node.text,
@@ -6726,7 +6730,7 @@ class Window:
         :param margins: (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
         :type margins: Tuple[int, int]
         :param button_color: Default button colors for all buttons in the window
-        :type button_color: Tuple[str, str] == (text color, button color)
+        :type button_color: Tuple[str, str] or str
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param progress_bar_color: (bar color, background color) Sets the default colors for all progress bars in the window
@@ -8597,7 +8601,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -8646,7 +8650,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -8690,7 +8694,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -8734,7 +8738,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -8768,7 +8772,7 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key: (bool)
     :param disabled: set disable state for element (Default = False)
@@ -8805,7 +8809,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -8843,7 +8847,7 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -8880,7 +8884,7 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -8917,7 +8921,7 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -8954,7 +8958,7 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -8990,7 +8994,7 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9026,7 +9030,7 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9062,7 +9066,7 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9098,7 +9102,7 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9134,7 +9138,7 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font:  specifies the font family, size, etc
@@ -9170,7 +9174,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font:  specifies the font family, size, etc
@@ -9220,7 +9224,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -9268,7 +9272,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -9318,7 +9322,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -9375,7 +9379,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param disabled: set disable state for element (Default = False)
@@ -9427,7 +9431,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param font:  specifies the font family, size, etc
     :type font: Union[str, Tuple[str, int]]
     :param disabled: set disable state for element (Default = False)
@@ -9491,7 +9495,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font:  specifies the font family, size, etc
@@ -9573,7 +9577,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font:  specifies the font family, size, etc
@@ -9784,6 +9788,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     except:
                         value = 0
                 elif element.Type == ELEM_TYPE_INPUT_MULTILINE:
+                    if element.WriteOnly:               # if marked as "write only" when created, then don't include with the values being returned
+                        continue
                     try:
                         value = element.TKText.get(1.0, tk.END)
                         if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
@@ -11488,14 +11494,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # print(f'Inserting {node.key} under parent {node.parent}')
                     if node.key != '':
                         if node.icon:
-                            if node.icon not in Tree.image_dict:
+                            if node.icon not in element.image_dict:
                                 if type(node.icon) is bytes:
                                     photo = tk.PhotoImage(data=node.icon)
                                 else:
                                     photo = tk.PhotoImage(file=node.icon)
-                                Tree.image_dict[node.icon] = photo
+                                element.image_dict[node.icon] = photo
                             else:
-                                photo = Tree.image_dict.get(node.icon)
+                                photo = element.image_dict.get(node.icon)
 
                             node.photo = photo
                             try:
@@ -11898,7 +11904,7 @@ class QuickMeter(object):
         :param bar_color:  color of a bar line
         :type bar_color: Tuple[str, str]
         :param button_color: button color (foreground, background)
-        :type button_color: Tuple[str, str]
+        :type button_color: Tuple[str, str] or str
         :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
         :type size: (int, int)
         :param border_width:  width of border around element
@@ -12011,7 +12017,7 @@ def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', 
     :param bar_color:  color of a bar line
     :type bar_color: Tuple(str, str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
     :type size: (int, int)
     :param border_width:  width of border around element
@@ -12231,6 +12237,21 @@ def EasyPrintClose():
         _DebugWin.debug_window = None
 
 
+
+
+#                            d8b          888
+#                            Y8P          888
+#                                         888
+#   .d8888b 88888b.  888d888 888 88888b.  888888
+#  d88P"    888 "88b 888P"   888 888 "88b 888
+#  888      888  888 888     888 888  888 888
+#  Y88b.    888 d88P 888     888 888  888 Y88b.
+#   "Y8888P 88888P"  888     888 888  888  "Y888
+#           888
+#           888
+#           888
+
+
 CPRINT_DESTINATION_WINDOW = None
 CPRINT_DESTINATION_MULTILINE_ELMENT_KEY = None
 
@@ -12252,7 +12273,8 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 
-def cprint(*args, **kwargs):
+# def cprint(*args, **kwargs):
+def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -12261,20 +12283,19 @@ def cprint(*args, **kwargs):
 
     args is a variable number of things you want to print.
 
-    kwargs can be any of these keywords:
-        end - The end char to use just like print uses
-        sep - The separation character like print uses
-        text_color - The color of the text
-                key - overrides the previously defined Multiline key
-        window - overrides the previously defined window to output to
-        background_color - The color of the background
-        colors -(str, str) or str.  A combined text/background color definition in a single parameter
+    end - The end char to use just like print uses
+    sep - The separation character like print uses
+    text_color - The color of the text
+            key - overrides the previously defined Multiline key
+    window - overrides the previously defined window to output to
+    background_color - The color of the background
+    colors -(str, str) or str.  A combined text/background color definition in a single parameter
 
-        There are also "aliases" for text_color, background_color and colors (t, b, c)
-        t - An alias for color of the text (makes for shorter calls)
-        b - An alias for the background_color parameter
-        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
-            str - can also be a string of the format "foreground on background"  ("white on red")
+    There are also "aliases" for text_color, background_color and colors (t, b, c)
+    t - An alias for color of the text (makes for shorter calls)
+    b - An alias for the background_color parameter
+    c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+    c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     With the aliases it's possible to write the same print but in more compact ways:
     cprint('This will print white text on red background', c=('white', 'red'))
@@ -12308,60 +12329,41 @@ def cprint(*args, **kwargs):
     :rtype: None
     """
 
-    destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY
-    window = CPRINT_DESTINATION_WINDOW
+    destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY if key is None else key
+    destination_window = window or CPRINT_DESTINATION_WINDOW
 
-    if (window is None and 'window' not in kwargs) or (destination_key is None and 'key' not in kwargs):
+    if (destination_window is None and window is None) or (destination_key is None and key is None):
         print('** Warning ** Attempting to perform a cprint without a valid window & key',
               'Will instead print on Console',
               'You can specify window and key in this cprint call, or set ahead of time using cprint_set_output_destination')
         print(*args)
         return
 
-
-
-    # loop through all keyword args.  Some will be passed on to the print function, others control
-    # the location to send the print
-    new_kwargs = {}
-    for arg in kwargs:
-        if arg == 't':
-            new_kwargs['text_color'] = kwargs[arg]
-        elif arg == 'b':
-            new_kwargs['background_color'] = kwargs[arg]
-        elif arg == 'c' or arg == 'colors':
-            try:
-                if isinstance(kwargs[arg], tuple):
-                    new_kwargs['text_color'] = kwargs[arg][0]
-                    new_kwargs['background_color'] = kwargs[arg][1]
-                elif isinstance(kwargs[arg],str):
-                    colors = kwargs[arg].split(' on ')
-                    new_kwargs['text_color'] = colors[0]
-                    new_kwargs['background_color'] = colors[1]
-            except Exception as e:
-                print('* cprint warning * you messed up with color formatting', e)
-        elif arg == 'key':
-            destination_key = kwargs[arg]
-        elif arg == 'window':
-            window = kwargs[arg]
-        else:
-            new_kwargs[arg] = kwargs[arg]
-    # Special code to control the "end".  If no end is specified then the ENTIRE LINE will be displayed with
-    # the background color spanning across the entire width of the element.  This is likely not the desired
-    # outcome the user was hoping for. So, thi code provides that behavior of only the portion of the line
-    # with text will have a background color change
-    if window is None or destination_key is None:
-        print('** cprint Warning - Missing information. Window or Key is None **')
-        return
-
+    kw_text_color = text_color or t
+    kw_background_color = background_color or b
+    dual_color = colors or c
     try:
-        if new_kwargs.get('end', None) is None:
-            new_kwargs['end'] = ''
-            window[destination_key].print(*args, **new_kwargs)
-            window[destination_key].print('')
-        else:
-            window[destination_key].print(*args, **new_kwargs)
+        if isinstance(dual_color, tuple):
+            kw_text_color = dual_color[0]
+            kw_background_color = dual_color[1]
+        elif isinstance(dual_color, str):
+            kw_text_color = dual_color.split(' on ')[0]
+            kw_background_color = dual_color.split(' on ')[1]
     except Exception as e:
-        print('** cprint error trying to print to the multiline **', e)
+        print('* cprint warning * you messed up with color formatting', e)
+
+    mline = destination_window.find_element(destination_key, silent_on_error=True)      # type: Multiline
+    try:
+        # mline = destination_window[destination_key]     # type: Multiline
+        if end is None:
+            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep)
+            mline.print('')
+        else:
+            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep)
+    except Exception as e:
+        print('** cprint error trying to print to the multiline. Printing to console instead **', e)
+        print(*args, end=end, sep=sep)
+
 
 # ------------------------------------------------------------------------------------------------ #
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
@@ -12435,7 +12437,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
     :param button_color: Color of the button (text, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param element_size: element size (width, height) in characters
     :type element_size: (int, int)
     :param button_element_size: Size of button
@@ -14297,7 +14299,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color:  button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param yes_no:  If True, displays Yes and No buttons instead of Ok
     :type yes_no: (bool)
     :param auto_close:   if True window will close itself
@@ -14438,7 +14440,7 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14491,7 +14493,7 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14543,7 +14545,7 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param background_color: color of background
@@ -14594,7 +14596,7 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14648,7 +14650,7 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14701,7 +14703,7 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14751,7 +14753,7 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14800,7 +14802,7 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14848,7 +14850,7 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14897,7 +14899,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -14958,7 +14960,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color:  button color (foreground, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -15070,7 +15072,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color: Color of the button (text, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: background color of the entire window
     :type background_color: (str)
     :param text_color: color of the text
@@ -15195,7 +15197,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color:  Color of the button (text, background)
-    :type button_color: Tuple[str, str]
+    :type button_color: Tuple[str, str] or str
     :param background_color: background color of the entire window
     :type background_color: (str)
     :param text_color: color of the message text
@@ -16548,7 +16550,7 @@ def main():
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Install PySimpleGUI from GitHub', button_color='white on red' ,key='-INSTALL-'),
+         Button('Install PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
     ]
 
