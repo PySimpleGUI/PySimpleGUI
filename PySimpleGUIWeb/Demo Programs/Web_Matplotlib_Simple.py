@@ -15,12 +15,12 @@ def create_figure():
     return fig
 
 
-def draw_figure(fig, element):
+def draw_figure(element, fig):
     """
     Draws the previously created "figure" in the supplied Image Element
 
-    :param fig: a Matplotlib figure
     :param element: an Image Element
+    :param fig: a Matplotlib figure
     :return: The figure canvas
     """
 
@@ -50,7 +50,7 @@ def main():
         if event == 'Exit' or event == sg.WIN_CLOSED:
             break
         if event == 'Draw':
-            draw_figure(create_figure(), window['-IMAGE-'])
+            draw_figure(window['-IMAGE-'], create_figure())
     window.close()
 
 
