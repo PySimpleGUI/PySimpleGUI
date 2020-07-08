@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.4 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide"
+version = __version__ = "4.24.0.5 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline"
 
 port = 'PySimpleGUI'
 
@@ -592,10 +592,7 @@ class ToolTip:
 #                       Element CLASS                                       #
 # ------------------------------------------------------------------------- #
 class Element():
-    """
-    The base class for all Elements.
-    Holds the basic description of an Element like size and colors
-    """
+    """ The base class for all Elements. Holds the basic description of an Element like size and colors """
 
     def __init__(self, type, size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, pad=None, tooltip=None,
                  visible=True, metadata=None):
@@ -874,6 +871,7 @@ class Element():
         :param bind_string: The string tkinter expected in its bind function
         :type bind_string: (str)
         :param key_modifier: Additional data to be added to the element's key when event is returned
+        :type key_modifier: (str)
         """
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
@@ -2128,7 +2126,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, focus=False, font=None, pad=None, tooltip=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2161,6 +2159,8 @@ class Multiline(Element):
         :type k: Union[str, int, tuple, object]
         :param write_only: If True then no entry will be added to the values dictionary when the window is read
         :type write_only: bool
+        :param auto_refresh: If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed
+        :type auto_refresh: (bool)
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2192,7 +2192,9 @@ class Multiline(Element):
         self.TKText = self.Widget = None  # type: tkst.ScrolledText
         self.tags = set()
         self.WriteOnly = write_only
+        self.AutoRefresh = auto_refresh
         key = key if key is not None else k
+        self.previous_stdout = self.previous_stderr = None
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -2301,6 +2303,54 @@ class Multiline(Element):
         :type background_color: (str)
         """
         _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
+
+
+    def reroute_stdout_to_here(self):
+        self.previous_stdout = sys.stdout
+        sys.stdout = self
+
+
+    def reroute_stderr_to_here(self):
+        self.previous_stderr = sys.stderr
+        sys.stderr = self
+
+    def restore_stdout(self):
+        if self.previous_stdout:
+           sys.stdout = self.previous_stdout
+
+
+    def restore_stderr(self):
+       if self.previous_stderr:
+           sys.stderr = self.previous_stderr
+
+
+    def write(self, txt):
+        """
+        Called by Python (not tkinter?) when stdout or stderr wants to write
+
+        :param txt: text of output
+        :type txt: (str)
+        """
+        try:
+            self.update(txt, append=True, autoscroll=True)
+        except:
+            pass
+
+
+    def flush(self):
+        """
+        Flush parameter was passed into a print statement.
+        For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
+        """
+        return
+
+
+    def __del__(self):
+        """
+        If this Widget is deleted, be sure and restore the old stdout, stderr
+        """
+        self.restore_stdout()
+        self.restore_stderr()
 
 
 
@@ -6536,6 +6586,8 @@ class TreeData(object):
 
         def __init__(self, parent, key, text, values, icon=None):
             """
+            Represents a node within the TreeData class
+
             :param parent: The parent Node
             :type parent: (TreeData.Node)
             :param key: Used to uniquely identify this node
@@ -7799,8 +7851,12 @@ class Window:
             except:
                 pass
         self.TKrootDestroyed = True
-        del self.TKroot
+        for row in self.Rows:
+            for elem in row:
+                del elem
+
         del self.Rows
+        del self.TKroot
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def _OnClosingCallback(self):
@@ -12401,6 +12457,11 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
 
     multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll)
 
+    try:        # if the element is set to autorefresh, then refresh the parent window
+        if multiline_element.AutoRefresh:
+            multiline_element.ParentForm.refresh()
+    except:
+        pass
 
 # ============================== SetGlobalIcon ======#
 # Sets the icon to be used by default                #
@@ -13892,9 +13953,9 @@ def theme_add_new(new_theme_name, new_theme_dict):
     """
     Add a new theme to the dictionary of themes
 
-    :param new_theme_name: text to display in eleemnt
+    :param new_theme_name: text to display in element
     :type new_theme_name: (str)
-    :param new_theme_dict: text to display in eleemnt
+    :param new_theme_dict: text to display in element
     :type new_theme_dict: (dict)
     """
     global LOOK_AND_FEEL_TABLE
@@ -16666,4 +16727,5 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
+
 
