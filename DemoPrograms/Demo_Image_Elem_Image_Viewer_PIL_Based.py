@@ -13,7 +13,8 @@ import base64
     
     The key to the program is the function "convert_to_bytes" which takes a filename or a 
     bytes object and converts (with optional resize) into a PNG formatted bytes object that
-    can then be passed to an Image Element's update method
+    can then be passed to an Image Element's update method.  This function can also optionally
+    resize the image.
     
     Copyright 2020 PySimpleGUI.org
 """
@@ -51,7 +52,8 @@ def convert_to_bytes(file_or_bytes, resize=None):
 # First the window layout...2 columns
 
 left_col = [[sg.Text('Folder'), sg.In(size=(25,1), enable_events=True ,key='-FOLDER-'), sg.FolderBrowse()],
-            [sg.Listbox(values=[], enable_events=True, size=(40,20),key='-FILE LIST-')]]
+            [sg.Listbox(values=[], enable_events=True, size=(40,20),key='-FILE LIST-')],
+            [sg.Text('Resize to'), sg.In(key='-W-', size=(5,1)), sg.In(key='-H-', size=(5,1))]]
 
 # For now will only show the name of the file that was chosen
 images_col = [[sg.Text('You choose from the list:')],
@@ -59,7 +61,7 @@ images_col = [[sg.Text('You choose from the list:')],
               [sg.Image(key='-IMAGE-')]]
 
 # ----- Full layout -----
-layout = [[sg.Column(left_col), sg.VSeperator(),sg.Column(images_col, element_justification='c')]]
+layout = [[sg.Column(left_col, element_justification='c'), sg.VSeperator(),sg.Column(images_col, element_justification='c')]]
 
 # --------------------------------- Create Window ---------------------------------
 window = sg.Window('Multiple Format Image Viewer', layout,resizable=True)
@@ -85,10 +87,13 @@ while True:
         try:
             filename = os.path.join(values['-FOLDER-'], values['-FILE LIST-'][0])
             window['-TOUT-'].update(filename)
-            window['-IMAGE-'].update(data=convert_to_bytes(filename))
-        except:
+            if values['-W-'] and values['-H-']:
+                new_size = int(values['-W-']), int(values['-H-'])
+            else:
+                new_size = None
+            window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
+        except Exception as E:
+            print(f'** Error {E} **')
             pass        # something weird happened making the full filename
-
 # --------------------------------- Close & Exit ---------------------------------
-
 window.close()
