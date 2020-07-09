@@ -2126,7 +2126,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, focus=False, font=None, pad=None, tooltip=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, focus=False, font=None, pad=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2161,6 +2161,10 @@ class Multiline(Element):
         :type write_only: bool
         :param auto_refresh: If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed
         :type auto_refresh: (bool)
+        :param reroute_stdout: If True then all output to stdout will be output to this element
+        :type reroute_stdout: (bool)
+        :param reroute_stderr: If True then all output to stdout will be output to this element
+        :type reroute_stderr: (bool)
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2195,6 +2199,10 @@ class Multiline(Element):
         self.AutoRefresh = auto_refresh
         key = key if key is not None else k
         self.previous_stdout = self.previous_stderr = None
+        if reroute_stdout:
+            self.reroute_stdout_to_here()
+        if reroute_stderr:
+            self.reroute_stderr_to_here()
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
