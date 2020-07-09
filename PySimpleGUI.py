@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.5 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline"
+version = __version__ = "4.24.0.6 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call"
 
 port = 'PySimpleGUI'
 
@@ -2275,6 +2275,12 @@ class Multiline(Element):
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
 
+        if self.AutoRefresh and self.ParentForm:
+            try:        # in case the window was destroyed
+                self.ParentForm.refresh()
+            except:
+                pass
+
     def Get(self):
         """
         Return current contents of the Multiline Element
@@ -2728,6 +2734,7 @@ class TKOutput(tk.Frame):
         self.frame.pack(side="left", padx=pad[0], pady=pad[1], expand=True, fill='y')
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
+        self.parent = parent
 
         sys.stdout = self
         sys.stderr = self
@@ -2736,6 +2743,7 @@ class TKOutput(tk.Frame):
     def write(self, txt):
         """
         Called by Python (not tkinter?) when stdout or stderr wants to write
+        Refreshes the window after the write so that the change is immediately displayed
 
         :param txt: text of output
         :type txt: (str)
@@ -2743,6 +2751,7 @@ class TKOutput(tk.Frame):
         try:
             self.output.insert(tk.END, str(txt))
             self.output.see(tk.END)
+            self.parent.update()
         except:
             pass
 
