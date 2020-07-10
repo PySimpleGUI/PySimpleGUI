@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.7 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr"
+version = __version__ = "4.24.0.8 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints"
 
 port = 'PySimpleGUI'
 
@@ -2305,7 +2305,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -2320,7 +2320,7 @@ class Multiline(Element):
         :param background_color: The background color of the line
         :type background_color: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, autoscroll=autoscroll)
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, )
 
 
     def reroute_stdout_to_here(self):
@@ -2350,7 +2350,7 @@ class Multiline(Element):
         :type txt: (str)
         """
         try:
-            self.update(txt, append=True, autoscroll=True)
+            self.update(txt, append=True)
         except:
             pass
 
@@ -12447,7 +12447,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=True):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
