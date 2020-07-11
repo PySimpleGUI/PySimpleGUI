@@ -400,7 +400,8 @@ ENABLE_TK_WINDOWS = False
 
 SUPPRESS_ERROR_POPUPS = False
 
-ENABLE_TREEVIEW_869_PATCH = False
+ENABLE_TREEVIEW_869_PATCH = True
+TREEVIEW_OLD_SELECTED_ROW_COLOR = '#4A6984'
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
@@ -6124,7 +6125,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
-                 alternating_row_color=None, header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
+                 alternating_row_color=None, selected_row_color=None, header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
@@ -6160,6 +6161,8 @@ class Table(Element):
         :type background_color: (str)
         :param alternating_row_color: if set then every other row will have this color in the background.
         :type alternating_row_color: (str)
+        :param selected_row_color: if set then use this color to show that a row is selected. Otherwise uses the system setting
+        :type selected_row_color: (str)
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -6223,6 +6226,7 @@ class Table(Element):
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
+        self.SelectedRowColor = selected_row_color
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
@@ -6374,7 +6378,7 @@ class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
-                 background_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, k=None, tooltip=None,
+                 background_color=None, selected_row_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param data: The data represented using a PySimpleGUI provided TreeData class
@@ -6409,6 +6413,8 @@ class Tree(Element):
         :type text_color: (str)
         :param background_color: color of background
         :type background_color: (str)
+        :param selected_row_color: if set then use this color to show that a row is selected. Otherwise uses the system setting
+        :type selected_row_color: (str)
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -6448,6 +6454,7 @@ class Tree(Element):
         self.TextColor = text_color
         self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
         self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
+        self.SelectedRowColor = selected_row_color
         self.HeaderFont = header_font
         self.Justification = justification
         self.InitialState = None
@@ -10115,6 +10122,24 @@ class VarHolder(object):
 
 
 # ========================   TK CODE STARTS HERE ========================================= #
+def _fixed_map(style, style_name, option, highlight_color=None):
+    # Fix for setting text colour for Tkinter 8.6.9
+    # From: https://core.tcl.tk/tk/info/509cafafae
+    #
+    # Returns the style map for 'option' with any styles starting with
+    # ('!disabled', '!selected', ...) filtered out.
+
+    # style.map() returns an empty list for missing options, so this
+    # should be future-safe.
+    new_map = [elm for elm in style.map(style_name, query_opt=option) if elm[:2] != ('!disabled', '!selected')]
+
+    if option == 'background':
+        new_map.append(('selected', highlight_color if highlight_color is not None else 'SystemHighlight'))
+
+    return new_map
+
+
+
 # @_timeit
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     """
@@ -10195,17 +10220,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
               '\nValid choices include: {}'.format(style.theme_names()))
         return False
 
-    def _fixed_map(style, style_name, option):
-        # Fix for setting text colour for Tkinter 8.6.9
-        # From: https://core.tcl.tk/tk/info/509cafafae
-        #
-        # Returns the style map for 'option' with any styles starting with
-        # ('!disabled', '!selected', ...) filtered out.
-
-        # style.map() returns an empty list for missing options, so this
-        # should be future-safe.
-        return [elm for elm in style.map(style_name, query_opt=option) if
-                elm[:2] != ('!disabled', '!selected')]
 
 
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
@@ -11470,7 +11484,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                    table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor, )
+                    if element.SelectedRowColor is not None:
+                        table_style.map(style_name, background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColor),)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, foreground=element.TextColor)
                 if element.RowHeight is not None:
@@ -11487,7 +11503,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     table_style.configure(style_name+'.Heading', font=font)
                 table_style.configure(style_name, font=font)
                 treeview.configure(style=style_name)
-
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.BindReturnKey:
@@ -11522,10 +11537,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    print(f"fixed up background color = {[elm for elm in table_style.map(style_name, query_opt='background')]}")
+
                     table_style.map(style_name,
                                     foreground=_fixed_map(table_style, style_name, 'foreground'),
-                                    background=_fixed_map(table_style, style_name, 'background'),)
-
+                                    background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColor),)
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element  # type: Tree
@@ -11605,8 +11621,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tree_style = ttk.Style()
                 tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
-                    tree_style.configure(style_name, background=element.BackgroundColor,
-                                         fieldbackground=element.BackgroundColor)
+                    tree_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
+                    if element.SelectedRowColor is not None:
+                        tree_style.map(style_name, background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColor),)
+
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, foreground=element.TextColor)
                 if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
@@ -11643,10 +11661,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
                     tree_style.map(style_name,
                                    foreground=_fixed_map(tree_style, style_name, 'foreground'),
-                                   background=_fixed_map(tree_style, style_name, 'background'),
-                                   )
-
-
+                                   background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColor),)
 
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
