@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.12 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function"
+version = __version__ = "4.24.0.13 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to popup"
 
 port = 'PySimpleGUI'
 
@@ -8210,6 +8210,18 @@ class Window:
             return
         self.TKroot.wm_title(str(title))
 
+
+    def make_modal(self):
+        if not self._is_window_created():
+            return
+
+        try:
+            self.TKroot.transient()
+            self.TKroot.grab_set()
+            self.TKroot.focus_force()
+        except Exception as e:
+            print('Exception trying to make modal', e)
+
     # def __enter__(self):
     #     """
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
@@ -14271,7 +14283,7 @@ def ObjToString(obj, extra='    '):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None):
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=False):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -14314,6 +14326,8 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type any_key_closes: (bool)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type model: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None]
     """
@@ -14395,6 +14409,9 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     if non_blocking:
         button, values = window.Read(timeout=0)
     else:
+        if modal:
+            window.finalize()
+            window.make_modal()
         button, values = window.Read()
         window.close(); del window
 
