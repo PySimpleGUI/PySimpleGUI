@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.13 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to popup"
+version = __version__ = "4.24.0.14 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups"
 
 port = 'PySimpleGUI'
 
@@ -2321,7 +2321,7 @@ class Multiline(Element):
         :param background_color: The background color of the line
         :type background_color: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, )
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color )
 
 
     def reroute_stdout_to_here(self):
@@ -14283,7 +14283,7 @@ def ObjToString(obj, extra='    '):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=False):
+def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -14327,7 +14327,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
-    :type model: bool
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None]
     """
@@ -14407,12 +14407,12 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
                                   pad=((20, 0), 3)))
 
     if non_blocking:
-        button, values = window.Read(timeout=0)
+        button, values = window.read(timeout=0)
     else:
         if modal:
             window.finalize()
             window.make_modal()
-        button, values = window.Read()
+        button, values = window.read()
         window.close(); del window
 
     return button
@@ -14435,7 +14435,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def PopupScrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None):
+                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, modal=True):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
@@ -14472,6 +14472,8 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     :type font: Union[str, Tuple[str, int]]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14480,7 +14482,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     width = width if width else MESSAGE_BOX_LINE_WIDTH
     window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top)
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal)
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
@@ -14531,7 +14533,7 @@ sprint = ScrolledTextBox
 # --------------------------- PopupNoButtons ---------------------------
 def PopupNoButtons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """Show a Popup but without any buttons
 
     :param *args: Variable number of items to display
@@ -14562,20 +14564,22 @@ def PopupNoButtons(*args, title=None, background_color=None, text_color=None, au
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]    """
     Popup(*args, title=title, background_color=background_color, text_color=text_color,
           button_type=POPUP_BUTTONS_NO_BUTTONS,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupNonBlocking ---------------------------
 def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                      text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                     location=(None, None), image=None):
+                     location=(None, None), image=None, modal=False):
     """
     Show Popup window and immediately return (does not block)
 
@@ -14611,6 +14615,8 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Reason for popup closing
     :rtype: Union[str, None]
     """
@@ -14619,7 +14625,7 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 PopupNoWait = PopupNonBlocking
@@ -14628,7 +14634,7 @@ PopupNoWait = PopupNonBlocking
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
 def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-               font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+               font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
     """
     Show Popup box that doesn't block and closes itself
 
@@ -14666,6 +14672,8 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14674,13 +14682,13 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                       text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                      font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+                      font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -14718,6 +14726,8 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14725,13 +14735,13 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
 def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                     text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
-                    line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None), image=None):
+                    line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -14767,6 +14777,8 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14774,7 +14786,7 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 PopupNoFrame = PopupNoTitlebar
@@ -14786,7 +14798,7 @@ PopupAnnoying = PopupNoTitlebar
 def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                    auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                   location=(None, None), image=None):
+                   location=(None, None), image=None, modal=True):
     """Popup that closes itself after some time period
 
     :param *args: Variable number of items to display
@@ -14823,6 +14835,8 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14831,7 +14845,7 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
           button_type=button_type,
           auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
           line_width=line_width,
-          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+          font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 PopupTimed = PopupAutoClose
@@ -14840,7 +14854,7 @@ PopupTimed = PopupAutoClose
 # --------------------------- PopupError ---------------------------
 def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Popup with colored button and 'Error' as button text
 
@@ -14876,6 +14890,8 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14884,13 +14900,13 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
                  auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image)
+                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupCancel ---------------------------
 def PopupCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display Popup with "cancelled" button text
 
@@ -14926,6 +14942,8 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
@@ -14933,13 +14951,13 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image)
+                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupOK ---------------------------
 def PopupOK(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
             auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-            no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+            no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display Popup with OK button only
 
@@ -14975,19 +14993,21 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
     """
     return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
-                 keep_on_top=keep_on_top, location=location, image=image)
+                 keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupOKCancel ---------------------------
 def PopupOKCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                   auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
-                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display popup with OK and Cancel buttons
 
@@ -15023,6 +15043,8 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: clicked button
     :rtype: Union["OK", "Cancel", None]
     """
@@ -15030,13 +15052,13 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 # --------------------------- PopupYesNo ---------------------------
 def PopupYesNo(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display Popup with Yes and No buttons
 
@@ -15072,6 +15094,8 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: clicked button
     :rtype: Union["Yes", "No", None]
     """
@@ -15079,7 +15103,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
-                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image)
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
 ##############################################################################
@@ -15091,7 +15115,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
 
 def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None):
+                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None, modal=True):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
 
@@ -15127,6 +15151,8 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :type initial_folder: (str)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: string representing the path chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
     """
@@ -15179,7 +15205,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     background_color=background_color,
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location)
+                    location=location, modal=modal)
 
     button, values = window.Read()
     window.close(); del window
@@ -15195,7 +15221,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                  file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None), initial_folder=None, image=None):
+                 location=(None, None), initial_folder=None, image=None, modal=True):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -15239,6 +15265,8 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :type initial_folder: (str)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: string representing the file(s) chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
     """
@@ -15313,7 +15341,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font,
                     background_color=background_color,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location)
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal)
 
     button, values = window.Read()
     window.close(); del window
@@ -15328,7 +15356,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
 
 def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                 grab_anywhere=False, keep_on_top=False, location=(None, None), image=None):
+                 grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
@@ -15362,6 +15390,8 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Text entered or None if window was closed or cancel button clicked
     :rtype: Union[str, None]
     """
@@ -15379,10 +15409,10 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
-    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
-                    no_titlebar=no_titlebar,
-                    background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location)
+    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar, background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, finalize=True)
+
+    if modal:
+        window.make_modal()
 
     button, values = window.Read()
     window.close(); del window
@@ -15394,7 +15424,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
 
 
 
-def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None):
+def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sunday_plus=0, no_titlebar=True, title='Choose Date', keep_on_top=True, location=(None, None), close_when_chosen=False, icon=None, locale=None, month_names=None, day_abbreviations=None, modal=True):
     """
     Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
 
@@ -15424,6 +15454,8 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type month_names: List[str]
     :param day_abbreviations: optional list of abbreviations to display as the day of week
     :type day_abbreviations: List[str]
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :type modal: bool
     :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
     :rtype: None or (int, int, int)
     """
@@ -15517,6 +15549,9 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
                     window[(week,day)].update(background_color=theme_text_color(), text_color=theme_background_color())
                     prev_choice = (week,day)
                     break
+
+    if modal:
+        window.make_modal()
 
     while True:             # Event Loop
         event, values = window.read()
@@ -16697,6 +16732,7 @@ def main():
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Install PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
+         B('Popup'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -16744,11 +16780,13 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
         elif event == 'About...':
-            popup_no_wait('About this program...', 'You are looking at the test harness for the PySimpleGUI program', keep_on_top=True, image=DEFAULT_BASE64_ICON)
+            popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', keep_on_top=True, image=DEFAULT_BASE64_ICON)
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
         elif event == '-INSTALL-':
             _upgrade_gui()
+        elif event == 'Popup':
+            popup('This is your basic popup', keep_on_top=True)
 
         i += 1
         # _refresh_debugger()
