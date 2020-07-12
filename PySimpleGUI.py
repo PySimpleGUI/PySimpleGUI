@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.10 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color"
+version = __version__ = "4.24.0.11 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme"
 
 port = 'PySimpleGUI'
 
@@ -401,8 +401,8 @@ ENABLE_TK_WINDOWS = False
 SUPPRESS_ERROR_POPUPS = False
 
 ENABLE_TREEVIEW_869_PATCH = True
-TREEVIEW_OLD_SELECTED_ROW_COLOR = '#4A6984'
-
+OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
+ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS = ('SystemHighlightText', 'SystemHighlight')
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
 # ====================================================================== #
@@ -6125,7 +6125,7 @@ class Table(Element):
     def __init__(self, values, headings=None, visible_column_map=None, col_widths=None, def_col_width=10,
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
-                 alternating_row_color=None, selected_row_color=None, header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
+                 alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
@@ -6161,8 +6161,8 @@ class Table(Element):
         :type background_color: (str)
         :param alternating_row_color: if set then every other row will have this color in the background.
         :type alternating_row_color: (str)
-        :param selected_row_color: if set then use this color to show that a row is selected. Otherwise uses the system setting
-        :type selected_row_color: (str)
+        :param selected_row_colors: Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color
+        :type selected_row_colors: str or Tuple[str, str]
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -6226,7 +6226,18 @@ class Table(Element):
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
-        self.SelectedRowColor = selected_row_color
+
+        if selected_row_colors == (None, None):
+            # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
+            selected_row_colors = theme_button_color()
+        else:
+            try:
+                if isinstance(selected_row_colors, str):
+                    selected_row_colors = selected_row_colors.split(' on ')
+            except Exception as e:
+                print('* Table Element Warning * you messed up with color formatting of Selected Row Color', e)
+        self.SelectedRowColors = selected_row_colors
+
         self.RightClickMenu = right_click_menu
         self.RowColors = row_colors
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
@@ -6378,7 +6389,7 @@ class Tree(Element):
     def __init__(self, data=None, headings=None, visible_column_map=None, col_widths=None, col0_width=10,
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
-                 background_color=None, selected_row_color=None, header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, k=None, tooltip=None,
+                 background_color=None, selected_row_colors=(None,None), header_text_color=None, header_background_color=None, header_font=None, num_rows=None, row_height=None, pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param data: The data represented using a PySimpleGUI provided TreeData class
@@ -6413,8 +6424,8 @@ class Tree(Element):
         :type text_color: (str)
         :param background_color: color of background
         :type background_color: (str)
-        :param selected_row_color: if set then use this color to show that a row is selected. Otherwise uses the system setting
-        :type selected_row_color: (str)
+        :param selected_row_colors: Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color
+        :type selected_row_colors: str or Tuple[str, str]
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -6454,7 +6465,18 @@ class Tree(Element):
         self.TextColor = text_color
         self.HeaderTextColor = header_text_color if header_text_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['TEXT_INPUT']
         self.HeaderBackgroundColor = header_background_color if header_background_color is not None else LOOK_AND_FEEL_TABLE[CURRENT_LOOK_AND_FEEL]['INPUT']
-        self.SelectedRowColor = selected_row_color
+
+        if selected_row_colors == (None, None):
+            # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
+            selected_row_colors = theme_button_color()
+        else:
+            try:
+                if isinstance(selected_row_colors, str):
+                    selected_row_colors = selected_row_colors.split(' on ')
+            except Exception as e:
+                print('* Table Element Warning * you messed up with color formatting of Selected Row Color', e)
+        self.SelectedRowColors = selected_row_colors
+
         self.HeaderFont = header_font
         self.Justification = justification
         self.InitialState = None
@@ -10122,7 +10144,7 @@ class VarHolder(object):
 
 
 # ========================   TK CODE STARTS HERE ========================================= #
-def _fixed_map(style, style_name, option, highlight_color=None):
+def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
     # Fix for setting text colour for Tkinter 8.6.9
     # From: https://core.tcl.tk/tk/info/509cafafae
     #
@@ -10134,8 +10156,9 @@ def _fixed_map(style, style_name, option, highlight_color=None):
     new_map = [elm for elm in style.map(style_name, query_opt=option) if elm[:2] != ('!disabled', '!selected')]
 
     if option == 'background':
-        new_map.append(('selected', highlight_color if highlight_color is not None else 'SystemHighlight'))
-
+        new_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
+    elif option == 'foreground':
+        new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
     return new_map
 
 
@@ -11485,10 +11508,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 table_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor, )
-                    if element.SelectedRowColor is not None:
-                        table_style.map(style_name, background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColor),)
+                    if element.SelectedRowColors[1] is not None:
+                        table_style.map(style_name, background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColors))
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     table_style.configure(style_name, foreground=element.TextColor)
+                    if element.SelectedRowColors[0] is not None:
+                        table_style.map(style_name, foreground=_fixed_map(table_style, style_name, 'foreground', element.SelectedRowColors))
                 if element.RowHeight is not None:
                     table_style.configure(style_name, rowheight=element.RowHeight)
                 else:
@@ -11537,11 +11562,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
-                    print(f"fixed up background color = {[elm for elm in table_style.map(style_name, query_opt='background')]}")
-
                     table_style.map(style_name,
-                                    foreground=_fixed_map(table_style, style_name, 'foreground'),
-                                    background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColor),)
+                                    foreground=_fixed_map(table_style, style_name, 'foreground', element.SelectedRowColors),
+                                    background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColors))
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element  # type: Tree
@@ -11622,11 +11645,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, background=element.BackgroundColor, fieldbackground=element.BackgroundColor)
-                    if element.SelectedRowColor is not None:
-                        tree_style.map(style_name, background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColor),)
-
+                    if element.SelectedRowColors[1] is not None:
+                        tree_style.map(style_name, background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColors))
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name, foreground=element.TextColor)
+                    if element.SelectedRowColors[0] is not None:
+                        tree_style.map(style_name, foreground=_fixed_map(tree_style, style_name, 'foreground', element.SelectedRowColors))
                 if element.HeaderTextColor is not None and element.HeaderTextColor != COLOR_SYSTEM_DEFAULT:
                     tree_style.configure(style_name+'.Heading', foreground=element.HeaderTextColor)
                 if element.HeaderBackgroundColor is not None and element.HeaderBackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -11660,8 +11684,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
                     tree_style.map(style_name,
-                                   foreground=_fixed_map(tree_style, style_name, 'foreground'),
-                                   background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColor),)
+                                    foreground=_fixed_map(tree_style, style_name, 'foreground', element.SelectedRowColors),
+                                    background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColors))
 
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
