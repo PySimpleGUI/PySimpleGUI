@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.11 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme"
+version = __version__ = "4.24.0.12 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function"
 
 port = 'PySimpleGUI'
 
@@ -10147,18 +10147,25 @@ class VarHolder(object):
 def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
     # Fix for setting text colour for Tkinter 8.6.9
     # From: https://core.tcl.tk/tk/info/509cafafae
-    #
-    # Returns the style map for 'option' with any styles starting with
-    # ('!disabled', '!selected', ...) filtered out.
 
-    # style.map() returns an empty list for missing options, so this
-    # should be future-safe.
+    default_map = [elm for elm in style.map("Treeview", query_opt=option) if '!' not in elm[0]]
+    custom_map = [elm for elm in style.map(style_name, query_opt=option) if '!' not in elm[0]]
+
+    if option == 'background':
+        custom_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
+    elif option == 'foreground':
+        custom_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
+
+    new_map = custom_map + default_map
+    return new_map
+
+
     new_map = [elm for elm in style.map(style_name, query_opt=option) if elm[:2] != ('!disabled', '!selected')]
 
     if option == 'background':
-        new_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
+        new_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
     elif option == 'foreground':
-        new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
+        new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
     return new_map
 
 
