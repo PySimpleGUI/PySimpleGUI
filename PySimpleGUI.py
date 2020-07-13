@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.14 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups"
+version = __version__ = "4.24.0.15 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters"
 
 port = 'PySimpleGUI'
 
@@ -6809,7 +6809,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -6883,6 +6883,8 @@ class Window:
         :type ttk_theme: (str)
         :param use_ttk_buttons: Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons.  None = use ttk buttons only if on a Mac
         :type use_ttk_buttons: (bool)
+        :param modal: If True then this window will be the only window a user can interact with until it is closed
+        :type modal: (bool)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -6959,6 +6961,7 @@ class Window:
         self.UseTtkButtons = use_ttk_buttons if use_ttk_buttons is not None else USE_TTK_BUTTONS
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
+        self.modal = modal
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -11955,6 +11958,10 @@ def StartupTK(my_flex_form):
         my_flex_form.CurrentlyRunningMainloop = True
         my_flex_form.TKroot.protocol("WM_DESTROY_WINDOW", my_flex_form._OnClosingCallback)
         my_flex_form.TKroot.protocol("WM_DELETE_WINDOW", my_flex_form._OnClosingCallback)
+
+        if my_flex_form.modal:
+            my_flex_form.make_modal()
+
         my_flex_form.TKroot.mainloop()
         my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
@@ -14019,14 +14026,6 @@ def theme_list():
     return list_of_look_and_feel_values()
 
 
-def theme_previewer(columns=12):
-    """
-    Show a window with all of the color themes - takes a while so be patient
-
-    :param columns: number of themes in a single row
-    :type columns: (int)
-    """
-    preview_all_look_and_feel_themes(columns)
 
 
 def theme_add_new(new_theme_name, new_theme_dict):
@@ -14046,6 +14045,58 @@ def theme_add_new(new_theme_name, new_theme_dict):
 
 
 
+
+def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None), location=(None, None)):
+    """
+    Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
+    They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
+
+    :param columns: The number of themes to display per row
+    :type columns: int
+    :param scrollable: If True then scrollbars will be added
+    :type scrollable: bool
+    :param scroll_area_size: Size of the scrollable area (The Column Element used to make scrollable)
+    :type scroll_area_size: (int, int)
+    :param location: Location on the screen to place the window. Defaults to the center like all windows
+    :type location: (int, int)
+    """
+
+    # Show a "splash" type message so the user doesn't give up waiting
+    popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
+
+    web = False
+
+    win_bg = 'black'
+
+    def sample_layout():
+        return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
+                [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(5, 15))]]
+
+    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
+
+    names = list_of_look_and_feel_values()
+    names.sort()
+
+    col_layout = []
+    row = []
+    for count, theme_name in enumerate(names):
+        theme(theme_name)
+        if not count % columns:
+            col_layout += [row]
+            row = []
+        row += [Frame(theme_name, sample_layout() if not web else [[T(theme_name)]] + sample_layout(), pad=(2,2))]
+    if row:
+        col_layout += [row]
+
+    layout += [[Column(col_layout, scrollable=scrollable, size=scroll_area_size, pad=(0,0), background_color=win_bg, key='-COL-')]]
+    window = Window('Preview of all Look and Feel choices', layout, background_color=win_bg, resizable=True, location=location, finalize=True)
+    window['-COL-'].expand(True, True, True)    # needed so that col will expand with the window
+    window.read()
+    window.close()
+
+
+
+preview_all_look_and_feel_themes = theme_previewer
 
 def ChangeLookAndFeel(index, force=False):
     """
@@ -14128,46 +14179,6 @@ def ChangeLookAndFeel(index, force=False):
     except:  # most likely an index out of range
         print('** Warning - Theme value not valid. Change your theme call. **')
         print('valid values are', list_of_look_and_feel_values())
-
-
-def preview_all_look_and_feel_themes(columns=12):
-    """
-    Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
-    They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
-    :param columns: The number of themes to display per row
-    :type columns: (int)
-    :return: None
-    :rtype: None
-    """
-
-    # Show a "splash" type message so the user doesn't give up waiting
-    popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
-
-    web = False
-
-    win_bg = 'black'
-
-    def sample_layout():
-        return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
-                [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(5, 15))]]
-
-    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
-
-    names = list_of_look_and_feel_values()
-    names.sort()
-    row = []
-    for count, theme in enumerate(names):
-        change_look_and_feel(theme)
-        if not count % columns:
-            layout += [row]
-            row = []
-        row += [Frame(theme, sample_layout() if not web else [[T(theme)]] + sample_layout())]
-    if row:
-        layout += [row]
-
-    window = Window('Preview of all Look and Feel choices', layout, background_color=win_bg)
-    window.read()
-    window.close()
 
 
 # ------------------------ Color processing functions ------------------------
@@ -14343,7 +14354,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     _title = title if title is not None else args_to_print[0]
     window = Window(_title, auto_size_text=True, background_color=background_color, button_color=button_color,
                     auto_close=auto_close, auto_close_duration=auto_close_duration, icon=icon, font=font,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes)
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes, modal=modal)
     max_line_total, total_lines = 0, 0
     if image is not None:
         if isinstance(image, str):
@@ -14409,9 +14420,9 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     if non_blocking:
         button, values = window.read(timeout=0)
     else:
-        if modal:
-            window.finalize()
-            window.make_modal()
+        # if modal:
+        #     window.finalize()
+        #     window.make_modal()
         button, values = window.read()
         window.close(); del window
 
