@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.16 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters, Combo - don't select first entry if updated with a new set of values"
+version = __version__ = "4.24.0.17 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters, Combo - don't select first entry if updated with a new set of values, multi-threaded support using Window.write_event_value"
 
 port = 'PySimpleGUI'
 
@@ -131,6 +131,7 @@ except:
 from threading import Thread
 import itertools
 import os
+import queue
 
 warnings.simplefilter('always', UserWarning)
 
@@ -1202,7 +1203,9 @@ class InputText(Element):
         if visible is False:
             self.TKEntry.pack_forget()
         elif visible is True:
+            # print(f'Other widgets on row = {self.ParentRowFrame.pack_slaves()}')
             self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            # self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1], in_=self.ParentRowFrame)
 
     def Get(self):
         """
@@ -3874,7 +3877,7 @@ class Graph(Element):
                  right_click_menu=None, visible=True, float_values=False, metadata=None):
         """
         :param canvas_size: size of the canvas area in pixels
-        :type canvas_size: (int, int)
+        :type canvas_size: Tuple[int, int]
         :param graph_bottom_left: (x,y) The bottoms left corner of your coordinate system
         :type graph_bottom_left: Tuple[int, int]
         :param graph_top_right: (x,y) The top right corner of  your coordinate system
@@ -6962,6 +6965,9 @@ class Window:
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.modal = modal
+        self.thread_queue = None        # type: queue.Queue
+        self.thread_key = None          # type: Any
+        self.thread_strvar  = None      # type: tk.StringVar
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7308,6 +7314,7 @@ class Window:
         # ensure called only 1 time through a single read cycle
         if not Window._read_call_from_debugger:
             _refresh_debugger()
+
         results = self._read(timeout=timeout, timeout_key=timeout_key)
         if close:
             self.close()
@@ -7354,6 +7361,11 @@ class Window:
                 self.LastButtonClicked = None
                 return results
             InitializeResults(self)
+
+            if self._queued_event_available():
+                self.ReturnValues = results = _BuildResults(self, False, self)
+                return results
+
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
@@ -7427,11 +7439,14 @@ class Window:
                 self.LastButtonClicked = None
             return results
         else:
+            if self._queued_event_available():
+                self.ReturnValues = results = _BuildResults(self, False, self)
+                return results
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
                 0] is None:  # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
-                # print("*** Faking timeout ***")
+                print("*** Faking timeout ***")
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
 
@@ -8224,6 +8239,79 @@ class Window:
             self.TKroot.focus_force()
         except Exception as e:
             print('Exception trying to make modal', e)
+
+
+    def _window_tkvar_changed_callback(self, event, *args):
+        """
+        Internal callback function for when the thread
+
+        :param event: Information from tkinter about the callback
+
+        """
+        if self._queued_event_available():
+            self.FormRemainedOpen = True
+            if self.CurrentlyRunningMainloop:
+                self.TKroot.quit()  # kick the users out of the mainloop
+
+
+
+    def _create_thread_queue(self, key):
+        """
+        Sets the key that will be returned if a thread communicates with this window.
+
+        :param key:
+        :type key: Any
+        """
+
+        self.thread_key = key
+        if self.thread_queue is None:
+            self.thread_queue = queue.Queue()
+
+        if self.thread_strvar is None:
+            self.thread_strvar = tk.StringVar()
+            self.thread_strvar.trace('w', self._window_tkvar_changed_callback)
+
+
+    def write_event_value(self, key=None, value=None):
+        """
+        Adds a key & value tuple to the queue that is used by threads to communicate with the window
+
+        :param key: The key that will be returned as the event when reading the window
+        :type key: Any
+        :param value: The value that will be in the values dictionary
+        :type value: Any
+        """
+
+        if self.thread_queue is None:
+            self._create_thread_queue(key)
+
+        if self.thread_queue:
+            key = key if key is not None else self.thread_key
+            self.thread_queue.put(item=(key, value))
+            self.thread_strvar.set('new item')
+
+
+    def _queued_event_read(self):
+        if self.thread_queue is None:
+            return None
+
+        try:                    # see if something has been posted to Queue
+            message = self.thread_queue.get_nowait()
+        except queue.Empty:     # get_nowait() will get exception when Queue is empty
+            return None
+
+        return message
+
+
+    def _queued_event_available(self):
+
+        if self.thread_queue is None:
+            return False
+
+        qsize = self.thread_queue.qsize()
+        return qsize != 0
+
+
 
     # def __enter__(self):
     #     """
@@ -9779,7 +9867,7 @@ def _BuildResults(form, initialize_only, top_level_form):
 
 
 def _BuildResultsForSubform(form, initialize_only, top_level_form):
-    button_pressed_text = top_level_form.LastButtonClicked
+    event = top_level_form.LastButtonClicked
     for row_num, row in enumerate(form.Rows):
         for col_num, element in enumerate(row):
             if element.Key is not None and WRITE_ONLY_KEY in str(element.Key):
@@ -9795,7 +9883,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:  # if a button was clicked
-                    button_pressed_text = element.ReturnValues[0]
+                    event = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_FRAME:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
@@ -9807,7 +9895,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:  # if a button was clicked
-                    button_pressed_text = element.ReturnValues[0]
+                    event = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_PANE:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
@@ -9819,7 +9907,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:  # if a button was clicked
-                    button_pressed_text = element.ReturnValues[0]
+                    event = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_TAB_GROUP:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
@@ -9831,7 +9919,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:  # if a button was clicked
-                    button_pressed_text = element.ReturnValues[0]
+                    event = element.ReturnValues[0]
 
             if element.Type == ELEM_TYPE_TAB:
                 element.DictionaryKeyCounter = top_level_form.DictionaryKeyCounter
@@ -9843,7 +9931,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 if element.UseDictionary:
                     top_level_form.UseDictionary = True
                 if element.ReturnValues[0] is not None:  # if a button was clicked
-                    button_pressed_text = element.ReturnValues[0]
+                    event = element.ReturnValues[0]
 
             if not initialize_only:
                 if element.Type == ELEM_TYPE_INPUT_TEXT:
@@ -9863,7 +9951,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = RadVar == this_rowcol
                 elif element.Type == ELEM_TYPE_BUTTON:
                     if top_level_form.LastButtonClicked == element.ButtonText:
-                        button_pressed_text = top_level_form.LastButtonClicked
+                        event = top_level_form.LastButtonClicked
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                     if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
@@ -9930,7 +10018,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.ClickPosition
                 elif element.Type == ELEM_TYPE_MENUBAR:
                     if element.MenuItemChosen is not None:
-                        button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
+                        event = top_level_form.LastButtonClicked = element.MenuItemChosen
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
@@ -9969,10 +10057,10 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
-    # if this is a column, then will fail so need to wrap with tr
+    # if this is a column, then will fail so need to wrap with try
     try:
         if form.ReturnKeyboardEvents and form.LastKeyboardEvent is not None:
-            button_pressed_text = form.LastKeyboardEvent
+            event = form.LastKeyboardEvent
             form.LastKeyboardEvent = None
     except:
         pass
@@ -9982,10 +10070,19 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
     except:
         pass
 
+    # if no event was found
+    if not initialize_only and event is None and form == top_level_form:
+        queued_event_value = form._queued_event_read()
+        if queued_event_value is not None:
+            event, value = queued_event_value
+            AddToReturnList(form, value)
+            form.ReturnValuesDictionary[event] = value
+
     if not form.UseDictionary:
-        form.ReturnValues = button_pressed_text, form.ReturnValuesList
+        form.ReturnValues = event, form.ReturnValuesList
     else:
-        form.ReturnValues = button_pressed_text, form.ReturnValuesDictionary
+        form.ReturnValues = event, form.ReturnValuesDictionary
+
 
     return form.ReturnValues
 
@@ -10779,7 +10876,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKEntry.config(fg=element.disabled_readonly_text_color)
 
                 element.Widget.config(highlightthickness=0)
-
+                # element.pack_keywords = {'side':tk.LEFT, 'padx':elementpad[0], 'pady':elementpad[1], 'expand':False, 'fill':tk.NONE }
+                # element.TKEntry.pack(**element.pack_keywords)
                 element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
                 if element.Visible is False:
                     element.TKEntry.pack_forget()
@@ -11961,7 +12059,7 @@ def StartupTK(my_flex_form):
 
         if my_flex_form.modal:
             my_flex_form.make_modal()
-
+        # ----------------------------------- tkinter mainloop call -----------------------------------
         my_flex_form.TKroot.mainloop()
         my_flex_form.CurrentlyRunningMainloop = False
         my_flex_form.TimerCancelled = True
@@ -16850,6 +16948,8 @@ test = main
 
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
 theme(CURRENT_LOOK_AND_FEEL)
+
+__tclversion_detailed__ = tkinter.Tcl().eval('info patchlevel')
 
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
