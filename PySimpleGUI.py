@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.17 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters, Combo - don't select first entry if updated with a new set of values, multi-threaded support using Window.write_event_value"
+version = __version__ = "4.24.0.18 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters, Combo - don't select first entry if updated with a new set of values, multi-threaded support using Window.write_event_value, force preview tooltip to close when new tooltip shown"
 
 port = 'PySimpleGUI'
 
@@ -915,6 +915,13 @@ class Element():
         :param tooltip_text: the text to show in tooltip.
         :type tooltip_text: (str)
         """
+
+        if self.TooltipObject:
+            try:
+                self.TooltipObject.leave()
+            except:
+                pass
+
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
 
