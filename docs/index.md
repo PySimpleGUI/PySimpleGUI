@@ -1448,7 +1448,8 @@ Popup(args=*<1 or N object>,
     keep_on_top=False,
     location=(None, None),
     any_key_closes=False,
-    image=None)
+    image=None,
+    modal=True)
 ```
 
 Parameter Descriptions:
@@ -1474,6 +1475,7 @@ Parameter Descriptions:
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 |                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |                str) or (bytes                |        image        | Image to include at the top of the popup window |
+|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -1513,7 +1515,8 @@ popup_scrolled(args=*<1 or N object>,
     grab_anywhere=False,
     keep_on_top=False,
     font=None,
-    image=None)
+    image=None,
+    modal=True)
 ```
 
 Parameter Descriptions:
@@ -1522,7 +1525,7 @@ Parameter Descriptions:
 |--|--|--|
 |             Any             |        *args        | Variable number of items to display |
 |             str             |        title        | Title to display in the window. |
-|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|   Tuple[str, str] or str    |    button_color     | button color (foreground, background) |
 |            bool             |       yes_no        | If True, displays Yes and No buttons instead of Ok |
 |            bool             |     auto_close      | if True window will close itself |
 |      Union[int, float]      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
@@ -1536,6 +1539,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Typical usage:
@@ -1577,7 +1581,8 @@ popup_no_wait(args=*<1 or N object>,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    image=None)
+    image=None,
+    modal=False)
 ```
 
 Parameter Descriptions:
@@ -1587,7 +1592,7 @@ Parameter Descriptions:
 |             Any             |        *args        | Variable number of items to display |
 |             str             |        title        | Title to display in the window. |
 |             int             |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|       Tuple[str, str]       |    button_color     | button color (foreground, background) |
+|   Tuple[str, str] or str    |    button_color     | button color (foreground, background) |
 |             str             |  background_color   | color of background |
 |             str             |     text_color      | color of the text |
 |            bool             |     auto_close      | if True window will close itself |
@@ -1600,6 +1605,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None] | **RETURN** | Reason for popup closing
 
 The `popup` call `popup_no_wait` or `popup_non_blocking` will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
@@ -1640,7 +1646,8 @@ popup_get_text(message,
     grab_anywhere=False,
     keep_on_top=False,
     location=(None, None),
-    image=None)
+    image=None,
+    modal=True)
 ```
 
 Parameter Descriptions:
@@ -1652,7 +1659,7 @@ Parameter Descriptions:
 |             str             |   default_text   | default value to put into input area |
 |             str             |  password_char   | character to be shown instead of actually typed characters |
 |         (int, int)          |       size       | (width, height) of the InputText Element |
-|       Tuple[str, str]       |   button_color   | Color of the button (text, background) |
+|   Tuple[str, str] or str    |   button_color   | Color of the button (text, background) |
 |             str             | background_color | background color of the entire window |
 |             str             |    text_color    | color of the message text |
 |      Union[bytes, str]      |       icon       | filename or base64 string to be used for the window's icon |
@@ -1662,6 +1669,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 ```python
@@ -1700,7 +1708,8 @@ popup_get_file(message,
     keep_on_top=False,
     location=(None, None),
     initial_folder=None,
-    image=None)
+    image=None,
+    modal=True)
 ```
 
 Parameter Descriptions:
@@ -1716,7 +1725,7 @@ Parameter Descriptions:
 |    Tuple[Tuple[str,str]]    |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
 |            bool             |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |         (int, int)          |       size        | (width, height) of the InputText Element |
-|       Tuple[str, str]       |   button_color    | Color of the button (text, background) |
+|   Tuple[str, str] or str    |   button_color    | Color of the button (text, background) |
 |             str             | background_color  | background color of the entire window |
 |             str             |    text_color     | color of the text |
 |      Union[bytes, str]      |       icon        | filename or base64 string to be used for the window's icon |
@@ -1727,6 +1736,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 |       str) or (bytes        |       image       | Image to include at the top of the popup window |
+|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
@@ -1770,7 +1780,8 @@ popup_get_folder(message,
     keep_on_top=False,
     location=(None, None),
     initial_folder=None,
-    image=None)
+    image=None,
+    modal=True)
 ```
 
 Parameter Descriptions:
@@ -1782,7 +1793,7 @@ Parameter Descriptions:
 |             str             |   default_path   | path to display to user as starting point (filled into the input field) |
 |            bool             |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |         (int, int)          |       size       | (width, height) of the InputText Element |
-|       Tuple[str, str]       |   button_color   | button color (foreground, background) |
+|   Tuple[str, str] or str    |   button_color   | button color (foreground, background) |
 |             str             | background_color | color of background |
 |             str             |    text_color    | color of the text |
 |      Union[bytes, str]      |       icon       | filename or base64 string to be used for the window's icon |
@@ -1793,6 +1804,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 This is a typical call
@@ -1876,18 +1888,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str           |     title     | text to display in eleemnt |
-|          int           | current_value | current value |
-|          int           |   max_value   | max value of QuickMeter |
-| Union[str, int, tuple] |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
-|          Any           |     *args     | stuff to output |
-|          str           |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
-|    Tuple(str, str)     |   bar_color   | color of a bar line |
-|    Tuple[str, str]     | button_color  | button color (foreground, background) |
-|       (int, int)       |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
-|          int           | border_width  | width of border around element |
-|          bool          | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |  no_titlebar  | If True: no titlebar will be shown on the window |
+|              str               |     title     | text to display in eleemnt |
+|              int               | current_value | current value |
+|              int               |   max_value   | max value of QuickMeter |
+| Union[str, int, tuple, object] |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|              Any               |     *args     | stuff to output |
+|              str               |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
+|        Tuple(str, str)         |   bar_color   | color of a bar line |
+|     Tuple[str, str] or str     | button_color  | button color (foreground, background) |
+|           (int, int)           |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|              int               | border_width  | width of border around element |
+|              bool              | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
+|              bool              |  no_titlebar  | If True: no titlebar will be shown on the window |
 | (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
 
 Here's the one-line Progress Meter in action!
@@ -7321,6 +7333,56 @@ Selective control over tk 8.6.9 treeview color patch
 * Disabled the code that patched the problem with background colors for Tree and Table elements
 * Can enable the patched code by calling set_options
 	* To enable set parameter enable_treeview_869_patch = True (defaults to false)
+
+## 4.25.0 PySimpleGUI 17-Jul-2020
+
+Biggest / most impactful set of changes in a while (fingers crossed)
+Modal windows
+Multithreaded Window.write_event_value method
+stdout re-route to any Multiline
+table/tree highlights
+k element parameter
+
+* New "k" parameter for all elements. 
+	* Same as "key"
+	* Created so layouts can be even more compact if desired
+	* New docstring for keys (basically anything except a list)
+* Popups
+	* New text wrap behavior. Will wrap text between \n in user's string
+	* All popups are now "modal" unless they are non-blocking (can be turned off using new parameter)
+* New button color and table/tree highlight color format
+	* Colors can still be tuple (text, background)
+	* Can also be a single string with format "text on background" (e.g. "white on red")
+* Multiline
+	* Automatically refresh window when updating multiline or output elements
+	* For cprint use Multiline's autoscroll setting
+	* New autoscroll parameter in Multiline.print
+	* New parameters to make the print and cprint stuff much easier
+		* write_only=False (so that it's not returned when read)
+		* auto_refresh=False
+		* reroute_stdout=False
+		* reroute_stderr=False
+		* reroute_cprint=False (removes need to call the cprint cprint_set_output_destination function)
+* Table / Tree Elements
+	* Re-enabled the tk 8.6.9 background color fix again
+	* selected_row_colors=(None, None) - tuple or string
+	* Automatically sets the selected row color based on the theme colors! (uses the button color)
+	* Can use 2 other constants for colors
+		* OLD_TABLE_TREE_SELECTED_ROW_COLORS - ('#FFFFFF', '#4A6984') the old blueish color
+		* ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS - (SystemHighlightText, SystemHighlight)
+	* Tree image caching happens at the element level now
+* Window	
+	* make_modal - new method to turn a window into a modal window
+	* modal parameter when window is created.  Default is False
+	* write_event_value - new method that can be called by threads!  This will "queue" an event and a value for the next window.read()
+	* Display an error popup if read a closed window 100+ times (stops you from eating 100% of the CPU time)
+	* was_closed method added - returns True if a window has been closed
+* Combo - don't select first entry if updated with a new set of values
+* Tooltip - fix for stuck-on tooltips
+* New theme_previewer with scrollbars. 3 new parameters	
+* cprint - now has all parameters shown in docstring versus using *args **kwargs	
+* New global variable __tclversion_detailed__ - string with full tkinter version (3 numbers instead of 2)
+* Warning is displayed if tcl version is found to be 8.5.
 
 ### Upcoming
 
