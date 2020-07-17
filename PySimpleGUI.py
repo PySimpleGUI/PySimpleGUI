@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.24.0.18 Unreleased\nAdded k parameter to buttons, new text wrapping behavior for popups, new docstring for keys, new single-string button_color format ('white on red'), moved Tree image caching to be on a per-element basis rather than system wide, automatically refresh window when printing to multiline, Output element will now auto-refresh window after every print call, new paramters to Multiline to reroute stdout/stderr, turned off autoscroll for cprint and re-routed stdout prints, new Table, Tree parameter - selected_row_color, Table & Tree now use 2 colors to define the selected row - they default to the button color for the theme, new version of the fixed mapping function, added Window.make_modal, new modal parameter added to all popups, more theme_previewer parameters, Combo - don't select first entry if updated with a new set of values, multi-threaded support using Window.write_event_value, force preview tooltip to close when new tooltip shown"
+version = __version__ = "4.25.0 Released 17-Jul-2020"
 
 port = 'PySimpleGUI'
 
@@ -6975,6 +6975,9 @@ class Window:
         self.thread_queue = None        # type: queue.Queue
         self.thread_key = None          # type: Any
         self.thread_strvar  = None      # type: tk.StringVar
+        self.read_closed_window_count = 0
+
+
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7357,6 +7360,9 @@ class Window:
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
         if self.TKrootDestroyed:
+            self.read_closed_window_count += 1
+            if self.read_closed_window_count > 100:
+                popup_error('You have tried 100 times to read a closed window.', 'You need to add a check for event == WIN_CLOSED', title='Trying to read a closed window')
             return None, None
         if not self.Shown:
             self._Show()
@@ -8059,6 +8065,7 @@ class Window:
             except:
                 pass
 
+
     def SendToBack(self):
         """
         Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
@@ -8070,6 +8077,7 @@ class Window:
         except:
             pass
 
+
     def CurrentLocation(self):
         """
         Get the current location of the window's top left corner
@@ -8080,6 +8088,7 @@ class Window:
         if not self._is_window_created():
             return
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+
 
     @property
     def Size(self):
@@ -8095,6 +8104,7 @@ class Window:
         win_height = self.TKroot.winfo_height()
         return win_width, win_height
 
+
     @Size.setter
     def Size(self, size):
         """
@@ -8109,6 +8119,7 @@ class Window:
         except:
             pass
 
+
     def VisibilityChanged(self):
         """
         Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
@@ -8117,6 +8128,7 @@ class Window:
         """
         # A dummy function.  Needed in Qt but not tkinter
         return
+
 
     def SetTransparentColor(self, color):
         """
@@ -8132,6 +8144,7 @@ class Window:
         except:
             print('Transparent color not supported on this platform (windows only)')
 
+
     def GrabAnyWhereOn(self):
         """
         Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
@@ -8143,6 +8156,7 @@ class Window:
         self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
         self.TKroot.bind("<B1-Motion>", self._OnMotion)
 
+
     def GrabAnyWhereOff(self):
         """
         Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
@@ -8153,6 +8167,7 @@ class Window:
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
         self.TKroot.unbind("<B1-Motion>")
+
 
     def _user_bind_callback(self, bind_string, event):
         """
@@ -8173,6 +8188,7 @@ class Window:
         if self.CurrentlyRunningMainloop:
             self.TKroot.quit()
 
+
     def bind(self, bind_string, key):
         """
         Used to add tkinter events to a Window.
@@ -8187,6 +8203,7 @@ class Window:
         self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
         self.user_bind_dict[bind_string] = key
 
+
     def _callback_main_debugger_window_create_keystroke(self, event):
         """
         Called when user presses the key that creates the main debugger window
@@ -8195,6 +8212,7 @@ class Window:
         """
         _Debugger.debugger._build_main_debugger_window()
 
+
     def _callback_popout_window_create_keystroke(self, event):
         """
         Called when user presses the key that creates the floating debugger window
@@ -8202,6 +8220,7 @@ class Window:
         :param event: (event) not used. Passed in event info
         """
         _Debugger.debugger._build_floating_window()
+
 
     def EnableDebugger(self):
         """
@@ -8212,6 +8231,7 @@ class Window:
         self.TKroot.bind('<Cancel>', self._callback_main_debugger_window_create_keystroke)
         self.TKroot.bind('<Pause>', self._callback_popout_window_create_keystroke)
         self.DebuggerEnabled = True
+
 
     def DisableDebugger(self):
         """
@@ -8237,6 +8257,10 @@ class Window:
 
 
     def make_modal(self):
+        """
+        Makes a window into a "Modal Window"
+        This means user will not be able to interact with other windows until this one is closed
+        """
         if not self._is_window_created():
             return
 
@@ -8246,6 +8270,17 @@ class Window:
             self.TKroot.focus_force()
         except Exception as e:
             print('Exception trying to make modal', e)
+
+
+    def was_closed(self):
+        """
+        Returns True if the window was closed
+
+        :return: True if the window is closed
+        :rtype: bool
+        """
+        return self.TKrootDestroyed
+
 
 
     def _window_tkvar_changed_callback(self, event, *args):
@@ -16847,7 +16882,7 @@ def main():
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Install PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
+         Button('Updrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Popup'),
          Button('Exit', tooltip='Exit button')],
     ]
@@ -16957,7 +16992,8 @@ test = main
 theme(CURRENT_LOOK_AND_FEEL)
 
 __tclversion_detailed__ = tkinter.Tcl().eval('info patchlevel')
-
+if __tclversion_detailed__.startswith('8.5'):
+    warnings.warn('You are running a VERY old version of tkinter {}'.format(__tclversion_detailed__), UserWarning)
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
