@@ -3434,7 +3434,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |            default_text            | Text initially shown in the input box as a default value(Default value = '') |
+|                                     Any                                      |            default_text            | Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string |
 |                         (int, int)  (width, height)                          |                size                | w=characters-wide, h=rows-high |
 |                                     bool                                     |              disabled              | set disable state for element (Default = False) |
 |                                     char                                     |           password_char            | Password character if this is a password field (Default value = '') |
@@ -9869,7 +9869,7 @@ Returns True if the window was closed
 Adds a key & value tuple to the queue that is used by threads to communicate with the window
 
 ```
-write_event_value(key=None, value=None)
+write_event_value(key, value)
 ```
 
 Parameter Descriptions:
