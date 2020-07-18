@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0.4  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image"
+version = __version__ = "0.39.0.5  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image, added theme_add_new"
 
 port = 'PySimpleGUIWeb'
 
@@ -1544,7 +1544,7 @@ class SuperImage(remi.gui.Image):
         self.load(image)
 
     def load(self, file_path_name):
-        if type(file_path_name) is bytes or len(file_path_name) > 200:
+        if type(file_path_name) is bytes:
             try:
                 #here a base64 image is received
                 self.imagedata = base64.b64decode(file_path_name, validate=True)
@@ -2307,6 +2307,9 @@ class Column(Element):
 
     add_row = AddRow
     layout = Layout
+
+
+Col = Column
 
 
 # ---------------------------------------------------------------------- #
@@ -7259,6 +7262,22 @@ def theme_list():
     :return: List[str] - A sorted list of the currently available color themes
     """
     return list_of_look_and_feel_values()
+
+
+def theme_add_new(new_theme_name, new_theme_dict):
+    """
+    Add a new theme to the dictionary of themes
+
+    :param new_theme_name: text to display in element
+    :type new_theme_name: (str)
+    :param new_theme_dict: text to display in element
+    :type new_theme_dict: (dict)
+    """
+    global LOOK_AND_FEEL_TABLE
+    try:
+        LOOK_AND_FEEL_TABLE[new_theme_name] = new_theme_dict
+    except Exception as e:
+        print('Exception during adding new theme {}'.format(e))
 
 
 def theme_previewer(columns=12):
