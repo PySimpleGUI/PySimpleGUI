@@ -22,17 +22,20 @@ def process_thread():
     proc = subprocess.run('pip list', shell=True, stdout=subprocess.PIPE)
 
 
-thread = threading.Thread(target=process_thread, daemon=True)
-thread.start()
+def main():
+    thread = threading.Thread(target=process_thread, daemon=True)
+    thread.start()
 
-while True:
-    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, 'Loading list of packages', time_between_frames=100)
-    thread.join(timeout=.1)
-    if not thread.is_alive():
-        break
-sg.popup_animated(None)
+    while True:
+        sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, 'Loading list of packages', time_between_frames=100)
+        thread.join(timeout=.1)
+        if not thread.is_alive():
+            break
+    sg.popup_animated(None)
 
-output = proc.__str__().replace('\\r\\n', '\n')
-sg.popup_scrolled(output, font='Courier 10')
+    output = proc.__str__().replace('\\r\\n', '\n')
+    sg.popup_scrolled(output, font='Courier 10')
 
 
+if __name__ == '__main__':
+    main()

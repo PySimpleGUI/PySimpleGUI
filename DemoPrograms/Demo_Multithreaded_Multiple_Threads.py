@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import queue
 import threading
 import time
 import PySimpleGUI as sg
@@ -41,13 +40,13 @@ import PySimpleGUI as sg
 # Create one of these functions for EVERY long-running call you want to make
 
 
-def long_function_wrapper(work_id, gui_queue):
+def long_function_wrapper(work_id, window):
     # LOCATION 1
     # this is our "long running function call"
     # sleep for a while as a simulation of a long-running computation
     time.sleep(5)
     # at the end of the work, before exiting, send a message back to the GUI indicating end
-    gui_queue.put('{} ::: done'.format(work_id))
+    window.write_event_value('-THREAD DONE-', work_id)
     # at this point, the thread exits
     return
 
@@ -56,8 +55,6 @@ def long_function_wrapper(work_id, gui_queue):
 def the_gui():
     sg.theme('Light Brown 3')
 
-    # queue used to communicate between the gui and long-running code
-    gui_queue = queue.Queue()
 
     layout = [[sg.Text('Multithreaded Work Example')],
               [sg.Text('Click Go to start a long-running function call')],
@@ -71,7 +68,7 @@ def the_gui():
     work_id = 0
     while True:
         # wait for up to 100 ms for a GUI event
-        event, values = window.read(timeout=100)
+        event, values = window.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == 'Go':           # clicking "Go" starts a long running work item by starting thread
@@ -81,23 +78,18 @@ def the_gui():
             # STARTING long run by starting a thread
             thread_id = threading.Thread(
                 target=long_function_wrapper,
-                args=(work_id, gui_queue,),
+                args=(work_id, window,),
                 daemon=True)
             thread_id.start()
             work_id = work_id+1 if work_id < 19 else 0
-        # --------------- Read next message coming in from threads ---------------
-        try:
-            message = gui_queue.get_nowait()    # see if something has been posted to Queue
-        except queue.Empty:                     # get_nowait() will get exception when Queue is empty
-            message = None                      # nothing in queue so do nothing
 
         # if message received from queue, then some work was completed
-        if message is not None:
+        if event == '-THREAD DONE-':
             # LOCATION 3
             # this is the place you would execute code at ENDING of long running task
             # You can check the completed_work_id variable
             # to see exactly which long-running function completed
-            completed_work_id = int(message[:message.index(' :::')])
+            completed_work_id = values[event]
             window['-OUTPUT2-'].update(
                 'Complete Work ID "{}"'.format(completed_work_id))
             window[completed_work_id].update(text_color='green')

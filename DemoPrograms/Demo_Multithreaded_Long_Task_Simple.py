@@ -17,26 +17,21 @@ import PySimpleGUI as sg
     long as the task is running.
 """
 
-total = 100     # number of units that are used with the progress bar
-message = ''    # used by thread to send back a message to the main thread
-progress = 0    # current progress up to a maximum of "total"
 
-
-def long_operation_thread(seconds):
+def long_operation_thread(seconds, window):
     """
     A worker thread that communicates with the GUI through a global message variable
     This thread can block for as long as it wants and the GUI will not be affected
     :param seconds: (int) How long to sleep, the ultimate blocking call
     """
-
-    global message, progress
-
+    progress = 0
     print('Thread started - will sleep for {} seconds'.format(seconds))
     for i in range(int(seconds * 10)):
         time.sleep(.1)  # sleep for a while
-        progress += total / (seconds * 10)
+        progress += 100 / (seconds * 10)
+        window.write_event_value('-PROGRESS-', progress)
 
-    message = f'*** The thread says.... "I am finished" ***'
+    window.write_event_value('-THREAD-', '*** The thread says.... "I am finished" ***')
 
 def the_gui():
     """
@@ -44,47 +39,47 @@ def the_gui():
     Reads data from a global variable and displays
     Returns when the user exits / closes the window
     """
-    global message, progress
 
     sg.theme('Light Brown 3')
 
     layout = [[sg.Text('Long task to perform example')],
-              [sg.Output(size=(80, 12))],
+              [sg.MLine(size=(80, 12), k='-ML-', reroute_stdout=True,write_only=True, autoscroll=True, auto_refresh=True)],
               [sg.Text('Number of seconds your task will take'),
-               sg.Input(key='-SECONDS-', size=(5, 1)),
+               sg.Input(key='-SECONDS-', focus=True, size=(5, 1)),
                sg.Button('Do Long Task', bind_return_key=True),
                sg.CBox('ONE chunk, cannot break apart', key='-ONE CHUNK-')],
-              [sg.Text('Work progress'), sg.ProgressBar(total, size=(20, 20), orientation='h', key='-PROG-')],
+              [sg.Text('Work progress'), sg.ProgressBar(100, size=(20, 20), orientation='h', key='-PROG-')],
               [sg.Button('Click Me'), sg.Button('Exit')], ]
 
-    window = sg.Window('Multithreaded Demonstration Window', layout)
+    window = sg.Window('Multithreaded Demonstration Window', layout, finalize=True)
 
-    thread = None
-
+    timeout = thread = None
     # --------------------- EVENT LOOP ---------------------
     while True:
-        event, values = window.read(timeout=100)
+        event, values = window.read(timeout=timeout)
+        # print(event, values)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         elif event.startswith('Do') and not thread:
             print('Thread Starting! Long work....sending value of {} seconds'.format(float(values['-SECONDS-'])))
-            thread = threading.Thread(target=long_operation_thread, args=(float(values['-SECONDS-']),), daemon=True)
+            timeout = 100 if values['-ONE CHUNK-'] else None
+            thread = threading.Thread(target=long_operation_thread, args=(float(values['-SECONDS-']),window), daemon=True)
             thread.start()
+            if values['-ONE CHUNK-']:
+                sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
         elif event == 'Click Me':
             print('Your GUI is alive and well')
-
-        if thread:                                          # If thread is running
-            if values['-ONE CHUNK-']:                       # If one big operation, show an animated GIF
-                sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
-            else:                                           # Not one big operation, so update a progress bar instead
-                window['-PROG-'].update_bar(progress, total)
+        elif event == '-PROGRESS-':
+            if not values['-ONE CHUNK-']:
+                window['-PROG-'].update_bar(values[event], 100)
+        elif event == '-THREAD-':            # Thread has completed
             thread.join(timeout=0)
-            if not thread.is_alive():                       # the thread finished
-                print(f'message = {message}')
-                sg.popup_animated(None)                     # stop animination in case one is running
-                thread, message, progress = None, '', 0     # reset variables for next run
-                window['-PROG-'].update_bar(0,0)            # clear the progress bar
-
+            print('Thread finished')
+            sg.popup_animated(None)                     # stop animination in case one is running
+            thread, message, progress, timeout = None, '', 0, None     # reset variables for next run
+            window['-PROG-'].update_bar(0,0)            # clear the progress bar
+        if values['-ONE CHUNK-'] and thread is not None:
+            sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, background_color='white', transparent_color='white', time_between_frames=100)
     window.close()
 
 

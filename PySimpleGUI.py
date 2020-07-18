@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.25.0 Released 17-Jul-2020"
+version = __version__ = "4.25.0.1 Unreleased\nMoved creation of the multi-threaded "
 
 port = 'PySimpleGUI'
 
@@ -1097,8 +1097,8 @@ class InputText(Element):
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
                  use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, right_click_menu=None, visible=True, metadata=None):
         """
-        :param default_text: Text initially shown in the input box as a default value(Default value = '')
-        :type default_text: (str)
+        :param default_text: Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
+        :type default_text: (Any)
         :param size: w=characters-wide, h=rows-high
         :type size: (int, int)  (width, height)
         :param disabled: set disable state for element (Default = False)
@@ -6977,8 +6977,6 @@ class Window:
         self.thread_strvar  = None      # type: tk.StringVar
         self.read_closed_window_count = 0
 
-
-
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -12046,6 +12044,9 @@ def StartupTK(my_flex_form):
     Window._IncrementOpenCount()
 
     my_flex_form.TKroot = root
+
+    my_flex_form._create_thread_queue('initialized queue')
+
     # Make moveable window
     if (my_flex_form.GrabAnywhere is not False and not (
             my_flex_form.NonBlocking and my_flex_form.GrabAnywhere is not True)):
@@ -16882,7 +16883,7 @@ def main():
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Updrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
+         Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Popup'),
          Button('Exit', tooltip='Exit button')],
     ]
@@ -16994,7 +16995,6 @@ theme(CURRENT_LOOK_AND_FEEL)
 __tclversion_detailed__ = tkinter.Tcl().eval('info patchlevel')
 if __tclversion_detailed__.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}'.format(__tclversion_detailed__), UserWarning)
-
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
