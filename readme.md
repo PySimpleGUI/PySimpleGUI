@@ -7384,6 +7384,13 @@ k element parameter
 * New global variable __tclversion_detailed__ - string with full tkinter version (3 numbers instead of 2)
 * Warning is displayed if tcl version is found to be 8.5.
 
+## 4.26.0 PySimpleGUI 18-Jul-2020
+
+* Multi-threaded tkvar initialization location changed so that thread doesn't intialize it now
+* Removed thread key - no longer needed
+* Window.write_event_values - now requires both parms
+* Upgrade button typo
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.

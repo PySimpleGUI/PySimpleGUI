@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.25.0.1 Unreleased\nMoved creation of the multi-threaded "
+version = __version__ = "4.26.0 Released 18-Jul-2020"
 
 port = 'PySimpleGUI'
 
@@ -6973,7 +6973,6 @@ class Window:
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.modal = modal
         self.thread_queue = None        # type: queue.Queue
-        self.thread_key = None          # type: Any
         self.thread_strvar  = None      # type: tk.StringVar
         self.read_closed_window_count = 0
 
@@ -8295,15 +8294,11 @@ class Window:
 
 
 
-    def _create_thread_queue(self, key):
+    def _create_thread_queue(self):
         """
-        Sets the key that will be returned if a thread communicates with this window.
-
-        :param key:
-        :type key: Any
+        Creates the queue used by threads to communicate with this window
         """
 
-        self.thread_key = key
         if self.thread_queue is None:
             self.thread_queue = queue.Queue()
 
@@ -8312,7 +8307,7 @@ class Window:
             self.thread_strvar.trace('w', self._window_tkvar_changed_callback)
 
 
-    def write_event_value(self, key=None, value=None):
+    def write_event_value(self, key, value):
         """
         Adds a key & value tuple to the queue that is used by threads to communicate with the window
 
@@ -8323,12 +8318,11 @@ class Window:
         """
 
         if self.thread_queue is None:
-            self._create_thread_queue(key)
+            print('*** Warning Window.write_event_value - no thread queue found ***')
+            return
 
-        if self.thread_queue:
-            key = key if key is not None else self.thread_key
-            self.thread_queue.put(item=(key, value))
-            self.thread_strvar.set('new item')
+        self.thread_queue.put(item=(key, value))
+        self.thread_strvar.set('new item')
 
 
     def _queued_event_read(self):
@@ -12045,7 +12039,7 @@ def StartupTK(my_flex_form):
 
     my_flex_form.TKroot = root
 
-    my_flex_form._create_thread_queue('initialized queue')
+    my_flex_form._create_thread_queue()
 
     # Make moveable window
     if (my_flex_form.GrabAnywhere is not False and not (
