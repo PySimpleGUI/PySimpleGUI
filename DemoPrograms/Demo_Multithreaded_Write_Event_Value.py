@@ -1,20 +1,25 @@
-import PySimpleGUI as sg
 import threading
 import time
+
+import PySimpleGUI as sg
 
 """
     Threaded Demo - Uses Window.write_event_value communications
     
-    Requires PySimpleGUI.py version 4.24.0.17
+    Requires PySimpleGUI.py version 4.25.0 and later
+    
+    This is a really important demo  to understand if you're going to be using multithreading in PySimpleGUI.
+    
+    Older mechanisms for multi-threading in PySimpleGUI relied on polling of a queue. The management of a communications
+    queue is now performed internally to PySimpleGUI.
 
-    Demo of threads using a new way of communicating with threads that is done in a non-polled way.
-    No longer do you need to run your event loop with a timeout value in order to multi-thread.
-    Now you can pend on your read forever and use a special call that threads can call that will add a new item to the queue
-    of items
-
+    The importance of using the new window.write_event_value call cannot be emphasized enough.  It will hav a HUGE impact, in
+    a positive way, on your code to move to this mechanism as your code will simply "pend" waiting for an event rather than polling.
+    
+    Copyright 2020 PySimpleGUI.org
 """
 
-THREAD_EVENT = '-THEAD-'
+THREAD_EVENT = '-THREAD-'
 
 def the_thread(window):
     """
@@ -25,7 +30,8 @@ def the_thread(window):
     i = 0
     while True:
         time.sleep(1)
-        window.write_event_value(THREAD_EVENT, i)
+        sg.cprint(f'thread info (in thread) = {threading.current_thread().name}', c='white on purple')
+        window.write_event_value('-THREAD-', i)
         i += 1
 
 
@@ -47,6 +53,7 @@ def main():
     while True:             # Event Loop
         event, values = window.read()
         sg.cprint(event, values)
+        sg.cprint(f'thread info = {threading.current_thread().name}')
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Start':
