@@ -4502,6 +4502,14 @@ Parameter Descriptions:
 | str |    text_color    | The color of the text |
 | str | background_color | The background color of the line |
 
+### reroute_stderr_to_here
+
+### reroute_stdout_to_here
+
+### restore_stderr
+
+### restore_stdout
+
 ### set_cursor
 
 Sets the cursor for the current Element.

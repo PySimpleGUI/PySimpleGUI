@@ -1119,7 +1119,7 @@ Like above, you may have to install either pip or tkinter.  To do this on Python
 
 `sudo apt install python-tkinter`
 
-### Upgrading from GitHub Using PySimpleGUI
+## Upgrading from GitHub Using PySimpleGUI
 
 Starting in version 4.17.0 there is code in the PySimpleGUI package that upgrades your previously pip installed package using the latest version checked into GitHub.  
 
@@ -2715,7 +2715,25 @@ theme_previewer
 
 The first step is to create the window object using the desired window customizations.  
 
-Note - There is no direct support for "**modal windows**" in PySimpleGUI.  All windows are accessible at all times unless you manually change the windows' settings.
+## Modal Windows (only applied to tkinter port currently
+)
+NOTE - as of PySimpleGUI 4.25.0 Modal Windows are supported!  By default the `popup` windows that block will be marked Modal by default.  This is a somewhat risky change because your expisting applications will behave differently. However, in theory, you shouldn't have been interacting with other windows while the popup is active.  All of those actions are at best queued.  It's implementation dependent.
+
+"Modal" in this case means that you must close this "modal" window before you will be able to interact with windows created before this window.  Think about an "about" box.  You normally have to close this little popup in most programs.  So, that's what PySimpleGUI is doing now.
+
+## Making your window modal
+
+To make a Modal  Wio=ndow you have 2 options.  
+
+1. Set the `moodel=True` parameter in your Window calls.
+
+2. Call the method `Window.make_modal()` to chance a window from non-modal to modal.  There is no modal to non-modal.  Don't see the need for one. If one comes up, sure!
+
+### Disabling modal windows
+
+Popups that block are the only windows that have modal on by default. There is a modal parameter than you  can set to False to turn it off.
+
+For the earlier than 4.25.0 and other ports of PySimpleGUI There is no direct support for "**modal windows**" in PySimpleGUI.  All windows are accessible at all times unless you manually change the windows' settings.
 
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.read` or `Window.Finalize` (or set `finalize=True` in your `Window` call) before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
 
