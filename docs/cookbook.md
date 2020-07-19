@@ -554,7 +554,11 @@ window.close()
 
 ## Making Changes to Themes & Adding Your Own Themes
 
-Modifying and creating your own theme is not difficult.
+Modifying and creating your own theme is not difficult, but tricky so start with something and modify it carefully.
+
+The tkinter port has the theme_add_new function that will add a new dictionary entry into the table with the name you provide.  It takes 2 parameters - the theme name and the dictionary entry.
+
+The manual way to add a dictionary entry is as follows....
 
 The Theme definitions are stored in a dictionary.  The underlying dictionary can be directly accessed via the variable `LOOK_AND_FEEL_TABLE`.
 
@@ -1049,7 +1053,7 @@ Prining to the console becomes a problem however when you launch using `pythonw`
 
 These Recipes explore how to retain *prints already in your code*.  Let's say your code was written for a console and you want to migrate over to a GUI.  Maybe there are so many print statements that you don't want to modify every one of them individually.
 
-There are at least 3 ways to transform your `print` statements that we'll explore here
+There are **at least 3 ways** to transform your `print` statements that we'll explore here
 1. The Debug window
 2. The Output Element
 3. The Multiline Element
@@ -1139,10 +1143,15 @@ window.close()
 
 Beginning in 4.18.0 you can "print" to any `Multiline` Element in your layouts.  The `Multiline.print` method acts similar to the `Print` function described earlier.  It has the normal print parameters `sep` & `end` and also has color options.  It's like a super-charged `print` statement.
 
-"Converting" expring print statements to output to a `Multiline` Element can be done by either
+"Converting" exprint print statements to output to a `Multiline` Element can be done by either
 
 * Adding the `Multiline` element to the `print` statment so that it's calling the `Multiline.print` method
 * Redefining `print`
+
+Added in version 4.25.0 was the ability to re-route stdout and stderr directly to any `Multiline` element.  This is done using parameteres when you create the multiline or you can call class methods to do the rerouting operation after the element is created.
+
+Since you may not be able to always have access to the window when printing, especially in code that it not your own code, another parameter was added `auto_refresh`.  If set to True then the window will automatically refresh every time an update is made to that Multiline element.
+
 
 ### 3A Appending Element to `print` Statement to print to Multiline
 
@@ -1269,7 +1278,32 @@ window.close()
 
 ```
 
-## Recipe Printing - #4/4 using `cprint` function (color printing) to print to Multiline
+### Recipe 3C - Rerouting stdout and stderr directly to a Multiline
+
+This was made available to the tkinter port in version 4.25.0.
+
+The eaiest way to make this happen is using parmaters when creating the `Multline` Element
+
+* reroute_stdout
+* reroute_stderr
+
+If you wish to reroute stdout / stderr after you've already created (and finalized) the Multline, then you can call `reroute_stdout_to_here` to reroute stdeout and `reroute_stderr_to_here` to reroute stderr.  
+
+To restore the old values back, be sure and call `restore_stdout` and `restore_stderr`
+
+This has a risky component to this.
+
+#### Warning Regarding Threading and Printing
+
+
+If programs outside of your control are running threads and they happen to call print, then the stdout will be routed to the window.  This MAY cause tkinter to crash.
+
+Your thread, by calling print, will trigger code inside of PySimpleGUI itself to be executed.  This code can be significant if the stdout has been re-rerouted to a multiline element that has auto-refresh turned on for example.  It is unclean how many operations or queued or if the calls from the threads will directly impact tkinter.  
+
+**The point here it to simple be on the looking for the dreaded "tkinter not in the mainloop" error**
+
+
+## Recipe Printing - #4A/4 using `cprint` function (color printing) to print to Multiline
 
 
 This method was added to PySimpleGUI tkinter port in June 2020 and needs to be ported to the other ports still. 
@@ -1283,7 +1317,31 @@ The idea is have a function, `cprint` that looks and acts like a normal print...
 
 The color portion of the cprint call is achieved through additional parameters that are not normally present on a call to print. This means that if you use these color parameters, you cannot simply rename your `cprint` calls to be `print` calls.  Of course you can safely go the other direction, renaming your `print` calls to call `cprint`.
 
-#### The Aliasing Shortcut Trick
+## The Aliasing Shortcut Trick
+
+While covered in "cprint", this trick can save you MASSIVE amount of typing.  It works well in PyCharm too.
+
+Would I do this in a huge production code base.  No, but I'm wring a little 100 line packet of fun.
+
+IF you're tire of writine `sg.xxxxx` as much as I am, then maybe you'll like this hack too.
+
+Through simple assignment, you can rename PySimpleGUI functions.  You add them to your local name space so you no longer need the `sgl.` part.
+
+For example.  I'm tired of writing `sg.cprint`.  I can fix this by adding a line of code to make an alias and then using the aliase insteast.
+
+I could even make it super short.
+
+
+```python
+cp = sg.cprint
+```
+
+Now all I call is `cp('This is what I want to print')`   The cool thing about PyCharm is that it knows these are the same and so the DOCSTRINGS work with them!!
+
+Yes, you can rename the entire Elements ane still get all the documentation as you type it in.
+
+
+
 
 So that you don't have to type: `sg.cprint` every time you want to print, you can add this statement to the top of your code:
 
@@ -1291,6 +1349,7 @@ So that you don't have to type: `sg.cprint` every time you want to print, you ca
 
 Now you can simply call `cprint` directly.   You will still get the docstrings if you're running PyCharm so you're not losing anything there.
 
+### Recipe 4A
 
 This Recipe shows many of the concepts and parameters. There is also one located in the Demo Programs area on GitHub (http://Demos.PySimpleGUI.org).
 
@@ -1356,6 +1415,101 @@ def main():
         elif event == 'Force 2':
             cprint(values['-IN-'], c=(values['-TEXT COLOR-'], values['-BG COLOR-']), key=MLINE_KEY2)
     window.close()
+
+if __name__ == '__main__':
+    main()
+```
+
+
+## Recipe Printing - #4B/4 using `cprint` with Multiline Parameters (PySimpleGUI version 4.25.0+)
+
+Beginning in verison 4.25.0 of the tkinter port you'll find new parameters for the Multline Element that makes the job of re-routihn your output much easier.  Rather than calling the `cprint_set_output_destination` function, you will use the `Multline` element's initial parameters to both setup the routing of the print output, but also mark the element as being a write-only element.  You can set the parameter `write_only` to True in order to make this a write-only Multiline.
+
+The new parameters you'll be interested in are:
+
+* write_only
+* auto_refresh
+* reroute_cprint
+
+This will cut out the call previously required to set up the routing.  You will be setting up the routing through the Multiline creation ifself.  
+
+You will continue to be able to manually route stdout and stderr to the Multline uning the `reroute_stdout_to_here` call.  Sorry about the wordiness of the call, but you're probably only going to have one in your code.  So it didn't seem so bad to have something descriptive enough that you won't need a comment.
+
+
+### Automatic Refresh
+
+The mutliline element has an option for auto-refreshing after an update.   The Output element automatically refreshes after each write.  Hopefully this will not slow things down considerably.
+
+Here is the code for 4B
+
+```python
+import threading
+import time
+import PySimpleGUI as sg
+
+
+"""
+    Threaded Demo - Uses Window.write_event_value communications
+    
+    Requires PySimpleGUI.py version 4.25.0 and later
+    
+    This is a really important demo  to understand if you're going to be using multithreading in PySimpleGUI.
+    
+    Older mechanisms for multi-threading in PySimpleGUI relied on polling of a queue. The management of a communications
+    queue is now performed internally to PySimpleGUI.
+
+    The importance of using the new window.write_event_value call cannot be emphasized enough.  It will hav a HUGE impact, in
+    a positive way, on your code to move to this mechanism as your code will simply "pend" waiting for an event rather than polling.
+    
+    Copyright 2020 PySimpleGUI.org
+"""
+
+THREAD_EVENT = '-THREAD-'
+
+cp = sg.cprint
+
+def the_thread(window):
+    """
+    The thread that communicates with the application through the window's events.
+
+    Once a second wakes and sends a new event and associated value to the window
+    """
+    i = 0
+    while True:
+        time.sleep(1)
+        window.write_event_value('-THREAD-', (threading.current_thread().name, i))      # Data sent is a tuple of thread name and counter
+        cp('This is cheating from the thread', c='white on green')
+        i += 1
+
+
+def main():
+    """
+    The demo will display in the multiline info about the event and values dictionary as it is being
+    returned from window.read()
+    Every time "Start" is clicked a new thread is started
+    Try clicking "Dummy" to see that the window is active while the thread stuff is happening in the background
+    """
+
+    layout = [  [sg.Text('Output Area - cprint\'s route to here', font='Any 15')],
+                [sg.Multiline(size=(65,20), key='-ML-', autoscroll=True, reroute_stdout=True, write_only=True, reroute_cprint=True)],
+                [sg.T('Input so you can see data in your dictionary')],
+                [sg.Input(key='-IN-', size=(30,1))],
+                [sg.B('Start A Thread'), sg.B('Dummy'), sg.Button('Exit')]  ]
+
+    window = sg.Window('Window Title', layout)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        cp(event, values)
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+        if event.startswith('Start'):
+            threading.Thread(target=the_thread, args=(window,), daemon=True).start()
+        if event == THREAD_EVENT:
+            cp(f'Data from the thread ', colors='white on purple', end='')
+            cp(f'{values[THREAD_EVENT]}', colors='white on red')
+    window.close()
+
 
 if __name__ == '__main__':
     main()
@@ -1539,8 +1693,9 @@ This pattern is really good any time you've got a file or folder to get from the
 
 -------
 
-
 ## Recipe - Get Filename With No Input Display.  Returns when file selected
+
+
 
 ![image](https://user-images.githubusercontent.com/46163555/75084589-11c10200-54ef-11ea-9096-58201dc3fb0f.png)
 
@@ -1559,6 +1714,211 @@ event, values = sg.Window('File Compare', layout).read(close=True)
 print(f'You chose: {values["-FILE-"]}')
 ```
 
+----------------
+
+
+## Recipe - Long Operations - Multi-threading
+
+
+### IMPORTANT GUI Topic!
+
+
+***Brief summary:***
+
+Threads can "inject" events and data into a `window.read()` call.  This allows your application to simply stop, pend and awaken immediatrely when something happens.  This makes for zero CPU time used when nothing's happening and it means 0ms latentcy.
+
+
+### The Long Operation
+
+
+A classic problem of GUI programming is when you try to perform some operation that requires a lot of time.  The problem is simple enough.... you have a GUI and when you press a button, you want a 10 second operation to take place while you're GUI patiently waits.
+
+What happens to most people that give this a try gets the dreaded windows/linux/mac "Your program has stopped 
+responding do you wish to close it"
+
+If you add a sleep(30) to your code, it's not very many seconds before your window does this:
+
+![SNAG-0866](https://user-images.githubusercontent.com/46163555/87881346-9e9cb880-c9c6-11ea-9124-88f23a42a274.jpg)
+
+No Bueno
+
+## PySimpleGUI to the Rescue
+
+This is likely the most significant feature addition in the past year.
+
+You hav always had this capability, but only in a manually created and polled fashion.
+
+## The Solution
+
+1. You put your long-running operation into a thread
+2. Your thread signals the window when it iws done
+3. Windows pend using their typical `window.read()` call
+
+
+## The 10 Second Operation Example
+
+In summary, there are 2 approaches.
+
+1. Brute force - Do the operation and don't return back until it's done
+2. Threaded - Begin the opration and be informed later when it completes
+
+The previous 3rd method relied on a poll of new never that would happen on a refular bnasis instad of pending
+
+
+### Brute Force Long Operation
+
+Here's our "Bruce Force" code:
+
+```python
+import PySimpleGUI as sg
+import time
+
+def long_function():
+    time.sleep(10)
+
+layout = [[sg.Output(size=(60,10))],
+          [sg.Button('Go'), sg.Button('Nothing'), sg.Button('Exit')]  ]
+
+window = sg.Window('Window Title', layout)
+
+while True:             # Event Loop
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Go':
+        print('About to go to call my long function')
+        long_function()
+        print('Your long operation completed')
+window.close()
+
+```
+
+
+Take a moment to get to know the code.  You'll find the typcical event loop. If you run this program, and you don't touch anything like your mouse, then it should sit for 10 seconds doing nothing and then print out the completed thmeesage.
+
+![SNAG-0867](https://user-images.githubusercontent.com/46163555/87882466-25a15f00-c9ce-11ea-98fe-0907dc915540.jpg)
+
+If you attempted to interact with the window by pressing the "Nothing" button, then you will likely get a mewssage about your window stoppedin g responding.  
+
+
+
+### Threaded Long Operation
+
+
+I think we can agree that brute force, no matter how badly we want it to work, won't.  Bummer
+
+
+
+```python
+import PySimpleGUI as sg
+import time
+import threading
+
+
+def long_function_thread(window):
+    time.sleep(10)
+    window.write_event_value('-THREAD DONE-', '')
+
+def long_function():
+    threading.Thread(target=long_function_thread, args=(window,), daemon=True).start()
+
+
+layout = [[sg.Output(size=(60,10))],
+          [sg.Button('Go'), sg.Button('Nothing'), sg.Button('Exit')]  ]
+
+window = sg.Window('Window Title', layout)
+
+while True:             # Event Loop
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Go':
+        print('About to go to call my long function')
+        long_function()
+        print('Long function has returned from starting')
+    elif event == '-THREAD DONE-':
+        print('Your long operation completed')
+    else:
+        print(event, values)
+window.close()
+
+```
+
+If you click the "Nothing" button, then you'll get a line printed in the Multiline that has the event and the values dictionary.
+
+Because there are no "input" elements, yourvalues sictionary is empy.
+
+Clicking "Go" is when the fun begins.
+
+You are immediately shown  a message that the long-operatrion function is starting.  The same function name as before is called `long_function`.  But now the contents of that function have been replaced with starting a thread  that executes the same code.
+
+This single line of code is all that was needed to create our long0runing function as a thread and to start that thread:
+
+```python
+threading.Thread(target=the_thread, args=(window,), daemon=True).start()
+```
+
+The conversion over to a thead was done in 3 simple steps:
+
+1. Renamed the `long_fundtion` to `long_function_thread`
+2. Pass into the `long_function_thread` the `window` that it will commmunicate with
+3. Add call to `window.write_event_value` when the long_running_thread is existing
+
+The result is a GUI that continutes to operate and be responsive to user's requests during the long running operation.
+
+
+
+### Long operations with feedback
+
+The power of the `Window.write_event_value` is that it can be used at any time, not just at the beginning and end of operations.  If a long operation can be broken intosmaller parts, then progress can be shown to the user.  Rather than calling `Window.write_event_value` once time, it can be called a number of times to 
+
+
+If we modify the code so that instead of sleeping for 10 seconds, we sleep for 1 second 10 times, then it's possible to show information about progress.
+
+
+Here's the code with the new operation broek up into 10 parts
+
+```python
+import PySimpleGUI as sg
+import time
+import threading
+
+def long_function_thread(window):
+    for i in range(10):
+        time.sleep(1)
+        window.write_event_value('-THREAD PROGRESS-', i)
+    window.write_event_value('-THREAD DONE-', '')
+
+def long_function():
+    threading.Thread(target=long_function_thread, args=(window,), daemon=True).start()
+
+
+layout = [[sg.Output(size=(60,10))],
+          [sg.Button('Go'), sg.Button('Nothing'), sg.Button('Exit')]  ]
+
+window = sg.Window('Window Title', layout)
+
+while True:             # Event Loop
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == 'Go':
+        print('About to go to call my long function')
+        long_function()
+        print('Long function has returned from starting')
+    elif event == '-THREAD DONE-':
+        print('Your long operation completed')
+    else:
+        print(event, values)
+window.close()
+
+```
+
+And the resulting window
+
+
+
+![image](https://user-images.githubusercontent.com/46163555/87884121-0e686e80-c9da-11ea-8b79-7f39616912b3.png)
 
 
 --------------- 
