@@ -899,6 +899,56 @@ else:
 
 -------
 
+
+# Recipe - Function and Aliases
+
+This is related to the topic of "User Defined Elements" if you care to go look it up.
+
+If you're using PyCharm, this technique works particuarly well because the DocStrings continue to work even after you have created aliases.
+
+Aliases are used a LOT in PySimpleGUI.  You'll find that nearly all of the Elements have multiple names that can be used for them.  Text Elements can be specified as `Text`, `Txt`, and `T`.  This allows you to write really compact code.
+
+You can make your own aliases too.  The advantage of you making your own is that they will be in your own name space and thus will not have the typical `sg.` in front of them.
+
+Let's use the `cprint` function as an example.
+
+Normally you'll call this function like this:
+
+```python
+sg.cprint('This is my white text on a red background', colors='white on red')
+```
+
+If you have a lot of these in your program, it won't get too long until you're tired of typing `sg.cprint`, so, why not make it super easy on yourself and type `cp` instead.  Here's all you have to do.
+
+```python
+cp = sg.cprint
+
+cp('This is my white text on a red background', colors='white on red')
+```
+
+Running these 2 calls produced these 2 lines of text in a Multiline element
+
+![image](https://user-images.githubusercontent.com/46163555/87994615-6d51e480-cabb-11ea-9a38-cf9badb77dc4.png)
+
+
+IF you're using PyCharm and press Control+Q with your cursor over the `cp`, you'll see the documentation brought up for the `cprint` call:
+
+![image](https://user-images.githubusercontent.com/46163555/87994828-e9e4c300-cabb-11ea-96e5-9c4e55076a20.png)
+
+
+Feel free to experiment.  Even renaming elements will save you the hassle of typing in the `sg.` portion.    Then again, so will importing the invdividual elements.
+
+```python
+# this import will allow you to type just "Text" to use a Text Element
+from PySimpleGUI import Text
+
+layout = [[Text('Simpler looking layout')]]
+```
+
+
+
+-------------
+
 # Recipe - Highly Responsive Inputs
 
 Sometimes it's desireable to begin processing input information when a user makes a selection rather than requiring the user to click an OK button.
@@ -1923,7 +1973,7 @@ And the resulting window
 
 --------------- 
 
-## Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
+## Recipe - Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
 
 Example of nearly all of the Elements in a single window.  Uses a customized color scheme, lots of Elements, default values, Columns, Frames with colored text, tooltips, file browsing.  There are at least 13 different Elements used.  
 
@@ -2064,7 +2114,7 @@ The `focus` parameter for the Button causes the window to start with that button
       
 --------      
       
-## Callback Function Simulation      
+## Recipe - Callback Function Simulation      
 The architecture of some programs works better with button callbacks instead of handling in-line.  While button callbacks are part of the PySimpleGUI implementation, they are not directly exposed to the caller.  The way to get the same result as callbacks is to simulate them with a recipe like this one.      
       
 ![image](https://user-images.githubusercontent.com/46163555/69109891-0ae5a780-0a47-11ea-8cc4-9442f46c7fa7.png)
@@ -2113,7 +2163,7 @@ sg.popup_ok('Done')
 ```  
 
       
-## OneLineProgressMeter      
+## Recipe - OneLineProgressMeter      
       
 This recipe shows just how easy it is to add a progress meter to your code.      
       
@@ -2133,7 +2183,7 @@ Unlike other progress meter Python packages, PySimpleGUI's one-line-progress-met
      
  -------
 
-## Minesweeper-style Grid of Buttons
+## Recipe -  Minesweeper-style Grid of Buttons
 
 There are a number of applications built using a GUI that involve a grid of buttons.  The games Minesweeper and Battleship can both be thought of as a grid of buttons.
 
