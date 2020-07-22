@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.2 Unreleased\nNew Sponsor button, highly experimental window_read_all()"
+version = __version__ = "4.26.0.2 Unreleased\nNew Sponsor button, highly experimental read_all_windows()"
 
 port = 'PySimpleGUI'
 
