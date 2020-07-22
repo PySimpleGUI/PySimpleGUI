@@ -8543,10 +8543,10 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
     Reads a list of windows.  If any of the list returns a value then the window and its event and values
     are returned.
 
-    :param timeout:
-    :type timeout:
-    :param timeout_key:
-    :type timeout_key:
+    :param timeout: Time in milliseconds to delay before a returning a timeout event
+    :type timeout: (int)
+    :param timeout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
+    :type timeout_key: (Any)
     :return: A tuple with the  (Window, event, values dictionary/list)
     :rtype: Tuple[Window, Any, (Dict or List)]
     """
