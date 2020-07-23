@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.3 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed"
+version = __version__ = "4.26.0.4 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme"
 
 port = 'PySimpleGUI'
 
@@ -14384,6 +14384,8 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     :type location: (int, int)
     """
 
+    current_theme = theme()
+
     # Show a "splash" type message so the user doesn't give up waiting
     popup_quick_message('Hang on for a moment, this will take a bit to create....', keep_on_top=True, background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
 
@@ -14423,7 +14425,7 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     window = Window('Preview of Themes', layout, background_color=win_bg, resizable=True, location=location, keep_on_top=True, finalize=True, modal=True)
     window['-COL-'].expand(True, True, True)    # needed so that col will expand with the window
     window.read(close=True)
-
+    theme(current_theme)
 
 
 preview_all_look_and_feel_themes = theme_previewer
