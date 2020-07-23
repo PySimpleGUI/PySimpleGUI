@@ -5,7 +5,10 @@ import PySimpleGUI as sg
 """
     If you're using the PySimpleGUI color themes, then your code will a line that looks something like this:
         sg.theme('Light Green 1') or sg.theme('LightGreen1')
-    This demo shows how to access the list of all themes to build your own previewer
+        
+    This demo shows how to access the list of all "dark themes" as an example of how you can build your own previewer
+    
+    Copyright 2020 PySimpleGUI.org
 """
 
 # Use the built-in Theme Viewer to show all of the themes and their names
@@ -18,6 +21,11 @@ import PySimpleGUI as sg
 window_background = 'black'
 
 def sample_layout():
+    """
+    Creates a small window that will represent the colors of the theme. This is an individual theme's preview
+    :return: layout of a little preview window
+    :rtype: List[List[Element]]
+    """
     return [[sg.Text('Text element'), sg.InputText('Input data here', size=(15, 1))],
             [sg.Button('Ok'), sg.Button('Cancel'), sg.Slider((1, 10), orientation='h', size=(10, 15))]]
 
@@ -25,8 +33,7 @@ def sample_layout():
 layout = [[sg.Text('List of Dark Themes Provided by PySimpleGUI', font='Default 18', background_color=window_background)]]
 
 FRAMES_PER_ROW = 9
-names = sg.theme_list()
-names = [name for name in names  if 'dark' in name.lower()]
+names = [name for name in sg.theme_list()  if 'dark' in name.lower()]       # get list of only "dark" themes
 row = []
 for count, theme in enumerate(names):
     sg.theme(theme)
@@ -37,6 +44,4 @@ for count, theme in enumerate(names):
 if row:
     layout += [row]
 
-window = sg.Window('Custom Preview of Themes', layout, background_color=window_background)
-window.read()
-window.close()
+sg.Window('Custom Preview of Themes', layout, background_color=window_background).read(close=True)
