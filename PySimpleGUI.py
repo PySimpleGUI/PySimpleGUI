@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.2 Unreleased\nNew Sponsor button, highly experimental read_all_windows()"
+version = __version__ = "4.26.0.3 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed"
 
 port = 'PySimpleGUI'
 
@@ -3495,8 +3495,7 @@ class ProgressBar(Element):
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
     """
 
-    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=(None, None), style=None, border_width=None, relief=None,
-                 key=None, k=None, pad=None, visible=True, metadata=None):
+    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None, relief=None, key=None, k=None, pad=None, visible=True, metadata=None):
         """
         :param max_value: max value of progressbar
         :type max_value: (int)
@@ -3506,8 +3505,8 @@ class ProgressBar(Element):
         :type size: (int, int)
         :param auto_size_text: Not sure why this is here
         :type auto_size_text: (bool)
-        :param bar_color: The 2 colors that make up a progress bar. One is the background, the other is the bar
-        :type bar_color: Tuple[str, str]
+        :param bar_color: The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
+        :type bar_color: Tuple[str, str] or str
         :param style: Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
         :type style: (str)
         :param border_width: The amount of pixels that go around the outside of the bar
@@ -3531,7 +3530,18 @@ class ProgressBar(Element):
         self.Cancelled = False
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
-        self.BarColor = bar_color
+
+        # Progress Bar colors can be a tuple (text, background) or a string with format "bar on background" - examples "red on white" or ("red", "white")
+        if bar_color is None:
+            bar_color = DEFAULT_PROGRESS_BAR_COLOR
+        else:
+            try:
+                if isinstance(bar_color,str):
+                    bar_color = bar_color.split(' on ')
+            except Exception as e:
+                print('* ProgressBar warning * you messed up with color formatting', e)
+
+        self.BarColor = bar_color       # should be a tuple at this point
         self.BarStyle = style if style else DEFAULT_TTK_THEME
         self.BorderWidth = border_width if border_width else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
@@ -3544,6 +3554,7 @@ class ProgressBar(Element):
     # returns False if update failed
     def UpdateBar(self, current_count, max=None):
         """
+        DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
         Change what the bar shows by changing the current count and optionally the max count
 
         :param current_count: sets the current value
@@ -3563,20 +3574,41 @@ class ProgressBar(Element):
             return False
         return True
 
-    def Update(self, visible=None):
+
+    def Update(self, current_count, max=None, visible=None):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
+        Now has the ability to modify the count so that the update_bar method is not longer needed separately
 
+        :param current_count: sets the current value
+        :type current_count: (int)
+        :param max: changes the max value
+        :type max: (int)
         :param visible: control visibility of element
         :type visible: (bool)
+        :return: Returns True if update was OK.  False means something wrong with window or it was closed
+        :rtype: (bool)
         """
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
-            return
+            return False
+
+        if self.ParentForm.TKrootDestroyed:
+            return False
 
         if visible is False:
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+
+        self.TKProgressBar.Update(current_count, max=max)
+        try:
+            self.ParentForm.TKroot.update()
+        except:
+            Window._DecrementOpenCount()
+            # _my_windows.Decrement()
+            return False
+        return True
+
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -14335,7 +14367,7 @@ def theme_add_new(new_theme_name, new_theme_dict):
 
 
 
-def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None), location=(None, None)):
+def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None), search_string=None, location=(None, None)):
     """
     Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
     They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
@@ -14346,12 +14378,14 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     :type scrollable: bool
     :param scroll_area_size: Size of the scrollable area (The Column Element used to make scrollable)
     :type scroll_area_size: (int, int)
+    :param search_string: If specified then only themes containing this string will be shown
+    :type search_string: str
     :param location: Location on the screen to place the window. Defaults to the center like all windows
     :type location: (int, int)
     """
 
     # Show a "splash" type message so the user doesn't give up waiting
-    popup_quick_message('Hang on for a moment, this will take a bit to create....', background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
+    popup_quick_message('Hang on for a moment, this will take a bit to create....', keep_on_top=True, background_color='red', text_color='#FFFFFF', auto_close=True, non_blocking=True)
 
     web = False
 
@@ -14361,10 +14395,18 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
         return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
                 [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(5, 15))]]
 
-    layout = [[Text('Here is a complete list of themes', font='Default 18', background_color=win_bg)]]
 
     names = list_of_look_and_feel_values()
     names.sort()
+    if search_string not in (None, ''):
+        print(f'Looking for {search_string.lower().replace(" ","")}')
+        names = [name for name in names if search_string.lower().replace(" ","") in name.lower().replace(" ","")]
+
+    if search_string not in (None, ''):
+        layout = [[Text('Themes containing "{}"'.format(search_string), font='Default 18', background_color=win_bg)]]
+    else:
+        layout = [[Text('List of all themes', font='Default 18', background_color=win_bg)]]
+
 
     col_layout = []
     row = []
@@ -14378,10 +14420,9 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
         col_layout += [row]
 
     layout += [[Column(col_layout, scrollable=scrollable, size=scroll_area_size, pad=(0,0), background_color=win_bg, key='-COL-')]]
-    window = Window('Preview of all Look and Feel choices', layout, background_color=win_bg, resizable=True, location=location, finalize=True)
+    window = Window('Preview of Themes', layout, background_color=win_bg, resizable=True, location=location, keep_on_top=True, finalize=True, modal=True)
     window['-COL-'].expand(True, True, True)    # needed so that col will expand with the window
-    window.read()
-    window.close()
+    window.read(close=True)
 
 
 
@@ -15690,7 +15731,7 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Text entered or None if window was closed or cancel button clicked
     :rtype: Union[str, None]
@@ -15709,10 +15750,8 @@ def PopupGetText(message, title=None, default_text='', password_char='', size=(N
               [InputText(default_text=default_text, size=size, key='_INPUT_', password_char=password_char)],
               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
-    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar, background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, finalize=True)
+    window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar, background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, finalize=True, modal=modal)
 
-    if modal:
-        window.make_modal()
 
     button, values = window.Read()
     window.close(); del window
@@ -17014,7 +17053,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         [graph_elem],
     ]
 
-    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red', border_width=0)
+    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
     tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
                                                   Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]], )
     tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
@@ -17038,13 +17077,14 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location',justification='l',size=(30,2)),
          VerLine(sys.version, 'Python Version', justification='l', size=(40, 2)),
 
-        [TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_', border_width=0)],
+        [TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_')],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Popup'),
          B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
+         B('Themes'),
          Button('Exit', tooltip='Exit button')],
     ]
 
@@ -17106,6 +17146,9 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/psgui')
+        elif event == 'Themes':
+            search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
+            theme_previewer(search_string=search_string)
 
         i += 1
         # _refresh_debugger()
