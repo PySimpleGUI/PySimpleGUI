@@ -83,7 +83,7 @@ The **Persistent window** is one that sticks around.  With these programs, you l
 If you are writing a "typical Windows program" where the window stays open while you collect multiple button clicks and input values, then you'll want Recipe Pattern 2B.
 
       
-## Recipe -  Pattern 1A - "One-shot Window" - (The Simplest Pattern)    
+# Recipe -  Pattern 1A - "One-shot Window" - (The Simplest Pattern)    
 
 
 
@@ -138,7 +138,7 @@ sg.popup('You entered', text_input)
 ``` 
 
 
-## Recipe -  Pattern 1B - "One-shot Window" - (Self-closing, single line)    
+# Recipe -  Pattern 1B - "One-shot Window" - (Self-closing, single line)    
 
 For a much more compact window, it's possible to create, display, read, and close a window in a single line of code.
 
@@ -160,7 +160,7 @@ Notice use of Element name "Shortcuts" (uses `B` rather than `Button`, `T` inste
 
 
 
-## Recipe - Pattern 2A - Persistent window (multiple reads using an event loop)      
+# Recipe - Pattern 2A - Persistent window (multiple reads using an event loop)      
 
 
 ![image](https://user-images.githubusercontent.com/46163555/68600333-5361fb80-0470-11ea-91cb-691e32832b60.png)
@@ -217,7 +217,7 @@ The `event` returned from the read is set to `None` (the variable `WIN_CLOSED`) 
 In some cirsumstances when a window is closed with an X, both of the return values from `window.read()` will be `None`.  This is why it's important to check for `event is None` before attempting to access anything in the `values` variable.
 
 
-## Recipe - Pattern 2B - Persistent window (multiple reads using an event loop + updates data in window)   
+# Recipe - Pattern 2B - Persistent window (multiple reads using an event loop + updates data in window)   
 
 ![image](https://user-images.githubusercontent.com/46163555/68633697-df9c0f00-04c0-11ea-9fb3-121a72a87a59.png)
 
@@ -439,7 +439,7 @@ Where Color is one of these:
 The # is optional and is used when there is more than 1 choice for a color.  For example, for "Dark Blue" there are 12 different themes (Dark Blue, and Dark Blue 1-11).  These colors specify the rough color of the background.  These can vary wildly so you'll have to try them out to see what you like the best.
 
 
-## Recipe - Built-in Theme Viewer
+# Recipe - Built-in Theme Viewer
 
 If you want to see a window on your system like the above theme preview screenshot, then make this call and you'll see the same window:
 
@@ -470,6 +470,7 @@ If you guess incorrectly, then you'll be treated to a random theme instead of so
 ---
 
 # Recipe - Post your screen-shots (PLEASE!)
+
 This is an odd recipe, but it's an important one and has nothing to do with your coding PySimpleGUI code.  Instead is has to do with modifying youre readme.md file on your GitHub so you can share with the world your creation.  Doon't be shy.  We all stated with "hello world" and your first GUI is likely to be primitive, but it's very important you post it any way.
 
 In case you've not noticed, you, the now fancy Python GUI programmer that you are, are a rare person in the Python world.  The VAST majority of Python projects posted on GitHub do not contain a GUI.  This GUI thing is kinda new and novel for Python pbeginning rogrammers.
@@ -581,7 +582,7 @@ As you can see, a single entry in the Look and Feel dictionary is itself a dicti
 
 ---
 
-## Recipe - Modifying an existing Theme
+# Recipe - Modifying an existing Theme
 
 Let's say you like the `LightGreeen3` Theme, except you would like for the buttons to have black text instead of white.  You can change this by modifying the theme at runtime.
 
@@ -608,7 +609,7 @@ Produces these 2 windows
 
 ----
 
-## Recipe - Adding Your Own Color Theme
+# Recipe - Adding Your Own Color Theme
 
 The great thing about these themes is that you set it onces and all future Elements will use the new settings.  If you're adding the same colors in your element definitions over and over then perhaps making your own theme is in order.
 
@@ -668,7 +669,7 @@ window = sg.Window('PSG System Dashboard', layout, no_titlebar=True, alpha_chann
 ```
 
 
-## Recipe - Replacing a Button with a Graphic
+# Recipe - Replacing a Button with a Graphic
 
 In PySimpleGUI you can use PNG and GIF image files as buttons.  You can also encode those files into Base64 strings and put them directly into your code.
 
@@ -1715,7 +1716,7 @@ main()
 ----------
 
 
-## Recipe - Get 2 Files By Browsing 
+# Recipe - Get 2 Files By Browsing 
       
 Sometimes you just need to get a couple of filenames.  Browse to get 2 file names that can be then compared.  By using `Input` elements the user can either use the Browse button to browse to select a file or they can paste the filename into the input element directly.    
       
@@ -1743,7 +1744,7 @@ This pattern is really good any time you've got a file or folder to get from the
 
 -------
 
-## Recipe - Get Filename With No Input Display.  Returns when file selected
+# Recipe - Get Filename With No Input Display.  Returns when file selected
 
 
 
@@ -1767,7 +1768,7 @@ print(f'You chose: {values["-FILE-"]}')
 ----------------
 
 
-## Recipe - Long Operations - Multi-threading
+# Recipe - Long Operations - Multi-threading
 
 
 ### IMPORTANT GUI Topic!
@@ -1973,7 +1974,7 @@ And the resulting window
 
 -------------------
 
-## Recipe - convert_to_bytes Function + PIL Image Viewer
+# Recipe - convert_to_bytes Function + PIL Image Viewer
 
 This function has turned out to be one of the best for working with images in PySimpleGUI.
 
@@ -2178,7 +2179,7 @@ The result are these 2 buttons:
 
 --------------- 
 
-## Recipe - Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
+# Recipe - Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
 
 Example of nearly all of the Elements in a single window.  Uses a customized color scheme, lots of Elements, default values, Columns, Frames with colored text, tooltips, file browsing.  There are at least 13 different Elements used.  
 
@@ -2319,7 +2320,7 @@ The `focus` parameter for the Button causes the window to start with that button
       
 --------      
       
-## Recipe - Callback Function Simulation      
+# Recipe - Callback Function Simulation      
 The architecture of some programs works better with button callbacks instead of handling in-line.  While button callbacks are part of the PySimpleGUI implementation, they are not directly exposed to the caller.  The way to get the same result as callbacks is to simulate them with a recipe like this one.      
       
 ![image](https://user-images.githubusercontent.com/46163555/69109891-0ae5a780-0a47-11ea-8cc4-9442f46c7fa7.png)
@@ -2368,7 +2369,7 @@ sg.popup_ok('Done')
 ```  
 
       
-## Recipe - OneLineProgressMeter      
+# Recipe - OneLineProgressMeter      
       
 This recipe shows just how easy it is to add a progress meter to your code.      
       
@@ -2388,7 +2389,7 @@ Unlike other progress meter Python packages, PySimpleGUI's one-line-progress-met
      
  -------
 
-## Recipe -  Minesweeper-style Grid of Buttons
+# Recipe -  Minesweeper-style Grid of Buttons
 
 There are a number of applications built using a GUI that involve a grid of buttons.  The games Minesweeper and Battleship can both be thought of as a grid of buttons.
 
