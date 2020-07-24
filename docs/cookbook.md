@@ -1971,6 +1971,211 @@ And the resulting window
 ![image](https://user-images.githubusercontent.com/46163555/87884121-0e686e80-c9da-11ea-8b79-7f39616912b3.png)
 
 
+-------------------
+
+## Recipe - convert_to_bytes Function + PIL Image Viewer
+
+This function has turned out to be one of the best for working with images in PySimpleGUI.
+
+```python
+import PIL.Image
+import io
+import base64
+
+def convert_to_bytes(file_or_bytes, resize=None):
+    '''
+    Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
+    Turns into  PNG format in the process so that can be displayed by tkinter
+    :param file_or_bytes: either a string filename or a bytes base64 image object
+    :type file_or_bytes:  (Union[str, bytes])
+    :param resize:  optional new size
+    :type resize: (Tuple[int, int] or None)
+    :return: (bytes) a byte-string object
+    :rtype: (bytes)
+    '''
+    if isinstance(file_or_bytes, str):
+        img = PIL.Image.open(file_or_bytes)
+    else:
+        try:
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
+        except Exception as e:
+            dataBytesIO = io.BytesIO(file_or_bytes)
+            img = PIL.Image.open(dataBytesIO)
+
+    cur_width, cur_height = img.size
+    if resize:
+        new_width, new_height = resize
+        scale = min(new_height/cur_height, new_width/cur_width)
+        img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
+    bio = io.BytesIO()
+    img.save(bio, format="PNG")
+    del img
+    return bio.getvalue()
+
+```
+
+It requires 3 packages - PIL, io, and base64.  PIL is the only one you'll need to pip install.  
+
+PySimpleGUI does not directly use the PIL package so that PySimpleGUI can remain highly portable.  Requiring users to install PIL was simply not acceptable for the package, but it's fine for demo programs and helper functions like this one.
+
+One thing that PIL buys you is the ability to work with a LOT more file formats.  If you want JPG images, then you want to use PIL as the tkinter based PySimpleGUI only supports PNGs and GIFs (because that's all tht tkinter supports)
+
+
+`convert_to_types` is a fantastic little function because you can give it a filename or a bytes string and it will return a bytes string that is optionally resized.
+
+This makes working with button images MUCH MUCH easier.
+
+Here are a couple of demos that use this function.  The first one is a Matplotlib previewer.  It creates a grid of graphs
+
+![SNAG-0872](https://user-images.githubusercontent.com/46163555/88382797-34459880-cd77-11ea-8ffa-0557310a30b9.jpg)
+
+
+These shots are from the demo that you'll see the source code to below.  Note the "Resize to" field below the file list.
+
+
+![SNAG-0873](https://user-images.githubusercontent.com/46163555/88382796-34459880-cd77-11ea-8bb1-50a70cac7c1b.jpg)
+
+![SNAG-0874](https://user-images.githubusercontent.com/46163555/88382795-33ad0200-cd77-11ea-9928-9a77879f7133.jpg)
+
+
+
+As an example of one way to use this function, included here is the Demo Program you'll find in the demo programs area on the GitHub:
+
+```python
+import PySimpleGUI as sg
+# import PySimpleGUIQt as sg
+import os.path
+import PIL.Image
+import io
+import base64
+
+"""
+    Demo for displaying any format of image file.
+    
+    Normally tkinter only wants PNG and GIF files.  This program uses PIL to convert files
+    such as jpg files into a PNG format so that tkinter can use it.
+    
+    The key to the program is the function "convert_to_bytes" which takes a filename or a 
+    bytes object and converts (with optional resize) into a PNG formatted bytes object that
+    can then be passed to an Image Element's update method.  This function can also optionally
+    resize the image.
+    
+    Copyright 2020 PySimpleGUI.org
+"""
+
+
+
+def convert_to_bytes(file_or_bytes, resize=None):
+    '''
+    Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
+    Turns into  PNG format in the process so that can be displayed by tkinter
+    :param file_or_bytes: either a string filename or a bytes base64 image object
+    :type file_or_bytes:  (Union[str, bytes])
+    :param resize:  optional new size
+    :type resize: (Tuple[int, int] or None)
+    :return: (bytes) a byte-string object
+    :rtype: (bytes)
+    '''
+    if isinstance(file_or_bytes, str):
+        img = PIL.Image.open(file_or_bytes)
+    else:
+        try:
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
+        except Exception as e:
+            dataBytesIO = io.BytesIO(file_or_bytes)
+            img = PIL.Image.open(dataBytesIO)
+
+    cur_width, cur_height = img.size
+    if resize:
+        new_width, new_height = resize
+        scale = min(new_height/cur_height, new_width/cur_width)
+        img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
+    bio = io.BytesIO()
+    img.save(bio, format="PNG")
+    del img
+    return bio.getvalue()
+
+
+
+# --------------------------------- Define Layout ---------------------------------
+
+# First the window layout...2 columns
+
+left_col = [[sg.Text('Folder'), sg.In(size=(25,1), enable_events=True ,key='-FOLDER-'), sg.FolderBrowse()],
+            [sg.Listbox(values=[], enable_events=True, size=(40,20),key='-FILE LIST-')],
+            [sg.Text('Resize to'), sg.In(key='-W-', size=(5,1)), sg.In(key='-H-', size=(5,1))]]
+
+# For now will only show the name of the file that was chosen
+images_col = [[sg.Text('You choose from the list:')],
+              [sg.Text(size=(40,1), key='-TOUT-')],
+              [sg.Image(key='-IMAGE-')]]
+
+# ----- Full layout -----
+layout = [[sg.Column(left_col, element_justification='c'), sg.VSeperator(),sg.Column(images_col, element_justification='c')]]
+
+# --------------------------------- Create Window ---------------------------------
+window = sg.Window('Multiple Format Image Viewer', layout,resizable=True)
+
+# ----- Run the Event Loop -----
+# --------------------------------- Event Loop ---------------------------------
+while True:
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Exit'):
+        break
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+    if event == '-FOLDER-':                         # Folder name was filled in, make a list of files in the folder
+        folder = values['-FOLDER-']
+        try:
+            file_list = os.listdir(folder)         # get list of files in folder
+        except:
+            file_list = []
+        fnames = [f for f in file_list if os.path.isfile(
+            os.path.join(folder, f)) and f.lower().endswith((".png", ".jpg", "jpeg", ".tiff", ".bmp"))]
+        window['-FILE LIST-'].update(fnames)
+    elif event == '-FILE LIST-':    # A file was chosen from the listbox
+        try:
+            filename = os.path.join(values['-FOLDER-'], values['-FILE LIST-'][0])
+            window['-TOUT-'].update(filename)
+            if values['-W-'] and values['-H-']:
+                new_size = int(values['-W-']), int(values['-H-'])
+            else:
+                new_size = None
+            window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
+        except Exception as E:
+            print(f'** Error {E} **')
+            pass        # something weird happened making the full filename
+# --------------------------------- Close & Exit ---------------------------------
+window.close()
+```
+
+## Use with buttons
+
+One particuarly good use of this function is when you want to add a graphic to a button.  This function will convert images of any format into a byte string that can be passed into your Button element when you create it.
+
+Let's say you want to user the PySimpleGUI icon as a button.  You can do that easily enough using this statement:
+
+```python
+sg.Button(image_data=sg.DEFAULT_BASE64_ICON, button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0, key='-PSG-'),
+
+```
+
+But maybe your application has button images that are all 40 x 40 pixels.  In that case, you simply pass this image to the convert function along with the new size you want it to be.
+
+```python
+sg.Button(image_data=convert_to_bytes(sg.DEFAULT_BASE64_ICON, (40, 40)), button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0, key='-PSG-')
+```
+
+
+The result are these 2 buttons:
+
+![image](https://user-images.githubusercontent.com/46163555/88383571-c39f7b80-cd78-11ea-9a4e-f9678a031087.png)
+
+
+
+
+
+
 --------------- 
 
 ## Recipe - Nearly All Elements with Color Theme, Menus,  (The Everything Bagel)
