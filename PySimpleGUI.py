@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.4 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme"
+version = __version__ = "4.26.0.5 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set)"
 
 port = 'PySimpleGUI'
 
@@ -6791,7 +6791,7 @@ class ErrorElement(Element):
         :return:  returns 'self' so call can be chained
         :rtype: (ErrorElement)
         """
-        if not silent_on_error or SUPPRESS_ERROR_POPUPS:
+        if not silent_on_error and not SUPPRESS_ERROR_POPUPS:
             PopupError('Key error in Update',
                        'You need to stop this madness and check your spelling',
                        'Bad key = {}'.format(self.Key),
@@ -6836,7 +6836,7 @@ class Window:
     _animated_popup_dict = {}
     _active_windows = {}
     _window_that_exited = None          # type: Window
-    _root_running_mainloop = None       # type: tk.Tk()     (may be the hidden root or a window's root)
+    _root_running_mainloop = None       # type: tk.Tk()    # (may be the hidden root or a window's root)
     _timeout_key = None
     _TKAfterID = None                   # timer that is used to run reads with timeouts
     _window_running_mainloop = None     # The window that is running the mainloop
@@ -7635,16 +7635,19 @@ class Window:
             element = self.AllKeysDict[key]
         except KeyError:
             element = None
-            if not silent_on_error or SUPPRESS_ERROR_POPUPS:
+            if not silent_on_error:
                 warnings.warn(
-                    "*** WARNING = FindElement did not find the key. Please check your key's spelling. key = %s ***" % key, UserWarning)
-                PopupError('Key error in FindElement Call',
+                    "*** WARNING = FindElement did not find the key. Please check your key's spelling if it's a string. key = {} ***".format(key), UserWarning)
+                if not SUPPRESS_ERROR_POPUPS:
+                    PopupError('Key error in FindElement Call',
                            'Bad key = {}'.format(key),
                            'Your bad line of code may resemble this:',
                            'window.FindElement("{}")'.format(key),
-                           'or window["{}"]'.format(key), keep_on_top=True, image=_random_error_icon()
-                           )
+                           'or window["{}"]'.format(key), keep_on_top=True, image=_random_error_icon())
+                raise KeyError(key)
+            else:
                 element = ErrorElement(key=key)
+                return element
         return element
 
     Element = FindElement  # Shortcut function
@@ -8453,7 +8456,7 @@ class Window:
             return self.FindElement(key)
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
-            return None
+            raise KeyError(key)
 
     def __call__(self, *args, **kwargs):
         """
