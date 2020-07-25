@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.9 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item"
+version = __version__ = "4.26.0.10 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default"
 
 port = 'PySimpleGUI'
 
@@ -407,7 +407,7 @@ MENU_KEY_SEPARATOR = '::'
 ENABLE_TK_WINDOWS = False
 
 SUPPRESS_ERROR_POPUPS = False
-SUPPRESS_RAISE_KEY_ERRORS = True
+SUPPRESS_RAISE_KEY_ERRORS = False
 
 ENABLE_TREEVIEW_869_PATCH = True
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
@@ -7630,31 +7630,38 @@ class Window:
         """
         try:
             element = self.AllKeysDict[key]
+            key_error = False
         except KeyError:
-            element = None
             if not silent_on_error:
-                warnings.warn(
-                    "*** WARNING = FindElement did not find the key. Please check your key's spelling if it's a string. key = {} ***".format(key), UserWarning)
+                print('** Error looking up your element using the key: ', key)
                 trace_details = traceback.format_stack()
                 error_message = ''
                 for line in trace_details:
-                    if key in line:
+                    if str(key).replace(' ','') in str(line).replace(' ', ''):
                         error_message = line
                         break
-                error_message = '\n'.join(error_message.split(','))
+                if error_message != '':
+                    error_parts = error_message.split(', ')
+                    if len(error_parts)  < 4:
+                        error_message = error_parts[0]+'\n'+error_parts[1]+ '\n' + ''.join(error_parts[2:])
+
                 if not SUPPRESS_ERROR_POPUPS:
                     popup_error('Key error in locating your element',
                            'Bad key = {}\n'.format(key),
                                 error_message,
                                line_width=100,
                                keep_on_top=True, image=_random_error_icon())
-                if not SUPPRESS_RAISE_KEY_ERRORS:
-                    raise KeyError(key)
-                else:
-                    element = ErrorElement(key=key)
+                # if not SUPPRESS_RAISE_KEY_ERRORS:
+                #     raise KeyError(key)
+                # else:
+                element = ErrorElement(key=key)
+                key_error = True
             else:
                 element = ErrorElement(key=key)
                 return element
+        if key_error:
+            if not SUPPRESS_RAISE_KEY_ERRORS:
+                raise KeyError(key)
         return element
 
     Element = FindElement  # Shortcut function
