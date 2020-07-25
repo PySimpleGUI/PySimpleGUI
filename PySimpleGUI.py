@@ -187,7 +187,7 @@ _timeit_total = 0
 
 def _timeit_summary(func):
     """
-    Same as the timeit decorator except that the value is shown as an averave
+    Same as the timeit decorator except that the value is shown as an average
     Put @_timeit_summary as a decorator to a function to get the time spent in that function printed out
 
     :param func: Decorated function
@@ -323,7 +323,7 @@ RELIEF_RIDGE = 'ridge'
 RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
-# These are the spepific themes that tkinter offers
+# These are the specific themes that tkinter offers
 THEME_DEFAULT = 'default'           # this is a TTK theme, not a PSG theme!!!
 THEME_WINNATIVE = 'winnative'
 THEME_CLAM = 'clam'
@@ -447,7 +447,7 @@ BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 BUTTON_TYPE_SHOW_DEBUGGER = 50
 
-BROWSE_FILES_DELIMITER = ';'  # the delimeter to be used between each file in the returned string
+BROWSE_FILES_DELIMITER = ';'  # the delimiter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 
@@ -535,7 +535,7 @@ class ToolTip:
 
     def leave(self, event=None):
         """
-        Called by tktiner when mouse exits a widget
+        Called by tkinter when mouse exits a widget
         :param event:  from tkinter.  Event info that's not used by function.
 
         """
@@ -750,7 +750,7 @@ class Element():
 
     def _generic_callback_handler(self, alternative_to_key=None, force_key_to_be=None):
         """
-        Peforms the actions that were in many of the callback functions previously.  Combined so that it's
+        Performs the actions that were in many of the callback functions previously.  Combined so that it's
         easier to modify and is in 1 place now
 
         :param event: From tkinter and is not used
@@ -803,7 +803,7 @@ class Element():
 
     def _CheckboxHandler(self):
         """
-        Internal callback for when a checkbnox is selected and enable events was set for checkbox
+        Internal callback for when a checkbox is selected and enable events was set for checkbox
         """
         self._generic_callback_handler('')
 
@@ -819,7 +819,7 @@ class Element():
 
     def _KeyboardHandler(self, event):
         """
-        Internal callback for when a key is pressed andd return keyboard events was set for window
+        Internal callback for when a key is pressed and return keyboard events was set for window
 
         :param event: Event data passed in by tkinter (not used)
         """
@@ -1013,7 +1013,7 @@ class Element():
 
     def set_vscroll_position(self, percent_from_top):
         """
-        Attempts to set the vertical scroll postition for an element's Widget
+        Attempts to set the vertical scroll position for an element's Widget
         :param percent_from_top: From 0 to 1.0, the percentage from the top to move scrollbar to
         :type percent_from_top: (float)
         """
@@ -1046,7 +1046,7 @@ class Element():
         """
         Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
         the Update method for the element.
-        Example:    If this text element was in yoiur layout:
+        Example:    If this text element was in your layout:
                     sg.Text('foo', key='T')
                     Then you can call the Update method for that element by writing:
                     window.FindElement('T')('new text value')
@@ -1090,7 +1090,7 @@ class InputText(Element):
         :type tooltip: (str)
         :param border_width: width of border around element in pixels
         :type border_width: (int)
-        :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: * DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
         :type enable_events: (bool)
@@ -2293,7 +2293,7 @@ class Multiline(Element):
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
         """
-        Print like Python normally prints except route the output to a multline element and also add colors if desired
+        Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
         :param args: The arguments to print
         :type args: (Any)
@@ -3867,7 +3867,7 @@ class Canvas(Element):
     @property
     def TKCanvas(self):
         """
-        Returns the underlying tkiner Canvas widget
+        Returns the underlying tkinter Canvas widget
 
         :return: The tkinter canvas widget
         :rtype: (tk.Canvas)
@@ -4008,7 +4008,7 @@ class Graph(Element):
         :type color: (str)
         :param width: width of line in pixels
         :type width: (int)
-        :return: id returned from tktiner or None if user closed the window. id is used when you
+        :return: id returned from tkinter or None if user closed the window. id is used when you
         :rtype: Union[int, None]
         """
         if point_from == (None, None):
@@ -4035,7 +4035,7 @@ class Graph(Element):
         :type color: (str)
         :param width: width of line in pixels
         :type width: (int)
-        :return: id returned from tktiner or None if user closed the window. id is used when you
+        :return: id returned from tkinter or None if user closed the window. id is used when you
         :rtype: Union[int, None]
         """
         converted_points = [self._convert_xy_to_canvas_xy(point[0], point[1]) for point in points]
@@ -4085,7 +4085,7 @@ class Graph(Element):
 
     def DrawCircle(self, center_location, radius, fill_color=None, line_color='black', line_width=1):
         """
-        Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
+        Draws a circle, centered at the location provided.  Can set the fill and outline colors
         :param center_location: Center location using USER'S coordinate system
         :type center_location: Union [Tuple[int, int], Tuple[float, float]]
         :param radius: Radius in user's coordinate values.
@@ -4127,7 +4127,7 @@ class Graph(Element):
         :type top_left: Union[Tuple[int, int], Tuple[float, float]]
         :param bottom_right: the bottom right point of bounding rectangle
         :type bottom_right: Union[Tuple[int, int], Tuple[float, float]]
-        :param fill_color: color of the interrior
+        :param fill_color: color of the interior
         :type fill_color: (str)
         :param line_color: color of outline of oval
         :type line_color: (str)
@@ -4157,7 +4157,7 @@ class Graph(Element):
         :type top_left: Union[Tuple[int, int], Tuple[float, float]]
         :param bottom_right: the bottom right point of bounding rectangle
         :type bottom_right: Union[Tuple[int, int], Tuple[float, float]]
-        :param extent: Andle to end drawing. Used in conjunction with start_angle
+        :param extent: Angle to end drawing. Used in conjunction with start_angle
         :type extent: (float)
         :param start_angle: Angle to begin drawing. Used in conjunction with extent
         :type start_angle: (float)
@@ -4479,7 +4479,7 @@ class Graph(Element):
 
     def change_coordinates(self, graph_bottom_left, graph_top_right):
         """
-        Changes the corrdinate system to a new one.  The same 2 points in space are used to define the coorinate
+        Changes the coordinate system to a new one.  The same 2 points in space are used to define the coordinate
         system - the bottom left and the top right values of your graph.
 
         :param graph_bottom_left: The bottoms left corner of your coordinate system
@@ -4494,7 +4494,7 @@ class Graph(Element):
     @property
     def TKCanvas(self):
         """
-        Returns the underlying tkiner Canvas widget
+        Returns the underlying tkinter Canvas widget
 
         :return: The tkinter canvas widget
         :rtype: (tk.Canvas)
@@ -5562,7 +5562,7 @@ class Column(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param scrollable: if True then scrollbars will be added to the column
         :type scrollable: (bool)
-        :param vertical_scroll_only: if Truen then no horizontal scrollbar will be shown
+        :param vertical_scroll_only: if True then no horizontal scrollbar will be shown
         :type vertical_scroll_only: (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
@@ -6039,7 +6039,7 @@ class Menu(Element):
     Is a List of -  "Item String" + List
     Where Item String is what will be displayed on the Menubar itself.
     The List that follows the item represents the items that are shown then Menu item is clicked
-    Notice how an "entry" in a mennu can be a list which means it branches out and shows another menu, etc. (resursive)
+    Notice how an "entry" in a menu can be a list which means it branches out and shows another menu, etc. (recursive)
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
                 ['&Debugger', ['Popout', 'Launch Debugger']],
@@ -6894,7 +6894,7 @@ class Window:
         :type icon: Union[str, str]
         :param force_toplevel: If True will cause this window to skip the normal use of a hidden master window
         :type force_toplevel: (bool)
-        :param alpha_channel: Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
+        :param alpha_channel: Sets the opacity of the window. 0 = invisible 1 = completely visible. Values between 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
         :type alpha_channel: (float)
         :param return_keyboard_events: if True key presses on the keyboard will be returned as Events from Read calls
         :type return_keyboard_events: (bool)
@@ -7621,7 +7621,7 @@ class Window:
 
         This call can be abbreviated to any of these:
         FindElement == Element == Find
-        Rememeber that this call will return None if no match is found which may cause your code to crash if not
+        Remember that this call will return None if no match is found which may cause your code to crash if not
         checked for.
 
         :param key: Used with window.FindElement and with return values to uniquely identify this element
@@ -8182,7 +8182,7 @@ class Window:
 
     def VisibilityChanged(self):
         """
-        Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
+        Not used in tkinter, but supplied because it is used in Qt. Want to remain source code compatible so that if
         you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
         about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
         """
@@ -8812,7 +8812,7 @@ class SystemTray:
     def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
         """
         Updates the menu, tooltip or icon
-        :param menu: menu defintion
+        :param menu: menu definition
         :type menu: ???
         :param tooltip: string representing tooltip
         :type tooltip: ???
@@ -9054,8 +9054,8 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
                 change_submits=False, enable_events=False,
                 font=None, pad=None, key=None, k=None, metadata=None):
     """
-    Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
-    BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
+    Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the variable
+    BROWSE_FILES_DELIMITER.  This defaults to ';' but is changable by the user
 
     :param button_text: text in the button (Default value = 'Browse')
     :type button_text: (str)
@@ -12469,13 +12469,13 @@ class QuickMeter(object):
 
 def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
     """
-    :param title: text to display in eleemnt
+    :param title: text to display in element
     :type title: (str)
     :param current_value: current value
     :type current_value: (int)
     :param max_value: max value of QuickMeter
     :type max_value: (int)
-    :param key:  Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
+    :param key:  Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters
     :type key: Union[str, int, tuple, object]
     :param *args: stuff to output
     :type *args: (Any)
@@ -12761,7 +12761,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     There are also "aliases" for text_color, background_color and colors (t, b, c)
     t - An alias for color of the text (makes for shorter calls)
     b - An alias for the background_color parameter
-    c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+    c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, background)
     c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     With the aliases it's possible to write the same print but in more compact ways:
@@ -16771,7 +16771,7 @@ def _install(files, url=None):
     As the setup.py is not run, the METADATA is very limited, i.e. is contains just name and version.
 
     If a __init__.py is in files that file will be used.
-    Otherwise, an __init__/py file will be generated. In thet case, if a __version__ = statement
+    Otherwise, an __init__/py file will be generated. In the case, if a __version__ = statement
     is found in the source file, the __version__ will be included in that __init__.py file.
 
     Version history
@@ -16786,7 +16786,7 @@ def _install(files, url=None):
 
     version 1.0.2  2020-03-07
         modified several open calls to be compatible with Python < 3.6
-        multipe installation for Pythonista removed. Now installs only in site-packages
+        multiple installation for Pythonista removed. Now installs only in site-packages
 
     version 1.0.1  2020-03-06
         now uses urllib instead of requests to avoid non standard libraries
