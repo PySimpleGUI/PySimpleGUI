@@ -20,6 +20,7 @@ import base64
 """
 
 
+
 def convert_to_bytes(file_or_bytes, resize=None):
     '''
     Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
@@ -34,17 +35,22 @@ def convert_to_bytes(file_or_bytes, resize=None):
     if isinstance(file_or_bytes, str):
         img = PIL.Image.open(file_or_bytes)
     else:
-        img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
+        try:
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
+        except Exception as e:
+            dataBytesIO = io.BytesIO(file_or_bytes)
+            img = PIL.Image.open(dataBytesIO)
 
     cur_width, cur_height = img.size
     if resize:
         new_width, new_height = resize
         scale = min(new_height/cur_height, new_width/cur_width)
         img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
-    bio = io.BytesIO()
-    img.save(bio, format="PNG")
-    del img
-    return bio.getvalue()
+    with io.BytesIO() as bio:
+        img.save(bio, format="PNG")
+        del img
+        return bio.getvalue()
+
 
 
 # --------------------------------- Define Layout ---------------------------------
