@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.5 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set)"
+version = __version__ = "4.26.0.7 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), traceback shown on key errors"
 
 port = 'PySimpleGUI'
 
@@ -112,7 +112,10 @@ import pickle
 import calendar
 import datetime
 import textwrap
+
 import inspect
+import traceback
+
 try:        # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
     from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 except:
@@ -7638,12 +7641,13 @@ class Window:
             if not silent_on_error:
                 warnings.warn(
                     "*** WARNING = FindElement did not find the key. Please check your key's spelling if it's a string. key = {} ***".format(key), UserWarning)
+                trace_details = traceback.format_stack()[0]
                 if not SUPPRESS_ERROR_POPUPS:
-                    PopupError('Key error in FindElement Call',
-                           'Bad key = {}'.format(key),
-                           'Your bad line of code may resemble this:',
-                           'window.FindElement("{}")'.format(key),
-                           'or window["{}"]'.format(key), keep_on_top=True, image=_random_error_icon())
+                    popup_error('Key error in locating your element',
+                           'Bad key = {}\n'.format(key),
+                                trace_details,
+                               line_width=len(trace_details),
+                               keep_on_top=True, image=_random_error_icon())
                 raise KeyError(key)
             else:
                 element = ErrorElement(key=key)
@@ -8456,6 +8460,7 @@ class Window:
             return self.FindElement(key)
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
+
             raise KeyError(key)
 
     def __call__(self, *args, **kwargs):
