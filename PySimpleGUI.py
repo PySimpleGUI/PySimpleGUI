@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.8 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors"
+version = __version__ = "4.26.0.9 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item"
 
 port = 'PySimpleGUI'
 
@@ -8459,13 +8459,7 @@ class Window:
         :return: The element found or None if no element was found
         :rtype: Union[Element, None]
         """
-        try:
-            return self.FindElement(key)
-        except Exception as e:
-            warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
-            if not SUPPRESS_RAISE_KEY_ERRORS:
-                raise KeyError(key)
-        return None
+        return self.FindElement(key)
 
 
     def __call__(self, *args, **kwargs):
