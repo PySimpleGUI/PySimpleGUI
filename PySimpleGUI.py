@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.10 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default"
+version = __version__ = "4.26.0.11 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events"
 
 port = 'PySimpleGUI'
 
@@ -6832,6 +6832,7 @@ class Window:
     hidden_master_root = None
     _animated_popup_dict = {}
     _active_windows = {}
+    _move_all_windows = False            # if one window moved, they will move
     _window_that_exited = None          # type: Window
     _root_running_mainloop = None       # type: tk.Tk()    # (may be the hidden root or a window's root)
     _timeout_key = None
@@ -7008,9 +7009,12 @@ class Window:
         self.thread_strvar  = None      # type: tk.StringVar
         self.read_closed_window_count = 0
         self.subwindow = subwindow
-
-
-
+        self.config_last_size = (None, None)
+        self.config_last_location = (None, None)
+        self.starting_window_position = (None, None)
+        self.not_completed_initial_movement = True
+        self.config_count = 0
+        self.saw_00 = False
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7836,6 +7840,8 @@ class Window:
         """
         try:
             self.TKroot.geometry("+%s+%s" % (x, y))
+            self.config_last_location = (int(x), (int(y)))
+
         except:
             pass
 
@@ -7917,8 +7923,63 @@ class Window:
             y = self.TKroot.winfo_y() + deltay
             self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
             # print('{},{}'.format(x,y))
-        except:
-            pass
+
+            if Window._move_all_windows:
+                for window in Window._active_windows:
+                    x = window.TKroot.winfo_x() + deltax
+                    y = window.TKroot.winfo_y() + deltay
+                    window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+        except Exception as e:
+            print(f'on motion error {e}', f'title = {window.Title}')
+
+
+
+
+    def _config_callback(self, event):
+        print(f'Config  event = {event} window = {self.Title}')
+        new_x = event.x
+        new_y = event.y
+
+
+        if self.not_completed_initial_movement:
+            if self.starting_window_position != (new_x, new_y):
+                return
+            self.not_completed_initial_movement = False
+            return
+
+        if not self.saw_00:
+            if new_x == 0 and new_y == 0:
+                self.saw_00 = True
+
+        # self.config_count += 1
+        # if self.config_count < 40:
+        #     return
+
+        print('Move LOGIC')
+
+        if self.config_last_size != (event.width, event.height):
+            self.config_last_size = (event.width, event.height)
+
+        if self.config_last_location[0] != new_x or self.config_last_location[1] != new_y:
+            if self.config_last_location == (None, None):
+                self.config_last_location = (new_x, new_y)
+                return
+
+        deltax = self.config_last_location[0] - event.x
+        deltay = self.config_last_location[1] - event.y
+        if deltax == 0 and deltay == 0:
+            print('not moving so returning')
+            return
+        if Window._move_all_windows:
+            print('checking all windows')
+            for window in Window._active_windows:
+                if window == self:
+                    continue
+                print(f'** Moving window {window.Title}')
+                x = window.TKroot.winfo_x() + deltax
+                y = window.TKroot.winfo_y() + deltay
+                # window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+                # window.config_last_location = (x,y)
 
     def _KeyboardCallback(self, event):
         """
@@ -11465,6 +11526,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(fg=text_color)
                 if element.ChangeSubmits:
                     element.TKSpinBox.bind('<ButtonRelease-1>', element._SpinChangedHandler)
+                    element.TKSpinBox.bind('<Up>', element._SpinChangedHandler)
+                    element.TKSpinBox.bind('<Down>', element._SpinChangedHandler)
                 if element.Disabled == True:
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
@@ -12142,7 +12205,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 def ConvertFlexToTK(MyFlexForm):
     """
 
-    :param MyFlexForm: (Window)
+    :type MyFlexForm: (Window)
 
     """
     master = MyFlexForm.TKroot
@@ -12183,7 +12246,9 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i' % (int(x), int(y))
     master.geometry(move_string)
-
+    MyFlexForm.config_last_location = (int(x), (int(y)))
+    # print(f'setting initial locaiton = {MyFlexForm.config_last_location}')
+    MyFlexForm.starting_window_position =  (int(x), (int(y)))
     master.update_idletasks()  # don't forget
 
     return
@@ -12294,6 +12359,8 @@ def StartupTK(window):
 
         if window.modal:
             window.make_modal()
+
+        # root.bind("<Configure>", window._config_callback)
         # ----------------------------------- tkinter mainloop call -----------------------------------
         Window._window_running_mainloop = window
         Window._root_running_mainloop = window.TKroot
