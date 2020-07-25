@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.7 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), traceback shown on key errors"
+version = __version__ = "4.26.0.8 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors"
 
 port = 'PySimpleGUI'
 
@@ -407,6 +407,7 @@ MENU_KEY_SEPARATOR = '::'
 ENABLE_TK_WINDOWS = False
 
 SUPPRESS_ERROR_POPUPS = False
+SUPPRESS_RAISE_KEY_ERRORS = True
 
 ENABLE_TREEVIEW_869_PATCH = True
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
@@ -6794,14 +6795,7 @@ class ErrorElement(Element):
         :return:  returns 'self' so call can be chained
         :rtype: (ErrorElement)
         """
-        if not silent_on_error and not SUPPRESS_ERROR_POPUPS:
-            PopupError('Key error in Update',
-                       'You need to stop this madness and check your spelling',
-                       'Bad key = {}'.format(self.Key),
-                       'Your bad line of code may resemble this:',
-                       'window.FindElement("{}")'.format(self.Key),
-                       'or window["{}"]'.format(self.Key), keep_on_top=True, image=_random_error_icon()
-                       )
+        print('** Your update is being ignored because you supplied a bad key earlier **')
         return self
 
     def Get(self):
@@ -7641,14 +7635,23 @@ class Window:
             if not silent_on_error:
                 warnings.warn(
                     "*** WARNING = FindElement did not find the key. Please check your key's spelling if it's a string. key = {} ***".format(key), UserWarning)
-                trace_details = traceback.format_stack()[0]
+                trace_details = traceback.format_stack()
+                error_message = ''
+                for line in trace_details:
+                    if key in line:
+                        error_message = line
+                        break
+                error_message = '\n'.join(error_message.split(','))
                 if not SUPPRESS_ERROR_POPUPS:
                     popup_error('Key error in locating your element',
                            'Bad key = {}\n'.format(key),
-                                trace_details,
-                               line_width=len(trace_details),
+                                error_message,
+                               line_width=100,
                                keep_on_top=True, image=_random_error_icon())
-                raise KeyError(key)
+                if not SUPPRESS_RAISE_KEY_ERRORS:
+                    raise KeyError(key)
+                else:
+                    element = ErrorElement(key=key)
             else:
                 element = ErrorElement(key=key)
                 return element
@@ -8460,8 +8463,10 @@ class Window:
             return self.FindElement(key)
         except Exception as e:
             warnings.warn('The key you passed in is no good. Key = {}*'.format(key))
+            if not SUPPRESS_RAISE_KEY_ERRORS:
+                raise KeyError(key)
+        return None
 
-            raise KeyError(key)
 
     def __call__(self, *args, **kwargs):
         """
@@ -12909,7 +12914,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, enable_treeview_869_patch=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, enable_treeview_869_patch=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
@@ -12986,6 +12991,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type ttk_theme:  (str)
     :param suppress_error_popups: If True then error popups will not be shown if generated internally to PySimpleGUI
     :type suppress_error_popups:  (bool)
+    :param suppress_raise_key_errors: If True then key errors won't be raised (you'll still get popup error)
+    :type suppress_raise_key_errors:  (bool)
+    :param enable_treeview_869_patch: If True, then will use the treeview color patch for tk 8.6.9
+    :type enable_treeview_869_patch:  (bool)
     :return: None
     :rtype: None
     """
@@ -13026,6 +13035,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global USE_TTK_BUTTONS
     global TOOLTIP_FONT
     global SUPPRESS_ERROR_POPUPS
+    global SUPPRESS_RAISE_KEY_ERRORS
     global ENABLE_TREEVIEW_869_PATCH
     # global _my_windows
 
@@ -13141,6 +13151,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if suppress_error_popups is not None:
         SUPPRESS_ERROR_POPUPS = suppress_error_popups
+
+    if suppress_raise_key_errors is not None:
+        SUPPRESS_RAISE_KEY_ERRORS = suppress_raise_key_errors
 
     if enable_treeview_869_patch is not None:
         ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
