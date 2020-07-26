@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.12 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups"
+version = __version__ = "4.26.0.13 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found"
 
 port = 'PySimpleGUI'
 
@@ -8737,7 +8737,12 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
 
     if window.XFound:
         event, values = None, None
-        del Window._active_windows[window]
+        window.close()
+        try:
+            del Window._active_windows[window]
+        except:
+            pass
+            # print('Error deleting window, but OK')
     else:
         _BuildResults(window, False, window)
         event, values = window.ReturnValues
