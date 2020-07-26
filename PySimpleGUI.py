@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.11 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events"
+version = __version__ = "4.26.0.12 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups"
 
 port = 'PySimpleGUI'
 
@@ -115,6 +115,7 @@ import textwrap
 
 import inspect
 import traceback
+import difflib
 
 try:        # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
     from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
@@ -408,6 +409,7 @@ ENABLE_TK_WINDOWS = False
 
 SUPPRESS_ERROR_POPUPS = False
 SUPPRESS_RAISE_KEY_ERRORS = False
+SUPPRESS_KEY_GUESSING = False
 
 ENABLE_TREEVIEW_869_PATCH = True
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
@@ -3681,7 +3683,9 @@ class Image(Element):
 
     def Update(self, filename=None, data=None, size=(None, None), visible=None):
         """
-        Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
+        To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
+        delete the previously shown image.
         :param filename: filename to the new image to display.
         :type filename: (str)
         :param data: Base64 encoded string OR a tk.PhotoImage object
@@ -3705,8 +3709,7 @@ class Image(Element):
             except Exception as e:
                 image = data
                 # return  # an error likely means the window has closed so exit
-        else:
-            return
+
         if image is not None:
             if type(image) is not bytes:
                 width, height = size[0] or image.width(), size[1] or image.height()
@@ -3721,6 +3724,10 @@ class Image(Element):
             self.tktext_label.pack_forget()
         elif visible is True:
             self.tktext_label.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        # if everything is set to None, then delete the image
+        if filename is None and image is None and visible is None and size == (None, None):
+            self.tktext_label.image = None
+
 
     def UpdateAnimation(self, source, time_between_frames=0):
         """
@@ -7604,6 +7611,19 @@ class Window:
         FillFormWithValues(self, values_dict)
         return self
 
+
+    def _find_closest_key(self, search_key):
+        if not isinstance(search_key, str):
+            search_key = str(search_key)
+        matches = difflib.get_close_matches(search_key, [str(k) for k in self.AllKeysDict.keys()])
+        if not len(matches):
+            return None
+        for k in self.AllKeysDict.keys():
+            if matches[0] == str(k):
+                return k
+        return matches[0] if len(matches) else None
+
+
     def FindElement(self, key, silent_on_error=False):
         """
         Find element object associated with the provided key.
@@ -7636,8 +7656,9 @@ class Window:
             element = self.AllKeysDict[key]
             key_error = False
         except KeyError:
+            closest_key = self._find_closest_key(key)
             if not silent_on_error:
-                print('** Error looking up your element using the key: ', key)
+                print('** Error looking up your element using the key: ', key, 'The closest matching key: ', closest_key)
                 trace_details = traceback.format_stack()
                 error_message = ''
                 for line in trace_details:
@@ -7652,6 +7673,7 @@ class Window:
                 if not SUPPRESS_ERROR_POPUPS:
                     popup_error('Key error in locating your element',
                            'Bad key = {}\n'.format(key),
+                                'A close key was found: {}'.format(closest_key),
                                 error_message,
                                line_width=100,
                                keep_on_top=True, image=_random_error_icon())
@@ -7664,6 +7686,9 @@ class Window:
                 element = ErrorElement(key=key)
                 return element
         if key_error:
+            if closest_key is not None and not SUPPRESS_KEY_GUESSING:
+                element = self.AllKeysDict[closest_key]
+                return element
             if not SUPPRESS_RAISE_KEY_ERRORS:
                 raise KeyError(key)
         return element
@@ -7934,7 +7959,26 @@ class Window:
 
 
 
+    def _config_callback(self, event):
+        print(f'Config  event = {event} window = {self.Title}')
+        try:
+            deltax = event.x - self.TKroot.x
+            deltay = event.y - self.TKroot.y
+            x = self.TKroot.winfo_x() + deltax
+            y = self.TKroot.winfo_y() + deltay
+            self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+            # print('{},{}'.format(x,y))
 
+            if Window._move_all_windows:
+                for window in Window._active_windows:
+                    x = window.TKroot.winfo_x() + deltax
+                    y = window.TKroot.winfo_y() + deltay
+                    window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+        except Exception as e:
+            print(f'on motion error {e}', f'title = {window.Title}')
+
+
+    """
     def _config_callback(self, event):
         print(f'Config  event = {event} window = {self.Title}')
         new_x = event.x
@@ -7980,6 +8024,7 @@ class Window:
                 y = window.TKroot.winfo_y() + deltay
                 # window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
                 # window.config_last_location = (x,y)
+    """
 
     def _KeyboardCallback(self, event):
         """
@@ -12247,6 +12292,8 @@ def ConvertFlexToTK(MyFlexForm):
     move_string = '+%i+%i' % (int(x), int(y))
     master.geometry(move_string)
     MyFlexForm.config_last_location = (int(x), (int(y)))
+    MyFlexForm.TKroot.x = int(x)
+    MyFlexForm.TKroot.y = int(y)
     # print(f'setting initial locaiton = {MyFlexForm.config_last_location}')
     MyFlexForm.starting_window_position =  (int(x), (int(y)))
     master.update_idletasks()  # don't forget
@@ -12360,7 +12407,7 @@ def StartupTK(window):
         if window.modal:
             window.make_modal()
 
-        # root.bind("<Configure>", window._config_callback)
+        # window.TKroot.bind("<Configure>", window._config_callback)
         # ----------------------------------- tkinter mainloop call -----------------------------------
         Window._window_running_mainloop = window
         Window._root_running_mainloop = window.TKroot
@@ -12982,7 +13029,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, enable_treeview_869_patch=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
@@ -13061,6 +13108,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type suppress_error_popups:  (bool)
     :param suppress_raise_key_errors: If True then key errors won't be raised (you'll still get popup error)
     :type suppress_raise_key_errors:  (bool)
+    :param suppress_key_guessing: If True then key errors won't try and find closest matches for you
+    :type suppress_key_guessing:  (bool)
     :param enable_treeview_869_patch: If True, then will use the treeview color patch for tk 8.6.9
     :type enable_treeview_869_patch:  (bool)
     :return: None
@@ -13104,6 +13153,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global TOOLTIP_FONT
     global SUPPRESS_ERROR_POPUPS
     global SUPPRESS_RAISE_KEY_ERRORS
+    global SUPPRESS_KEY_GUESSING
     global ENABLE_TREEVIEW_869_PATCH
     # global _my_windows
 
@@ -13222,6 +13272,9 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if suppress_raise_key_errors is not None:
         SUPPRESS_RAISE_KEY_ERRORS = suppress_raise_key_errors
+
+    if suppress_key_guessing is not None:
+        SUPPRESS_KEY_GUESSING = suppress_key_guessing
 
     if enable_treeview_869_patch is not None:
         ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
