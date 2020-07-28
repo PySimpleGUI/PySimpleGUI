@@ -1086,6 +1086,23 @@ while True:
 window.close()
 
 ```
+--------
+
+# Recipe - Positioning Windows on a Multi-Monitor Setup (tkinter version of PySimpleGUI only)
+
+On the Windows operating system, it's possible to create your window on monitors other than your primary display.  Think of your primary display as a single quadrant in a larger space of display area.  The upper left corner of your primary display is (0,0).
+
+If you wish to locate / create a window on the monitor to the LEFT of your primary monitor, then set the X value to a **negative** value.  This causes the window to be created on the monitor to the left.  If you set your X value to be larger than the width of your primary monitor, then you window will be created on the monitor that is located to the RIGHT of your primary monitor.]
+
+I don't know if this technique works on Linux, but it's working great on Windows.  This technique has been tried on a 4-monitor setup and it worked as you would expect.
+
+To use this feature, rather than using the default window location of "centered on your primary screen", set the `location` parameter in your `Window` creation to be the location you wish the window to be created.
+
+Setting the parameter `location=(-500,330)` in my `Window` call, set the location of the window on my left hand monitor.
+
+Experimenting is the best way to get a handle on how your system responds.
+
+It would be great to know if this works on Linux and the Mac.
 
 
 ---------
