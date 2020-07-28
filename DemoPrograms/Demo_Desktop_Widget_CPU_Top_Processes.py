@@ -4,7 +4,7 @@ import psutil
 import time
 from threading import Thread
 import operator
-
+import sys
 
 """
     PSUTIL Desktop Widget
@@ -36,7 +36,7 @@ def CPU_thread(args):
             pass
 
 
-def main():
+def main(location):
     global g_interval,  g_procs, g_exit
 
     # ----------------  Create Form  ----------------
@@ -53,7 +53,7 @@ def main():
     ]
 
     window = sg.Window('Top CPU Processes', layout,
-                       no_titlebar=True, keep_on_top=True, use_default_focus=False, alpha_channel=.8, grab_anywhere=True)
+                       no_titlebar=True, keep_on_top=True,location=location, use_default_focus=False, alpha_channel=.8, grab_anywhere=True)
 
     # start cpu measurement thread
     thread = Thread(target=CPU_thread, args=(None,))
@@ -96,6 +96,10 @@ def main():
 
     window.close()
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        location = sys.argv[1].split(',')
+        location = (int(location[0]), int(location[1]))
+    else:
+        location = (None, None)
+    main(location)

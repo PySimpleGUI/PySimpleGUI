@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
 import psutil
+import sys
 
 """
     Desktop floating widget - System status dashboard
@@ -52,7 +53,7 @@ def human_size(bytes, units=(' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB')):
     return str(bytes) + units[0] if bytes < 1024 else human_size(bytes >> 10, units[1:])
 
 
-def main():
+def main(location):
     # ----------------  Create Window  ----------------
     sg.theme('Black')
     sg.set_options(element_padding=(0, 0), margins=(1, 1), border_width=0)
@@ -82,7 +83,7 @@ def main():
              keep_on_top=True,
              grab_anywhere=True, no_titlebar=True,
              return_keyboard_events=True, alpha_channel=ALPHA,
-             use_default_focus=False, finalize=True)
+             use_default_focus=False, finalize=True, location=location)
 
     # setup graphs & initial values
     netio = psutil.net_io_counters()
@@ -127,6 +128,11 @@ def main():
         mem_usage_graph.graph_percentage_abs(mem_used)
         window['_MEM_TXT_'].update('{}% Memory Used'.format(mem_used))
 
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        location = sys.argv[1].split(',')
+        location = (int(location[0]), int(location[1]))
+    else:
+        location = (None, None)
+    main(location)
 
-if __name__ == "__main__":
-    main()
