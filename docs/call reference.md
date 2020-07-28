@@ -3180,7 +3180,9 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
+To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
+delete the previously shown image.
 
 ```
 Update(filename=None,
@@ -3349,7 +3351,9 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
+To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
+delete the previously shown image.
 
 ```
 update(filename=None,
@@ -4313,6 +4317,7 @@ Multiline(default_text="",
     font=None,
     pad=None,
     tooltip=None,
+    justification=None,
     right_click_menu=None,
     visible=True,
     metadata=None)
@@ -4401,7 +4406,8 @@ Update(value=None,
     text_color_for_value=None,
     background_color_for_value=None,
     visible=None,
-    autoscroll=None)
+    autoscroll=None,
+    justification=None)
 ```
 
 Parameter Descriptions:
@@ -4489,7 +4495,8 @@ print(args=*<1 or N object>,
     end=None,
     sep=None,
     text_color=None,
-    background_color=None)
+    background_color=None,
+    justification=None)
 ```
 
 Parameter Descriptions:
@@ -4618,7 +4625,8 @@ update(value=None,
     text_color_for_value=None,
     background_color_for_value=None,
     visible=None,
-    autoscroll=None)
+    autoscroll=None,
+    justification=None)
 ```
 
 Parameter Descriptions:
@@ -5394,7 +5402,7 @@ ProgressBar(max_value,
     orientation=None,
     size=(None, None),
     auto_size_text=None,
-    bar_color=(None, None),
+    bar_color=None,
     style=None,
     border_width=None,
     relief=None,
@@ -5413,7 +5421,7 @@ Parameter Descriptions:
 |                                     str                                      |  orientation   | 'horizontal' or 'vertical' |
 |                                  (int, int)                                  |      size      | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
 |                                     bool                                     | auto_size_text | Not sure why this is here |
-|                               Tuple[str, str]                                |   bar_color    | The 2 colors that make up a progress bar. One is the background, the other is the bar |
+|                            Tuple[str, str] or str                            |   bar_color    | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
 |                                     str                                      |     style      | Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 |                                     int                                      |  border_width  | The amount of pixels that go around the outside of the bar |
 |                                     str                                      |     relief     | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF) |
@@ -5454,19 +5462,26 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
+Now has the ability to modify the count so that the update_bar method is not longer needed separately
 
 ```
-Update(visible=None)
+Update(current_count,
+    max=None,
+    visible=None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool | visible | control visibility of element |
+| int  | current_count | sets the current value |
+| int  |      max      | changes the max value |
+| bool |    visible    | control visibility of element |
+| (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
 
 ### UpdateBar
 
+DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
 Change what the bar shows by changing the current count and optionally the max count
 
 ```
@@ -5616,19 +5631,26 @@ unhide_row()
 ### update
 
 Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
+Now has the ability to modify the count so that the update_bar method is not longer needed separately
 
 ```
-update(visible=None)
+update(current_count,
+    max=None,
+    visible=None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool | visible | control visibility of element |
+| int  | current_count | sets the current value |
+| int  |      max      | changes the max value |
+| bool |    visible    | control visibility of element |
+| (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
 
 ### update_bar
 
+DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
 Change what the bar shows by changing the current count and optionally the max count
 
 ```
@@ -8688,6 +8710,7 @@ Window(title,
     ttk_theme=None,
     use_ttk_buttons=None,
     modal=False,
+    subwindow=False,
     metadata=None)
 ```
 
@@ -11153,7 +11176,8 @@ cprint(args=*<1 or N object>,
     colors=None,
     c=None,
     window=None,
-    key=None)
+    key=None,
+    justification=None)
 ```
 
 Parameter Descriptions:
@@ -11697,7 +11721,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
-|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12746,7 +12770,7 @@ Parameter Descriptions:
 |            bool             |   keep_on_top    | If True the window will remain above all current windows |
 |       Tuple[int, int]       |     location     | (x,y) Location on screen to display the upper left corner of window |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
-|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13547,6 +13571,8 @@ set_options(icon=None,
     use_ttk_buttons=None,
     ttk_theme=None,
     suppress_error_popups=None,
+    suppress_raise_key_errors=None,
+    suppress_key_guessing=None,
     enable_treeview_869_patch=None)
 ```
 
@@ -13591,6 +13617,9 @@ Parameter Descriptions:
 |                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 |                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
+|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
 | None | **RETURN** | None
 
 ### Non PEP8 version (same as PEP8 version)
@@ -13647,6 +13676,8 @@ SetOptions(icon=None,
     use_ttk_buttons=None,
     ttk_theme=None,
     suppress_error_popups=None,
+    suppress_raise_key_errors=None,
+    suppress_key_guessing=None,
     enable_treeview_869_patch=None)
 ```
 
@@ -13691,6 +13722,9 @@ Parameter Descriptions:
 |                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
 |                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
 |                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
+|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
 | None | **RETURN** | None
 
 ## The Test Harness
@@ -13872,6 +13906,7 @@ They are sorted alphabetically.  The legacy color names are mixed in, but otherw
 theme_previewer(columns=12,
     scrollable=False,
     scroll_area_size=(None, None),
+    search_string=None,
     location=(None, None))
 ```
 
@@ -13882,6 +13917,7 @@ Parameter Descriptions:
 |    int     |     columns      | The number of themes to display per row |
 |    bool    |    scrollable    | If True then scrollbars will be added |
 | (int, int) | scroll_area_size | Size of the scrollable area (The Column Element used to make scrollable) |
+|    str     |  search_string   | If specified then only themes containing this string will be shown |
 | (int, int) |     location     | Location on the screen to place the window. Defaults to the center like all windows |
 
 Sets/Returns the progress meter border width currently in use
@@ -14032,6 +14068,7 @@ They are sorted alphabetically.  The legacy color names are mixed in, but otherw
 preview_all_look_and_feel_themes(columns=12,
     scrollable=False,
     scroll_area_size=(None, None),
+    search_string=None,
     location=(None, None))
 ```
 
@@ -14042,6 +14079,7 @@ Parameter Descriptions:
 |    int     |     columns      | The number of themes to display per row |
 |    bool    |    scrollable    | If True then scrollbars will be added |
 | (int, int) | scroll_area_size | Size of the scrollable area (The Column Element used to make scrollable) |
+|    str     |  search_string   | If specified then only themes containing this string will be shown |
 | (int, int) |     location     | Location on the screen to place the window. Defaults to the center like all windows |
 
 Get a list of the valid values to pass into your call to change_look_and_feel
