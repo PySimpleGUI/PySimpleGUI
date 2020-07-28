@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
+import sys
 import psutil
 
 """
@@ -49,13 +50,13 @@ class DashGraph(object):
     def text_display(self, text):
         self.text_elem.update(text)
 
-def main():
+def main(location):
     # A couple of "User defined elements" that combine several elements and enable bulk edits
     def Txt(text, **kwargs):
         return(sg.Text(text, font=('Helvetica 8'), **kwargs))
 
     def GraphColumn(name, key):
-        return sg.Column([[Txt(name, size=(10,1), key=key+'_TXT_'), ],
+        return sg.Column([[Txt(name, size=(10,1), key=key+'_TXT_')],
                     [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black', key=key+'_GRAPH_')]], pad=(2, 2))
 
     num_cores = len(psutil.cpu_percent(percpu=True))        # get the number of cores in the CPU
@@ -74,7 +75,7 @@ def main():
         layout += [[GraphColumn('CPU '+str(rows*NUM_COLS+cols), '_CPU_'+str(rows*NUM_COLS+cols)) for cols in range(min(num_cores-rows*NUM_COLS, NUM_COLS))]]
 
     # ----------------  Create Window  ----------------
-    window = sg.Window('PSG System Dashboard', layout,
+    window = sg.Window('CPU Cores Usage Widget', layout,
                        keep_on_top=True,
                        auto_size_buttons=False,
                        grab_anywhere=True,
@@ -83,7 +84,8 @@ def main():
                        return_keyboard_events=True,
                        alpha_channel=TRANSPARENCY,
                        use_default_focus=False,
-                       finalize=True)
+                       finalize=True,
+                       location=location)
 
     # setup graphs & initial values
     graphs = [DashGraph(window['_CPU_'+str(i)+'_GRAPH_'],
@@ -107,4 +109,10 @@ def main():
     window.close()
 
 if __name__ == "__main__":
-    main()
+    # when invoking this program, if a location is set on the command line, then the window will be created there. Use x,y with no ( )
+    if len(sys.argv) > 1:
+        location = sys.argv[1].split(',')
+        location = (int(location[0]), int(location[1]))
+    else:
+        location = (None, None)
+    main(location)
