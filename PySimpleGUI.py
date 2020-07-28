@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.13 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found"
+version = __version__ = "4.26.0.14 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update"
 
 port = 'PySimpleGUI'
 
@@ -2118,7 +2118,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, focus=False, font=None, pad=None, tooltip=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, focus=False, font=None, pad=None, tooltip=None, justification=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2194,6 +2194,8 @@ class Multiline(Element):
         key = key if key is not None else k
         self.previous_stdout = self.previous_stderr = None
         self.reroute_cprint = reroute_cprint
+        self.Justification = 'left' if justification is None else justification
+        self.justification_tag = self.just_center_tag = self.just_left_tag = self.just_right_tag = None
         if reroute_stdout:
             self.reroute_stdout_to_here()
         if reroute_stderr:
@@ -2204,7 +2206,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None):
+    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None, justification=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to display
@@ -2231,6 +2233,18 @@ class Multiline(Element):
         if autoscroll is not None:
             self.Autoscroll = autoscroll
 
+        if justification is not None:
+            if justification.startswith('l'):
+                just_tag = 'left'
+            if justification.startswith('r'):
+                just_tag = 'right'
+            if justification.startswith('c'):
+                just_tag = 'center'
+        else:
+            just_tag = self.justification_tag
+
+        starting_point = self.Widget.index(tk.INSERT)
+        tag = None
         if value is not None:
             value = str(value)
             if background_color_for_value is not None or text_color_for_value is not None:
@@ -2243,23 +2257,25 @@ class Multiline(Element):
                     if text_color_for_value is not None:
                         self.TKText.tag_configure(tag, foreground=text_color_for_value)
                 except Exception as e:
-                    print('* Multiline.update - bad color likely specified')
-            else:
-                tag = None
+                    print(f'* Multiline.update - bad color likely specified: {e}')
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
                 if not append:
                     self.TKText.delete('1.0', tk.END)
-                if tag is not None:
-                    self.TKText.insert(tk.END, value, tag)
+                if tag is not None or just_tag is not None:
+                    self.TKText.insert(tk.END, value, (just_tag, tag))
                 else:
                     self.TKText.insert(tk.END, value)
-            except:
-                pass
+
+                # self.TKText.tag_add(just_tag, starting_point, starting_point)
+
+            except Exception as e:
+                print(f'* Error setting multiline {e}')
             if self.Disabled:
                 self.TKText.configure(state='disabled')
             self.DefaultText = value
+
         if self.Autoscroll:
             self.TKText.see(tk.END)
         if disabled is True:
@@ -2297,7 +2313,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None):
         """
         Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -2312,7 +2328,7 @@ class Multiline(Element):
         :param background_color: The background color of the line
         :type background_color: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color )
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, justification=justification )
 
 
     def reroute_stdout_to_here(self):
@@ -11423,6 +11439,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKText.config(highlightthickness=0)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(background=element.BackgroundColor)
+
+                element.TKText.tag_configure("center", justify='center')
+                element.TKText.tag_configure("left", justify='left')
+                element.TKText.tag_configure("right", justify='right')
+
+                if element.Justification.startswith('l'):
+                    element.TKText.tag_add("left", 1.0, "end")
+                    element.justification_tag = 'left'
+                elif element.Justification.startswith('r'):
+                    element.TKText.tag_add("right", 1.0, "end")
+                    element.justification_tag = 'right'
+                elif element.Justification.startswith('c'):
+                    element.TKText.tag_add("center", 1.0, "end")
+                    element.justification_tag = 'center'
                 # if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):               # only works on Linux so not including it
                 #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
@@ -12871,7 +12901,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 # def cprint(*args, **kwargs):
-def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None):
+def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -12953,10 +12983,10 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     try:
         # mline = destination_window[destination_key]     # type: Multiline
         if end is None:
-            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep)
-            mline.print('')
+            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification)
+            mline.print('', justification=justification)
         else:
-            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep)
+            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification)
     except Exception as e:
         print('** cprint error trying to print to the multiline. Printing to console instead **', e)
         print(*args, end=end, sep=sep)
@@ -12966,7 +12996,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None):
     """
     Print like Python normally prints except route the output to a multline element and also add colors if desired
 
@@ -12996,7 +13026,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
             outstring += sep_str
     outstring += end_str
 
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll)
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll, justification=justification)
 
     try:        # if the element is set to autorefresh, then refresh the parent window
         if multiline_element.AutoRefresh:
