@@ -1,4 +1,5 @@
 import PySimpleGUI as sg
+# import PySimpleGUIQt as sg
 
 """
     Demo - Multiple layouts in a single window that are swapped in and out
@@ -20,7 +21,7 @@ layout2 = [[sg.Text('This is layout 2')],
            [sg.Input(key='-IN2-')]]
 
 layout3 = [[sg.Text('This is layout 3 - It is all Radio Buttons')],
-           *[[sg.R(f'Radio {i}', 1)] for i in range(8)]]
+           *[[sg.Radio(f'Radio {i}', 1)] for i in range(8)]]
 
 # ----------- Create actual layout using Columns and a row of Buttons
 layout = [[sg.Column(layout1, key='-COL1-'), sg.Column(layout2, visible=False, key='-COL2-'), sg.Column(layout3, visible=False, key='-COL3-')],
