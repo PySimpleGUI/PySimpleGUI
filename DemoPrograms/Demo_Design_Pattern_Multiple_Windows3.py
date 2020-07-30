@@ -4,51 +4,52 @@ import PySimpleGUI as sg
     Example of wizard-like PySimpleGUI windows
 '''
 
-layout = [[sg.Text('Window 1'), ],
-          [sg.Input()],
-          [sg.Text('',size=(20,1),  key='-OUTPUT-')],
-          [sg.Button('Next >'), sg.Button('Exit')]]
+def make_window1():
+    layout = [[sg.Text('Window 1'), ],
+              [sg.Input(k='-IN-', enable_events=True)],
+              [sg.Text(size=(20,1),  k='-OUTPUT-')],
+              [sg.Button('Next >'), sg.Button('Exit')]]
 
-window = sg.Window('Window 1', layout)
+    return sg.Window('Window 1', layout, finalize=True)
 
-window3_active = window2_active = False
+
+def make_window2():
+    layout = [[sg.Text('Window 2')],
+               [sg.Button('< Prev'), sg.Button('Next >')]]
+
+    return sg.Window('Window 2', layout, finalize=True)
+
+
+def make_window3():
+    layout = [[sg.Text('Window 3')],
+               [sg.Button('< Prev'), sg.Button('Exit')]]
+    return sg.Window('Window 3', layout, finalize=True)
+
+
+
+window1, window2, window3 = make_window1(), None, None
+
 while True:
-    if not window2_active:
-        event1, values1 = window.read()
-        if event1 is None or event1 == 'Exit':
-            break
-        window['-OUTPUT-'].update(values1[0])
+    window, event, values = sg.read_all_windows()
+    if window == window1 and event in (sg.WIN_CLOSED, 'Exit'):
+        break
 
-    if not window2_active and event1 == 'Next >':
-        window2_active = True
-        window.hide()
-        layout2 = [[sg.Text('Window 2')],
-                   [sg.Button('< Prev'), sg.Button('Next >')]]
+    if window == window1:
+        if event == 'Next >':
+            window1.hide()
+            window2 = make_window2()
+        window1['-OUTPUT-'].update(values['-IN-'])
 
-        window2 = sg.Window('Window 2', layout2)
-
-    if window2_active:
-        event2 = window2.read()[0]
-        if event2 in (sg.WIN_CLOSED, 'Exit', '< Prev'):
-            window2_active = False
-            window2.close()
-            window.un_hide()
-        elif event2 == 'Next >':
-            window3_active = True
-            window2_active = False
+    if window == window2:
+        if event == 'Next >':
             window2.hide()
-            layout3 = [[sg.Text('Window 3')],
-                       [sg.Button('< Prev'), sg.Button('Exit')]]
-            window3 = sg.Window('Window 3', layout3)
+            window3 = make_window3()
+        elif event in (sg.WIN_CLOSED, '< Prev'):
+            window2.close()
+            window1.un_hide()
 
-    if window3_active:
-        ev3, vals3 = window3.read()
-        if ev3 == '< Prev':
-            window3.close()
-            window3_active = False
-            window2_active = True
-            window2.un_hide()
-        elif ev3 in (sg.WIN_CLOSED, 'Exit'):
-            break
+    if window == window3:
+        window3.close()
+        window2.un_hide()
 
 window.close()

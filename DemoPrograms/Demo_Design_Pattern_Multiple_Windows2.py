@@ -1,38 +1,52 @@
 import PySimpleGUI as sg
 
 """
-    PySimpleGUI The Complete Course
-    Lesson 7
-    Multiple Independent Windows
+    Multiple Window Design Pattern
+    
+    Two windows - both remain active
+    Window 1 launches Window 2
+    Window 1 remains visible and active while Window 2 is active
+    Closing Window 1 exits application
+    
 """
-# Design pattern 2 - First window remains active
 
-layout = [[ sg.Text('Window 1'),],
-          [sg.Input()],
-          [sg.Text('', size=(20,1), key='-OUTPUT-')],
-          [sg.Button('Launch 2'), sg.Button('Exit')]]
 
-window1 = sg.Window('Window 1', layout)
+def make_window1():
+    layout = [[ sg.Text('Window 1'),],
+              [sg.Input(enable_events=True, k='-IN-')],
+              [sg.Text(size=(20,1), k='-OUTPUT-')],
+              [sg.Button('Launch 2'), sg.Button('Exit')]]
 
-window2_active = False
+    return sg.Window('Window 1', layout, finalize=True)
 
-while True:
-    event1, values1 = window1.read(timeout=100)
-    window1['-OUTPUT-'].update(values1[0])
-    if event1 is None or event1 == 'Exit':
-        break
 
-    if not window2_active and event1 == 'Launch 2':
-        window2_active = True
-        layout2 = [[sg.Text('Window 2')],
-                   [sg.Button('Exit')]]
+def make_window2():
+    layout = [[sg.Text('Window 2')],
+              [sg.Button('Exit')]]
 
-        window2 = sg.Window('Window 2', layout2)
+    return sg.Window('Window 2', layout, finalize=True)
 
-    if window2_active:
-        ev2, vals2 = window2.read(timeout=100)
-        if ev2 is None or ev2 == 'Exit':
-            window2_active  = False
+
+def main():
+    window1, window2 = make_window1(), None
+    while True:
+        window, event, values = sg.read_all_windows()
+        if window == window1 and event in (sg.WIN_CLOSED, 'Exit'):
+            break
+        # Window 1 stuff
+        if event == '-IN-':
+            window['-OUTPUT-'].update(values['-IN-'])
+        elif event == 'Launch 2' and not window2:
+            window2 = make_window2()
+
+        # Window 2 stuff
+        if window == window2 and event in(sg.WIN_CLOSED, 'Exit'):
             window2.close()
+            window2 = None
 
-window1.close()
+    window1.close()
+    window2.close()
+
+
+if __name__ == '__main__':
+    main()
