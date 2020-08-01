@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.15 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events"
+version = __version__ = "4.26.0.16 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events"
 
 port = 'PySimpleGUI'
 
@@ -8068,10 +8068,11 @@ class Window:
         """
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
-        self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
+        self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 or event.num == 5 else 'MouseWheel:Up'
         # if not self.NonBlocking:
         #     _BuildResults(self, False, self)
         _exit_mainloop(self)
+
 
     def _Close(self):
         """
