@@ -245,7 +245,7 @@ def _timeit_summary(func):
 
     I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
 """
-
+get_globals = lambda: globals()
 # ----====----====----==== Constants the user CAN safely change ====----====----====----#
 
 # Base64 encoded GIF file
@@ -17390,5 +17390,4 @@ if __name__ == '__main__':
         exit(0)
     main()
     exit(0)
-
 
