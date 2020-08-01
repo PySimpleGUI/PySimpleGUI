@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.16 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events"
+version = __version__ = "4.26.0.17 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events, added get_globals"
 
 port = 'PySimpleGUI'
 
@@ -10774,7 +10774,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if element_type == ELEM_TYPE_COLUMN:
                 element = element  # type: Column
                 if element.Scrollable:
-                    element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
+                    element.Widget = element.TKColFrame = TkScrollableFrame(tk_row_frame, element.VerticalScrollOnly)  # do not use yet!  not working
                     PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
@@ -10796,7 +10796,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                   highlightthickness=0)
                 else:
                     if element.Size != (None, None):
-                        element.TKColFrame = TkFixedFrame(tk_row_frame)
+                        element.Widget = element.TKColFrame = TkFixedFrame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame.TKFrame, toplevel_form)
                         element.TKColFrame.TKFrame.update()
                         if None not in (element.Size[0], element.Size[1]):
@@ -10810,7 +10810,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             element.TKColFrame.TKFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                               highlightthickness=0)
                     else:
-                        element.TKColFrame = tk.Frame(tk_row_frame)
+                        element.Widget = element.TKColFrame = tk.Frame(tk_row_frame)
                         PackFormIntoFrame(element, element.TKColFrame, toplevel_form)
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
@@ -13314,6 +13314,20 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
         ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
 
     return True
+
+
+
+def get_globals():
+    """
+    Returns the dictionary of the global variables
+
+    :return: the gobals dictionary
+    :rtype: Dict[str, Any]
+    """
+
+    return globals()
+
+
 
 # ----------------------------------------------------------------- #
 
