@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.14 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update"
+version = __version__ = "4.26.0.15 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events"
 
 port = 'PySimpleGUI'
 
@@ -771,9 +771,6 @@ class Element():
         else:
             self.ParentForm.LastButtonClicked = alternative_to_key
         self.ParentForm.FormRemainedOpen = True
-        # fill in everything except for the values
-        if self.ParentForm.subwindow:
-            self.ParentForm.multi_window_return_values_queue.put(item=(self.ParentForm, self.ParentForm.LastButtonClicked, None))
 
         _exit_mainloop(self.ParentForm)
         # if self.ParentForm.CurrentlyRunningMainloop:
@@ -6875,7 +6872,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, subwindow=False, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -7031,7 +7028,6 @@ class Window:
         self.thread_queue = None        # type: queue.Queue
         self.thread_strvar  = None      # type: tk.StringVar
         self.read_closed_window_count = 0
-        self.subwindow = subwindow
         self.config_last_size = (None, None)
         self.config_last_location = (None, None)
         self.starting_window_position = (None, None)
@@ -7687,9 +7683,11 @@ class Window:
                         error_message = error_parts[0]+'\n'+error_parts[1]+ '\n' + ''.join(error_parts[2:])
 
                 if not SUPPRESS_ERROR_POPUPS:
+                    key_message = 'A close key was found: {}'.format(closest_key) if closest_key is not None else 'No key found that resembles your key'
+
                     popup_error('Key error in locating your element',
                            'Bad key = {}\n'.format(key),
-                                'A close key was found: {}'.format(closest_key),
+                                key_message,
                                 error_message,
                                line_width=100,
                                keep_on_top=True, image=_random_error_icon())
@@ -8056,10 +8054,8 @@ class Window:
             self.LastKeyboardEvent = event.char
         else:
             self.LastKeyboardEvent = str(event.keysym) + ':' + str(event.keycode)
-        if not self.NonBlocking:
-            _BuildResults(self, False, self)
-        # if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
-        #     self.TKroot.quit()
+        # if not self.NonBlocking:
+        #     _BuildResults(self, False, self)
         _exit_mainloop(self)
 
     def _MouseWheelCallback(self, event):
@@ -8073,10 +8069,8 @@ class Window:
         self.LastButtonClicked = None
         self.FormRemainedOpen = True
         self.LastKeyboardEvent = 'MouseWheel:Down' if event.delta < 0 else 'MouseWheel:Up'
-        if not self.NonBlocking:
-            _BuildResults(self, False, self)
-        # if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
-        #     self.TKroot.quit()
+        # if not self.NonBlocking:
+        #     _BuildResults(self, False, self)
         _exit_mainloop(self)
 
     def _Close(self):
@@ -12420,9 +12414,13 @@ def StartupTK(window):
     if window.ReturnKeyboardEvents and not window.NonBlocking:
         root.bind("<KeyRelease>", window._KeyboardCallback)
         root.bind("<MouseWheel>", window._MouseWheelCallback)
+        root.bind("<Button-4>", window._MouseWheelCallback)
+        root.bind("<Button-5>", window._MouseWheelCallback)
     elif window.ReturnKeyboardEvents:
         root.bind("<Key>", window._KeyboardCallback)
         root.bind("<MouseWheel>", window._MouseWheelCallback)
+        root.bind("<Button-4>", window._MouseWheelCallback)
+        root.bind("<Button-5>", window._MouseWheelCallback)
 
     if window.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
@@ -15827,7 +15825,6 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
                                                      initialdir=initial_folder,
                                                      initialfile=default_path,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
-
         root.destroy()
         if Window.NumOpenWindows == 1:
             Window.NumOpenWindows = 0
