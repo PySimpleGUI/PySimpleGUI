@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.17 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events, added get_globals"
+version = __version__ = "4.26.0.18 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events, added get_globals, support for timeout=0 on read_all_windows"
 
 port = 'PySimpleGUI'
 
@@ -6860,6 +6860,7 @@ class Window:
     _window_running_mainloop = None     # The window that is running the mainloop
     _container_element_counter = 0  # used to get a number of Container Elements (Frame, Column, Tab)
     _read_call_from_debugger = False
+    _timeout_0_counter = 0              # when timeout=0 then go through each window one at a time
 
     multi_window_return_values_queue = queue.Queue()  # A queue with return values in case multi-window environment (window, event, values)
 
@@ -8717,8 +8718,23 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
     if len(Window._active_windows) == 0:
         return None, WIN_CLOSED, None
 
+
     Window._root_running_mainloop = Window.hidden_master_root
     Window._timeout_key = timeout_key
+
+    if timeout == 0:
+        window = list(Window._active_windows.keys())[Window._timeout_0_counter]
+        event, values = window._ReadNonBlocking()
+        if event is None:
+            event = timeout_key
+        if values is None:
+            event = None
+        Window._timeout_0_counter = (Window._timeout_0_counter +1 ) % len(Window._active_windows)
+        return window, event, values
+
+    Window._timeout_0_counter = 0           # reset value if not reading with timeout 0 so ready next time needed
+
+
     # setup timeout timer
     if timeout != None:
         try:
