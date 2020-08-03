@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4.3 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly"
+version = __version__ = "4.27.4.4 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly, added border_width to Canvas & Graph elems"
 
 port = 'PySimpleGUI'
 
@@ -3873,7 +3873,7 @@ class Image(Element):
 class Canvas(Element):
 
     def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, metadata=None):
+                 right_click_menu=None, visible=True, border_width=0, metadata=None):
         """
         :param canvas: Your own tk.Canvas if you already created it. Leave blank to create a Canvas
         :type canvas: (tk.Canvas)
@@ -3893,6 +3893,8 @@ class Canvas(Element):
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param visible: set visibility state of the element
         :type visible: (bool)
+        :param border_width: width of border around element in pixels. Not normally used with Canvas element
+        :type border_width: (int)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -3900,6 +3902,7 @@ class Canvas(Element):
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
         self.RightClickMenu = right_click_menu
+        self.BorderWidth = border_width
         key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
@@ -3942,7 +3945,7 @@ class Graph(Element):
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, float_values=False, metadata=None):
+                 right_click_menu=None, visible=True, float_values=False, border_width=0, metadata=None):
         """
         :param canvas_size: size of the canvas area in pixels
         :type canvas_size: Tuple[int, int]
@@ -3972,6 +3975,8 @@ class Graph(Element):
         :type visible: (bool)
         :param float_values: If True x,y coordinates are returned as floats, not ints
         :type float_values: (bool)
+        :param border_width: width of border around element in pixels. Not normally used for Graph Elements
+        :type border_width: (int)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -3988,6 +3993,7 @@ class Graph(Element):
         self.Images = {}
         self.RightClickMenu = right_click_menu
         self.FloatValues = float_values
+        self.BorderWidth = border_width
         key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
@@ -11714,6 +11720,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
                 # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
+                element = element  # type: Canvas
                 width, height = element_size
                 if element._TKCanvas is None:
                     element._TKCanvas = element.Widget = tk.Canvas(tk_row_frame, width=width, height=height,
