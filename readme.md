@@ -7629,6 +7629,51 @@ k element parameter
 * Window.write_event_values - now requires both parms
 * Upgrade button typo
 
+## 4.27.1 PySimpleGUI 3-Aug-2020
+
+Multi-window support done right!
+New capabilities for printing, Multiline
+Main app additions
+Theme searching
+
+* read_all_windows - function that reads all currently open windows.
+	* Finally the efficient multi-window solution
+	* No longer need to do round-robin type scheduling
+	* Easily convert existing programs from single to multi-windows
+	* Demo programs with multi-window design patterns all updated
+	* Ideal for "floating palette / toolbar" window adds-ons
+	* Can read with timeout including timeout=0
+* theme_previewer
+	* search option
+	* button in main app
+	* reset to previous theme following preview
+* Sponsor button in main app
+* Theme previewer in main app
+* Progress bar 
+	* colors can use the single string "foreground on background" color format
+	* update_bar combined with update for a single update interface
+* Better element key error handling
+	* 3 options to control how lookup errors are handled
+	* popup now shows
+		* file, function, line #, actual line of code with error
+		* erroneous key provided
+		* best matching key
+	* will automatically try to continue with best matching key
+	* can assert with key error if desired (true by default)
+* fix for get item
+* Up/down arrow bindings for spinner if enabling events
+* Multiline 
+	* new justification parameter on creation and update
+	* print - justification parameter added
+* cprint - justification parameter added - note tricky to set color of single word but possible	
+* Added mousewheel for Linux return_keyboard_events enabled
+* Added get_globals function for extending easier
+* Refactored callbacks
+* Image element - can clear image by not setting any parameters when calling update
+* Column Element's Widget member variable now being set
+* Window's starting window location saved
+* Early experimental "Move all windows in sync" when using grab_anywhere (coming soon)
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
