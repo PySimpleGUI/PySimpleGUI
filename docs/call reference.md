@@ -4350,6 +4350,7 @@ Parameter Descriptions:
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                     str                                      |  justification   | text justification. left, right, center. Can use single characters l, r, c. |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -4422,6 +4423,7 @@ Parameter Descriptions:
 |             str             | background_color | color of background |
 |            bool             |     visible      | set visibility state of the element |
 |            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
+|             str             |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ### bind
 
@@ -4508,14 +4510,39 @@ Parameter Descriptions:
 | str |       sep        | The separation character like print uses |
 | str |    text_color    | The color of the text |
 | str | background_color | The background color of the line |
+| str |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ### reroute_stderr_to_here
 
+Sends stderr to this element
+
+```python
+reroute_stderr_to_here()
+```
+
 ### reroute_stdout_to_here
+
+Sends stdout (prints) to this element
+
+```python
+reroute_stdout_to_here()
+```
 
 ### restore_stderr
 
+Restore a previously re-reouted stderr back to the original destination
+
+```python
+restore_stderr()
+```
+
 ### restore_stdout
+
+Restore a previously re-reouted stdout back to the original destination
+
+```python
+restore_stdout()
+```
 
 ### set_cursor
 
@@ -4641,6 +4668,7 @@ Parameter Descriptions:
 |             str             | background_color | color of background |
 |            bool             |     visible      | set visibility state of the element |
 |            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
+|             str             |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ## OptionMenu Element 
 
@@ -8710,7 +8738,6 @@ Window(title,
     ttk_theme=None,
     use_ttk_buttons=None,
     modal=False,
-    subwindow=False,
     metadata=None)
 ```
 
@@ -9913,6 +9940,23 @@ Parameter Descriptions:
 ## Function Reference
 
 These are the functions available for you to call
+
+## Multi-window Interface
+
+Reads a list of windows.  If any of the list returns a value then the window and its event and values
+are returned.
+
+```
+read_all_windows(timeout=None, timeout_key="__TIMEOUT__")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int |   timeout   | Time in milliseconds to delay before a returning a timeout event |
+| Any | timeout_key | Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY |
+| Tuple[Window, Any, (Dict or List)] | **RETURN** | A tuple with the  (Window, event, values dictionary/list)
 
 ## Button Related
 
@@ -11194,7 +11238,7 @@ Parameter Descriptions:
 |           str           |       end        | end character |
 |           str           |       sep        | separator character |
 |           Any           |       key        | key of multiline to output to (if you want to override the one previously set) |
-|         Window          |      window      | Window containing the multiline to output to (if you want to override the one previously set) |
+|           str           |      window      | Window containing the multiline to output to (if you want to override the one previously set) :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 | None | **RETURN** | None
 
 Sets up the color print (cprint) output destination
@@ -13517,111 +13561,6 @@ Parameter Descriptions:
 | Any | obj | The object to display |
 | (str) | **RETURN** | Formatted output of the object's values
 
-## Settings 
-
-Sets the icon which will be used any time a window is created if an icon is not provided when the
-window is created.
-
-```
-set_global_icon(icon)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Union[bytes, str] | icon | Either a Base64 byte string or a filename |
-| None | **RETURN** | None
-
-```
-set_options(icon=None,
-    button_color=None,
-    element_size=(None, None),
-    button_element_size=(None, None),
-    margins=(None, None),
-    element_padding=(None, None),
-    auto_size_text=None,
-    auto_size_buttons=None,
-    font=None,
-    border_width=None,
-    slider_border_width=None,
-    slider_relief=None,
-    slider_orientation=None,
-    autoclose_time=None,
-    message_box_line_width=None,
-    progress_meter_border_depth=None,
-    progress_meter_style=None,
-    progress_meter_relief=None,
-    progress_meter_color=None,
-    progress_meter_size=None,
-    text_justification=None,
-    background_color=None,
-    element_background_color=None,
-    text_element_background_color=None,
-    input_elements_background_color=None,
-    input_text_color=None,
-    scrollbar_color=None,
-    text_color=None,
-    element_text_color=None,
-    debug_win_size=(None, None),
-    window_location=(None, None),
-    error_button_color=(None, None),
-    tooltip_time=None,
-    tooltip_font=None,
-    use_ttk_buttons=None,
-    ttk_theme=None,
-    suppress_error_popups=None,
-    suppress_raise_key_errors=None,
-    suppress_key_guessing=None,
-    enable_treeview_869_patch=None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
-|             Tuple[str, str] or str             |          button_color           | Color of the button (text, background) |
-|                   (int, int)                   |          element_size           | element size (width, height) in characters |
-|                   (int, int)                   |       button_element_size       | Size of button |
-|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
-|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
-|                      int                       |          border_width           | width of border around element |
-|                      ???                       |       slider_border_width       | ??? |
-|                      ???                       |          slider_relief          | ??? |
-|                      ???                       |       slider_orientation        | ??? |
-|                      ???                       |         autoclose_time          | ??? |
-|                      ???                       |     message_box_line_width      | ??? |
-|                      ???                       |   progress_meter_border_depth   | ??? |
-|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                      ???                       |      progress_meter_relief      |  |
-|                      ???                       |      progress_meter_color       | ??? |
-|                      ???                       |       progress_meter_size       | ??? |
-|        Union['left', 'right', 'center']        |       text_justification        | Default text justification for all Text Elements in window |
-|                      str                       |        background_color         | color of background |
-|                      str                       |    element_background_color     | element background color |
-|                      str                       |  text_element_background_color  | text element background color |
-|                 idk_yetReally                  | input_elements_background_color | ??? |
-|                      ???                       |        input_text_color         | ??? |
-|                      ???                       |         scrollbar_color         | ??? |
-|                      str                       |           text_color            | color of the text |
-|                      ???                       |       element_text_color        | ??? |
-|                Tuple[int, int]                 |         debug_win_size          | window size |
-|                      ???                       |         window_location         | (Default = (None)) |
-|                      ???                       |       error_button_color        | (Default = (None)) |
-|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
-| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
-|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
-|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
-|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
-|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
-|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
-| None | **RETURN** | None
-
 ### Non PEP8 version (same as PEP8 version)
 
 Sets the icon which will be used any time a window is created if an icon is not provided when the
@@ -14020,6 +13959,123 @@ Parameter Descriptions:
 |--|--|--|
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
+| None | **RETURN** | None
+
+## Configuration / Settings / Extensions
+
+Returns the dictionary of the global variables
+
+```
+get_globals()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Dict[str, Any] | **RETURN** | the gobals dictionary
+
+Sets the icon which will be used any time a window is created if an icon is not provided when the
+window is created.
+
+```
+set_global_icon(icon)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[bytes, str] | icon | Either a Base64 byte string or a filename |
+| None | **RETURN** | None
+
+```
+set_options(icon=None,
+    button_color=None,
+    element_size=(None, None),
+    button_element_size=(None, None),
+    margins=(None, None),
+    element_padding=(None, None),
+    auto_size_text=None,
+    auto_size_buttons=None,
+    font=None,
+    border_width=None,
+    slider_border_width=None,
+    slider_relief=None,
+    slider_orientation=None,
+    autoclose_time=None,
+    message_box_line_width=None,
+    progress_meter_border_depth=None,
+    progress_meter_style=None,
+    progress_meter_relief=None,
+    progress_meter_color=None,
+    progress_meter_size=None,
+    text_justification=None,
+    background_color=None,
+    element_background_color=None,
+    text_element_background_color=None,
+    input_elements_background_color=None,
+    input_text_color=None,
+    scrollbar_color=None,
+    text_color=None,
+    element_text_color=None,
+    debug_win_size=(None, None),
+    window_location=(None, None),
+    error_button_color=(None, None),
+    tooltip_time=None,
+    tooltip_font=None,
+    use_ttk_buttons=None,
+    ttk_theme=None,
+    suppress_error_popups=None,
+    suppress_raise_key_errors=None,
+    suppress_key_guessing=None,
+    enable_treeview_869_patch=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|               Union[bytes, str]                |              icon               | filename or base64 string to be used for the window's icon |
+|             Tuple[str, str] or str             |          button_color           | Color of the button (text, background) |
+|                   (int, int)                   |          element_size           | element size (width, height) in characters |
+|                   (int, int)                   |       button_element_size       | Size of button |
+|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
+|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|          Union[str, Tuple[str, int]]           |              font               | specifies the font family, size, etc |
+|                      int                       |          border_width           | width of border around element |
+|                      ???                       |       slider_border_width       | ??? |
+|                      ???                       |          slider_relief          | ??? |
+|                      ???                       |       slider_orientation        | ??? |
+|                      ???                       |         autoclose_time          | ??? |
+|                      ???                       |     message_box_line_width      | ??? |
+|                      ???                       |   progress_meter_border_depth   | ??? |
+|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      ???                       |      progress_meter_relief      |  |
+|                      ???                       |      progress_meter_color       | ??? |
+|                      ???                       |       progress_meter_size       | ??? |
+|        Union['left', 'right', 'center']        |       text_justification        | Default text justification for all Text Elements in window |
+|                      str                       |        background_color         | color of background |
+|                      str                       |    element_background_color     | element background color |
+|                      str                       |  text_element_background_color  | text element background color |
+|                 idk_yetReally                  | input_elements_background_color | ??? |
+|                      ???                       |        input_text_color         | ??? |
+|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       |           text_color            | color of the text |
+|                      ???                       |       element_text_color        | ??? |
+|                Tuple[int, int]                 |         debug_win_size          | window size |
+|                      ???                       |         window_location         | (Default = (None)) |
+|                      ???                       |       error_button_color        | (Default = (None)) |
+|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
+| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
+|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
+|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
+|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.26.0.18 Unreleased\nNew Sponsor button, highly experimental read_all_windows(), search option for theme previewer, theme button in main, progress bar color can use new 'on' format, combined ProgressBar.update_bar with ProgressBar.update so now only update is needed, theme previewer restore previous theme, raise KeyError when find_element or window[] hits a bad key (unless find_element has silent error set), better traceback shown on key errors, fix for get item, formatting of error location information. raise key error by default, added up / down arrow bindings for spinner if enabling events, key guessing attempt for bad lookups, read_all_windows - close window when X found, new Multiline Justification parameter for both creation and update, fix for return keyboard/mouse events when reading all windows, added mousewheel for linux for return_keyboard_events, added get_globals, support for timeout=0 on read_all_windows"
+version = __version__ = "4.27.1 Released 3-Aug-2020"
 
 port = 'PySimpleGUI'
 
@@ -2164,6 +2164,8 @@ class Multiline(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param justification: text justification. left, right, center. Can use single characters l, r, c.
+        :type justification: (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
         :param visible: set visibility state of the element
@@ -2222,6 +2224,8 @@ class Multiline(Element):
         :type visible: (bool)
         :param autoscroll: if True then contents of element are scrolled down when new text is added to the end
         :type autoscroll: (bool)
+        :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
+        :type justification: (str)
         """
 
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
@@ -2324,27 +2328,41 @@ class Multiline(Element):
         :type text_color: (str)
         :param background_color: The background color of the line
         :type background_color: (str)
+        :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
+        :type justification: (str)
         """
         _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, justification=justification )
 
 
     def reroute_stdout_to_here(self):
+        """
+        Sends stdout (prints) to this element
+        """
         self.previous_stdout = sys.stdout
         sys.stdout = self
 
 
     def reroute_stderr_to_here(self):
+        """
+        Sends stderr to this element
+        """
         self.previous_stderr = sys.stderr
         sys.stderr = self
 
     def restore_stdout(self):
+        """
+        Restore a previously re-reouted stdout back to the original destination
+        """
         if self.previous_stdout:
            sys.stdout = self.previous_stdout
 
 
     def restore_stderr(self):
-       if self.previous_stderr:
-           sys.stderr = self.previous_stderr
+        """
+        Restore a previously re-reouted stderr back to the original destination
+        """
+        if self.previous_stderr:
+            sys.stderr = self.previous_stderr
 
 
     def write(self, txt):
@@ -10229,10 +10247,6 @@ def _BuildResults(form, initialize_only, top_level_form):
     _BuildResultsForSubform(form, initialize_only, top_level_form)
     if not top_level_form.LastButtonClickedWasRealtime:
         top_level_form.LastButtonClicked = None
-    # print(f'Built results = {form.ReturnValues}')
-    curframe = inspect.currentframe()
-    calframe = inspect.getouterframes(curframe, 2)
-    # print('caller name:', calframe[1][3])
     return form.ReturnValues
 
 
@@ -12915,7 +12929,6 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 
-# def cprint(*args, **kwargs):
 def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None):
     """
     Color print to a multiline element in a window of your choice.
@@ -12966,6 +12979,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     :param key: key of multiline to output to (if you want to override the one previously set)
     :type key: (Any)
     :param window: Window containing the multiline to output to (if you want to override the one previously set)
+    :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
+    :type justification: (str)
     :type window: (Window)
     :return: None
     :rtype: None
