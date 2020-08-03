@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4 Released 3-Aug-2020"
+version = __version__ = "4.27.4.1 Unreleased\nAdded setting of combobox button color to be theme's button color"
 
 port = 'PySimpleGUI'
 
@@ -11338,6 +11338,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     combostyle.configure(style_name, selectbackground=element.BackgroundColor)
                     combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
                     combostyle.configure(style_name, selectforeground=element.TextColor)
+
+                    try:
+                        combostyle.configure(style_name, arrowcolor=theme_button_color()[0])
+                        combostyle.configure(style_name, background=theme_button_color()[1])
+                    except Exception as e:
+                        print('* Problem setting combobox button color *', e)
 
                 # Strange code that is needed to set the font for the drop-down list
                 element._newfont = tkinter.font.Font(font=font)
