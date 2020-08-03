@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4.5 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly, added border_width to Canvas & Graph elems, added pin function to pin an element's location in a layout"
+version = __version__ = "4.28.0 Released 3-Aug-2020"
 
 port = 'PySimpleGUI'
 

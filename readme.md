@@ -7675,6 +7675,21 @@ Theme searching
 * Early experimental "Move all windows in sync" when using grab_anywhere (coming soon)
 * Fix for 3.4 (can't use f-strings)
 
+## 4.28.0 PySimpleGUI 3-Aug-2020
+
+Element pinning for invisibility!
+
+* Better visible/invisible handling
+	* pin - new function to place an element in a layout that will hold its position
+	* border_width added to Canvas and Graph (so that they will default to 0)
+* Combobox
+	* button color will match theme's button color
+	* background color set correctly when readonly indicated
+* Spin element
+	* spin button color set to background color of spinner
+	* spin arrow color automatically set to text color
+* Bad element key popup - fix for displaying correct line info in some situations
+
 ### Upcoming
 
 There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
