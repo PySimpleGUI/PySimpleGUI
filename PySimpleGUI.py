@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4.1 Unreleased\nAdded setting of combobox button color to be theme's button color"
+version = __version__ = "4.27.4.2 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!)"
 
 port = 'PySimpleGUI'
 
@@ -7692,8 +7692,9 @@ class Window:
                 print('** Error looking up your element using the key: ', key, 'The closest matching key: ', closest_key)
                 trace_details = traceback.format_stack()
                 error_message = ''
-                for line in trace_details:
-                    if str(key).replace(' ','') in str(line).replace(' ', ''):
+                file_info_pysimplegui = trace_details[-1].split(",")[0]
+                for line in reversed(trace_details):
+                    if line.split(",")[0] != file_info_pysimplegui:
                         error_message = line
                         break
                 if error_message != '':
@@ -11629,6 +11630,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKSpinBox.configure(font=font)  # set wrap to width of widget
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(background=element.BackgroundColor)
+                    element.TKSpinBox.configure(buttonbackground=element.BackgroundColor)
                 element.Widget.config(highlightthickness=0)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
