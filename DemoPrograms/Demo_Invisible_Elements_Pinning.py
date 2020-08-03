@@ -17,7 +17,7 @@ import PySimpleGUI as sg
     exactly why it works, but it works.
     
     For other ports of PySimpleGUI such as the Qt port, the position is remembered by Qt and as a
-    result this technique using Columns is not needed.
+    result this technique using "pin" is not needed.
     
     Copyright 2020 PySimpleGUI.org
 """
