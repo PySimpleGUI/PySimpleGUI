@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.1 Released 3-Aug-2020"
+version = __version__ = "4.27.4 Released 3-Aug-2020"
 
 port = 'PySimpleGUI'
 
@@ -2258,7 +2258,7 @@ class Multiline(Element):
                     if text_color_for_value is not None:
                         self.TKText.tag_configure(tag, foreground=text_color_for_value)
                 except Exception as e:
-                    print(f'* Multiline.update - bad color likely specified: {e}')
+                    print('* Multiline.update - bad color likely specified:', e)
             if self.Disabled:
                 self.TKText.configure(state='normal')
             try:
@@ -2272,7 +2272,7 @@ class Multiline(Element):
                 # self.TKText.tag_add(just_tag, starting_point, starting_point)
 
             except Exception as e:
-                print(f'* Error setting multiline {e}')
+                print("* Error setting multiline *", e)
             if self.Disabled:
                 self.TKText.configure(state='disabled')
             self.DefaultText = value
@@ -7988,12 +7988,12 @@ class Window:
                     y = window.TKroot.winfo_y() + deltay
                     window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
         except Exception as e:
-            print(f'on motion error {e}', f'title = {window.Title}')
+            print('on motion error', e)
 
 
 
     def _config_callback(self, event):
-        print(f'Config  event = {event} window = {self.Title}')
+        # print('Config  event = {} window = {}'.format(event, self.Title))
         try:
             deltax = event.x - self.TKroot.x
             deltay = event.y - self.TKroot.y
@@ -8008,7 +8008,7 @@ class Window:
                     y = window.TKroot.winfo_y() + deltay
                     window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
         except Exception as e:
-            print(f'on motion error {e}', f'title = {window.Title}')
+            print('on motion error {}'.format(e), 'title = {}'.format(window.Title))
 
 
     """
@@ -14622,7 +14622,7 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     names = list_of_look_and_feel_values()
     names.sort()
     if search_string not in (None, ''):
-        print(f'Looking for {search_string.lower().replace(" ","")}')
+        # print(f'Looking for {search_string.lower().replace(" ","")}')
         names = [name for name in names if search_string.lower().replace(" ","") in name.lower().replace(" ","")]
 
     if search_string not in (None, ''):
