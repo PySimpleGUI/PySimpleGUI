@@ -2,13 +2,19 @@ import PySimpleGUI as sg
 
 """
     Demo - "Pinning" an element into a location in a layout
-
+    
+    Requires PySimpleGUI version 4.28.0 and greater
+    
     When using the tkinter port of PySimpleGUI, if you make an element invisible and then visible again,
     rather than the element appearing where it was originally located, it will be moved to the bottom
     of whatever it was contained within (a window or a container element (column, frame, tab))
 
-    This demo adds a function "pin" which will place the element inside of a Column element.  This will
+    This demo uses a new "pin" function which will place the element inside of a Column element.  This will
     reserve a location for the element to be returned.
+    
+    Additionally, there will be a 1 pixel Canvas element inside the "pin". 
+    This will cause the area to shrink when the element is made invisible. It's a weird tkinter thing. Not sure
+    exactly why it works, but it works.
     
     For other ports of PySimpleGUI such as the Qt port, the position is remembered by Qt and as a
     result this technique using Columns is not needed.
@@ -16,32 +22,25 @@ import PySimpleGUI as sg
     Copyright 2020 PySimpleGUI.org
 """
 
-def pin(elem):
-    '''
-    Pin's an element provided into a layout so that when it's made invisible and visible again, it will
-     be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
-    :param elem: the element to put into the layout
-    :return: A column element containing the provided element
-    '''
-    return sg.Column([[elem, sg.Canvas(size=(0,0), pad=(0,0))]], pad=(0,0))
-
-
-layout = [  [sg.Text('Window with Hidden Button')],
-            [sg.Input(key='-IN-')],
-            [pin(sg.Button('Button1')), pin(sg.Button('Button2')), sg.B('Button3')],
+layout = [  [sg.Text('Hide Button or Input. Button3 hides Input.  Buttons 1 & 2 hide Button 2')],
+            [sg.pin(sg.Input(key='-IN-'))],
+            [sg.pin(sg.Button('Button1')), sg.pin(sg.Button('Button2')), sg.B('Button3')],
         ]
 
-window = sg.Window('Window Title', layout)
+window = sg.Window('Visible / Invisible Element Demo', layout)
 
-toggle = False
+toggle = toggle_in = False
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
 
-    window['Button2'].update(visible=toggle)
-    toggle = not toggle
-
+    if event in ('Button1', 'Button2'):
+        window['Button2'].update(visible=toggle)
+        toggle = not toggle
+    if event == 'Button3':
+        window['-IN-'].update(visible=toggle_in)
+        toggle_in = not toggle_in
 window.close()
