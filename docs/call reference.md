@@ -631,6 +631,7 @@ Canvas(canvas=None,
     tooltip=None,
     right_click_menu=None,
     visible=True,
+    border_width=0,
     metadata=None)
 ```
 
@@ -647,6 +648,7 @@ Parameter Descriptions:
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |     visible      | set visibility state of the element |
+|                                     int                                      |   border_width   | width of border around element in pixels. Not normally used with Canvas element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
 
 ### SetFocus
@@ -2007,6 +2009,7 @@ Graph(canvas_size,
     right_click_menu=None,
     visible=True,
     float_values=False,
+    border_width=0,
     metadata=None)
 ```
 
@@ -2028,6 +2031,7 @@ Parameter Descriptions:
 |                       List[List[Union[List[str],str]]]                       | right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |      visible      | set visibility state of the element (Default = True) |
 |                                     bool                                     |   float_values    | If True x,y coordinates are returned as floats, not ints |
+|                                     int                                      |   border_width    | width of border around element in pixels. Not normally used for Graph Elements |
 |                                     Any                                      |     metadata      | User metadata that can be set to ANYTHING |
 
 ### BringFigureToFront
@@ -13960,6 +13964,15 @@ Parameter Descriptions:
 |     Window      |   window    | The window object to fill |
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 | None | **RETURN** | None
+
+## Element Visibility
+
+Pin's an element provided into a layout so that when it's made invisible and visible again, it will
+ be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
+
+```
+pin(elem)
+```
 
 ## Configuration / Settings / Extensions
 
