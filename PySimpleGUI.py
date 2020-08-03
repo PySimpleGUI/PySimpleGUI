@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4.2 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!)"
+version = __version__ = "4.27.4.3 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly"
 
 port = 'PySimpleGUI'
 
@@ -11337,6 +11337,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # Set individual widget options
                     combostyle.configure(style_name, foreground=element.TextColor)
                     combostyle.configure(style_name, selectbackground=element.BackgroundColor)
+                    combostyle.map(style_name, fieldbackground=[('readonly', element.BackgroundColor)])
                     combostyle.configure(style_name, fieldbackground=element.BackgroundColor)
                     combostyle.configure(style_name, selectforeground=element.TextColor)
 
@@ -17200,6 +17201,7 @@ def main():
 
     # theme('dark blue 3')
     # theme('dark brown 2')
+    # theme('dark')
     # theme('dark red')
     # theme('Light Green 6')
     ver = version.split('\n')[0]
