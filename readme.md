@@ -7629,7 +7629,7 @@ k element parameter
 * Window.write_event_values - now requires both parms
 * Upgrade button typo
 
-## 4.27.1 PySimpleGUI 3-Aug-2020
+## 4.27.4 PySimpleGUI 3-Aug-2020
 
 Multi-window support done right!
 New capabilities for printing, Multiline
@@ -7673,6 +7673,7 @@ Theme searching
 * Column Element's Widget member variable now being set
 * Window's starting window location saved
 * Early experimental "Move all windows in sync" when using grab_anywhere (coming soon)
+* Fix for 3.4 (can't use f-strings)
 
 ### Upcoming
 
