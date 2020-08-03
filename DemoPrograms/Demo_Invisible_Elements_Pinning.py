@@ -24,7 +24,7 @@ def pin(elem):
     :param elem: the element to put into the layout
     :return: A column element containing the provided element
     '''
-    return sg.Column([[elem]], pad=(0,0))
+    return sg.Column([[elem, sg.Canvas(size=(0,0), pad=(0,0))]], pad=(0,0))
 
 
 layout = [  [sg.Text('Window with Hidden Button')],

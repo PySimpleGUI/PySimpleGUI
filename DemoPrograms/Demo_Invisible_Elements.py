@@ -9,7 +9,7 @@ import PySimpleGUI as sg
 
 """
 
-layout = [[sg.Col([[sg.Text('My Window')], [sg.Input(key='-IN-'), sg.Button('My button', key='-OUT-')]], key='-COL-')],
+layout = [[sg.Col([[sg.Text('My Window')], [sg.Input(key='-IN-'), sg.Button('My button', key='-OUT-')]], key='-COL-'), sg.Canvas(size=(0,0), pad=(0,0))],
           [sg.Button('Invisible'), sg.Button('Visible'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
