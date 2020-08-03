@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.27.4.4 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly, added border_width to Canvas & Graph elems"
+version = __version__ = "4.27.4.5 Unreleased\nAdded setting of combobox button color to be theme's button color, spin arrow color set to background color of spin, fix for error popup when bad key (thanks Ruud!), fixed background color for combo when readonly, added border_width to Canvas & Graph elems, added pin function to pin an element's location in a layout"
 
 port = 'PySimpleGUI'
 
@@ -9134,6 +9134,17 @@ def Sizer(h_pixels=0, v_pixels=0):
     """
 
     return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
+
+
+def pin(elem):
+    '''
+    Pin's an element provided into a layout so that when it's made invisible and visible again, it will
+     be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
+
+    :param elem: the element to put into the layout
+    :return: A column element containing the provided element
+    '''
+    return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0))
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
