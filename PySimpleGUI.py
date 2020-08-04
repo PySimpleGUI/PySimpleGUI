@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0 Released 3-Aug-2020"
+version = __version__ = "4.28.0.1 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents."
 
 port = 'PySimpleGUI'
 
@@ -5640,6 +5640,7 @@ class Column(Element):
         self.TKColFrame = None
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
+
         self.RightClickMenu = right_click_menu
         bg = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ContainerElemementNumber = Window._GetAContainerNumber()
@@ -5761,6 +5762,15 @@ class Column(Element):
                 self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
+
+    def contents_changed(self):
+        """
+        When a scrollable column has part of its layout changed by making elements visibile or invisible, then this function
+        should be called so that the new scroll area is computed to match the new contents.
+        """
+        self.TKColFrame.canvas.config(scrollregion=self.TKColFrame.canvas.bbox('all'))
+
+
 
     add_row = AddRow
     layout = Layout
@@ -8337,14 +8347,12 @@ class Window:
             pass
 
 
-    def VisibilityChanged(self):
+    def visibility_changed(self):
         """
-        Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
-        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
-        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
+        When making an element in a column or someplace that has a scrollbar, then you'll want to call this function
+        prior to the column's contents_changed() method.
         """
-        # A dummy function.  Needed in Qt but not tkinter
-        return
+        self.refresh()
 
 
     def SetTransparentColor(self, color):
@@ -8675,7 +8683,7 @@ class Window:
     set_transparent_color = SetTransparentColor
     size = Size
     un_hide = UnHide
-    visibility_changed = VisibilityChanged
+    VisibilityChanged = visibility_changed
 
     #
     # def __exit__(self, *a):
