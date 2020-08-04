@@ -1,9 +1,9 @@
 import PySimpleGUI as sg
 
 """
-    Demo - "Collapsable" sections of windows
+    Demo - "Collapsible" sections of windows
 
-    This demo shows one techinique for creating a collapsable section (Column) within your window.
+    This demo shows one techinique for creating a collapsible section (Column) within your window.
 
     It uses the "pin" function so you'll need version 4.28.0+
 
@@ -33,7 +33,7 @@ section2 = [[sg.pin(sg.Input('Input sec 2', key='-IN2-'))],
             [sg.pin(sg.Button('Button section 2', button_color='yellow on purple')),sg.Button('Button2 section 2', button_color='yellow on purple'), sg.B('Button3 section 2', button_color='yellow on purple')]]
 
 
-layout = [  [sg.Text('Window with 2 collapsable sections')],
+layout = [  [sg.Text('Window with 2 collapsible sections')],
             [sg.pin(sg.Input('Input 1', key='-IN0-'))],
             [sg.T(SYMBOL_DOWN, enable_events=True, k='-OPEN SEC1-', text_color='yellow'), sg.T('Section 1', enable_events=True, text_color='yellow', k='-OPEN SEC1-0')],
             [collapse(section1, '-SEC1-')],
