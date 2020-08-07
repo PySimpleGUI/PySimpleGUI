@@ -6,6 +6,8 @@ import PySimpleGUI as sg
     
     There's an added capability to "re-open" window 2 should it be closed.  This is done by simply calling the make_win2 function
     again when the button is pressed in window 1.
+    
+    The program exits when both windows have been closed
         
     Copyright 2020 PySimpleGUI.org
 """
@@ -43,7 +45,7 @@ def main():
             window.close()
             if window == window2:       # if closing win 2, mark as closed
                 window2 = None
-            elif window == window1:     # if closing win 1, exit program
+            elif window == window1:     # if closing win 1, mark as closed
                 window1 = None
         elif event == 'Reopen':
             if not window2:
