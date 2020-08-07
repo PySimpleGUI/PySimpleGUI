@@ -3,11 +3,12 @@ import PySimpleGUI as sg
 """
     Multiple Window Design Pattern
     
-    Two windows - both remain active
+    Two windows - both remain active and visible
     Window 1 launches Window 2
     Window 1 remains visible and active while Window 2 is active
     Closing Window 1 exits application
     
+    Copyright 2020 PySimpleGUI.org
 """
 
 
@@ -45,7 +46,8 @@ def main():
             window2 = None
 
     window1.close()
-    window2.close()
+    if window2 is not None:
+        window2.close()
 
 
 if __name__ == '__main__':
