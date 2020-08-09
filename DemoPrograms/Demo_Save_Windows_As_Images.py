@@ -78,17 +78,6 @@ def save_win(filename=None, title=None, crop=True):
     :return:
     """
     C = 7 if crop else 0  # pixels to crop
-    if filename is None or title is None:
-        layout = [[sg.T('Choose window to save', font='Any 18')],
-                  [sg.T('The extension you choose for filename will determine the image format')],
-                  [sg.T('Window Title:', size=(12, 1)), sg.I(title if title is not None else '', key='-T-')],
-                  [sg.T('Filename:', size=(12, 1)), sg.I(filename if filename is not None else '', key='-F-')],
-                  [sg.Button('Ok', bind_return_key=True), sg.Button('Cancel')]]
-        event, values = sg.Window('Choose Win Title and Filename', layout).read(close=True)
-        if event != 'Ok':  # if cancelled or closed the window
-            print('Cancelling the save')
-            return
-        filename, title = values['-F-'], values['-T-']
     try:
         fceuxHWND = win32gui.FindWindow(None, title)
         rect = win32gui.GetWindowRect(fceuxHWND)
@@ -96,18 +85,21 @@ def save_win(filename=None, title=None, crop=True):
         frame = np.array(ImageGrab.grab(bbox=rect_cropped), dtype=np.uint8)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.imwrite(filename, frame)
-        sg.cprint('Wrote image to file:', filename)
+        sg.cprint('Wrote image to file:')
+        sg.cprint(filename, c='white on purple')
     except Exception as e:
         sg.popup('Error trying to save screenshot file', e, keep_on_top=True)
 
 
 def main():
     layout = [[sg.Text('Window Snapshot', key='-T-', font='Any 20', justification='c')],
+              [sg.Text('Choose one or more window titles from list')],
               [sg.Listbox(values=[' '], size=(50, 20), select_mode=sg.SELECT_MODE_EXTENDED, font=('Courier', 12), key='-PROCESSES-')],
               [sg.Checkbox('Show only Python programs', default=True, key='-PYTHON ONLY-')],
               [sg.Checkbox('Crop image', default=True, key='-CROP-')],
               [sg.Multiline(size=(63, 10), font=('Courier', 10), key='-ML-')],
-              [sg.Text('Output folder:'), sg.In(os.path.dirname(__file__), key='-FOLDER-'), sg.FolderBrowse()],
+              [sg.Text('Output folder:', size=(15,1)), sg.In(os.path.dirname(__file__), key='-FOLDER-'), sg.FolderBrowse()],
+              [sg.Text('Hardcode filename:', size=(15,1)), sg.In(key='-HARDCODED FILENAME-')],
               [sg.Button('Refresh'),
                sg.Button('Snapshot', button_color=('white', 'DarkOrange2')),
                sg.Exit(button_color=('white', 'sea green'))]]
@@ -130,10 +122,15 @@ def main():
         if event == 'Refresh':
             show_list_by_name(window, '-PROCESSES-', values['-PYTHON ONLY-'])
         elif event == 'Snapshot':
-            for title in values['-PROCESSES-']:
-                sg.cprint('Saving: ', end='', c='white on red')
-                sg.cprint(title)
-                output_filename = os.path.join(values['-FOLDER-'], f'{title}.png')
+            for i, title in enumerate(values['-PROCESSES-']):
+                sg.cprint('Saving:', end='', c='white on red')
+                sg.cprint(' ', title, colors='white on green')
+                if values['-HARDCODED FILENAME-']:
+                    fname = values['-HARDCODED FILENAME-']
+                    fname = f'{fname[:-4]}{i}{fname[-4:]}'
+                    output_filename = os.path.join(values['-FOLDER-'], fname)
+                else:
+                    output_filename = os.path.join(values['-FOLDER-'], f'{title}.png')
                 save_win(output_filename, title, values['-CROP-'])
     window.close()
 
