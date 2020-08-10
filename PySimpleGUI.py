@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.1 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents."
+version = __version__ = "4.28.0.2 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square"
 
 port = 'PySimpleGUI'
 
@@ -414,6 +414,17 @@ SUPPRESS_KEY_GUESSING = False
 ENABLE_TREEVIEW_869_PATCH = True
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
 ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS = ('SystemHighlightText', 'SystemHighlight')
+
+# Some handy unicode symbols
+SYMBOL_SQUARE = '█'
+SYMBOL_CIRCLE = '⚫'
+SYMBOL_CIRCLE_OUTLINE = '◯'
+SYMBOL_UP =    '▲'
+SYMBOL_RIGHT = '►'
+SYMBOL_DOWN =  '▼'
+SYMBOL_LEFT =  '◄'
+
+
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
 # ====================================================================== #
@@ -3021,6 +3032,13 @@ class Button(Element):
             except Exception as e:
                 print('* cprint warning * you messed up with color formatting', e)
         self.ButtonColor = button_color
+        # experimental code to compute disabled button text color
+        # if disabled_button_color is None:
+        #     try:
+        #         disabled_button_color = (get_complimentary_hex(theme_button_color()[0]), theme_button_color()[1])
+        #         # disabled_button_color = disabled_button_color
+        #     except:
+        #         print('* Problem computing disabled button color *')
         self.DisabledButtonColor = disabled_button_color if disabled_button_color is not None else (None, None)
         self.ImageFilename = image_filename
         self.ImageData = image_data
@@ -8366,6 +8384,7 @@ class Window:
             return
         try:
             self.TKroot.attributes('-transparentcolor', color)
+            self.TransparentColor = color
         except:
             print('Transparent color not supported on this platform (windows only)')
 
@@ -10788,6 +10807,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # *********** Make TK Row                             ***********#
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
+        row_fill_direction = tk.NONE
         row_justify = form.ElementJustification
         for col_num, element in enumerate(flex_row):
             element.ParentRowFrame = tk_row_frame
@@ -12252,9 +12272,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(style_name, background=element.color)
                 separator = element.Widget = ttk.Separator(tk_row_frame, orient=element.Orientation, )
                 if element.Orientation.startswith('h'):
-                    row_should_expand = True
+                    # row_should_expand = True
+                    row_fill_direction = tk.X
+                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
+                else:
+                    separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=True)
                 element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
-                separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill='both', expand=True)
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
@@ -12336,10 +12359,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # row_should_expand = False
 
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0,
-                          expand=row_should_expand, fill=tk.BOTH if row_should_expand else tk.NONE)
+                          expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
     return
+
 
 
 def ConvertFlexToTK(MyFlexForm):
