@@ -1,5 +1,5 @@
 ---
-name: Issue Form - Must fill in this form with every new issue submitted.  CLICK THE GREEN BUTTON --------------------->
+name: Issue Form - Must fill in this form with every new issue submitted.  CLICK THE GREEN BUTTON ---------------------------------->
 about: This form contains the information needed to help you solve your problem
 title: "[ Enhancement/Bug/Question] My problem is..."
 labels: ''
