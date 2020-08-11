@@ -8,12 +8,12 @@ def show_win():
     sg.set_options(border_width=0, margins=(0, 0), element_padding=(5, 3))
 
     frame_layout = [
-        [sg.Button('', image_data=mac_red,
-              button_color=('white', sg.COLOR_SYSTEM_DEFAULT), key='-exit-'),
+        [sg.Button(image_data=mac_red,
+              button_color=(sg.theme_background_color(),sg.theme_background_color()), key='-exit-'),
          sg.Button('', image_data=mac_orange,
-              button_color=('white', sg.COLOR_SYSTEM_DEFAULT)),
+              button_color=(sg.theme_background_color(),sg.theme_background_color())),
          sg.Button('', image_data=mac_green,
-              button_color=('white', sg.COLOR_SYSTEM_DEFAULT), key='-minimize-'),
+              button_color=(sg.theme_background_color(),sg.theme_background_color()), key='-minimize-'),
          sg.Text(' '*40)], ]
 
     layout = [[sg.Frame('', frame_layout)],
