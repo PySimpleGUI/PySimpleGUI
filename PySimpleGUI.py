@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.3 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square"
+version = __version__ = "4.28.0.4 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark gray 8 theme"
 
 port = 'PySimpleGUI'
 
@@ -422,7 +422,8 @@ SYMBOL_CIRCLE_OUTLINE = '◯'
 SYMBOL_UP =    '▲'
 SYMBOL_RIGHT = '►'
 SYMBOL_DOWN =  '▼'
-SYMBOL_LEFT =  '◄'
+SYMBOL_DOWN =  '▼'
+SYMBOL_X = '❎'
 
 
 # ====================================================================== #
@@ -3186,6 +3187,7 @@ class Button(Element):
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
+                popup('called from saveas filename')
         elif self.BType == BUTTON_TYPE_CLOSES_WIN:  # this is a return type button so GET RESULTS and destroy window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
@@ -14424,6 +14426,15 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'BUTTON': ('red', 'yellow'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
                                       'PROGRESS_DEPTH': 0,
                                      },
+                       'DarkGrey8': {'BACKGROUND': '#19232D',
+                                        'TEXT': '#ffffff',
+                                        'INPUT': '#32414B',
+                                        'TEXT_INPUT': '#ffffff',
+                                        'SCROLL': '#505F69',
+                                        'BUTTON': ('#ffffff', '#32414B'),
+                                        'PROGRESS': ('#505F69', '#32414B'),
+                                        'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+                                        }
                        }
 
 
