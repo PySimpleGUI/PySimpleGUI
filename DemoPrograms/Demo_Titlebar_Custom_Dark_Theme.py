@@ -2,8 +2,9 @@ import PySimpleGUI as sg
 
 """
     Demo showing how to remove the titlebar and replace with your own
-    Note that you cannot minimize these kinds of windows because they do not
-    have an icon representing them on the taskbar
+    Unlike previous demos that lacked a titlebar, this one provides a way for you
+    to "minimize" your window that does not have a titlebar.  This is done by faking
+    the window using a hidden window that is minimized.
     
     Copyright 2020 PySimpleGUI.org
 """
@@ -31,6 +32,7 @@ def dummy_minimized_window(title):
     The FocusIn event is set so that if the user restores the window from the taskbar, then the read
     wille return, the window will be closed, and the function will return
     """
+
     layout = [[sg.T('This is your window with a customized titlebar... you just cannot see it')]]
     window = sg.Window(title, layout, finalize=True, alpha_channel=0)
     window.minimize()
@@ -43,7 +45,8 @@ def title_bar(title):
     Creates a "row" that can be added to a layout. This row looks like a titlebar
     :param title: The "title" to show in the titlebar
     :type title: str
-    :return: List[sg.Element]
+    :return: A list of elements (i.e. a "row" for a layout)
+    :type: List[sg.Element]
     """
     bg = sg.theme_input_background_color()
 
@@ -64,7 +67,7 @@ def main():
 
     window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True, margins=(0,0), finalize=True)
 
-    window['-C-'].expand(True, False, False)
+    window['-C-'].expand(True, False, False)        # expand the titlebar's rightmost column so that it resizes correctly
 
     while True:             # Event Loop
         event, values = window.read()
@@ -78,6 +81,7 @@ def main():
         if event == 'Go':
             window['-OUT-'].update(values['-IN-'])
     window.close()
+
 
 if __name__ == '__main__':
     main()
