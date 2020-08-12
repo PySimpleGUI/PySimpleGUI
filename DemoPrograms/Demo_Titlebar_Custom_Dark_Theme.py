@@ -23,7 +23,7 @@ import PySimpleGUI as sg
 # sg.theme_add_new('DarkGrey8', DarkGrey8)
 
 
-def dummy_window():
+def dummy_minimized_window(title):
     """
     Creates an invisible window that is minimized to the taskbar
     As soon as something happens to the window, it is closed and the function
@@ -31,14 +31,20 @@ def dummy_window():
     The FocusIn event is set so that if the user restores the window from the taskbar, then the read
     wille return, the window will be closed, and the function will return
     """
-    layout = [[sg.T('You will not see this')]]
-    window = sg.Window('Window Title', layout, finalize=True, alpha_channel=0)
+    layout = [[sg.T('This is your window with a customized titlebar... you just cannot see it')]]
+    window = sg.Window(title, layout, finalize=True, alpha_channel=0)
     window.minimize()
     window.bind('<FocusIn>', '-FOCUS-')
     window.read(close=True)
 
 
 def title_bar(title):
+    """
+    Creates a "row" that can be added to a layout. This row looks like a titlebar
+    :param title: The "title" to show in the titlebar
+    :type title: str
+    :return: List[sg.Element]
+    """
     bg = sg.theme_input_background_color()
 
     return [sg.Col([[sg.T(title, background_color=bg )]], pad=(0, 0), background_color=bg),
@@ -47,13 +53,16 @@ def title_bar(title):
 
 def main():
     sg.theme('DarkGrey8')
-    layout = [  title_bar('Window Title'),
+
+    title = 'Customized Titlebar Window'
+
+    layout = [  title_bar(title),
                 [sg.T('This is normal window text.   The above is the fake "titlebar"')],
                 [sg.T('Input something:')],
                 [sg.Input(key='-IN-'), sg.Text(size=(12,1), key='-OUT-')],
                 [sg.Button('Go')]  ]
 
-    window = sg.Window('Window Title', layout, resizable=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True, margins=(0,0), finalize=True)
+    window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True, margins=(0,0), finalize=True)
 
     window['-C-'].expand(True, False, False)
 
@@ -64,7 +73,7 @@ def main():
             break
         if event == '-MINIMIZE-':
             window.hide()
-            dummy_window()
+            dummy_minimized_window(window.Title)
             window.un_hide()
         if event == 'Go':
             window['-OUT-'].update(values['-IN-'])
