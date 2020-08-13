@@ -6,6 +6,10 @@ import PySimpleGUI as sg
     to "minimize" your window that does not have a titlebar.  This is done by faking
     the window using a hidden window that is minimized.
     
+    While this demo uses the button colors for the titlebar color, you can use anything you want.
+    If possible it could be good to use combinations that are known to match like the input element colors
+    or the button colors.
+    
     Copyright 2020 PySimpleGUI.org
 """
 
@@ -40,7 +44,7 @@ def dummy_minimized_window(title):
     window.read(close=True)
 
 
-def title_bar(title):
+def title_bar(title, text_color, background_color):
     """
     Creates a "row" that can be added to a layout. This row looks like a titlebar
     :param title: The "title" to show in the titlebar
@@ -48,18 +52,23 @@ def title_bar(title):
     :return: A list of elements (i.e. a "row" for a layout)
     :type: List[sg.Element]
     """
-    bg = sg.theme_input_background_color()
+    bc = background_color
+    tc = text_color
 
-    return [sg.Col([[sg.T(title, background_color=bg )]], pad=(0, 0), background_color=bg),
-     sg.Col([[sg.T('_', background_color=bg, enable_events=True, key='-MINIMIZE-'),sg.Text('❎', background_color=bg, enable_events=True, key='Exit')]], element_justification='r', k='-C-', pad=(0, 0), background_color=bg)]
+    return [sg.Col([[sg.T(title,text_color=tc, background_color=bc )]], pad=(0, 0), background_color=bc),
+     sg.Col([[sg.T('_', text_color=tc, background_color=bc, enable_events=True, key='-MINIMIZE-'),sg.Text('❎', text_color=tc, background_color=bc, enable_events=True, key='Exit')]], element_justification='r', k='-C-', pad=(0, 0), background_color=bc)]
+
+
 
 
 def main():
+    # sg.theme('light green 3')
+    # sg.theme('dark red')
     sg.theme('DarkGrey8')
 
     title = 'Customized Titlebar Window'
 
-    layout = [  title_bar(title),
+    layout = [  title_bar(title, sg.theme_button_color()[0], sg.theme_button_color()[1]),
                 [sg.T('This is normal window text.   The above is the fake "titlebar"')],
                 [sg.T('Input something:')],
                 [sg.Input(key='-IN-'), sg.Text(size=(12,1), key='-OUT-')],
