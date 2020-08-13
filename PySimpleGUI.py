@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.4 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark gray 8 theme"
+version = __version__ = "4.28.0.5 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark gray 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None"
 
 port = 'PySimpleGUI'
 
@@ -8028,24 +8028,28 @@ class Window:
             print('on motion error', e)
 
 
+    def _focus_callback(self, event):
+        print('Focus event = {} window = {}'.format(event, self.Title))
+
 
     def _config_callback(self, event):
-        # print('Config  event = {} window = {}'.format(event, self.Title))
-        try:
-            deltax = event.x - self.TKroot.x
-            deltay = event.y - self.TKroot.y
-            x = self.TKroot.winfo_x() + deltax
-            y = self.TKroot.winfo_y() + deltay
-            self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
-            # print('{},{}'.format(x,y))
-
-            if Window._move_all_windows:
-                for window in Window._active_windows:
-                    x = window.TKroot.winfo_x() + deltax
-                    y = window.TKroot.winfo_y() + deltay
-                    window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
-        except Exception as e:
-            print('on motion error {}'.format(e), 'title = {}'.format(window.Title))
+        print('Config  event = {} window = {}'.format(event, self.Title))
+        #
+        # try:
+        #     deltax = event.x - self.TKroot.x
+        #     deltay = event.y - self.TKroot.y
+        #     x = self.TKroot.winfo_x() + deltax
+        #     y = self.TKroot.winfo_y() + deltay
+        #     self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+        #     # print('{},{}'.format(x,y))
+        #
+        #     if Window._move_all_windows:
+        #         for window in Window._active_windows:
+        #             x = window.TKroot.winfo_x() + deltax
+        #             y = window.TKroot.winfo_y() + deltay
+        #             window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
+        # except Exception as e:
+        #     print('on motion error {}'.format(e), 'title = {}'.format(window.Title))
 
 
     """
@@ -8177,8 +8181,10 @@ class Window:
                 pass
         self.TKrootDestroyed = True
 
-        del self.Rows
-        del self.TKroot
+        # Free up anything that was held in the layout and the root variables
+        self.Rows = None
+        self.TKroot = None
+
 
     # IT FINALLY WORKED! 29-Oct-2018 was the first time this damned thing got called
     def _OnClosingCallback(self):
@@ -12523,6 +12529,7 @@ def StartupTK(window):
     if window.NonBlocking:
         window.TKroot.protocol("WM_DESTROY_WINDOW", window._OnClosingCallback)
         window.TKroot.protocol("WM_DELETE_WINDOW", window._OnClosingCallback)
+
     else:  # it's a blocking form
         # print('..... CALLING MainLoop')
         window.CurrentlyRunningMainloop = True
@@ -12533,6 +12540,7 @@ def StartupTK(window):
             window.make_modal()
 
         # window.TKroot.bind("<Configure>", window._config_callback)
+
         # ----------------------------------- tkinter mainloop call -----------------------------------
         Window._window_running_mainloop = window
         Window._root_running_mainloop = window.TKroot
