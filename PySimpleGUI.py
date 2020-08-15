@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.5 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark gray 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None"
+version = __version__ = "4.28.0.7 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect"
 
 port = 'PySimpleGUI'
 
@@ -584,8 +584,11 @@ class ToolTip:
         x = self.widget.winfo_rootx() + self.x + DEFAULT_TOOLTIP_OFFSET[0]
         y = self.widget.winfo_rooty() + self.y + DEFAULT_TOOLTIP_OFFSET[1]
         self.tipwindow = tk.Toplevel(self.widget)
-        if not sys.platform.startswith('darwin'):
+        # if not sys.platform.startswith('darwin'):
+        try:
             self.tipwindow.wm_overrideredirect(True)
+        except:
+            print('* Error performing wm_overrideredirect *')
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
         self.tipwindow.wm_attributes("-topmost", 1)
 
@@ -12453,8 +12456,11 @@ def StartupTK(window):
         Window._IncrementOpenCount()
         Window.hidden_master_root = tk.Tk()
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-        if not sys.platform.startswith('darwin'):
+        # if not sys.platform.startswith('darwin'):
+        try:
             Window.hidden_master_root.wm_overrideredirect(True)
+        except:
+            print('* Error performing wm_overrideredirect *')
         Window.hidden_master_root.withdraw()
         root = tk.Toplevel(Window.hidden_master_root)
     else:
@@ -14432,8 +14438,7 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'DESCRIPTION': ['#000000', 'Blue', 'Red', 'Grey']},
                        'HotDogStand': {'BACKGROUND': 'red', 'TEXT': 'yellow', 'INPUT': 'yellow', 'TEXT_INPUT': '#000000', 'SCROLL': 'yellow',
                                       'BUTTON': ('red', 'yellow'), 'PROGRESS': DEFAULT_PROGRESS_BAR_COLOR, 'BORDER': 1, 'SLIDER_DEPTH': 0,
-                                      'PROGRESS_DEPTH': 0,
-                                     },
+                                      'PROGRESS_DEPTH': 0,},
                        'DarkGrey8': {'BACKGROUND': '#19232D',
                                         'TEXT': '#ffffff',
                                         'INPUT': '#32414B',
@@ -14441,9 +14446,16 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                         'SCROLL': '#505F69',
                                         'BUTTON': ('#ffffff', '#32414B'),
                                         'PROGRESS': ('#505F69', '#32414B'),
-                                        'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
-                                        }
-                       }
+                                        'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,},
+                       'DarkGrey9' : {'BACKGROUND': '#36393F',
+                                          'TEXT': '#DCDDDE',
+                                          'INPUT': '#40444B',
+                                          'TEXT_INPUT': '#ffffff',
+                                          'SCROLL': '#202225',
+                                          'BUTTON': ('#202225', '#B9BBBE'),
+                                          'PROGRESS': ('#202225', '#40444B'),
+                                          'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,}
+                    }
 
 
 def ListOfLookAndFeelValues():
@@ -15808,15 +15820,22 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
             Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            if not sys.platform.startswith('darwin'):
+
+            # if not sys.platform.startswith('darwin'):
+            try:
                 Window.hidden_master_root.wm_overrideredirect(True)
+            except:
+                print('* Error performing wm_overrideredirect *')
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            if not sys.platform.startswith('darwin'):
+            # if not sys.platform.startswith('darwin'):
+            try:
                 root.wm_overrideredirect(True)
+            except:
+                print('* Error performing wm_overrideredirect *')
             root.withdraw()
         except:
             pass
@@ -15921,15 +15940,21 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            if not sys.platform.startswith('darwin'):
+            # if not sys.platform.startswith('darwin'):
+            try:
                 Window.hidden_master_root.wm_overrideredirect(True)
+            except:
+                print('* Error performing wm_overrideredirect *')
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            if not sys.platform.startswith('darwin'):
+            # if not sys.platform.startswith('darwin'):
+            try:
                 root.wm_overrideredirect(True)
+            except:
+                print('* Error performing wm_overrideredirect *')
             root.withdraw()
         except:
             pass
