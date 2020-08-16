@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.7 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect"
+version = __version__ = "4.28.0.8 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns"
 
 port = 'PySimpleGUI'
 
@@ -5621,7 +5621,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification='left', element_justification='left', metadata=None):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None, vertical_alignment=None, metadata=None):
         """
         :param layout: Layout that will be shown in the Column container
         :type layout: List[List[Element]]
@@ -5647,6 +5647,8 @@ class Column(Element):
         :type justification: (str)
         :param element_justification: All elements inside the Column will have this justification 'left', 'right', 'center' are valid values
         :type element_justification: (str)
+        :param vertical_alignment: Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
+        :type vertical_alignment: (str)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -5669,6 +5671,7 @@ class Column(Element):
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         self.Justification = justification
+        self.VerticalAlignment = vertical_alignment
         key = key if key is not None else k
 
         self.Layout(layout)
@@ -10819,7 +10822,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         tk_row_frame = tk.Frame(containing_frame)
         row_should_expand = False
         row_fill_direction = tk.NONE
-        row_justify = form.ElementJustification
+
+        if form.ElementJustification is not None:
+            row_justify = form.ElementJustification
+        # elif toplevel_form.ElementJustification is not None:
+        #     row_justify = toplevel_form.ElementJustification
+        else:
+            row_justify = 'l'
+
         for col_num, element in enumerate(flex_row):
             element.ParentRowFrame = tk_row_frame
             element.ParentForm = toplevel_form  # save the button's parent form object
@@ -10902,20 +10912,34 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                             element.TKColFrame.config(background=element.BackgroundColor, borderwidth=0,
                                                       highlightthickness=0)
-                if element.Justification.lower().startswith('c'):
-                    anchor = tk.N
-                    side = tk.TOP
+
+                if element.Justification is None:
+                    pass
+                elif element.Justification.lower().startswith('l'):
+                    row_justify = 'l'
+                elif element.Justification.lower().startswith('c'):
+                    row_justify = 'c'
                 elif element.Justification.lower().startswith('r'):
-                    anchor = tk.NE
-                    side = tk.RIGHT
-                else:
-                    anchor = tk.NW
-                    side = tk.LEFT
+                    row_justify = 'r'
+
                 # anchor=tk.NW
                 # side = tk.LEFT
-                row_justify = element.Justification
+                # row_justify = element.Justification
                 element.Widget = element.TKColFrame
-                element.TKColFrame.pack(side=side, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
+
+                if element.VerticalAlignment is not None:
+                    anchor = tk.CENTER   # Default to center if a bad choice is made
+
+                    if element.VerticalAlignment.lower().startswith('t'):
+                        anchor = tk.N
+                    if element.VerticalAlignment.lower().startswith('c'):
+                        anchor = tk.CENTER
+                    if element.VerticalAlignment.lower().startswith('b'):
+                        anchor = tk.S
+                    element.TKColFrame.pack(side=tk.LEFT, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
+                else:
+                    element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
+
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.Visible is False:
                     element.TKColFrame.pack_forget()
@@ -12348,27 +12372,28 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
 
+        anchor = 'nw'
+
         if row_justify.lower().startswith('c'):
             anchor = 'n'
-            side = tk.CENTER
+            side = tk.LEFT
         elif row_justify.lower().startswith('r'):
             anchor = 'ne'
             side = tk.RIGHT
         elif row_justify.lower().startswith('l'):
             anchor = 'nw'
             side = tk.LEFT
-        elif toplevel_form.ElementJustification.lower().startswith('c'):
-            anchor = 'n'
-            side = tk.TOP
-        elif toplevel_form.ElementJustification.lower().startswith('r'):
-            anchor = 'ne'
-            side = tk.TOP
-        else:
-            anchor = 'nw'
-            side = tk.TOP
+        # elif toplevel_form.ElementJustification.lower().startswith('c'):
+        #     anchor = 'n'
+        #     side = tk.TOP
+        # elif toplevel_form.ElementJustification.lower().startswith('r'):
+        #     anchor = 'ne'
+        #     side = tk.TOP
+        # else:
+        #     anchor = 'nw'
+        #     side = tk.TOP
 
         # row_should_expand = False
-
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0,
                           expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -17382,7 +17407,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
     tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
                                                   Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]], )
-    tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
+    # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
+    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l')]], tooltip='tab 3', title_color='red', )
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
     tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', )
     tab6 = Tab('Do NOT click', frame7)
