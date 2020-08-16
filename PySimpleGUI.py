@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.8 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns"
+version = __version__ = "4.28.0.9 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame"
 
 port = 'PySimpleGUI'
 
@@ -4678,7 +4678,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
-                 tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
+                 tooltip=None, right_click_menu=None, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
         """
         :param title: text that is displayed as the Frame's "label" or title
         :type title: (str)
@@ -4712,6 +4712,8 @@ class Frame(Element):
         :type visible: (bool)
         :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
         :type element_justification: (str)
+        :param vertical_alignment: Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
+        :type vertical_alignment: (str)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -4733,6 +4735,7 @@ class Frame(Element):
         self.RightClickMenu = right_click_menu
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
+        self.VerticalAlignment = vertical_alignment
         self.Widget = None              # type: tk.LabelFrame
         self.Layout(layout)
         key = key if key is not None else k
@@ -11882,7 +11885,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-                labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+
+                if element.VerticalAlignment is not None:
+                    anchor = tk.CENTER   # Default to center if a bad choice is made
+                    if element.VerticalAlignment.lower().startswith('t'):
+                        anchor = tk.N
+                    if element.VerticalAlignment.lower().startswith('c'):
+                        anchor = tk.CENTER
+                    if element.VerticalAlignment.lower().startswith('b'):
+                        anchor = tk.S
+                    labeled_frame.pack(side=tk.LEFT, anchor=anchor, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                else:
+                    labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+
                 if element.Size != (None, None):
                     labeled_frame.config(width=element.Size[0], height=element.Size[1])
                 if not element.Visible:
@@ -17405,10 +17420,10 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     ]
 
     tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
-    tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc'),
-                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice'), ]], )
+    tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t'),
+                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], )
     # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
-    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l')]], tooltip='tab 3', title_color='red', )
+    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', )
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
     tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', )
     tab6 = Tab('Do NOT click', frame7)
