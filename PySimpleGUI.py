@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.10 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func"
+version = __version__ = "4.28.0.11 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs"
 
 port = 'PySimpleGUI'
 
@@ -9190,6 +9190,36 @@ def pin(elem, vertical_alignment=None):
     return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
 
 
+def vtop(elem):
+    '''
+    Aligh the element to the top of the row that contains it.
+
+    :param elem: the element to put into the layout
+    :return: A column element containing the provided element aligned to the top
+    '''
+    return Column([[elem]], pad=(0,0), vertical_alignment='top')
+
+
+def vcenter(elem):
+    '''
+    Aligh the element to the center of the row that contains it.
+
+    :param elem: the element to put into the layout
+    :return: A column element containing the provided element aligned to the center
+    '''
+    return Column([[elem]], pad=(0,0), vertical_alignment='center')
+
+
+def vbottom(elem):
+    '''
+    Aligh the element to the bottom of the row that contains it.
+
+    :param elem: the element to put into the layout
+    :return: A column element containing the provided element aligned to the bottom
+    '''
+    return Column([[elem]], pad=(0,0), vertical_alignment='bottom')
+
+
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
@@ -12373,7 +12403,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.BOTH, expand=True)
+                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
+                row_fill_direction = tk.X
                 if element.Visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
