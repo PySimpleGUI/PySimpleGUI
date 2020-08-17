@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.9 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame"
+version = __version__ = "4.28.0.10 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func"
 
 port = 'PySimpleGUI'
 
@@ -105,7 +105,6 @@ from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
 # end of tkitner specific imports
-
 import datetime
 import time
 import pickle
@@ -9180,7 +9179,7 @@ def Sizer(h_pixels=0, v_pixels=0):
     return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
 
 
-def pin(elem):
+def pin(elem, vertical_alignment=None):
     '''
     Pin's an element provided into a layout so that when it's made invisible and visible again, it will
      be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
@@ -9188,7 +9187,7 @@ def pin(elem):
     :param elem: the element to put into the layout
     :return: A column element containing the provided element
     '''
-    return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0))
+    return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
