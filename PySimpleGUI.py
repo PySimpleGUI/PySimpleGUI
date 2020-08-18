@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.14 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x"
+version = __version__ = "4.28.0.15 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests"
 
 port = 'PySimpleGUI'
 
@@ -17480,21 +17480,21 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
-         B('Popup'),
          B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
          B('Themes'),
          Button('Exit', tooltip='Exit button')],
+        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')]
     ]
 
     layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(45, 25), orientation='v', key='+PROGRESS+')]])]]
-    window = Window('Window Title', layout,
+    window = Window('PySimpleGUI Main Test Harness', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
                     right_click_menu=['&Right', ['Right', '!&Click', '&Menu', 'E&xit', 'Properties']],
                     # transparent_color= '#9FB8AD',
                     resizable=True,
                     keep_on_top=True,
-                    element_justification='left',
+                    element_justification='left',       # justify contents to the left
                     metadata='My window metadata',
                     finalize=True,
                     grab_anywhere=True,
@@ -17547,6 +17547,20 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
             theme_previewer(search_string=search_string)
+        elif event.startswith('P '):
+            if event == 'P ':
+                popup('Normal Popup - Modal', keep_on_top=True)
+            elif event == 'P NoTitle':
+                popup_no_titlebar('No titlebar', keep_on_top=True)
+            elif event == 'P NoModal':
+                popup('Normal Popup - Not Modal', 'You can interact with main window menubar ',
+                      'but will have no effect immediately', 'button clicks will happen after you close this popup',modal=False, keep_on_top=True)
+            elif event == 'P NoBlock':
+                popup_non_blocking('Non-blocking', 'The background window should still be running', keep_on_top=True)
+            elif event == 'P AutoClose':
+                popup_auto_close('Will autoclose in 3 seconds', auto_close_duration=3 ,keep_on_top=True)
+
+
 
         i += 1
         # _refresh_debugger()
