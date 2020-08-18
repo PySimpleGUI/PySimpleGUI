@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.13 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer"
+version = __version__ = "4.28.0.14 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x"
 
 port = 'PySimpleGUI'
 
@@ -8006,12 +8006,13 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
+
         try:
-            self.TKroot.x = None
-            self.TKroot.y = None
-        except:
-            pass
-        # print('-Stop- move {},{}'.format(event.x,event.y))
+            self.TKroot.x = event.x
+            self.TKroot.y = event.y
+        except Exception as e:
+            print('stop move error', e, event)
+
 
     def _OnMotion(self, event):
         """
