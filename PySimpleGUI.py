@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.12 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion"
+version = __version__ = "4.28.0.13 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer"
 
 port = 'PySimpleGUI'
 
@@ -14776,7 +14776,7 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
 
     def sample_layout():
         return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
-                [Button('Ok'), Button('Cancel'), Slider((1, 10), orientation='h', size=(5, 15))]]
+                [Button('Ok'), Button('Disabled', disabled=True), Slider((1, 10), orientation='h', size=(5, 15))]]
 
 
     names = list_of_look_and_feel_values()
