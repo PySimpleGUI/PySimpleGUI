@@ -106,8 +106,9 @@ def main():
               [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15, 1), font='any 14', key='-filter-')],
               [sg.Button('Sort by Name', ),
                sg.Button('Sort by % CPU', button_color=('white', 'DarkOrange2')),
-               sg.Button('Kill', button_color=('white', 'red'), bind_return_key=True),
-               sg.Button('Kill All', button_color='red on white', bind_return_key=True),
+               sg.Button('Kill Selected', button_color=('white', 'red'), bind_return_key=True),
+               sg.Button('Kill All', button_color='red on white'),
+               sg.Button('Kill All & Exit', button_color='red on white'),
                sg.Exit(button_color=('white', 'sea green'))]]
 
     window = sg.Window('Python Process Killer', layout,
@@ -136,7 +137,7 @@ def main():
             window['-processes-'].update(show_list_by_name())
             name_sorted = True
         elif event.startswith('Kill'):
-            if event.endswith('All'):
+            if event.startswith('Kill All'):
                 processes_to_kill = show_list_by_name()
             else:
                 processes_to_kill = values['-processes-']
@@ -148,6 +149,8 @@ def main():
                 except Exception as e:
                     sg.popup_no_wait('Error killing process', e, auto_close_duration=2, auto_close=True, keep_on_top=True)
             window['-processes-'].update(show_list_by_name() if name_sorted else show_list_by_cpu())
+            if event.endswith('Exit'):
+                break
         elif event == 'Sort by % CPU':
             window['-processes-'].update(show_list_by_cpu())
             name_sorted = False
