@@ -1059,6 +1059,28 @@ class Element():
             return False
 
 
+    def _grab_anywhere_on(self):
+        """
+        Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+        """
+        self.Widget.bind("<ButtonPress-1>", self.ParentForm._StartMove)
+        self.Widget.bind("<ButtonRelease-1>", self.ParentForm._StopMove)
+        self.Widget.bind("<B1-Motion>", self.ParentForm._OnMotion)
+
+
+    def _grab_anywhere_off(self):
+        """
+        Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+        """
+        self.Widget.unbind("<ButtonPress-1>")
+        self.Widget.unbind("<ButtonRelease-1>")
+        self.Widget.unbind("<B1-Motion>")
+
+
+
+
     def __call__(self, *args, **kwargs):
         """
         Makes it possible to "call" an already existing element.  When you do make the "call", it actually calls
@@ -2428,7 +2450,7 @@ class Text(Element):
     """
 
     def __init__(self, text='', size=(None, None), auto_size_text=None, click_submits=False, enable_events=False,
-                 relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
+                 relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, grab=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text: Any
@@ -2460,6 +2482,8 @@ class Text(Element):
         :type k: Union[str, int, tuple, object]
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[Union[List[str],str]]]
+        :param grab: If True can grab this element and move the window around. Default is False
+        :type grab: (bool)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -2480,6 +2504,7 @@ class Text(Element):
         self.RightClickMenu = right_click_menu
         self.TKRightClickMenu = None
         self.BorderWidth = border_width
+        self.Grab = grab
         key = key if key is not None else k
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -11101,6 +11126,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
+                if element.Grab:
+                    element._grab_anywhere_on()
             # -------------------------  BUTTON placement element non-ttk version  ------------------------- #
             elif (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is False) or \
                     (element_type == ELEM_TYPE_BUTTON and element.UseTtkButtons is not True and toplevel_form.UseTtkButtons is not True):
