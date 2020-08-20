@@ -15,18 +15,19 @@ import PySimpleGUI as sg
 
 
 # If not running 4.28.0.4+ that has the DarkGrey8 theme, then uncomment to get it added.
-# DarkGrey8 = {'BACKGROUND': '#19232D',
-#               'TEXT': '#ffffff',
-#               'INPUT': '#32414B',
-#               'TEXT_INPUT': '#ffffff',
-#               'SCROLL': '#505F69',
-#               'BUTTON': ('#ffffff', '#32414B'),
-#               'PROGRESS': ('#505F69', '#32414B'),
-#               'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
-#               }
+DarkGrey8 = {'BACKGROUND': '#19232D',
+              'TEXT': '#ffffff',
+              'INPUT': '#32414B',
+              'TEXT_INPUT': '#ffffff',
+              'SCROLL': '#505F69',
+              'BUTTON': ('#ffffff', '#32414B'),
+              'PROGRESS': ('#505F69', '#32414B'),
+              'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              }
 
-# sg.theme_add_new('DarkGrey8', DarkGrey8)
+sg.theme_add_new('DarkGrey8', DarkGrey8)
 
+sg.theme('DarkGrey8')
 
 def dummy_minimized_window(title):
     """
