@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.16 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element"
+version = __version__ = "4.28.0.17 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element"
 
 port = 'PySimpleGUI'
 
@@ -751,6 +751,7 @@ class Element():
         :param event:
 
         """
+        print('Text clicked')
         self._generic_callback_handler(self.DisplayText)
         return
 
@@ -2573,7 +2574,7 @@ class StatusBar(Element):
 
     def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
-                 key=None, k=None, tooltip=None, visible=True, metadata=None):
+                 key=None, k=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: Text that is to be displayed in the widget
         :type text: (str)
@@ -2601,6 +2602,8 @@ class StatusBar(Element):
         :type key: Union[str, int, tuple, object]
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: Union[str, int, tuple, object]
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[Union[List[str],str]]]
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -2620,6 +2623,7 @@ class StatusBar(Element):
             bg = background_color
         self.TKText = self.Widget = None  # type: tk.Label
         key = key if key is not None else k
+        self.RightClickMenu = right_click_menu
 
         super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg,
                          font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip,
@@ -5648,7 +5652,7 @@ class Column(Element):
     """
 
     def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
-                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None, vertical_alignment=None, metadata=None):
+                 vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None, vertical_alignment=None, grab=None, metadata=None):
         """
         :param layout: Layout that will be shown in the Column container
         :type layout: List[List[Element]]
@@ -5676,6 +5680,8 @@ class Column(Element):
         :type element_justification: (str)
         :param vertical_alignment: Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides)
         :type vertical_alignment: (str)
+        :param grab: If True can grab this element and move the window around. Default is False
+        :type grab: (bool)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -5700,7 +5706,7 @@ class Column(Element):
         self.Justification = justification
         self.VerticalAlignment = vertical_alignment
         key = key if key is not None else k
-
+        self.Grab = grab
         self.Layout(layout)
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
@@ -11003,6 +11009,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # anchor=tk.NW
                 # side = tk.LEFT
                 # row_justify = element.Justification
+
+
                 element.Widget = element.TKColFrame
 
                 if element.VerticalAlignment is not None:
@@ -11032,6 +11040,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     AddMenuItem(top_menu, menu[1], element)
                     element.TKRightClickMenu = top_menu
                     element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                if element.Grab:
+                    element._grab_anywhere_on()
                 # row_should_expand = True
             # -------------------------  Pane placement element  ------------------------- #
             if element_type == ELEM_TYPE_PANE:
@@ -12460,7 +12470,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-
+                if element.RightClickMenu or toplevel_form.RightClickMenu:
+                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
+                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+                    AddMenuItem(top_menu, menu[1], element)
+                    element.TKRightClickMenu = top_menu
+                    element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
