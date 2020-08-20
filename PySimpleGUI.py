@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.15 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests"
+version = __version__ = "4.28.0.16 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element"
 
 port = 'PySimpleGUI'
 
@@ -9191,34 +9191,54 @@ def pin(elem, vertical_alignment=None):
     return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
 
 
-def vtop(elem):
+def vtop(elem_or_row):
     '''
-    Aligh the element to the top of the row that contains it.
+    Align an element or a row of elements to the top of the row that contains it
 
-    :param elem: the element to put into the layout
-    :return: A column element containing the provided element aligned to the top
+    :param elem_or_row: the element or row of elements
+    :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
+    :return: A column element containing the provided element aligned to the top or list of elements (a row)
+    :rtype: Union[Column, List[Column]]
     '''
-    return Column([[elem]], pad=(0,0), vertical_alignment='top')
+
+    if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
+        return [Column([[e]], pad=(0,0), vertical_alignment='top') for e in elem_or_row]
+
+    return Column([[elem_or_row]], pad=(0,0), vertical_alignment='top')
 
 
-def vcenter(elem):
+def vcenter(elem_or_row):
     '''
-    Aligh the element to the center of the row that contains it.
+    Align an element or a row of elements to the center of the row that contains it
 
-    :param elem: the element to put into the layout
-    :return: A column element containing the provided element aligned to the center
+    :param elem_or_row: the element or row of elements
+    :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
+    :return: A column element containing the provided element aligned to the center or list of elements (a row)
+    :rtype: Union[Column, List[Column]]
     '''
-    return Column([[elem]], pad=(0,0), vertical_alignment='center')
+
+    if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
+        return [Column([[e]], pad=(0,0), vertical_alignment='center') for e in elem_or_row]
 
 
-def vbottom(elem):
+    return Column([[elem_or_row]], pad=(0,0), vertical_alignment='center')
+
+
+def vbottom(elem_or_row):
     '''
-    Aligh the element to the bottom of the row that contains it.
+    Align an element or a row of elements to the bottom of the row that contains it
 
-    :param elem: the element to put into the layout
-    :return: A column element containing the provided element aligned to the bottom
+    :param elem_or_row: the element or row of elements
+    :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
+    :return: A column element containing the provided element aligned to the bottom or list of elements (a row)
+    :rtype: Union[Column, List[Column]]
     '''
-    return Column([[elem]], pad=(0,0), vertical_alignment='bottom')
+
+    if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
+        return [Column([[e]], pad=(0,0), vertical_alignment='bottom') for e in elem_or_row]
+
+
+    return Column([[elem_or_row]], pad=(0,0), vertical_alignment='bottom')
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
