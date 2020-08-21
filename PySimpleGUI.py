@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.17 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element"
+version = __version__ = "4.28.0.18 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed"
 
 port = 'PySimpleGUI'
 
@@ -420,7 +420,7 @@ SYMBOL_CIRCLE = '⚫'
 SYMBOL_CIRCLE_OUTLINE = '◯'
 SYMBOL_UP =    '▲'
 SYMBOL_RIGHT = '►'
-SYMBOL_DOWN =  '▼'
+SYMBOL_LEFT =  '◄'
 SYMBOL_DOWN =  '▼'
 SYMBOL_X = '❎'
 
@@ -751,7 +751,6 @@ class Element():
         :param event:
 
         """
-        print('Text clicked')
         self._generic_callback_handler(self.DisplayText)
         return
 
@@ -17676,9 +17675,9 @@ test = main
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
 theme(CURRENT_LOOK_AND_FEEL)
 
-__tclversion_detailed__ = tkinter.Tcl().eval('info patchlevel')
-if __tclversion_detailed__.startswith('8.5'):
-    warnings.warn('You are running a VERY old version of tkinter {}'.format(__tclversion_detailed__), UserWarning)
+tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
+if tclversion_detailed.startswith('8.5'):
+    warnings.warn('You are running a VERY old version of tkinter {}'.format(tclversion_detailed), UserWarning)
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
