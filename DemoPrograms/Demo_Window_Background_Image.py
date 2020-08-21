@@ -2,12 +2,9 @@ import PySimpleGUI as sg
 
 """
     Highly experimental demo of how the illusion of a window with a background image is possible with PySimpleGUI.
-    
-    At the moment, the only way to make all this work in a synchronized manner is by using the "grab anywhere" option.
-    This is why you don't see a titlebar.  You could move it if there was one, but only the background would move.
-    Still working on the code to get the <Configuration> based callback to do the synchronization.  Soon, hopefully!
-    
-    For now, enjoy the interesting 
+
+    Requires the latest PySimpleGUI from GitHub.  Your copy of PySimpleGUI should be local to your application so that 
+    the global variable _move_all_windows can be changed.  
     
     Copyright 2020 PySimpleGUI.org
 """
@@ -16,10 +13,36 @@ import PySimpleGUI as sg
 sg.Window._move_all_windows = True
 
 
+def title_bar(title, text_color, background_color):
+    """
+    Creates a "row" that can be added to a layout. This row looks like a titlebar
+    :param title: The "title" to show in the titlebar
+    :type title: str
+    :param text_color: Text color for titlebar
+    :type text_color: str
+    :param background_color: Background color for titlebar
+    :type background_color: str
+    :return: A list of elements (i.e. a "row" for a layout)
+    :rtype: List[sg.Element]
+    """
+    bc = background_color
+    tc = text_color
+    font = 'Helvetica 12'
+
+    return [sg.Col([[sg.T(title, text_color=tc, background_color=bc, font=font, grab=True)]], pad=(0, 0), background_color=bc),
+            sg.Col([[sg.T('_', text_color=tc, background_color=bc, enable_events=True, font=font, key='-MINIMIZE-'), sg.Text('❎', text_color=tc, background_color=bc, font=font, enable_events=True, key='Exit')]], element_justification='r', key='-C-', grab=True,
+                   pad=(0, 0), background_color=bc)]
+
+
+
 def main():
 
-    background_layout = [[sg.Image(data=background_image)]]
-    window_background = sg.Window('Background', background_layout, grab_anywhere=True, no_titlebar=True, finalize=True, margins=(0, 0), element_padding=(0,0), right_click_menu=[[''], ['Exit',]])
+    background_layout = [ title_bar('This is the titlebar', sg.theme_text_color(), sg.theme_background_color()),
+                        [sg.Image(data=background_image)]]
+    window_background = sg.Window('Background', background_layout, no_titlebar=True, finalize=True, margins=(0, 0), element_padding=(0,0), right_click_menu=[[''], ['Exit',]])
+
+    window_background['-C-'].expand(True, False, False)  # expand the titlebar's rightmost column so that it resizes correctly
+
 
     # ------ Column Definition ------ #
     column1 = [[sg.Text('Column 1', justification='center', size=(10, 1))],
@@ -57,13 +80,14 @@ def main():
         [sg.Submit(tooltip='Click to submit this form'), sg.Cancel()],
     [sg.Text('Right Click To Exit', size=(30, 1), justification='center', font=("Helvetica", 25), relief=sg.RELIEF_SUNKEN)], ]
 
-    top_window = sg.Window('Everything bagel', layout, finalize=True, keep_on_top=True, grab_anywhere=True,  transparent_color=sg.theme_background_color(), no_titlebar=True)
+    top_window = sg.Window('Everything bagel', layout, finalize=True, keep_on_top=True, grab_anywhere=False,  transparent_color=sg.theme_background_color(), no_titlebar=True)
 
     # window_background.send_to_back()
     # top_window.bring_to_front()
 
     while True:
         window, event, values = sg.read_all_windows()
+        print(event, values)
         if event is None or event == 'Cancel' or event == 'Exit':
             print(f'closing window = {window.Title}')
             break
