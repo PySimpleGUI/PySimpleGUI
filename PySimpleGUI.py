@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.19 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAUT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns"
+version = __version__ = "4.28.0.20 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAUT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button"
 
 port = 'PySimpleGUI'
 
@@ -3091,7 +3091,7 @@ class Button(Element):
         self.calendar_month_names = None
         self.calendar_day_abbreviations = None
         self.calendar_title = ''
-        self.calendar_selection = None
+        self.calendar_selection = ''
         self.InitialFolder = initial_folder
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
@@ -3134,18 +3134,9 @@ class Button(Element):
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
         _exit_mainloop(self.ParentForm)
 
-    # -------  Button Callback  ------- #
-    def ButtonCallBack(self):
-        """
-        Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
-        """
-        # global _my_windows
 
-        # print('Button callback')
 
-        # print(f'Button Callback - Parent = {self.ParentForm}   Position = {self.Position}')
-        # Buttons modify targets or return from the form
-        # If modifying target, get the element object at the target and modify its StrVar
+    def _find_target(self):
         target = self.Target
         target_element = None
         if target[0] == ThisRow:
@@ -3172,6 +3163,49 @@ class Button(Element):
                     should_submit_window = True
             except:
                 pass
+        return target_element, strvar, should_submit_window
+
+    # -------  Button Callback  ------- #
+    def ButtonCallBack(self):
+        """
+        Not user callable! Called by tkinter when a button is clicked.  This is where all the fun begins!
+        """
+        # global _my_windows
+
+        # print('Button callback')
+
+        # print(f'Button Callback - Parent = {self.ParentForm}   Position = {self.Position}')
+        # Buttons modify targets or return from the form
+        # If modifying target, get the element object at the target and modify its StrVar
+        # target = self.Target
+        # target_element = None
+        # if target[0] == ThisRow:
+        #     target = [self.Position[0], target[1]]
+        #     if target[1] < 0:
+        #         target[1] = self.Position[1] + target[1]
+        # strvar = None
+        # should_submit_window = False
+        # if target == (None, None):
+        #     strvar = self.TKStringVar
+        # else:
+        #     if not isinstance(target, str):
+        #         if target[0] < 0:
+        #             target = [self.Position[0] + target[0], target[1]]
+        #         target_element = self.ParentContainer._GetElementAtLocation(target)
+        #     else:
+        #         target_element = self.ParentForm.FindElement(target)
+        #     try:
+        #         strvar = target_element.TKStringVar
+        #     except:
+        #         pass
+        #     try:
+        #         if target_element.ChangeSubmits:
+        #             should_submit_window = True
+        #     except:
+        #         pass
+
+        target_element, strvar, should_submit_window = self._find_target()
+
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             if sys.platform == 'darwin':        # macs don't like seeing the parent window (go firgure)
@@ -3256,30 +3290,34 @@ class Button(Element):
                 Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             # ------------ new chooser code -------------
-
-            if self.calendar_default_date_M_D_Y == (None, None, None):
-                now = datetime.datetime.now()
-                cur_month, cur_day, cur_year = now.month, now.day, now.year
-            else:
-                cur_month, cur_day, cur_year = self.calendar_default_date_M_D_Y
-
-            date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.calendar_close_when_chosen, no_titlebar=self.calendar_no_titlebar, begin_at_sunday_plus=self.calendar_begin_at_sunday_plus, locale=self.calendar_locale, location=self.calendar_location, month_names=self.calendar_month_names, day_abbreviations=self.calendar_day_abbreviations, title=self.calendar_title)
-            if date_chosen is not None:
-                month, day, year = date_chosen
-                now = datetime.datetime.now()
-                hour, minute, second = now.hour, now.minute, now.second
-                try:
-                    date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.calendar_format)
-                except Exception as e:
-                    print('Bad format string', e)
-                    date_string = 'Bad format string'
-
-                if target_element is not None:
-                    target_element.update(date_string)
-                self.calendar_selection = date_string
-
-                strvar.set(date_string)
-                self.TKStringVar.set(date_string)
+            self.ParentForm.LastButtonClicked = self.Key    # key should have been generated already if not set by user
+            self.ParentForm.FormRemainedOpen = True
+            should_submit_window = False
+            _exit_mainloop(self.ParentForm)
+            #
+            # if self.calendar_default_date_M_D_Y == (None, None, None):
+            #     now = datetime.datetime.now()
+            #     cur_month, cur_day, cur_year = now.month, now.day, now.year
+            # else:
+            #     cur_month, cur_day, cur_year = self.calendar_default_date_M_D_Y
+            #
+            # date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.calendar_close_when_chosen, no_titlebar=self.calendar_no_titlebar, begin_at_sunday_plus=self.calendar_begin_at_sunday_plus, locale=self.calendar_locale, location=self.calendar_location, month_names=self.calendar_month_names, day_abbreviations=self.calendar_day_abbreviations, title=self.calendar_title)
+            # if date_chosen is not None:
+            #     month, day, year = date_chosen
+            #     now = datetime.datetime.now()
+            #     hour, minute, second = now.hour, now.minute, now.second
+            #     try:
+            #         date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.calendar_format)
+            #     except Exception as e:
+            #         print('Bad format string', e)
+            #         date_string = 'Bad format string'
+            #
+            #     if target_element is not None:
+            #         target_element.update(date_string)
+            #     self.calendar_selection = date_string
+            #
+            #     strvar.set(date_string)
+            #     self.TKStringVar.set(date_string)
 
             # ------------ old chooser code -------------
             # should_submit_window = False
@@ -7460,6 +7498,50 @@ class Window:
         self.FormRemainedOpen = True
         self.TKroot.quit()  # kick the users out of the mainloop
 
+
+    def _calendar_chooser_button_clicked(self, elem):
+        """
+
+        :param elem:
+        :return:
+        """
+        target_element, strvar, should_submit_window = elem._find_target()
+
+        if elem.calendar_default_date_M_D_Y == (None, None, None):
+            now = datetime.datetime.now()
+            cur_month, cur_day, cur_year = now.month, now.day, now.year
+        else:
+            cur_month, cur_day, cur_year = elem.calendar_default_date_M_D_Y
+
+        date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=elem.calendar_close_when_chosen,
+                                     no_titlebar=elem.calendar_no_titlebar, begin_at_sunday_plus=elem.calendar_begin_at_sunday_plus,
+                                     locale=elem.calendar_locale, location=elem.calendar_location, month_names=elem.calendar_month_names,
+                                     day_abbreviations=elem.calendar_day_abbreviations, title=elem.calendar_title)
+        if date_chosen is not None:
+            month, day, year = date_chosen
+            now = datetime.datetime.now()
+            hour, minute, second = now.hour, now.minute, now.second
+            try:
+                date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(elem.calendar_format)
+            except Exception as e:
+                print('Bad format string in calendar chooser button', e)
+                date_string = 'Bad format string'
+
+            if target_element is not None and target_element != elem:
+                target_element.update(date_string)
+            elif target_element == elem:
+                elem.calendar_selection = date_string
+
+            strvar.set(date_string)
+            elem.TKStringVar.set(date_string)
+            if should_submit_window:
+                self.LastButtonClicked = target_element.Key
+                results = _BuildResults(self, False, self)
+        else:
+            should_submit_window = False
+        return should_submit_window
+
+
     # @_timeit_summary
     def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
         """
@@ -7481,7 +7563,24 @@ class Window:
             _refresh_debugger()
 
         Window._root_running_mainloop = self.TKroot
-        results = self._read(timeout=timeout, timeout_key=timeout_key)
+
+        while True:
+            results = self._read(timeout=timeout, timeout_key=timeout_key)
+            # Post processing for Calendar Chooser Button
+            try:
+                elem = self.find_element(results[0], silent_on_error=True)    # get the element that caused the event
+                if elem.Type == ELEM_TYPE_BUTTON:
+                    if elem.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
+                        if self._calendar_chooser_button_clicked(elem):     # returns True if should break out
+                            # results[0] = self.LastButtonClicked
+                            results = self.ReturnValues
+                            break
+                        else:
+                            continue
+                break
+            except:
+                break            #  wasn't a calendar button for sure
+
         if close:
             self.close()
 
@@ -10202,7 +10301,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
-                   button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
+                   button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, enable_events=None,
                    key=None, k=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
                    no_titlebar=True, location=(None, None), metadata=None):
     """
@@ -10270,7 +10369,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
-                    auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
+                    auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, enable_events=enable_events,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
     button.calendar_close_when_chosen = close_when_date_chosen
     button.calendar_default_date_M_D_Y = default_date_m_d_y
@@ -10487,6 +10586,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
                     if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
+                        # value = None
                         value = element.calendar_selection
                     else:
                         try:
@@ -10577,15 +10677,12 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and
-                  element.BType == BUTTON_TYPE_CALENDAR_CHOOSER and
-                  element.Target == (None, None)) or \
-                    (element.Type == ELEM_TYPE_BUTTON and
                      element.BType == BUTTON_TYPE_COLOR_CHOOSER and
                      element.Target == (None, None)) or \
                     (element.Type == ELEM_TYPE_BUTTON
                      and element.Key is not None and
                      (element.BType in (BUTTON_TYPE_SAVEAS_FILE, BUTTON_TYPE_BROWSE_FILE, BUTTON_TYPE_BROWSE_FILES,
-                                        BUTTON_TYPE_BROWSE_FOLDER))):
+                                        BUTTON_TYPE_BROWSE_FOLDER, BUTTON_TYPE_CALENDAR_CHOOSER))):
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
 
