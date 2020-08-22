@@ -56,9 +56,9 @@ def title_bar(title, text_color, background_color):
     tc = text_color
     font = 'Helvetica 12'
 
-    return [sg.Col([[sg.T(title, text_color=tc, background_color=bc, font=font)]], pad=(0, 0), background_color=bc),
+    return [sg.Col([[sg.T(title, text_color=tc, background_color=bc, font=font, grab=True)]], pad=(0, 0), background_color=bc),
             sg.Col([[sg.T('_', text_color=tc, background_color=bc, enable_events=True, font=font, key='-MINIMIZE-'),
-                     sg.Text('❎', text_color=tc, background_color=bc, font=font, enable_events=True, key='Exit')]], element_justification='r', key='-C-',
+                     sg.Text('❎', text_color=tc, background_color=bc, font=font, enable_events=True, key='Exit')]], element_justification='r', key='-C-', expand_x=True, grab=True,
                    pad=(0, 0), background_color=bc)]
 
 
@@ -77,15 +77,16 @@ def create_window(title, bar_text_color, bar_background_color):
         [sg.Input('Color of input text', key='-IN-'), sg.Text(size=(12, 1), key='-OUT-')],
         [sg.Button('Go'), sg.Button('Next'), sg.B('New Theme'), sg.Button('Exit')]]
 
-    window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True, margins=(0, 0), finalize=True)
+    window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=False, keep_on_top=True, margins=(0, 0), finalize=True)
 
-    window['-C-'].expand(True, False, False)  # expand the titlebar's rightmost column so that it resizes correctly
+    # window['-C-'].expand(True, False, False)  # expand the titlebar's rightmost column so that it resizes correctly
 
     return window
 
 
 def choose_theme():
-    layout = [[sg.Text('Look and Feel Browser')],
+    layout = [[sg.Text('Custom Titlebar Demo', font='Any 14')],
+              [sg.Text('This program requires version 4.28.0.20 and later')],
               [sg.Text('Click a look and feel color to see demo window')],
               [sg.Listbox(values=sg.theme_list(),
                           size=(20, 20), key='-LIST-', enable_events=True)],
