@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.11 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new"
+version = __version__ = "0.35.0.12 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title"
 
 port = 'PySimpleGUIQt'
 
@@ -4591,6 +4591,21 @@ class Window:
         location = self.QT_QMainWindow.geometry()
         return location.left(), location.top()
 
+
+    def set_title(self, title):
+        """
+        Change the title of the window
+
+        :param title: The string to set the title to
+        :type title: (str)
+        """
+        if not self._is_window_created():
+            return
+        self.Title = str(title)
+        self.QT_QMainWindow.setWindowTitle(self.Title)
+
+
+
     class QTMainWindow(QWidget):
         def __init__(self,enable_key_events, window):
             self.KeyEventsEnabled = enable_key_events
@@ -6380,6 +6395,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_Spinner)
             # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
+                element = element       # type: Output
                 element.Widget = element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
                 style = 'QTextBrowser {'
