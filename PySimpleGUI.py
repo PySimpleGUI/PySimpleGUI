@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.20 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAUT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button"
+version = __version__ = "4.28.0.21 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAULT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button, force focus when no-titlebar window, added Window.force_focus"
 
 port = 'PySimpleGUI'
 
@@ -8669,6 +8669,17 @@ class Window:
             print('Exception trying to make modal', e)
 
 
+    def force_focus(self):
+        """
+        Forces this window to take focus
+        """
+        if not self._is_window_created():
+            return
+        self.TKroot.focus_force()
+
+
+
+
     def was_closed(self):
         """
         Returns True if the window was closed
@@ -12774,6 +12785,9 @@ def StartupTK(window):
         root.bind("<MouseWheel>", window._MouseWheelCallback)
         root.bind("<Button-4>", window._MouseWheelCallback)
         root.bind("<Button-5>", window._MouseWheelCallback)
+
+    if window.NoTitleBar:
+        window.TKroot.focus_force()
 
     if window.AutoClose:
         duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
@@ -17556,10 +17570,28 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
+def _main_switch_theme():
+    layout = [
+              [Text('Click a look and feel color to see demo window')],
+              [Listbox(values=theme_list(),
+                          size=(20, 20), key='-LIST-')],
+              [Button('Choose'), Button('Cancel')]]
 
-def main():
+    window = Window('Change Themes', layout)
+
+    event, values = window.read(close=True)
+
+    if event == 'Choose':
+        theme_name = values['-LIST-'][0]
+        theme(theme_name)
+
+
+def _create_main_window():
     """
-    The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+    Creates the main test harness window.
+
+    :return: The test window
+    :rtype: Window
     """
 
     # theme('dark blue 3')
@@ -17673,18 +17705,17 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location',justification='l',size=(30,2)),
          VerLine(sys.version, 'Python Version', justification='l', size=(40, 2)),
 
-        [TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_')],
+        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
-         B('Themes'),
          Button('Exit', tooltip='Exit button')],
-        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')]
+        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose'), B('Themes'),B('Switch Themes'),]
     ]
 
-    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(45, 25), orientation='v', key='+PROGRESS+')]])]]
+    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('PySimpleGUI Main Test Harness', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
@@ -17699,9 +17730,17 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
                     # ttk_theme=THEME_ALT,
                     # icon=PSG_DEBUGGER_LOGO
                     )
-    # graph_elem.DrawCircle((200, 200), 50, 'blue')
-    i = 0
     window['-SPONSOR-'].set_cursor(cursor='hand2')
+
+    return window
+
+def main():
+    """
+    The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
+    """
+    window = _create_main_window()
+    graph_elem = window['+GRAPH+']
+    i = 0
     # Don't use the debug window
     # Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     # print(window.element_list())
@@ -17745,6 +17784,13 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
             theme_previewer(search_string=search_string)
+        elif event == 'Switch Themes':
+            window.close()
+            _main_switch_theme()
+            window = _create_main_window()
+            graph_elem = window['+GRAPH+']
+        elif event == '-HIDE TABS-':
+            window['-TAB GROUP-'].update(visible=False)
         elif event.startswith('P '):
             if event == 'P ':
                 popup('Normal Popup - Modal', keep_on_top=True)
