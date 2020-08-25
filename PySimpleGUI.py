@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.22 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAULT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button, force focus when no-titlebar window, added Window.force_focus, do not close hidden master window"
+version = __version__ = "4.28.0.23 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAULT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button, force focus when no-titlebar window, added Window.force_focus, do not close hidden master window, disable close on one_line_progress_meter - was causing next window to not work right when close with X, changed back toplevel to no parent"
 
 port = 'PySimpleGUI'
 
@@ -7677,7 +7677,6 @@ class Window:
             Window._window_running_mainloop = self
             Window._root_running_mainloop.mainloop()
 
-
             # print('Out main')
             self.CurrentlyRunningMainloop = False
             # if self.LastButtonClicked != TIMEOUT_KEY:
@@ -8301,7 +8300,7 @@ class Window:
         a window so that resources are properly freed up within your thread.
         """
         try:
-            del Window._active_windows[self]
+            del Window._active_windows[self]        # will only be in the list if window was explicitly finalized
         except:
             pass
 
@@ -12722,9 +12721,11 @@ def StartupTK(window):
         except:
             print('* Error performing wm_overrideredirect *')
         Window.hidden_master_root.withdraw()
-        root = tk.Toplevel(Window.hidden_master_root)
+        # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
+        root = tk.Toplevel()
     else:
-        root = tk.Toplevel(Window.hidden_master_root)
+        # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
+        root = tk.Toplevel()
 
     if window.DebuggerEnabled:
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
@@ -12943,7 +12944,7 @@ class QuickMeter(object):
             col2 += [[T('', size=(30, 10), key='_STATS_')],
                      [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col), Column(col2)]
-        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar)
+        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar, disable_close=True)
         self.window.Layout([layout]).Finalize()
 
         return self.window
@@ -17783,7 +17784,8 @@ def main():
                 webbrowser.open_new_tab(r'https://www.paypal.me/psgui')
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
-            theme_previewer(search_string=search_string)
+            if search_string:
+                theme_previewer(search_string=search_string)
         elif event == 'Switch Themes':
             window.close()
             _main_switch_theme()
