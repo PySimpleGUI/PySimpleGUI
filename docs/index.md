@@ -3573,9 +3573,9 @@ Traceback (most recent call last):
     main()
   File "C:/Users/mike/.PyCharmCE2019.1/config/scratches/scratch_978 - key error example.py", line 17, in main
     window['-O U T'].update(values['-IN-'])
-  File "C:\Python\PycharmProjects\GooeyGUI\PySimpleGUI.py", line 8591, in __getitem__
+  File "C:\Python\PycharmProjects\PSG\PySimpleGUI.py", line 8591, in __getitem__
     return self.FindElement(key)
-  File "C:\Python\PycharmProjects\GooeyGUI\PySimpleGUI.py", line 7709, in FindElement
+  File "C:\Python\PycharmProjects\PSG\PySimpleGUI.py", line 7709, in FindElement
     raise KeyError(key)
 KeyError: '-O U T'
 ```
@@ -7689,6 +7689,45 @@ Element pinning for invisibility!
 	* spin button color set to background color of spinner
 	* spin arrow color automatically set to text color
 * Bad element key popup - fix for displaying correct line info in some situations
+
+## 4.29.0 PySimpleGUI 25-Aug-2020
+
+Custom titlebar capabilities (several new features required)
+Better Alignment
+Calendar button works again
+
+* Window.visiblity_changed now refreshes the window 
+* Added Column.contents_changed which will update the scrollbar so corrently match the contents
+* Separators expand only in 1 direction now
+* Added 8 SYMBOLS:
+	SYMBOL_SQUARE = '█'
+	SYMBOL_CIRCLE = '⚫'
+	SYMBOL_CIRCLE_OUTLINE = '◯'
+	SYMBOL_UP =    '▲'
+	SYMBOL_RIGHT = '►'
+	SYMBOL_LEFT =  '◄'
+	SYMBOL_DOWN =  '▼'
+	SYMBOL_X = '❎'
+* New dark themes - dark grey 8, dark grey 9, dark green 9, dark purple 7
+* When closing window no longer deletes the tkroot variable and rows but instead set to None
+* Changd no-titlebar code to use try/except. Previously removed for Mac due to tk 8.6.10 errors calling wm_overrideredirect
+* Fix for Column/window element justification
+* New vertical_alignment parm for Column, Frame, pin
+* New layout helper functions - vtop/vcenter/vbottom - Can pass an element or a row of elements
+* Fixed statusbar expansion
+* Added disabled button to theme previewer
+* Fixed grab anywhere stop motion bug - was setting position to None and causing error changed to event.x
+* Expanded main to include popup tests, theme tests, ability to hide tabs
+* Grab parameter for Text Element, Column Element
+* Added tclversion_detailed to get the detailed tkinter version
+* All themes changed the progress bar definition that had a "DEFAULT" indicator. New constant DEFAULT_PROGRESS_BAR_COMPUTE indicates the other theme colors should be used to create the progess bar colors.
+* Added expand_x and expand_y parameters to Columns
+* Fix for Calendar Button.  Still needs to be fixed for read_all_windows
+* Force focus when no-titlebar window. Needed for Raspberry Pi
+* Added Window.force_focus
+* No longer closes the hidden master window. Closing it caused a memory leak within tkinter
+* Disable close on one_line_progress_meter. There is a cancel button that will close the window
+* Changed back toplevel to no parent - was causing problems with timeout=0 windows
 
 ### Upcoming
 

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.28.0.23 Unreleased 3-Aug-2020\nAdded a referesh to visiblity_changed (an existing function but blank), added Column.contents_changed which will update the scrollbar so corrently match the contents, separators expand only in 1 direction now, added SYBOOLS for arrows circle square, dark grey 8 theme, when closing window don't delete the tkroot variable and rows but instead set to None, dark grey 9 theme, replaced check for darkwin with try/except for wm_overrideredirect, fix for Column/window element justification, new vertical_alignment parm for Columns, vertical_alignment parm added to Frame, vertical_alignment added to pin func, vtop/vcenter/vbottom vertical alignment layout helper funcs, fixed statusbar expansion, added disabled button to theme previewer, grab anywhere stop motion was setting position to None and causing error. changed to event.x, expanded main to include popup tests, made vtop/vcenter/vbottom capable of taking an entire row as well as a single element, grab parameter for Text Element, added symbol left, added tclversion_detailed, all themes changed the progress bar definition that had a DEFAULT indicator because of bug it caused when swapping themes, added expand_x and expand_y to Columns, fix for Calendar Button, force focus when no-titlebar window, added Window.force_focus, do not close hidden master window, disable close on one_line_progress_meter - was causing next window to not work right when close with X, changed back toplevel to no parent"
+version = __version__ = "4.29.0 Released 25-Aug-2020"
 
 port = 'PySimpleGUI'
 
@@ -31,7 +31,7 @@ port = 'PySimpleGUI'
 """
 Copyright 2018, 2019, 2020 PySimpleGUI.org
 
-OK, let's get the bullshit out of the way
+OK, let's get the BS out of the way
 
 This software is available for your use under a MODIFIED LGPL3+ license
 

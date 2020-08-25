@@ -1122,8 +1122,12 @@ Column(layout,
     key=None,
     k=None,
     visible=True,
-    justification="left",
-    element_justification="left",
+    justification=None,
+    element_justification=None,
+    vertical_alignment=None,
+    grab=None,
+    expand_x=None,
+    expand_y=None,
     metadata=None)
 ```
 
@@ -1143,6 +1147,10 @@ Parameter Descriptions:
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     str                                      |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
 |                                     str                                      | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
+|                                     str                                      |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                     bool                                     |         grab          | If True can grab this element and move the window around. Default is False |
+|                                     bool                                     |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
+|                                     bool                                     |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
 ### AddRow
@@ -1708,6 +1716,7 @@ Frame(title,
     right_click_menu=None,
     visible=True,
     element_justification="left",
+    vertical_alignment=None,
     metadata=None)
 ```
 
@@ -1731,6 +1740,7 @@ Parameter Descriptions:
 |                       List[List[Union[List[str],str]]]                       |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     bool                                     |        visible        | set visibility state of the element |
 |                                     str                                      | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
+|                                     str                                      |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
 |                                     Any                                      |       metadata        | User metadata that can be set to ANYTHING |
 
 ### AddRow
@@ -6518,6 +6528,7 @@ StatusBar(text,
     pad=None,
     key=None,
     k=None,
+    right_click_menu=None,
     tooltip=None,
     visible=True,
     metadata=None)
@@ -6540,6 +6551,7 @@ Parameter Descriptions:
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                        Union[str, int, tuple, object]                        |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
 |                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -7887,6 +7899,7 @@ Text(text="",
     key=None,
     k=None,
     right_click_menu=None,
+    grab=None,
     tooltip=None,
     visible=True,
     metadata=None)
@@ -7911,6 +7924,7 @@ Parameter Descriptions:
 |                        Union[str, int, tuple, object]                        |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
 |                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                     bool                                     |       grab       | If True can grab this element and move the window around. Default is False |
 |                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                     bool                                     |     visible      | set visibility state of the element |
 |                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
@@ -9304,9 +9318,8 @@ UnHide()
 
 ### VisibilityChanged
 
-Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
-        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
-        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
+When making an element in a column or someplace that has a scrollbar, then you'll want to call this function
+        prior to the column's contents_changed() method.
 
 ```python
 VisibilityChanged()
@@ -9629,6 +9642,14 @@ Returns the Element that currently has focus as reported by tkinter. If no eleme
 |---|---|---|
 |<type>| **return** | An Element if one has been found with focus or None if no element found         |
 
+### force_focus
+
+Forces this window to take focus
+
+```python
+force_focus()
+```
+
 ### get_screen_dimensions
 
 Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
@@ -9908,9 +9929,8 @@ un_hide()
 
 ### visibility_changed
 
-Not used in tkinter, but supplied becuase it is used in Qt. Want to remain source code compatible so that if
-        you are making this call in your PySimpleGUIQt code, you can switch to PySimpleGUI and it will not complain
-        about a missing method.  Just know that in this version of PySimpleGUI, it does nothing
+When making an element in a column or someplace that has a scrollbar, then you'll want to call this function
+        prior to the column's contents_changed() method.
 
 ```python
 visibility_changed()
@@ -9985,6 +10005,7 @@ CalendarButton(button_text,
     bind_return_key=False,
     focus=False,
     pad=None,
+    enable_events=None,
     key=None,
     k=None,
     locale=None,
@@ -13965,14 +13986,53 @@ Parameter Descriptions:
 | (Dict[Any:Any]) | values_dict | A dictionary with element keys as key and value is values parm for Update call |
 | None | **RETURN** | None
 
-## Element Visibility
+## Layout Helper Funcs
 
 Pin's an element provided into a layout so that when it's made invisible and visible again, it will
  be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
 ```
-pin(elem)
+pin(elem, vertical_alignment=None)
 ```
+
+Align an element or a row of elements to the bottom of the row that contains it
+
+```
+vbottom(elem_or_row)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[Element, List[Element], Tuple[Element]] | elem_or_row | the element or row of elements |
+| Union[Column, List[Column]] | **RETURN** | A column element containing the provided element aligned to the bottom or list of elements (a row)
+
+Align an element or a row of elements to the center of the row that contains it
+
+```
+vcenter(elem_or_row)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[Element, List[Element], Tuple[Element]] | elem_or_row | the element or row of elements |
+| Union[Column, List[Column]] | **RETURN** | A column element containing the provided element aligned to the center or list of elements (a row)
+
+Align an element or a row of elements to the top of the row that contains it
+
+```
+vtop(elem_or_row)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Union[Element, List[Element], Tuple[Element]] | elem_or_row | the element or row of elements |
+| Union[Column, List[Column]] | **RETURN** | A column element containing the provided element aligned to the top or list of elements (a row)
 
 ## Configuration / Settings / Extensions
 
