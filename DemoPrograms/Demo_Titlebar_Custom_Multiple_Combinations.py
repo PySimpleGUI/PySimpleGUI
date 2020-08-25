@@ -74,7 +74,7 @@ def create_window(title, bar_text_color, bar_background_color):
 
         [sg.T('This is normal window text.   The above is the fake "titlebar"')],
         [sg.T('Input something:')],
-        [sg.Input('Color of input text', key='-IN-'), sg.Text(size=(12, 1), key='-OUT-')],
+        [sg.Input('Color of input text', focus=True, key='-IN-'), sg.Text(size=(12, 1), key='-OUT-')],
         [sg.Button('Go'), sg.Button('Next'), sg.B('New Theme'), sg.Button('Exit')]]
 
     window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=False, keep_on_top=True, margins=(0, 0), finalize=True)
@@ -121,7 +121,7 @@ def main():
     theme, color_pairs = choose_theme()
 
     index = 0
-    window = create_window(f'{color_pairs[index][0]} - {theme}', color_pairs[index][1], color_pairs[index][2])
+    window = create_window('{} - {}'.format(color_pairs[index][0],theme), color_pairs[index][1], color_pairs[index][2])
 
     while True:  # Event Loop
         event, values = window.read()
@@ -132,17 +132,18 @@ def main():
             window.hide()
             dummy_minimized_window(window.Title)
             window.un_hide()
+            window.force_focus()
         elif event == 'Go':
             window['-OUT-'].update(values['-IN-'])
         elif event == 'Next':
             window.close()
             index = (index + 1) % len(color_pairs)
-            window = create_window(f'{color_pairs[index][0]} - {theme}', color_pairs[index][1], color_pairs[index][2])
+            window = create_window('{} - {}'.format(color_pairs[index][0],theme), color_pairs[index][1], color_pairs[index][2])
         elif event == 'New Theme':
             window.close()
             theme, color_pairs = choose_theme()
             index = 0
-            window = create_window(f'{color_pairs[index][0]} - {theme}', color_pairs[index][1], color_pairs[index][2])
+            window = create_window('{} - {}'.format(color_pairs[index][0],theme), color_pairs[index][1], color_pairs[index][2])
 
     window.close()
 
