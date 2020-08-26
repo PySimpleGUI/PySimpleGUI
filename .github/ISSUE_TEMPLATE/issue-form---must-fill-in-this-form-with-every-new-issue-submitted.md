@@ -15,12 +15,26 @@ assignees: ''
 
 ### PySimpleGUI Port and Version
 
-This is critical to know.  Knowing where your PySimpleGUI.py file is located is just as important.  You can get these by adding this to the top of your file and running it:
+Ports = tkinter, Qt, WxPython, Web
+
+PySimpleGUI Version:
+
+tkinter version:
+
+You can get these by adding this to the top of your file and running it:
 
 ```python
 import PySimpleGUI as sg
-print(sg)
-print(sg.version)
+
+print(sg)             # Location of your PySimpleGUI.py file
+print(sg.version)     # PySimpleGUI version number
+print(sg.tclversion_detailed)   # tkinter detailed version number (in PySimpleGUI version 4.29.0+)
+print(sg.sys.version) # Python version number
+```
+
+The tkinter version number can be obtained using above code in version 4.29.0+.  If your code is prior:
+```python
+print(sg.tkinter.Tcl().eval('info patchlevel'))
 ```
 
 
@@ -43,6 +57,7 @@ _________ Have used another Python GUI Framework (tkinter, Qt, etc) previously (
 
 ### Description of Problem / Question / Details
 
+
 ### Code To Duplicate
 
 A short program that isolates and demonstrates the problem (i.e. please don't paste a link to your 400 line program.... instead paste your 10 line program in full).  
@@ -53,9 +68,6 @@ This pre-formatted code block is all set for you to paste in your bit of code:
 
 ```python
 import PySimpleGUI as sg
-print(sg)
-print(sg.version)
 
 ## Paste your code here
-
 ```
