@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0 Released 25-Aug-2020"
+version = __version__ = "4.29.0.1 Unreleased\nAdded shink parameter to pin"
 
 port = 'PySimpleGUI'
 
@@ -9325,15 +9325,22 @@ def Sizer(h_pixels=0, v_pixels=0):
     return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
 
 
-def pin(elem, vertical_alignment=None):
+def pin(elem, vertical_alignment=None, shrink=True):
     '''
     Pin's an element provided into a layout so that when it's made invisible and visible again, it will
      be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
     :param elem: the element to put into the layout
+    :type elem: Element
+    :param shrink: If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank
+    :type shrink: bool
     :return: A column element containing the provided element
+    :rtype: Column
     '''
-    return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
+    if shrink:
+        return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
+    else:
+        return Column([[elem]], pad=(0,0), vertical_alignment=vertical_alignment)
 
 
 def vtop(elem_or_row):
