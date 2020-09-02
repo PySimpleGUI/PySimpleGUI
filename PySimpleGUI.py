@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.1 Unreleased\nAdded shink parameter to pin"
+version = __version__ = "4.29.0.3 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function"
 
 port = 'PySimpleGUI'
 
@@ -7171,7 +7171,8 @@ class Window:
         self.not_completed_initial_movement = True
         self.config_count = 0
         self.saw_00 = False
-
+        self.maximized = False
+        
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -8082,6 +8083,7 @@ class Window:
         except:
             pass
 
+
     def Minimize(self):
         """
         Minimize this window to the task bar
@@ -8089,6 +8091,8 @@ class Window:
         if not self._is_window_created():
             return
         self.TKroot.iconify()
+        self.maximized = False
+
 
     def Maximize(self):
         """
@@ -8105,6 +8109,7 @@ class Window:
             self.TKroot.attributes('-fullscreen', True)
         # this method removes the titlebar too
         # self.TKroot.attributes('-fullscreen', True)
+        self.maximized = True
 
     def Normal(self):
         """
@@ -8119,6 +8124,8 @@ class Window:
                 self.TKroot.state('normal')
             else:
                 self.TKroot.attributes('-fullscreen', False)
+        self.maximized = False
+
 
     def _StartMove(self, event):
         """
@@ -9332,6 +9339,8 @@ def pin(elem, vertical_alignment=None, shrink=True):
 
     :param elem: the element to put into the layout
     :type elem: Element
+    :param vertical_alignment: Aligns elements vertically. 'top', 'center', 'bottom'. Can be shortened to 't', 'c', 'b'
+    :type vertical_alignment: Union[str, None]
     :param shrink: If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank
     :type shrink: bool
     :return: A column element containing the provided element
@@ -12635,6 +12644,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #     side = tk.TOP
 
         # row_should_expand = False
+
+        # if form.RightClickMenu:
+        #     menu = form.RightClickMenu
+        #     top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+        #     AddMenuItem(top_menu, menu[1], form)
+        #     tk_row_frame.bind('<Button-3>', form._RightClickMenuCallback)
+
+
         tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0,
                           expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -17578,6 +17595,28 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
+def main_sdk_help_window():
+
+    element_classes = Element.__subclasses__()
+    element_names = {element.__name__: element for element in element_classes}
+    layout = [[Text('PySimpleGUI Element Reference', font='Any 20')]]
+    button_col = Col([[B(e, pad=(0, 0), size=(15, 1))] for e in sorted(element_names.keys())])
+    layout += [vtop([button_col, Multiline(size=(120, 50), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 9')])]
+    layout += [[Button('Exit', size=(15, 1))]]
+
+    window = Window('PySimpleGUI Reference', layout, use_default_focus=False, keep_on_top=True)
+
+    while True:  # Event Loop
+        event, values = window.read()
+        if event == WIN_CLOSED or event == 'Exit':
+            break
+        if event in element_names.keys():
+            elem = element_names[event]
+            window['-ML-'].update('')
+            print(help(elem))
+    window.close()
+
+
 def _main_switch_theme():
     layout = [
               [Text('Click a look and feel color to see demo window')],
@@ -17720,7 +17759,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
          Button('Exit', tooltip='Exit button')],
-        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose'), B('Themes'),B('Switch Themes'),]
+        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose'), B('Themes'),B('Switch Themes'),B('SDK Reference')]
     ]
 
     layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
@@ -17799,7 +17838,11 @@ def main():
             window = _create_main_window()
             graph_elem = window['+GRAPH+']
         elif event == '-HIDE TABS-':
-            window['-TAB GROUP-'].update(visible=False)
+            window['-TAB GROUP-'].update(visible=window['-TAB GROUP-'].metadata == True)
+            window['-TAB GROUP-'].metadata = not window['-TAB GROUP-'].metadata
+            window['-HIDE TABS-'].update(text=SYMBOL_UP if window['-TAB GROUP-'].metadata else SYMBOL_DOWN)
+        elif event == 'SDK Reference':
+            main_sdk_help_window()
         elif event.startswith('P '):
             if event == 'P ':
                 popup('Normal Popup - Modal', keep_on_top=True)
