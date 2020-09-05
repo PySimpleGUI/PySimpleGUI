@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.3 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function"
+version = __version__ = "4.29.0.5 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13"
 
 port = 'PySimpleGUI'
 
@@ -11320,7 +11320,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(foreground=bc[0])
                 if bd == 0 and not sys.platform.startswith('darwin'):
                     tkbutton.config(relief=tk.FLAT)
-                tkbutton.config(highlightthickness=0)
+
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
@@ -11365,6 +11365,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                # tkbutton.config(highlightthickness=0)
             # -------------------------  BUTTON placement element ttk version ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
@@ -14762,7 +14763,40 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                           'SCROLL': '#202225',
                                           'BUTTON': ('#202225', '#B9BBBE'),
                                           'PROGRESS': ('#202225', '#40444B'),
-                                          'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,}
+                                          'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkGrey10' : {'BACKGROUND': '#1c1e23',
+                                      'TEXT': '#cccdcf',
+                                      'INPUT': '#272a31',
+                                      'TEXT_INPUT': '#8b9fde',
+                                      'SCROLL': '#313641',
+                                      'BUTTON': ('#f5f5f6', '#2e3d5a'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COMPUTE,
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkGrey11' : {'BACKGROUND': '#1c1e23',
+                                      'TEXT': '#cccdcf',
+                                      'INPUT': '#313641',
+                                      'TEXT_INPUT': '#cccdcf',
+                                      'SCROLL': '#313641',
+                                      'BUTTON': ('#f5f5f6', '#313641'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COMPUTE,
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkGrey12' : {'BACKGROUND': '#1c1e23',
+                                      'TEXT': '#8b9fde',
+                                      'INPUT': '#313641',
+                                      'TEXT_INPUT': '#8b9fde',
+                                      'SCROLL': '#313641',
+                                      'BUTTON': ('#cccdcf', '#2e3d5a'),
+                                      'PROGRESS': DEFAULT_PROGRESS_BAR_COMPUTE,
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkGrey13' : {'BACKGROUND': '#1c1e23',
+                                      'TEXT': '#cccdcf',
+                                      'INPUT': '#272a31',
+                                      'TEXT_INPUT': '#cccdcf',
+                                      'SCROLL': '#313641',
+                                      'BUTTON': ('#8b9fde', '#313641'),
+                                      'PROGRESS': ('#cccdcf','#272a31'),
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0}
+
                     }
 
 
@@ -17595,7 +17629,7 @@ def _upgrade_gui():
     else:
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
-def main_sdk_help_window():
+def main_sdk_help():
 
     element_classes = Element.__subclasses__()
     element_names = {element.__name__: element for element in element_classes}
@@ -17646,15 +17680,18 @@ def _create_main_window():
     # theme('dark')
     # theme('dark red')
     # theme('Light Green 6')
+    # theme('Dark Grey 8')
     ver = version.split('\n')[0]
 
     tkversion = tkinter.TkVersion
     tclversion = tkinter.TclVersion
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
-    print('Starting up PySimpleGUI Test Harness\n', 'PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tclversion),
+    print('Starting up PySimpleGUI Diagnostic & Help System')
+    print('PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tclversion),
           'tkinter version = {}'.format(tkversion), '\nPython Version {}'.format(sys.version))
     print('tcl detailed version = {}'.format(tclversion_detailed))
+    print('PySimpleGUI.py location', __file__)
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
@@ -17738,8 +17775,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
 
 
 
-    def VerLine(version, description, justification='r', size=(30,1)):
-        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), T(description, font='Any 12')]
+    def VerLine(version, description, justification='r', size=(40,1)):
+        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), vtop(T(description, font='Any 12'))]
 
     layout1 = [
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
@@ -17749,8 +17786,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          VerLine(ver, 'PySimpleGUI Version'),
          VerLine('{}/{}'.format(tkversion,tclversion),'TK/TCL Versions'),
          VerLine(tclversion_detailed, 'detailed tkinter version'),
-         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location',justification='l',size=(30,2)),
-         VerLine(sys.version, 'Python Version', justification='l', size=(40, 2)),
+         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40,2)),
+         VerLine(sys.version, 'Python Version',  size=(40, 2)),
 
         [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
@@ -17842,7 +17879,7 @@ def main():
             window['-TAB GROUP-'].metadata = not window['-TAB GROUP-'].metadata
             window['-HIDE TABS-'].update(text=SYMBOL_UP if window['-TAB GROUP-'].metadata else SYMBOL_DOWN)
         elif event == 'SDK Reference':
-            main_sdk_help_window()
+            main_sdk_help()
         elif event.startswith('P '):
             if event == 'P ':
                 popup('Normal Popup - Modal', keep_on_top=True)
