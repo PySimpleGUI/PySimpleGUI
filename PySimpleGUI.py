@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.5 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13"
+version = __version__ = "4.29.0.7 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs"
 
 port = 'PySimpleGUI'
 
@@ -133,6 +133,7 @@ except:
 from threading import Thread
 import itertools
 import os
+import json
 import queue
 try:
     import webbrowser
@@ -14795,6 +14796,14 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'SCROLL': '#313641',
                                       'BUTTON': ('#8b9fde', '#313641'),
                                       'PROGRESS': ('#cccdcf','#272a31'),
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkGrey14' : {'BACKGROUND': '#24292e',
+                                      'TEXT': '#fafbfc',
+                                      'INPUT': '#1d2125',
+                                      'TEXT_INPUT': '#fafbfc',
+                                      'SCROLL': '#1d2125',
+                                      'BUTTON': ('#fafbfc', '#155398'),
+                                      'PROGRESS': ('#155398','#1d2125'),
                                       'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0}
 
                     }
@@ -16797,6 +16806,210 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     output = output[output.index("stdout=b'")+9:-2]
     return output
 
+
+
+
+#   .d8888b.           888    888    d8b
+#  d88P  Y88b          888    888    Y8P
+#  Y88b.               888    888
+#   "Y888b.    .d88b.  888888 888888 888 88888b.   .d88b.  .d8888b
+#      "Y88b. d8P  Y8b 888    888    888 888 "88b d88P"88b 88K
+#        "888 88888888 888    888    888 888  888 888  888 "Y8888b.
+#  Y88b  d88P Y8b.     Y88b.  Y88b.  888 888  888 Y88b 888      X88
+#   "Y8888P"   "Y8888   "Y888  "Y888 888 888  888  "Y88888  88888P'
+#                                                      888
+#                                                 Y8b d88P
+#                                                  "Y88P"
+
+# Interface to saving / loading user program settings in json format
+
+class _UserSettings:
+    settings = None             # type: _UserSettings
+    def __init__(self):
+        self.path = None
+        self.filename = None
+        self.full_filename = None
+        self.dict = {}
+        # self.full_filename = os.path.join(self.location, self.filename)
+
+    def set_location(self, filename=None, path=None):
+        if filename is not None:
+            dirname_from_filename = os.path.dirname(filename)  # see if a path was provided as part of filename
+            if dirname_from_filename:
+                path = dirname_from_filename
+                filename = os.path.basename(filename)
+        else:
+            frame = inspect.stack()[2]
+            module = inspect.getmodule(frame[0])
+            filename = module.__file__
+            filename = os.path.basename(filename)
+            filename = os.path.splitext(filename)[0] + '.json'
+        self.filename = filename
+
+        if path is None:
+            if sys.platform.startswith('win'):
+                self.path = os.path.expanduser(r'~\AppData\Local\PySimpleGUI\settings')
+            elif sys.platform.startswith('linux'):
+                self.path = os.path.expanduser(r'~/.config/PySimpleGUI/settings')
+            elif sys.platform.startswith('darwin'):
+                self.path = os.path.expanduser(r'~/Library/Application Support/PySimpleGUI/settings')
+            else:
+                self.path = '.'
+        else:
+            self.path = path
+        self.filename = filename
+        self.full_filename = os.path.join(self.path, self.filename)
+
+
+    def save(self):
+        try:
+            if not os.path.exists(self.path):
+                os.makedirs(self.path)
+            with open(self.full_filename, 'w') as f:
+                json.dump(self.dict, f)
+        except Exception as e:
+            print('Error saving settings to file:', self.full_filename, e)
+
+
+    def read(self):
+        if self.full_filename is None:
+            return {}
+        try:
+            if os.path.exists(self.full_filename):
+                with open(self.full_filename, 'r') as f:
+                    self.dict = json.load(f)
+        except Exception as e:
+            print('Error reading settings from file:', self.full_filename, e)
+        return self.dict
+
+# Create a singleton for the settings information
+_UserSettings.settings = _UserSettings()
+
+
+
+def user_settings_filename(filename=None, path=None):
+    """
+    Sets the filename and path for your settings file.  Either paramter can be optional.
+    If you don't choose a path, one is provided for you that is OS specific
+    Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+    If you don't choose a filename, your application's filename + '.json' will be used
+
+    :param filename: The name of the file to use. Can be a full path and filename or just filename
+    :type filename: (str)
+    :param path: The folder that the settings file will be stored in. Do no include the filename.
+    :type path: (str)
+    :return: The full pathname of the settings file that has both the path and filename combined.
+    :rtype: (str)
+    """
+    settings = _UserSettings.settings
+    if filename is not None or path is not None or (filename is None and path is None):
+        settings.set_location(filename, path)
+        settings.read()
+    return settings.full_filename
+
+
+def user_settings_set_entry(key, value):
+    """
+    Sets an individual setting to the specified value.  If no filename has been specified up to this point,
+    then a default filename will be used.
+    After value has been modified, the settings file is written to disk.
+
+    :param key:  Setting to be saved. Can be anything except a List
+    :type key: (Any)
+    :param value: Value to save as the setting's value. Can be anything
+    :type value:  (Any)
+    """
+    settings = _UserSettings.settings
+    if settings.full_filename is None:
+        settings.set_location()
+    settings.read()
+    settings.dict[key] = value
+    # settings.save()
+
+
+def user_settings_get_entry(key, default=None):
+    """
+    Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+    the user specified default value will be returned.  It no default is specified and nothing is found,m then
+    None is returned.
+    If no filename has been specified up to this point, then a default filename will be assigned and used.
+
+    :param key: Key used to lookup the setting in the settings dictionary
+    :type key: (Any)
+    :param default: Value to use should the key not be found in the dictionary
+    :type default: (Any)
+    :return:
+    """
+    settings = _UserSettings.settings
+    if settings.full_filename is None:
+        settings.set_location()
+        settings.read()
+    value = settings.dict.get(key, default)
+    return value
+
+
+def user_settings_save(filename=None, path=None):
+    """
+    Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
+    previously specitfied filename to create a new settings file.  The settings dictionary ais then saved to the newly defined file.
+
+    :param filename: The filename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
+    :type filename: (str)
+    :param path: The (optional) path to use to save the file.
+    :type path: (str)
+    :return: The full path and filename used to save the settings
+    :rtype: (str)
+    """
+    settings = _UserSettings.settings
+    if filename is not None or path is not None:
+        settings.set_location(filename=filename, path=path)
+    settings.save()
+    return settings.full_filename
+
+
+def user_settings_load(filename=None, path=None):
+    """
+    Specifies the path and filename to use for the settings and reads the contents of the file.
+    The filename can be a full filename including a path, or the path can be specified separately.
+    If  no filename is specified, then the caller's filename will be used with the extension ".json"
+
+    :param filename: Filename to load settings from (and save to in the future)
+    :type filename: (str)
+    :param path: Path to the file. Defaults to a specific folder depending on the operating system
+    :type path: (str)
+    :return: The settings dictionary (i.e. all settings)
+    :rtype: (dict)
+    """
+    settings = _UserSettings.settings
+    if filename is not None or path is not None or settings.full_filename is None:
+        settings.set_location(filename, path)
+    settings.read()
+    return settings.dict
+
+
+def user_settings_write_new_dictionary(settings_dict):
+    """
+    Writes a specified dictionary to the currently defined settings filename.
+
+    :param settings_dict: The dictionary to be written to the currently defined settings file
+    :type settings_dict: (dict)
+    """
+    settings = _UserSettings.settings
+    if settings.full_filename is None:
+        settings.set_location()
+    settings.dict = settings_dict
+    settings.save()
+
+
+def user_settings():
+    """
+    Returns the current settings dictionary.  You'll need to have previously read the settings file or
+    made an update to it so that one exists.
+
+    :return: The current settings dictionary
+    :rtype: (dict)
+    """
+    return _UserSettings.settings.dict
 
 
 #####################################################################################################
