@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.7 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs"
+version = __version__ = "4.29.0.8 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update"
 
 port = 'PySimpleGUI'
 
@@ -1793,11 +1793,13 @@ class Radio(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, disabled=None, visible=None):
+    def Update(self, value=None, text=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: if True change to selected and set others in group to unselected
         :type value: (bool)
+        :param text: Text to display next to radio button
+        :type text: (str)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param visible: control visibility of element
@@ -1817,6 +1819,9 @@ class Radio(Element):
             except:
                 print('Error updating Radio')
             self.InitialState = value
+        if text is not None:
+            self.Text = str(text)
+            self.TKRadio.configure(text=self.Text)
         if disabled == True:
             self.TKRadio['state'] = 'disabled'
         elif disabled == False:
