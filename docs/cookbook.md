@@ -2758,7 +2758,7 @@ layout = [  [sg.Text('Text area', key='_TEXT_')],
             [sg.Input(key='_URL_')],  
             [sg.Button('Chrome'), sg.Button('Exit')]]  
   
-window = sg.Window('Window Title', layuout)  
+window = sg.Window('Window Title', layout)  
   
 while True:             # Event Loop  
   event, values = window.read()  
