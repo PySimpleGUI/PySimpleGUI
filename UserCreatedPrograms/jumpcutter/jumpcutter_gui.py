@@ -22,66 +22,89 @@ import sys
     NOTE - it has not yet been tested on Linux.  It's only been tested on Windows.  Hoping to get it
     tested out on Linux shortly.
     
+    KNOWN Problem - filenames with spaces.  Working on it.  For now, make a temp folder and make sure everything
+    has no spaces and you'll be fine.  YouTube download wasn't working on the video I tried
+    
     Copyright 2020 PySimpleGUI.org
 """
 
-def build_parameter_string(values):
-    values_to_parm = {'-FILE-' : '--input_file',
-                      '-URL-' : '--url',
-                      '-OUT FILE-' : '--output_file',
-                      '-SILENT THRESHOLD-' : '--silent_threshold',
-                      '-SOUNDED SPEED-' : '--sounded_speed',
-                      '-SILENT SPEED-' : '--silent_speed',
-                      '-FRAME MARGIN-' : '--frame_margin',
-                      '-SAMPLE RATE-' : '--sample_rate',
-                      '-FRAME RATE-' : '--frame_rate',
-                      '-FRAME QUALITY-' : '--frame_quality',
-                      }
-    parms = ''
-    for key in values:
-        if key not in values_to_parm:
-            continue
-        if values[key] != '':
-            parms += f"{values_to_parm[key]} {values[key]} "
-    return(parms)
+
+def FText(text, in_key=None, default=None, tooltip=None, input_size=None, text_size=None):
+    """
+    A "Fixed-sized Text Input".  Returns a row with a Text and an Input element.
+    """
+    if input_size is None:
+        input_size = (20, 1)
+    if text_size is None:
+        text_size = (20, 1)
+    return [sg.Text(text, size=text_size, justification='r', tooltip=tooltip),
+            sg.Input(default_text=default, key=in_key, size=input_size, tooltip=tooltip)]
 
 
 def main():
-    def FText(text, in_key=None, default=None, tooltip=None, input_size=(20,1)):
-        """
-        A "Fixed-sized Text Input".  Returns a row with a Text and an Input element.
-        """
-        return [sg.Text(text, size=(20, 1), justification='r', tooltip=tooltip), sg.Input(default_text=default, key=in_key, size=input_size)]
 
-    layout = [
-        [sg.Text('Jump Cutter', font='Any 20')],
-        FText('Input File', '-FILE-', '', 'the video file you want modified', input_size=(40,1)) + [sg.FileBrowse()],
-        FText('URL', '-URL-', '', 'A youtube url to download and process', input_size=(40,1)),
-        FText('Output File', '-OUT FILE-', '', "the output file. (optional. if not included, it'll just modify the input file name)", input_size=(40,1)) + [sg.FileSaveAs()],
-        FText('Silent Threshold', '-SILENT THRESHOLD-', 0.03,
-              "the volume amount that frames' audio needs to surpass to be consider \"sounded\". It ranges from 0 (silence) to 1 (max volume)"),
-        FText('Sounded Speed', '-SOUNDED SPEED-', 1.00, "the speed that sounded (spoken) frames should be played at. Typically 1."),
-        FText('Silent Speed', '-SILENT SPEED-', 5.00, "the speed that silent frames should be played at. 999999 for jumpcutting."),
-        FText('Frame Margin', '-FRAME MARGIN-', 1,
-              "some silent frames adjacent to sounded frames are included to provide context. How many frames on either the side of speech should be included? That's this variable."),
-        FText('Sample Rate', '-SAMPLE RATE-', '44100', "sample rate of the input and output videos"),
-        FText('Frame Rate', '-FRAME RATE-', 30,
-              "frame rate of the input and output videos. optional... I try to find it out myself, but it doesn't always work."),
-        FText('Frame Quality', '-FRAME QUALITY-', 3, "quality of frames to be extracted from input video. 1 is highest, 31 is lowest, 3 is the default."),
-        [sg.MLine(size=(90,10), reroute_stdout=True, reroute_stderr=True, reroute_cprint=True, write_only=True, font='Courier 10', autoscroll=True, key='-ML-')],
-        [sg.Button('Start'), sg.Button('Exit')],
-    ]
+    # This version of the GUI uses this large dictionary to drive 100% of the creation of the
+    #   layout that collections the parameters for the command line call.  It's really simplistic
+    #   at the moment with a tuple containing information about each entry.
+    # The definition of the GUI.  Defines:
+    #   PSG Input Key
+    #   Tuple of items needed to build a line in the layout
+    #       0 - The command line's parameter
+    #       1 - The text to display next to input
+    #       2 - The default value for the input
+    #       3 - Size of input field (None for default)
+    #       4 - Tooltip string
+    #       5 - List of additional elements to include on the same row
 
-    window = sg.Window('Jump Cutter', layout)
+    input_defintion = {
+        '-FILE-' : ('--input_file', 'Input File', '', (40,1),'the video file you want modified', [sg.FileBrowse()]),
+        '-URL-' : ('--url','URL (not yet working)', '', (40,1), 'A youtube url to download and process', []),
+        '-OUT FILE-' : ('--output_file', 'Output File', '', (40,1), "the output file. (optional. if not included, it'll just modify the input file name)", [sg.FileSaveAs()]),
+        '-SILENT THRESHOLD-' : ('--silent_threshold', 'Silent Threshold', 0.03, None, "the volume amount that frames' audio needs to surpass to be consider \"sounded\". It ranges from 0 (silence) to 1 (max volume)", []),
+        '-SOUNDED SPEED-' : ('--sounded_speed', 'Sounded Speed', 1.00, None, "the speed that sounded (spoken) frames should be played at. Typically 1.", []),
+        '-SILENT SPEED-' : ('--silent_speed', 'Silent Speed', 5.00, None, "the speed that silent frames should be played at. 999999 for jumpcutting.", []),
+        '-FRAME MARGIN-' : ('--frame_margin', 'Frame Margin', 1, None, "some silent frames adjacent to sounded frames are included to provide context. How many frames on either the side of speech should be included? That's this variable.", []),
+        '-SAMPLE RATE-' : ('--sample_rate', 'Sample Rate', 44100, None, "sample rate of the input and output videos", []),
+        '-FRAME RATE-' : ('--frame_rate', 'Frame Rate', 30, None, "frame rate of the input and output videos. optional... I try to find it out myself, but it doesn't always work.", []),
+        '-FRAME QUALITY-' : ('--frame_quality', 'Frame Quality', 3, None, "quality of frames to be extracted from input video. 1 is highest, 31 is lowest, 3 is the default.", [])
+                    }
+
+    # the command that will be invoked with the parameters
+    command_to_run = r'python .\jumpcutter.py '
+
+    # Find longest input descrption
+    text_len = max([len(input_defintion[key][1]) for key in input_defintion])
+    # Top part of layout that's not table driven
+    layout = [[sg.Text('Jump Cutter', font='Any 20')]]
+    # Computed part of layout that's based on the dictionary of attributes (the table driven part)
+    for key in input_defintion:
+        layout_def = input_defintion[key]
+        line = FText(layout_def[1], in_key=key, default=layout_def[2], tooltip=layout_def[4], input_size=layout_def[3], text_size=(text_len,1))
+        if layout_def[5] != []:
+            line += layout_def[5]
+        layout += [line]
+    # Bottom part of layout that's not table driven
+    layout += [[sg.Text('Constructed Command Line:')],
+        [sg.Text(size=(80,3), key='-COMMAND LINE-', text_color='yellow', font='Courier 8')],
+        [sg.MLine(size=(80,10), reroute_stdout=True, reroute_stderr=True, reroute_cprint=True, write_only=True, font='Courier 8', autoscroll=True, key='-ML-')],
+        [sg.Button('Start'), sg.Button('Exit')]]
+
+    window = sg.Window('Jump Cutter', layout, finalize=True)
 
     while True:
         event, values = window.read()
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
         if event == 'Start':
-            parms = build_parameter_string(values)
-            print('Your parameters = ', parms)
-            runCommand(cmd=r'python .\jumpcutter.py ' + parms, window=window)
+            parms = ''
+            for key in values:
+                if key not in input_defintion:
+                    continue
+                if values[key] != '':
+                    parms += f"{input_defintion[key][0]} {values[key]} "
+            command = command_to_run + parms
+            window['-COMMAND LINE-'].update(command)
+            runCommand(cmd=command, window=window)
             sg.cprint('*'*20+'DONE'+'*'*20, background_color='red', text_color='white')
     window.close()
 
