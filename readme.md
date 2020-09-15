@@ -3802,13 +3802,13 @@ Individual colors are specified using either the color names as defined in tkint
 	"#RRGGBB"        or          "darkblue"
 
 ### `auto_size_text      `
-A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
+A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk to the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
 
 `Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
 
 `Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
 
-### Chortcut functions
+### Shortcut functions
 The shorthand functions for `Text` are `Txt` and `T`
 
 ### Events `enable_events`
@@ -5856,7 +5856,7 @@ PySimpleGUI doesn't and can't provide every single setting available in the unde
 There are a few of reasons for this.
 
 1. Time & resource limits - The size of the PySimpleGUI development team is extremely small
-2. PySimpleGUI provides a "Unified API".  This means the code is, in theory, portable across all of the PySimpleGUI ports without chaning the user's code (except for the import)
+2. PySimpleGUI provides a "Unified API".  This means the code is, in theory, portable across all of the PySimpleGUI ports without changing the user's code (except for the import)
 3. PySimpleGUI is meant, by design, to be simple and cover 80% of the GUI problems.
 
 However, PySimpleGUI programs are ***not*** dead ends!!  Writing PySimpleGUI code and then getting to a point where you really really feel like you need to extend the Listbox to include the ability to change the "Selected" color.  Maybe that's super-critical to your project.  And maybe you find out late that the base PySimpleGUI code doesn't expose that tkinter capability.  Fear not!  The road does continue!!
