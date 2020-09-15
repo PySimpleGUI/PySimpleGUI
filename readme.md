@@ -3802,13 +3802,13 @@ Individual colors are specified using either the color names as defined in tkint
 	"#RRGGBB"        or          "darkblue"
 
 ### `auto_size_text      `
-A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
+A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk to the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.  
 
 `Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
 
 `Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
 
-### Chortcut functions
+### Shortcut functions
 The shorthand functions for `Text` are `Txt` and `T`
 
 ### Events `enable_events`
