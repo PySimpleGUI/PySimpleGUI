@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.8 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update"
+version = __version__ = "4.29.0.9 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme"
 
 port = 'PySimpleGUI'
 
@@ -1962,6 +1962,7 @@ class Checkbox(Element):
             return
 
         if value is not None:
+            value = bool(value)
             try:
                 self.TKIntVar.set(value)
                 self.InitialState = value
@@ -2158,7 +2159,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, focus=False, font=None, pad=None, tooltip=None, justification=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2199,6 +2200,8 @@ class Multiline(Element):
         :type reroute_stderr: (bool)
         :param reroute_cprint: If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination
         :type reroute_cprint: (bool)
+        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
+        :type echo_stdout_stderr: (bool)
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
@@ -2236,6 +2239,7 @@ class Multiline(Element):
         key = key if key is not None else k
         self.previous_stdout = self.previous_stderr = None
         self.reroute_cprint = reroute_cprint
+        self.echo_stdout_stderr = echo_stdout_stderr
         self.Justification = 'left' if justification is None else justification
         self.justification_tag = self.just_center_tag = self.just_left_tag = self.just_right_tag = None
         if reroute_stdout:
@@ -2345,6 +2349,7 @@ class Multiline(Element):
             except:
                 pass
 
+
     def Get(self):
         """
         Return current contents of the Multiline Element
@@ -2352,7 +2357,6 @@ class Multiline(Element):
         :return: current contents of the Multiline Element (used as an input type of Multiline
         :rtype: (str)
         """
-
         return self.TKText.get(1.0, tk.END)
 
 
@@ -2392,6 +2396,7 @@ class Multiline(Element):
         self.previous_stderr = sys.stderr
         sys.stderr = self
 
+
     def restore_stdout(self):
         """
         Restore a previously re-reouted stdout back to the original destination
@@ -2417,6 +2422,8 @@ class Multiline(Element):
         """
         try:
             self.update(txt, append=True)
+            if self.echo_stdout_stderr:
+                self.previous_stdout.write(txt)
         except:
             pass
 
@@ -2426,7 +2433,10 @@ class Multiline(Element):
         Flush parameter was passed into a print statement.
         For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
         """
-        return
+        try:
+            self.previous_stdout.flush()
+        except:
+            pass
 
 
     def __del__(self):
@@ -2472,7 +2482,7 @@ class Text(Element):
         :param relief: relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
         :type relief: (str/enum)
         :param font: specifies the font family, size, etc
-        :type font: Union[str, Tuple[str, int]]
+        :type font: (str or Tuple[str, int] or None)
         :param text_color: color of the text
         :type text_color: (str)
         :param background_color: color of background
@@ -2784,7 +2794,7 @@ class TKOutput(tk.Frame):
     to PySimpleGUI by directly manipulating tkinter.
     """
 
-    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, font=None, pad=None):
+    def __init__(self, parent, width, height, bd, background_color=None, text_color=None, echo_stdout_stderr=False, font=None, pad=None):
         """
         :param parent: The "Root" that the Widget will be in
         :type parent: Union[tk.Tk, tk.Toplevel]
@@ -2798,6 +2808,8 @@ class TKOutput(tk.Frame):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
+        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
+        :type echo_stdout_stderr: (bool)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -2819,6 +2831,7 @@ class TKOutput(tk.Frame):
         self.previous_stdout = sys.stdout
         self.previous_stderr = sys.stderr
         self.parent = parent
+        self.echo_stdout_stderr = echo_stdout_stderr
 
         sys.stdout = self
         sys.stderr = self
@@ -2839,6 +2852,12 @@ class TKOutput(tk.Frame):
         except:
             pass
 
+        try:
+            if self.echo_stdout_stderr:
+                self.previous_stdout.write(txt)
+        except:
+            pass
+
     def Close(self):
         """
         Called when wanting to restore the old stdout/stderr
@@ -2851,7 +2870,12 @@ class TKOutput(tk.Frame):
         Flush parameter was passed into a print statement.
         For now doing nothing.  Not sure what action should be taken to ensure a flush happens regardless.
         """
-        return
+        try:
+            if self.echo_stdout_stderr:
+                self.previous_stdout.flush()
+        except:
+            pass
+
 
 
     def __del__(self):
@@ -2871,8 +2895,7 @@ class Output(Element):
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
     """
 
-    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, font=None, tooltip=None,
-                 key=None, k=None, right_click_menu=None, visible=True, metadata=None):
+    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param size: (width, height) w=characters-wide, h=rows-high
         :type size: (int, int)
@@ -2882,6 +2905,8 @@ class Output(Element):
         :type text_color: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
+        :type echo_stdout_stderr: (bool)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2903,6 +2928,7 @@ class Output(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.RightClickMenu = right_click_menu
         key = key if key is not None else k
+        self.echo_stdout_stderr = echo_stdout_stderr
 
         super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, metadata=metadata)
@@ -9339,7 +9365,7 @@ def Sizer(h_pixels=0, v_pixels=0):
 
 
 def pin(elem, vertical_alignment=None, shrink=True):
-    '''
+    """
     Pin's an element provided into a layout so that when it's made invisible and visible again, it will
      be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
@@ -9351,7 +9377,7 @@ def pin(elem, vertical_alignment=None, shrink=True):
     :type shrink: bool
     :return: A column element containing the provided element
     :rtype: Column
-    '''
+    """
     if shrink:
         return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
     else:
@@ -9359,14 +9385,14 @@ def pin(elem, vertical_alignment=None, shrink=True):
 
 
 def vtop(elem_or_row):
-    '''
+    """
     Align an element or a row of elements to the top of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
     :return: A column element containing the provided element aligned to the top or list of elements (a row)
     :rtype: Union[Column, List[Column]]
-    '''
+    """
 
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
         return [Column([[e]], pad=(0,0), vertical_alignment='top') for e in elem_or_row]
@@ -9375,14 +9401,14 @@ def vtop(elem_or_row):
 
 
 def vcenter(elem_or_row):
-    '''
+    """
     Align an element or a row of elements to the center of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
     :return: A column element containing the provided element aligned to the center or list of elements (a row)
     :rtype: Union[Column, List[Column]]
-    '''
+    """
 
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
         return [Column([[e]], pad=(0,0), vertical_alignment='center') for e in elem_or_row]
@@ -9392,14 +9418,14 @@ def vcenter(elem_or_row):
 
 
 def vbottom(elem_or_row):
-    '''
+    """
     Align an element or a row of elements to the bottom of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Union[Element, List[Element], Tuple[Element]]
     :return: A column element containing the provided element aligned to the bottom or list of elements (a row)
     :rtype: Union[Column, List[Column]]
-    '''
+    """
 
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
         return [Column([[e]], pad=(0,0), vertical_alignment='bottom') for e in elem_or_row]
@@ -10173,7 +10199,7 @@ CButton = CloseButton
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
-    '''
+    """
     :param button_text: text in the button
     :type button_text: (str)
     :param image_filename: image filename if there is a button image
@@ -10212,7 +10238,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type metadata: (Any)
     :return: Button created
     :rtype: (Button)
-    '''
+    """
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
@@ -11968,11 +11994,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
+                element = element                   # type: Output
                 width, height = element_size
                 element._TKOut = element.Widget = TKOutput(tk_row_frame, width=width, height=height, bd=border_depth,
                                                            background_color=element.BackgroundColor,
                                                            text_color=text_color, font=font,
-                                                           pad=elementpad)
+                                                           pad=elementpad, echo_stdout_stderr=element.echo_stdout_stderr)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
                 element._TKOut.pack(side=tk.LEFT, expand=False, fill=tk.NONE)
                 if element.Visible is False:
@@ -13085,12 +13112,12 @@ def OneLineProgressMeterCancel(key='OK for 1 meter'):
 
 
 def GetComplimentaryHex(color):
-    '''
+    """
     :param color: color string, like "#RRGGBB"
     :type color: (str)
     :return: color string, like "#RRGGBB"
     :rtype: (str)
-    '''
+    """
 
     # strip the # from the beginning
     color = color[1:]
@@ -14809,7 +14836,17 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                       'SCROLL': '#1d2125',
                                       'BUTTON': ('#fafbfc', '#155398'),
                                       'PROGRESS': ('#155398','#1d2125'),
-                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0}
+                                      'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0},
+                       'DarkBrown7' : {'BACKGROUND': '#2c2417',
+                                        'TEXT': '#baa379',
+                                        'INPUT': '#baa379',
+                                        'TEXT_INPUT': '#000000',
+                                        'SCROLL': '#392e1c',
+                                        'BUTTON': ('#000000', '#baa379'),
+                                        'PROGRESS': ('#baa379','#453923'),
+                                        'BORDER': 1,
+                                        'SLIDER_DEPTH': 1,
+                                        'PROGRESS_DEPTH': 0}
 
                     }
 
@@ -16844,11 +16881,13 @@ class _UserSettings:
                 path = dirname_from_filename
                 filename = os.path.basename(filename)
         else:
-            frame = inspect.stack()[2]
-            module = inspect.getmodule(frame[0])
-            filename = module.__file__
-            filename = os.path.basename(filename)
-            filename = os.path.splitext(filename)[0] + '.json'
+            # frame = inspect.stack()[2]
+            # module = inspect.getmodule(frame[0])
+            filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.json'
+            # print(filename)
+            # filename = module.__file__
+            # filename = os.path.basename(filename)
+            # filename = os.path.splitext(filename)[0] + '.json'
         self.filename = filename
 
         if path is None:
