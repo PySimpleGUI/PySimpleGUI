@@ -1,6 +1,11 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.9 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme"
+version = __version__ = "4.29.0.10 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string"
 
+# The shortened version of version
+try:
+    ver = version.split(' ')[0]
+except:
+    ver = ''
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -16958,7 +16963,7 @@ def user_settings_set_entry(key, value):
     then a default filename will be used.
     After value has been modified, the settings file is written to disk.
 
-    :param key:  Setting to be saved. Can be anything except a List
+    :param key:  Setting to be saved. Can be any valid dictionary key type
     :type key: (Any)
     :param value: Value to save as the setting's value. Can be anything
     :type value:  (Any)
@@ -16968,15 +16973,34 @@ def user_settings_set_entry(key, value):
         settings.set_location()
     settings.read()
     settings.dict[key] = value
-    # settings.save()
+    settings.save()
+
+
+def user_settings_delete_entry(key):
+    """
+    Deletes an individual entry.  If no filename has been specified up to this point,
+    then a default filename will be used.
+    After value has been deleted, the settings file is written to disk.
+
+    :param key:  Setting to be saved. Can be any valid dictionary key type (hashable)
+    :type key: (Any)
+    """
+    settings = _UserSettings.settings
+    if settings.full_filename is None:
+        settings.set_location()
+    settings.read()
+    if key in settings.dict:
+        del settings.dict[key]
+        settings.save()
 
 
 def user_settings_get_entry(key, default=None):
     """
     Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
-    the user specified default value will be returned.  It no default is specified and nothing is found,m then
-    None is returned.
+    the user specified default value will be returned.  It no default is specified and nothing is found, then
+    None is returned.  If the key isn't in the dictionary, then it will be added and the settings file saved.
     If no filename has been specified up to this point, then a default filename will be assigned and used.
+    The settings are SAVED prior to returning.
 
     :param key: Key used to lookup the setting in the settings dictionary
     :type key: (Any)
@@ -16989,6 +17013,8 @@ def user_settings_get_entry(key, default=None):
         settings.set_location()
         settings.read()
     value = settings.dict.get(key, default)
+    if key not in settings.dict:
+        user_settings_set_entry(key, value)
     return value
 
 
