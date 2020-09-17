@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.11 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled"
+version = __version__ = "4.29.0.12 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update"
 
 # The shortened version of version
 try:
@@ -1773,7 +1773,7 @@ class Radio(Element):
 
         self.InitialState = default
         self.Text = text
-        self.TKRadio = None
+        self.Widget = self.TKRadio = None  # type: tk.Radiobutton
         self.GroupID = group_id
         self.Value = None
         self.Disabled = disabled
@@ -1798,13 +1798,17 @@ class Radio(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, text=None, disabled=None, visible=None):
+    def Update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: if True change to selected and set others in group to unselected
         :type value: (bool)
         :param text: Text to display next to radio button
         :type text: (str)
+        :param background_color: color of background
+        :type background_color: (str)
+        :param text_color: color of the text. Note this also changes the color of the selection dot
+        :type text_color: (str)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param visible: control visibility of element
@@ -1827,6 +1831,24 @@ class Radio(Element):
         if text is not None:
             self.Text = str(text)
             self.TKRadio.configure(text=self.Text)
+        if background_color is not None:
+            self.TKRadio.configure(background=background_color)
+            self.BackgroundColor = background_color
+        if text_color is not None:
+            self.TKRadio.configure(fg=text_color)
+            self.TextColor = text_color
+        if self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
+            # ---- compute color of circle background ---
+            text_hsl = _hex_to_hsl(self.TextColor)
+            background_hsl = _hex_to_hsl(self.BackgroundColor if self.BackgroundColor else theme_background_color())
+            l_delta = abs(text_hsl[2] - background_hsl[2])/10
+            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+            else:
+                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+            self.CircleBackgroundColor = RGB(*bg_rbg)
+            self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the checkbox
+
         if disabled == True:
             self.TKRadio['state'] = 'disabled'
         elif disabled == False:
