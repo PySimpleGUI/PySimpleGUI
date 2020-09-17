@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.10 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string"
+version = __version__ = "4.29.0.11 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled"
 
 # The shortened version of version
 try:
@@ -15378,7 +15378,7 @@ def Popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type any_key_closes: (bool)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None]
@@ -15524,7 +15524,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     :type font: Union[str, Tuple[str, int]]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -15535,6 +15535,11 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal)
+    if image is not None:
+        if isinstance(image, str):
+            window.add_row(Image(filename=image))
+        else:
+            window.add_row(Image(data=image))
     max_line_total, max_line_width, total_lines, height_computed = 0, 0, 0, 0
     complete_output = ''
     for message in args:
@@ -15616,7 +15621,7 @@ def PopupNoButtons(*args, title=None, background_color=None, text_color=None, au
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]    """
@@ -15829,7 +15834,7 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -15887,7 +15892,7 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -15942,7 +15947,7 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -15994,7 +15999,7 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -16045,7 +16050,7 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: Union[str, None, TIMEOUT_KEY]
@@ -16095,7 +16100,7 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: clicked button
     :rtype: Union["OK", "Cancel", None]
@@ -16146,7 +16151,7 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
     :type location: Tuple[int, int]
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: clicked button
     :rtype: Union["Yes", "No", None]
@@ -16203,7 +16208,7 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
     :type initial_folder: (str)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: string representing the path chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
@@ -16324,7 +16329,7 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :type initial_folder: (str)
     :param image:  Image to include at the top of the popup window
     :type image: (str) or (bytes)
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: string representing the file(s) chosen, None if cancelled or window closed with X
     :rtype: Union[str, None]
@@ -16516,7 +16521,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type month_names: List[str]
     :param day_abbreviations: optional list of abbreviations to display as the day of week
     :type day_abbreviations: List[str]
-    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
     :rtype: None or (int, int, int)
