@@ -97,7 +97,7 @@ def show_list_by_cpu():
 
 def main():
     # ----------------  Create Form  ----------------
-    # sg.theme('Topanga')
+    sg.theme('Dark Grey 9')
 
     layout = [[sg.Text('Python Process Killer - Choose one or more processes',
                        size=(45, 1), font=('Helvetica', 15), text_color='yellow')],
@@ -147,7 +147,8 @@ def main():
                     kill_proc(pid=pid)
                     # kill_proc_tree(pid=pid)
                 except Exception as e:
-                    sg.popup_no_wait('Error killing process', e, auto_close_duration=2, auto_close=True, keep_on_top=True)
+                    if event.endswith('Selected'):      # only show the error if trying to kill only 1 process
+                        sg.popup_no_wait('Error killing process', e, auto_close_duration=2, auto_close=True, keep_on_top=True)
             window['-processes-'].update(show_list_by_name() if name_sorted else show_list_by_cpu())
             if event.endswith('Exit'):
                 break
