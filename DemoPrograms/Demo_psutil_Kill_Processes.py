@@ -7,6 +7,8 @@ import operator
 
 CONFIRM_KILLS = False
 
+
+
 """
     Utility to show running processes, CPU usage and provides way to kill processes.
     Based on psutil package that is easily installed using pip
@@ -46,10 +48,10 @@ def show_list_by_name(window):
 def main():
 
     # ----------------  Create Form  ----------------
-    # sg.theme('Topanga')
+    sg.theme('Dark Grey 9')
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
-                       size=(45,1), font=('Helvetica', 15), text_color='red')],
+                       size=(45,1), font=('Helvetica', 15), text_color='yellow')],
               [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-processes-')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-filter-')],
