@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.13 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, "
+version = __version__ = "4.29.0.14 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists"
 
 # The shortened version of version
 try:
@@ -4475,7 +4475,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawImage(self, filename=None, data=None, location=(None, None), color='black', font=None, angle=0):
+    def DrawImage(self, filename=None, data=None, location=(None, None)):
         """
         Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
@@ -4485,12 +4485,6 @@ class Graph(Element):
         :type data: Union[str, bytes]
         :param location: the (x,y) location to place image's top left corner
         :type location: Union[Tuple[int, int], Tuple[float, float]]
-        :param color: text color
-        :type color: (str)
-        :param font: specifies the font family, size, etc
-        :type font: Union[str, Tuple[str, int]]
-        :param angle: Angle 0 to 360 to draw the text.  Zero represents horizontal text
-        :type angle: (float)
         :return: id returned from tkinter that you'll need if you want to manipulate the image
         :rtype: Union[int, None]
         """
@@ -16906,30 +16900,40 @@ class _UserSettings:
         self.dict = {}
         # self.full_filename = os.path.join(self.location, self.filename)
 
-    def set_location(self, filename=None, path=None):
+
+    def compute_filename(self, filename=None, path=None):
         if filename is not None:
             dirname_from_filename = os.path.dirname(filename)  # see if a path was provided as part of filename
             if dirname_from_filename:
                 path = dirname_from_filename
                 filename = os.path.basename(filename)
+        elif self.filename is not None:
+            filename = self.filename
         else:
             filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.json'
-        self.filename = filename
 
         if path is None:
-            if sys.platform.startswith('win'):
-                self.path = os.path.expanduser(r'~\AppData\Local\PySimpleGUI\settings')
+            if self.path is not None:
+                path = self.path
+            elif sys.platform.startswith('win'):
+                path = os.path.expanduser(r'~\AppData\Local\PySimpleGUI\settings')
             elif sys.platform.startswith('linux'):
-                self.path = os.path.expanduser(r'~/.config/PySimpleGUI/settings')
+                path = os.path.expanduser(r'~/.config/PySimpleGUI/settings')
             elif sys.platform.startswith('darwin'):
-                self.path = os.path.expanduser(r'~/Library/Application Support/PySimpleGUI/settings')
+                path = os.path.expanduser(r'~/Library/Application Support/PySimpleGUI/settings')
             else:
-                self.path = '.'
-        else:
-            self.path = path
-        self.filename = filename
-        self.full_filename = os.path.join(self.path, self.filename)
+                path = '.'
 
+        full_filename = os.path.join(path, filename)
+        return (full_filename, path, filename)
+
+    def set_location(self, filename=None, path=None):
+        cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
+
+        self.filename = cfilename
+        self.path = cpath
+        self.full_filename = cfull_filename
+        print(f'set location... {self.full_filename}')
 
     def save(self):
         try:
@@ -16957,6 +16961,13 @@ class _UserSettings:
             print('Error reading settings from file:', self.full_filename, e)
         return self.dict
 
+    def exists(self, filename=None, path=None):
+        cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
+        if os.path.exists(cfull_filename):
+            return True
+        return False
+
+
 # Create a singleton for the settings information
 _UserSettings.settings = _UserSettings()
 
@@ -16979,7 +16990,7 @@ def user_settings_filename(filename=None, path=None):
     """
     settings = _UserSettings.settings
     if filename is not None or path is not None or (filename is None and path is None):
-        settings.set_location(filename, path)
+        settings.set_location(filename=filename, path=path)
         settings.read()
     return settings.full_filename
 
@@ -17104,6 +17115,22 @@ def user_settings_load(filename=None, path=None):
     settings.read()
     return settings.dict
 
+
+def user_settings_file_exists(filename=None, path=None):
+    """
+    Determines if a settings file exists.  If so a boolean True is returned.
+    If either a filename or a path is not included, then the appropriate default
+    will be used.
+
+    :param filename: Filename to check
+    :type filename: (str)
+    :param path: Path to the file. Defaults to a specific folder depending on the operating system
+    :type path: (str)
+    :return: True if the file exists
+    :rtype: (bool)
+    """
+    settings = _UserSettings.settings
+    return settings.exists(filename=filename, path=path)
 
 def user_settings_write_new_dictionary(settings_dict):
     """
