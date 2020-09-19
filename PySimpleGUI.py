@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.12 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update"
+version = __version__ = "4.29.0.13 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, "
 
 # The shortened version of version
 try:
@@ -16913,13 +16913,7 @@ class _UserSettings:
                 path = dirname_from_filename
                 filename = os.path.basename(filename)
         else:
-            # frame = inspect.stack()[2]
-            # module = inspect.getmodule(frame[0])
             filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.json'
-            # print(filename)
-            # filename = module.__file__
-            # filename = os.path.basename(filename)
-            # filename = os.path.splitext(filename)[0] + '.json'
         self.filename = filename
 
         if path is None:
@@ -16946,6 +16940,11 @@ class _UserSettings:
         except Exception as e:
             print('Error saving settings to file:', self.full_filename, e)
 
+    def delete_file(self):
+        try:
+            os.remove(self.full_filename)
+        except Exception as e:
+            print('User settings delete filename warning', e)
 
     def read(self):
         if self.full_filename is None:
@@ -16960,6 +16959,7 @@ class _UserSettings:
 
 # Create a singleton for the settings information
 _UserSettings.settings = _UserSettings()
+
 
 
 
@@ -16982,6 +16982,26 @@ def user_settings_filename(filename=None, path=None):
         settings.set_location(filename, path)
         settings.read()
     return settings.full_filename
+
+
+def user_settings_delete_filename(filename=None, path=None):
+    """
+    Deltes the filename and path for your settings file.  Either paramter can be optional.
+    If you don't choose a path, one is provided for you that is OS specific
+    Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+    If you don't choose a filename, your application's filename + '.json' will be used
+    Also sets your current dictionary to a blank one.
+
+    :param filename: The name of the file to use. Can be a full path and filename or just filename
+    :type filename: (str)
+    :param path: The folder that the settings file will be stored in. Do no include the filename.
+    :type path: (str)
+    """
+    settings = _UserSettings.settings
+    if filename is not None or path is not None or (filename is None and path is None):
+        settings.set_location(filename, path)
+        settings.delete_file()
+        settings.dict = {}
 
 
 def user_settings_set_entry(key, value):
@@ -17042,6 +17062,7 @@ def user_settings_get_entry(key, default=None):
     value = settings.dict.get(key, default)
     if key not in settings.dict:
         user_settings_set_entry(key, value)
+        settings.save()
     return value
 
 
@@ -17050,7 +17071,7 @@ def user_settings_save(filename=None, path=None):
     Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
     previously specitfied filename to create a new settings file.  The settings dictionary ais then saved to the newly defined file.
 
-    :param filename: The filename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
+    :param filename: The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
     :type filename: (str)
     :param path: The (optional) path to use to save the file.
     :type path: (str)
@@ -17100,12 +17121,17 @@ def user_settings_write_new_dictionary(settings_dict):
 
 def user_settings():
     """
-    Returns the current settings dictionary.  You'll need to have previously read the settings file or
-    made an update to it so that one exists.
+    Returns the current settings dictionary.  If you've not setup the filename for the
+    settings, a default one will be used and then read.
 
     :return: The current settings dictionary
     :rtype: (dict)
     """
+    settings = _UserSettings.settings
+    if settings.full_filename is None:
+        settings.set_location()
+        settings.read()
+        settings.save()
     return _UserSettings.settings.dict
 
 
