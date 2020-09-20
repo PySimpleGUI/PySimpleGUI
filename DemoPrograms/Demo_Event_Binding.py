@@ -14,22 +14,30 @@ import PySimpleGUI as sg
 """
 sg.theme('Dark Blue 3')
 
-layout = [  [sg.Text('Move mouse over me', key='-TEXT-')],
-            [sg.In(key='-IN-')],
-            [sg.Button('Right Click Me', key='-BUTTON-'), sg.Button('Exit')]  ]
+def main():
+    layout = [  [sg.Text('Move mouse over me', key='-TEXT-')],
+                [sg.In(key='-IN-')],
+                [sg.Button('Right Click Me', key='-BUTTON-'), sg.Button('Right Click Me2', key=(2,3)),sg.Button('Exit'),
+                ]
+                ]
 
-window = sg.Window('Window Title', layout, finalize=True)
+    window = sg.Window('Window Title', layout, finalize=True)
 
-window.bind('<FocusOut>', '+FOCUS OUT+')
+    window.bind('<FocusOut>', '+FOCUS OUT+')
 
-window['-BUTTON-'].bind('<Button-3>', '+RIGHT CLICK+')
-window['-TEXT-'].bind('<Enter>', '+MOUSE OVER+')
-window['-TEXT-'].bind('<Leave>', '+MOUSE AWAY+')
-window['-IN-'].bind('<FocusIn>', '+INPUT FOCUS+')
+    window['-BUTTON-'].bind('<Button-3>', '+RIGHT CLICK+')
+    window[(2,3)].bind('<Button-3>', '+RIGHT CLICK+')
+    window['-TEXT-'].bind('<Enter>', '+MOUSE OVER+')
+    window['-TEXT-'].bind('<Leave>', '+MOUSE AWAY+')
+    window['-IN-'].bind('<FocusIn>', '+INPUT FOCUS+')
 
-while True:             # Event Loop
-    event, values = window.read()
-    print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
-window.close()
+    while True:             # Event Loop
+        event, values = window.read()
+        print(event, values)
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+    window.close()
+
+
+if __name__ == '__main__':
+    main()
