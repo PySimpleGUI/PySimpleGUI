@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.14 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists"
+version = __version__ = "4.29.0.15 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme"
 
 # The shortened version of version
 try:
@@ -14867,8 +14867,17 @@ LOOK_AND_FEEL_TABLE = {'SystemDefault':
                                         'PROGRESS': ('#baa379','#453923'),
                                         'BORDER': 1,
                                         'SLIDER_DEPTH': 1,
+                                        'PROGRESS_DEPTH': 0},
+                       'Python': {'BACKGROUND': '#3d7aab',
+                                        'TEXT': '#ffde56',
+                                        'INPUT': '#295273',
+                                        'TEXT_INPUT': '#ffde56',
+                                        'SCROLL': '#295273',
+                                        'BUTTON': ('#ffde56', '#295273'),
+                                        'PROGRESS': ('#ffde56','#295273'),
+                                        'BORDER': 1,
+                                        'SLIDER_DEPTH': 1,
                                         'PROGRESS_DEPTH': 0}
-
                     }
 
 
@@ -16933,7 +16942,7 @@ class _UserSettings:
         self.filename = cfilename
         self.path = cpath
         self.full_filename = cfull_filename
-        print(f'set location... {self.full_filename}')
+        # print(f'set location... {self.full_filename}')
 
     def save(self):
         try:
@@ -16977,9 +16986,14 @@ _UserSettings.settings = _UserSettings()
 def user_settings_filename(filename=None, path=None):
     """
     Sets the filename and path for your settings file.  Either paramter can be optional.
+
     If you don't choose a path, one is provided for you that is OS specific
     Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
-    If you don't choose a filename, your application's filename + '.json' will be used
+
+    If you don't choose a filename, your application's filename + '.json' will be used.
+
+    Normally the filename and path are split in the user_settings calls. However for this call they
+    can be combined so that the filename contains both the path and filename.
 
     :param filename: The name of the file to use. Can be a full path and filename or just filename
     :type filename: (str)
@@ -18230,7 +18244,7 @@ def main():
                 webbrowser.open_new_tab(r'https://www.paypal.me/psgui')
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
-            if search_string:
+            if search_string is not None:
                 theme_previewer(search_string=search_string)
         elif event == 'Switch Themes':
             window.close()
