@@ -166,6 +166,7 @@ def draw_figure(element, figure):
     :return: The figure canvas
     """
 
+
     plt.close('all')        # erases previously drawn plots
     canv = FigureCanvasAgg(figure)
     buf = io.BytesIO()
@@ -176,6 +177,7 @@ def draw_figure(element, figure):
     element.update(data=buf.read())
     return canv
 
+
 # ----------------------------- The GUI Section -----------------------------
 
 def main():
@@ -184,11 +186,17 @@ def main():
                              'Scales': create_pyplot_scales,
                              'Basic Figure': create_figure}
 
+
+    left_col = [[sg.T('Figures to Draw')],
+                [sg.Listbox(list(dictionary_of_figures), default_values=[list(dictionary_of_figures)[0]], size=(15, 5), key='-LB-')],
+                [sg.T('Matplotlib Styles')],
+                [sg.Combo(plt.style.available,  key='-STYLE-')]]
+
     layout = [ [sg.T('Matplotlib Example', font='Any 20')],
-               [sg.Listbox(list(dictionary_of_figures.keys()), size=(15, 5), key='-LB-'), sg.Image(key='-IMAGE-')],
+               [sg.Column(left_col), sg.Image(key='-IMAGE-')],
                [sg.B('Draw'), sg.B('Exit')] ]
 
-    window = sg.Window('Title', layout)
+    window = sg.Window('Matplotlib Template', layout)
 
     image_element = window['-IMAGE-']       # type: sg.Image
 
@@ -197,8 +205,11 @@ def main():
         print(event, values)
         if event == 'Exit' or event == sg.WIN_CLOSED:
             break
-        if event == 'Draw':
-            func = dictionary_of_figures[values['-LB-'][0]]
+        if event == 'Draw' and values['-LB-']:
+            # Get the function to call to make figure. Done this way to get around bug in Web port (default value not working correctly for listbox)
+            func = dictionary_of_figures.get(values['-LB-'][0], list(dictionary_of_figures.values())[0])
+            if values['-STYLE-']:
+                plt.style.use(values['-STYLE-'])
             draw_figure(image_element, func())
 
     window.close()
