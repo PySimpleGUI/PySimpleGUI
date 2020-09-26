@@ -1,6 +1,4 @@
 import PySimpleGUI as sg
-# import PySimpleGUIQt as sg
-# import PySimpleGUIWeb as sg
 
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasAgg
@@ -12,14 +10,16 @@ from matplotlib import cm
 from mpl_toolkits.mplot3d.axes3d import get_test_data
 from matplotlib.ticker import NullFormatter  # useful for `logit` scale
 
-
 """
-    Demo - Matplotlib Embedded figure in a window TEMPLATE
+    Demo - Matplotlib Non-interactive Embedded with Theme and Style selection
     
-    The reason this program is labelled as a "Template" is that it functions on 3 
-    PySimpleGUI ports by only changing the import statement. tk, Qt, Web(Remi) all
-    run this same code and produce identical results.
+    This demo is based on the Matplotlib "TEMPLATE" demo that is a general purpose, display-only
+    demo as only the image of the plot is shown.  None of the buttons and interactive parts
+    of the MAtplotlib interface are included.
     
+    This demo adds the ability to change the Window's "Theme" and the Matplotlib's "Style".
+    It gives you a way to quickly see how well a theme is going to match a particular Matplotlib Style. 
+
     Copyright 2020 PySimpleGUI.org
 """
 
@@ -69,7 +69,6 @@ def create_axis_grid():
     return plt.gcf()
 
 
-
 def create_figure():
     # ------------------------------- START OF YOUR MATPLOTLIB CODE -------------------------------
     fig = matplotlib.figure.Figure(figsize=(5, 4), dpi=100)
@@ -80,8 +79,6 @@ def create_figure():
 
 
 def create_subplot_3d():
-
-
     fig = plt.figure()
 
     ax = fig.add_subplot(1, 2, 1, projection='3d')
@@ -102,10 +99,7 @@ def create_subplot_3d():
     return fig
 
 
-
-
 def create_pyplot_scales():
-
     plt.close('all')
     # Fixing random state for reproducibility
     np.random.seed(19680801)
@@ -155,6 +149,7 @@ def create_pyplot_scales():
                         wspace=0.35)
     return plt.gcf()
 
+
 # ----------------------------- The draw figure helpful function -----------------------------
 
 def draw_figure(element, figure):
@@ -166,8 +161,7 @@ def draw_figure(element, figure):
     :return: The figure canvas
     """
 
-
-    plt.close('all')        # erases previously drawn plots
+    plt.close('all')  # erases previously drawn plots
     canv = FigureCanvasAgg(figure)
     buf = io.BytesIO()
     canv.print_figure(buf, format='png')
@@ -178,39 +172,56 @@ def draw_figure(element, figure):
     return canv
 
 
+dictionary_of_figures = {'Axis Grid': create_axis_grid,
+                         'Subplot 3D': create_subplot_3d,
+                         'Scales': create_pyplot_scales,
+                         'Basic Figure': create_figure}
+
+
 # ----------------------------- The GUI Section -----------------------------
+def create_window():
+    """
+    Defines the window's layout and creates the window object.
+    This function is used so that the window's theme can be changed and the window "re-started".
 
-def main():
-    dictionary_of_figures = {'Axis Grid': create_axis_grid,
-                             'Subplot 3D': create_subplot_3d,
-                             'Scales': create_pyplot_scales,
-                             'Basic Figure': create_figure}
-
+    :return: The Window object
+    :rtype: sg.Window
+    """
 
     left_col = [[sg.T('Figures to Draw')],
                 [sg.Listbox(list(dictionary_of_figures), default_values=[list(dictionary_of_figures)[0]], size=(15, 5), key='-LB-')],
                 [sg.T('Matplotlib Styles')],
-                [sg.Combo(plt.style.available,  key='-STYLE-')]]
+                [sg.Combo(plt.style.available, size=(15, 10), key='-STYLE-')],
+                [sg.T('PySimpleGUI Themes')],
+                [sg.Combo(sg.theme_list(), default_value=sg.theme(), size=(15, 10), key='-THEME-')]]
 
-    layout = [ [sg.T('Matplotlib Example', font='Any 20')],
-               [sg.Column(left_col), sg.Image(key='-IMAGE-')],
-               [sg.B('Draw'), sg.B('Exit')] ]
+    layout = [[sg.T('Matplotlib Example', font='Any 20')],
+              [sg.Col(left_col), sg.Image(key='-IMAGE-')],
+              [sg.B('Draw'), sg.B('Exit')]]
 
-    window = sg.Window('Matplotlib Template', layout)
+    window = sg.Window('Matplotlib Embedded Template', layout, finalize=True)
 
-    image_element = window['-IMAGE-']       # type: sg.Image
+    return window
+
+
+def main():
+    window = create_window()
 
     while True:
         event, values = window.read()
         print(event, values)
         if event == 'Exit' or event == sg.WIN_CLOSED:
             break
-        if event == 'Draw' and values['-LB-']:
-            # Get the function to call to make figure. Done this way to get around bug in Web port (default value not working correctly for listbox)
-            func = dictionary_of_figures.get(values['-LB-'][0], list(dictionary_of_figures.values())[0])
-            if values['-STYLE-']:
-                plt.style.use(values['-STYLE-'])
-            draw_figure(image_element, func())
+        if event == 'Draw':
+            if values['-THEME-'] != sg.theme():  # if new theme chosen, create a new window
+                window.close()
+                sg.theme(values['-THEME-'])
+                window = create_window()
+            if values['-LB-']:  # make sure something selected to draw
+                func = dictionary_of_figures[values['-LB-'][0]]
+                if values['-STYLE-']:
+                    plt.style.use(values['-STYLE-'])
+                draw_figure(window['-IMAGE-'], func())
 
     window.close()
 
