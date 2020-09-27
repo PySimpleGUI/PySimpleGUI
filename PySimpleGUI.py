@@ -8578,7 +8578,7 @@ class Window:
 
     def set_min_size(self, size):
         """
-        Changes the minimum size of the window
+        Changes the minimum size of the window. Note Window must be read or finalized first.
 
         :param size: (width, height) of the desired window size
         :type size: Tuple[int, int)]
