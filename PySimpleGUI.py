@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.15 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme"
+version = __version__ = "4.29.0.16 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size"
 
 # The shortened version of version
 try:
@@ -8552,10 +8552,10 @@ class Window:
         Return the current size of the window in pixels
 
         :return: (width, height) of the window
-        :rtype: Tuple[(int), (int)]
+        :rtype: Tuple[(int), (int)] or Tuple[None, None]
         """
         if not self._is_window_created():
-            return
+            return (None, None)
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
         return win_width, win_height
@@ -8574,6 +8574,19 @@ class Window:
             self.TKroot.update_idletasks()
         except:
             pass
+
+
+    def set_min_size(self, size):
+        """
+        Changes the minimum size of the window. Note Window must be read or finalized first.
+
+        :param size: (width, height) of the desired window size
+        :type size: Tuple[int, int)]
+        """
+        if not self._is_window_created():
+            return
+        self.TKroot.minsize(size[0], size[1])
+        self.TKroot.update_idletasks()
 
 
     def visibility_changed(self):
