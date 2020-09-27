@@ -8580,8 +8580,8 @@ class Window:
         """
         Changes the minimum size of the window. Note Window must be read or finalized first.
 
-        :param size: (width, height) of the desired window size
-        :type size: Tuple[int, int)]
+        :param size: (width, height) tuple (int, int) of the desired window size in pixels
+        :type size: Tuple[int, int]
         """
         if not self._is_window_created():
             return
