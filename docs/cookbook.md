@@ -469,7 +469,7 @@ If you guess incorrectly, then you'll be treated to a random theme instead of so
 
 ---
 
-# Recipe - Post your screen-shots (PLEASE!)
+# Recipe - Post your screenshots (PLEASE!)
 
 This is an odd recipe, but it's an important one and has nothing to do with your coding PySimpleGUI code.  Instead is has to do with modifying youre readme.md file on your GitHub so you can share with the world your creation.  Doon't be shy.  We all stated with "hello world" and your first GUI is likely to be primitive, but it's very important you post it any way.
 
@@ -484,26 +484,26 @@ Your GitHub visitors may never have made a GUI and need to see a beginner GUI ju
 
 This is one of the easiest / laziest / quickest ways of adding a screenshot to your Readme.md and this post on your project's main page.
 
-Here'show you do it:
+Here's how you do it:
 
-1. Open a "Screenshots" Issue somehwere in GitHub.  It sdoesn't matter which project you open it under.  
+1. Open a "Screenshots" Issue somewhere in GitHub.  It sdoesn't matter which project you open it under.  
 2. Copy and paste your image into the Issue's comment section.  OR Drag and drop your image info the comment section.  OR click the upload diaload box by clickin at the bottom on the words "Attach files by dragging & dropping, selecting or pasting them.
 3. A line of code will be inserted when you add a the image to your GitHub Issue's comment.  The line of code will resemble this:
 ```
 ![image](https://user-images.githubusercontent.com/46163555/76170712-d6633c00-615a-11ea-866a-11d0b94a1b64.png)
 ```
-4. Copy the line of code that is created in the comment.  You can see this line when in the "Write" mode for the Issue.. If you want to see how it'll look, switch to the preview tab.
+4. Copy the line of code that is created in the comment.  You can see this line when in the "Write" mode for the Issue. If you want to see how it'll look, switch to the preview tab.
 5. Paste the line of code from the Issue Comment into your readme.md file located in your mtop-level FirHub folder
 
 That's it.
 
 Note, if you simply copy the link to the image that's created, in your readme.md file you will see only the link.  The image will not be embedded into the page, only the link will be shown  The thing you paste into your readme needs to have this format, theat starts with `![filename]`.
 
-Pasting the above line directly into this Cookbook resulted in this Weahter Widget posted::
+Pasting the above line directly into this Cookbook resulted in this Weather Widget posted::
 
 ![image](https://user-images.githubusercontent.com/46163555/76170712-d6633c00-615a-11ea-866a-11d0b94a1b64.png)
 
-## The Image Hosted Elsehwere Technique
+## The Image Hosted Elsewhere Technique
 
 The same technique is used as above, except in the line of code, you'll insert the URL of your image where every that may be inside the `( )`
 
