@@ -5943,7 +5943,7 @@ Either way you'll access it using the same `Window` variable `sg.Window.TKroot`
 
 Watch this space in the future for the more standardized variable name for this object.  It may be something like `Window.Widget` as the Elements use or something like `Window.GUIWindow`.
 
-## Binding tkiner "events"
+## Binding tkinter "events"
 
 If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
 
