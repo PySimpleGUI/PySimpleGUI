@@ -185,11 +185,6 @@ This is the window that Example 2 produces.
 </p>
 
 
-<p align="center">
-  <img src="">
-</p>
-
-
 
 And here's what it looks like after you enter a value into the Input field and click the Ok button.
 <p align="center">
