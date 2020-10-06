@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.16 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size"
+version = __version__ = "4.29.0.17 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors"
 
 # The shortened version of version
 try:
@@ -16897,6 +16897,54 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     return output
 
 
+#######################################################################
+#  8888888888
+#  888
+#  888
+#  8888888    888d888 888d888 .d88b.  888d888
+#  888        888P"   888P"  d88""88b 888P"
+#  888        888     888    888  888 888
+#  888        888     888    Y88..88P 888
+#  8888888888 888     888     "Y88P"  888
+#
+#
+#
+#  888b     d888
+#  8888b   d8888
+#  88888b.d88888
+#  888Y88888P888  .d88b.  .d8888b  .d8888b   8888b.   .d88b.   .d88b.
+#  888 Y888P 888 d8P  Y8b 88K      88K          "88b d88P"88b d8P  Y8b
+#  888  Y8P  888 88888888 "Y8888b. "Y8888b. .d888888 888  888 88888888
+#  888   "   888 Y8b.          X88      X88 888  888 Y88b 888 Y8b.
+#  888       888  "Y8888   88888P'  88888P' "Y888888  "Y88888  "Y8888
+#                                                         888
+#                                                    Y8b d88P
+#                                                     "Y88P"
+# Code to make messages to help user find errors in their code
+#######################################################################
+
+def _create_error_message():
+    """
+    Creates an error message containing the filename and line number of the users
+    code that made the call into PySimpleGUI
+    :return: Error string to display with file, line number, and line of code
+    :rtype: str
+    """
+
+    called_func = inspect.stack()[1].function
+    trace_details = traceback.format_stack()
+    error_message = ''
+    file_info_pysimplegui = trace_details[-1].split(",")[0]
+    for line in reversed(trace_details):
+        if line.split(",")[0] != file_info_pysimplegui:
+            error_message = line
+            break
+    if error_message != '':
+        error_parts = error_message.split(', ')
+        if len(error_parts) < 4:
+            error_message = error_parts[0] + '\n' + error_parts[1] + '\n' + ''.join(error_parts[2:])
+    return 'The PySimpleGUI internal reporting function is ' + called_func + '\n' + \
+           'The error originated from:\n' + error_message
 
 
 #   .d8888b.           888    888    d8b
@@ -16964,13 +17012,15 @@ class _UserSettings:
             with open(self.full_filename, 'w') as f:
                 json.dump(self.dict, f)
         except Exception as e:
-            print('Error saving settings to file:', self.full_filename, e)
+            print('*** Error saving settings to file:***\n', self.full_filename, e)
+            print(_create_error_message())
 
     def delete_file(self):
         try:
             os.remove(self.full_filename)
         except Exception as e:
-            print('User settings delete filename warning', e)
+            print('*** User settings delete filename warning ***\n', e)
+            print(_create_error_message())
 
     def read(self):
         if self.full_filename is None:
@@ -16980,7 +17030,9 @@ class _UserSettings:
                 with open(self.full_filename, 'r') as f:
                     self.dict = json.load(f)
         except Exception as e:
-            print('Error reading settings from file:', self.full_filename, e)
+            print('*** Error reading settings from file: ***\n', self.full_filename, e)
+            print(_create_error_message())
+
         return self.dict
 
     def exists(self, filename=None, path=None):
@@ -16992,8 +17044,6 @@ class _UserSettings:
 
 # Create a singleton for the settings information
 _UserSettings.settings = _UserSettings()
-
-
 
 
 def user_settings_filename(filename=None, path=None):
@@ -17077,7 +17127,9 @@ def user_settings_delete_entry(key):
     if key in settings.dict:
         del settings.dict[key]
         settings.save()
-
+    else:
+        print('*** Warning - key ', key, ' not found in settings ***\n')
+        print(_create_error_message())
 
 def user_settings_get_entry(key, default=None):
     """
@@ -17091,7 +17143,8 @@ def user_settings_get_entry(key, default=None):
     :type key: (Any)
     :param default: Value to use should the key not be found in the dictionary
     :type default: (Any)
-    :return:
+    :return: Value of specified settings
+    :rtype: (Any)
     """
     settings = _UserSettings.settings
     if settings.full_filename is None:
@@ -17765,6 +17818,7 @@ ICON_BASE64_THINK = b'iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAA
 
 ICON_BASE64_PALM = b'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA8CAMAAAAdQmecAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAMAUExURQAAAB8SDx4UEiAUDyAUEiMZFSUbGSsUEy8aFiwbGTsUFTkdICwiHTIjHDQrHzsiGysjIjIlIDMqIzMsKjsgIzotID0uKT01IzszMUkYHE0ZIFkbKEQhHkUqH0sgHUUgI0MtIkUoKEsmIEwqIkwqL00rM0I1I0s1JEswKE04J0w7LUc9OVYpJ1omMVM0JVQ1K1I4JVU7KlszK1k6J1s7KVw4NGEdLmQeMWghNmE5LWQ4NXIiPWs2RHkkQnAzRVRENVNDOF1ENFxEOVpKOWNDM2NHPWNMPGxFOWxKPG9QPnJKPHVQP05HRFJMSltUUWpLQ2lUQ2NcWndNQndIU3JUQ3JUSHRZTHxSRHxVSHxZSnlaVH1YYmZgX39gVmZjYnZran14doFURoNWSYNbTYNeUoleUItbaYRgT4VhU4JiWIVoXIpjVIxlWo1oVo1pWpFiVpFlWZJsXZRxX4JmZYVsY4trY4pzaoN9e5NtYpRtaJltY5ZxYpRyaZpzZZx1ap14a5N4eJx1cJp3eJ15cZp6eqB2a6J6baN8cqJ7eax9cah+epx7hImBf5uBeqWAdKOCe6qCdKqDequJfbKJfY2EgpmIiZqVk52Zk6SBhKaFiKyDgqqFiayJgqyNi6aLkayNlKGQi6uRja+QlqySm6qZlLKMhLKOi7SRi76Th7qTi7KTk7KVm7KYk7SZm7iWk7yZk7ucm7Sco7ScqbqeorOfsK2knrmhnKukoqyop7GrqrqhpLqlq7mup7urqrSosbKuubqjsrymubyps7qqub6xrbSxsLizvbe1wr68ycKYi8OcmsCmo8KmqcGup8Ooq8qqqcersMGvv8yutMKxu8uwtM2zusy+v9G3usCwwsS0yca8xsW7y82/x8m9ysm90Ne8wMjAvMPCxsLAyc3Ax8vAy8/IzMbD0c3F08zK2NPLx9DJztnBydLO09LL2tPS19TS29rU29bU4dnT5NzV6NvZ4+Hf5uDd6+Pi7eXj8ejl9Ozp9/Lw+wAAAAAAAAAAAAAAAErQjXwAAAEAdFJOU////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////wBT9wclAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAHU0lEQVRYR5WWf1gbZx3A8bw2y7nJVq00ZM9Eq63t0o3QFNKkrLbjoRjXsWFHCI+T0gNNe2nWm4Ndm9xFTLmj1UFONsUU1s2aZRRxdP7otNZN1Omc1inTdbad06danzlkVoR2/hG/7w8gNG/Y9iE/uPf9vp/7vt/37r0UZPLx34nxiYmJNybp4VuSxzQ9MXn5zempqelLlybfpotteu31ifFzfzp7/sL45PT09MS/aPOCME1jZ8+fGxs9Njw0fGLswuT01D/+SjsWgmU6fnJs7IUTx7410N8/MDx64eKlqV++DRXD9M2BkZOnfjicTvV0d/f0Hx09f/HNf//iL7QzP7mmn0XN9BMjR9PpfhOpkkdHz0z97+9PT9DuvOSa7gvHus2vYEzT6E4MDP10/PKlM0/T7rzkmoLBeyORWMwwzf6UaZowvydPX7z8nzPP0v585JhO7pIkWZbvVXUzlUomzYNmcui7L49fvPDs6zQiDzmmr9UHg7vDu8MRVTcOHESq5KEjz7z8yitnfkwj8pBr2njHNjEo7ZbliGFAQsk+eB155vTpc6f/RkPY5JiOr7i1uh5UYUVROw4ehEolk1193zj2k9+NLpxUbsWXrt5YfdfnpDAUS9UgLaCrq2/g6JETT9IINrmmJStWb9wUCKK6K0h1wDCMDs1IHjr8Tk23F63aeOsdooSXUNU6O7QOTdM7937x0NAbNIRJrumrS4tWb64OiFKrJEshWdnXqWr7QqGO/fuHztIQJrmmzKKiFauc9aLYIkp7xHvkfXtCLSG5Y+TU1w8foRFMGKat7y1asbLaH/CLkNeO5h2trZJk/Oq3I/uHh/9IQ1gwTD+4qnBpkbPK5xf9zTua/c1+fyT1WLLnvi+8MPwoDWHBMEWDjuuFpc5P+Hz3iM3Ndb5mPZVOKfU93xnqj/2GxjDINb3q8PicJYUly2vkutZWURR1PdErtwz8+vloQPk+DWLAyMnjWb58ZUnhrsf3SJ9s8fl1TVWlwODzI/HaxrYFpscw1fscxY7Slc7Yc5LkatDhTpZE3YzH133+1EsP0RgGDNOPqm74cJWrtHRbond9Q0LVdSmsmWa4rf3Ffw4/QmMYMEyZ9rIy502u0hpDlRK6HtNN40BCjI68+IeBtndWp0xmU5VrpWttFdqiensff27QjIuxwf6+/Y13v0YjGDBNr25yrV3rqoL7t7fX1A/0Girs6Eqw7fcPfJlGMGCaMt+rdt7k3Natqwkjpmnm4BNpQ27o+fNLD7yL4xYt+/RxGjYPtimTKSxxqYluEOm63psaTBtB89tDfe2LeY7neW7xnT+ncXPkMT109aoaJaYaugY7CmxSj6UHU12haNPV4EFw3I00cpY8psWLVlcHIxFdVTUtFod9Lm0aO+/adSMVAZy1icZSmKb738fzSzY1yJCRYcBGF48qWpdW11j/AapBQMW203gMw7SVRG4ORBKaqsXjWjSqaRGldkvV5utIF8JqFazWB+kQRI5pK4eLyvPVElQbyqRF92rxDll0rK+pXQRd8LK+/6MbNtzidrvXHKOjgCtMTVTD8++uDet6J1RJaVOie5XglrK6xlrUYf3QOo8HLG6v1+uuOEwHXmHajs45w05Fhx3c0JRQOBRUAi7P+pprIJuPrHHY7cXwZ3eAraJ8Nqss01NLqANzTbumxLSIrijhnTvDQWepq+x6oVAQBAuCh7dgs9sryj10dJbpttmJYT7eDlWOaJEwiO5uuRlJLNDMcSgK3lBOjkeyE3Q8NW1fNk8D1WiD9YJnZ1gOB1sCH0MK2oO/LYIF0gO3RWgkBmJ6cG51yRk5vkbR1IgcDisxWWwoIX0ILBAEm2AjCPx7sIeYbpvLx3odmgLPCaFIREY/WGDnrYOM5sAqUNgJNkEgImRaTGN44YPF0AFYhJsDIXicS/I+EC2n3QBHc7LZYO0q0KXgtttmTdfijDhLMQAiGxxYINK3Ax6ccqcq3jCzVrBaWAKdOKNyckk56N5esJ3UBqLQrAGYHg531CGV5ENtuAEDuSDWVKCMvN5Kb6X7s9R0O8poZvZ4FB0n2MrqGhr8vjLSij5JnYnMDSpIqbLS66amZbOiOSB9PNzmqdtSVVhL2rAcXtCHTeVIVQl4yfQKrs0WoWuNDKLp2dZ5eCvVzkGSmlWRpMCEhtORxIqj8TEBH88ja4IoKfxrqAC2wbmxUG0O7id6NAM+no+9GMuo6hZs+gxZKQQaRTPMFjFMUCuaFlo/Mr2CJkgJReNPfIFfmRM+ZIBVFfhS+BLOCZWb3C7kPofLEkM0CNqQy4zKuwGZ7iTRWIURIPW3mt0MMyo0vYL7s64luCt4Hu6ZeR4EHcgAuaBYcJ0XZPATAC0ampyAJ0fHz0IGZTPXiFTgQiYyJwAnh+pNd4QsZrcjgDYB5Bir7BvAhB5vKCvUZ+F4vMQ4cB54EP0/C2ik9/TDBZmnyG6BGqHuWJR9XvqdD2yCXcq+Dna6JtpIYJ15QWB+5W6v+1P/B0gPXHqaGwimAAAAAElFTkSuQmCC'
 
+ICON_BUY_ME_A_COFFEE = b'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'
 
 ICON_BASE64_LIST = [ICON_BASE64_BLOB_HEADACHE, ICON_BASE64_BLOB_PALM, ICON_BASE64_BLOB_PAT, ICON_BASE64_BLOB_THINK, ICON_BASE64_BLOB_THINK2, ICON_BASE64_BROW, ICON_BASE64_LEGO_THINK, ICON_BASE64_PALM, ICON_BASE64_THINK]
 
@@ -18147,6 +18201,7 @@ You have no financial responsibility.
 I hope you are enjoying using PySimpleGUI whether you sponsor the product or not.""")],
               [T('Click here to help --->>>'), T('YES - I want to support PySimpleGUI!', enable_events=True, text_color='red', background_color='yellow', k='-SPONSOR-')],]
 
+    pop_test_tab_layout = [[T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')]]
 
     graph_elem = Graph((600, 150), (0, 0), (800, 300), key='+GRAPH+')
 
@@ -18162,7 +18217,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
     tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', )
     tab6 = Tab('Do NOT click', frame7)
-
+    tab7 = Tab('Popup Tests', pop_test_tab_layout)
 
 
     def VerLine(version, description, justification='r', size=(40,1)):
@@ -18179,14 +18234,14 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40,2)),
          VerLine(sys.version, 'Python Version',  size=(40, 2)),
 
-        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
+        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
         [Button('Button'), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
          Button('Exit', tooltip='Exit button')],
-        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose'), B('Themes'),B('Switch Themes'),B('SDK Reference')]
+        [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),B('Themes'),B('Switch Themes'),B('SDK Reference')]
     ]
 
     layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
@@ -18255,6 +18310,9 @@ def main():
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/psgui')
+        elif event == '-COFFEE-':
+            if webbrowser_available:
+                webbrowser.open_new_tab(r'https://www.buymeacoffee.com/PySimpleGUI')
         elif event == 'Themes':
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
             if search_string is not None:
