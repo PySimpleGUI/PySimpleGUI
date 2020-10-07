@@ -703,11 +703,14 @@ Buy Me a Coffee is a great way to publicly support developers.  It's quick, easy
 
 ### GitHub Sponsoring
 
-There are 2 levels of GitHub sponsorship.  The more basic is a simple, single-donation, sponsorship.  One of these has been in place for some time that you can see at the top of the PySimpleGUI Primary GitHub project page.  It ultimately leads to a PayPal portal.
 
-<a href="https://www.paypal.me/psgui" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=%3Curl%3E&color=f88379"></a>
 
-The second level of GitHub sponsorship, where you can sponsor the project at varying levels of support is still being set up.  It is a bit more complicated than the simple PayPal portal.
+<a href="https://github.com/sponsors/PySimpleGUI" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=%3Curl%3E&color=f88379"></a>
+
+The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is how you can sponsor the project at varying levels of support on an ongoing basis.  It's how many Open Source developers are able to receive corporate level sponsorship.
+
+Your help in financially contributing to the project would be greatly appreciated. Being an Open Source developer is financially challenging.  YouTube video creators are able to make a living creating videos.  It's not so easy yet for Open Source developers.
+
 
 # Contributing  :construction_worker:
 
