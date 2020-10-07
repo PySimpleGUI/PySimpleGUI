@@ -3531,7 +3531,7 @@ while (True):
     else:
         event, values = window.read()
     if event == 'button':
-        event = window[event).GetText()
+        event = window[event].GetText()
     # --------- Do Button Operations --------
     if event == sg.WIN_CLOSED or event == 'Exit':        # ALWAYS give a way out of program
         break
@@ -3542,12 +3542,12 @@ while (True):
     elif event == 'Pause':
         paused = True
         paused_time = int(round(time.time() * 100))
-        element = window['button')
+        element = window['button']
         element.update(text='Run')
     elif event == 'Run':
         paused = False
         start_time = start_time + int(round(time.time() * 100)) - paused_time
-        element = window['button')
+        element = window['button']
         element.update(text='Pause')
 
     # --------- Display timer in window --------
