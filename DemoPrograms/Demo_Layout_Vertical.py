@@ -71,11 +71,14 @@ def main():
 
     # -------------------- Example 5B - Top align portion of a row --------------------
     # Same operation as adding the 2 lists, but instead unpacks vtop list directly into a row layout
-    layout = [ [sg.T('This layout uses the "vtop" for first part of row')],
-               [*sg.vtop([sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')]), sg.Text('More elements'), sg.CB('Last')],
-               [sg.Button('OK')]  ]
+    try:
+        layout = [ [sg.T('This layout uses the "vtop" for first part of row')],
+                   [*sg.vtop([sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')]), sg.Text('More elements'), sg.CB('Last')],
+                   [sg.Button('OK')]  ]
 
-    sg.Window('Example 5B', layout).read(close=True)
+        sg.Window('Example 5B', layout).read(close=True)
+    except:
+        print('Your version of Python likely does not support unpacking inside of a list')
 
     # -------------------- Example 6 - Use function to align all rows in layout --------------------
     layout = [ [sg.T('This layout has all rows top aligned using function')],
