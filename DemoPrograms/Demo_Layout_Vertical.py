@@ -32,14 +32,14 @@ def main():
                [sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')],
                [sg.Button('OK')]  ]
 
-    sg.Window('Window Title', layout).read(close=True)
+    sg.Window('Example 1', layout).read(close=True)
 
     # -------------------- Example 2 - Top aligned Text element using Column --------------------
     layout = [ [sg.T('This uses a Column Element to align 1 element')],
                [sg.Col([[sg.Text('On row 1')]], vertical_alignment='top', pad=(0,0)), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')],
                [sg.Button('OK')]  ]
 
-    sg.Window('Window Title', layout).read(close=True)
+    sg.Window('Example 2', layout).read(close=True)
 
 
     # -------------------- Example 3 - Top aligned Text element using Column --------------------
@@ -47,7 +47,7 @@ def main():
                [sg.vtop(sg.Text('On row 1')), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')],
                [sg.Button('OK')]  ]
 
-    sg.Window('Window Title', layout).read(close=True)
+    sg.Window('Example 3', layout).read(close=True)
 
     # -------------------- Example 4 - Top align an entire row --------------------
     # Note that the vtop function takes a row as input and returns a row.  DO NOT place [ ] around vtop
@@ -56,10 +56,28 @@ def main():
                sg.vtop([sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')]),
                [sg.Button('OK')]  ]
 
-    sg.Window('Window Title', layout).read(close=True)
+    sg.Window('Example 4', layout).read(close=True)
 
 
-    # -------------------- Example 5 - Use function to align all rows in layout --------------------
+    # -------------------- Example 5 - Top align portion of a row --------------------
+    # You can combine 2 lists to make a row [a,b] + [c,d] = [a,b,c,d]
+    # To combine vtop with a normally specified row, add them vtop(a,b) + [c,d] = [a, b, c, d] (sorta)
+    layout = [ [sg.T('This layout uses the "vtop" for first part of row')],
+               sg.vtop([sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')]) + [sg.Text('More elements'), sg.CB('Last')],
+               [sg.Button('OK')]  ]
+
+    sg.Window('Example 5', layout).read(close=True)
+
+
+    # -------------------- Example 5B - Top align portion of a row --------------------
+    # Same operation as adding the 2 lists, but instead unpacks vtop list directly into a row layout
+    layout = [ [sg.T('This layout uses the "vtop" for first part of row')],
+               [*sg.vtop([sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')]), sg.Text('More elements'), sg.CB('Last')],
+               [sg.Button('OK')]  ]
+
+    sg.Window('Example 5B', layout).read(close=True)
+
+    # -------------------- Example 6 - Use function to align all rows in layout --------------------
     layout = [ [sg.T('This layout has all rows top aligned using function')],
                [sg.Text('On row 1'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 1')],
                [sg.Text('On row 2'), sg.Listbox(list(range(10)), size=(5,4)), sg.Text('On row 2')],
@@ -67,7 +85,7 @@ def main():
 
     layout = top_align_layout(layout)       # pass in a layout, get a loyout back
 
-    sg.Window('Window Title', layout).read(close=True)
+    sg.Window('Example 6', layout).read(close=True)
 
 
 
