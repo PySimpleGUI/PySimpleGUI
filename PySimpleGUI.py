@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.17 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors"
+version = __version__ = "4.29.0.18 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors, focus indicator for Button Checkbox Radio using highlights"
 
 # The shortened version of version
 try:
@@ -3049,7 +3049,7 @@ class Button(Element):
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
-                 use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, visible=True, metadata=None):
+                 highlight_colors=None, use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -3087,6 +3087,8 @@ class Button(Element):
         :type button_color: Tuple[str, str] or str
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color: Tuple[str, str]
+        :param highlight_colors: colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button
+        :type highlight_colors: Tuple[str, str]
         :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :type use_ttk_buttons: (bool)
         :param font: specifies the font family, size, etc
@@ -3160,11 +3162,31 @@ class Button(Element):
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
         key = key if key is not None else k
-
+        if highlight_colors != None:
+            self.HighlightColors = highlight_colors
+        else:
+            self.HighlightColors = self._compute_highlight_colors()
         super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    # Realtime button release callback
+
+    def _compute_highlight_colors(self):
+        """
+        Determines the color to use to indicate the button has focus. This setting is only used by Linux.
+        :return: Pair of colors. (Highlight, Highlight Background)
+        :rtype: Tuple[str, str]
+        """
+        highlight_color = highlight_background = COLOR_SYSTEM_DEFAULT
+        if self.ButtonColor != COLOR_SYSTEM_DEFAULT and theme_background_color() != COLOR_SYSTEM_DEFAULT:
+            highlight_background = theme_background_color()
+        if self.ButtonColor != COLOR_SYSTEM_DEFAULT and self.ButtonColor[0] != COLOR_SYSTEM_DEFAULT:
+            if self.ButtonColor[0] != theme_background_color():
+                highlight_color = self.ButtonColor[0]
+            else:
+                highlight_color = 'red'
+        return (highlight_color, highlight_background)
+
+                # Realtime button release callback
     def ButtonReleaseCallBack(self, parm):
         """
         Not a user callable function.  Called by tkinter when a "realtime" button is released
@@ -11431,7 +11453,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                # tkbutton.config(highlightthickness=0)
+
+                if element.HighlightColors[1] != COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(highlightbackground=element.HighlightColors[1])
+                if element.HighlightColors[0] != COLOR_SYSTEM_DEFAULT:
+                    tkbutton.config(highlightcolor=element.HighlightColors[0])
+
+
             # -------------------------  BUTTON placement element ttk version ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element  # type: Button
@@ -11924,7 +11952,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.configure(fg=text_color)
-                element.Widget.configure(highlightthickness=0)
+
+                element.Widget.configure(highlightthickness=1)
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKCheckbutton.config(highlightbackground=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKCheckbutton.config(highlightcolor=element.TextColor)
+
                 element.TKCheckbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.Visible is False:
                     element.TKCheckbutton.pack_forget()
@@ -11988,7 +12022,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.configure(activebackground=element.BackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKRadio.configure(fg=text_color)
-                element.Widget.config(highlightthickness=0)
+
+                element.Widget.configure(highlightthickness=1)
+                if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKRadio.config(highlightbackground=element.BackgroundColor)
+                if element.TextColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKRadio.config(highlightcolor=element.TextColor)
+
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
                 element.TKRadio.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
@@ -16960,6 +17000,9 @@ def _create_error_message():
 #                                                  "Y88P"
 
 # Interface to saving / loading user program settings in json format
+# This is a new set of APIs supplied by PySimpleGUI that enables users to easily set/save/load individual
+# settings.  They are automatically saved to a JSON file. If no file/path is specified then a filename is
+# created from the source file filename.
 
 class _UserSettings:
     settings = None             # type: _UserSettings
@@ -17211,6 +17254,7 @@ def user_settings_file_exists(filename=None, path=None):
     """
     settings = _UserSettings.settings
     return settings.exists(filename=filename, path=path)
+
 
 def user_settings_write_new_dictionary(settings_dict):
     """
@@ -18203,7 +18247,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
 
     pop_test_tab_layout = [[T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')]]
 
-    graph_elem = Graph((600, 150), (0, 0), (800, 300), key='+GRAPH+')
+    graph_elem = Graph((600, 250), (0, 0), (800, 300), key='+GRAPH+')
 
     frame6 = [
         [graph_elem],
@@ -18235,11 +18279,10 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          VerLine(sys.version, 'Python Version',  size=(40, 2)),
 
         [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
-        [Button('Button'), B('Hide Stuff', metadata='my metadata'),
+        [Button('Button', highlight_colors=('yellow','red')), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
-         B('Sponsor this effort', button_color='white on dark green', key='-SPONSOR-2'),
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),B('Themes'),B('Switch Themes'),B('SDK Reference')]
     ]
