@@ -8,6 +8,9 @@ import PySimpleGUI as sg
     This demo is very basic. The user_settings functions are used directly without a lookup table
     or some other mechanism to map between PySimpleGUI keys and user settings keys. 
     
+    Two windows are shown.  One is a super-simple "save previously entered filename"
+    The other is a larger "settings window" where multiple settings are saved/loaded
+    
     Copyright 2020 PySimpleGUI.org
 """
 
@@ -32,8 +35,6 @@ def make_window():
 
     :return: (sg.Window)  The window that was created
     """
-
-    sg.user_settings_filename(path=SETTINGS_PATH)
 
     sg.theme(sg.user_settings_get_entry('theme', 'DarkBlue2'))  # set the theme
 
@@ -75,5 +76,30 @@ def settings_window():
             window = make_window()
 
 
+def save_previous_filename_demo():
+    """
+    Saving the previously selected filename....
+    A 2-line demo of one of the likely most popular use of user settings
+    * Get the previously entered filename
+    * Use previous as default for Input
+    * When a new filename is chosen, write the filename to user settings
+    """
+
+    prior_filename = sg.user_settings_get_entry('filename', '')
+
+    layout = [[sg.Text('Enter a filename:')],
+              [sg.Input(prior_filename, key='-IN-'), sg.FileBrowse()],
+              [sg.B('OK')]]
+
+    event, values = sg.Window('Filename Example', layout).read(close=True)
+
+    # If user clicked OK, then save the filename for next time
+    if event == 'OK':
+        sg.user_settings_set_entry('filename', values['-IN-'])
+
+
 if __name__ == '__main__':
+    sg.user_settings_filename(path=SETTINGS_PATH)  # Set the location for the settings file
+    # Run a couple of demo windows
+    save_previous_filename_demo()
     settings_window()
