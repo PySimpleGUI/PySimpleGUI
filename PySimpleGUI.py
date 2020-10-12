@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.18 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors, focus indicator for Button Checkbox Radio using highlights"
+version = __version__ = "4.29.0.18 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors, focus indicator for Button Checkbox Radio using highlights, added Window to SDK reference window"
 
 # The shortened version of version
 try:
@@ -18121,6 +18121,8 @@ def main_sdk_help():
 
     element_classes = Element.__subclasses__()
     element_names = {element.__name__: element for element in element_classes}
+    element_names['Window'] = Window
+
     layout = [[Text('PySimpleGUI Element Reference', font='Any 20')]]
     button_col = Col([[B(e, pad=(0, 0), size=(15, 1))] for e in sorted(element_names.keys())])
     layout += [vtop([button_col, Multiline(size=(120, 50), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 9')])]
