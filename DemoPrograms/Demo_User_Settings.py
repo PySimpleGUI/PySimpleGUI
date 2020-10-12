@@ -79,23 +79,26 @@ def settings_window():
 def save_previous_filename_demo():
     """
     Saving the previously selected filename....
-    A 2-line demo of one of the likely most popular use of user settings
-    * Get the previously entered filename
-    * Use previous as default for Input
+    A demo of one of the likely most popular use of user settings
+    * Use previous input as default for Input
     * When a new filename is chosen, write the filename to user settings
     """
 
-    prior_filename = sg.user_settings_get_entry('filename', '')
-
+    # Notice that the Input element has a default value given (first parameter) that is read from the user settings
     layout = [[sg.Text('Enter a filename:')],
-              [sg.Input(prior_filename, key='-IN-'), sg.FileBrowse()],
-              [sg.B('OK')]]
+              [sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()],
+              [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]]
 
-    event, values = sg.Window('Filename Example', layout).read(close=True)
+    window = sg.Window('Filename Example', layout)
 
-    # If user clicked OK, then save the filename for next time
-    if event == 'OK':
-        sg.user_settings_set_entry('filename', values['-IN-'])
+    while True:
+        event, values = window.read()
+        if event in(sg.WINDOW_CLOSED, 'Exit'):
+            break
+        elif event == 'Save':
+            sg.user_settings_set_entry('filename', values['-IN-'])
+
+    window.close()
 
 
 if __name__ == '__main__':
