@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
 import pymunk
 import random
-
 """
     Demo of pymunk physics lib combined with a large Window that is transparent. Result appears like
     a screensaver type of screen
@@ -57,30 +56,44 @@ def main():
     graph_elem = sg.Graph(screensize, (0, screensize[1]), (screensize[0], 0),
                           enable_events=True, key='-GRAPH-', background_color='lightblue')
     layout = [[graph_elem]]
-    window1 = sg.Window('Bouncing Balls', layout, finalize=True, location=(0,0), keep_on_top=True,  element_padding=(0,0), margins=(0,0), no_titlebar=True, transparent_color='lightblue')
+    window1 = sg.Window('Bouncing Balls', layout, finalize=True, location=(0,0), keep_on_top=True,  element_padding=(0,0), margins=(0,0), no_titlebar=True, right_click_menu=[[''], ['Front', 'Back', 'Controls', 'Exit']])
 
     area = Playfield(graph_elem, screensize)
     area.add_balls()
-
-    layout2 = [[sg.B('❎', border_width=0, button_color=('white', sg.theme_background_color()), key='Exit')],[sg.B('Kick'), sg.B('Front'), sg.B('Back'), sg.B('More Balls'),]]
+    transparent, paused = False, True
+    layout2 = [[sg.B('❎', border_width=0, button_color=('white', sg.theme_background_color()), key='Exit')],[sg.B('Kick'), sg.B('Front'), sg.B('Back'), sg.B('More Balls'),sg.B('Transparent'), sg.B('Resume', key='Pause')]]
     window2 = sg.Window('Buttons', layout2, keep_on_top=True, grab_anywhere=True, no_titlebar=True, finalize=True)
+
+
 
     # ------------------- GUI Event Loop -------------------
     while True:
         window, event, values = sg.read_all_windows(timeout=0)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
-        area.space.step(0.02)
 
         if event == 'More Balls':
             area.add_balls()
         elif event == 'Kick':
             for ball in area.arena_balls:
-                ball.body.position = ball.body.position[0], ball.body.position[1]-random.randint(1, 200)
+                ball.body.position = ball.body.position[0], ball.body.position[1]-random.randint(200,400)
         elif event == 'Front':
             window1.bring_to_front()
         elif event == 'Back':
             window1.send_to_back()
+        elif event == 'Transparent':
+            window1.set_transparent_color('lightblue' if not transparent else 'black')
+            transparent = not transparent
+        elif event == 'Controls':
+            window2.bring_to_front()
+        elif event == 'Pause':
+            paused = not paused
+            window['Pause'].update(text='Resume' if paused else 'Pause')
+
+        if paused:
+            continue
+
+        area.space.step(0.02)
 
         for ball in area.arena_balls:
             if ball.body.position[1] > screensize[1]:
