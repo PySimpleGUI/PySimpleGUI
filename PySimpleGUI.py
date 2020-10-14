@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.29.0.18 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors, focus indicator for Button Checkbox Radio using highlights, added Window to SDK reference window"
+version = __version__ = "4.29.0.19 Unreleased\nAdded shink parameter to pin, added variable Window.maximized, added main_sdk_help_window function, theme DarkGrey10 added, no longer setting highlight thickness to 0 for buttons so that focus can be seen, new themes DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, new user_settings APIs, added text parameter to Radio.update, echo_stdout_stderr parm added to Multiline and Output elements, added DarkBrown7 theme, user settings delete function, ver shortened version string, modal docstring fix in some popups, image parameter implemented in popup_scrolled, added Radio background & text colors to update, removed pad parms from DrawImage, added user_settings_file_exists, fixed blank entry with main program's theme previewer, added Python theme, added Window.set_min_size, error message function for soft errors, focus indicator for Button Checkbox Radio using highlights, added Window to SDK reference window, added theme swatch previewer"
 
 # The shortened version of version
 try:
@@ -297,7 +297,7 @@ DEFAULT_BUTTON_COLOR = ('white', BLUES[0])  # Foreground, Background (None, None
 OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
 
 # The "default PySimpleGUI theme"
-CURRENT_LOOK_AND_FEEL = 'Dark Blue 3'
+OFFICIAL_PYSIMPLEGUI_THEME = CURRENT_LOOK_AND_FEEL = 'Dark Blue 3'
 
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
@@ -15217,6 +15217,67 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
 
 preview_all_look_and_feel_themes = theme_previewer
 
+
+
+def _theme_preview_window_swatches():
+    # Begin the layout with a header
+    layout = [[Text('Themes as color swatches', text_color='white', background_color='black', font='Default 25')],
+              [Text('Tooltip and right click a color to get the value', text_color='white', background_color='black', font='Default 15')],
+              [Text('Left click a color to copy to clipboard (requires pyperclip)', text_color='white', background_color='black', font='Default 15')]]
+    layout =[[Column(layout, element_justification='c', background_color='black')]]
+    # Create the pain part, the rows of Text with color swatches
+    for i, theme_name in enumerate(theme_list()):
+        theme(theme_name)
+        colors = [theme_background_color(), theme_text_color(), theme_input_background_color(),
+                  theme_input_text_color()]
+        if theme_button_color() != COLOR_SYSTEM_DEFAULT:
+            colors.append(theme_button_color()[0])
+            colors.append(theme_button_color()[1])
+        colors = list(set(colors))      # de-duplicate items
+        row = [T(theme(), background_color='black', text_color='white',  size=(20,1), justification='r')]
+        for color in colors:
+            if color != COLOR_SYSTEM_DEFAULT:
+                row.append(T(SYMBOL_SQUARE, text_color=color, background_color='black', pad=(0,0), font='DEFAUlT 20', right_click_menu=['Nothing',[color]], tooltip=color, enable_events=True, key=(i,color)))
+        layout += [row]
+    # finish the layout by adding an exit button
+    layout += [[B('Exit')]]
+    # place layout inside of a Column so that it's scrollable
+    layout = [[Column(layout, scrollable=True,vertical_scroll_only=True,  background_color='black')]]
+    # create and return Window that uses the layout
+    return Window('Theme Color Swatches', layout, background_color='black', finalize=True)
+
+
+
+def theme_previewer_swatches():
+    """
+    Display themes in a window as color swatches.
+    Click on a color swatch to see the hex value printed on the console.
+    If you hover over a color or right click it you'll also see the hext value.
+    """
+    current_theme = theme()
+    popup_quick_message('This is going to take a minute...', text_color='white', background_color='red', font='Default 20', keep_on_top=True)
+    window = _theme_preview_window_swatches()
+    theme(OFFICIAL_PYSIMPLEGUI_THEME)
+    col_height = window.get_screen_size()[1]-200
+    if window.size[1] > 100:
+        window.size = (window.size[0], col_height)
+    window.move(window.get_screen_size()[0]//2-window.size[0]//2, 0)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event == WIN_CLOSED or event == 'Exit':
+            break
+        if isinstance(event, tuple):       # someone clicked a swatch
+            chosen_color = event[1]
+        else:
+            if event[0] == '#':  # someone right clicked
+                chosen_color = event
+            else:
+                chosen_color = ''
+        print('color = ', chosen_color)
+    window.close()
+    theme(current_theme)
+
 def ChangeLookAndFeel(index, force=False):
     """
     Change the "color scheme" of all future PySimpleGUI Windows.
@@ -17174,6 +17235,7 @@ def user_settings_delete_entry(key):
         print('*** Warning - key ', key, ' not found in settings ***\n')
         print(_create_error_message())
 
+
 def user_settings_get_entry(key, default=None):
     """
     Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
@@ -17203,7 +17265,7 @@ def user_settings_get_entry(key, default=None):
 def user_settings_save(filename=None, path=None):
     """
     Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
-    previously specitfied filename to create a new settings file.  The settings dictionary ais then saved to the newly defined file.
+    previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
 
     :param filename: The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
     :type filename: (str)
@@ -18286,7 +18348,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
-        [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),B('Themes'),B('Switch Themes'),B('SDK Reference')]
+        [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
+          B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference')]
     ]
 
     layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
@@ -18362,6 +18425,8 @@ def main():
             search_string = popup_get_text('Enter a search term or leave blank for all themes', 'Show Available Themes', keep_on_top=True)
             if search_string is not None:
                 theme_previewer(search_string=search_string)
+        elif event == 'Theme Swatches':
+            theme_previewer_swatches()
         elif event == 'Switch Themes':
             window.close()
             _main_switch_theme()
