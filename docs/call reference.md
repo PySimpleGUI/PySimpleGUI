@@ -39,6 +39,7 @@ Button(button_text="",
     auto_size_button=None,
     button_color=None,
     disabled_button_color=None,
+    highlight_colors=None,
     use_ttk_buttons=None,
     font=None,
     bind_return_key=False,
@@ -70,8 +71,9 @@ Parameter Descriptions:
 |                                     int                                      |     border_width      | width of border around button in pixels |
 |                                  (int, int)                                  |         size          | (width, height) of the button in characters wide, rows high |
 |                                     bool                                     |   auto_size_button    | if True the button size is sized to fit the text |
-|                            Tuple[str, str] or str                            |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
+|                        Tuple[str, str] or str or None                        |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
 |                               Tuple[str, str]                                | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                               Tuple[str, str]                                |   highlight_colors    | colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button |
 |                                     bool                                     |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
 |                         Union[str, Tuple[str, int]]                          |         font          | specifies the font family, size, etc |
 |                                     bool                                     |    bind_return_key    | If True the return key will cause this button to be pressed |
@@ -2128,10 +2130,7 @@ Places an image onto your canvas.  It's a really important method for this eleme
 ```
 DrawImage(filename=None,
     data=None,
-    location=(None, None),
-    color="black",
-    font=None,
-    angle=0)
+    location=(None, None))
 ```
 
 Parameter Descriptions:
@@ -2141,9 +2140,6 @@ Parameter Descriptions:
 |                     str                     | filename | if image is in a file, path and filename for the image. (GIF and PNG only!) |
 |              Union[str, bytes]              |   data   | if image is in Base64 format or raw? format then use instead of filename |
 | Union[Tuple[int, int], Tuple[float, float]] | location | the (x,y) location to place image's top left corner |
-|                     str                     |  color   | text color |
-|         Union[str, Tuple[str, int]]         |   font   | specifies the font family, size, etc |
-|                    float                    |  angle   | Angle 0 to 360 to draw the text. Zero represents horizontal text |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
 
 ### DrawLine
@@ -2551,10 +2547,7 @@ Places an image onto your canvas.  It's a really important method for this eleme
 ```
 draw_image(filename=None,
     data=None,
-    location=(None, None),
-    color="black",
-    font=None,
-    angle=0)
+    location=(None, None))
 ```
 
 Parameter Descriptions:
@@ -2564,9 +2557,6 @@ Parameter Descriptions:
 |                     str                     | filename | if image is in a file, path and filename for the image. (GIF and PNG only!) |
 |              Union[str, bytes]              |   data   | if image is in Base64 format or raw? format then use instead of filename |
 | Union[Tuple[int, int], Tuple[float, float]] | location | the (x,y) location to place image's top left corner |
-|                     str                     |  color   | text color |
-|         Union[str, Tuple[str, int]]         |   font   | specifies the font family, size, etc |
-|                    float                    |  angle   | Angle 0 to 360 to draw the text. Zero represents horizontal text |
 | Union[int, None] | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
 
 ### draw_line
@@ -4327,6 +4317,7 @@ Multiline(default_text="",
     reroute_stdout=False,
     reroute_stderr=False,
     reroute_cprint=False,
+    echo_stdout_stderr=False,
     focus=False,
     font=None,
     pad=None,
@@ -4341,33 +4332,34 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |   default_text   | Initial text to show |
-|                                     bool                                     |  enter_submits   | if True, the Window.Read call will return is enter key is pressed in this element |
-|                                     bool                                     |     disabled     | set disable state |
-|                                     bool                                     |    autoscroll    | If True the contents of the element will automatically scroll as more data added to the end |
-|                                     int                                      |   border_width   | width of border around element in pixels |
-|                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
-|                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
-|                                     str                                      | background_color | color of background |
-|                                     str                                      |    text_color    | color of the text |
-|                                     bool                                     |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                     bool                                     |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
-|                                     bool                                     |   do_not_clear   | if False the element will be cleared any time the Window.Read call returns |
-|                        Union[str, int, tuple, object]                        |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                     bool                                     |    write_only    | If True then no entry will be added to the values dictionary when the window is read |
-|                                     bool                                     |   auto_refresh   | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
-|                                     bool                                     |  reroute_stdout  | If True then all output to stdout will be output to this element |
-|                                     bool                                     |  reroute_stderr  | If True then all output to stdout will be output to this element |
-|                                     bool                                     |  reroute_cprint  | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
-|                                     bool                                     |      focus       | if True initial focus will go to this element |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                     str                                      |  justification   | text justification. left, right, center. Can use single characters l, r, c. |
-|                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                     bool                                     |     visible      | set visibility state of the element |
-|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
+|                                     str                                      |    default_text    | Initial text to show |
+|                                     bool                                     |   enter_submits    | if True, the Window.Read call will return is enter key is pressed in this element |
+|                                     bool                                     |      disabled      | set disable state |
+|                                     bool                                     |     autoscroll     | If True the contents of the element will automatically scroll as more data added to the end |
+|                                     int                                      |    border_width    | width of border around element in pixels |
+|                                  (int, int)                                  |        size        | (width, height) width = characters-wide, height = rows-high |
+|                                     bool                                     |   auto_size_text   | if True will size the element to match the length of the text |
+|                                     str                                      |  background_color  | color of background |
+|                                     str                                      |     text_color     | color of the text |
+|                                     bool                                     |   change_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                     bool                                     |   enable_events    | Turns on the element specific events. Spin events happen when an item changes |
+|                                     bool                                     |    do_not_clear    | if False the element will be cleared any time the Window.Read call returns |
+|                        Union[str, int, tuple, object]                        |        key         | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                        Union[str, int, tuple, object]                        |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                     bool                                     |     write_only     | If True then no entry will be added to the values dictionary when the window is read |
+|                                     bool                                     |    auto_refresh    | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
+|                                     bool                                     |   reroute_stdout   | If True then all output to stdout will be output to this element |
+|                                     bool                                     |   reroute_stderr   | If True then all output to stdout will be output to this element |
+|                                     bool                                     |   reroute_cprint   | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
+|                                     bool                                     | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
+|                                     bool                                     |       focus        | if True initial focus will go to this element |
+|                         Union[str, Tuple[str, int]]                          |        font        | specifies the font family, size, etc |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     str                                      |      tooltip       | text, that will appear when mouse hovers over the element |
+|                                     str                                      |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
+|                       List[List[Union[List[str],str]]]                       |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                     bool                                     |      visible       | set visibility state of the element |
+|                                     Any                                      |      metadata      | User metadata that can be set to ANYTHING |
 
 ### Get
 
@@ -4949,6 +4941,7 @@ Output(size=(None, None),
     background_color=None,
     text_color=None,
     pad=None,
+    echo_stdout_stderr=False,
     font=None,
     tooltip=None,
     key=None,
@@ -4962,17 +4955,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                  (int, int)                                  |       size       | (width, height) w=characters-wide, h=rows-high |
-|                                     str                                      | background_color | color of background |
-|                                     str                                      |    text_color    | color of the text |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                        Union[str, int, tuple, object]                        |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                       List[List[Union[List[str],str]]]                       | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                     bool                                     |     visible      | set visibility state of the element |
-|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
+|                                  (int, int)                                  |        size        | (width, height) w=characters-wide, h=rows-high |
+|                                     str                                      |  background_color  | color of background |
+|                                     str                                      |     text_color     | color of the text |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                     bool                                     | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
+|                         Union[str, Tuple[str, int]]                          |        font        | specifies the font family, size, etc |
+|                                     str                                      |      tooltip       | text, that will appear when mouse hovers over the element |
+|                        Union[str, int, tuple, object]                        |        key         | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                        Union[str, int, tuple, object]                        |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                       List[List[Union[List[str],str]]]                       |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                     bool                                     |      visible       | set visibility state of the element |
+|                                     Any                                      |      metadata      | User metadata that can be set to ANYTHING |
 
 ### Get
 
@@ -5805,6 +5799,9 @@ Changes some of the settings for the Radio Button Element. Must call `Window.Rea
 
 ```
 Update(value=None,
+    text=None,
+    background_color=None,
+    text_color=None,
     disabled=None,
     visible=None)
 ```
@@ -5813,9 +5810,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool |  value   | if True change to selected and set others in group to unselected |
-| bool | disabled | disable or enable state of the element |
-| bool | visible  | control visibility of element |
+| bool |      value       | if True change to selected and set others in group to unselected |
+| str  |       text       | Text to display next to radio button |
+| str  | background_color | color of background |
+| str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
+| bool |     disabled     | disable or enable state of the element |
+| bool |     visible      | control visibility of element |
 
 ### bind
 
@@ -5974,6 +5974,9 @@ Changes some of the settings for the Radio Button Element. Must call `Window.Rea
 
 ```
 update(value=None,
+    text=None,
+    background_color=None,
+    text_color=None,
     disabled=None,
     visible=None)
 ```
@@ -5982,9 +5985,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| bool |  value   | if True change to selected and set others in group to unselected |
-| bool | disabled | disable or enable state of the element |
-| bool | visible  | control visibility of element |
+| bool |      value       | if True change to selected and set others in group to unselected |
+| str  |       text       | Text to display next to radio button |
+| str  | background_color | color of background |
+| str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
+| bool |     disabled     | disable or enable state of the element |
+| bool |     visible      | control visibility of element |
 
 ## Slider Element 
 
@@ -7915,7 +7921,7 @@ Parameter Descriptions:
 |                                     bool                                     |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
 |                                  (str/enum)                                  |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID` |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
+|                       (str or Tuple[str, int] or None)                       |       font       | specifies the font family, size, etc |
 |                                     str                                      |    text_color    | color of the text |
 |                                     str                                      | background_color | color of background |
 |                                     int                                      |   border_width   | number of pixels for the border (if using a relief) |
@@ -9881,6 +9887,20 @@ Parameter Descriptions:
 | str |   icon    | Filename or bytes object |
 | str | pngbase64 | Base64 encoded image |
 
+### set_min_size
+
+Changes the minimum size of the window. Note Window must be read or finalized first.
+
+```
+set_min_size(size)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] | size | (width, height) tuple (int, int) of the desired window size in pixels |
+
 ### set_title
 
 Change the title of the window
@@ -11425,7 +11445,7 @@ Parameter Descriptions:
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 |                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |                str) or (bytes                |        image        | Image to include at the top of the popup window |
-|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -11512,7 +11532,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -11559,7 +11579,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -11604,7 +11624,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -11649,7 +11669,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -11702,7 +11722,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 |       str) or (bytes        |       image       | Image to include at the top of the popup window |
-|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -11747,7 +11767,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
-|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -11835,7 +11855,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
@@ -11877,7 +11897,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -11922,7 +11942,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -11967,7 +11987,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -12104,7 +12124,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -12149,7 +12169,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -12289,7 +12309,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -12336,7 +12356,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -12381,7 +12401,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
 ## Popups PEP8 Versions
@@ -12435,7 +12455,7 @@ Parameter Descriptions:
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 |                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |                str) or (bytes                |        image        | Image to include at the top of the popup window |
-|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
@@ -12522,7 +12542,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -12569,7 +12589,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -12614,7 +12634,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -12659,7 +12679,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
@@ -12698,7 +12718,7 @@ Parameter Descriptions:
 |       bool       |     keep_on_top      | If True the window will remain above all current windows |
 |    List[str]     |     month_names      | optional list of month names to use (should be 12 items) |
 |    List[str]     |  day_abbreviations   | optional list of abbreviations to display as the day of week |
-|       bool       |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|       bool       |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -12751,7 +12771,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 |       str) or (bytes        |       image       | Image to include at the top of the popup window |
-|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -12796,7 +12816,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
-|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -12884,7 +12904,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
@@ -12926,7 +12946,7 @@ Parameter Descriptions:
 |            bool             |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12971,7 +12991,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13016,7 +13036,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -13182,7 +13202,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -13227,7 +13247,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union["OK", "Cancel", None] | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -13367,7 +13387,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -13414,7 +13434,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -13459,7 +13479,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 |       Tuple[int, int]       |      location       | Location of upper left corner of the window |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union["Yes", "No", None] | **RETURN** | clicked button
 
 Same as popup_scrolled
@@ -13507,7 +13527,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -13553,7 +13573,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 ## PEP8 Function Bindings
@@ -13699,6 +13719,12 @@ The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the E
 
 ```
 main()
+```
+
+Display a window that will display the docstrings for each PySimpleGUI Element and the Window object
+
+```
+main_sdk_help()
 ```
 
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
@@ -13884,6 +13910,14 @@ Parameter Descriptions:
 |    str     |  search_string   | If specified then only themes containing this string will be shown |
 | (int, int) |     location     | Location on the screen to place the window. Defaults to the center like all windows |
 
+Display themes in a window as color swatches.
+Click on a color swatch to see the hex value printed on the console.
+If you hover over a color or right click it you'll also see the hext value.
+
+```
+theme_previewer_swatches()
+```
+
 Sets/Returns the progress meter border width currently in use
 
 ```
@@ -13956,6 +13990,166 @@ Parameter Descriptions:
 |--|--|--|
 | (str) | **RETURN** | (str) - color string of the text background color currently in use
 
+## User Settings
+
+Returns the current settings dictionary.  If you've not setup the filename for the
+settings, a default one will be used and then read.
+
+```
+user_settings()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (dict) | **RETURN** | The current settings dictionary
+
+Deletes an individual entry.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been deleted, the settings file is written to disk.
+
+```
+user_settings_delete_entry(key)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | key | Setting to be saved. Can be any valid dictionary key type (hashable) |
+
+Deltes the filename and path for your settings file.  Either paramter can be optional.
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+If you don't choose a filename, your application's filename + '.json' will be used
+Also sets your current dictionary to a blank one.
+
+```
+user_settings_delete_filename(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | The name of the file to use. Can be a full path and filename or just filename |
+| str |   path   | The folder that the settings file will be stored in. Do no include the filename. |
+
+Determines if a settings file exists.  If so a boolean True is returned.
+If either a filename or a path is not included, then the appropriate default
+will be used.
+
+```
+user_settings_file_exists(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | Filename to check |
+| str |   path   | Path to the file. Defaults to a specific folder depending on the operating system |
+| (bool) | **RETURN** | True if the file exists
+
+Sets the filename and path for your settings file.  Either paramter can be optional.
+
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+
+If you don't choose a filename, your application's filename + '.json' will be used.
+
+Normally the filename and path are split in the user_settings calls. However for this call they
+can be combined so that the filename contains both the path and filename.
+
+```
+user_settings_filename(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | The name of the file to use. Can be a full path and filename or just filename |
+| str |   path   | The folder that the settings file will be stored in. Do no include the filename. |
+| (str) | **RETURN** | The full pathname of the settings file that has both the path and filename combined.
+
+Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+the user specified default value will be returned.  It no default is specified and nothing is found, then
+None is returned.  If the key isn't in the dictionary, then it will be added and the settings file saved.
+If no filename has been specified up to this point, then a default filename will be assigned and used.
+The settings are SAVED prior to returning.
+
+```
+user_settings_get_entry(key, default=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |   key   | Key used to lookup the setting in the settings dictionary |
+| Any | default | Value to use should the key not be found in the dictionary |
+| (Any) | **RETURN** | Value of specified settings
+
+Specifies the path and filename to use for the settings and reads the contents of the file.
+The filename can be a full filename including a path, or the path can be specified separately.
+If  no filename is specified, then the caller's filename will be used with the extension ".json"
+
+```
+user_settings_load(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | Filename to load settings from (and save to in the future) |
+| str |   path   | Path to the file. Defaults to a specific folder depending on the operating system |
+| (dict) | **RETURN** | The settings dictionary (i.e. all settings)
+
+Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
+previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
+
+```
+user_settings_save(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used. |
+| str |   path   | The (optional) path to use to save the file. |
+| (str) | **RETURN** | The full path and filename used to save the settings
+
+Sets an individual setting to the specified value.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been modified, the settings file is written to disk.
+
+```
+user_settings_set_entry(key, value)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |  key  | Setting to be saved. Can be any valid dictionary key type |
+| Any | value | Value to save as the setting's value. Can be anything |
+
+Writes a specified dictionary to the currently defined settings filename.
+
+```
+user_settings_write_new_dictionary(settings_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| dict | settings_dict | The dictionary to be written to the currently defined settings file |
+
 ## Misc
 
 Fills a window with values provided in a values dictionary { element_key : new_value }
@@ -13992,8 +14186,19 @@ Pin's an element provided into a layout so that when it's made invisible and vis
  be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
 
 ```
-pin(elem, vertical_alignment=None)
+pin(elem,
+    vertical_alignment=None,
+    shrink=True)
 ```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     Element      |        elem        | the element to put into the layout |
+| Union[str, None] | vertical_alignment | Aligns elements vertically. 'top', 'center', 'bottom'. Can be shortened to 't', 'c', 'b' |
+|       bool       |       shrink       | If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank |
+| Column | **RETURN** | A column element containing the provided element
 
 Align an element or a row of elements to the bottom of the row that contains it
 
