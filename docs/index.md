@@ -1475,7 +1475,7 @@ Parameter Descriptions:
 |                     bool                     |     keep_on_top     | If True the window will remain above all current windows |
 |                     bool                     |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
 |                str) or (bytes                |        image        | Image to include at the top of the popup window |
-|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                     bool                     |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
@@ -1539,7 +1539,7 @@ Parameter Descriptions:
 |            bool             |     keep_on_top     | If True the window will remain above all current windows |
 | Union[str, Tuple[str, int]] |        font         | specifies the font family, size, etc |
 |       str) or (bytes        |        image        | Image to include at the top of the popup window |
-|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None, TIMEOUT_KEY] | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Typical usage:
@@ -1736,7 +1736,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location      | Location of upper left corner of the window |
 |             str             |  initial_folder   | location in filesystem to begin browsing |
 |       str) or (bytes        |       image       | Image to include at the top of the popup window |
-|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
@@ -1804,7 +1804,7 @@ Parameter Descriptions:
 |       Tuple[int, int]       |     location     | Location of upper left corner of the window |
 |             str             |  initial_folder  | location in filesystem to begin browsing |
 |       str) or (bytes        |      image       | Image to include at the top of the popup window |
-|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|            bool             |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | Union[str, None] | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 This is a typical call
@@ -4435,9 +4435,9 @@ sg.Popup(event, values, line_width=200)
 
 ```
 
-### Column, Frame, Tab, Window element_justification
+## Columns As a Way to Modify Elements
 
-Beginning in Release 4.3 you can set the justification for any container element.  This is done through the `element_justification` parameter.  This will greatly help anyone that wants to center all of their content in a window.  Previously it was difficult to do these kinds of layouts, if not impossible.
+Sometimes Columns are used to contain a single elemnet, but to give that elemously it was difficult to do these kinds of layouts, if not impossible.
 
 justify the `Column` element's row by setting the `Column`'s `justification` parameter.
 
@@ -5848,6 +5848,225 @@ None
 Exception module 'tkinter' has no attribute '__version__'
 ```
 ---
+
+# User Settings API
+
+In release 4.30.0 there is a new set of API calls available to help with "user settings".  Think of user settings as a dictionary that is automatically written to your hard drive.  That's basically what it is.  Underpinning the code is the JSON package provided by Python.
+
+While using JSON files to save and load a settings dictionary isn't very difficult, it is still code you'll need to write if you want to save settings as part of your GUI.  Since having "settings" for a GUI based program isn't uncommon, it made sense to build this capability into PySimpleGUI.  Clearly you can still use your own method for saving settings, but if you're looking for a simple and easy way to do it, these calls are likely about as easy as it gets.
+
+There have already been some demo programs written that use JSON files to store settings.  You can expect that this capability will begin to show up in more demos in the future since it's now part of PySimpleGUI.
+
+User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  You do not need to explicitly read nor write the file.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.  
+
+## List of Calls
+
+|Function|Description|
+| ---  | --- |
+|user_settings|Returns settings as a dictionary|
+|user_settings_delete_entry|Deletes a setting|
+|user_settings_delete_filename|Deletes the settings file|
+|user_settings_file_exists|Returns True if settings file specified exists|
+|user_settings_filename|Returns full path and filename of current settings file|
+|user_settings_get_entry|Returns value for a setting. If no setting found, then specified default value is returned|
+|user_settings_load|Loads dictionary from the settings file. This is not normally needed||
+|user_settings_save|Saves settings to current or newly specified file. Not normally needed|
+|user_settings_set_entry|Sets an entry to a particular value
+|user_settings_write_new_dictionary|Writes a specified dictionary to settings file|
+
+## Operations
+
+There are 2 categories that the calls can be divided into.
+
+1. File operations
+2. Settings operations
+
+File operations involve working with the JSON file itself.  They include:
+* Setting the path and/or filename
+* Load/save the file (these are somewhat optional as the saving loading/saving is done automatically)
+* Deleting the settings file
+* Checking if settings file exists
+
+Generally speaking, a setting is specified with a key which is generally a string.  Settings operations are for working with the individual settings and include:
+* Get the value of a setting (returns a default value if not found)
+* Set the value of a setting (also saves the settings to disk)
+
+Any setting operation may cause the file to be written. This is because a "get" operation can include returning a default value if the setting isn't found.  This means a new entry is made in your settings dictionary is one didn't exist before.  Since a new entry is made, that means it needs to be also be written to disk.
+
+## Filenames
+
+The settings filename defaults the filename of your Python file making the call with the extension ".json" added.  If your Python program is called `test.py` then your default settings filename will be `test.json`.
+
+In addition to the filename having a default value, the path to the file also has a default value.  The default depends on your operating system.
+
+|Operating System|Default Path|
+| ---  | --- |
+| Windows | \user\user_name\AppData\Local\PySimpleGUI\settings |
+| Linux | ~/.config/PySimpleGUI/settings |
+| Mac | ~/Library/Application Support/PySimpleGUI/settings |
+
+When calling the User Settings APIs, if a parameter is named `filename`, you can specify a full path or just the filename.  This will save you the trouble of having to split up your path and filename in your code.  If you specify only the path, the the filename will be added to that path and named as defined earlier.
+
+Like the rest of PySimpleGUI, the idea is for you to write as little code as possible.  The default values for the filename and path should be fine for you to use.  They will be stored in a location on your system that is meant to store user settings.  
+
+### Setting Filename
+
+If you want to see what the current filename is for your settings, then you can call `user_settings_filename()` with no parameters and you'll get back an absolute path and filename.
+
+To make the code for specifying the folder and filename as simple as possible, the 2 parts are separated in the call specifying the name of the settings file.  However, it is possible to supply a full and complete folder + filename as well.
+
+The default filename for your settings file is the name of the file that makes the call to the User Settings API's with the `.py` extension changed to a `.json` extension. If your source file is called `demo.py`,  then your settings filename will be `demo.json`.  
+
+#### Setting only the filename
+
+If you want to control the name of the file and/or the path to the settings file, then you will use the `user_settings_filename` call.  This function takes 2 parameters.
+
+```python
+user_settings_filename(filename=None, path=None)
+```
+
+If you set only the path, then the filename will default to the value already described.  If you set only the filename, then the path will be the default path is dependent on your operating system.  See the table above for the locations for each OS.
+
+```python
+import PySimpleGUI as sg
+
+sg.user_settings_filename(filename='my_settings.json')
+print(sg.user_settings_filename())
+```
+
+If you are running on Windows, then the result of running this code will be this printed on the console:
+
+```
+C:\Users\your_use_name\AppData\Local\PySimpleGUI\settings\my_settings.json
+```
+
+You are not restricted to naming your settings file to an extension of .json.  That is simply the default extension that's used by PySimpleGUI.  You can use any extension you would like, including no extension.
+
+#### Setting only the path
+
+Maybe you don't care about the settings filename itself, but you do care about where the settings are stored.  Let's say you want the settings to be stored in the same folder as your Python source file.  Specifying `path='.'` will achieve this.
+
+#### Setting a fully qualified filename
+
+If you want to specify the full absolute path and filename of the settings file, you can do it by using the filename parameter.  Instead of passing the filename only, pass in a fully qualified path and filename.  If you want to name your settings file `a:\temp\my_settings`, then your call will look like this:
+
+```python
+sg.user_settings_filename(filename=r'a:\temp\my_settings')
+```
+
+You are not required to break your file down into 2 parameters.  You could if you wanted to however.  The equivalent to the above call using 2 parameters would be:
+
+```python
+sg.user_settings_filename(filename='my_settings' , path=r'a:\temp')
+```
+
+### Getting the current filename
+
+Calling `user_settings_filename` with no parameters will return the full path and filename of your settings file as a single string.
+
+### File Loading / Saving
+
+Generally speaking you will not need to load or save your settings file.  It is automatically saved after every change.  
+
+Note that reading a setting can also cause the file to be written.  If you read a setting and the setting did not exist, then your call to `user_settings_get_entry` will return the default value you specified.  As a result, the dictionary is updated with this default value and in return the file is written with this value as well.
+
+One of the situations where you may want to explicitly read/load the settings file is if you're expecting it to be modified by another program.
+
+Like so much of PySimpleGUI, as much as possible is automatically done on your behalf.  This includes the requirement of saving and loading your settings file.  Even naming your settings file is optional.  
+
+## Error Handling for User Settings
+
+From a GUI perspective, user settings are not critical to the GUI operations itself.  There is nothing about settings that will cause your window to not function.  As a result, errors that occur in the User Settings are "soft errors".  An error message is displayed along with information about how you called the function, when possible, and then execution continues.
+
+One reason for treating these as soft errors and thus not raising an exception is that raising an exception will crash your GUI.  If you have redirected your output, which many GUIs do, then you will see no error information and your window will simply disappear.  If you double clicked a .py file to launch your GUI, both the GUI and the console window will instantly disappear if the GUI crashes, leaving you no information to help you debug the problem.
+
+The only time errors can occur are during file operations.  Typically these errors happen because you've specified a bad path or you don't have write permission for the path you specified.
+
+Example error message.  If you executed this code:
+
+```python
+def main():
+    sg.user_settings_filename(path='...')
+    sg.user_settings_set_entry('test',123)
+```
+
+Then you'll get an error when trying to set the 'test' entry because `'...'` is not a valid path.
+
+```
+*** Error saving settings to file:***
+ ...\scratch_1065.json [Errno 2] No such file or directory: '...\\scratch_1065.json'
+The PySimpleGUI internal reporting function is save
+The error originated from:
+  File "C:/Users/mike/.PyCharmCE2019.1/config/scratches/scratch_1065.py"
+line 8
+in main
+    sg.user_settings_set_entry('test',123)
+```
+
+You should be able to easily figure out these errors as they are file operations and the error messages are clear in detailing what's happened and where the call originated.
+
+## Example User Settings Usage
+
+One of the primary places settings are likely to be used is for filenames / folder names.  How many times have you run the same program and needed to enter the same filename?  Even if the name of the file is on your clipboard, it's still a pain in the ass to paste it into the input field every time you run the code.  Wouldn't it be so much simpler if your program remembered the last value you entered?  Well, that's exactly why this set of APIs was developed.... again it was from laziness that this capability gained life.
+
+If you want your `Input` elements to default to an entry from your settings, then you simply set the first parameter (`default_text`) to the value of a setting from your settings file.
+
+Let's say your layout had this typical file input row:
+
+```python
+[sg.Input(key='-IN-'), sg.FileBrowse()]
+```
+
+To automatically fill in the `Input` to be the last value entered, use this layout row:
+
+```python
+[sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()]
+```
+
+When your user clicks OK or closes the window in a way that is in a positive way (instead of cancelling), then add this statement to save the value.
+
+```python
+sg.user_settings_set_entry('filename', values['-IN-'])
+```
+
+Here's an entire program demonstrating this way of using user settings
+
+![image](https://user-images.githubusercontent.com/46163555/96048583-cde78800-0e44-11eb-87fe-c2465e1b6cf8.png)
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Enter a filename:')],
+          [sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()],
+          [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]]
+
+window = sg.Window('Filename Example', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WINDOW_CLOSED, 'Exit'):
+        break
+    elif event == 'Save':
+        sg.user_settings_set_entry('filename', values['-IN-'])
+
+window.close()
+```
+
+In 2 lines of code you've just made life for your user so much easier.  And, by not specifying a location and name for your file, the settings are stored out of sight / out of mind.  If you wanted to have the settings be stored with your program file so that it's more visible, then add this statement before your layout:
+
+```python
+sg.user_settings_filename(path='.')
+```
+
+## Brief Caution - User Settings Stick Around
+
+If you're using the default path, remember that previous runs of your file may have old settings that are still in your settings file.  It can get confusing when you've forgotten that you previously wrote a setting.  Not seeing the filename can have drawbacks like this.
+
+Also, because the settings automatically save after every update, it can be easy to accidently overwrite a previously saved setting.  If you want to avoid this, then perhaps it's best that you work with a dictionary within your code and then explicitly save your dictionary when you're ready to commit it to disk.  
+
+To save your Python dictionary to a settings file, simply call `user_settings_write_new_dictionary(dict)`, passing in your dictionary as the parameter.
+
+-------------------------
 
 # Extending PySimpleGUI
 
@@ -7729,15 +7948,49 @@ Calendar button works again
 * Disable close on one_line_progress_meter. There is a cancel button that will close the window
 * Changed back toplevel to no parent - was causing problems with timeout=0 windows
 
-### Upcoming
+## 4.30.0 PySimpleGUI 14-Oct-2020
 
-There will always be overlapping work as the ports will never actually be "complete" as there's always something new that can be built.  However there's a definition for the base functionality for PySimpleGUI.  This is what is being strived for with the current ports that are underway.
+User Settings APIs, lots more themes, theme swatch previewer, test harness additions
 
-The current road ahead is to complete these ports - Qt (very close), Web (pretty close), Wx (not all that close).
+* Added shrink parameter to pin, 
+* added variable Window.maximized, 
+* added main_sdk_help_window function, 
+* New themes - DarkGrey10,DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, Python, DarkBrown7
+* Highlight Thickness for Button, Radio, Input elements
+	* Set to 1 now instead of 0 so that focus can be seen
+	* Color is automatically set for buttons, checkboxes, radio buttons
+	* Color can be manually set for Buttons using `highlight_colors` parameter
+	* Only used by Linux
+* user_settings APIs
+	* Whole new set of API calls for handling "user settings"
+	* Settings are saved to json file
+	* For more info, see the documentation
+* Radio.update - added text, background & text colors parameters
+* Multiline & Output Elements:
+	* added parameter echo_stdout_stderr
+	* if True then stdout & stderr will go to the console AND to the Multiline
+* "ver" is shortened version string
+* modal docstring fix in some popups
+* image parameter implemented in popup_scrolled
+* Graph.draw_image - removed color, font, angle parameters
+* fixed blank entry with main program's theme previewer
+* added Window.set_min_size
+* error message function for soft errors
+* focus indicator for Button Checkbox Radio using highlights
+* added main_sdk_help Window
+* added theme_previewer_swatches function
+* added "Buy Me A Coffee" button
+* updated `pin` layout helper function - added `shrink` parameter
+* Main debugger window set to keep on top
 
-PySimpleGUIDroid is in the works....
+## Upcoming
 
-In addition to the ports there is ongoing work with educators that want to bring PySimpleGUI into their classrooms.  Some projects have already started with teachers.  One effort is to examine a number of books that teach Python to kids and convert the exercises to use PySimpleGUI instead of tkinter or command line.  Another educational effort is in integrating with Circuit Python.  It's unclear exactly how PySimpleGUI will fit into the picture.  A board from Adafruit is arriving soon which should help solidify what's possible.
+The future for PySimpleGUI looks bright!  
+
+The overall roadmap is a simple one:
+* Continue to build-out the tkinter port
+* Continue to bring features forward from the tkinter port to the other ports (Qt, WxPython, Remi)
+* Add mobile applications (native built applications instead of PyDriod3 that's used today)
 
 ## Code Condition
 
@@ -7747,7 +8000,7 @@ In addition to the ports there is ongoing work with educators that want to bring
 
 It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
 
-While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summar 2019 to ensure the externally facing interfaces all adhere to PEP8 names.
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summer of 2019 to ensure the externally facing interfaces all adhere to PEP8 names.
 
 Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
 
