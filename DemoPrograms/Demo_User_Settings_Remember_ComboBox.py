@@ -10,14 +10,13 @@ import PySimpleGUI as sg
     Copyright 2020 PySimpleGUI.org
 """
 
-
 def main():
 
     layout = [[sg.T('This is your layout')],
-              [sg.T('Enter or choose name'), sg.Combo(sg.user_settings_get_entry('names', []), size=(20,1), k='-COMBO-')],
+              [sg.T('Enter or choose name'), sg.Combo(sorted(sg.user_settings_get_entry('names', [])), size=(20,1), k='-COMBO-')],
               [sg.OK(), sg.Button('Exit')]]
 
-    event, values = sg.Window('Pattern for theme saving', layout).read(close=True)
+    event, values = sg.Window('Pattern for saving with Combobox', layout).read(close=True)
 
     if event == 'OK':
         sg.user_settings_set_entry('names', list(set(sg.user_settings_get_entry('names', []) + [values['-COMBO-'],])))
