@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0 Released 15-Oct-2020"
+version = __version__ = "4.30.0.1 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter"
 
 # The shortened version of version
 try:
@@ -12962,6 +12962,59 @@ def StartupTK(window):
     return
 
 
+
+
+def _set_icon_for_tkinter_window(root, icon=None, pngbase64=None):
+    """
+    At the moment, this function is only used by the get_filename or folder with the no_window option set.
+    Changes the icon that is shown on the title bar and on the task bar.
+    NOTE - The file type is IMPORTANT and depends on the OS!
+    Can pass in:
+    * filename which must be a .ICO icon file for windows, PNG file for Linux
+    * bytes object
+    * BASE64 encoded file held in a variable
+
+    :param root: The window being modified
+    :type root: (tk.Tk or tk.TopLevel)
+    :param icon: Filename or bytes object
+    :type icon: (str)
+    :param pngbase64: Base64 encoded image
+    :type pngbase64: (str)
+    """
+
+    if type(icon) is bytes or pngbase64 is not None:
+        wicon = tkinter.PhotoImage(data=icon if icon is not None else pngbase64)
+        try:
+            root.tk.call('wm', 'iconphoto', root._w, wicon)
+        except:
+            wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+            try:
+                root.tk.call('wm', 'iconphoto', root._w, wicon)
+            except Exception as e:
+                print('Set icon exception', e)
+                pass
+        return
+
+    wicon = icon
+    try:
+        root.iconbitmap(icon)
+    except:
+        try:
+            wicon = tkinter.PhotoImage(file=icon)
+            root.tk.call('wm', 'iconphoto', root._w, wicon)
+        except:
+            try:
+                wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
+                try:
+                    root.tk.call('wm', 'iconphoto', root._w, wicon)
+                except:
+                    print('Set icon exception', e)
+                    pass
+            except:
+                print('Set icon exception', e)
+                pass
+
+
 # ==============================_GetNumLinesNeeded ==#
 # Helper function for determining how to wrap text   #
 # ===================================================#
@@ -16474,6 +16527,8 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
     :rtype: Union[str, None]
     """
 
+    if icon is None:
+        icon = Window._user_defined_icon or DEFAULT_BASE64_ICON
     if no_window:
         if not Window.hidden_master_root:
             # if first window being created, make a throwaway, hidden master root.  This stops one user
@@ -16500,21 +16555,27 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
             root.withdraw()
         except:
             pass
+
+        if root and icon is not None:
+            _set_icon_for_tkinter_window(root, icon=icon)
         # TODO - Macs will not like this code because of the filetypes being used.  Need another Darwin check.
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        initialdir=initial_folder,
                                                        initialfile=default_path,
+                                                       parent=root,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             filename = tk.filedialog.askopenfilenames(filetypes=file_types,
                                                       initialdir=initial_folder,
                                                       initialfile=default_path,
+                                                      parent=root,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             filename = tk.filedialog.askopenfilename(filetypes=file_types,
                                                      initialdir=initial_folder,
                                                      initialfile=default_path,
+                                                     parent=root,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
         root.destroy()
         if Window.NumOpenWindows == 1:
