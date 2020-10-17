@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = "4.30.0.1 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number)"
+version = "4.30.0.2 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number)"
 
 # The shortened version of version
 try:
