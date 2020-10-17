@@ -1,11 +1,14 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.1 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter"
+version = "4.30.0.1 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number)"
 
 # The shortened version of version
 try:
     ver = version.split(' ')[0]
 except:
     ver = ''
+
+__version__ = ver
+
 port = 'PySimpleGUI'
 
 #  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
@@ -18298,13 +18301,13 @@ def _create_main_window():
     # theme('dark red')
     # theme('Light Green 6')
     # theme('Dark Grey 8')
-    ver = version.split('\n')[0]
 
     tkversion = tkinter.TkVersion
     tclversion = tkinter.TclVersion
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
     print('Starting up PySimpleGUI Diagnostic & Help System')
+    print('PySimpleGUI long version = ', version)
     print('PySimpleGUI Version ', ver, '\ntcl ver = {}'.format(tclversion),
           'tkinter version = {}'.format(tkversion), '\nPython Version {}'.format(sys.version))
     print('tcl detailed version = {}'.format(tclversion_detailed))
