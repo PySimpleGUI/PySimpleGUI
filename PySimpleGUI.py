@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = "4.30.0.2 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number)"
+version = "4.30.0.3 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor"
 
 # The shortened version of version
 try:
@@ -8787,6 +8787,20 @@ class Window:
         return self.TKrootDestroyed
 
 
+
+    def set_cursor(self, cursor):
+        """
+        Sets the cursor for the window.
+        :param cursor: The tkinter cursor name
+        :type cursor: (str)
+        """
+        if not self._is_window_created():
+            return
+        try:
+            self.TKroot.config(cursor=cursor)
+        except Exception as e:
+            print('Warning bad cursor specified ', cursor)
+            print(e)
 
     def _window_tkvar_changed_callback(self, event, *args):
         """
