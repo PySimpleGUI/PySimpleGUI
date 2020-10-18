@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = "4.30.0.5 Unreleased \nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again."
+version = "4.30.0.6 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again."
 
 # The shortened version of version
 try:
@@ -18130,7 +18130,7 @@ def _install(files, url=None):
 
     version = "unknown"
     for line in file_contents[sourcefile].decode("utf-8").split("\n"):
-        line_split = line.split("version =")
+        line_split = line.split("__version__ =")
         if len(line_split) > 1:
             raw_version = line_split[-1].strip(" '\"")
             version = ""
@@ -18149,7 +18149,7 @@ def _install(files, url=None):
     if file not in file_contents:
         file_contents[file] = ("from ." + package + " import *\n").encode()
         if version != "unknown":
-            file_contents[file] += ("from ." + package + " import version\n").encode()
+            file_contents[file] += ("from ." + package + " import __version__\n").encode()
     if sys.platform.startswith("linux") or (sys.platform == "ios"):
         search_in = sys.path
     else:
