@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.8 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls"
+version = __version__ = "4.30.0.9 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1325,8 +1325,11 @@ class Combo(Element):
 
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
         """
-        Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
-        :param value: change which value is current selected hased on new list of previous list of choices
+        Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
+        Note that the state can be in 3 states only.... enabled, disabled, readonly even
+        though more combinations are available. The easy way to remember is that if you
+        change the readonly parameter then you are enabling the element.
+        :param value: change which value is current selected based on new list of previous list of choices
         :type value: (Any)
         :param values: change list of choices
         :type values: List[Any]
@@ -1334,7 +1337,7 @@ class Combo(Element):
         :type set_to_index: (int)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
-        :param readonly: if True make element readonly (user cannot change any choices)
+        :param readonly: if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
         :type readonly: (bool)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
@@ -1374,9 +1377,9 @@ class Combo(Element):
         elif readonly is False:
             self.Readonly = False
             self.TKCombo['state'] = 'enable'
-        if disabled == True:
+        if disabled is True:
             self.TKCombo['state'] = 'disable'
-        elif disabled == False:
+        elif disabled is False and not readonly:
             self.TKCombo['state'] = 'enable'
         if font is not None:
             self.TKCombo.configure(font=font)
