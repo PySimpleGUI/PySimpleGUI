@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.7 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change"
+version = __version__ = "4.30.0.8 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2410,7 +2410,7 @@ class Multiline(Element):
         :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification: (str)
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, justification=justification )
+        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, justification=justification, autoscroll=True )
 
 
     def reroute_stdout_to_here(self):
