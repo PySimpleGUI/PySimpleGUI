@@ -1503,7 +1503,10 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
 
 ```
 Update(value=None,
@@ -1519,11 +1522,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             Any             |    value     | change which value is current selected hased on new list of previous list of choices |
+|             Any             |    value     | change which value is current selected based on new list of previous list of choices |
 |          List[Any]          |    values    | change list of choices |
 |             int             | set_to_index | change selection to a particular choice starting with index = 0 |
 |            bool             |   disabled   | disable or enable state of the element |
-|            bool             |   readonly   | if True make element readonly (user cannot change any choices) |
+|            bool             |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 | Union[str, Tuple[str, int]] |     font     | specifies the font family, size, etc |
 |            bool             |   visible    | control visibility of element |
 
@@ -1673,7 +1676,10 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
 
 ```
 update(value=None,
@@ -1689,11 +1695,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             Any             |    value     | change which value is current selected hased on new list of previous list of choices |
+|             Any             |    value     | change which value is current selected based on new list of previous list of choices |
 |          List[Any]          |    values    | change list of choices |
 |             int             | set_to_index | change selection to a particular choice starting with index = 0 |
 |            bool             |   disabled   | disable or enable state of the element |
-|            bool             |   readonly   | if True make element readonly (user cannot change any choices) |
+|            bool             |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 | Union[str, Tuple[str, int]] |     font     | specifies the font family, size, etc |
 |            bool             |   visible    | control visibility of element |
 
@@ -4421,15 +4427,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             str             |      value       | new text to display |
-|            bool             |     disabled     | disable or enable state of the element |
-|            bool             |      append      | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
-|             str             |    text_color    | color of the text |
-|             str             | background_color | color of background |
-|            bool             |     visible      | set visibility state of the element |
-|            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
-|             str             |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|             str             |           value            | new text to display |
+|            bool             |          disabled          | disable or enable state of the element |
+|            bool             |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
+| Union[str, Tuple[str, int]] |            font            | specifies the font family, size, etc |
+|             str             |         text_color         | color of the text |
+|             str             |      background_color      | color of background |
+|             str             |    text_color_for_value    | color of the new text being added (the value paramter) |
+|             str             | background_color_for_value | color of the new background of the text being added (the value paramter) |
+|            bool             |          visible           | set visibility state of the element |
+|            bool             |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
+|             str             |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ### bind
 
@@ -4666,15 +4674,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|             str             |      value       | new text to display |
-|            bool             |     disabled     | disable or enable state of the element |
-|            bool             |      append      | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| Union[str, Tuple[str, int]] |       font       | specifies the font family, size, etc |
-|             str             |    text_color    | color of the text |
-|             str             | background_color | color of background |
-|            bool             |     visible      | set visibility state of the element |
-|            bool             |    autoscroll    | if True then contents of element are scrolled down when new text is added to the end |
-|             str             |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|             str             |           value            | new text to display |
+|            bool             |          disabled          | disable or enable state of the element |
+|            bool             |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
+| Union[str, Tuple[str, int]] |            font            | specifies the font family, size, etc |
+|             str             |         text_color         | color of the text |
+|             str             |      background_color      | color of background |
+|             str             |    text_color_for_value    | color of the new text being added (the value paramter) |
+|             str             | background_color_for_value | color of the new background of the text being added (the value paramter) |
+|            bool             |          visible           | set visibility state of the element |
+|            bool             |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
+|             str             |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ## OptionMenu Element 
 
