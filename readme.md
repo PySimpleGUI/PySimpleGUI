@@ -35,7 +35,7 @@ Web (Remi) <img src="https://pepy.tech/badge/pysimpleguiweb?color=blue&style=for
 <a href=""><img src="https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"  width="260px"></a>
 <a href=""><img src="https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"width="200px"></a>
 <a href=""><img src="http://ForTheBadge.com/images/badges/makes-people-smile.svg" alt="img"width="190px"></a>
-<a href=""><img src="https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?style=social&label=Star&maxAge=2592000" alt="img"width="140x"></a>
+<a href="../../tree/master"><img src="https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?style=social&label=Star&maxAge=2592000" alt="img"width="140x"></a>
 </p>
 
 
