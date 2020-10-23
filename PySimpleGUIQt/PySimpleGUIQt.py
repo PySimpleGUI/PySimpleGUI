@@ -554,6 +554,7 @@ class InputText(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.DefaultText = default_text
         self.PasswordCharacter = password_char
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -701,6 +702,7 @@ class Combo(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Values = values
         self.DefaultValue = default_value
         self.ChangeSubmits = change_submits or enable_events
@@ -790,6 +792,7 @@ class OptionMenu(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Values = values
         self.DefaultValue = default_value
         self.TKOptionMenu = None
@@ -855,6 +858,7 @@ class Listbox(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
@@ -982,6 +986,7 @@ class Radio(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.InitialState = default
         self.Text = text
         self.GroupID = group_id
@@ -1068,6 +1073,7 @@ class Checkbox(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Text = text
         self.InitialState = default
         self.Value = None
@@ -1153,6 +1159,7 @@ class Spin(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Values = values
         self.DefaultValue = initial_value
         self.ChangeSubmits = change_submits or enable_events
@@ -1267,6 +1274,7 @@ class Multiline(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -1448,6 +1456,7 @@ class MultilineOutput(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -1553,6 +1562,7 @@ class Text(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.DisplayText = str(text)
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
         self.Justification = justification or 'left'
@@ -1627,6 +1637,7 @@ class Output(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self._TKOut = None
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1733,6 +1744,7 @@ class Button(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
         self.FileTypes = file_types
@@ -2006,6 +2018,7 @@ class ButtonMenu(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.MenuDefinition = menu_def
         self.AutoSizeButton = auto_size_button
         self.ButtonText = button_text
@@ -2095,6 +2108,7 @@ class ProgressBar(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.MaxValue = max_value
         self.TKProgressBar = None
         self.Cancelled = False
@@ -2167,6 +2181,7 @@ class Image(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Filename = filename
         self.Data = data
         self.DataBase64 = data_base64
@@ -2239,6 +2254,7 @@ class Canvas(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
 
@@ -2287,6 +2303,7 @@ class Graph(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.CanvasSize = canvas_size
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
@@ -2533,6 +2550,7 @@ class Frame(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2665,6 +2683,7 @@ class Tab(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2782,6 +2801,7 @@ class TabGroup(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -2922,7 +2942,7 @@ class Slider(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
-
+        key = key if key is not None else k
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
@@ -3020,6 +3040,7 @@ class Dial(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
@@ -3081,6 +3102,7 @@ class Stretch(Element):
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         """
+        key = key if key is not None else k
         self.Widget = None          # type: Stretch
         super().__init__(ELEM_TYPE_STRETCH, size=size, font=font, background_color=background_color,
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip)
@@ -3117,6 +3139,7 @@ class Column(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.UseDictionary = False
         self.ReturnValues = None
         self.ReturnValuesList = []
@@ -3200,6 +3223,7 @@ class Menu(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.TKMenu = None
@@ -3310,6 +3334,7 @@ class Table(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.Values = values
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
@@ -3500,6 +3525,7 @@ class Tree(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        key = key if key is not None else k
         self.TreeData = data
         self.ColumnHeadings = headings
         self.ColumnsToDisplay = visible_column_map
