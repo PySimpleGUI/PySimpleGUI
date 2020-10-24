@@ -33,6 +33,7 @@ ML_KLEY = '-ML-'
 
 demo_path = ''
 git_demo_path = ''
+theme = sg.theme()
 demo_files = []
 git_demo_files = []
 editor_program = github_program = None
@@ -74,13 +75,14 @@ def settings_window():
     :return: True if settings were changed
     :rtype: (bool)
     """
-    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program
+    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program, theme
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
               [sg.T('Path to Demos', size=(20, 1)), sg.In(sg.user_settings_get_entry('-demos folder-', ''), k='-DEMOS-'), sg.FolderBrowse()],
               [sg.T('Path to GitHub Folder', size=(20, 1)), sg.In(sg.user_settings_get_entry('-github folder-', ''), k='-GITHUB-'), sg.FolderBrowse()],
               [sg.T('Github Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-GitHub Program-', ''), k='-GITHUB PROGRAM-'), sg.FileBrowse()],
               [sg.T('Editor Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-Editor Program-', ''), k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.Combo(sg.theme_list(), theme, k='-THEME-')],
               [sg.B('Ok'), sg.B('Cancel')],
               ]
 
@@ -91,10 +93,12 @@ def settings_window():
         sg.user_settings_set_entry('-github folder-', values['-GITHUB-'])
         sg.user_settings_set_entry('-GitHub Program-', values['-GITHUB PROGRAM-'])
         sg.user_settings_set_entry('-Editor Program-', values['-EDITOR PROGRAM-'])
+        sg.user_settings_set_entry('-theme-', values['-THEME-'])
         demo_path = values['-DEMOS-']
         git_demo_path = values['-GITHUB-']
         editor_program = values['-EDITOR PROGRAM-']
         github_program = values['-GITHUB PROGRAM-']
+        theme = values['-THEME-']
         return True
 
     return False
@@ -108,12 +112,13 @@ def make_window():
     :rtype: (Window)
     """
 
-    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program
+    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program, theme
 
     demo_path = sg.user_settings_get_entry('-demos folder-', '')
     git_demo_path = sg.user_settings_get_entry('-github folder-', '')
     github_program = sg.user_settings_get_entry('-GitHub Program-', '')
     editor_program = sg.user_settings_get_entry('-Editor Program-', '')
+    theme = sg.user_settings_get_entry('-theme-', None)
 
     try:
         git_demo_files = os.listdir(git_demo_path)
@@ -125,7 +130,7 @@ def make_window():
     except:
         demo_files = []
 
-    sg.theme(sg.user_settings_get_entry('theme', None))
+    sg.theme(theme)
     # First the window layout...2 columns
 
     find_tooltip = "Find in file\nEnter a string in box to search for string inside of the files.\nFile list will update with list of files string found inside."
@@ -153,7 +158,7 @@ def make_window():
                         k='-FILENAME-'), sg.FileBrowse(), sg.B('Clear'), sg.B('Run', k='-RUN INDIVIDUAL-'), sg.B('Edit', k='-EDIT INDIVIDUAL-')],
               [sg.Button('Edit Me (this program) in PyCharm'),
                sg.B('Launch GitHub', button_color=(sg.theme_input_background_color(), sg.theme_input_text_color())),
-               sg.Button('Exit'), sg.Button('Theme', k='-THEME-'), sg.B('Settings')],
+               sg.Button('Exit'), sg.B('Settings')],
               ]
 
     # --------------------------------- Create Window ---------------------------------
@@ -171,7 +176,7 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program
+    global demo_files, git_demo_files, demo_path, git_demo_path, editor_program, github_program, theme
 
     window = make_window()
 
@@ -211,12 +216,6 @@ def main():
         elif event == '-FILTER-':
             new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(values=new_list)
-        elif event == '-THEME-':
-            ev, vals = sg.Window('Choose Theme', [[sg.Combo(sg.theme_list(), k='-THEME LIST-'), sg.OK(), sg.Cancel()]]).read(close=True)
-            if ev != sg.WIN_CLOSED:
-                window.close()
-                sg.user_settings_set_entry('theme', vals['-THEME LIST-'])
-                window = make_window()
         elif event == '-RUN INDIVIDUAL-':
             sg.user_settings_set_entry('-filenames-', list(set(sg.user_settings_get_entry('-filenames-', []) + [values['-FILENAME-'], ])))
             sg.user_settings_set_entry('-last filename-', values['-FILENAME-'])
