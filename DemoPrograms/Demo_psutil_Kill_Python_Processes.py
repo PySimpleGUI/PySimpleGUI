@@ -4,6 +4,7 @@ import os
 import signal
 import psutil
 import operator
+import sys
 
 CONFIRM_KILLS = False
 
@@ -95,10 +96,7 @@ def show_list_by_cpu():
     return display_list
 
 
-def main():
-    # ----------------  Create Form  ----------------
-    sg.theme('Dark Grey 9')
-
+def make_window():
     layout = [[sg.Text('Python Process Killer - Choose one or more processes',
                        size=(45, 1), font=('Helvetica', 15), text_color='yellow')],
               [sg.Listbox(values=[' '], size=(100, 20), select_mode=sg.SELECT_MODE_EXTENDED, font=('Courier', 10), key='-processes-')],
@@ -118,6 +116,26 @@ def main():
                        return_keyboard_events=True,
                        finalize=True)
 
+    return window
+
+def kill_all():
+    processes_to_kill = show_list_by_name()
+    for proc in processes_to_kill:
+        pid = int(proc[0:5])
+        try:
+            kill_proc(pid=pid)
+            # kill_proc_tree(pid=pid)
+        except Exception as e:
+            pass
+
+def main(silent=False):
+    if silent:
+        kill_all()
+        sg.popup_auto_close('Killed everything....', 'This window autocloses')
+        sys.exit()
+    # ----------------  Create Form  ----------------
+    sg.theme('Dark Grey 9')
+    window = make_window()
     display_list = show_list_by_name()
     window['-processes-'].update(display_list)
     name_sorted = True
@@ -166,4 +184,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 2 and sys.argv[1] == 'silent':
+        main(silent=True)
+    else:
+        main(silent=False)
