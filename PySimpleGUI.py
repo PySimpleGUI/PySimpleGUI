@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.11 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table"
+version = __version__ = "4.30.0.11 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17338,13 +17338,13 @@ def _upgrade_gui():
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
 
-def main_get_debug_data(supress_popup=False):
+def main_get_debug_data(suppress_popup=False):
     """
     Collect up and display the data needed to file GitHub issues.
     This function will place the information on the clipboard.
     You MUST paste the information from the clipboard prior to existing your application.
-    :param supress_popup: If True no popup window will be shown. The string will be only returned, not displayed
-    :type supress_popup: (bool)
+    :param suppress_popup: If True no popup window will be shown. The string will be only returned, not displayed
+    :type suppress_popup: (bool)
     :returns: String containing the information to place into the GitHub Issue
     :rtype: (str)
     """
@@ -17363,7 +17363,7 @@ PySimpleGUI filename: {}""".format(sys.version, tclversion_detailed, ver, __file
     root.update_idletasks()
     root.destroy()
 
-    if not supress_popup:
+    if not suppress_popup:
         popup_scrolled('*** With this window still open, paste clipboard into your GitHub Issue***\n',
                    message, title='Select and copy this info to your GitHub Issue', keep_on_top=True, size=(100,10))
 
