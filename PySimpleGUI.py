@@ -7096,7 +7096,8 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False,
+                 metadata=None, custom_window_class=None, add_to_main_window=False):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -7174,6 +7175,10 @@ class Window:
         :type modal: (bool)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
+        :param custom_window_class: Specifies a Window class (WM_CLASS) to be set for this window.
+        :type custom_window_class: (str)
+        :param add_to_main_window: Specifies if the new Window should be grouped with the hidden main window. Default = False
+        :type add_to_main_window: (bool)
         """
 
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
@@ -7259,6 +7264,8 @@ class Window:
         self.config_count = 0
         self.saw_00 = False
         self.maximized = False
+        self.CustomWindowClass = custom_window_class
+        self.AddToMainWindow = add_to_main_window
         
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -12880,10 +12887,16 @@ def StartupTK(window):
             print('* Error performing wm_overrideredirect *')
         Window.hidden_master_root.withdraw()
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
-        root = tk.Toplevel()
+        if window.CustomWindowClass is not None:
+            root = tk.Toplevel(class_=window.CustomWindowClass)
+        else:
+            root = tk.Toplevel()
     else:
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
-        root = tk.Toplevel()
+        if window.CustomWindowClass is not None:
+            root = tk.Toplevel(class_=window.CustomWindowClass)
+        else:
+            root = tk.Toplevel()
 
     if window.DebuggerEnabled:
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
@@ -12900,6 +12913,9 @@ def StartupTK(window):
     Window._IncrementOpenCount()
 
     window.TKroot = root
+
+    if (window.AddToMainWindow):
+        root.group(Window.hidden_master_root)
 
     window._create_thread_queue()
 
