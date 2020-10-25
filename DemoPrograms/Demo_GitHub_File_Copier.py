@@ -40,8 +40,8 @@ def get_demo_git_files():
     :rtype: Tuple[List[str], List[str]]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '')
-    git_demo_path = sg.user_settings_get_entry('-github folder-', '')
+    demo_path = sg.user_settings_get_entry('-demos folder-')
+    git_demo_path = sg.user_settings_get_entry('-github folder-')
 
     try:
         git_demo_files = os.listdir(git_demo_path)
@@ -66,7 +66,7 @@ def find_in_file(string):
     :rtype: List[str]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '')
+    demo_path = sg.user_settings_get_entry('-demos folder-')
     demo_files, git_files = get_demo_git_files()
 
     file_list = []
@@ -95,11 +95,11 @@ def settings_window():
     """
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20, 1)), sg.In(sg.user_settings_get_entry('-demos folder-', ''), k='-DEMOS-'), sg.FolderBrowse()],
-              [sg.T('Path to GitHub Folder', size=(20, 1)), sg.In(sg.user_settings_get_entry('-github folder-', ''), k='-GITHUB-'), sg.FolderBrowse()],
-              [sg.T('Github Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-GitHub Program-', ''), k='-GITHUB PROGRAM-'), sg.FileBrowse()],
-              [sg.T('Editor Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-Editor Program-', ''), k='-EDITOR PROGRAM-'), sg.FileBrowse()],
-              [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
+              [sg.T('Path to Demos', size=(20, 1)), sg.In(sg.user_settings_get_entry('-demos folder-'), k='-DEMOS-'), sg.FolderBrowse()],
+              [sg.T('Path to GitHub Folder', size=(20, 1)), sg.In(sg.user_settings_get_entry('-github folder-'), k='-GITHUB-'), sg.FolderBrowse()],
+              [sg.T('Github Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-GitHub Program-'), k='-GITHUB PROGRAM-'), sg.FileBrowse()],
+              [sg.T('Editor Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-Editor Program-'), k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-'), k='-THEME-')],
               [sg.B('Ok'), sg.B('Cancel')],
               ]
 
@@ -124,7 +124,7 @@ def make_window():
     :rtype: (Window)
     """
 
-    theme = sg.user_settings_get_entry('-theme-', None)
+    theme = sg.user_settings_get_entry('-theme-')
     demo_files, git_files = get_demo_git_files()
 
     sg.theme(theme)
@@ -153,7 +153,7 @@ def make_window():
     layout = [[sg.vtop(sg.Column(left_col, element_justification='c')), sg.VSeperator(), sg.vtop(sg.Column(right_col, element_justification='c'))],
               [sg.HorizontalSeparator()],
               [sg.Multiline(size=(90, 10), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
-              [sg.Combo(sg.user_settings_get_entry('-filenames-', []), default_value=sg.user_settings_get_entry('-last filename-', ''), size=(65, 1),
+              [sg.Combo(sg.user_settings_get_entry('-filenames-', []), default_value=sg.user_settings_get_entry('-last filename-'), size=(65, 1),
                         k='-FILENAME-'), sg.FileBrowse(), sg.B('Clear'), sg.B('Run', k='-RUN INDIVIDUAL-'), sg.B('Edit', k='-EDIT INDIVIDUAL-')],
               [sg.Button('Edit Me (this program)'),
                sg.B('Launch GitHub', button_color=(sg.theme_input_background_color(), sg.theme_input_text_color())),
@@ -175,10 +175,10 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '')
-    git_demo_path = sg.user_settings_get_entry('-github folder-', '')
-    github_program = sg.user_settings_get_entry('-GitHub Program-', '')
-    editor_program = sg.user_settings_get_entry('-Editor Program-', '')
+    demo_path = sg.user_settings_get_entry('-demos folder-')
+    git_demo_path = sg.user_settings_get_entry('-github folder-')
+    github_program = sg.user_settings_get_entry('-GitHub Program-')
+    editor_program = sg.user_settings_get_entry('-Editor Program-')
     demo_files, git_files = get_demo_git_files()
 
     window = make_window()
@@ -238,10 +238,10 @@ def main():
             if settings_window() is True:
                 window.close()
                 window = make_window()
-                demo_path = sg.user_settings_get_entry('-demos folder-', '')
-                git_demo_path = sg.user_settings_get_entry('-github folder-', '')
-                github_program = sg.user_settings_get_entry('-GitHub Program-', '')
-                editor_program = sg.user_settings_get_entry('-Editor Program-', '')
+                demo_path = sg.user_settings_get_entry('-demos folder-')
+                git_demo_path = sg.user_settings_get_entry('-github folder-')
+                github_program = sg.user_settings_get_entry('-GitHub Program-')
+                editor_program = sg.user_settings_get_entry('-Editor Program-')
                 demo_files, git_files = get_demo_git_files()
     window.close()
 
