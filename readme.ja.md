@@ -673,7 +673,7 @@ PySimpleGUI は作成するのに安価ではありませんでした。愛の�
 
 PySimpleGUIにはオープンソースライセンスがあり、そのまま残ることができれば素晴らしいことです。 お客様またはお客様の会社 (特に企業でPySimpleGUIを使用している場合) が、PySimpleGUIを使用して経済的に利益を得ている場合は、プロジェクトの寿命を延長する機能を持ちます。
 
-###コーヒーを買って
+###　コーヒーを買って
 
 私にコーヒーを買うことは、開発者を公的にサポートするための素晴らしい方法です。 それは迅速で簡単で、あなたの貢献は、あなたがPySimpleGUIの支持者であることを他の人が見ることができるように記録されます。 寄付を非公開にすることもできます。
 
@@ -699,7 +699,7 @@ PySimpleGUI は現在、オープンソースライセンスでライセンス�
 # 特別な感謝 :pray:
 
 
-この日本語版のreadmeは、[@ okajun35]（https://github.com/okajun35）の助けを借りて大幅に改善されました。PySimpleGUIのreadmeのこのバージョンは、[@M4cs](https://github.com/M4cs)の助けを借りずに一緒に来なかったでしょう。彼は素晴らしい開発者であり、プロジェクトの立ち上げ以来のPySimpleGUIサポーターです。  [@Israel Dryer](https://github.com/israel-dryer)は、別の長期的なサポーターであり、パッケージの機能の封筒を押したいくつかのPySimpleGUIプログラムを書いています。 ボードの画像を使用するユニークな掃海艇は、Israelによって作成されました。 [@jason990420](https://github.com/jason990420)は、彼はあなたが上の写真だけでなく、PySimpleGUIで作られた最初の掃海ゲームを見てPySimpleGUI、PySimpleGUIを使用して最初のカードゲームを公開したときに多くの驚きました。 
+この日本語版のreadmeは、[@ okajun35]（https://github.com/okajun35）の助けを借りて大幅に改善されました。 PySimpleGUIのreadmeのこのバージョンは、[@M4cs](https://github.com/M4cs)の助けを借りずに一緒に来なかったでしょう。彼は素晴らしい開発者であり、プロジェクトの立ち上げ以来のPySimpleGUIサポーターです。  [@Israel Dryer](https://github.com/israel-dryer)は、別の長期的なサポーターであり、パッケージの機能の封筒を押したいくつかのPySimpleGUIプログラムを書いています。 ボードの画像を使用するユニークな掃海艇は、Israelによって作成されました。 [@jason990420](https://github.com/jason990420)は、彼はあなたが上の写真だけでなく、PySimpleGUIで作られた最初の掃海ゲームを見てPySimpleGUI、PySimpleGUIを使用して最初のカードゲームを公開したときに多くの驚きました。
 
 PySimpleGUIを使用する1,100以上のGitHubリポジトリは、このプロジェクトのエンジンを刺激するインスピレーションとなっているのはあなたのために、「ありがとう」を負っています。 一晩Twitterに投稿する海外ユーザーは、PySimpleGUIで一日の仕事を始める火花ですPySimpleGUI.開発エンジンを開始し、毎日実行する準備ができているポジティブなエネルギーの源となっています。 あなたは、オープンソース開発者が望むことができる最高のユーザーコミュニティでした。
 
