@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.15 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port"
+version = __version__ = "0.35.0.16 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -5972,7 +5972,6 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
         # *********** Make TK Row                             ***********#
         qt_row_layout = QHBoxLayout()
         elem_align = container_elem.ElementJustification[0]
-
         if elem_align in align2qt_align:
             qt_row_layout.setAlignment(align2qt_align[elem_align])
         for col_num, element in enumerate(flex_row):
@@ -6061,7 +6060,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if not element.Visible:
                     column_widget.setVisible(False)
 
-                qt_row_layout.addWidget(scroll if scroll else column_widget)
+                qt_row_layout.addWidget(scroll if scroll else column_widget, alignment=Qt.AlignVCenter)
             # -------------------------  TEXT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
                 element.Widget = element.QT_Label = qlabel = QLabel(element.DisplayText, toplevel_win.QTWindow)
@@ -6105,7 +6104,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if element.ClickSubmits:    element.QT_Label.mousePressEvent = element._QtCallbackTextClicked
                 if not element.Visible:
                     element.QT_Label.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Label)
+                qt_row_layout.addWidget(element.QT_Label, alignment=Qt.AlignVCenter)
             # -------------------------  BUTTON placement element  ------------------------- #
             elif element_type == ELEM_TYPE_BUTTON:
                 element = element            #type: Button
@@ -6150,7 +6149,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if not element.Visible:
                     element.QT_QPushButton.setVisible(False)
 
-                qt_row_layout.addWidget(element.QT_QPushButton)
+                qt_row_layout.addWidget(element.QT_QPushButton, alignment=Qt.AlignVCenter)
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element       # type: InputText
@@ -6216,7 +6215,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_QLineEdit.installEventFilter(element.InputTextWidget)
                 if not element.Visible:
                     element.QT_QLineEdit.setVisible(False)
-                qt_row_layout.addWidget(element.QT_QLineEdit)
+                qt_row_layout.addWidget(element.QT_QLineEdit, alignment=Qt.AlignVCenter)
             # -------------------------  COMBO placement BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
                 element.Widget = element.QT_ComboBox = QComboBox()
@@ -6269,7 +6268,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_ComboBox.setAutoCompletion(True)
                 if not element.Visible:
                     element.QT_ComboBox.setVisible(False)
-                qt_row_layout.addWidget(element.QT_ComboBox)
+                qt_row_layout.addWidget(element.QT_ComboBox, alignment=Qt.AlignVCenter)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
@@ -6330,7 +6329,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_ListWidget.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_ListWidget.setVisible(False)
-                qt_row_layout.addWidget(element.QT_ListWidget)
+                qt_row_layout.addWidget(element.QT_ListWidget, alignment=Qt.AlignVCenter)
             # -------------------------  INPUT MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element           # type: Multiline
@@ -6380,7 +6379,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 if not element.Visible:
                     element.QT_TextEdit.setVisible(False)
-                qt_row_layout.addWidget(element.QT_TextEdit)
+                qt_row_layout.addWidget(element.QT_TextEdit, alignment=Qt.AlignVCenter)
             # ------------------------- OUTPUT MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
                 element = element           # type: MultilineOutput
@@ -6414,7 +6413,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 if not element.Visible:
                     element.QT_TextBrowser.setVisible(False)
-                qt_row_layout.addWidget(element.QT_TextBrowser)
+                qt_row_layout.addWidget(element.QT_TextBrowser, alignment=Qt.AlignVCenter)
             # -------------------------  INPUT CHECKBOX placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
                 element = element           # type: Checkbox
@@ -6446,7 +6445,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_Checkbox.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_Checkbox.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Checkbox)
+                qt_row_layout.addWidget(element.QT_Checkbox, alignment=Qt.AlignVCenter)
               # -------------------------  PROGRESSBAR placement element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 element.Widget = element.QT_QProgressBar = QProgressBar()
@@ -6488,7 +6487,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if not element.Visible:
                     element.QT_QProgressBar.setVisible(False)
 
-                qt_row_layout.addWidget(element.QT_QProgressBar)
+                qt_row_layout.addWidget(element.QT_QProgressBar, alignment=Qt.AlignVCenter)
             # -------------------------  INPUT RADIO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
                 element = element           # type: Radio
@@ -6532,7 +6531,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_Radio_Button.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_Radio_Button.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Radio_Button)
+                qt_row_layout.addWidget(element.QT_Radio_Button, alignment=Qt.AlignVCenter)
                 # -------------------------  INPUT SPIN placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 # element.QT_Spinner = QSpinBox()
@@ -6569,7 +6568,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_Spinner.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_Spinner.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Spinner)
+                qt_row_layout.addWidget(element.QT_Spinner, alignment=Qt.AlignVCenter)
             # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 element = element       # type: Output
@@ -6600,7 +6599,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_TextBrowser.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_TextBrowser.setVisible(False)
-                qt_row_layout.addWidget(element.QT_TextBrowser)
+                qt_row_layout.addWidget(element.QT_TextBrowser, alignment=Qt.AlignVCenter)
             # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element           # type: Image
@@ -6636,7 +6635,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QLabel.mousePressEvent = element.QtCallbackImageClicked
                 if not element.Visible:
                     element.QT_QLabel.setVisible(False)
-                qt_row_layout.addWidget(element.QT_QLabel)
+                qt_row_layout.addWidget(element.QT_QLabel, alignment=Qt.AlignVCenter)
             # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 width, height = element_size
@@ -6670,7 +6669,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QGraphicsView.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QGraphicsView.setVisible(False)
-                qt_row_layout.addWidget(element.QT_QGraphicsView)
+                qt_row_layout.addWidget(element.QT_QGraphicsView, alignment=Qt.AlignVCenter)
             # -------------------------  MENUBAR placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element           # type: Menu
@@ -6773,7 +6772,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QPushButton.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QPushButton.setVisible(False)
-                qt_row_layout.addWidget(element.QT_QPushButton)
+                qt_row_layout.addWidget(element.QT_QPushButton, alignment=Qt.AlignVCenter)
             # -------------------------  Frame placement element  ------------------------- #
             elif element_type == ELEM_TYPE_FRAME:
                 element.Widget = column_widget = QGroupBox()
@@ -6870,7 +6869,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                         print('Bad tab position specified {}', element.TabLocation)
                 PackFormIntoFrame(element, element.ParentForm.QFormLayout, toplevel_win)
 
-                qt_row_layout.addWidget(element.QT_QTabWidget)
+                qt_row_layout.addWidget(element.QT_QTabWidget, alignment=Qt.AlignVCenter)
                 if not element.Visible:
                     element.QT_QTabWidget.setVisible(False)
 
@@ -6924,7 +6923,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_Slider.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_Slider.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Slider)
+                qt_row_layout.addWidget(element.QT_Slider, alignment=Qt.AlignVCenter)
             # -------------------------  DIAL placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_DIAL:
                 element.Widget = element.QT_Dial = qdial = QDial()
@@ -6954,7 +6953,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # qt_row_layout.setContentsMargins(*full_element_pad)
                 if not element.Visible:
                     element.QT_Dial.setVisible(False)
-                qt_row_layout.addWidget(element.QT_Dial)
+                qt_row_layout.addWidget(element.QT_Dial, alignment=Qt.AlignVCenter)
             # -------------------------  Stretch placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STRETCH:
                 element = element       # type: Stretch
@@ -7006,7 +7005,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if not element.Visible:
                     element.QT_TableWidget.setVisible(False)
 
-                qt_row_layout.addWidget(element.QT_TableWidget)
+                qt_row_layout.addWidget(element.QT_TableWidget, alignment=Qt.AlignVCenter)
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element   # type: Tree
@@ -7091,7 +7090,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QTreeWidget.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QTreeWidget.setVisible(False)
-                qt_row_layout.addWidget(element.QT_QTreeWidget)
+                qt_row_layout.addWidget(element.QT_QTreeWidget, alignment=Qt.AlignVCenter)
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element           # type: HorizontalSeparator
@@ -7112,8 +7111,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
                 qlabel.setFrameStyle(QFrame.VLine if element.Orientation[0] =='v' else QFrame.HLine)
 
-                qt_row_layout.addWidget(element.QT_Label)
+                qt_row_layout.addWidget(element.QT_Label, alignment=Qt.AlignVCenter)
 
+            # Align the Element on center in the row
+            # try:
+            #     element.Widget.setAlignment(element.Widget.alignment() | Qt.AlignVCenter)
+            # except Exception as e:
+            #     print(f'* Alignment error {e}')
 
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         qt_row_layout.setSpacing(0)
