@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "0.35.0.16 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row"
+version = __version__ = "0.35.0.17 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row, added margin to some elements, renamed styles related variables"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -389,7 +389,7 @@ class Element():
         self.Visible = visible
         self.metadata = metadata                # type: Any
         self.row_frame = None                   # type: QHBoxLayout
-
+        self.qt_styles = []                     # type: Tuple[QtStyle]
 
     def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
@@ -444,7 +444,7 @@ class Element():
         if not self._widget_was_created():
             return
 
-        a_style = self.css_style_obj[0]
+        a_style = self.qt_styles[0]
         # print(f'a_style = {a_style}')
         if font is not None:  #= apply_new_font(css_props_dict, create_style_from_font(font))
             a_style['font'] = create_style_from_font(font)
@@ -4085,7 +4085,7 @@ class Window:
         self.UniqueKeyCounter = 0
         self.metadata = metadata
         self.ElementJustification = element_justification
-
+        self.AllKeysDict = {}
 
         if layout is not None:
             self.Layout(layout)
@@ -4828,6 +4828,138 @@ FlexForm = Window
 
 
 
+
+
+class QtStyle(object):
+    '''
+        API
+
+        # step 1 - make a style
+        ss = QtStyle(QLabel)
+
+        # step 2 - add fields
+        ss['font'] = create_style_from_font()
+        ss['background_color'] = (color, color_default)
+        ss['color'] = (color, color_default)
+        # step 2.1 - add additions
+        ss.append_css_to_end.append(" QScrollBar:vertical { ... some css here ...  } ")
+        # step 2.2 - add anchor
+        ss.my_anchor = '::chunk'
+
+        # step 3 - build result
+        css_str = ss.build_css_string()
+        qt_widget.setStyleSheet(css_str)
+
+        ====== Special fields
+        - font
+        - margin
+        Why they are special? Because of the formatting.
+
+        === === ===
+        made by nngogol
+    '''
+
+    def __init__(self, widget_name=''):
+        self.widget_name = widget_name
+        self.css_props = {}
+        self.my_anchor = None
+
+        self.logging = True
+        self.logging = not True
+        self.append_css_to_end = []
+
+        self.make_secure_check = True  # Check if "css property is valid, i.e. it's present in default names".
+        #                               Make makes development safer, if you have a erro in spelling css-property
+        #                               In production: it can be disabled, I guess.
+
+    def __setitem__(self, css_prop_name, css_prop_value):
+
+        # validation
+        if not isinstance(css_prop_value, (tuple, list, str)):
+            raise Exception('Bad value fro css property -> %s.' % css_prop_value)
+        if self.make_secure_check:
+            if not is_valid_css_prop(css_prop_name):
+                raise Exception('Bad css property name: ' % css_prop_name)
+
+        self.css_props[css_prop_name] = css_prop_value
+
+    def build_css_string(self):
+        # no css props added -> return empty string
+        if not self.css_props:  # empty case
+            print(f' final_str # {self.widget_name} = ""')
+            return ''
+
+        css_props_str_list = []
+        for key, value in self.css_props.items():
+            # special cases:
+            if key == 'margin':
+                # validation
+                if not isinstance(value, (tuple, list)):
+                    raise Exception('Cant handle this TYPE for margin property : %s ' % str(type(value)))
+
+                result_css_string = ''
+
+                if len(value) == 4:
+                    # skip all zeros
+                    if value[0] == value[1] == value[2] == value[3] == 0: result_css_string = ''
+
+                    result_css_string = 'margin : {}px {}px {}px {}px;'.format(*value)
+                elif len(value) == 1:
+                    # skip all zeros
+                    if value[0] == 0: continue
+
+                    result_css_string = 'margin : {}px;'.format(value[0])
+                else:
+                    raise Exception('Bad value for margin property: ' % str(value))
+
+                # # Fix for this case:
+                # # Wrong:    margin: 0px;
+                # # Right:    margin: 0;
+                # result_css_string = result_css_string.replace(': 0px', ': 0')
+
+                css_props_str_list.append(result_css_string)
+
+                continue
+            # if key == 'border': ...
+
+            # it's a css string! Format: 'propery: value;''
+            if isinstance(value, str):
+                # is css prop name + css prop value
+                if ':' in value:
+                    css_props_str_list.append(value)
+                # is css value
+                else:
+                    css_props_str_list.append(_to_css_prop(key, value))
+                # we continue, because it was 'string type parsing'
+                continue
+
+            isnot = None
+            # it's a pair! Format: (val, default_val)
+            if isinstance(value, (tuple, list)):
+                user_css_prop_value, isnot = value
+
+            if user_css_prop_value is not None and user_css_prop_value != isnot:
+                css_props_str_list.append(_to_css_prop(key, user_css_prop_value))
+
+        # join all props
+        css_all = ''.join(css_props_str_list)
+        final_str = css_all
+        if self.widget_name:
+            my_anchor = '' if self.my_anchor is None else self.my_anchor
+            final_str = '%s%s { %s }' % (self.widget_name, my_anchor, css_all)
+
+        # if needed: append some css from self.append_css_to_end
+        final_str += ' '.join(self.append_css_to_end)
+
+        if self.logging: print(f'final css string (self.widget_name): {final_str}')
+        return final_str
+
+    def __repr__(self):
+        return self.build_css_string()
+
+
+
+
 # =========================================================================== #
 # Stops the mainloop and sets the event information                           #
 # =========================================================================== #
@@ -4874,7 +5006,7 @@ def convert_tkinter_filetypes_to_qt(filetypes):
 def create_style_from_font(font):
     """
     Convert from font string/tuple into a Qt style sheet string
-    :param font: "Arial 10 Bold" or ('Arial', 10, 'Bold)
+    :param font: "Arial 10 Bold" or ('Arial', 10, 'Bold')
     :return: style string that can be combined with other style strings
     """
 
@@ -5737,7 +5869,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                     # # style['margin'] = full_element_pad
                     # new_menu.setStyleSheet(menu_style.build_css_string())
                     # print(menu_style)
-                    # # element.css_style_obj = (style,)
+                    # # element.qt_styles = (style,)
                     # # === style === end
                     #
                     # Key handling.... strip off key before setting text
@@ -5818,135 +5950,6 @@ def is_valid_css_prop(a_css_prop):
     return norm_ in _valid_css_fields
 
 
-class _Style(object):
-    '''
-        API
-
-        # step 1 - make a style
-        ss = Style(QLabel)
-
-        # step 2 - add fields
-        ss['font'] = create_style_from_font()
-        ss['background_color'] = (color, color_default)
-        ss['color'] = (color, color_default)
-        # step 2.1 - add additions
-        ss.append_css_to_end.append(" QScrollBar:vertical { ... some css here ...  } ")
-        # step 2.2 - add anchor
-        ss.my_anchor = '::chunk'
-
-        # step 3 - build result
-        css_str = ss.build_css_string()
-        qt_widget.setStyleSheet(css_str)
-
-        ====== Special fields
-        - font
-        - margin
-        Why they are special? Because of the formatting.
-
-        === === ===
-        made by nngogol
-    '''
-
-    def __init__(self, widget_name=''):
-        self.widget_name = widget_name
-        self.css_props = {}
-        self.my_anchor = None
-
-        self.logging = True
-        self.logging = not True
-        self.append_css_to_end = []
-
-        self.make_secure_check = True  # Check if "css property is valid, i.e. it's present in default names".
-        #                               Make makes development safer, if you have a erro in spelling css-property
-        #                               In production: it can be disabled, I guess.
-
-    def __setitem__(self, css_prop_name, css_prop_value):
-
-        # validation
-        if not isinstance(css_prop_value, (tuple, list, str)):
-            raise Exception('Bad value fro css property -> %s.' % css_prop_value)
-        if self.make_secure_check:
-            if not is_valid_css_prop(css_prop_name):
-                raise Exception('Bad css property name: ' % css_prop_name)
-
-        self.css_props[css_prop_name] = css_prop_value
-
-    def build_css_string(self):
-        # no css props added -> return empty string
-        if not self.css_props:  # empty case
-            print(f' final_str # {self.widget_name} = ""')
-            return ''
-
-        css_props_str_list = []
-        for key, value in self.css_props.items():
-            # special cases:
-            if key == 'margin':
-                # validation
-                if not isinstance(value, (tuple, list)):
-                    raise Exception('Cant handle this TYPE for margin property : %s ' % str(type(value)))
-
-                result_css_string = ''
-
-                if len(value) == 4:
-                    # skip all zeros
-                    if value[0] == value[1] == value[2] == value[3] == 0: result_css_string = ''
-
-                    result_css_string = 'margin : {}px {}px {}px {}px;'.format(*value)
-                elif len(value) == 1:
-                    # skip all zeros
-                    if value[0] == 0: continue
-
-                    result_css_string = 'margin : {}px;'.format(value[0])
-                else:
-                    raise Exception('Bad value for margin property: ' % str(value))
-
-                # # Fix for this case:
-                # # Wrong:    margin: 0px;
-                # # Right:    margin: 0;
-                # result_css_string = result_css_string.replace(': 0px', ': 0')
-
-                css_props_str_list.append(result_css_string)
-
-                continue
-            # if key == 'border': ...
-
-            # it's a css string! Format: 'propery: value;''
-            if isinstance(value, str):
-                # is css prop name + css prop value
-                if ':' in value:
-                    css_props_str_list.append(value)
-                # is css value
-                else:
-                    css_props_str_list.append(_to_css_prop(key, value))
-                # we continue, because it was 'string type parsing'
-                continue
-
-            isnot = None
-            # it's a pair! Format: (val, default_val)
-            if isinstance(value, (tuple, list)):
-                user_css_prop_value, isnot = value
-
-            if user_css_prop_value is not None and user_css_prop_value != isnot:
-                css_props_str_list.append(_to_css_prop(key, user_css_prop_value))
-
-        # join all props
-        css_all = ''.join(css_props_str_list)
-        final_str = css_all
-        if self.widget_name:
-            my_anchor = '' if self.my_anchor is None else self.my_anchor
-            final_str = '%s%s { %s }' % (self.widget_name, my_anchor, css_all)
-
-        # if needed: append some css from self.append_css_to_end
-        final_str += ' '.join(self.append_css_to_end)
-
-        if self.logging: print(f'final css string (self.widget_name): {final_str}')
-        return final_str
-
-    def __repr__(self):
-        return self.build_css_string()
-
-
-align2qt_align = {'c' : Qt.AlignCenter, 'l' : Qt.AlignLeft, 'r' : Qt.AlignRight}
 def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
     """
     :param form: a window class
@@ -5957,6 +5960,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
     :type toplevel_form: (Window)
     """
     # align2qt_align
+    align2qt_align = {'c': Qt.AlignCenter, 'l': Qt.AlignLeft, 'r': Qt.AlignRight}
 
     border_depth = toplevel_win.BorderDepth if toplevel_win.BorderDepth is not None else DEFAULT_BORDER_WIDTH
     # --------------------------------------------------------------------------- #
@@ -6030,13 +6034,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # column_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
 
                 # === style ===
-                style = _Style('QGroupBox')
+                style = QtStyle('QGroupBox')
                 style['font'] = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     style['background_color'] = element.BackgroundColor
                 style['border'] = '0px solid gray' # FIXv2
                 column_widget.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 column_layout = QFormLayout()
@@ -6081,12 +6085,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # element.QT_Label.setWordWrap(True)
 
                 # === style ===
-                style = _Style('QLabel')
+                style = QtStyle('QLabel')
                 style['font'] = create_style_from_font(font)
                 style['color'] = (element.TextColor, COLOR_SYSTEM_DEFAULT)
                 style['background_color'] = (element.BackgroundColor, COLOR_SYSTEM_DEFAULT)
-                element.QT_Label.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                style['margin'] = full_element_pad
+                element.QT_Label.setStyleSheet(str(style))
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.Relief is not None:
@@ -6112,7 +6117,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 btype = element.BType
                 element.Widget = element.QT_QPushButton = QPushButton(btext)
                 # === style ===
-                style = _Style('QPushButton')
+                style = QtStyle('QPushButton')
                 style['font'] = create_style_from_font(font)
                 style['color'] = (element.TextColor, COLOR_SYSTEM_DEFAULT)
                 style['background_color'] = (element.BackgroundColor)
@@ -6121,7 +6126,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 style['margin'] = full_element_pad
                 # style['border'] = '{}px solid gray '.format(border_depth)
                 element.QT_QPushButton.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 # element.QT_QPushButton.setFlat(False)
@@ -6165,7 +6170,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_QLineEdit.setText(str(default_text))
 
                 # === style ===
-                style = _Style('QLineEdit')
+                style = QtStyle('QLineEdit')
                 style['font'] = create_style_from_font(font)
                 if element.Disabled or element.ReadOnly:
                     if element.disabled_readonly_background_color:
@@ -6182,7 +6187,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray '.format(border_depth)
                 element.QT_QLineEdit.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.AutoSizeText is False or toplevel_win.AutoSizeText is False or element.Size[0] is not None:
@@ -6218,25 +6223,22 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_QLineEdit, alignment=Qt.AlignVCenter)
             # -------------------------  COMBO placement BOX (Drop Down) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_COMBO:
+                element = element   # type: Combo
                 element.Widget = element.QT_ComboBox = QComboBox()
-                max_line_len = max([len(str(l)) for l in element.Values])
-                if auto_size_text is False:
-                    width = element_size[0]
-                else:
-                    width = max_line_len
 
                 # === style ===
-                style = _Style('QComboBox')
+                style = QtStyle('QComboBox')
                 style['font'] = create_style_from_font(font)
                 style['color'] = (element.TextColor, COLOR_SYSTEM_DEFAULT)
                 style['background_color'] = (element.BackgroundColor, COLOR_SYSTEM_DEFAULT)
                 style['border'] = '{}px solid gray '.format(border_depth)
+                style['margin'] = full_element_pad
                 # style2 = Style('QListView')
                 # style2['color'] = (element.TextColor, COLOR_SYSTEM_DEFAULT)
                 # style2['background_color'] = (element.BackgroundColor, COLOR_SYSTEM_DEFAULT)
 
                 element.QT_ComboBox.setStyleSheet(style.build_css_string())# content+style2.content)
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if not auto_size_text:
@@ -6271,24 +6273,14 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 qt_row_layout.addWidget(element.QT_ComboBox, alignment=Qt.AlignVCenter)
             # -------------------------  OPTION MENU (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
-                max_line_len = max([len(str(l)) for l in element.Values])
+                pass
             # -------------------------  LISTBOX placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_LISTBOX:
                 element = element       # type: Listbox
-                max_line_len = max([len(str(l)) for l in element.Values]) if len(element.Values) != 0 else 0
                 element.Widget = element.QT_ListWidget = QListWidget()
-                style = element.QT_ListWidget.styleSheet()
-                # import pdb; pdb.set_trace();
-
-                # style += """QScrollBar:vertical {
-                #             border: none;
-                #             background:lightgray;
-                #             width:12px;
-                #             margin: 0px 0px 0px 0px;
-                #         } """
 
                 # === style ===
-                style = _Style('QListWidget')
+                style = QtStyle('QListWidget')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style['color'] = element.TextColor
@@ -6297,7 +6289,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray; '.format(border_depth)
                 element.QT_ListWidget.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if not auto_size_text:
@@ -6342,14 +6334,14 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_TextEdit.dropEvent = element._dropEvent
 
                 # === style ===
-                style = _Style('QTextEdit')
+                style = QtStyle('QTextEdit')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray; '.format(border_depth)
                 element.QT_TextEdit.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6384,19 +6376,18 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
             elif element_type == ELEM_TYPE_MULTILINE_OUTPUT:
                 element = element           # type: MultilineOutput
                 default_text = element.DefaultText
-                width, height = element_size
                 element.Widget = element.QT_TextBrowser = QTextBrowser()
                 element.QT_TextBrowser.setDisabled(False)
 
                 # === style ===
-                style = _Style('QTextBrowser')
+                style = QtStyle('QTextBrowser')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray'.format(border_depth)
                 element.QT_TextBrowser.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6423,13 +6414,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_Checkbox.setDisabled(True)
 
                 # === style ===
-                style = _Style('QCheckBox')
+                style = QtStyle('QCheckBox')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 element.QT_Checkbox.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6462,8 +6453,9 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QProgressBar.setOrientation(QtCore.Qt.Vertical)
 
                 # === style ===
-                style = _Style('QProgressBar')
-                style_chunk = _Style('QProgressBar::chunk')
+                style = QtStyle('QProgressBar')
+                style_chunk = QtStyle('QProgressBar::chunk')
+                style['margin'] = full_element_pad
                 # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 # style += 'border: {}px solid gray; '.format(border_depth)
                 if element.BarColor != (None, None):
@@ -6478,7 +6470,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
 
                 element.QT_QProgressBar.setStyleSheet(style.build_css_string()+style_chunk.build_css_string())
-                element.css_style_obj = (style, style_chunk)
+                element.qt_styles = (style, style_chunk)
                 # === style === end
 
                 element.QT_QProgressBar.setTextVisible(False)
@@ -6499,13 +6491,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if default_value:    qradio.setChecked(True)
 
                 # === style ===
-                style = _Style('QRadioButton')
+                style = QtStyle('QRadioButton')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 element.QT_Radio_Button.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.AutoSizeText is False or element.Size[0] is not None:
@@ -6543,14 +6535,14 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     except:
                         pass
                 # === style ===
-                style = _Style('QSpinBox')
+                style = QtStyle('QSpinBox')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray'.format(border_depth)
                 element.QT_Spinner.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 # element.QT_Spinner.setRange(element.Values[0], element.Values[1])
@@ -6576,7 +6568,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_TextBrowser.setDisabled(False)
 
                 # === style ===
-                style = _Style('QTextBrowser')
+                style = QtStyle('QTextBrowser')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
@@ -6584,7 +6576,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 style['border'] = '{}px solid gray'.format(border_depth)
                 # style += "QScrollBar:vertical {border: none; background:lightgray; width:12px; margin: 0px 0px 0px 0px; } "
                 element.QT_TextBrowser.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.AutoSizeText is False or element.Size[0] is not None:
@@ -6624,10 +6616,10 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     qlabel.setPixmap(pixmap)
 
                 # === style ===
-                style = _Style('QLabel')
+                style = QtStyle('QLabel')
                 style['margin'] = full_element_pad
                 element.QT_QLabel.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.Tooltip:         element.QT_QLabel.setToolTip(element.Tooltip)
@@ -6653,13 +6645,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_QGraphicsView.setScene(element.QT_QGraphicsScene)
 
                 # === style ===
-                style = _Style('QGraphicsView')
+                style = QtStyle('QGraphicsView')
                 style['background_color'] = (element.BackgroundColor, COLOR_SYSTEM_DEFAULT)
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray '.format(border_depth)
                 # print(f'style content = {style.content}')
                 element.QT_QGraphicsView.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 qgraphicsview.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -6687,7 +6679,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     element.QT_QMenuBar.addAction(baritem.menuAction())
                     AddMenuItem(baritem, menu_entry[1], element)
                     # === style ===
-                    menu_style = _Style('QMenu')
+                    menu_style = QtStyle('QMenu')
                     menu_style['font'] = create_style_from_font(font)
                     if element.MenuItemTextColor is not None and element.MenuItemTextColor != COLOR_SYSTEM_DEFAULT:
                         menu_style['color'] = element.MenuItemTextColor
@@ -6700,10 +6692,10 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     # === style ===
-                    style = _Style('QMenuBar')
+                    style = QtStyle('QMenuBar')
                     style['background_color'] = (element.BackgroundColor, COLOR_SYSTEM_DEFAULT)
                     element.QT_QMenuBar.setStyleSheet(style.build_css_string())
-                    element.css_style_obj = (style,)
+                    element.qt_styles = (style,)
                     # === style === end
 
                 if not element.Visible:
@@ -6715,7 +6707,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.Widget = element.QT_QPushButton = QPushButton(btext)
 
                 # === style ===
-                style = _Style('QPushButton')
+                style = QtStyle('QPushButton')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style['color'] = element.TextColor
@@ -6725,7 +6717,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     style['border'] = 'none'
                 style['margin'] = full_element_pad
                 element.QT_QPushButton.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6756,7 +6748,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 AddMenuItem(qmenu, menu_def[1], element)
 
                 # === style ===
-                menu_style = _Style('QMenu')
+                menu_style = QtStyle('QMenu')
                 menu_style['font'] = create_style_from_font(font)
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     menu_style['color'] = element.TextColor
@@ -6764,7 +6756,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                     menu_style['background-color'] = element.BackgroundColor
                 # style['margin'] = full_element_pad
                 qmenu.setStyleSheet(menu_style.build_css_string())
-                # element.css_style_obj = (style,)
+                # element.qt_styles = (style,)
                 # === style === end
 
                 element.QT_QPushButton.setMenu(qmenu)
@@ -6779,14 +6771,15 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.QT_QGroupBox = column_widget
 
                 # === style ===
-                style = _Style('QGroupBox')
+                style = QtStyle('QGroupBox')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
+                # style['margin'] = full_element_pad
                 # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
                 # style += 'border: {}px solid gray; '.format(border_depth)
                 column_widget.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6806,7 +6799,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # tab_widget.setFrameShape(QtWidgets.QFrame.NoFrame)
 
                 # === style ===
-                style = _Style('QTabWidget')
+                style = QtStyle('QTabWidget')
                 style['font'] = create_style_from_font(font)
                 if element.BackgroundColor is not None:
                     # style += 'background-color: %s;' % element.BackgroundColor
@@ -6822,7 +6815,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # style += 'border: {}px solid gray; '.format(border_depth)
                 style['margin'] = full_element_pad
                 tab_widget.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
 
@@ -6843,7 +6836,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.Widget = element.QT_QTabWidget = qtab =QTabWidget()
 
                 # === style ===
-                style = _Style('QTabWidget')
+                style = QtStyle('QTabWidget')
                 # print(f'qtab.styleSheet() -> {qtab.styleSheet()}')
                 # style = qtab.styleSheet() # FIXv2
                 if element.SelectedTitleColor not in (None, COLOR_SYSTEM_DEFAULT):
@@ -6855,8 +6848,9 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if element.TextColor not in (None, COLOR_SYSTEM_DEFAULT):
                     style.my_anchor = '::tab'
                     style['color'] = element.TextColor
+                style['margin'] = full_element_pad
                 qtab.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.TabLocation is not None:
@@ -6883,13 +6877,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if element.Disabled: element.QT_Slider.setDisabled(True)
 
                 # === style ===
-                style = _Style('QSlider')
+                style = QtStyle('QSlider')
                 style['font'] = create_style_from_font(font)
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray'.format(border_depth)
                 element.QT_Slider.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 element.QT_Slider.setMinimum(element.Range[0]); element.QT_Slider.setMaximum(element.Range[1])
@@ -6929,13 +6923,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 element.Widget = element.QT_Dial = qdial = QDial()
 
                 # === style ===
-                style = _Style('QDial')
+                style = QtStyle('QDial')
                 style['font'] = create_style_from_font(font)
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 style['border'] = '{}px solid gray'.format(border_depth)
                 element.QT_Dial.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
                 # === style === end
 
                 if element.Disabled: element.QT_Dial.setDisabled(True)
@@ -6967,7 +6961,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # element.QT_TableWidget = QTableWidget()
                 # === style ===
 
-                style = _Style('QTableWidget')
+                style = QtStyle('QTableWidget')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
@@ -6977,13 +6971,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 # more css: ScrollBar
                 style.append_css_to_end.append(" QScrollBar:vertical {border: none; background:lightgray; width:12px; margin: 0px 0px 0px 0px; } ")
                 # more css: QHeaderView
-                header_style = _Style('QHeaderView::section')
+                header_style = QtStyle('QHeaderView::section')
                 header_style['font'] = create_style_from_font(element.HeaderFont if element.HeaderFont is not None else font)
                 header_style['background-color'] = element.HeaderBackgroundColor
                 header_style['color'] = element.HeaderTextColor
 
                 element.QT_TableWidget.setStyleSheet(style.build_css_string() + header_style.build_css_string())
-                element.css_style_obj = (style, header_style)
+                element.qt_styles = (style, header_style)
                 # === style === end
 
                 if element.ChangeSubmits:
@@ -7062,7 +7056,7 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 add_treeview_data(element.TreeData.root_node, element.QT_QTreeWidget)
 
                 # === style ===
-                style = _Style('QTreeWidget')
+                style = QtStyle('QTreeWidget')
                 style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
@@ -7070,13 +7064,13 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 style['border'] = '{}px solid gray'.format(border_depth)
                 style.append_css_to_end.append(" QScrollBar:vertical {border: none; background:lightgray; width:12px; margin: 0px 0px 0px 0px; } ")
 
-                header_style = _Style('QHeaderView::section')
+                header_style = QtStyle('QHeaderView::section')
                 header_style['font'] = create_style_from_font(element.HeaderFont if element.HeaderFont is not None else font)
                 header_style['background-color'] = element.HeaderBackgroundColor
                 header_style['color'] = element.HeaderTextColor
 
                 element.QT_QTreeWidget.setStyleSheet(style.build_css_string() + header_style.build_css_string())
-                element.css_style_obj = (style, header_style)
+                element.qt_styles = (style, header_style)
                 # === style === end
 
 
@@ -7100,14 +7094,14 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                         element.QT_Label.setFixedWidth(element_size[0])
                     if element_size[1] is not None:
                         element.QT_Label.setFixedHeight(element_size[1])
-                style = _Style('QLabel')
+                style = QtStyle('QLabel')
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     style['color'] = element.TextColor
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     style['background-color'] = element.BackgroundColor
                 style['margin'] = full_element_pad
                 element.QT_Label.setStyleSheet(style.build_css_string())
-                element.css_style_obj = (style,)
+                element.qt_styles = (style,)
 
                 qlabel.setFrameStyle(QFrame.VLine if element.Orientation[0] =='v' else QFrame.HLine)
 
