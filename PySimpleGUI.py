@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.12 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as ''"
+version = __version__ = "4.30.0.13 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -303,7 +303,6 @@ OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])
 
 # The "default PySimpleGUI theme"
 OFFICIAL_PYSIMPLEGUI_THEME = CURRENT_LOOK_AND_FEEL = 'Dark Blue 3'
-
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
@@ -12809,6 +12808,10 @@ def ConvertFlexToTK(MyFlexForm):
                 MyFlexForm.TKroot.wm_attributes("-type", "splash")
             else:
                 MyFlexForm.TKroot.wm_overrideredirect(True)
+                # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
+                if sys.platform.startswith('darwin') and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                    print('* Applying Mac no_titlebar patch *')
+                    MyFlexForm.TKroot.wm_overrideredirect(False)
     except:
         pass
 
@@ -17602,7 +17605,7 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
         elif event == 'About...':
-            popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', keep_on_top=True, image=DEFAULT_BASE64_ICON)
+            popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', version,keep_on_top=True, image=DEFAULT_BASE64_ICON)
         elif event.startswith('See'):
             window.set_transparent_color(theme_background_color())
         elif event == '-INSTALL-':
