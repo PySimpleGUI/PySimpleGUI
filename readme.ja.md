@@ -425,6 +425,7 @@ https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/PySimpleGUI.py
 ### 大量にスクラップされたGitHubの画像
 
 2つ目は、PySimpleGUIを使用していると伝えられているGitHubの1,000のプロジェクトか集めた[3,000以上の画像の大規模なギャラリー ](https://www.dropbox.com/sh/g67ms0darox0i2p/AAAMrkIM6C64nwHLDkboCWnaa?dl=0)です。 手作業でフィルタリングされており初期のドキュメントで使用されていた古いスクリーンショットがたくさんあります。 しかし、そこにあなたの想像力を引き起こす何かが見つかもしれません。
+
 <hr>
 
 # PySimpleGUI の用途です :hammer:
@@ -463,7 +464,7 @@ sg.popup('入力した', filename)
 
 
 <br>
-＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
 ## Rainmeter風スタイルウィンドウ
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/RainmeterStyleWidgets.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/RainmeterStyleWidgets.jpg"  alt="img" align="right" width="500px"></a>
