@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+from PySimpleGUI import Column
+
 version = __version__ = "0.35.0.17 Unreleased\nMassive update of docstrings (thanks nngogol), default for slider tick interval set automatically now, margins added to Window but not yet hooked up, VSeparator added (spelling error), added Radio.reset_group and removed clearing all when one of them is cleared (recent change), added default key for one_line_progress_meter, auto-add keys to tables & trees, InputText element gets new disabled-readonly foreground and background color settings and also a readonly parameter, InputText gets border_width parameter, fixed up some docstrings, popup gets new image and any_key_closes parms, input type popups also get image parameter, error checks for trying to manipulate a window prior to finalize, added a dummy Element.expand method, added theme_add_new, added Window.set_title, updated to the latest themes from tktiner port, big styles update (thanks nngogol!), more Styles work, changed popup text layout to match tkinter port, fixed vertical alignment in row, added margin to some elements, renamed styles related variables"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
@@ -25,13 +27,16 @@ except:
 #          #          #  #  #    #  #####   #       #       #     #  #     #   #   #   # #    #
 #          #    #     #  #  #    #  #       #       #       #     #  #     #   #   #    #     #
 #          #     #####   #  #    #  #       ######  ######   #####    #####   ###   #### #    #
+#
+# Copyright 2020 PySimpleGUI.org
+
 
 from PySide2.QtWidgets import QApplication, QLabel, QWidget, QLineEdit, QComboBox, QFormLayout, QVBoxLayout, QHBoxLayout, QListWidget, QDial, QTableWidget
 from PySide2.QtWidgets import QSlider, QCheckBox, QRadioButton, QSpinBox, QPushButton, QTextEdit, QMainWindow, QDialog, QAbstractItemView
 from PySide2.QtWidgets import QSpacerItem, QFrame, QGroupBox, QTextBrowser, QPlainTextEdit, QButtonGroup, QFileDialog, QTableWidget, QTabWidget, QTabBar, QTreeWidget, QTreeWidgetItem, QLayout, QTreeWidgetItemIterator, QProgressBar
 from PySide2.QtWidgets import QTableWidgetItem, QGraphicsView, QGraphicsScene, QGraphicsItemGroup, QMenu, QMenuBar, QAction, QSystemTrayIcon, QColorDialog
 from PySide2.QtGui import QPainter, QPixmap, QPen, QColor, QBrush, QPainterPath, QFont, QImage, QIcon
-from PySide2.QtCore import Qt,QProcess, QEvent, QSize
+from PySide2.QtCore import Qt, QEvent, QSize
 import PySide2.QtGui as QtGui
 import PySide2.QtCore as QtCore
 import PySide2.QtWidgets as QtWidgets
@@ -39,13 +44,6 @@ import PySide2.QtWidgets as QtWidgets
 using_pyqt5 = False
 
 
-
-"""
-    The QT version if PySimpleGUI.
-    Still being developed.  Very limited features.  Been in development for less than 2 days so don't expect much!!
-    
-    So far can interact with the basic Widgets and get button clicks back.  Can't yet read which button caused the event.
-"""
 
 DEFAULT_BASE64_ICON = b'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'
 
@@ -389,7 +387,10 @@ class Element():
         self.Visible = visible
         self.metadata = metadata                # type: Any
         self.row_frame = None                   # type: QHBoxLayout
-        self.qt_styles = []                     # type: Tuple[QtStyle]
+        self.qt_styles = []                     # type: List[QtStyle]
+        self.Widget = None                      # type: QWidget
+
+
 
     def _FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
@@ -459,6 +460,33 @@ class Element():
         widget.setStyleSheet(a_style.build_css_string())
         set_widget_visiblity(widget, visible)
 
+
+    def set_stylesheet(self, stylesheet):
+        """
+        Sets the stylesheet for a Qt Widget
+        :param stylesheet: Stylesheet (string) to set stylesheet to
+        :type stylesheet: (str)
+        """
+        try:
+            self.Widget.setStyleSheet(stylesheet)
+        except Exception as e:
+            print('** Error Setting Stylesheet **', e)
+
+    def get_stylesheet(self):
+        """
+        Returns the stylesheet for element's associated Qt Widget
+        :return: stylesheet
+        :rtype: (str)
+        """
+        stylesheet = ''
+        try:
+            stylesheet = self.Widget.styleSheet()
+        except Exception as e:
+            print('** Error Setting Stylesheet **', e)
+
+        return stylesheet
+
+    update = Update
 
     # ---------------------------------- DUMMY METHODS - They don't do anything! ----------------------------------
 
@@ -4874,6 +4902,7 @@ class QtStyle(object):
 
     def __setitem__(self, css_prop_name, css_prop_value):
 
+        css_prop_name = css_prop_name.replace('_', '-')
         # validation
         if not isinstance(css_prop_value, (tuple, list, str)):
             raise Exception('Bad value fro css property -> %s.' % css_prop_value)
@@ -4892,7 +4921,7 @@ class QtStyle(object):
         css_props_str_list = []
         for key, value in self.css_props.items():
             # special cases:
-            if key == 'margin':
+            if key == 'margin' or key == 'padding':
                 # validation
                 if not isinstance(value, (tuple, list)):
                     raise Exception('Cant handle this TYPE for margin property : %s ' % str(type(value)))
@@ -4903,14 +4932,14 @@ class QtStyle(object):
                     # skip all zeros
                     if value[0] == value[1] == value[2] == value[3] == 0: result_css_string = ''
 
-                    result_css_string = 'margin : {}px {}px {}px {}px;'.format(*value)
+                    result_css_string = '{} : {}px {}px {}px {}px;'.format(key, *value)
                 elif len(value) == 1:
                     # skip all zeros
                     if value[0] == 0: continue
 
-                    result_css_string = 'margin : {}px;'.format(value[0])
+                    result_css_string = '{} : {}px;'.format(key, value[0])
                 else:
-                    raise Exception('Bad value for margin property: ' % str(value))
+                    raise Exception('Bad value for margin/padding property: ' % str(value))
 
                 # # Fix for this case:
                 # # Wrong:    margin: 0px;
@@ -5945,6 +5974,7 @@ def _to_css_prop(key_, val_):
 _valid_css_fields = ['align-content', 'align-items', 'align-self', 'background', 'background-attachment', 'background-color', 'background-image', 'background-position', 'background-size', 'border', 'border-collapse', 'border-image', 'border-radius', 'border-spacing', 'bottom', 'box-decoration-break', 'caret-color', 'clear', 'clip-path', 'color', 'color-adjust', 'column-count', 'column-fill', 'column-gap', 'column-rule', 'column-rule-color', 'column-rule-style', 'column-rule-width', 'column-span', 'column-width', 'columns', 'contain', 'content', 'counter-increment', 'counter-reset', 'counter-set', 'cursor', 'direction', 'display', 'empty-cells', 'fill', 'filter', 'flex', 'flex-basis', 'flex-direction', 'flex-flow', 'flex-grow', 'flex-shrink', 'flex-wrap', 'float', 'font', 'font-display', 'font-family', 'font-feature-settings', 'font-kerning', 'font-optical-sizing', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-synthesis', 'font-variant', 'font-variant-numeric', 'font-weight', 'gap', 'grid-column', 'grid-row', 'grid-template-columns', 'grid-template-rows', 'hanging-punctuation', 'height', 'hyphens', 'image-rendering', 'initial-letter', 'inline-size', 'inset', 'inset-block', 'inset-block-end', 'inset-block-start', 'inset-inline', 'inset-inline-end', 'inset-inline-start', 'isolation', 'justify-content', 'left', 'letter-spacing', 'line-clamp', 'line-height', 'list-style', 'margin', 'mask-image', 'mask-position', 'mask-repeat', 'mask-size', 'max-height', 'max-width', 'min-height', 'min-width', 'mix-blend-mode', 'object-fit', 'object-position', 'offset-anchor', 'offset-distance', 'offset-path', 'offset-rotate', 'opacity', 'order', 'orphans', 'outline', 'outline-offset', 'overflow', 'overflow-anchor', 'overflow-wrap', 'overscroll-behavior', 'padding', 'page-break', 'paint-order', 'perspective', 'perspective-origin', 'place-items', 'pointer-events', 'position', 'quotes', 'resize', 'right', 'row-gap', 'scroll-behavior', 'scroll-margin', 'scroll-padding', 'scroll-snap-align', 'scroll-snap-stop', 'scroll-snap-type', 'scrollbar', 'scrollbar-color', 'scrollbar-gutter', 'scrollbar-width', 'shape-image-threshold', 'shape-margin', 'shape-outside', 'speak', 'stroke', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-width', 'tab-size', 'table-layout', 'text-align', 'text-align-last', 'text-decoration', 'text-decoration-color', 'text-decoration-line', 'text-decoration-skip', 'text-decoration-skip-ink', 'text-decoration-style', 'text-decoration-thickness', 'text-indent', 'text-justify', 'text-overflow', 'text-rendering', 'text-shadow', 'text-stroke', 'text-transform', 'text-underline-offset', 'text-underline-position', 'top', 'touch-action', 'transform', 'transform-origin', 'transform-style', 'transition', 'transition-delay', 'transition-duration', 'transition-property', 'transition-timing-function', 'unicode-bidi', 'unicode-range', 'user-select', 'vertical-align', 'visibility', 'white-space', 'widows', 'width', 'will-change', 'word-break', 'word-spacing', 'writing-mode', 'z-index', 'zoom']
 def is_valid_css_prop(a_css_prop):
     '''Check if a given property EXISTS in qt Spec'''
+    return True
     global _valid_css_fields
     norm_ = a_css_prop.replace('_', '-')
     return norm_ in _valid_css_fields
@@ -6772,25 +6802,40 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
 
                 # === style ===
                 style = QtStyle('QGroupBox')
-                style['font'] = create_style_from_font(font)
+                # style['font'] = create_style_from_font(font)
                 if element.TextColor is not None:       style['color'] = element.TextColor
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
+                # style['origin'] = 'margin'
+                style['font'] = create_style_from_font(font)
+                # style['padding'] = (10,10,10,10)
                 # style['margin'] = full_element_pad
-                # style += 'margin: {}px {}px {}px {}px;'.format(*full_element_pad)
-                # style += 'border: {}px solid gray; '.format(border_depth)
-                column_widget.setStyleSheet(style.build_css_string())
-                element.qt_styles = (style,)
+                # style['padding'] = (15,15,15,15)
+                # style['padding'] = (10,10,10,10)
+                # style['margin'] = (20,20,20,20)
+                style_title = QtStyle('QGroupBox::title')
+                style_title['padding'] =  (0,0,0,0)
+                style_title['margin'] =  (0,0,0,0)
+                style_title['subcontrol-origin'] = 'border'
+                # style_title['subcontrol-position'] = 'top left'
+                # column_widget.setStyleSheet(str(style)+str(style_title))
+                column_widget.setStyleSheet(str(style))
+                # print(element.Widget.styleSheet())
+
+                element.qt_styles = (style, )
                 # === style === end
 
 
                 column_widget.setTitle(element.Title)
                 column_layout, column_vbox = QFormLayout(), QVBoxLayout()
                 PackFormIntoFrame(element, column_layout, toplevel_win)
-                column_vbox.addLayout(column_layout); column_widget.setLayout(column_vbox)
+                column_vbox.addLayout(column_layout)
+                column_widget.setLayout(column_vbox)
                 if element.Tooltip:
                     column_widget.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QGroupBox.setVisible(False)
+
+
                 qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -9700,7 +9745,7 @@ def main():
         [Text('VERSION {}'.format(ver), size=(85,1), text_color='yellow', font='ANY 18')],
 
         # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
-         [Frame('Input Text Group', frame1, title_color='yellow', tooltip='Text Group'), Stretch()],
+         [Frame('Input Text Group', frame1, title_color='yellow', tooltip='Text Group', font='Courier 20'), Stretch()],
         [Frame('Multiple Choice Group', frame2, title_color='green'),
          Frame('Binary Choice Group', frame3, title_color='purple'),
          Frame('Variable Choice Group', frame4, title_color='blue'), Stretch()],
