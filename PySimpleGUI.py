@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.15 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type"
+version = __version__ = "4.30.0.16 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2059,7 +2059,7 @@ class Spin(Element):
     A spinner with up/down buttons and a single line of text. Choose 1 values from list
     """
 
-    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False,
+    def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
                  size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List of valid values
@@ -2072,6 +2072,8 @@ class Spin(Element):
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. Spin events happen when an item changes
         :type enable_events: (bool)
+        :param readonly: Turns on the element specific events. Spin events happen when an item changes
+        :type readonly: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
         :type size: (int, int)
         :param auto_size_text: if True will size the element to match the length of the text
@@ -2101,6 +2103,7 @@ class Spin(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.TKSpinBox = self.Widget = None  # type: tk.Spinbox
         self.Disabled = disabled
+        self.Readonly = readonly
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
@@ -2109,15 +2112,20 @@ class Spin(Element):
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, values=None, disabled=None, visible=None):
+    def Update(self, value=None, values=None, disabled=None, readonly=None, visible=None):
         """
         Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
+        Note that the state can be in 3 states only.... enabled, disabled, readonly even
+        though more combinations are available. The easy way to remember is that if you
+        change the readonly parameter then you are enabling the element.
         :param value: set the current value from list of choices
         :type value: (Any)
         :param values: set available choices
         :type values: List[Any]
-        :param disabled: disable or enable state of the element
+        :param disabled: disable. Note disabled and readonly cannot be mixed. It must be one OR the other
         :type disabled: (bool)
+        :param readonly: make element readonly.  Note disabled and readonly cannot be mixed. It must be one OR the other
+        :type readonly: (bool)
         :param visible: control visibility of element
         :type visible: (bool)
         """
@@ -2136,6 +2144,18 @@ class Spin(Element):
                 self.DefaultValue = value
             except:
                 pass
+
+        if readonly:
+            self.Readonly = True
+            self.TKSpinBox['state'] = 'readonly'
+        elif readonly is False:
+            self.Readonly = False
+            self.TKSpinBox['state'] = 'enable'
+        if disabled is True:
+            self.TKSpinBox['state'] = 'disable'
+        elif disabled is False and not readonly:
+            self.TKSpinBox['state'] = 'enable'
+
         if disabled is not None:
             self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
         # if disabled == True:
@@ -3062,7 +3082,7 @@ class Button(Element):
     """
 
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, disabled=False, change_submits=False,
+                 file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
                  highlight_colors=None, use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, visible=True, metadata=None):
@@ -3079,6 +3099,8 @@ class Button(Element):
         :type file_types: Tuple[Tuple[str, str], ...]
         :param initial_folder: starting path for folders and files
         :type initial_folder: (str)
+        :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
+        :type default_extension: (str)
         :param disabled: If True button will be created disabled
         :type disabled: (bool)
         :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -3170,6 +3192,7 @@ class Button(Element):
         self.calendar_title = ''
         self.calendar_selection = ''
         self.InitialFolder = initial_folder
+        self.DefaultExtension = default_extension
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.UseTtkButtons = use_ttk_buttons
@@ -3341,10 +3364,11 @@ class Button(Element):
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
             if sys.platform == 'darwin':
-                file_name = tk.filedialog.asksaveasfilename(
+                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension,
                     initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,
+                print(f'default ext = {self.DefaultExtension}')
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,defaultextension=self.DefaultExtension,
                                                             initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             if file_name:
                 strvar.set(file_name)
@@ -9655,7 +9679,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+               default_extension='', disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
                pad=None, key=None, k=None, metadata=None):
     """
@@ -9665,7 +9689,10 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :type file_types: Tuple[Tuple[str, str], ...]
+    :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
+    :type default_extension: (str)
     :param initial_folder:  starting path for folders and files
+    :type initial_folder: (str)
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9692,13 +9719,13 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
+                  initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
                   enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,default_extension='',
            disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
            pad=None, key=None, k=None, metadata=None):
@@ -9709,7 +9736,10 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types:  (Default value = (("ALL Files", "*.*")))
     :type file_types: Tuple[Tuple[str, str], ...]
+    :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
+    :type default_extension: (str)
     :param initial_folder:  starting path for folders and files
+    :type initial_folder: (str)
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -9736,7 +9766,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, disabled=disabled,
+                  initial_folder=initial_folder, default_extension=default_extension,  tooltip=tooltip, size=size, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
                   enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
@@ -12091,7 +12121,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.bind('<ButtonRelease-1>', element._SpinChangedHandler)
                     element.TKSpinBox.bind('<Up>', element._SpinChangedHandler)
                     element.TKSpinBox.bind('<Down>', element._SpinChangedHandler)
-                if element.Disabled == True:
+                if element.Readonly:
+                    element.TKSpinBox['state'] = 'readonly'
+                if element.Disabled is True:  # note overrides readonly if disabled
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip,
