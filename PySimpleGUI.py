@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.13 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10"
+version = __version__ = "4.30.0.15 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2173,7 +2173,12 @@ class Spin(Element):
         :return: The currently visible entry
         :rtype: (Any)
         """
-        return self.TKStringVar.get()
+        value = self.TKStringVar.get()
+        for v in self.Values:
+            if str(v) == value:
+                value = v
+                break
+        return value
 
     get = Get
     set_focus = Element.SetFocus
