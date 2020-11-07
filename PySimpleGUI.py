@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.16 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin"
+version = __version__ = "4.30.0.17 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3367,9 +3367,7 @@ class Button(Element):
                 file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension,
                     initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
-                print(f'default ext = {self.DefaultExtension}')
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,defaultextension=self.DefaultExtension,
-                                                            initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -16263,17 +16261,49 @@ def _create_error_message():
 # settings.  They are automatically saved to a JSON file. If no file/path is specified then a filename is
 # created from the source file filename.
 
-class _UserSettings:
-    settings = None             # type: _UserSettings
-    def __init__(self):
-        self.path = None
-        self.filename = None
+class UserSettings:
+    # A reserved settings object for use by the setting functions. It's a way for users
+    # to access the user settings without using the UserSettings object
+    settings = None             # type: UserSettings
+
+    def __init__(self, filename=None, path=None):
+        """
+        User Settings
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        """
+        self.path = path
+        self.filename = filename
         self.full_filename = None
         self.dict = {}
-        # self.full_filename = os.path.join(self.location, self.filename)
+        if filename is not None or path is not None:
+            self.set_location(filename, path)
+
+
+    def __repr__(self):
+        """
+        Converts the settings dictionary into a string for easy display
+
+        :return: (str) the dictionary as a string
+        """
+        return str(self.dict)
+
 
 
     def compute_filename(self, filename=None, path=None):
+        """
+        Creates the full filename given the path or the filename or both.
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        :return: Tuple with (full filename, path, filename)
+        :rtype: Tuple[str, str, str]
+        """
         if filename is not None:
             dirname_from_filename = os.path.dirname(filename)  # see if a path was provided as part of filename
             if dirname_from_filename:
@@ -16299,15 +16329,62 @@ class _UserSettings:
         full_filename = os.path.join(path, filename)
         return (full_filename, path, filename)
 
+
     def set_location(self, filename=None, path=None):
+        """
+        Sets the location of the settings file
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        """
         cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
 
         self.filename = cfilename
         self.path = cpath
         self.full_filename = cfull_filename
-        # print(f'set location... {self.full_filename}')
 
-    def save(self):
+
+    def get_filename(self, filename=None, path=None):
+        """
+        Sets the filename and path for your settings file.  Either paramter can be optional.
+
+        If you don't choose a path, one is provided for you that is OS specific
+        Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+
+        If you don't choose a filename, your application's filename + '.json' will be used.
+
+        Normally the filename and path are split in the user_settings calls. However for this call they
+        can be combined so that the filename contains both the path and filename.
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        :return: The full pathname of the settings file that has both the path and filename combined.
+        :rtype: (str)
+        """
+        if filename is not None or path is not None or (filename is None and path is None):
+            self.set_location(filename=filename, path=path)
+            self.read()
+        return self.full_filename
+
+
+    def save(self, filename=None, path=None):
+        """
+        Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
+        previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
+
+        :param filename: The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
+        :type filename: (str or None)
+        :param path: The (optional) path to use to save the file.
+        :type path: (str or None)
+        :return: The full path and filename used to save the settings
+        :rtype: (str)
+        """
+        if filename is not None or path is not None:
+            self.set_location(filename=filename, path=path)
         try:
             if not os.path.exists(self.path):
                 os.makedirs(self.path)
@@ -16316,15 +16393,71 @@ class _UserSettings:
         except Exception as e:
             print('*** Error saving settings to file:***\n', self.full_filename, e)
             print(_create_error_message())
+        return self.full_filename
 
-    def delete_file(self):
+
+    def load(self, filename=None, path=None):
+        """
+        Specifies the path and filename to use for the settings and reads the contents of the file.
+        The filename can be a full filename including a path, or the path can be specified separately.
+        If  no filename is specified, then the caller's filename will be used with the extension ".json"
+
+        :param filename: Filename to load settings from (and save to in the future)
+        :type filename: (str or None)
+        :param path: Path to the file. Defaults to a specific folder depending on the operating system
+        :type path: (str or None)
+        :return: The settings dictionary (i.e. all settings)
+        :rtype: (dict)
+        """
+        if filename is not None or path is not None or self.full_filename is None:
+            self.set_location(filename, path)
+        self.read()
+        return self.dict
+
+
+    def delete_file(self, filename=None, path=None):
+        """
+        Deltes the filename and path for your settings file.  Either paramter can be optional.
+        If you don't choose a path, one is provided for you that is OS specific
+        Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+        If you don't choose a filename, your application's filename + '.json' will be used
+        Also sets your current dictionary to a blank one.
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        """
+        if filename is not None or path is not None or (filename is None and path is None):
+            self.set_location(filename=filename, path=path)
         try:
             os.remove(self.full_filename)
         except Exception as e:
             print('*** User settings delete filename warning ***\n', e)
             print(_create_error_message())
+        self.dict = {}
+
+
+    def write_new_dictionary(self, settings_dict):
+        """
+        Writes a specified dictionary to the currently defined settings filename.
+
+        :param settings_dict: The dictionary to be written to the currently defined settings file
+        :type settings_dict: (dict)
+        """
+        if self.full_filename is None:
+            self.set_location()
+        self.dict = settings_dict
+        self.save()
+
 
     def read(self):
+        """
+        Reads settings file and returns the dictionary.
+
+        :return: settings dictionary
+        :rtype: (dict)
+        """
         if self.full_filename is None:
             return {}
         try:
@@ -16337,15 +16470,112 @@ class _UserSettings:
 
         return self.dict
 
+
     def exists(self, filename=None, path=None):
+        """
+        Check if a particular settings file exists.  Returns True if file exists
+
+        :param filename: The name of the file to use. Can be a full path and filename or just filename
+        :type filename: (str or None)
+        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :type path: (str or None)
+        """
         cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
         if os.path.exists(cfull_filename):
             return True
         return False
 
 
+    def delete_entry(self, key):
+        """
+        Deletes an individual entry.  If no filename has been specified up to this point,
+        then a default filename will be used.
+        After value has been deleted, the settings file is written to disk.
+
+        :param key:  Setting to be saved. Can be any valid dictionary key type (hashable)
+        :type key: (Any)
+        """
+        if self.full_filename is None:
+            self.set_location()
+        self.read()
+        if key in self.dict:
+            del self.dict[key]
+            self.save()
+        else:
+            print('*** Warning - key ', key, ' not found in settings ***\n')
+            print(_create_error_message())
+
+
+    def set_entry(self, key, value):
+        """
+        Sets an individual setting to the specified value.  If no filename has been specified up to this point,
+        then a default filename will be used.
+        After value has been modified, the settings file is written to disk.
+
+        :param key:  Setting to be saved. Can be any valid dictionary key type
+        :type key: (Any)
+        :param value: Value to save as the setting's value. Can be anything
+        :type value:  (Any)
+        """
+        if self.full_filename is None:
+            self.set_location()
+        self.read()
+        self.dict[key] = value
+        self.save()
+
+
+    def get_entry(self, key, default=None):
+        """
+        Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+        the user specified default value will be returned.  It no default is specified and nothing is found, then
+        None is returned.  If the key isn't in the dictionary, then it will be added and the settings file saved.
+        If no filename has been specified up to this point, then a default filename will be assigned and used.
+        The settings are SAVED prior to returning.
+
+        :param key: Key used to lookup the setting in the settings dictionary
+        :type key: (Any)
+        :param default: Value to use should the key not be found in the dictionary
+        :type default: (Any)
+        :return: Value of specified settings
+        :rtype: (Any)
+        """
+        if self.full_filename is None:
+            self.set_location()
+            self.read()
+        value = self.dict.get(key, default)
+        if key not in self.dict:
+            self.set_entry(key, value)
+            self.save()
+        return value
+
+
+    def get_dict(self):
+        """
+        Returns the current settings dictionary.  If you've not setup the filename for the
+        settings, a default one will be used and then read.
+
+        :return: The current settings dictionary
+        :rtype: (dict)
+        """
+        if self.full_filename is None:
+            self.set_location()
+            self.read()
+            self.save()
+        return self.dict
+
+
+    def __setitem__(self, item, value):
+        self.set_entry(item, value)
+
+
+    def __getitem__(self, item):
+        return self.get_entry(item)
+
+
+
+
 # Create a singleton for the settings information
-_UserSettings.settings = _UserSettings()
+UserSettings.settings = UserSettings()
 
 
 def user_settings_filename(filename=None, path=None):
@@ -16367,11 +16597,8 @@ def user_settings_filename(filename=None, path=None):
     :return: The full pathname of the settings file that has both the path and filename combined.
     :rtype: (str)
     """
-    settings = _UserSettings.settings
-    if filename is not None or path is not None or (filename is None and path is None):
-        settings.set_location(filename=filename, path=path)
-        settings.read()
-    return settings.full_filename
+    settings = UserSettings.settings
+    return settings.get_filename(filename, path)
 
 
 def user_settings_delete_filename(filename=None, path=None):
@@ -16387,11 +16614,8 @@ def user_settings_delete_filename(filename=None, path=None):
     :param path: The folder that the settings file will be stored in. Do no include the filename.
     :type path: (str)
     """
-    settings = _UserSettings.settings
-    if filename is not None or path is not None or (filename is None and path is None):
-        settings.set_location(filename, path)
-        settings.delete_file()
-        settings.dict = {}
+    settings = UserSettings.settings
+    settings.delete_file(filename, path)
 
 
 def user_settings_set_entry(key, value):
@@ -16405,12 +16629,8 @@ def user_settings_set_entry(key, value):
     :param value: Value to save as the setting's value. Can be anything
     :type value:  (Any)
     """
-    settings = _UserSettings.settings
-    if settings.full_filename is None:
-        settings.set_location()
-    settings.read()
-    settings.dict[key] = value
-    settings.save()
+    settings = UserSettings.settings
+    settings.set_entry(key, value)
 
 
 def user_settings_delete_entry(key):
@@ -16422,16 +16642,9 @@ def user_settings_delete_entry(key):
     :param key:  Setting to be saved. Can be any valid dictionary key type (hashable)
     :type key: (Any)
     """
-    settings = _UserSettings.settings
-    if settings.full_filename is None:
-        settings.set_location()
-    settings.read()
-    if key in settings.dict:
-        del settings.dict[key]
-        settings.save()
-    else:
-        print('*** Warning - key ', key, ' not found in settings ***\n')
-        print(_create_error_message())
+    settings = UserSettings.settings
+    settings.delete_entry(key)
+
 
 
 def user_settings_get_entry(key, default=None):
@@ -16449,15 +16662,8 @@ def user_settings_get_entry(key, default=None):
     :return: Value of specified settings
     :rtype: (Any)
     """
-    settings = _UserSettings.settings
-    if settings.full_filename is None:
-        settings.set_location()
-        settings.read()
-    value = settings.dict.get(key, default)
-    if key not in settings.dict:
-        user_settings_set_entry(key, value)
-        settings.save()
-    return value
+    settings = UserSettings.settings
+    return settings.get_entry(key, default)
 
 
 def user_settings_save(filename=None, path=None):
@@ -16472,11 +16678,8 @@ def user_settings_save(filename=None, path=None):
     :return: The full path and filename used to save the settings
     :rtype: (str)
     """
-    settings = _UserSettings.settings
-    if filename is not None or path is not None:
-        settings.set_location(filename=filename, path=path)
-    settings.save()
-    return settings.full_filename
+    settings = UserSettings.settings
+    return settings.save(filename, path)
 
 
 def user_settings_load(filename=None, path=None):
@@ -16492,11 +16695,8 @@ def user_settings_load(filename=None, path=None):
     :return: The settings dictionary (i.e. all settings)
     :rtype: (dict)
     """
-    settings = _UserSettings.settings
-    if filename is not None or path is not None or settings.full_filename is None:
-        settings.set_location(filename, path)
-    settings.read()
-    return settings.dict
+    settings = UserSettings.settings
+    return settings.load(filename, path)
 
 
 def user_settings_file_exists(filename=None, path=None):
@@ -16512,7 +16712,7 @@ def user_settings_file_exists(filename=None, path=None):
     :return: True if the file exists
     :rtype: (bool)
     """
-    settings = _UserSettings.settings
+    settings = UserSettings.settings
     return settings.exists(filename=filename, path=path)
 
 
@@ -16523,11 +16723,8 @@ def user_settings_write_new_dictionary(settings_dict):
     :param settings_dict: The dictionary to be written to the currently defined settings file
     :type settings_dict: (dict)
     """
-    settings = _UserSettings.settings
-    if settings.full_filename is None:
-        settings.set_location()
-    settings.dict = settings_dict
-    settings.save()
+    settings = UserSettings.settings
+    settings.write_new_dictionary(settings_dict)
 
 
 def user_settings():
@@ -16538,12 +16735,8 @@ def user_settings():
     :return: The current settings dictionary
     :rtype: (dict)
     """
-    settings = _UserSettings.settings
-    if settings.full_filename is None:
-        settings.set_location()
-        settings.read()
-        settings.save()
-    return _UserSettings.settings.dict
+    settings = UserSettings.settings
+    return settings.get_dict()
 
 
 #####################################################################################################
