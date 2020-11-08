@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.17 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface"
+version = __version__ = "4.30.0.18 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16244,6 +16244,7 @@ def _create_error_message():
            'The error originated from:\n' + error_message
 
 
+
 #   .d8888b.           888    888    d8b
 #  d88P  Y88b          888    888    Y8P
 #  Y88b.               888    888
@@ -16279,6 +16280,7 @@ class UserSettings:
         self.filename = filename
         self.full_filename = None
         self.dict = {}
+        self.default_value = None
         if filename is not None or path is not None:
             self.set_location(filename, path)
 
@@ -16291,6 +16293,15 @@ class UserSettings:
         """
         return str(self.dict)
 
+
+    def set_default_value(self, default):
+        """
+        Set the value that will be returned if a requested setting is not found
+
+        :param default: value to be returned if a setting is not found in the settings dictionary
+        :type default: Any
+        """
+        self.default_value = default
 
 
     def compute_filename(self, filename=None, path=None):
@@ -16539,6 +16550,9 @@ class UserSettings:
         :return: Value of specified settings
         :rtype: (Any)
         """
+        if self.default_value is not None:
+            default = self.default_value
+
         if self.full_filename is None:
             self.set_location()
             self.read()
@@ -16565,16 +16579,38 @@ class UserSettings:
 
 
     def __setitem__(self, item, value):
+        """
+        Enables setting a setting by using [ ] notation like a dictionary.
+        Your code will have this kind of design pattern:
+        settings = sg.UserSettings()
+        settings[item] = value
+
+        :param item: The key for the setting to change. Needs to be a hashable type. Basically anything but a list
+        :type item: Any
+        :param value: The value to set the setting to
+        :type value: Any
+        """
+
         self.set_entry(item, value)
 
 
     def __getitem__(self, item):
-        return self.get_entry(item)
+        """
+        Enables accessing a setting using [ ] notation like a dictionary.
+        If the entry does not exist, then the default value will be returned.  This default
+        value is None unless user sets by calling UserSettings.set_default_value(default_value)
+
+        :param item: The key for the setting to change. Needs to be a hashable type. Basically anything but a list
+        :type item: Any
+        :return: The setting value
+        :rtype: Any
+        """
+        return self.get_entry(item, self.default_value)
 
 
 
 
-# Create a singleton for the settings information
+# Create a singleton for the settings information so that the settings functions can be used
 UserSettings.settings = UserSettings()
 
 
