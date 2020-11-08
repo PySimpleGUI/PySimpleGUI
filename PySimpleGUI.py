@@ -16517,7 +16517,7 @@ class UserSettings:
             print(_create_error_message())
 
 
-    def set_entry(self, key, value):
+    def set(self, key, value):
         """
         Sets an individual setting to the specified value.  If no filename has been specified up to this point,
         then a default filename will be used.
@@ -16535,7 +16535,7 @@ class UserSettings:
         self.save()
 
 
-    def get_entry(self, key, default=None):
+    def get(self, key, default=None):
         """
         Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
         the user specified default value will be returned.  It no default is specified and nothing is found, then
@@ -16558,7 +16558,7 @@ class UserSettings:
             self.read()
         value = self.dict.get(key, default)
         if key not in self.dict:
-            self.set_entry(key, value)
+            self.set(key, value)
             self.save()
         return value
 
@@ -16591,7 +16591,7 @@ class UserSettings:
         :type value: Any
         """
 
-        self.set_entry(item, value)
+        self.set(item, value)
 
 
     def __getitem__(self, item):
@@ -16605,7 +16605,7 @@ class UserSettings:
         :return: The setting value
         :rtype: Any
         """
-        return self.get_entry(item, self.default_value)
+        return self.get(item, self.default_value)
 
 
 
@@ -16666,7 +16666,7 @@ def user_settings_set_entry(key, value):
     :type value:  (Any)
     """
     settings = UserSettings.settings
-    settings.set_entry(key, value)
+    settings.set(key, value)
 
 
 def user_settings_delete_entry(key):
@@ -16699,7 +16699,7 @@ def user_settings_get_entry(key, default=None):
     :rtype: (Any)
     """
     settings = UserSettings.settings
-    return settings.get_entry(key, default)
+    return settings.get(key, default)
 
 
 def user_settings_save(filename=None, path=None):
