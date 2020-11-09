@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.20 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!"
+version = __version__ = "4.30.0.21 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3609,7 +3609,7 @@ class ButtonMenu(Element):
 
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
-                 size=(None, None), auto_size_button=None, button_color=None, font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
+                 size=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None, font=None, item_font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -3635,8 +3635,16 @@ class ButtonMenu(Element):
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
         :type button_color: Tuple[str, str] or str
+        :param background_color: color of the background
+        :type background_color: (str)
+        :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
+        :type text_color: (str)
+        :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+        :type disabled_text_color: (str)
         :param font: specifies the font family, size, etc
         :type font: Union[str, Tuple[str, int]]
+        :param item_font: specifies the font family, size, etc, for the menu items
+        :type item_font: Union[str, Tuple[str, int]]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
@@ -3655,9 +3663,13 @@ class ButtonMenu(Element):
         self.AutoSizeButton = auto_size_button
         self.ButtonText = button_text
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
-        self.TextColor = self.ButtonColor[0]
-        self.BackgroundColor = self.ButtonColor[1]
-        self.BorderWidth = border_width
+        # self.TextColor = self.ButtonColor[0]
+        # self.BackgroundColor = self.ButtonColor[1]
+        self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
+        self.TextColor = text_color if text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.ItemFont = item_font
+        self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.ImageFilename = image_filename
         self.ImageData = image_data
         self.ImageSize = image_size
@@ -6351,9 +6363,9 @@ class Menu(Element):
         :type metadata: (Any)
         """
 
-        self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.TextColor = text_color if text_color is not None else DEFAULT_BACKGROUND_COLOR
-        self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
+        self.TextColor = text_color if text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.MenuDefinition = menu_definition
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
@@ -11012,6 +11024,17 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                     new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
                     if element.Font is not None:
                         new_menu.config(font=element.Font)
+                    if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        new_menu.config(bg=element.BackgroundColor)
+                    if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        new_menu.config(fg=element.TextColor)
+                    if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        new_menu.config(disabledforeground=element.DisabledTextColor)
+                    try:                # if the element has an item font specified, use it. Some may not have variable
+                        if element.ItemFont is not None:
+                            new_menu.config(font=element.ItemFont)
+                    except:
+                        pass
                     return_val = new_menu
                     pos = sub_menu_info[i].find('&')
                     if pos != -1:
@@ -11458,6 +11481,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     bc = DEFAULT_BUTTON_COLOR
                 bd = element.BorderWidth
+
                 if btype != BUTTON_TYPE_REALTIME:
                     tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
                                                           command=element.ButtonCallBack, justify=tk.CENTER, bd=bd, font=font)
@@ -11657,9 +11681,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if bd == 0:
-                    tkbutton.config(relief=tk.FLAT)
-                tkbutton.config(highlightthickness=0)
+                if bd == 0 and not sys.platform.startswith('darwin'):
+                    tkbutton.config(relief=RELIEF_FLAT)
+                elif bd != 0:
+                    tkbutton.config(relief=RELIEF_RAISED)
+
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
@@ -11689,6 +11715,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 menu_def = element.MenuDefinition
 
                 top_menu = tk.Menu(tkbutton, tearoff=False, font=font)
+
+                if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    top_menu.config(bg=element.BackgroundColor)
+                if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    top_menu.config(fg=element.TextColor)
+                if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    top_menu.config(disabledforeground=element.DisabledTextColor)
+                if element.ItemFont is not None:
+                    top_menu.config(font=element.ItemFont)
+
                 AddMenuItem(top_menu, menu_def[1], element)
 
                 tkbutton.configure(menu=top_menu)
@@ -17722,11 +17758,13 @@ def _create_main_window():
     print('PySimpleGUI.py location', __file__)
     # ------ Menu Definition ------ #
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
-                ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
+                ['&Edit', ['&Paste', ['Special', 'Normal', '!Disabled' ], 'Undo'], ],
                 ['&Debugger', ['Popout', 'Launch Debugger']],
+                ['!&Disabled', ['Popout', 'Launch Debugger']],
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
 
+    button_menu_def = ['unused', ['&Paste', ['Special', 'Normal', '!Disabled'], 'Undo'], ]
     treedata = TreeData()
 
     treedata.Insert("", '_A_', 'Tree Item 1', [1, 2, 3], )
@@ -17825,7 +17863,9 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
-          B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub')]
+          B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub'),
+          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')]
+
     ]
 
     layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
