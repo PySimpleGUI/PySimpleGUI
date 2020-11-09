@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.19 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings"
+version = __version__ = "4.30.0.20 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -6323,12 +6323,16 @@ class Menu(Element):
     menu is shown.  The key portion is returned as part of the event.
     """
 
-    def __init__(self, menu_definition, background_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None, k=None, visible=True, metadata=None):
+    def __init__(self, menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None, k=None, visible=True, metadata=None):
         """
-        :param menu_definition: ???
+        :param menu_definition: The Menu definition specified using lists (docs explain the format)
         :type menu_definition: List[List[Tuple[str, List[str]]]
         :param background_color: color of the background
         :type background_color: (str)
+        :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
+        :type text_color: (str)
+        :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+        :type disabled_text_color: (str)
         :param size: Not used in the tkinter port
         :type size: (int, int)
         :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
@@ -6348,12 +6352,14 @@ class Menu(Element):
         """
 
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.TextColor = text_color if text_color is not None else DEFAULT_BACKGROUND_COLOR
+        self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else DEFAULT_BACKGROUND_COLOR
         self.MenuDefinition = menu_definition
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
         key = key if key is not None else k
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, size=size, pad=pad, key=key,
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, text_color=text_color, size=size, pad=pad, key=key,
                          visible=visible, font=font, metadata=metadata)
 
         self.Tearoff = tearoff
@@ -12255,10 +12261,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot,
                                                           tearoff=element.Tearoff)  # create the menubar
+
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff)
+                    if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        baritem.config(bg=element.BackgroundColor)
+                    if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        baritem.config(fg=element.TextColor)
+                    if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                        baritem.config(disabledforeground=element.DisabledTextColor)
                     if element.Font is not None:
                         baritem.config(font=element.Font)
                     pos = menu_entry[0].find('&')
@@ -17815,7 +17828,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
           B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub')]
     ]
 
-    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
+    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('PySimpleGUI Main Test Harness', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
