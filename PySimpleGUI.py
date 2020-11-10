@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.21 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth"
+version = __version__ = "4.30.0.22 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7118,7 +7118,7 @@ class Window:
     _user_defined_icon = None
     hidden_master_root = None       # type: tk.Tk
     _animated_popup_dict = {}
-    _active_windows = {}
+    _active_windows = {}            # type: Dict[Window:tk.Tk()]
     _move_all_windows = False            # if one window moved, they will move
     _window_that_exited = None          # type: Window
     _root_running_mainloop = None       # type: tk.Tk()    # (may be the hidden root or a window's root)
@@ -8862,12 +8862,13 @@ class Window:
         :param event: Information from tkinter about the callback
 
         """
+        # print('Thread callback info')
+        # print(event)
+        # trace_details = traceback.format_stack()
+        # print(''.join(trace_details))
         if self._queued_thread_event_available():
             self.FormRemainedOpen = True
-            # if self.CurrentlyRunningMainloop:
-            #     self.TKroot.quit()  # kick the users out of the mainloop
             _exit_mainloop(self)
-
 
 
     def _create_thread_queue(self):
@@ -9097,6 +9098,12 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
     if len(Window._active_windows) == 0:
         return None, WIN_CLOSED, None
 
+    # first see if any queued events are waiting for any of the windows
+    for window in Window._active_windows.keys():
+        if window._queued_thread_event_available():
+            _BuildResults(window, False, window)
+            event, values = window.ReturnValues
+            return window, event, values
 
     Window._root_running_mainloop = Window.hidden_master_root
     Window._timeout_key = timeout_key
@@ -17864,7 +17871,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
           B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub'),
-          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')]
+          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-', item_font='courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]
 
     ]
 
