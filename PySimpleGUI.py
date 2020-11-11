@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.22 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop"
+version = __version__ = "4.30.0.23 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2255,11 +2255,11 @@ class Multiline(Element):
         :type auto_refresh: (bool)
         :param reroute_stdout: If True then all output to stdout will be output to this element
         :type reroute_stdout: (bool)
-        :param reroute_stderr: If True then all output to stdout will be output to this element
+        :param reroute_stderr: If True then all output to stderr will be output to this element
         :type reroute_stderr: (bool)
         :param reroute_cprint: If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination
         :type reroute_cprint: (bool)
-        :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
+        :param echo_stdout_stderr: If True then output to stdout and stderr will be output to this element AND also to the normal console location
         :type echo_stdout_stderr: (bool)
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
