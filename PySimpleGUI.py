@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.24 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first"
+version = __version__ = "4.30.0.25 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -422,6 +422,8 @@ SUPPRESS_RAISE_KEY_ERRORS = False
 SUPPRESS_KEY_GUESSING = False
 
 ENABLE_TREEVIEW_869_PATCH = True
+ENABLE_MAC_NOTITLEBAR_PATCH = False
+
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
 ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS = ('SystemHighlightText', 'SystemHighlight')
 
@@ -12905,7 +12907,7 @@ def ConvertFlexToTK(MyFlexForm):
             else:
                 MyFlexForm.TKroot.wm_overrideredirect(True)
                 # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
-                if sys.platform.startswith('darwin') and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                if sys.platform.startswith('darwin') and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
                     print('* Applying Mac no_titlebar patch *')
                     MyFlexForm.TKroot.wm_overrideredirect(False)
     except:
@@ -13743,7 +13745,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: Union[bytes, str]
@@ -13826,6 +13828,8 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type suppress_key_guessing:  (bool)
     :param enable_treeview_869_patch: If True, then will use the treeview color patch for tk 8.6.9
     :type enable_treeview_869_patch:  (bool)
+    :param enable_mac_notitlebar_patch: If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10
+    :type enable_mac_notitlebar_patch:  (bool)
     :return: None
     :rtype: None
     """
@@ -13869,6 +13873,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global SUPPRESS_RAISE_KEY_ERRORS
     global SUPPRESS_KEY_GUESSING
     global ENABLE_TREEVIEW_869_PATCH
+    global ENABLE_MAC_NOTITLEBAR_PATCH
     # global _my_windows
 
     if icon:
@@ -13992,6 +13997,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if enable_treeview_869_patch is not None:
         ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
+
+    if enable_mac_notitlebar_patch is not None:
+        ENABLE_MAC_NOTITLEBAR_PATCH = enable_mac_notitlebar_patch
+
 
     return True
 
@@ -14472,7 +14481,7 @@ def _theme_preview_window_swatches():
     # Begin the layout with a header
     layout = [[Text('Themes as color swatches', text_color='white', background_color='black', font='Default 25')],
               [Text('Tooltip and right click a color to get the value', text_color='white', background_color='black', font='Default 15')],
-              [Text('Left click a color to copy to clipboard (requires pyperclip)', text_color='white', background_color='black', font='Default 15')]]
+              [Text('Left click a color to copy to clipboard', text_color='white', background_color='black', font='Default 15')]]
     layout =[[Column(layout, element_justification='c', background_color='black')]]
     # Create the pain part, the rows of Text with color swatches
     for i, theme_name in enumerate(theme_list()):
