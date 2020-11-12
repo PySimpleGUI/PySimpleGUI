@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.25 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar"
+version = __version__ = "4.30.0.26 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar, renamed parts of UserSettings to prep for release"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16334,8 +16334,8 @@ def _create_error_message():
 
 class UserSettings:
     # A reserved settings object for use by the setting functions. It's a way for users
-    # to access the user settings without using the UserSettings object
-    settings = None             # type: UserSettings
+    # to access the user settings without diarectly using the UserSettings class
+    _default_for_function_interface = None             # type: UserSettings
 
     def __init__(self, filename=None, path=None):
         """
@@ -16374,7 +16374,7 @@ class UserSettings:
         self.default_value = default
 
 
-    def compute_filename(self, filename=None, path=None):
+    def _compute_filename(self, filename=None, path=None):
         """
         Creates the full filename given the path or the filename or both.
 
@@ -16420,7 +16420,7 @@ class UserSettings:
         :param path: The folder that the settings file will be stored in. Do no include the filename.
         :type path: (str or None)
         """
-        cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
+        cfull_filename, cpath, cfilename = self._compute_filename(filename=filename, path=path)
 
         self.filename = cfilename
         self.path = cpath
@@ -16561,7 +16561,7 @@ class UserSettings:
         :param path: The folder that the settings file will be stored in. Do no include the filename.
         :type path: (str or None)
         """
-        cfull_filename, cpath, cfilename = self.compute_filename(filename=filename, path=path)
+        cfull_filename, cpath, cfilename = self._compute_filename(filename=filename, path=path)
         if os.path.exists(cfull_filename):
             return True
         return False
@@ -16681,7 +16681,7 @@ class UserSettings:
 
 
 # Create a singleton for the settings information so that the settings functions can be used
-UserSettings.settings = UserSettings()
+UserSettings._default_for_function_interface = UserSettings()
 
 
 def user_settings_filename(filename=None, path=None):
@@ -16703,7 +16703,7 @@ def user_settings_filename(filename=None, path=None):
     :return: The full pathname of the settings file that has both the path and filename combined.
     :rtype: (str)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.get_filename(filename, path)
 
 
@@ -16720,7 +16720,7 @@ def user_settings_delete_filename(filename=None, path=None):
     :param path: The folder that the settings file will be stored in. Do no include the filename.
     :type path: (str)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     settings.delete_file(filename, path)
 
 
@@ -16735,7 +16735,7 @@ def user_settings_set_entry(key, value):
     :param value: Value to save as the setting's value. Can be anything
     :type value:  (Any)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     settings.set(key, value)
 
 
@@ -16748,7 +16748,7 @@ def user_settings_delete_entry(key):
     :param key:  Setting to be saved. Can be any valid dictionary key type (hashable)
     :type key: (Any)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     settings.delete_entry(key)
 
 
@@ -16768,7 +16768,7 @@ def user_settings_get_entry(key, default=None):
     :return: Value of specified settings
     :rtype: (Any)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.get(key, default)
 
 
@@ -16784,7 +16784,7 @@ def user_settings_save(filename=None, path=None):
     :return: The full path and filename used to save the settings
     :rtype: (str)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.save(filename, path)
 
 
@@ -16801,7 +16801,7 @@ def user_settings_load(filename=None, path=None):
     :return: The settings dictionary (i.e. all settings)
     :rtype: (dict)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.load(filename, path)
 
 
@@ -16818,7 +16818,7 @@ def user_settings_file_exists(filename=None, path=None):
     :return: True if the file exists
     :rtype: (bool)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.exists(filename=filename, path=path)
 
 
@@ -16829,7 +16829,7 @@ def user_settings_write_new_dictionary(settings_dict):
     :param settings_dict: The dictionary to be written to the currently defined settings file
     :type settings_dict: (dict)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     settings.write_new_dictionary(settings_dict)
 
 
@@ -16841,7 +16841,7 @@ def user_settings():
     :return: The current settings dictionary
     :rtype: (dict)
     """
-    settings = UserSettings.settings
+    settings = UserSettings._default_for_function_interface
     return settings.get_dict()
 
 
