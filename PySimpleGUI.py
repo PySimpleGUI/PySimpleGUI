@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.27 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar, renamed parts of UserSettings to prep for release, UserSettings delete item interface added"
+version = __version__ = "4.30.0.28 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar, renamed parts of UserSettings to prep for release, UserSettings delete item interface added, UserSetting removed adding entry and saving when no entry found"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16627,9 +16627,12 @@ class UserSettings:
             self.set_location()
             self.read()
         value = self.dict.get(key, default)
-        if key not in self.dict:
-            self.set(key, value)
-            self.save()
+        # Previously was saving creating an entry and saving the dictionary if the
+        # key was not found.  I don't understand why it was originally coded this way.
+        # Hopefully nothing is going to break removing this code.
+        # if key not in self.dict:
+        #     self.set(key, value)
+        #     self.save()
         return value
 
 
