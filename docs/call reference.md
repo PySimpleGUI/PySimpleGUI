@@ -27,6 +27,7 @@ Button(button_text="",
     tooltip=None,
     file_types=(('ALL Files', '*.*'),),
     initial_folder=None,
+    default_extension="",
     disabled=False,
     change_submits=False,
     enable_events=False,
@@ -61,6 +62,7 @@ Parameter Descriptions:
 |                                     str                                      |        tooltip        | text, that will appear when mouse hovers over the element |
 |                         Tuple[Tuple[str, str], ...]                          |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
 |                                     str                                      |    initial_folder     | starting path for folders and files |
+|                                     str                                      |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                     bool                                     |       disabled        | If True button will be created disabled |
 |                                     bool                                     |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
@@ -374,7 +376,11 @@ ButtonMenu(button_text,
     size=(None, None),
     auto_size_button=None,
     button_color=None,
+    text_color=None,
+    background_color=None,
+    disabled_text_color=None,
     font=None,
+    item_font=None,
     pad=None,
     key=None,
     k=None,
@@ -387,25 +393,29 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |   button_text    | Text to be displayed on the button |
-|                               List[List[str]]                                |     menu_def     | A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types |
-|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                     bool                                     |     disabled     | If True button will be created disabled |
-|                                     str                                      |  image_filename  | image filename if there is a button image. GIFs and PNGs only. |
-|                              Union[bytes, str]                               |    image_data    | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                                  (int, int)                                  |    image_size    | Size of the image in pixels (width, height) |
-|                                     int                                      | image_subsample  | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                                     int                                      |   border_width   | width of border around button in pixels |
-|                                  (int, int)                                  |       size       | (width, height) of the button in characters wide, rows high |
-|                                     bool                                     | auto_size_button | if True the button size is sized to fit the text |
-|                            Tuple[str, str] or str                            |   button_color   | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                        Union[str, int, tuple, object]                        |       key        | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                     bool                                     |     tearoff      | Determines if menus should allow them to be torn off |
-|                                     bool                                     |     visible      | set visibility state of the element |
-|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
+|                                     str                                      |     button_text     | Text to be displayed on the button |
+|                               List[List[str]]                                |      menu_def       | A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types |
+|                                     str                                      |       tooltip       | text, that will appear when mouse hovers over the element |
+|                                     bool                                     |      disabled       | If True button will be created disabled |
+|                                     str                                      |   image_filename    | image filename if there is a button image. GIFs and PNGs only. |
+|                              Union[bytes, str]                               |     image_data      | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                  (int, int)                                  |     image_size      | Size of the image in pixels (width, height) |
+|                                     int                                      |   image_subsample   | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                     int                                      |    border_width     | width of border around button in pixels |
+|                                  (int, int)                                  |        size         | (width, height) of the button in characters wide, rows high |
+|                                     bool                                     |  auto_size_button   | if True the button size is sized to fit the text |
+|                            Tuple[str, str] or str                            |    button_color     | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|                                     str                                      |  background_color   | color of the background |
+|                                     str                                      |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
+|                                     str                                      | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                         Union[str, Tuple[str, int]]                          |        font         | specifies the font family, size, etc |
+|                         Union[str, Tuple[str, int]]                          |      item_font      | specifies the font family, size, etc, for the menu items |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                        Union[str, int, tuple, object]                        |         key         | Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element |
+|                        Union[str, int, tuple, object]                        |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                     bool                                     |       tearoff       | Determines if menus should allow them to be torn off |
+|                                     bool                                     |       visible       | set visibility state of the element |
+|                                     Any                                      |      metadata       | User metadata that can be set to ANYTHING |
 
 ### Click
 
@@ -4081,6 +4091,8 @@ Parameter Descriptions:
 ```
 Menu(menu_definition,
     background_color=None,
+    text_color=None,
+    disabled_text_color=None,
     size=(None, None),
     tearoff=False,
     font=None,
@@ -4095,16 +4107,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                       List[List[Tuple[str, List[str]]]                       | menu_definition  | ??? |
-|                                     str                                      | background_color | color of the background |
-|                                  (int, int)                                  |       size       | Not used in the tkinter port |
-|                                     bool                                     |     tearoff      | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-|                        Union[str, int, tuple, object]                        |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                     bool                                     |     visible      | set visibility state of the element |
-|                                     Any                                      |     metadata     | User metadata that can be set to ANYTHING |
+|                       List[List[Tuple[str, List[str]]]                       |   menu_definition   | The Menu definition specified using lists (docs explain the format) |
+|                                     str                                      |  background_color   | color of the background |
+|                                     str                                      |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
+|                                     str                                      | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                                  (int, int)                                  |        size         | Not used in the tkinter port |
+|                                     bool                                     |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                         Union[str, Tuple[str, int]]                          |        font         | specifies the font family, size, etc |
+|                        Union[str, int, tuple, object]                        |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                        Union[str, int, tuple, object]                        |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                     bool                                     |       visible       | set visibility state of the element |
+|                                     Any                                      |      metadata       | User metadata that can be set to ANYTHING |
 
 ### SetFocus
 
@@ -4355,9 +4369,9 @@ Parameter Descriptions:
 |                                     bool                                     |     write_only     | If True then no entry will be added to the values dictionary when the window is read |
 |                                     bool                                     |    auto_refresh    | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
 |                                     bool                                     |   reroute_stdout   | If True then all output to stdout will be output to this element |
-|                                     bool                                     |   reroute_stderr   | If True then all output to stdout will be output to this element |
+|                                     bool                                     |   reroute_stderr   | If True then all output to stderr will be output to this element |
 |                                     bool                                     |   reroute_cprint   | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
-|                                     bool                                     | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
+|                                     bool                                     | echo_stdout_stderr | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
 |                                     bool                                     |       focus        | if True initial focus will go to this element |
 |                         Union[str, Tuple[str, int]]                          |        font        | specifies the font family, size, etc |
 | (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -6267,6 +6281,7 @@ Spin(values,
     disabled=False,
     change_submits=False,
     enable_events=False,
+    readonly=False,
     size=(None, None),
     auto_size_text=None,
     font=None,
@@ -6289,6 +6304,7 @@ Parameter Descriptions:
 |                                     bool                                     |     disabled     | set disable state |
 |                                     bool                                     |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                     bool                                     |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
+|                                     bool                                     |     readonly     | Turns on the element specific events. Spin events happen when an item changes |
 |                                  (int, int)                                  |       size       | (width, height) width = characters-wide, height = rows-high |
 |                                     bool                                     |  auto_size_text  | if True will size the element to match the length of the text |
 |                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
@@ -6344,11 +6360,15 @@ Parameter Descriptions:
 ### Update
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
 
 ```
 Update(value=None,
     values=None,
     disabled=None,
+    readonly=None,
     visible=None)
 ```
 
@@ -6358,7 +6378,8 @@ Parameter Descriptions:
 |--|--|--|
 |    Any    |  value   | set the current value from list of choices |
 | List[Any] |  values  | set available choices |
-|   bool    | disabled | disable or enable state of the element |
+|   bool    | disabled | disable. Note disabled and readonly cannot be mixed. It must be one OR the other |
+|   bool    | readonly | make element readonly. Note disabled and readonly cannot be mixed. It must be one OR the other |
 |   bool    | visible  | control visibility of element |
 
 ### bind
@@ -6509,11 +6530,15 @@ unhide_row()
 ### update
 
 Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
 
 ```
 update(value=None,
     values=None,
     disabled=None,
+    readonly=None,
     visible=None)
 ```
 
@@ -6523,7 +6548,8 @@ Parameter Descriptions:
 |--|--|--|
 |    Any    |  value   | set the current value from list of choices |
 | List[Any] |  values  | set available choices |
-|   bool    | disabled | disable or enable state of the element |
+|   bool    | disabled | disable. Note disabled and readonly cannot be mixed. It must be one OR the other |
+|   bool    | readonly | make element readonly. Note disabled and readonly cannot be mixed. It must be one OR the other |
 |   bool    | visible  | control visibility of element |
 
 ## StatusBar Element 
@@ -8730,6 +8756,234 @@ Unhides (makes visible again) the row container that the Element is located on.
 unhide_row()
 ```
 
+## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
+
+User Settings
+
+```
+UserSettings(filename=None,
+    path=None,
+    silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### delete_entry
+
+Deletes an individual entry.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been deleted, the settings file is written to disk.
+
+```
+delete_entry(key)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | key | Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable) |
+
+### delete_file
+
+Deltes the filename and path for your settings file.  Either paramter can be optional.
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+If you don't choose a filename, your application's filename + '.json' will be used
+Also sets your current dictionary to a blank one.
+
+```
+delete_file(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### exists
+
+Check if a particular settings file exists.  Returns True if file exists
+
+```
+exists(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### get
+
+Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+the user specified default value will be returned.  It no default is specified and nothing is found, then
+the "default value" is returned.  This default can be specified in this call, or previously defined
+by calling set_default. If nothing specified now or previously, then None is returned as default.
+
+```
+get(key, default=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |   key   | Key used to lookup the setting in the settings dictionary |
+| Any | default | Value to use should the key not be found in the dictionary |
+| (Any) | **RETURN** | Value of specified settings
+
+### get_dict
+
+Returns the current settings dictionary.  If you've not setup the filename for the
+settings, a default one will be used and then read.
+
+Note that you can display the dictionary in text format by printing the object itself.
+
+`get_dict()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|<type>| **return** | The current settings dictionary         |
+
+### get_filename
+
+Sets the filename and path for your settings file.  Either paramter can be optional.
+
+If you don't choose a path, one is provided for you that is OS specific
+Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
+
+If you don't choose a filename, your application's filename + '.json' will be used.
+
+Normally the filename and path are split in the user_settings calls. However for this call they
+can be combined so that the filename contains both the path and filename.
+
+```
+get_filename(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+| (str) | **RETURN** | The full pathname of the settings file that has both the path and filename combined.
+
+### load
+
+Specifies the path and filename to use for the settings and reads the contents of the file.
+The filename can be a full filename including a path, or the path can be specified separately.
+If  no filename is specified, then the caller's filename will be used with the extension ".json"
+
+```
+load(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | Filename to load settings from (and save to in the future) |
+| (str or None) |   path   | Path to the file. Defaults to a specific folder depending on the operating system |
+| (dict) | **RETURN** | The settings dictionary (i.e. all settings)
+
+### read
+
+Reads settings file and returns the dictionary.
+
+`read()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|<type>| **return** | settings dictionary         |
+
+### save
+
+Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
+previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
+
+```
+save(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used. |
+| (str or None) |   path   | The (optional) path to use to save the file. |
+| (str) | **RETURN** | The full path and filename used to save the settings
+
+### set
+
+Sets an individual setting to the specified value.  If no filename has been specified up to this point,
+then a default filename will be used.
+After value has been modified, the settings file is written to disk.
+
+```
+set(key, value)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |  key  | Setting to be saved. Can be any valid dictionary key type |
+| Any | value | Value to save as the setting's value. Can be anything |
+
+### set_default_value
+
+Set the value that will be returned if a requested setting is not found
+
+```
+set_default_value(default)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any | default | value to be returned if a setting is not found in the settings dictionary |
+
+### set_location
+
+Sets the location of the settings file
+
+```
+set_location(filename=None, path=None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### write_new_dictionary
+
+Writes a specified dictionary to the currently defined settings filename.
+
+```
+write_new_dictionary(settings_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| dict | settings_dict | The dictionary to be written to the currently defined settings file |
+
 ## Window 
 
     Represents a single Window
@@ -10318,6 +10572,7 @@ FileSaveAs(button_text="Save As...",
     target=(555666777, -1),
     file_types=(('ALL Files', '*.*'),),
     initial_folder=None,
+    default_extension="",
     disabled=False,
     tooltip=None,
     size=(None, None),
@@ -10336,19 +10591,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |   button_text    | text in the button (Default value = 'Save As...') |
-|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
-|                                     bool                                     |  initial_folder  | starting path for folders and files :param disabled: set disable state for element (Default = False) |
-|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                            Tuple[str, str] or str                            |   button_color   | button color (foreground, background) |
-|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
-|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                        Union[str, int, tuple, object]                        |       key        | key for uniquely identify this element (for window.FindElement) |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                     str                                      |    button_text    | text in the button (Default value = 'Save As...') |
+|                         Tuple[Tuple[str, str], ...]                          |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
+|                                     str                                      | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                     str                                      |  initial_folder   | starting path for folders and files |
+|                                     bool                                     |     disabled      | set disable state for element (Default = False) |
+|                                     str                                      |      tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size        | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button  | True if button size is determined by button text |
+|                            Tuple[str, str] or str                            |   button_color    | button color (foreground, background) |
+|                                     bool                                     |  change_submits   | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |   enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font        | specifies the font family, size, etc |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                        Union[str, int, tuple, object]                        |        key        | key for uniquely identify this element (for window.FindElement) |
+|                        Union[str, int, tuple, object]                        |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (Button) | **RETURN** | returns a button
 
 Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
@@ -10743,6 +11000,7 @@ SaveAs(button_text="Save As...",
     target=(555666777, -1),
     file_types=(('ALL Files', '*.*'),),
     initial_folder=None,
+    default_extension="",
     disabled=False,
     tooltip=None,
     size=(None, None),
@@ -10761,19 +11019,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                     str                                      |   button_text    | text in the button (Default value = 'Save As...') |
-|                         Tuple[Tuple[str, str], ...]                          |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
-|                                     bool                                     |  initial_folder  | starting path for folders and files :param disabled: set disable state for element (Default = False) |
-|                                     str                                      |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                  (int, int)                                  |       size       | (w,h) w=characters-wide, h=rows-high |
-|                                     bool                                     | auto_size_button | True if button size is determined by button text |
-|                            Tuple[str, str] or str                            |   button_color   | button color (foreground, background) |
-|                                     bool                                     |  change_submits  | If True, pressing Enter key submits window (Default = False) |
-|                                     bool                                     |  enable_events   | Turns on the element specific events.(Default = False) |
-|                         Union[str, Tuple[str, int]]                          |       font       | specifies the font family, size, etc |
-| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                        Union[str, int, tuple, object]                        |       key        | key for uniquely identify this element (for window.FindElement) |
-|                        Union[str, int, tuple, object]                        |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                     str                                      |    button_text    | text in the button (Default value = 'Save As...') |
+|                         Tuple[Tuple[str, str], ...]                          |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) :param file_types: (Default value = (("ALL Files", "*.*"))) |
+|                                     str                                      | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                     str                                      |  initial_folder   | starting path for folders and files |
+|                                     bool                                     |     disabled      | set disable state for element (Default = False) |
+|                                     str                                      |      tooltip      | text, that will appear when mouse hovers over the element |
+|                                  (int, int)                                  |       size        | (w,h) w=characters-wide, h=rows-high |
+|                                     bool                                     | auto_size_button  | True if button size is determined by button text |
+|                            Tuple[str, str] or str                            |   button_color    | button color (foreground, background) |
+|                                     bool                                     |  change_submits   | If True, pressing Enter key submits window (Default = False) |
+|                                     bool                                     |   enable_events   | Turns on the element specific events.(Default = False) |
+|                         Union[str, Tuple[str, int]]                          |       font        | specifies the font family, size, etc |
+| (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
+|                        Union[str, int, tuple, object]                        |        key        | key for uniquely identify this element (for window.FindElement) |
+|                        Union[str, int, tuple, object]                        |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13672,7 +13932,8 @@ SetOptions(icon=None,
     suppress_error_popups=None,
     suppress_raise_key_errors=None,
     suppress_key_guessing=None,
-    enable_treeview_869_patch=None)
+    enable_treeview_869_patch=None,
+    enable_mac_notitlebar_patch=None)
 ```
 
 Parameter Descriptions:
@@ -13719,6 +13980,7 @@ Parameter Descriptions:
 |                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
 |                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
 |                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
+|                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
 | None | **RETURN** | None
 
 ## The Test Harness
@@ -14044,7 +14306,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | The name of the file to use. Can be a full path and filename or just filename |
-| str |   path   | The folder that the settings file will be stored in. Do no include the filename. |
+| str |   path   | The folder that the settings file will be stored in. Do not include the filename. |
 
 Determines if a settings file exists.  If so a boolean True is returned.
 If either a filename or a path is not included, then the appropriate default
@@ -14081,7 +14343,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | filename | The name of the file to use. Can be a full path and filename or just filename |
-| str |   path   | The folder that the settings file will be stored in. Do no include the filename. |
+| str |   path   | The folder that the settings file will be stored in. Do not include the filename. |
 | (str) | **RETURN** | The full pathname of the settings file that has both the path and filename combined.
 
 Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
@@ -14147,6 +14409,18 @@ Parameter Descriptions:
 |--|--|--|
 | Any |  key  | Setting to be saved. Can be any valid dictionary key type |
 | Any | value | Value to save as the setting's value. Can be anything |
+
+Used to control the display of error messages.  By default, error messages are displayed to stdout.
+
+```
+user_settings_silent_on_error(silent_on_error=False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | silent_on_error | If True then all error messages are silenced (not displayed on the console) |
 
 Writes a specified dictionary to the currently defined settings filename.
 
@@ -14317,7 +14591,8 @@ set_options(icon=None,
     suppress_error_popups=None,
     suppress_raise_key_errors=None,
     suppress_key_guessing=None,
-    enable_treeview_869_patch=None)
+    enable_treeview_869_patch=None,
+    enable_mac_notitlebar_patch=None)
 ```
 
 Parameter Descriptions:
@@ -14364,6 +14639,7 @@ Parameter Descriptions:
 |                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
 |                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
 |                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
+|                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()

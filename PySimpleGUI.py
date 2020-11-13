@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.30.0.28 Unreleased\nAdded ability to set icon for popup_get_file when icon is set as parameter, changed __version__  to be same as 'ver' (the shortened version number), added Window.set_cursor, changed install to use version instead of __version__, changed back __version__ to be the long-form of the version number so that installs from GitHub will work again, trying another version change, Multiline.print (and cprint) now autoscrolls, additional check for combo update to allow setting both disabled & readonly parms, docstring fix for Multiline.update, added main_get_debug_data, reformatted look and feel table, fixed spelling error suppress_popup, None as initial value for Input element treated as '', added patch for no titlebar on Mac if version < 8.6.10, fix for Spin.get not returning correct type, added default extension to FileSaveAs and SaveAs buttons, added readonly option to Spin, UserSettings object interface, enable user to set default value for UserSettings, MenuBar get colorful!, ButtonMenu added colors & fixed border depth, read_all_windows checks queue prior to going into mainloop, Multiline docstring fix, window.read check to see if thread message in queue first, added option to enable Mac patch for no_titlebar, renamed parts of UserSettings to prep for release, UserSettings delete item interface added, UserSetting removed adding entry and saving when no entry found"
+version = __version__ = "4.31.0 Released 13-Nov-2020"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16337,13 +16337,13 @@ class UserSettings:
     # to access the user settings without diarectly using the UserSettings class
     _default_for_function_interface = None             # type: UserSettings
 
-    def __init__(self, filename=None, path=None):
+    def __init__(self, filename=None, path=None, silent_on_error=False):
         """
         User Settings
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         """
         self.path = path
@@ -16351,6 +16351,7 @@ class UserSettings:
         self.full_filename = None
         self.dict = {}
         self.default_value = None
+        self.silent_on_error = silent_on_error
         if filename is not None or path is not None:
             self.load(filename=filename, path=path)
 
@@ -16374,13 +16375,14 @@ class UserSettings:
         self.default_value = default
 
 
+
     def _compute_filename(self, filename=None, path=None):
         """
         Creates the full filename given the path or the filename or both.
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         :return: Tuple with (full filename, path, filename)
         :rtype: Tuple[str, str, str]
@@ -16417,7 +16419,7 @@ class UserSettings:
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         """
         cfull_filename, cpath, cfilename = self._compute_filename(filename=filename, path=path)
@@ -16441,7 +16443,7 @@ class UserSettings:
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         :return: The full pathname of the settings file that has both the path and filename combined.
         :rtype: (str)
@@ -16472,8 +16474,9 @@ class UserSettings:
             with open(self.full_filename, 'w') as f:
                 json.dump(self.dict, f)
         except Exception as e:
-            print('*** Error saving settings to file:***\n', self.full_filename, e)
-            print(_create_error_message())
+            if not self.silent_on_error:
+                print('*** Error saving settings to file:***\n', self.full_filename, e)
+                print(_create_error_message())
         return self.full_filename
 
 
@@ -16506,7 +16509,7 @@ class UserSettings:
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         """
         if filename is not None or path is not None or (filename is None and path is None):
@@ -16514,8 +16517,9 @@ class UserSettings:
         try:
             os.remove(self.full_filename)
         except Exception as e:
-            print('*** User settings delete filename warning ***\n', e)
-            print(_create_error_message())
+            if not self.silent_on_error:
+                print('*** User settings delete filename warning ***\n', e)
+                print(_create_error_message())
         self.dict = {}
 
 
@@ -16546,8 +16550,9 @@ class UserSettings:
                 with open(self.full_filename, 'r') as f:
                     self.dict = json.load(f)
         except Exception as e:
-            print('*** Error reading settings from file: ***\n', self.full_filename, e)
-            print(_create_error_message())
+            if not self.silent_on_error:
+                print('*** Error reading settings from file: ***\n', self.full_filename, e)
+                print(_create_error_message())
 
         return self.dict
 
@@ -16558,7 +16563,7 @@ class UserSettings:
 
         :param filename: The name of the file to use. Can be a full path and filename or just filename
         :type filename: (str or None)
-        :param path: The folder that the settings file will be stored in. Do no include the filename.
+        :param path: The folder that the settings file will be stored in. Do not include the filename.
         :type path: (str or None)
         """
         cfull_filename, cpath, cfilename = self._compute_filename(filename=filename, path=path)
@@ -16573,7 +16578,7 @@ class UserSettings:
         then a default filename will be used.
         After value has been deleted, the settings file is written to disk.
 
-        :param key:  Setting to be saved. Can be any valid dictionary key type (hashable)
+        :param key:  Setting to be deleted. Can be any valid dictionary key type (i.e. must be hashable)
         :type key: (Any)
         """
         if self.full_filename is None:
@@ -16583,8 +16588,9 @@ class UserSettings:
             del self.dict[key]
             self.save()
         else:
-            print('*** Warning - key ', key, ' not found in settings ***\n')
-            print(_create_error_message())
+            if not self.silent_on_error:
+                print('*** Warning - key ', key, ' not found in settings ***\n')
+                print(_create_error_message())
 
 
     def set(self, key, value):
@@ -16609,9 +16615,8 @@ class UserSettings:
         """
         Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
         the user specified default value will be returned.  It no default is specified and nothing is found, then
-        None is returned.  If the key isn't in the dictionary, then it will be added and the settings file saved.
-        If no filename has been specified up to this point, then a default filename will be assigned and used.
-        The settings are SAVED prior to returning.
+        the "default value" is returned.  This default can be specified in this call, or previously defined
+        by calling set_default. If nothing specified now or previously, then None is returned as default.
 
         :param key: Key used to lookup the setting in the settings dictionary
         :type key: (Any)
@@ -16641,8 +16646,10 @@ class UserSettings:
         Returns the current settings dictionary.  If you've not setup the filename for the
         settings, a default one will be used and then read.
 
+        Note that you can display the dictionary in text format by printing the object itself.
+
         :return: The current settings dictionary
-        :rtype: (dict)
+        :rtype: Dict
         """
         if self.full_filename is None:
             self.set_location()
@@ -16712,7 +16719,7 @@ def user_settings_filename(filename=None, path=None):
 
     :param filename: The name of the file to use. Can be a full path and filename or just filename
     :type filename: (str)
-    :param path: The folder that the settings file will be stored in. Do no include the filename.
+    :param path: The folder that the settings file will be stored in. Do not include the filename.
     :type path: (str)
     :return: The full pathname of the settings file that has both the path and filename combined.
     :rtype: (str)
@@ -16731,7 +16738,7 @@ def user_settings_delete_filename(filename=None, path=None):
 
     :param filename: The name of the file to use. Can be a full path and filename or just filename
     :type filename: (str)
-    :param path: The folder that the settings file will be stored in. Do no include the filename.
+    :param path: The folder that the settings file will be stored in. Do not include the filename.
     :type path: (str)
     """
     settings = UserSettings._default_for_function_interface
@@ -16836,6 +16843,7 @@ def user_settings_file_exists(filename=None, path=None):
     return settings.exists(filename=filename, path=path)
 
 
+
 def user_settings_write_new_dictionary(settings_dict):
     """
     Writes a specified dictionary to the currently defined settings filename.
@@ -16845,6 +16853,17 @@ def user_settings_write_new_dictionary(settings_dict):
     """
     settings = UserSettings._default_for_function_interface
     settings.write_new_dictionary(settings_dict)
+
+
+def user_settings_silent_on_error(silent_on_error=False):
+    """
+    Used to control the display of error messages.  By default, error messages are displayed to stdout.
+
+    :param silent_on_error: If True then all error messages are silenced (not displayed on the console)
+    :type silent_on_error: (bool)
+    """
+    settings = UserSettings._default_for_function_interface
+    settings.silent_on_error = silent_on_error
 
 
 def user_settings():
