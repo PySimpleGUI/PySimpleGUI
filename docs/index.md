@@ -5859,7 +5859,16 @@ There have already been some demo programs written that use JSON files to store 
 
 User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  You do not need to explicitly read nor write the file.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.  
 
-## List of Calls
+## Two Interfaces
+
+There are 2 ways to access User Settings
+
+1. User Settings function calls
+2. The `UserSettings` class
+
+They both offer the same basic operations.  The class interface has an added benefit of being able to access the individual settings using the same syntax as Python dictionary.
+
+## List of Calls for Function Interface
 
 |Function|Description|
 | ---  | --- |
@@ -5974,6 +5983,102 @@ One of the situations where you may want to explicitly read/load the settings fi
 
 Like so much of PySimpleGUI, as much as possible is automatically done on your behalf.  This includes the requirement of saving and loading your settings file.  Even naming your settings file is optional.  
 
+## The `UserSettings` Class Interface
+
+The `UserSettings` class makes working with settings look like a Python dictionary.  The familiar [ ] syntax is used to read, write and delete entries.
+
+### Creating a `UserSettings` Object
+
+The first step is to create your setting object.  The parameters are the same as calling the `user_settings_filename` function.  If you want to use the default values, then leave the parameters unchanged.
+
+```python
+settings = sg.UserSettings()
+```
+
+This is the same as calling `sg.user_settings_filename()`
+
+### Reading, Writing, and Deleting an Individual Settings Using [ ] Syntax
+
+The first operation will be to create the User Settings object.
+
+```python
+settings = sg.UserSettings()
+```
+
+To read a setting the dictionary-style [ ] syntax is used.  If the item's name is `'-item-'`, then reading the value is achieved by writing
+
+```python
+item_value = settings['-item-']
+```
+
+Writing the setting is the same syntax except the expression is reversed.
+
+```python
+settings['-item-'] = new_value
+```
+
+To delete an item, again the dictionary style syntax is used.
+
+```python
+del settings['-item-']
+```
+
+You can also call the delete_entry method to delete the entry.
+
+```python
+settings.delete_entry('-item-')
+```
+
+### `UserSettings` Methods
+
+You'll find all of the `UserSettings` methods available to you detailed in the Call Reference documentation.
+
+One operation in particular that is not achievable using the [ ] notation is a "get" operation with a default value.  For dictionaries, this method is `get` and for the `UserSettings` class the method is also called `get`.  They both have an optional second parameter that represents a "default value" should the key not be found in the dictionary.
+
+If you would like a setting with key `'-item-'` to return an empty string `''` instead of `None` if they key isn't found, then you can use this code to achieve that:
+
+```python
+value = settings.get('-item-', '')
+```
+
+It's the same kind of syntax that you're used to using with dictionaries.
+
+### Default Value
+
+Normally the default value will be `None` if a key is not found and you get the value of the entry using the bracket format:
+
+```python
+item_value = settings['-item-']
+```
+
+You can change the default value by calling `settings.set_default_value(new_default)`.  This will set the default value to return in the case when no key is found.  Note that an exception is not raised when there is a key error (see next section on error handling).  Instead, the default value is returned with a warning displayed.
+
+## Displaying the Settings Dictionary
+
+The class interface makes it easy to dump out the dictionary.  If you print the UserSettings object you'll get a printout of the dictionary.
+
+Note that you'll need to "load" the settings from disk if you haven't performed any operations on the settings.
+
+```python
+settings = sg.UserSettings()
+settings.load()
+print(settings)
+```
+
+If you were to print the dictionary after creating the object, then the `load` is not needed
+
+```python
+settings = sg.UserSettings()
+print(settings['-item-'])
+print(settings)
+```
+
+To print the dictionary using the function call interface:
+
+```python
+print(sg.user_settings())
+```
+
 ## Error Handling for User Settings
 
 From a GUI perspective, user settings are not critical to the GUI operations itself.  There is nothing about settings that will cause your window to not function.  As a result, errors that occur in the User Settings are "soft errors".  An error message is displayed along with information about how you called the function, when possible, and then execution continues.
@@ -5987,10 +6092,10 @@ Example error message.  If you executed this code:
 ```python
 def main():
     sg.user_settings_filename(path='...')
-    sg.user_settings_set_entry('test',123)
+    sg.user_settings_set_entry('-test-',123)
 ```
 
-Then you'll get an error when trying to set the 'test' entry because `'...'` is not a valid path.
+Then you'll get an error when trying to set the '-test-' entry because `'...'` is not a valid path.
 
 ```
 *** Error saving settings to file:***
@@ -6000,10 +6105,24 @@ The error originated from:
   File "C:/Users/mike/.PyCharmCE2019.1/config/scratches/scratch_1065.py"
 line 8
 in main
-    sg.user_settings_set_entry('test',123)
+    sg.user_settings_set_entry('-test-',123)
 ```
 
 You should be able to easily figure out these errors as they are file operations and the error messages are clear in detailing what's happened and where the call originated.
+
+### Silenting the Errors
+
+If you're the type that doesn't want to see any error messages printed out on your console, then you can silence the error output. 
+
+When using the class interface, there is a parameter `silent_on_error` that you can set to `True`.
+
+For the function interface, call the function `user_settings_silent_on_error()` and set the parameter to `True`
+
+## Coding Convention for User Settings Keys
+
+The User Settings prompted a new coding convention that's been added to PySimpleGUI examples.  As you're likely aware, keys in layouts have the format `'-KEY-`'.  For UserSettings, a similar format is used, but instead of the string being in all upper case, the characters are lower case.  In the example below, the user setting for "filename" has a User Setting key of `'-filename-'`.  Coding conventions are a good thing to have in your projects.  You don't have to follow this one of course, but you're urged to create your own for places in your code that it makes sense.  You could say that PEP8 is one giant coding convention for the Python language as a whole.  You don't have to follow it, but most Python programmers do.  We follow it "by convention".
+
+The reason this is done in PySimpleGUI is so that the keys are immediately recognizable.  Perhaps your application has dictionaries that you use.  If you follow the PySimpleGUI coding convention of Element keys have the format `'-KEY-'` and User Settings keys have the format of `'-key-'`, then you'll immediately understand what a specific key is used for.  Your company may have its own coding conventions so follow those if appropriate instead of what you see in the PySimpleGUI examples.
 
 ## Example User Settings Usage
 
@@ -6020,13 +6139,13 @@ Let's say your layout had this typical file input row:
 To automatically fill in the `Input` to be the last value entered, use this layout row:
 
 ```python
-[sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()]
+[sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse()]
 ```
 
 When your user clicks OK or closes the window in a way that is in a positive way (instead of cancelling), then add this statement to save the value.
 
 ```python
-sg.user_settings_set_entry('filename', values['-IN-'])
+sg.user_settings_set_entry('-filename-', values['-IN-'])
 ```
 
 Here's an entire program demonstrating this way of using user settings
@@ -6037,7 +6156,7 @@ Here's an entire program demonstrating this way of using user settings
 import PySimpleGUI as sg
 
 layout = [[sg.Text('Enter a filename:')],
-          [sg.Input(sg.user_settings_get_entry('filename', ''), key='-IN-'), sg.FileBrowse()],
+          [sg.Input(sg.user_settings_get_entry('-filename-', ''), key='-IN-'), sg.FileBrowse()],
           [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]]
 
 window = sg.Window('Filename Example', layout)
@@ -6047,7 +6166,7 @@ while True:
     if event in (sg.WINDOW_CLOSED, 'Exit'):
         break
     elif event == 'Save':
-        sg.user_settings_set_entry('filename', values['-IN-'])
+        sg.user_settings_set_entry('-filename-', values['-IN-'])
 
 window.close()
 ```
@@ -6057,6 +6176,48 @@ In 2 lines of code you've just made life for your user so much easier.  And, by 
 ```python
 sg.user_settings_filename(path='.')
 ```
+
+## Example Using UserSettings Class with [ ] Syntax
+
+The same example can be written using the `UserSettings` class and the [ ] lookup syntax.
+
+Here's the same program as above.
+
+```python
+import PySimpleGUI as sg
+
+settings = sg.UserSettings()
+
+layout = [[sg.Text('Enter a filename:')],
+          [sg.Input(settings.get('-filename-', ''), key='-IN-'), sg.FileBrowse()],
+          [sg.B('Save'), sg.B('Exit Without Saving', key='Exit')]]
+
+window = sg.Window('Filename Example', layout)
+
+while True:
+    event, values = window.read()
+    if event in (sg.WINDOW_CLOSED, 'Exit'):
+        break
+    elif event == 'Save':
+        settings['-filename-'] = values['-IN-']
+
+window.close()
+```
+
+If you were to place these 2 examples in the same file so that one ran after the other, you will find that the same settings file is used and thus the value saved in the first example will be read by the second one.  
+
+There was one additional line of code added:
+
+```python
+settings.set_default_value('')      # Set the default not-found value to ''
+
+```
+
+Strictly speaking, this line isn't needed because the Input Element now takes `None` to be the same as a value of `''`, but to produce identical results I added this line of code.
+
+## Demo Programs
+
+There are a number of demo programs that show how to use UserSettings to create a richer experience for your users by remember the last value input into input elements or by adding a Combobox with a history of previously entered values.  These upgrades make for a much easier to use GUI, especially when you find yourself typing in the same values or using the same files/folders.
 
 ## Brief Caution - User Settings Stick Around
 
@@ -6521,9 +6682,9 @@ If you've created a GitHub for your project that uses PySimpleGUI then please po
 | 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
 | 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
 | 2.9.0 | Aug 16,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!, colored text defaults
-| 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progess bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
-| 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel settin
-| 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system defaul color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
+| 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progress bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
+| 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel setting
+| 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system default color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
 | 2.30.0 | Sept 6, 2018 - Calendar Chooser (button), borderless windows, load/save form to disk
 | 3.0.0 | Sept 7, 2018 - The "fix for poor choice of 2.x numbers" release. Color Chooser (button), "grab anywhere" windows are on by default, disable combo boxes, Input Element text justification (last part needed for 'tables'), Image Element changes to support OpenCV?, PopupGetFile and PopupGetFolder have better no_window option
 | 3.01.01 | Sept 10, 2018 - Menus! (sort of a big deal)
@@ -7982,6 +8143,40 @@ User Settings APIs, lots more themes, theme swatch previewer, test harness addit
 * added "Buy Me A Coffee" button
 * updated `pin` layout helper function - added `shrink` parameter
 * Main debugger window set to keep on top
+
+## 4.31.0 PySimpleGUI 13-Nov-2020
+
+User Settings class, write_event_value fixes, Menus get colors, Mac no_titlebar patch
+
+* InputText element - Now treating None as '' for default
+* Combo - handling update calls with both disabled and readonly set
+* Spin - readonly 
+	* Added parameter added when creating
+	* Added parameter to update
+* Spin.get() now returns value rather than string version of value
+* Multiline print now autoscrolls by default
+* FileSaveAs and SaveAs now has  default_extension parameter like the popup_get_file has
+* Button Menu - Color and font changes
+	* New create parameters - background color, text color, disabled text color, item font
+	* Fixed problem with button always being flat
+* Menu (Menubar) - Color changes
+	* New create paramters - text color, disabled text color.
+	* Hooked up background color parameter that was already there but not functional
+* write_event_value - fixed race conditions
+	* Window.read() and read_all_windows() now checks the thread queue for events before starting tkinter's mainloop in case events are queued
+* Window.set_cursor added so that window's cursor can be set just like can be set for individual elements
+* Icon is now set when no_window option used on popup_get_file or popup_get_folder
+* Reformatted the theme definitions to save a LOT of lines of code
+* UserSettings class
+	* Added a class interface for User Settings
+	* Can still use the function interface if desired
+	* One advantage of class is that [ ] can be used to get and set entries
+	* Looks and acts much like a "persistent global dictionary"
+	* The User Settings function interfaces now use the class
+* main_get_debug_data() 
+	* Function added that will display a popup and add to the clipboard data needed for GitHub Issues
+	* Added button to Test Harness to display the popup with version data
+* Mac - Added parm enable_mac_notitlebar_patch to set_options to enable apply a "patch" if the Window has no_titlebar set.
 
 ## Upcoming
 
