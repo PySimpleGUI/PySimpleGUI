@@ -30,7 +30,6 @@ import PySimpleGUI as sg
 """
 
 
-
 def get_demo_git_files():
     """
     Get the files in the demo and the GitHub folders
@@ -40,8 +39,8 @@ def get_demo_git_files():
     :rtype: Tuple[List[str], List[str]]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-')
-    git_demo_path = sg.user_settings_get_entry('-github folder-')
+    demo_path = sg.user_settings_get_entry('-demos folder-', '')
+    git_demo_path = sg.user_settings_get_entry('-github folder-', '')
 
     try:
         git_demo_files = os.listdir(git_demo_path)
@@ -68,7 +67,7 @@ def find_in_file(string):
 
     demo_path = sg.user_settings_get_entry('-demos folder-')
     demo_files, git_files = get_demo_git_files()
-
+    string = string.lower()
     file_list = []
     for file in demo_files:
         filename = os.path.join(demo_path, file)
@@ -95,11 +94,11 @@ def settings_window():
     """
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20, 1)), sg.In(sg.user_settings_get_entry('-demos folder-'), k='-DEMOS-'), sg.FolderBrowse()],
-              [sg.T('Path to GitHub Folder', size=(20, 1)), sg.In(sg.user_settings_get_entry('-github folder-'), k='-GITHUB-'), sg.FolderBrowse()],
-              [sg.T('Github Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-GitHub Program-'), k='-GITHUB PROGRAM-'), sg.FileBrowse()],
-              [sg.T('Editor Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-Editor Program-'), k='-EDITOR PROGRAM-'), sg.FileBrowse()],
-              [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-'), k='-THEME-')],
+              [sg.T('Path to Demos', size=(20, 1)), sg.In(sg.user_settings_get_entry('-demos folder-', ''), k='-DEMOS-'), sg.FolderBrowse()],
+              [sg.T('Path to GitHub Folder', size=(20, 1)), sg.In(sg.user_settings_get_entry('-github folder-', ''), k='-GITHUB-'), sg.FolderBrowse()],
+              [sg.T('Github Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-GitHub Program-', ''), k='-GITHUB PROGRAM-'), sg.FileBrowse()],
+              [sg.T('Editor Program', size=(20, 1)), sg.In(sg.user_settings_get_entry('-Editor Program-', ''), k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
               [sg.B('Ok'), sg.B('Cancel')],
               ]
 
@@ -148,7 +147,7 @@ def make_window():
     ]
 
     # ----- Full layout -----
-    ML_KEY = '-ML-'         # Multline's key
+    ML_KEY = '-ML-'  # Multline's key
 
     layout = [[sg.vtop(sg.Column(left_col, element_justification='c')), sg.VSeperator(), sg.vtop(sg.Column(right_col, element_justification='c'))],
               [sg.HorizontalSeparator()],
@@ -175,10 +174,10 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-')
-    git_demo_path = sg.user_settings_get_entry('-github folder-')
-    github_program = sg.user_settings_get_entry('-GitHub Program-')
-    editor_program = sg.user_settings_get_entry('-Editor Program-')
+    demo_path = sg.user_settings_get_entry('-demos folder-', '')
+    git_demo_path = sg.user_settings_get_entry('-github folder-', '')
+    github_program = sg.user_settings_get_entry('-GitHub Program-', '')
+    editor_program = sg.user_settings_get_entry('-Editor Program-', '')
     demo_files, git_files = get_demo_git_files()
 
     window = make_window()
@@ -223,6 +222,7 @@ def main():
         elif event == '-RUN INDIVIDUAL-':
             sg.user_settings_set_entry('-filenames-', list(set(sg.user_settings_get_entry('-filenames-', []) + [values['-FILENAME-'], ])))
             sg.user_settings_set_entry('-last filename-', values['-FILENAME-'])
+
             window['-FILENAME-'].update(values=list(set(sg.user_settings_get_entry('-filenames-', []))))
             sg.cprint('Running Individual File...', c='white on purple')
             sg.cprint(values['-FILENAME-'], c='white on red')
@@ -251,14 +251,10 @@ def run(app_name, parm=''):
 
 
 def run_py(pyfile, parms=None):
-    if sys.platform == 'linux':
-        cmd = 'python3'
-    else:
-        cmd = 'python'
     if parms is not None:
-        execute_command_subprocess(cmd, pyfile, parms)
+        execute_command_subprocess('python', pyfile, parms)
     else:
-        execute_command_subprocess(cmd, pyfile)
+        execute_command_subprocess('python', pyfile)
 
 
 def execute_command_subprocess(command, *args, wait=False):
@@ -266,7 +262,7 @@ def execute_command_subprocess(command, *args, wait=False):
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
-        sp = subprocess.Popen([command + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         expanded_args = ' '.join(args)
         sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
