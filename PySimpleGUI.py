@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "4.31.0 Released 13-Nov-2020"
+from wx import Font
+
+version = __version__ = "4.31.0.1 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3667,8 +3669,8 @@ class ButtonMenu(Element):
         self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
         # self.TextColor = self.ButtonColor[0]
         # self.BackgroundColor = self.ButtonColor[1]
-        self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
-        self.TextColor = text_color if text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.BackgroundColor = background_color if background_color is not None else theme_input_background_color()
+        self.TextColor = text_color if text_color is not None else theme_input_text_color()
         self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.ItemFont = item_font
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
@@ -6365,16 +6367,17 @@ class Menu(Element):
         :type metadata: (Any)
         """
 
-        self.BackgroundColor = background_color if background_color is not None else COLOR_SYSTEM_DEFAULT
-        self.TextColor = text_color if text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.BackgroundColor = background_color if background_color is not None else theme_input_background_color()
+        self.TextColor = text_color if text_color is not None else theme_input_text_color()
         self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.MenuDefinition = menu_definition
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
         key = key if key is not None else k
 
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=background_color, text_color=text_color, size=size, pad=pad, key=key,
-                         visible=visible, font=font, metadata=metadata)
+
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=self.BackgroundColor, text_color=self.TextColor, size=size, pad=pad, key=key, visible=visible, font=font, metadata=metadata)
+        # super().__init__(ELEM_TYPE_MENUBAR, background_color=COLOR_SYSTEM_DEFAULT, text_color=COLOR_SYSTEM_DEFAULT, size=size, pad=pad, key=key, visible=visible, font=None, metadata=metadata)
 
         self.Tearoff = tearoff
 
@@ -12311,7 +12314,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot,
                                                           tearoff=element.Tearoff)  # create the menubar
-
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
                     # print(f'Adding a Menubar ENTRY {menu_entry}')
@@ -12322,8 +12324,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         baritem.config(fg=element.TextColor)
                     if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(disabledforeground=element.DisabledTextColor)
-                    if element.Font is not None:
-                        baritem.config(font=element.Font)
+                    if Font is not None:
+                        baritem.config(font=font)
                     pos = menu_entry[0].find('&')
                     # print(pos)
                     if pos != -1:
@@ -12891,39 +12893,39 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 
-def ConvertFlexToTK(MyFlexForm):
+def _convert_window_to_tk(window):
     """
 
-    :type MyFlexForm: (Window)
+    :type window: (Window)
 
     """
-    master = MyFlexForm.TKroot
-    master.title(MyFlexForm.Title)
-    InitializeResults(MyFlexForm)
+    master = window.TKroot
+    master.title(window.Title)
+    InitializeResults(window)
     try:
-        if MyFlexForm.NoTitleBar:
+        if window.NoTitleBar:
             if sys.platform == 'linux':
-                MyFlexForm.TKroot.wm_attributes("-type", "splash")
+                window.TKroot.wm_attributes("-type", "splash")
             else:
-                MyFlexForm.TKroot.wm_overrideredirect(True)
+                window.TKroot.wm_overrideredirect(True)
                 # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
                 if sys.platform.startswith('darwin') and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
                     print('* Applying Mac no_titlebar patch *')
-                    MyFlexForm.TKroot.wm_overrideredirect(False)
+                    window.TKroot.wm_overrideredirect(False)
     except:
         pass
 
-    PackFormIntoFrame(MyFlexForm, master, MyFlexForm)
+    PackFormIntoFrame(window, master, window)
 
-    MyFlexForm.TKroot.configure(padx=MyFlexForm.Margins[0], pady=MyFlexForm.Margins[1])
+    window.TKroot.configure(padx=window.Margins[0], pady=window.Margins[1])
 
     # ....................................... DONE creating and laying out window ..........................#
-    if MyFlexForm._Size != (None, None):
-        master.geometry("%sx%s" % (MyFlexForm._Size[0], MyFlexForm._Size[1]))
+    if window._Size != (None, None):
+        master.geometry("%sx%s" % (window._Size[0], window._Size[1]))
     screen_width = master.winfo_screenwidth()  # get window info to move to middle of screen
     screen_height = master.winfo_screenheight()
-    if MyFlexForm.Location != (None, None):
-        x, y = MyFlexForm.Location
+    if window.Location != (None, None):
+        x, y = window.Location
     elif DEFAULT_WINDOW_LOCATION != (None, None):
         x, y = DEFAULT_WINDOW_LOCATION
     else:
@@ -12939,11 +12941,11 @@ def ConvertFlexToTK(MyFlexForm):
 
     move_string = '+%i+%i' % (int(x), int(y))
     master.geometry(move_string)
-    MyFlexForm.config_last_location = (int(x), (int(y)))
-    MyFlexForm.TKroot.x = int(x)
-    MyFlexForm.TKroot.y = int(y)
-    # print(f'setting initial locaiton = {MyFlexForm.config_last_location}')
-    MyFlexForm.starting_window_position =  (int(x), (int(y)))
+    window.config_last_location = (int(x), (int(y)))
+    window.TKroot.x = int(x)
+    window.TKroot.y = int(y)
+    # print(f'setting initial locaiton = {window.config_last_location}')
+    window.starting_window_position =  (int(x), (int(y)))
     master.update_idletasks()  # don't forget
 
     return
@@ -13025,7 +13027,7 @@ def StartupTK(window):
 
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
-    ConvertFlexToTK(window)
+    _convert_window_to_tk(window)
 
     window.SetIcon(window.WindowIcon)
 
@@ -17818,7 +17820,7 @@ def _create_main_window():
                 ['&Toolbar', ['Command &1', 'Command &2', 'Command &3', 'Command &4']],
                 ['&Help', '&About...'], ]
 
-    button_menu_def = ['unused', ['&Paste', ['Special', 'Normal', '!Disabled'], 'Undo'], ]
+    button_menu_def = ['unused', ['&Paste', ['Special', 'Normal', '!Disabled'], 'Undo', 'Exit'], ]
     treedata = TreeData()
 
     treedata.Insert("", '_A_', 'Tree Item 1', [1, 2, 3], )
@@ -17918,7 +17920,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
           B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub'),
-          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-', item_font='courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]
+          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')
+          ]
 
     ]
 
@@ -17957,7 +17960,7 @@ def main():
             print(event, values)
             # Print(event, text_color='white', background_color='red', end='')
             # Print(values)
-        if event == WIN_CLOSED or event == 'Exit':
+        if event == WIN_CLOSED or event == 'Exit' or (event == '-BMENU-' and values['-BMENU-'] == 'Exit'):
             break
         if i < 800:
             graph_elem.DrawLine((i, 0), (i, random.randint(0, 300)), width=1, color='#{:06x}'.format(random.randint(0, 0xffffff)))
@@ -18033,7 +18036,6 @@ def main():
 
 change_look_and_feel = ChangeLookAndFeel
 convert_args_to_single_string = ConvertArgsToSingleString
-convert_flex_to_tk = ConvertFlexToTK
 easy_print = EasyPrint
 easy_print_close = EasyPrintClose
 fill_form_with_values = FillFormWithValues
