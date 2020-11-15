@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from wx import Font
 
-version = __version__ = "4.31.0.1 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK"
+version = __version__ = "4.31.0.2 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3509,7 +3509,7 @@ class Button(Element):
         if text is not None:
             self.TKButton.configure(text=text)
             self.ButtonText = text
-        if button_color != (None, None):
+        if button_color != (None, None) and button_color != COLOR_SYSTEM_DEFAULT:
             if isinstance(button_color, str):
                 try:
                     button_color = button_color.split(' on ')
@@ -3561,7 +3561,7 @@ class Button(Element):
             self.TKButton.pack_forget()
         elif visible is True:
             self.TKButton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
-        if disabled_button_color != (None, None):
+        if disabled_button_color != (None, None) and disabled_button_color != COLOR_SYSTEM_DEFAULT:
             if not self.UseTtkButtons:
                 self.TKButton['disabledforeground'] = disabled_button_color[0]
             else:
