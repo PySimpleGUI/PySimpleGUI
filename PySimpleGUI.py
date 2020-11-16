@@ -1,7 +1,5 @@
 #!/usr/bin/python3
-from wx import Font
-
-version = __version__ = "4.31.0.3 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu"
+version = __version__ = "4.31.0.4 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu, right click menu color & font options added to Window"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7147,6 +7145,8 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
+                 right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
+                 right_click_menu_font=None,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
@@ -7213,6 +7213,14 @@ class Window:
         :type transparent_color: (str)
         :param debugger_enabled: If True then the internal debugger will be enabled
         :type debugger_enabled: (bool)
+        :param right_click_menu_background_color: Background color for right click menus
+        :type right_click_menu_background_color: (str)
+        :param right_click_menu_text_color: Text color for right click menus
+        :type right_click_menu_text_color: (str)
+        :param right_click_menu_disabled_text_color: Text color for disabled right click menu items
+        :type right_click_menu_disabled_text_color: (str)
+        :param right_click_menu_font: Font for right click menus
+        :type right_click_menu_font: Union[str, Tuple[str, int]]
         :param finalize: If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :type finalize: (bool)
         :param element_justification: All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
@@ -7310,7 +7318,11 @@ class Window:
         self.config_count = 0
         self.saw_00 = False
         self.maximized = False
-        
+        self.right_click_menu_background_color = right_click_menu_background_color if right_click_menu_background_color is not None else theme_input_background_color()
+        self.right_click_menu_text_color = right_click_menu_text_color if right_click_menu_text_color is not None else theme_input_text_color()
+        self.right_click_menu_disabled_text_color = right_click_menu_disabled_text_color if right_click_menu_disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
+        self.right_click_menu_font = right_click_menu_font if right_click_menu_font is not None else self.Font
+
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
 
@@ -11000,7 +11012,7 @@ def _FindElementWithFocusInSubForm(form):
     return None
 
 
-def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False):
+def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False, right_click_menu=False):
     """
     Only to be used internally. Not user callable
     :param top_menu: ???
@@ -11043,16 +11055,28 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
             if i != len(sub_menu_info) - 1:
                 if type(sub_menu_info[i + 1]) == list:
                     new_menu = tk.Menu(top_menu, tearoff=element.Tearoff)
-                    if element.Font is not None:
-                        new_menu.config(font=element.Font)
-                    if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
-                        new_menu.config(bg=element.BackgroundColor)
-                    if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                        new_menu.config(fg=element.TextColor)
-                    if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
-                        new_menu.config(disabledforeground=element.DisabledTextColor)
-                    if element.ItemFont is not None:
-                        new_menu.config(font=element.ItemFont)
+                    # if a right click menu, then get styling from the top-level window
+                    if right_click_menu:
+                        window = element.ParentForm
+                        if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(bg=window.right_click_menu_background_color)
+                        if window.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(fg=window.right_click_menu_text_color)
+                        if window.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
+                        if window.right_click_menu_font is not None:
+                            new_menu.config(font=window.right_click_menu_font)
+                    else:
+                        if element.Font is not None:
+                            new_menu.config(font=element.Font)
+                        if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(bg=element.BackgroundColor)
+                        if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(fg=element.TextColor)
+                        if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                            new_menu.config(disabledforeground=element.DisabledTextColor)
+                        if element.ItemFont is not None:
+                            new_menu.config(font=element.ItemFont)
                     return_val = new_menu
                     pos = sub_menu_info[i].find('&')
                     if pos != -1:
@@ -11215,7 +11239,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         if element.RightClickMenu or toplevel_form.RightClickMenu:
             menu = element.RightClickMenu or toplevel_form.RightClickMenu
             top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-            AddMenuItem(top_menu, menu[1], element)
+
+            if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(bg=toplevel_form.right_click_menu_background_color)
+            if toplevel_form.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(fg=toplevel_form.right_click_menu_text_color)
+            if toplevel_form.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(disabledforeground=toplevel_form.right_click_menu_disabled_text_color)
+            if toplevel_form.right_click_menu_font is not None:
+                top_menu.config(font=toplevel_form.right_click_menu_font)
+
+            AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
             element.TKRightClickMenu = top_menu
             element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
 
@@ -12293,7 +12327,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         baritem.config(fg=element.TextColor)
                     if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(disabledforeground=element.DisabledTextColor)
-                    if Font is not None:
+                    if font is not None:
                         baritem.config(font=font)
                     pos = menu_entry[0].find('&')
                     # print(pos)
