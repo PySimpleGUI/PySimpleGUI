@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from wx import Font
 
-version = __version__ = "4.31.0.2 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT"
+version = __version__ = "4.31.0.3 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -693,8 +693,10 @@ class Element():
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.pad_used    = (0,0)        # the amount of pad used when was inserted into the layout
-
-
+        if not hasattr(self, 'DisabledTextColor'):
+            self.DisabledTextColor = None
+        if not hasattr(self, 'ItemFont'):
+            self.ItemFont = None
 
     def _RightClickMenuCallback(self, event):
         """
@@ -7705,6 +7707,8 @@ class Window:
             results = self._read(timeout=timeout, timeout_key=timeout_key)
             # Post processing for Calendar Chooser Button
             try:
+                if results[0] == timeout_key:   # if a timeout, then not a calendar button
+                    break
                 elem = self.find_element(results[0], silent_on_error=True)    # get the element that caused the event
                 if elem.Type == ELEM_TYPE_BUTTON:
                     if elem.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
@@ -11047,11 +11051,8 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                         new_menu.config(fg=element.TextColor)
                     if element.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
                         new_menu.config(disabledforeground=element.DisabledTextColor)
-                    try:                # if the element has an item font specified, use it. Some may not have variable
-                        if element.ItemFont is not None:
-                            new_menu.config(font=element.ItemFont)
-                    except:
-                        pass
+                    if element.ItemFont is not None:
+                        new_menu.config(font=element.ItemFont)
                     return_val = new_menu
                     pos = sub_menu_info[i].find('&')
                     if pos != -1:
@@ -11210,6 +11211,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         return False
 
 
+    def _add_right_click_menu(element):
+        if element.RightClickMenu or toplevel_form.RightClickMenu:
+            menu = element.RightClickMenu or toplevel_form.RightClickMenu
+            top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+            AddMenuItem(top_menu, menu[1], element)
+            element.TKRightClickMenu = top_menu
+            element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
 
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
@@ -11368,12 +11376,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKColFrame.configure(background=element.BackgroundColor,
                 #                                  highlightbackground=element.BackgroundColor,
                 #                                  highlightcolor=element.BackgroundColor)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKColFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
                 if element.Grab:
                     element._grab_anywhere_on()
                 # row_should_expand = True
@@ -11464,12 +11467,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
                 if element.Grab:
                     element._grab_anywhere_on()
             # -------------------------  BUTTON placement element non-ttk version  ------------------------- #
@@ -11800,12 +11798,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKEntry, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKEntry.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
                 # row_should_expand = True
 
             # -------------------------  COMBO placement element  ------------------------- #
@@ -11977,12 +11970,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKListbox.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
                 element = element  # type: Multiline
@@ -12036,12 +12024,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.reroute_cprint:
                     cprint_set_output_destination(toplevel_form, element.Key)
 
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKText.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
+
                 # row_should_expand = True
             # -------------------------  CHECKBOX pleacement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_CHECKBOX:
@@ -12199,12 +12183,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element._TKOut.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
                 # row_should_expand = True
                 # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
@@ -12224,11 +12203,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     else:
                         width, height = element_size
                     if photo is not None:
-                        element.tktext_label = element.Widget = tk.Label(tk_row_frame, image=photo, width=width,
+                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width,
                                                                          height=height,
                                                                          bd=border_depth)
                     else:
-                        element.tktext_label = element.Widget = tk.Label(tk_row_frame, width=width, height=height,
+                        element.tktext_label = tk.Label(tk_row_frame, width=width, height=height,
                                                                          bd=border_depth)
 
                     if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
@@ -12245,18 +12224,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 if element.EnableEvents:
                     element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.tktext_label.bind('<Button-3>', element._RightClickMenuCallback)
+                element.Widget = element.tktext_label
+
+                _add_right_click_menu(element)
+
                 # -------------------------  Canvas placement element  ------------------------- #
             elif element_type == ELEM_TYPE_CANVAS:
                 element = element  # type: Canvas
                 width, height = element_size
                 if element._TKCanvas is None:
-                    element._TKCanvas = element.Widget = tk.Canvas(tk_row_frame, width=width, height=height,
+                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height,
                                                                    bd=border_depth)
                 else:
                     element._TKCanvas.master = tk_row_frame
@@ -12268,12 +12245,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element._TKCanvas.bind('<Button-3>', element._RightClickMenuCallback)
+                element.Widget = element._TKCanvas
+                _add_right_click_menu(element)
+
                 # -------------------------  Graph placement element  ------------------------- #
             elif element_type == ELEM_TYPE_GRAPH:
                 element = element  # type: Graph
@@ -12302,12 +12276,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 if element.DragSubmits:
                     element._TKCanvas2.bind('<Motion>', element.MotionCallBack)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element._TKCanvas2.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
             # -------------------------  MENU placement element  ------------------------- #
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
@@ -12378,12 +12347,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     labeled_frame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    labeled_frame.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
+
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -12413,12 +12378,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKFrame.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
+
                 # row_should_expand = True
             # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
@@ -12640,12 +12601,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
@@ -12762,12 +12718,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.TKTreeview.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
+
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
                     print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
                     tree_style.map(style_name,
@@ -12845,12 +12797,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.bind('<Button-1>', element._TextClickedHandler)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-                if element.RightClickMenu or toplevel_form.RightClickMenu:
-                    menu = element.RightClickMenu or toplevel_form.RightClickMenu
-                    top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
-                    AddMenuItem(top_menu, menu[1], element)
-                    element.TKRightClickMenu = top_menu
-                    element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
+                _add_right_click_menu(element)
+
         # ............................DONE WITH ROW pack the row of widgets ..........................#
         # done with row, pack the row of widgets
         # tk_row_frame.grid(row=row_num+2, sticky=tk.NW, padx=DEFAULT_MARGINS[0])
