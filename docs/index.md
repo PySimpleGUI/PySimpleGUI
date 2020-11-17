@@ -8196,6 +8196,10 @@ Menu colors and font, fixes
 * Auto-close windows can now be finalized (previously could not do this)
 * Window.read with timeout is faster
 
+## 4.32.1 PySimpleGUI 17-Nov-2020
+
+* Bug in finalize code
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  

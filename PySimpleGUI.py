@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.0 Released 17-Nov-2020"
+version = __version__ = "4.32.1 Released 17-Nov-2020"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7323,7 +7323,7 @@ class Window:
         self.right_click_menu_disabled_text_color = right_click_menu_disabled_text_color if right_click_menu_disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.right_click_menu_font = right_click_menu_font if right_click_menu_font is not None else self.Font
         self.auto_close_timer_needs_starting = False
-        self.finalize = False
+        self.finalize_in_progress = False
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7762,7 +7762,7 @@ class Window:
             self.ReturnValues = results = _BuildResults(self, False, self)
             return results
 
-        if self.finalize and self.auto_close_timer_needs_starting:
+        if self.finalize_in_progress and self.auto_close_timer_needs_starting:
             self._start_autoclose_timer()
             self.auto_close_timer_needs_starting = False
 
@@ -7937,7 +7937,7 @@ class Window:
 
         if self.TKrootDestroyed:
             return self
-        self.finalize = True
+        self.finalize_in_progress = True
 
         self.Read(timeout=1)
 
@@ -13047,7 +13047,7 @@ def StartupTK(window):
 
     if window.AutoClose:
         # if the window is being finalized, then don't start the autoclose timer
-        if not window.finalize:
+        if not window.finalize_in_progress:
             window._start_autoclose_timer()
             # duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
             # window.TKAfterID = root.after(int(duration * 1000), window._AutoCloseAlarmCallback)
