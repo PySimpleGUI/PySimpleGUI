@@ -9021,6 +9021,10 @@ Window(title,
     right_click_menu=None,
     transparent_color=None,
     debugger_enabled=True,
+    right_click_menu_background_color=None,
+    right_click_menu_text_color=None,
+    right_click_menu_disabled_text_color=None,
+    right_click_menu_font=None,
     finalize=False,
     element_justification="left",
     ttk_theme=None,
@@ -9033,44 +9037,48 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                    str                    |            title            | The title that will be displayed in the Titlebar and on the Taskbar |
-|           List[List[Elements]]            |           layout            | The layout for the window. Can also be specified in the Layout method |
-|       (int, int) - (width, height)        |    default_element_size     | size in characters (wide) and rows (high) for all elements in this window |
-|                (int, int)                 | default_button_element_size | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
-|                   bool                    |       auto_size_text        | True if Elements in Window should be sized to exactly fir the length of text |
-|                   bool                    |      auto_size_buttons      | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|              Tuple[int, int]              |          location           | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
-|                (int, int)                 |            size             | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
-| Tuple[int, int] or ((int, int),(int,int)) |       element_padding       | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|              Tuple[int, int]              |           margins           | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|          Tuple[str, str] or str           |        button_color         | Default button colors for all buttons in the window |
-|        Union[str, Tuple[str, int]]        |            font             | specifies the font family, size, etc |
-|              Tuple[str, str]              |     progress_bar_color      | (bar color, background color) Sets the default colors for all progress bars in the window |
-|                    str                    |      background_color       | color of background |
-|                    int                    |        border_depth         | Default border depth (width) for all elements in the window |
-|                   bool                    |         auto_close          | If True, the window will automatically close itself |
-|                    int                    |     auto_close_duration     | Number of seconds to wait before closing the window |
-|              Union[str, str]              |            icon             | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-|                   bool                    |       force_toplevel        | If True will cause this window to skip the normal use of a hidden master window |
-|                   float                   |        alpha_channel        | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
-|                   bool                    |   return_keyboard_events    | if True key presses on the keyboard will be returned as Events from Read calls |
-|                   bool                    |      use_default_focus      | If True will use the default focus algorithm to set the focus to the "Correct" element |
-|     Union['left', 'right', 'center']      |     text_justification      | Default text justification for all Text Elements in window |
-|                   bool                    |         no_titlebar         | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
-|                   bool                    |        grab_anywhere        | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
-|                   bool                    |         keep_on_top         | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
-|                   bool                    |          resizable          | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
-|                   bool                    |        disable_close        | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
-|                   bool                    |      disable_minimize       | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
-|     List[List[Union[List[str],str]]]      |      right_click_menu       | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                    str                    |      transparent_color      | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
-|                   bool                    |      debugger_enabled       | If True then the internal debugger will be enabled |
-|                   bool                    |          finalize           | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
-|                    str                    |    element_justification    | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
-|                    str                    |          ttk_theme          | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
-|                   bool                    |       use_ttk_buttons       | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
-|                   bool                    |            modal            | If True then this window will be the only window a user can interact with until it is closed |
-|                    Any                    |          metadata           | User metadata that can be set to ANYTHING |
+|                    str                    |                title                 | The title that will be displayed in the Titlebar and on the Taskbar |
+|           List[List[Elements]]            |                layout                | The layout for the window. Can also be specified in the Layout method |
+|       (int, int) - (width, height)        |         default_element_size         | size in characters (wide) and rows (high) for all elements in this window |
+|                (int, int)                 |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
+|                   bool                    |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
+|                   bool                    |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|              Tuple[int, int]              |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|                (int, int)                 |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
+| Tuple[int, int] or ((int, int),(int,int)) |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|              Tuple[int, int]              |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|          Tuple[str, str] or str           |             button_color             | Default button colors for all buttons in the window |
+|        Union[str, Tuple[str, int]]        |                 font                 | specifies the font family, size, etc |
+|              Tuple[str, str]              |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
+|                    str                    |           background_color           | color of background |
+|                    int                    |             border_depth             | Default border depth (width) for all elements in the window |
+|                   bool                    |              auto_close              | If True, the window will automatically close itself |
+|                    int                    |         auto_close_duration          | Number of seconds to wait before closing the window |
+|              Union[str, str]              |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|                   bool                    |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
+|                   float                   |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
+|                   bool                    |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
+|                   bool                    |          use_default_focus           | If True will use the default focus algorithm to set the focus to the "Correct" element |
+|     Union['left', 'right', 'center']      |          text_justification          | Default text justification for all Text Elements in window |
+|                   bool                    |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
+|                   bool                    |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                   bool                    |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
+|                   bool                    |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
+|                   bool                    |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
+|                   bool                    |           disable_minimize           | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
+|     List[List[Union[List[str],str]]]      |           right_click_menu           | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                    str                    |          transparent_color           | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
+|                   bool                    |           debugger_enabled           | If True then the internal debugger will be enabled |
+|                    str                    |  right_click_menu_background_color   | Background color for right click menus |
+|                    str                    |     right_click_menu_text_color      | Text color for right click menus |
+|                    str                    | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
+|        Union[str, Tuple[str, int]]        |        right_click_menu_font         | Font for right click menus |
+|                   bool                    |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
+|                    str                    |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
+|                    str                    |              ttk_theme               | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
+|                   bool                    |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
+|                   bool                    |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
+|                    Any                    |               metadata               | User metadata that can be set to ANYTHING |
 
 ### AddRow
 
