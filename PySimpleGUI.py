@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.31.0.5 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu, right click menu color & font options added to Window, check for UserSettings already initialized"
+version = __version__ = "4.31.0.6 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu, right click menu color & font options added to Window, check for UserSettings already initialized, don't start autoclose timer if a window is being finalized"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7322,6 +7322,8 @@ class Window:
         self.right_click_menu_text_color = right_click_menu_text_color if right_click_menu_text_color is not None else theme_input_text_color()
         self.right_click_menu_disabled_text_color = right_click_menu_disabled_text_color if right_click_menu_disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.right_click_menu_font = right_click_menu_font if right_click_menu_font is not None else self.Font
+        self.auto_close_timer_needs_starting = False
+        self.finalize = False
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7760,6 +7762,10 @@ class Window:
             self.ReturnValues = results = _BuildResults(self, False, self)
             return results
 
+        if self.finalize and self.auto_close_timer_needs_starting:
+            self._start_autoclose_timer()
+            self.auto_close_timer_needs_starting = False
+
         timeout = int(timeout) if timeout is not None else None
         if timeout == 0:  # timeout of zero runs the old readnonblocking
             event, values = self._ReadNonBlocking()
@@ -7914,8 +7920,9 @@ class Window:
         return _BuildResults(self, False, self)
 
 
-
-
+    def _start_autoclose_timer(self):
+        duration = DEFAULT_AUTOCLOSE_TIME if self.AutoCloseDuration is None else self.AutoCloseDuration
+        self.TKAfterID = self.TKroot.after(int(duration * 1000), self._AutoCloseAlarmCallback)
 
 
     def Finalize(self):
@@ -7930,7 +7937,12 @@ class Window:
 
         if self.TKrootDestroyed:
             return self
+        self.finalize = True
+
         self.Read(timeout=1)
+
+        if self.AutoClose:
+            self.auto_close_timer_needs_starting = True
         # add the window to the list of active windows
         Window._active_windows[self] = Window.hidden_master_root
         return self
@@ -13034,8 +13046,11 @@ def StartupTK(window):
         window.TKroot.focus_force()
 
     if window.AutoClose:
-        duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
-        window.TKAfterID = root.after(int(duration * 1000), window._AutoCloseAlarmCallback)
+        # if the window is being finalized, then don't start the autoclose timer
+        if not window.finalize:
+            window._start_autoclose_timer()
+            # duration = DEFAULT_AUTOCLOSE_TIME if window.AutoCloseDuration is None else window.AutoCloseDuration
+            # window.TKAfterID = root.after(int(duration * 1000), window._AutoCloseAlarmCallback)
 
     if window.Timeout != None:
         window.TKAfterID = root.after(int(window.Timeout), window._TimeoutAlarmCallback)
