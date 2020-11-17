@@ -8178,6 +8178,24 @@ User Settings class, write_event_value fixes, Menus get colors, Mac no_titlebar 
 	* Added button to Test Harness to display the popup with version data
 * Mac - Added parm enable_mac_notitlebar_patch to set_options to enable apply a "patch" if the Window has no_titlebar set.
 
+## 4.32.0 PySimpleGUI 17-Nov-2020
+
+Menu colors and font, fixes
+
+* Menu, ButtonMenu, and right click menu now default to theme colors and Window font
+	* The background color for menus is the InputText background color
+	* The text color for menus is the InputText text color
+	* The font defaults to the Window font
+	* These theme colors have worked well in the past as they are the settings used for Table and Tree headers
+	* All settings can be changed
+* Added ability to set the right click menu colors and font
+	* New parameters added to Window to control right click look
+* Fixed problem with Button.update. 
+	* Was crashing if button color changed to COLOR_SYSTEM_DEFAULT
+* Fixed problem with right click menus introduced in the previous release
+* Auto-close windows can now be finalized (previously could not do this)
+* Window.read with timeout is faster
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
