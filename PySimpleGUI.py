@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.31.0.4 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu, right click menu color & font options added to Window"
+version = __version__ = "4.31.0.5 Unreleased\nChange Menu & ButtonMenu color and font default, renamed & refactored from FlexForm to Window in ConvertFlexToTK, Button.update now checks for COLOR_SYSTEM_DEFAULT, fix for DisabledText missing for right click menus, made reads faster when timeout happens, refactored adding right click menu, right click menu color & font options added to Window, check for UserSettings already initialized"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16686,7 +16686,8 @@ class UserSettings:
 
 
 # Create a singleton for the settings information so that the settings functions can be used
-UserSettings._default_for_function_interface = UserSettings()
+if UserSettings._default_for_function_interface is None:
+    UserSettings._default_for_function_interface = UserSettings()
 
 
 def user_settings_filename(filename=None, path=None):
