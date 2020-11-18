@@ -4,6 +4,7 @@ import base64
 from urllib import request
 import json
 import sys
+import webbrowser
 
 """
     A Current Weather Widget
@@ -77,11 +78,17 @@ def change_settings(settings, window_location=(None, None)):
     layout = [[sg.T('Enter Zipcode or City for your location')],
               [sg.I(settings.get('-location-', nearest_postal), size=(15, 1), key='-LOCATION-')],
               [sg.I(settings.get('-api key-', ''), size=(32, 1), key='-API KEY-')],
-              [sg.B('Ok', border_width=0, bind_return_key=True), sg.B('Cancel', border_width=0)], ]
+              [sg.B('Ok', border_width=0, bind_return_key=True),  sg.B('Register For a Key', border_width=0, k='-REGISTER-'), sg.B('Cancel', border_width=0)], ]
 
     window = sg.Window('Settings', layout, location=window_location, no_titlebar=True, keep_on_top=True, border_depth=0)
     event, values = window.read()
     window.close()
+
+    if event == '-REGISTER-':
+        sg.popup('Launching browser so you can signup for the "Current Weather" service from OpenWeatherMap.org to get a Free API Key', 'Click OK and your browser will open', r'Visit https://home.openweathermap.org/ for more information', location=window_location)
+        # Register to get a free key
+        webbrowser.open(r'https://home.openweathermap.org/users/sign_up')
+
 
     if event == 'Ok':
         user_location = settings['-location-'] = values['-LOCATION-']
