@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1 Released 17-Nov-2020"
+version = __version__ = "4.32.1.1 Unreleased\nRemoved faking timeout message as it can happen when autoclose used"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7629,7 +7629,7 @@ class Window:
             window = self
             if window:
                 if window.NonBlocking:
-                    self.CloseNonBlockingForm()
+                    self.Close()
                 else:
                     window._Close()
                     self.TKroot.quit()
@@ -7879,8 +7879,8 @@ class Window:
             if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[
                 0] is None:  # Special Qt case because returning for no reason so fake timeout
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
-            elif not self.XFound and self.ReturnValues[0] is None:  # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
-                print("*** Faking timeout ***")
+            elif not self.XFound and self.ReturnValues[0] is None:  # Return a timeout event... can happen when autoclose used on another window
+                # print("*** Faking timeout ***")
                 self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]  # fake a timeout
             return self.ReturnValues
 
@@ -9069,6 +9069,8 @@ class Window:
     size = Size
     un_hide = UnHide
     VisibilityChanged = visibility_changed
+    CloseNonBlocking = Close
+    CloseNonBlockingForm = Close
 
     #
     # def __exit__(self, *a):
@@ -9092,8 +9094,6 @@ class Window:
 
 
 FlexForm = Window
-Window.CloseNonBlockingForm = Window.Close
-Window.CloseNonBlocking = Window.Close
 
 def _exit_mainloop(exiting_window):
     # print(f'Checking exit window = {exiting_window.Title}',
