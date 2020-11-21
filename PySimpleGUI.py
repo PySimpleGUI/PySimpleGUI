@@ -8983,6 +8983,20 @@ class Window:
         self.multi_window_return_values_queue.put(item=(window, event, value))
 
 
+
+
+    @property
+    def key_dict(self):
+        """
+        Returns a dictionary with all keys and their corresponding elements
+        { key : Element }
+        :return: Dictionary of keys and elements
+        :rtype: Dict[Any:Element]
+        """
+        return self.AllKeysDict
+
+
+
     # def __enter__(self):
     #     """
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
