@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.1 Unreleased\nRemoved faking timeout message as it can happen when autoclose used"
+version = __version__ = "4.32.1.2 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -408,6 +408,7 @@ MESSAGE_BOX_LINE_WIDTH = 60
 # Key representing a Read timeout
 EVENT_TIMEOUT = TIMEOUT_EVENT = TIMEOUT_KEY = '__TIMEOUT__'
 WIN_CLOSED = WINDOW_CLOSED = None
+WINDOW_CLOSE_ATTEMPTED_EVENT = WIN_X_EVENT = WIN_CLOSE_ATTEMPTED_EVENT = '-WINDOW CLOSE ATTEMPTED-'
 
 # Key indicating should not create any return values for element
 WRITE_ONLY_KEY = '__WRITE ONLY__'
@@ -7147,7 +7148,7 @@ class Window:
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
                  right_click_menu_font=None,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -7231,6 +7232,8 @@ class Window:
         :type use_ttk_buttons: (bool)
         :param modal: If True then this window will be the only window a user can interact with until it is closed
         :type modal: (bool)
+        :param enable_close_attempted_event: If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
+        :type enable_close_attempted_event: (bool)
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -7324,6 +7327,7 @@ class Window:
         self.right_click_menu_font = right_click_menu_font if right_click_menu_font is not None else self.Font
         self.auto_close_timer_needs_starting = False
         self.finalize_in_progress = False
+        self.close_destroys_window = not enable_close_attempted_event if enable_close_attempted_event is not None else None
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -8514,19 +8518,24 @@ class Window:
         # print('Got closing callback', self.DisableClose)
         if self.DisableClose:
             return
-        self.XFound = True
         if self.CurrentlyRunningMainloop:  # quit if this is the current mainloop, otherwise don't quit!
             _exit_mainloop(self)
-            # self.TKroot.quit()  # kick the users out of the mainloop
-            self.TKroot.destroy()  # destroy this window
-            self.RootNeedsDestroying = True
-            self.TKrootDestroyed = True
+            if self.close_destroys_window:
+                self.TKroot.destroy()  # destroy this window
+                self.TKrootDestroyed = True
+                self.XFound = True
+            else:
+                self.LastButtonClicked = '-WINDOW CLOSE ATTEMPTED-'
         elif Window._root_running_mainloop == Window.hidden_master_root:
             _exit_mainloop(self)
         else:
-            self.TKroot.destroy()   # destroy this window
+            if self.close_destroys_window:
+                self.TKroot.destroy()   # destroy this window
+                self.XFound = True
+            else:
+                self.LastButtonClicked = '-WINDOW CLOSE ATTEMPTED-'
+        if self.close_destroys_window:
             self.RootNeedsDestroying = True
-        self.RootNeedsDestroying = True
 
     def Disable(self):
         """
