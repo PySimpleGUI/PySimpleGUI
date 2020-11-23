@@ -288,8 +288,8 @@ def main(location):
         if gauge.change():
             new_angle = cpu_percent*180/100
             window['-gauge VALUE-'].update(f'{int(cpu_percent)}%')
-            gauge.change(degree=new_angle, step=new_angle)
-
+            gauge.change(degree=new_angle, step=180)
+            gauge.change()
         # ----------- update the graphics and text in the window ------------
         # update the window, wait for a while, then check for exit
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
