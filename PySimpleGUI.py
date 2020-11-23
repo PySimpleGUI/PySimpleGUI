@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.2 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT"
+version = __version__ = "4.32.1.3 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, fill_color added to draw_arc"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -4422,7 +4422,7 @@ class Graph(Element):
 
         return id
 
-    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1):
+    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1, fill_color=None):
         """
         Draws different types of arcs.  Uses a "bounding box" to define location
         :param top_left: the top left point of bounding rectangle
@@ -4437,6 +4437,8 @@ class Graph(Element):
         :type style: (str)
         :param arc_color: color to draw arc with
         :type arc_color: (str)
+        :param fill_color: color to fill the area
+        :type fill_color: (str)
         :return: id returned from tkinter that you'll need if you want to manipulate the arc
         :rtype: Union[int, None]
         """
@@ -4450,8 +4452,9 @@ class Graph(Element):
         try:  # in case closed with X
             id = self._TKCanvas2.create_arc(converted_top_left[0], converted_top_left[1], converted_bottom_right[0],
                                             converted_bottom_right[1], extent=extent, start=start_angle, style=tkstyle,
-                                            outline=arc_color, width=line_width)
-        except:
+                                            outline=arc_color, width=line_width, fill=fill_color)
+        except Exception as e:
+            print('Error encountered drawing arc.',e)
             id = None
         return id
 
