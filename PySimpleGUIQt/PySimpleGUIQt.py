@@ -130,7 +130,6 @@ OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR = ('white', BLUES[0])  # Colors should never b
 
 
 CURRENT_LOOK_AND_FEEL = 'DarkBlue3'
-# CURRENT_LOOK_AND_FEEL = 'DarkRed'
 
 DEFAULT_ERROR_BUTTON_COLOR = ("#FFFFFF", "#FF0000")
 DEFAULT_BACKGROUND_COLOR = None
@@ -2550,7 +2549,7 @@ class Graph(Element):
 #                           Frame                                        #
 # ---------------------------------------------------------------------- #
 class Frame(Element):
-    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
+    def __init__(self, title, layout, title_color=None, background_color=None, title_location=None, frame_color=None,
                  relief=DEFAULT_FRAME_RELIEF, element_justification='float', size=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
                  tooltip=None, visible=True, size_px=(None,None), metadata=None):
         """
@@ -2564,6 +2563,8 @@ class Frame(Element):
         :type background_color: (str)
         :param title_location: location to place the text title.  Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT
         :type title_location: (enum)
+        :param frame_color: color of the frame lines
+        :type frame_color: (str)
         :param relief: relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief: (enum)
         :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
@@ -2605,6 +2606,7 @@ class Frame(Element):
         self.BorderWidth = border_width
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self.ElementJustification = element_justification
+        self.FrameColor = frame_color if frame_color is not None else theme_text_color()
         self.Widget = self.QT_QGroupBox = None              # type: QGroupBox
         self.Layout(layout)
 
@@ -6807,36 +6809,79 @@ def PackFormIntoFrame(container_elem, containing_frame, toplevel_win):
                 if element.BackgroundColor is not None: style['background-color'] = element.BackgroundColor
                 # style['origin'] = 'margin'
                 style['font'] = create_style_from_font(font)
+                style['border'] = '{}px solid {} '.format(border_depth, element.FrameColor)
+
                 # style['padding'] = (10,10,10,10)
                 # style['margin'] = full_element_pad
-                # style['padding'] = (15,15,15,15)
+                # style['padding'] = (0,15,15,15)
                 # style['padding'] = (10,10,10,10)
-                # style['margin'] = (20,20,20,20)
-                style_title = QtStyle('QGroupBox::title')
-                style_title['padding'] =  (0,0,0,0)
-                style_title['margin'] =  (0,0,0,0)
-                style_title['subcontrol-origin'] = 'border'
-                # style_title['subcontrol-position'] = 'top left'
-                # column_widget.setStyleSheet(str(style)+str(style_title))
-                column_widget.setStyleSheet(str(style))
-                # print(element.Widget.styleSheet())
+                style['margin-top'] = '10px'
+                # style['top'] = '60px'
+                # style['margin'] = (0,0,0,0)
+                style['origin'] = 'margin'
 
+                style_title = QtStyle('QGroupBox::title')
+                # style_title['padding'] =  (0,5,0,5)
+                style_title['margin'] = (0,0,0,0)
+
+                style_title['left'] =  '15px'
+                # style_title['margin-top'] =  '-20px'
+                # style_title['top'] =  '20px'
+                style_title['subcontrol-origin'] = 'margin'
+                # style_title['subcontrol-origin'] = 'border'
+
+                # style_title['subcontrol-origin'] = 'padding'
+                style_title['subcontrol-position'] = 'top left'
+
+                column_widget.setStyleSheet(str(style)+str(style_title))
+                # column_widget.setStyleSheet(str(style))
+                # print(element.Widget.styleSheet())
                 element.qt_styles = (style, )
                 # === style === end
 
-
                 column_widget.setTitle(element.Title)
+
                 column_layout, column_vbox = QFormLayout(), QVBoxLayout()
                 PackFormIntoFrame(element, column_layout, toplevel_win)
                 column_vbox.addLayout(column_layout)
                 column_widget.setLayout(column_vbox)
+
+                # Add a padding groupbox
+                pad_layout, pad_vbox = QFormLayout(), QVBoxLayout()
+                pad_groupbox = QGroupBox()
+
+                pad_vbox.addLayout(pad_layout)
+                pad_groupbox.setLayout(pad_vbox)
+                pad_vbox.addWidget(column_widget)
+
+                pad_layout.setSpacing(0)
+                pad_vbox.setSpacing(0)
+                # === style ===
+                style = QtStyle('QGroupBox')
+                # style['font'] = create_style_from_font(font)
+                style['border'] = '0px'
+                style['margin'] = (0,0,0,0)
+                # style['margin'] = full_element_pad
+
+                style['padding'] = (0,0,0,0)
+                style['margin-top'] = '0px'
+                style['origin'] = 'content'
+                style_title = QtStyle('QGroupBox::title')
+                style_title['subcontrol-origin'] = 'content'
+
+                style_title['padding'] =  (0,0,0,0)
+                style_title['margin'] = (0,0,0,0)
+                pad_groupbox.setStyleSheet(str(style)+str(style_title))
+                # === style === end
+
+
                 if element.Tooltip:
                     column_widget.setToolTip(element.Tooltip)
                 if not element.Visible:
                     element.QT_QGroupBox.setVisible(False)
 
-
-                qt_row_layout.addWidget(column_widget)
+                qt_row_layout.addWidget(pad_groupbox)
+                # qt_row_layout.addWidget(column_widget)
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
                 element.Widget = tab_widget = QWidget()
@@ -9745,9 +9790,10 @@ def main():
         [Text('VERSION {}'.format(ver), size=(85,1), text_color='yellow', font='ANY 18')],
 
         # [Image(data_base64=logo, tooltip='Image', click_submits=True, key='_IMAGE_'),
-         [Frame('Input Text Group', frame1, title_color='yellow', tooltip='Text Group', font='Courier 20'), Stretch()],
-        [Frame('Multiple Choice Group', frame2, title_color='green'),
-         Frame('Binary Choice Group', frame3, title_color='purple'),
+         [Frame('Input Text Group', frame1, title_color='yellow', tooltip='Text Group', font='Courier 20', pad=(0,0)), Stretch()],
+        [Frame('Multiple Choice Group', frame2, title_color=theme_text_color()),
+         # Column([[Frame('Binary Choice Group', frame3, frame_color='white', title_color='white')]], pad=(0,0)),
+         Frame('Binary Choice Group', frame3, frame_color='white', title_color='white'),
          Frame('Variable Choice Group', frame4, title_color='blue'), Stretch()],
         [Frame('Structured Data Group', frame5, title_color='yellow'), ],
         # [Frame('Graphing Group', frame6)],
