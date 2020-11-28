@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0.6  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image, added theme_add_new, fixed is (None, None) compare, fixed type comparisons"
+version = __version__ = "0.39.0.5  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image, added theme_add_new"
 
 port = 'PySimpleGUIWeb'
 
@@ -335,7 +335,7 @@ class Element():
         self.AutoSizeText = auto_size_text
         # self.Pad = DEFAULT_ELEMENT_PADDING if pad is None else pad
         self.Pad = pad
-        if font is not None and not isinstance(font, str):
+        if font is not None and type(font) is not str:
             self.Font = font
         elif font is not None:
             self.Font = font.split(' ')
@@ -1359,13 +1359,13 @@ class Button(Element):
         if image_data:
             self.Widget.empty()
             simage = SuperImage(image_data)
-            if image_size != (None, None):
+            if image_size is not (None, None):
                 simage.set_size(image_size[0], image_size[1])
             self.Widget.append(simage)
         if image_filename:
             self.Widget.empty()
             simage = SuperImage(image_filename)
-            if image_size != (None, None):
+            if image_size is not (None, None):
                 simage.set_size(image_size[0], image_size[1])
             self.Widget.append(simage)
 
@@ -1544,7 +1544,7 @@ class SuperImage(remi.gui.Image):
         self.load(image)
 
     def load(self, file_path_name):
-        if isinstance(file_path_name, bytes):
+        if type(file_path_name) is bytes:
             try:
                 #here a base64 image is received
                 self.imagedata = base64.b64decode(file_path_name, validate=True)
@@ -1736,7 +1736,7 @@ class Graph(Element):
         if location == (None, None):
             return
         if data is not None:
-            image_source = data.decode('utf-8') if isinstance(data, bytes) else data
+            image_source = data.decode('utf-8') if type(data) is bytes else data
         converted_point = self._convert_xy_to_canvas_xy(location[0], location[1])
         if self.Widget is None:
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
@@ -1745,7 +1745,7 @@ class Graph(Element):
 
         rpoint = remi.gui.SvgImage('', converted_point[0], converted_point[0], size[0], size[1])
 
-        if isinstance(image_source, bytes) or len(image_source) > 200:
+        if type(image_source) is bytes or len(image_source) > 200:
             # rpoint.set_image("data:image/svg;base64,%s"%image_source)
             rpoint.image_data = "data:image/svg;base64,%s"%image_source
         else:
@@ -3491,7 +3491,7 @@ def font_parse_string(font):
     if font is None:
         return ''
 
-    if isinstance(font, str):
+    if type(font) is str:
         _font = font.split(' ')
     else:
         _font = font
@@ -4111,7 +4111,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
     # menu.append([m1, m2, m3])
 
     return_val = None
-    if isinstance(sub_menu_info, str):
+    if type(sub_menu_info) is str:
         if not is_sub_menu and not skip:
             # print(f'Adding command {sub_menu_info}')
             pos = sub_menu_info.find('&')
@@ -4142,7 +4142,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
         while i < (len(sub_menu_info)):
             item = sub_menu_info[i]
             if i != len(sub_menu_info) - 1:
-                if isinstance(sub_menu_info[i + 1], list):
+                if type(sub_menu_info[i + 1]) == list:
                     pos = sub_menu_info[i].find('&')
                     if pos != -1:
                         if pos == 0 or sub_menu_info[i][pos - 1] != "\\":
@@ -4284,11 +4284,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
             full_element_pad = [0, 0, 0, 0]  # Top, Right, Bottom, Left
             elementpad = element.Pad if element.Pad is not None else toplevel_form.ElementPadding
-            if not isinstance(elementpad[0], tuple):  # left and right
+            if type(elementpad[0]) != tuple:  # left and right
                 full_element_pad[1] = full_element_pad[3] = elementpad[0]
             else:
                 full_element_pad[3], full_element_pad[1] = elementpad[0]
-            if not isinstance(elementpad[1], tuple):  # top and bottom
+            if type(elementpad[1]) != tuple:  # top and bottom
                 full_element_pad[0] = full_element_pad[2] = elementpad[1]
             else:
                 full_element_pad[0], full_element_pad[2] = elementpad[1]
@@ -5217,7 +5217,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         # if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
         #     tk_row_frame.configure(background=form.BackgroundColor)
         # toplevel_form.TKroot.configure(padx=DEFAULT_MARGINS[0], pady=DEFAULT_MARGINS[1])
-        if not isinstance(containing_frame, remi.gui.TabBox):
+        if not type(containing_frame) == remi.gui.TabBox:
             containing_frame.append(tk_row_frame)
     return
 
@@ -7498,7 +7498,7 @@ def Popup(*args, button_color=None, background_color=None, text_color=None, butt
         PopupButton = Button
     # show either an OK or Yes/No depending on paramater
     if custom_text != (None, None):
-        if not isinstance(custom_text, tuple):
+        if type(custom_text) is not tuple:
             window.AddRow(PopupButton(custom_text, size=(len(custom_text), 1), button_color=button_color, focus=True,
                                       bind_return_key=True))
         elif custom_text[1] is None:
