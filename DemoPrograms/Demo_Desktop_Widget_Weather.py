@@ -28,7 +28,7 @@ import webbrowser
 
 """
 
-SETTINGS_PATH = '.'
+SETTINGS_PATH = None            # use the default settings path (OS settings foloder)
 
 API_KEY = ''  # Set using the "Settings" window and saved in your config file
 
@@ -60,8 +60,7 @@ def load_settings():
     settings = sg.UserSettings(path=SETTINGS_PATH)
     API_KEY = settings['-api key-']
     if not API_KEY:
-        sg.popup_quick_message('No valid API key found... opening setup window...', keep_on_top=True, background_color='red', text_color='white',
-                               auto_close_duration=3, non_blocking=False)
+        sg.popup_quick_message('No valid API key found... opening setup window...', keep_on_top=True, background_color='red', text_color='white', auto_close_duration=3, non_blocking=False, location=win_location)
         change_settings(settings)
     return settings
 
@@ -139,7 +138,7 @@ def request_weather_data(endpoint):
     global APP_DATA
 
     if endpoint is None:
-        sg.popup_error('Could not connect to api.  endpoint is None', keep_on_top=True)
+        sg.popup_error('Could not connect to api.  endpoint is None', keep_on_top=True, location=win_location)
         return
     else:
         try:
@@ -147,7 +146,7 @@ def request_weather_data(endpoint):
         except request.HTTPError:
             sg.popup_error('ERROR Obtaining Weather Data',
                            'Is your API Key set correctly?',
-                           API_KEY, keep_on_top=True)
+                           API_KEY, keep_on_top=True, location=win_location)
             return
 
     if response.reason == 'OK':
@@ -177,14 +176,12 @@ def metric_row(metric):
 def create_window(win_location):
     """ Create the application window """
     col1 = sg.Column(
-        [[sg.Text(APP_DATA['City'], font=('Arial Rounded MT Bold', 18), pad=((10, 0), (50, 0)), size=(18, 1), background_color=BG_COLOR, text_color=TXT_COLOR,
-                  key='City')],
+        [[sg.Text(APP_DATA['City'], font=('Arial Rounded MT Bold', 18), pad=((10, 0), (50, 0)), size=(18, 1), background_color=BG_COLOR, text_color=TXT_COLOR, key='City')],
          [sg.Text(APP_DATA['Description'], font=('Arial', 12), pad=(10, 0), background_color=BG_COLOR, text_color=TXT_COLOR, key='Description')]],
         background_color=BG_COLOR, key='COL1')
 
     col2 = sg.Column(
-        [[sg.Text('×', font=('Arial Black', 16), pad=(0, 0), justification='right', background_color=BG_COLOR, text_color=TXT_COLOR, enable_events=True,
-                  key='-QUIT-')],
+        [[sg.Text('×', font=('Arial Black', 16), pad=(0, 0), justification='right', background_color=BG_COLOR, text_color=TXT_COLOR, enable_events=True, key='-QUIT-')],
          [sg.Image(data=APP_DATA['Icon'], pad=((5, 10), (0, 0)), size=(100, 100), background_color=BG_COLOR, key='Icon')]],
         element_justification='center', background_color=BG_COLOR, key='COL2')
 
@@ -214,7 +211,8 @@ def create_window(win_location):
               [bot_col]]
 
     window = sg.Window(layout=layout, title='Weather Widget', margins=(0, 0), finalize=True, location=win_location,
-                       element_justification='center', keep_on_top=True, no_titlebar=True, grab_anywhere=True, alpha_channel=ALPHA)
+                       element_justification='center', keep_on_top=True, no_titlebar=True, grab_anywhere=True, alpha_channel=ALPHA,
+                       right_click_menu=[[''], 'Exit'])
 
     for col in ['COL1', 'COL2', 'TopCOL', 'BotCOL', '-QUIT-']:
         window[col].expand(expand_y=True, expand_x=True)
@@ -263,16 +261,16 @@ def main(refresh_rate, win_location):
 
     while True:  # Event Loop
         event, values = window.read(timeout=refresh_in_milliseconds)
-        if event in (None, '-QUIT-'):
+        if event in (None, '-QUIT-', 'Exit'):
             break
         if event == '-CHANGE-':
             x, y = window.current_location()
-            settings = change_settings(settings, (x + 405, y))
+            settings = change_settings(settings, (x + 200, y+50))
         elif event == '-REFRESH-':
             sg.popup_quick_message('Refreshing...', keep_on_top=True, background_color='red', text_color='white',
-                                   auto_close_duration=3, non_blocking=False)
+                                   auto_close_duration=3, non_blocking=False, location=(win_location[0]+170, win_location[1]+150))
         elif event != sg.TIMEOUT_KEY:
-            sg.Print('Unknown event received\nEvent & values:\n', event, values)
+            sg.Print('Unknown event received\nEvent & values:\n', event, values, location=win_location)
 
         update_weather()
         update_metrics(window)
@@ -281,8 +279,8 @@ def main(refresh_rate, win_location):
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        location = sys.argv[1].split(',')
-        location = (int(location[0]), int(location[1]))
+        win_location = sys.argv[1].split(',')
+        win_location = (int(win_location[0]), int(win_location[1]))
     else:
-        location = (None, None)
-    main(refresh_rate=1, win_location=location)
+        win_location = (None, None)
+    main(refresh_rate=1, win_location=win_location)
