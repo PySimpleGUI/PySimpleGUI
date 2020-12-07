@@ -2540,7 +2540,7 @@ class Text(Element):
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text: Any
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int)
+        :type size: (int, int or  None)
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :type auto_size_text: (bool)
         :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -14028,19 +14028,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
 
     return True
-
-
-
-def get_globals():
-    """
-    Returns the dictionary of the global variables
-
-    :return: the gobals dictionary
-    :rtype: Dict[str, Any]
-    """
-
-    return globals()
-
 
 
 # ----------------------------------------------------------------- #
