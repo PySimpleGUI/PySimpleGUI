@@ -17488,11 +17488,15 @@ import site
 import shutil
 import hashlib
 import base64
-from pathlib import Path
+import glob
 import configparser
 import urllib.request
 import urllib.error
 
+def path_stem(path):
+    head, tail = os.path.split(path)
+    retval = tail or os.path.basename(head)
+    return os.path.splitext(retval)[0]
 
 def _install(files, url=None):
     """
@@ -17531,70 +17535,40 @@ def _install(files, url=None):
 
     Version history
     ---------------
-    version 1.0.5  2020-06-24
-        Bug with removing the dist-info of packages starting with the same name fixed.
+    version 1.0.0  | December 9, 2020
+        Initial version
 
-    version 1.0.4  2020-03-29
-        Linux and ios versions now search in sys.path for site-packages,
-        whereas other platforms now use site.getsitepackages().
-        This is to avoid installation in a roaming directory on Windows.
-
-    version 1.0.2  2020-03-07
-        modified several open calls to be compatible with Python < 3.6
-        multipe installation for Pythonista removed. Now installs only in site-packages
-
-    version 1.0.1  2020-03-06
-        now uses urllib instead of requests to avoid non standard libraries
-        installation for Pythonista improved
-
-    version 1.0.0  2020-03-04
-        initial version
-
-    (c)2020 Ruud van der Ham - www.salabim.org
+    :O NO COPYRIGHT ¯\_(ツ)_/¯
     """
-
-    class Info:
-        version = "?"
-        package = "?"
-        path = "?"
-        files_copied = []
-
-    info = Info()
-    Pythonista = sys.platform == "ios"
-    if not files:
-        raise ValueError("no files specified")
-    if files[0][0] == "!":
-        raise ValueError("first item in files (sourcefile) may not be optional")
-    package = Path(files[0]).stem
-    sourcefile = files[0]
-
-    file_contents = {}
-    for file in files:
-        optional = file[0] == "!"
-        if optional:
-            file = file[1:]
-
-        if url:
-            try:
-                with urllib.request.urlopen(url + file) as response:
-                    page = response.read()
-
-                file_contents[file] = page
-                exists = True
-            except urllib.error.URLError:
-                exists = False
-
+    class ReturnInfo:
+        src = ""
+        package = ""
+        new_files = ""
+        path = ""
+        
+    info = ReturnInfo()
+    info.src = files[0]
+    info.package = path_stem(files[0])
+    
+    page_contents = {}
+    for f in files:
+        is_file_optional = f[0] == "!"
+        if (is_file_optional):
+            f = f[1:]
+            if (os.path.exists(f)):
+                with urllib.request.urlopen(url + f) as resp:
+                    page = resp.read()
+                    page_contents[f] = page
         else:
-            exists = Path(file).is_file()
-            if exists:
-                with open(file, "rb") as f:
-                    file_contents[file] = f.read()
-
-        if (not exists) and (not optional):
-            raise FileNotFoundError(file + " not found. Nothing installed.")
-
-    version = "unknown"
-    for line in file_contents[sourcefile].decode("utf-8").split("\n"):
+            with urllib.request.urlopen(url + f) as resp:
+                    page = resp.read()
+                    page_contents[f] = page
+                    
+                    
+    
+    
+    version = "?"
+    for line in page_contents[src].decode("utf-8").split("\n"):
         line_split = line.split("__version__ =")
         if len(line_split) > 1:
             raw_version = line_split[-1].strip(" '\"")
@@ -17605,43 +17579,42 @@ def _install(files, url=None):
                 else:
                     break
             break
-
-    info.files_copied = list(file_contents.keys())
-    info.package = package
-    info.version = version
-
-    file = "__init__.py"
-    if file not in file_contents:
-        file_contents[file] = ("from ." + package + " import *\n").encode()
+    
+    info.new_files = files_copied = list(page_contents.keys())
+    sitepackages_path = ""
+    if "__init__.py" not in page_contents:
+        page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
         if version != "unknown":
-            file_contents[file] += ("from ." + package + " import __version__\n").encode()
+            page_contents[file] += ("from ." + info.package + " import __version__\n").encode()
     if sys.platform.startswith("linux") or (sys.platform == "ios"):
-        search_in = sys.path
+        dir_search = sys.path
     else:
-        search_in = site.getsitepackages()
-
-    for f in search_in:
-        sitepackages_path = Path(f)
-        if sitepackages_path.name == "site-packages" and sitepackages_path.is_dir():
+        dir_search = site.getsitepackages()
+        
+    for f in dir_search:
+        if ((os.path.isdir(f)) and (f.contains("site-packages"))):
+            sitepackages_path = f
             break
     else:
-        raise ModuleNotFoundError("can't find the site-packages folder")
-
-    path = sitepackages_path / package
+        raise ModuleNotFoundError("Unable to find site-packages folder!")
+        
+    path = str(sitepackages_path) + "/" + str(info.package)
     info.path = str(path)
-
-    if path.is_file():
-        path.unlink()
-
-    if not path.is_dir():
-        path.mkdir()
-
-    for file, contents in file_contents.items():
-        with (path / file).open("wb") as f:
+    
+    if (os.path.exists(path)):
+        os.unlink(path)
+        
+    if not os.path.isdir(path):
+        os.mkdir(path)
+        
+        
+    for file, contents in page_contents.items():
+        with open(str(path) + "/" + str(file), "wb") as f:
             f.write(contents)
-
-    if Pythonista:
-        pypi_packages = sitepackages_path / ".pypi_packages"
+            
+            
+    if (sys.platform == "ios"):
+        pypi_packages = str(sitepackages_path) + "/.pypi_packages"
         config = configparser.ConfigParser()
         config.read(pypi_packages)
         config[package] = {}
@@ -17650,38 +17623,38 @@ def _install(files, url=None):
         config[package]["summary"] = ""
         config[package]["files"] = path.as_posix()
         config[package]["dependency"] = ""
-        with pypi_packages.open("w") as f:
+        with open(pypi_packages, "w") as f
             config.write(f)
     else:
-        for entry in sitepackages_path.glob("*"):
+        for entry in glob.glob(sitepackages_path + "/*")
             if entry.is_dir():
                 if entry.stem.startswith(package + "-") and entry.suffix == ".dist-info":
                     shutil.rmtree(entry)
-        path_distinfo = Path(str(path) + "-" + version + ".dist-info")
-        if not path_distinfo.is_dir():
-            path_distinfo.mkdir()
-        with (path_distinfo / "METADATA").open("w") as f:  # make a dummy METADATA file
+        path_distinfo = str(path) + "-" + str(version) + ".dist-info"
+        if not os.path.isdir(path_distinfo)
+            os.mkdir(path_distinfo)
+        with open(path_distinfo / "METADATA", "w") as f:
             f.write("Name: " + package + "\n")
             f.write("Version: " + version + "\n")
 
-        with (path_distinfo / "INSTALLER").open("w") as f:  # make a dummy METADATA file
+        with open(path_distinfo / "INSTALLER", "w") as f:
             f.write("github\n")
-        with (path_distinfo / "RECORD").open("w") as f:
-            pass  # just to create the file to be recorded
+        with open(path_distinfo / "RECORD", "w") as f:
+            pass
 
-        with (path_distinfo / "RECORD").open("w") as record_file:
+        with open(str(path_distinfo) + "/RECORD", "w") as record_file:
 
             for p in (path, path_distinfo):
-                for file in p.glob("**/*"):
+                for file in glob.glob(str(p) + "**/*"):
 
-                    if file.is_file():
-                        name = file.relative_to(sitepackages_path).as_posix()  # make sure we have slashes
+                    if os.path.isfile(file)
+                        name = os.path.join(sitepackages_path, file)  # make sure we have slashes
                         record_file.write(name + ",")
 
-                        if (file.stem == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
+                        if (path_stem(file) == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
                             record_file.write(",")
                         else:
-                            with file.open("rb") as f:
+                            with open(file, "rb") as f:
                                 file_contents = f.read()
                                 hash = "sha256=" + base64.urlsafe_b64encode(
                                     hashlib.sha256(file_contents).digest()
@@ -17692,8 +17665,8 @@ def _install(files, url=None):
                                 record_file.write(hash + "," + length)
 
                         record_file.write("\n")
-
-    return info
+                        
+    return ReturnInfo
 
 
 def _upgrade_from_github():
