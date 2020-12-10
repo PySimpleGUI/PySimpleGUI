@@ -1819,7 +1819,7 @@ You hav always had this capability, but only in a manually created and polled fa
 ## The Solution
 
 1. You put your long-running operation into a thread
-2. Your thread signals the window when it iws done
+2. Your thread signals the window when it was done
 3. Windows pend using their typical `window.read()` call
 
 
