@@ -17545,6 +17545,7 @@ def _install(files, url=None):
         package = ""
         new_files = ""
         path = ""
+        version = ""
         
     info = ReturnInfo()
     info.src = files[0]
@@ -17568,7 +17569,7 @@ def _install(files, url=None):
     
     
     version = "?"
-    for line in page_contents[src].decode("utf-8").split("\n"):
+    for line in page_contents[info.src].decode("utf-8").split("\n"):
         line_split = line.split("__version__ =")
         if len(line_split) > 1:
             raw_version = line_split[-1].strip(" '\"")
@@ -17579,29 +17580,29 @@ def _install(files, url=None):
                 else:
                     break
             break
-    
+    info.version = version
     info.new_files = files_copied = list(page_contents.keys())
     sitepackages_path = ""
     if "__init__.py" not in page_contents:
         page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
         if version != "unknown":
-            page_contents[file] += ("from ." + info.package + " import __version__\n").encode()
+            page_contents["__init__.py"] += ("from ." + info.package + " import __version__\n").encode()
     if sys.platform.startswith("linux") or (sys.platform == "ios"):
         dir_search = sys.path
     else:
         dir_search = site.getsitepackages()
         
     for f in dir_search:
-        if ((os.path.isdir(f)) and (f.contains("site-packages"))):
+        if ((os.path.isdir(f)) and (str("site-packages") in str(f))):
             sitepackages_path = f
             break
     else:
         raise ModuleNotFoundError("Unable to find site-packages folder!")
         
-    path = str(sitepackages_path) + "/" + str(info.package)
+    path = str(sitepackages_path) + "\\" + str(info.package)
     info.path = str(path)
     
-    if (os.path.exists(path)):
+    if (os.path.isfile(path)):
         os.unlink(path)
         
     if not os.path.isdir(path):
@@ -17617,29 +17618,29 @@ def _install(files, url=None):
         pypi_packages = str(sitepackages_path) + "/.pypi_packages"
         config = configparser.ConfigParser()
         config.read(pypi_packages)
-        config[package] = {}
-        config[package]["url"] = "github"
-        config[package]["version"] = version
-        config[package]["summary"] = ""
-        config[package]["files"] = path.as_posix()
-        config[package]["dependency"] = ""
-        with open(pypi_packages, "w") as f
+        config[info.package] = {}
+        config[info.package]["url"] = "github"
+        config[info.package]["version"] = version
+        config[info.package]["summary"] = ""
+        config[info.package]["files"] = path.as_posix()
+        config[info.package]["dependency"] = ""
+        with open(pypi_packages, "w") as f:
             config.write(f)
     else:
-        for entry in glob.glob(sitepackages_path + "/*")
-            if entry.is_dir():
-                if entry.stem.startswith(package + "-") and entry.suffix == ".dist-info":
+        for entry in glob.glob(sitepackages_path + "/*"):
+            if os.path.isdir(entry):
+                if path_stem(entry).startswith(info.package + "-") and ".dist-info" in entry:
                     shutil.rmtree(entry)
         path_distinfo = str(path) + "-" + str(version) + ".dist-info"
-        if not os.path.isdir(path_distinfo)
+        if not os.path.isdir(path_distinfo):
             os.mkdir(path_distinfo)
-        with open(path_distinfo / "METADATA", "w") as f:
-            f.write("Name: " + package + "\n")
+        with open(path_distinfo + "/METADATA", "w") as f:
+            f.write("Name: " + info.package + "\n")
             f.write("Version: " + version + "\n")
 
-        with open(path_distinfo / "INSTALLER", "w") as f:
+        with open(path_distinfo + "/INSTALLER", "w") as f:
             f.write("github\n")
-        with open(path_distinfo / "RECORD", "w") as f:
+        with open(path_distinfo + "/RECORD", "w") as f:
             pass
 
         with open(str(path_distinfo) + "/RECORD", "w") as record_file:
@@ -17647,7 +17648,7 @@ def _install(files, url=None):
             for p in (path, path_distinfo):
                 for file in glob.glob(str(p) + "**/*"):
 
-                    if os.path.isfile(file)
+                    if os.path.isfile(file):
                         name = os.path.join(sitepackages_path, file)  # make sure we have slashes
                         record_file.write(name + ",")
 
@@ -17666,7 +17667,7 @@ def _install(files, url=None):
 
                         record_file.write("\n")
                         
-    return ReturnInfo
+    return info
 
 
 def _upgrade_from_github():
@@ -17677,7 +17678,7 @@ def _upgrade_from_github():
     # print("files copied: ", ", ".join(info.files_copied))
 
 
-    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.files_copied, keep_on_top=True, background_color='red', text_color='white')
+    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.new_files, keep_on_top=True, background_color='red', text_color='white')
 
 
 def _upgrade_gui():
