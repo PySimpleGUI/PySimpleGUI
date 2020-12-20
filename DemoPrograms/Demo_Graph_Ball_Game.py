@@ -5,6 +5,7 @@ import random
 import socket
 
 """
+    python -m pip install pymunk==5.7.0
     Demo that shows integrating PySimpleGUI with the pymunk library.  This combination
     of PySimpleGUI and pymunk could be used to build games.
     Note this exact same demo runs with PySimpleGUIWeb by changing the import statement
