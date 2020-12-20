@@ -1,4 +1,5 @@
-import PySimpleGUIWeb as sg
+import PySimpleGUI as sg
+# import PySimpleGUIWeb as sg
 import pymunk
 import random
 import socket
@@ -7,6 +8,8 @@ import socket
 
 
 """
+    To get a good version of pymunk that works with this code:
+    python -m pip install pymunk==5.7.0
     Demo that shows integrating PySimpleGUI with the pymunk library.  This combination
     of PySimpleGUI and pymunk could be used to build games.
     Note this exact same demo runs with PySimpleGUIWeb by changing the import statement
@@ -28,7 +31,8 @@ class Ball():
 
 
 class Playfield():
-    def __init__(self):
+    def __init__(self, graph_elem):
+        self.graph_elem = graph_elem
         self.space = pymunk.Space()
         self.space.gravity = 0, 200
         self.add_wall((0, 400), (600, 400))  # ground
@@ -50,39 +54,46 @@ class Playfield():
             r = random.randint(1, 10)
             ball = Ball(x, y, r)
             self.arena_balls.append(ball)
-            area.space.add(ball.body, ball.shape)
-            ball.gui_circle_figure = graph_elem.draw_circle(
-                (x, y), r, fill_color='black', line_color='red')
+            self.space.add(ball.body, ball.shape)
+            ball.gui_circle_figure = self.graph_elem.draw_circle(
+                (x, y), r, fill_color='black', line_width=0)
 
 
-# -------------------  Build and show the GUI Window -------------------
-graph_elem = sg.Graph((600, 400), (0, 400), (600, 0),
-                      enable_events=True, key='-GRAPH-', background_color='lightblue')
+def main():
 
-hostname = socket.gethostbyname(socket.gethostname())
-layout = [[sg.Text('Ball Test'), sg.Text('My IP '+hostname)],
-          [graph_elem],
-          # [sg.Up(), sg.Down()],
-          [sg.Button('Kick'), sg.Button('Exit')]]
 
-window = sg.Window('Window Title', layout, finalize=True)
 
-area = Playfield()
-area.add_balls()
+    # -------------------  Build and show the GUI Window -------------------
+    graph_elem = sg.Graph((600, 400), (0, 400), (600, 0),
+                          enable_events=True, key='-GRAPH-', background_color='lightblue')
 
-# ------------------- GUI Event Loop -------------------
-while True:  # Event Loop
-    event, values = window.read(timeout=0)
-    # print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
-    area.space.step(0.02)
+    hostname = socket.gethostbyname(socket.gethostname())
+    layout = [[sg.Text('Ball Test'), sg.Text('My IP '+hostname)],
+              [graph_elem],
+              # [sg.Up(), sg.Down()],
+              [sg.Button('Kick'), sg.Button('Exit')]]
 
-    for ball in area.arena_balls:
-        if event == 'Kick':
-            ball.body.position = ball.body.position[0], ball.body.position[1]-random.randint(
-                1, 200)
-        graph_elem.RelocateFigure(
-            ball.gui_circle_figure, ball.body.position[0], ball.body.position[1])
+    window = sg.Window('Window Title', layout, finalize=True)
 
-window.close()
+    area = Playfield(graph_elem)
+    area.add_balls()
+
+    # ------------------- GUI Event Loop -------------------
+    while True:  # Event Loop
+        event, values = window.read(timeout=1)
+        # print(event, values)
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+        area.space.step(0.02)
+
+        for ball in area.arena_balls:
+            if event == 'Kick':
+                ball.body.position = ball.body.position[0], ball.body.position[1]-random.randint(
+                    1, 200)
+            graph_elem.RelocateFigure(
+                ball.gui_circle_figure, ball.body.position[0], ball.body.position[1])
+
+    window.close()
+
+if __name__ == '__main__':
+    main()
