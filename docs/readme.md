@@ -714,11 +714,29 @@ The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is h
 Your help in financially contributing to the project would be greatly appreciated. Being an Open Source developer is financially challenging.  YouTube video creators are able to make a living creating videos.  It's not so easy yet for Open Source developers.
 
 
+# Funding - Your help is needed
+
+A frank discussion is needed here.  Subtle hasn't worked.
+
+The financial part of Open Source development is not openly discussed often.  As an Open Source developer, there is no automatic form of incoming happening, especially with Python where the source code essentially has to be provided.  Creating and administrating a Commercial License is expensive.  It's a big hurdle to take a project from an Open Source License to a Commercial License.  The attorneys I've spoken with haven't heard of it happening successfully.  So, licensing is not a practical option.
+
+It's expensive to operate an active Open Source project.  The labor involved is massive.  How does it get paid for?  Well, it comes from the developer is how.  Just like YouTube creators have expenses for camera equipment and time making their content and need supporters in order to operate, so do Open Source developers.
+
+PySimpleGUI needs your help.  Without some kind of funding, this project will end, likely sooner than later.  The individuals with the most ability to make a financial contribution are Corporate Users.  It's not tremendously difficult nor does it pose a financial hardship on someone working for a company to make a donation to PySimpleGUI.  You're spending someone else's money.  If you get a paycheck from a corporation and you're using PySimpleGUI, you're a "corporate user".  It doesn't matter if PySimpleGUI is shipping in a product you sell.  Your company is benefitting by running PySimpleGUI.  If it wasn't, you wouldn't be using it.  The person at your company that can help the PySimpleGUI effort is you, the user.  Your CFO isn't going to automatically make a payment.  Your legal team isn't on the lookout for Open Source projects to help.  I've not struck licensing deals with your company, or any company.  It's you, the end user that is the person at your company that will need to take action and has the ability to help the project continue.
+
+This PySimpleGUI software isn't the output from an AI bot.  Nor is the support for users that are using it.  There's a software developer (with a help from some very kind, friendly, generous people) that's doing all this work.  I do it because I love creating and enabling people to do cool things. But that love doesn't pay bills.  The energy put into the project doesn't create electricity.  I make stuff, electricity isn't one of them.
+
+Patreon works well for YouTubers.  It typically fails miserably for developers.  But there are multiple mechanisms available including PayPal, GitHub sponsorship, and BuyMeACoffee.  They all work pretty well and take 2 minutes, if that. One thing it requires is action on the part of the PySimpleGUI user.  If you can't afford to help, it's OK.  Use the software for free.  Make cool stuff.  Make the world a better, easier to use place.  If you can afford to help, please consider donating to the project.  It's for a good cause. 
+
+To everyone that's helped, in whatever fashion, I'm very very grateful. And thanks to everyone that takes a moment to say "thank you", it's a small price to pay and adds to the project's momentum.
+
+
+
 # Contributing  :construction_worker:
 
 While PySimpleGUI is currently licensed under an open-source license, the project itself is structured like a proprietary product.  Pull Requests are not accepted.
 
-One of the best ways for you to contribute is to write and publish applications.  Users are inspired by seeing what other users build.  Create a GitHub repo from, post the code, and include a screenshot in your repo's readme file.  
+One of the best ways for you to contribute code is to write and publish applications.  Users are inspired by seeing what other users build.  Create a GitHub repo from, post the code, and include a screenshot in your repo's readme file.  
 
 If there is a feature missing that you need or you have an enhancement to suggest, then [open an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&template=issue-form---must-fill-in-this-form-with-every-new-issue-submitted.md&title=%5B+Enhancement%2FBug%2FQuestion%5D+My+problem+is...)
 

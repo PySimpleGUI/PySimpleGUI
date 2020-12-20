@@ -9,6 +9,14 @@ import os
 
 '''
 Demo_Chatterbot.py
+
+
+Note - this code was written using version 0.8.7 of Chatterbot... to install:
+
+python -m pip install chatterbot==0.8.7
+
+It still runs fine with the old version. 
+
 A GUI wrapped arouind the Chatterbot package.
 The GUI is used to show progress bars during the training process and
 to collect user input that is sent to the chatbot.  The reply is displayed in the GUI window
@@ -72,22 +80,22 @@ chatbot.train("chatterbot.corpus.english")
 
 ################# GUI #################
 
-layout = [[sg.Output(size=(80, 20))],
-          [sg.MLine(size=(70, 5), enter_submits=True),
+layout = [[sg.Multiline(size=(80, 20), reroute_stdout=True, echo_stdout_stderr=True)],
+          [sg.MLine(size=(70, 5), key='-MLINE IN-', enter_submits=True, do_not_clear=False),
            sg.Button('SEND', bind_return_key=True), sg.Button('EXIT')]]
 
-window = sg.Window('Chat Window', layout, default_element_size=(30, 2))
+window = sg.Window('Chat Window', layout,
+                   default_element_size=(30, 2))
 
 # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
 while True:
-    event, (value,) = window.read()
+    event, values = window.read()
     if event != 'SEND':
         break
-    string = value.rstrip()
-    print('     '+string)
+    string = values['-MLINE IN-'].rstrip()
+    print('  ' + string)
     # send the user input to chatbot to get a response
-    response = chatbot.get_response(value.rstrip())
+    response = chatbot.get_response(values['-MLINE IN-'].rstrip())
     print(response)
-    speak(str(response))
 
 window.close()

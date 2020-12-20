@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
-from chatterbot import ChatBot
 import chatterbot.utils
 
 
 '''
 Demo_Chatterbot.py
+
+Note - this code was written using version 0.8.7 of Chatterbot... to install:
+
+python -m pip install chatterbot==0.8.7
+
+It still runs fine with the old version. 
+
 A GUI wrapped arouind the Chatterbot package.
 The GUI is used to show progress bars during the training process and
 to collect user input that is sent to the chatbot.  The reply is displayed in the GUI window
@@ -50,15 +56,32 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
 # redefine the chatbot text based progress bar with a graphical one
 chatterbot.utils.print_progress_bar = print_progress_bar
 
+
+from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
+
+chatbot = ChatBot('Ron Obvious')
+
+# Create a new trainer for the chatbot
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+# Train based on the english corpus
+trainer.train("chatterbot.corpus.english")
+
+# Train based on english greetings corpus
+trainer.train("chatterbot.corpus.english.greetings")
+
+# Train based on the english conversations corpus
+trainer.train("chatterbot.corpus.english.conversations")
 chatbot = ChatBot('Ron Obvious', trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
 
 # Train based on the english corpus
-chatbot.train("chatterbot.corpus.english")
+# chatbot.train("chatterbot.corpus.english")
 
 ################# GUI #################
 
-layout = [[sg.Output(size=(80, 20))],
-          [sg.MLine(size=(70, 5), enter_submits=True),
+layout = [[sg.Multiline(size=(80, 20), reroute_stdout=True, echo_stdout_stderr=True)],
+          [sg.MLine(size=(70, 5), key='-MLINE IN-', enter_submits=True, do_not_clear=False),
            sg.Button('SEND', bind_return_key=True), sg.Button('EXIT')]]
 
 window = sg.Window('Chat Window', layout,
@@ -66,11 +89,11 @@ window = sg.Window('Chat Window', layout,
 
 # ---===--- Loop taking in user input and using it to query HowDoI web oracle --- #
 while True:
-    event, (value,) = window.read()
+    event, values = window.read()
     if event != 'SEND':
         break
-    string = value.rstrip()
+    string = values['-MLINE IN-'].rstrip()
     print('  ' + string)
     # send the user input to chatbot to get a response
-    response = chatbot.get_response(value.rstrip())
+    response = chatbot.get_response(values['-MLINE IN-'].rstrip())
     print(response)
