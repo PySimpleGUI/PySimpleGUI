@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.12 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!"
+version = __version__ = "4.32.1.13 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -237,6 +237,41 @@ def _timeit_summary(func):
         return result
 
     return wrapper
+
+
+def _running_linux():
+    """
+    Determines the OS is Linux by using sys.platform
+
+    Returns True if Linux
+
+    :return: True if sys.platform indicates running Linux
+    :rtype: (bool)
+    """
+    return sys.platform.startswith('linux')
+
+def _running_mac():
+    """
+    Determines the OS is Mac by using sys.platform
+
+    Returns True if Mac
+
+    :return: True if sys.platform indicates running Mac
+    :rtype: (bool)
+    """
+    return sys.platform.startswith('darwin')
+
+def _running_windows():
+    """
+    Determines the OS is Windows by using sys.platform
+
+    Returns True if Windows
+
+    :return: True if sys.platform indicates running Windows
+    :rtype: (bool)
+    """
+    return sys.platform.startswith('win')
+
 
 
 # Handy python statements to increment and decrement with wrapping that I don't want to forget
@@ -544,6 +579,7 @@ ELEM_TYPE_SEPARATOR = 'separator'
 ELEM_TYPE_STATUSBAR = 'statusbar'
 ELEM_TYPE_PANE = 'pane'
 ELEM_TYPE_BUTTONMENU = 'buttonmenu'
+ELEM_TYPE_TITLEBAR = 'titlebar'
 
 # STRETCH == ERROR ELEMENT as a filler
 
@@ -802,18 +838,19 @@ class Element():
         """
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
-            if sys.platform == 'linux':
+            # if sys.platform == 'linux':
+            if _running_linux():
                 print('* linix minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
-                self.ParentForm.TKroot.state('icon')
-                return
-                self.ParentForm.maximize()
-                # self.ParentForm.TKroot.wm_overrideredirect(False)
-                self.ParentForm.minimize()
+                # self.ParentForm.TKroot.state('icon')
+                # return
+                # self.ParentForm.maximize()
                 self.ParentForm.TKroot.wm_overrideredirect(False)
-                self.ParentForm.TKroot.deiconify()
-                self._skip_first_restore_callback = True
-                self.ParentForm.TKroot.bind('<FocusIn>', self._titlebar_restore)
+                # self.ParentForm.minimize()
+                # self.ParentForm.TKroot.wm_overrideredirect(False)
+                self.ParentForm.TKroot.iconify()
+                # self._skip_first_restore_callback = True
+                self.ParentForm.TKroot.bind('<Button-1>', self._titlebar_restore)
             else:
                 self.ParentForm.TKroot.wm_overrideredirect(False)
                 self.ParentForm.Minimize()
@@ -831,20 +868,23 @@ class Element():
 
 
     def _titlebar_restore(self, event):
-        print('restoring')
-        if sys.platform == 'linux':
-            if self._skip_first_restore_callback:
-                self._skip_first_restore_callback = False
-                return
-            self.ParentForm.TKroot.unbind('<FocusIn>')
+        # if sys.platform == 'linux':
+        if _running_linux():
+            print('linux restore')
+            # if self._skip_first_restore_callback:
+            #     self._skip_first_restore_callback = False
+            #     return
+            self.ParentForm.TKroot.unbind('<Button-1>')
+            self.ParentForm.TKroot.deiconify()
 
             # self.ParentForm.TKroot.wm_overrideredirect(True)
-            self.ParentForm.TKroot.wm_attributes("-type", "dock")
+            self.ParentForm.TKroot.wm_attributes("-type", 'dock')
 
         else:
             self.ParentForm.TKroot.unbind('<Expose>')
             self.ParentForm.TKroot.wm_overrideredirect(True)
         self.ParentForm.normal()
+
 
     def _ReturnKeyHandler(self, event):
         """
@@ -1194,7 +1234,6 @@ class Input(Element):
     """
     Display a single text input field.  Based on the tkinter Widget `Entry`
     """
-
     def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
@@ -1340,6 +1379,7 @@ class Input(Element):
 In = Input
 InputText = Input
 I = Input
+
 
 
 # ---------------------------------------------------------------------- #
@@ -5955,7 +5995,7 @@ class Column(Element):
         self.ParentPanedWindow = None
         self.Rows = []
         self.TKFrame = None
-        self.TKColFrame = None
+        self.TKColFrame = None          # type: tk.Frame
         self.Scrollable = scrollable
         self.VerticalScrollOnly = vertical_scroll_only
 
@@ -6073,6 +6113,15 @@ class Column(Element):
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
 
+        if self.ExpandX and self.ExpandY:
+            expand = tk.BOTH
+        elif self.ExpandX:
+            expand = tk.X
+        elif self.ExpandY:
+            expand = tk.Y
+        else:
+            expand = None
+
         if visible is False:
             if self.TKColFrame:
                 self.TKColFrame.pack_forget()
@@ -6080,7 +6129,7 @@ class Column(Element):
                 self.ParentPanedWindow.remove(self.TKColFrame)
         elif visible is True:
             if self.TKColFrame:
-                self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+                self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1], fill=expand)
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
 
@@ -6535,6 +6584,8 @@ class Menu(Element):
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
+
+
 
 
 # ---------------------------------------------------------------------- #
@@ -7574,11 +7625,16 @@ class Window:
                 icon = DEFAULT_BASE64_ICON_16_BY_16
             else:
                 icon = self.WindowIcon
-            new_rows = [Titlebar(title=self.Title,icon=icon, text_color=None, background_color=None, )] + rows
+            new_rows = [[Titlebar(title=self.Title,icon=icon, text_color=None, background_color=None, )]] + rows
         else:
             new_rows = rows
         self.AddRows(new_rows)
         self._BuildKeyDict()
+
+        if self._has_custom_titlebar_element():
+            self.Margins = (0,0)
+            self.NoTitleBar = True
+
         return self
 
 
@@ -9161,7 +9217,12 @@ class Window:
         return True
 
 
+    def _has_custom_titlebar_element(self):
+        for elem in self.AllKeysDict.values():
+            if elem.metadata == TITLEBAR_METADATA_MARKER:
+                return True
 
+        return False
 
 
     add_row = AddRow
@@ -9669,7 +9730,7 @@ def Sizer(h_pixels=0, v_pixels=0):
     return Column([[]], pad=((h_pixels, 0), (v_pixels, 0)))
 
 
-def pin(elem, vertical_alignment=None, shrink=True):
+def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None):
     """
     Pin's an element provided into a layout so that when it's made invisible and visible again, it will
      be in the correct place.  Otherwise it will be placed at the end of its containing window/column.
@@ -9684,9 +9745,9 @@ def pin(elem, vertical_alignment=None, shrink=True):
     :rtype: Column
     """
     if shrink:
-        return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment)
+        return Column([[elem, Canvas(size=(0,0), pad=(0,0))]], pad=(0,0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
     else:
-        return Column([[elem]], pad=(0,0), vertical_alignment=vertical_alignment)
+        return Column([[elem]], pad=(0,0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
 
 
 def vtop(elem_or_row):
@@ -9742,9 +9803,24 @@ def vbottom(elem_or_row):
 
 
 
-def Titlebar(title='',icon=None, text_color=None, background_color=None, font=None):
+def Titlebar(title='',icon=None, text_color=None, background_color=None, font=None, key=None):
     """
-    Creates a "row" that can be added to a layout. This row looks like a titlebar
+    A custom titlebar that replaces the OS provided titlebar, thus giving you control
+    the is not possible using the OS provided titlebar such as the color.
+
+    NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
+    should have no problem and it should function as a normal window would.
+
+    This titlebar is created from a row of elements that is then encapulated into a
+    single Column element which is what the Titlebar returns to you.
+
+    A custom titlebar removes the margins from your window.  Ify ou want the  remainder
+    of your Window to have margins, place the layout after the Titlebar into a Column and
+    set the pad of that Column to the dimensions you would like your margins to have.
+
+    The Titlebar is a COLUMN element.  You can thus call the update method for the column and
+    perform operations such as making the column visible/invisible
+
     :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon: str or bytes
     :param title: The "title" to show in the titlebar
@@ -9774,14 +9850,11 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
     icon_and_text_portion += [T(title, text_color=tc, background_color=bc, font=font, grab=True)]
 
 
-    return [Column([icon_and_text_portion], pad=(0, 0), background_color=bc, metadata=TITLEBAR_METADATA_MARKER), Column([[T(SYMBOL_TITLEBAR_MINIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font, key=TITLEBAR_MINIMIZE_KEY),
-                                                                                                                          T(SYMBOL_TITLEBAR_MAXIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font,key=TITLEBAR_MAXIMIZE_KEY),
-                                                                                                                          Text(SYMBOL_TITLEBAR_CLOSE, text_color=tc, background_color=bc, font=font, enable_events=True, key=TITLEBAR_CLOSE_KEY),
-                                                                                                                          ]], element_justification='r', expand_x=True, grab=True, pad=(0, 0), background_color=bc)]
-
-
-
-
+    return Column([[Column([icon_and_text_portion], pad=(0, 0), background_color=bc),
+                    Column([[T(SYMBOL_TITLEBAR_MINIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font, key=TITLEBAR_MINIMIZE_KEY),
+                             Text(SYMBOL_TITLEBAR_MAXIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font,key=TITLEBAR_MAXIMIZE_KEY),
+                             Text(SYMBOL_TITLEBAR_CLOSE, text_color=tc, background_color=bc, font=font, enable_events=True, key=TITLEBAR_CLOSE_KEY),]],
+                           element_justification='r', expand_x=True, grab=True, pad=(0, 0), background_color=bc)]],expand_x=True, grab=True,  background_color=bc, pad=(0,0),metadata=TITLEBAR_METADATA_MARKER, key=key)
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
@@ -13329,16 +13402,16 @@ def _set_icon_for_tkinter_window(root, icon=None, pngbase64=None):
     wicon = icon
     try:
         root.iconbitmap(icon)
-    except:
+    except  Exception as e:
         try:
             wicon = tkinter.PhotoImage(file=icon)
             root.tk.call('wm', 'iconphoto', root._w, wicon)
-        except:
+        except  Exception as e:
             try:
                 wicon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
                 try:
                     root.tk.call('wm', 'iconphoto', root._w, wicon)
-                except:
+                except Exception as e:
                     print('Set icon exception', e)
                     pass
             except:
