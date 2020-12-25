@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.13 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible"
+version = __version__ = "4.32.1.14 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -752,7 +752,7 @@ class Element():
         self.Key = key  # dictionary key for return values
         self.Tooltip = tooltip
         self.TooltipObject = None
-        self.Visible = visible
+        self.visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False          # needed because of right click menu code
@@ -1355,6 +1355,9 @@ class Input(Element):
             # print(f'Other widgets on row = {self.ParentRowFrame.pack_slaves()}')
             self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             # self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1], in_=self.ParentRowFrame)
+        if visible is not None:
+            self.visible = visible
+
 
     def Get(self):
         """
@@ -1506,6 +1509,8 @@ class Combo(Element):
             self.TKCombo.pack_forget()
         elif visible is True:
             self.TKCombo.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def Get(self):
         """
@@ -1630,6 +1635,8 @@ class OptionMenu(Element):
             self.TKOptionMenu.pack_forget()
         elif visible is True:
             self.TKOptionMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -1781,6 +1788,8 @@ class Listbox(Element):
                 self.TKListbox.config(selectmode=select_mode)
             except:
                 print('Listbox.update error trying to change mode to: ', select_mode)
+        if visible is not None:
+            self.visible = visible
 
     def SetValue(self, values):
         """
@@ -1984,6 +1993,8 @@ class Radio(Element):
             self.TKRadio.pack_forget()
         elif visible is True:
             self.TKRadio.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def ResetGroup(self):
         """
@@ -2157,6 +2168,8 @@ class Checkbox(Element):
             self.TKCheckbutton.pack_forget()
         elif visible is True:
             self.TKCheckbutton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     get = Get
     set_focus = Element.SetFocus
@@ -2286,6 +2299,8 @@ class Spin(Element):
             self.TKSpinBox.pack_forget()
         elif visible is True:
             self.TKSpinBox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def _SpinChangedHandler(self, event):
         """
@@ -2531,6 +2546,8 @@ class Multiline(Element):
                 self.ParentForm.refresh()
             except:
                 pass
+        if visible is not None:
+            self.visible = visible
 
 
     def Get(self):
@@ -2739,6 +2756,8 @@ class Text(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def Get(self):
         """
@@ -2861,6 +2880,8 @@ class StatusBar(Element):
             self.TKText.pack_forget()
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -3149,6 +3170,8 @@ class Output(Element):
             self._TKOut.frame.pack_forget()
         elif visible is True:
             self._TKOut.frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def Get(self):
         """
@@ -3697,6 +3720,10 @@ class Button(Element):
             self.DisabledButtonColor = (disabled_button_color[0] if disabled_button_color[0] is not None else self.DisabledButtonColor[0],
                                         disabled_button_color[1] if disabled_button_color[1] is not None else self.DisabledButtonColor[1])
 
+        if visible is not None:
+            self.visible = visible
+
+
     def GetText(self):
         """
         Returns the current text shown on a button
@@ -3853,6 +3880,8 @@ class ButtonMenu(Element):
             self.TKButtonMenu.pack_forget()
         elif visible is True:
             self.TKButtonMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def Click(self):
         """
@@ -3984,6 +4013,8 @@ class ProgressBar(Element):
             self.TKProgressBar.TKProgressBarForReal.pack_forget()
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
         self.TKProgressBar.Update(current_count, max=max)
         try:
@@ -4107,6 +4138,8 @@ class Image(Element):
         # if everything is set to None, then delete the image
         if filename is None and image is None and visible is None and size == (None, None):
             self.tktext_label.image = None
+        if visible is not None:
+            self.visible = visible
 
 
     def UpdateAnimation(self, source, time_between_frames=0):
@@ -4763,6 +4796,8 @@ class Graph(Element):
             self._TKCanvas2.pack_forget()
         elif visible is True:
             self._TKCanvas2.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     def Move(self, x_direction, y_direction):
         """
@@ -5175,6 +5210,8 @@ class Frame(Element):
             self.TKFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if value is not None:
             self.TKFrame.config(text=str(value))
+        if visible is not None:
+            self.visible = visible
 
     add_row = AddRow
     layout = Layout
@@ -5411,6 +5448,9 @@ class Tab(Element):
                 state = 'disabled'
         if visible is False:
             state = 'hidden'
+        if visible is not None:
+            self.visible = visible
+
         self.ParentNotebook.tab(self.TabID, state=state)
 
         if title is not None:
@@ -5778,6 +5818,8 @@ class Slider(Element):
             self.TKScale.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if range != (None, None):
             self.TKScale.config(from_=range[0], to_=range[1])
+        if visible is not None:
+            self.visible = visible
 
     def _SliderChangedHandler(self, event):
         """
@@ -6132,6 +6174,8 @@ class Column(Element):
                 self.TKColFrame.pack(padx=self.pad_used[0], pady=self.pad_used[1], fill=expand)
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
+        if visible is not None:
+            self.visible = visible
 
     def contents_changed(self):
         """
@@ -6228,6 +6272,8 @@ class Pane(Element):
             self.PanedWindow.pack_forget()
         elif visible is True:
             self.PanedWindow.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -6577,6 +6623,8 @@ class Menu(Element):
             self.ParentForm.TKroot.configure(menu=[])  # this will cause the menubar to disappear
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
+        if visible is not None:
+            self.visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -6791,6 +6839,8 @@ class Table(Element):
                     self.TKTreeview.tag_configure(row_def[0], background=row_def[1])
                 else:
                     self.TKTreeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
+        if visible is not None:
+            self.visible = visible
 
     def _treeview_selected(self, event):
         """
@@ -7089,6 +7139,9 @@ class Tree(Element):
             self.TKTreeview.pack_forget()
         elif visible is True:
             self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+        if visible is not None:
+            self.visible = visible
+
         return self
 
     set_focus = Element.SetFocus
@@ -9803,7 +9856,7 @@ def vbottom(elem_or_row):
 
 
 
-def Titlebar(title='',icon=None, text_color=None, background_color=None, font=None, key=None):
+def Titlebar(title='',icon=None, text_color=None, background_color=None, font=None, key=None, k=None):
     """
     A custom titlebar that replaces the OS provided titlebar, thus giving you control
     the is not possible using the OS provided titlebar such as the color.
@@ -9832,11 +9885,16 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
     :param font: Font to be used for the text and the symbols
     :type font: str
     :return: A list of elements (i.e. a "row" for a layout)
+    :param key: Identifies an Element. Should be UNIQUE to this window.
+    :type key: str | int | tuple | object
+    :param k: Exactly the same as key.  Choose one of them to use
+    :type k: str | int | tuple | object
     :rtype: List[Element]
     """
     bc = background_color or theme_button_color()[1]
     tc = text_color or theme_button_color()[0]
     font = font or ('Helvetica', 12)
+    key = k or key
 
     if isinstance(icon, bytes):
         icon_and_text_portion = [Image(data=icon, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
@@ -11675,7 +11733,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKColFrame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
 
                 # element.TKColFrame.pack(side=side, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKColFrame.pack_forget()
                 # element.TKColFrame = element.TKColFrame
                 # if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
@@ -11708,7 +11766,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     pane.Widget = pane.TKColFrame = tk.Frame(element.PanedWindow)
                     pane.ParentPanedWindow = element.PanedWindow
                     PackFormIntoFrame(pane, pane.TKColFrame, toplevel_form)
-                    if pane.Visible:
+                    if pane.visible:
                         element.PanedWindow.add(pane.TKColFrame)
                     if pane.BackgroundColor != COLOR_SYSTEM_DEFAULT and pane.BackgroundColor is not None:
                         pane.TKColFrame.configure(background=pane.BackgroundColor,
@@ -11716,7 +11774,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                   highlightcolor=pane.BackgroundColor)
 
                 element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
-                if element.Visible is False:
+                if element.visible is False:
                     element.PanedWindow.pack_forget()
             # -------------------------  TEXT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TEXT:
@@ -11766,7 +11824,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
@@ -11845,7 +11903,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
@@ -11957,7 +12015,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
@@ -12050,7 +12108,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 tkbutton.configure(menu=top_menu)
                 element.TKMenu = top_menu
-                if element.Visible is False:
+                if element.visible is False:
                     tkbutton.pack_forget()
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
@@ -12092,7 +12150,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element.pack_keywords = {'side':tk.LEFT, 'padx':elementpad[0], 'pady':elementpad[1], 'expand':False, 'fill':tk.NONE }
                 # element.TKEntry.pack(**element.pack_keywords)
                 element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
                     toplevel_form.FocusSet = True
@@ -12187,7 +12245,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKCombo['values'] = element.Values
 
                 element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKCombo.pack_forget()
                 if element.DefaultValue is not None:
                     element.TKCombo.set(element.DefaultValue)
@@ -12224,7 +12282,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
                 element.TKOptionMenu.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKOptionMenu.pack_forget()
                 if element.Disabled == True:
                     element.TKOptionMenu['state'] = 'disabled'
@@ -12265,7 +12323,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
                 listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 element.TKListbox.pack(side=tk.LEFT)
-                if element.Visible is False:
+                if element.visible is False:
                     listbox_frame.pack_forget()
                     element.vsb.pack_forget()
                 if element.BindReturnKey:
@@ -12307,7 +12365,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):               # only works on Linux so not including it
                 #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKText.pack_forget()
                 else:
                     # Chr0nic
@@ -12367,7 +12425,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.config(highlightcolor=element.TextColor)
 
                 element.TKCheckbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKCheckbutton.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
@@ -12391,7 +12449,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                       border_width=element.BorderWidth, relief=element.Relief,
                                                       style=toplevel_form.TtkTheme, key=element.Key)
                 element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 element.Widget = element.TKProgressBar.TKProgressBarForReal
                 # -------------------------  RADIO placement element  ------------------------- #
@@ -12439,7 +12497,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
                 element.TKRadio.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -12460,7 +12518,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(buttonbackground=element.BackgroundColor)
                 element.Widget.config(highlightthickness=0)
                 element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKSpinBox.pack_forget()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKSpinBox.configure(fg=text_color)
@@ -12485,7 +12543,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            pad=elementpad, echo_stdout_stderr=element.echo_stdout_stderr)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
                 element._TKOut.pack(side=tk.LEFT, expand=False, fill=tk.NONE)
-                if element.Visible is False:
+                if element.visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKOut, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -12523,7 +12581,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # tktext_label.configure(anchor=tk.NW, image=photo)
                     element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
 
-                if element.Visible is False:
+                if element.visible is False:
                     element.tktext_label.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
@@ -12546,7 +12604,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element._TKCanvas, text=element.Tooltip,
@@ -12571,7 +12629,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
                     # element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
                 element._TKCanvas2.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     # element._TKCanvas.pack_forget()
                     element._TKCanvas2.pack_forget()
                 if element.Tooltip is not None:
@@ -12637,7 +12695,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.Size != (None, None):
                     labeled_frame.config(width=element.Size[0], height=element.Size[1])
-                if not element.Visible:
+                if not element.visible:
                     labeled_frame.pack_forget()
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT and element.BackgroundColor is not None:
                     labeled_frame.configure(background=element.BackgroundColor,
@@ -12664,7 +12722,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 state = 'normal'
                 if element.Disabled:
                     state = 'disabled'
-                if element.Visible is False:
+                if element.visible is False:
                     state = 'hidden'
                 # this code will add an image to the tab. Use it when adding the image on a tab enhancement
                 # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
@@ -12772,7 +12830,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
                 tkscale.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                if element.Visible is False:
+                if element.visible is False:
                     tkscale.pack_forget()
                 element.TKScale = tkscale
                 if element.Disabled == True:
@@ -12901,7 +12959,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     treeview.configure(xscrollcommand=hscrollbar.set)
 
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKTreeview.pack_forget()
                 frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
                 if element.Tooltip is not None:
@@ -13017,7 +13075,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar.config(command=treeview.yview)
                 treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
-                if element.Visible is False:
+                if element.visible is False:
                     element.TKTreeview.pack_forget()
                 frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
@@ -13096,7 +13154,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(fg=element.TextColor)
                 tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
                 row_fill_direction = tk.X
-                if element.Visible is False:
+                if element.visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
                 if element.ClickSubmits:
