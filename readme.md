@@ -16,50 +16,31 @@ Some programs are not well-suited for PySimpleGUI however.  By definition, PySim
 
 # Statistics :chart_with_upwards_trend:
 
-## PyPI Installs
+## PyPI Downloads
 
-<p align="center">
-tkinter <img src="http://pepy.tech/badge/pysimplegui?color=blue&style=for-the-badge" width="100px">
-tkinter 2.7 <img src="https://pepy.tech/badge/pysimplegui27?color=blue&style=for-the-badge"><br>
-Qt <img src="https://pepy.tech/badge/pysimpleguiqt?color=blue&style=for-the-badge">
-WxPython<img src="https://pepy.tech/badge/pysimpleguiwx?color=blue&style=for-the-badge">
-Web (Remi) <img src="https://pepy.tech/badge/pysimpleguiweb?color=blue&style=for-the-badge">
-</p>
+![tkinter](https://img.shields.io/pypi/dm/pysimplegui?label=tkinter&style=for-the-badge)
+![tkinter 2.7 downloads](https://img.shields.io/pypi/dm/pysimplegui27?label=tkinter%202.7&style=for-the-badge)
+![qt](https://img.shields.io/pypi/dm/pysimpleguiqt?label=qt&style=for-the-badge)
+![wx](https://img.shields.io/pypi/dm/pysimpleguiwx?label=wx&style=for-the-badge)
+![web](https://img.shields.io/pypi/dm/pysimpleguiweb?label=web&style=for-the-badge)
 
+## Latest PyPI Versions
+
+![tkinter](https://img.shields.io/pypi/v/pysimplegui.svg?label=tkinter&style=for-the-badge&color=red)
+![tkinter 2.7](https://img.shields.io/pypi/v/pysimplegui27.svg?label=tkinter%202.7&style=for-the-badge&color=red)
+![qt](https://img.shields.io/pypi/v/pysimpleguiqt.svg?label=qt&style=for-the-badge&color=red)
+![wx](https://img.shields.io/pypi/v/pysimpleguiwx.svg?label=wx&style=for-the-badge&color=red)
+![web](https://img.shields.io/pypi/v/pysimpleguiweb.svg?label=web&style=for-the-badge&color=red)
 
 ## GitHub
 
-<p align="center">
-<a href=""><img src="https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge" alt="img" width="180px"></a>
-<a href=""><img src="https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge" alt="img"  width="200px"></a>
-<a href=""><img src="https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"  width="260px"></a>
-<a href=""><img src="https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"width="200px"></a>
-<a href=""><img src="http://ForTheBadge.com/images/badges/makes-people-smile.svg" alt="img"width="190px"></a>
-<a href=""><img src="https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?style=social&label=Star&maxAge=2592000" alt="img"width="140x"></a>
-</p>
+![open issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge)
+![closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge)
+![commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge)
+![last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge)
+![stars](https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge&label=Stars&maxAge=2592000)
 
-
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/?username=PySimpleGUI&bg_color=3e7bac&title_color=ffdd55&icon_color=ffdd55&text_color=ffdd55&show_icons=true&count_private=true">
-</p>
-
-## Most Recent PyPI Version
-
-
-
-<p align="center">
-tkinter
-<a href="pypi tkinter"><img src="https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge&color=red" alt="img" align="center" width="150px"></a>
-Qt
-<a href="https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-Web
-<a href="https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-WxPython
-<a href="https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-
-</p>
-
-<hr>
+![Github stats](https://github-readme-stats.vercel.app/api/?username=PySimpleGUI&bg_color=3e7bac&title_color=ffdd55&icon_color=ffdd55&text_color=ffdd55&show_icons=true&count_private=true)
 
 # What Is PySimpleGUI :question:
 
