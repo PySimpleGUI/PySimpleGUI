@@ -4,13 +4,13 @@
 
 Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
 
-## Currently PySimpleGUI (tkinter) only
+**Currently PySimpleGUI (tkinter) only**
 
 This documentation is created using the PySimpleGUI.py file which means it's based on the tkinter code. Some of the calls are different, might not exist at all, or there may be more methods/functions for the other PySimpleGUI ports (Qt, Wx, Web).  
 
 Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
 
-## Caution - Some functions / methods may be internal only yet exposed in this documentation
+**Caution - Some functions / methods may be internal only yet exposed in this documentation**
 
 This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidently shown in this documentation.  Hopefully these accidents don't happen often.
 

@@ -19,12 +19,11 @@
 
 # PySimpleGUI User's Manual
 
-## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
+Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
-## <span>The Call Reference Section Moved to <a href="https://pysimplegui.readthedocs.io/en/latest/call%20reference/">here</a></span>
+**The [Call Reference Section](https://pysimplegui.readthedocs.io/en/latest/call%20reference/) has moved.**
 
-### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
----
+**This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.**
 
 # Jump-Start
 
