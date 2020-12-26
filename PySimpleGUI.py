@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.14 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements"
+version = __version__ = "4.32.1.16 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements, dummy element.update so docstrings will be happier, custom titlebar global settings, custom titlebar window-level settings"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -208,9 +208,11 @@ def _timeit(func):
 
     return wrapper
 
+
 _timeit_counter = 0
 MAX_TIMEIT_COUNT = 1000
 _timeit_total = 0
+
 
 def _timeit_summary(func):
     """
@@ -250,6 +252,7 @@ def _running_linux():
     """
     return sys.platform.startswith('linux')
 
+
 def _running_mac():
     """
     Determines the OS is Mac by using sys.platform
@@ -261,6 +264,7 @@ def _running_mac():
     """
     return sys.platform.startswith('darwin')
 
+
 def _running_windows():
     """
     Determines the OS is Windows by using sys.platform
@@ -271,7 +275,6 @@ def _running_windows():
     :rtype: (bool)
     """
     return sys.platform.startswith('win')
-
 
 
 # Handy python statements to increment and decrement with wrapping that I don't want to forget
@@ -476,6 +479,10 @@ MENU_KEY_SEPARATOR = '::'
 ENABLE_TK_WINDOWS = False
 
 USE_CUSTOM_TITLEBAR = False
+CUSTOM_TITLEBAR_BACKGROUND_COLOR = None
+CUSTOM_TITLEBAR_TEXT_COLOR = None
+CUSTOM_TITLEBAR_ICON = None
+CUSTOM_TITLEBAR_FONT = None
 TITLEBAR_METADATA_MARKER = 'This window has a titlebar'
 
 SUPPRESS_ERROR_POPUPS = False
@@ -1210,6 +1217,13 @@ class Element():
         self.Widget.unbind("<B1-Motion>")
 
 
+    def update(self, *args, **kwargs):
+        """
+        A dummy update call.  This will only be called if an element hasn't implemented an update method
+        It is provided here for docstring purposes.  If you got here by browing code via PyCharm, know
+        that this is not the function that will be called.  Your actual element's update method will be called
+        """
+        print('* Base Element Class update was called. Your element does not seem to have an update method')
 
 
     def __call__(self, *args, **kwargs):
@@ -4048,9 +4062,9 @@ class Image(Element):
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
         """
         :param filename: image filename if there is a button image. GIFs and PNGs only.
-        :type filename: (str)
+        :type filename: str | None
         :param data: Raw or Base64 representation of the image to put on button. Choose either filename or data
-        :type data: bytes | str
+        :type data: bytes | str | None
         :param background_color: color of background
         :type background_color:
         :param size: (width, height) size of image in pixels
@@ -7341,7 +7355,9 @@ class Window:
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
                  right_click_menu_font=None,
-                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False, metadata=None):
+                 finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
+                 titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
+                 use_custom_titlebar=None, metadata=None):
         """
         :param title: The title that will be displayed in the Titlebar and on the Taskbar
         :type title: (str)
@@ -7366,7 +7382,7 @@ class Window:
         :param button_color: Default button colors for all buttons in the window
         :type button_color: Tuple[str, str] or str
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | Tuple[str, int] | None
         :param progress_bar_color: (bar color, background color) Sets the default colors for all progress bars in the window
         :type progress_bar_color: Tuple[str, str]
         :param background_color: color of background
@@ -7427,6 +7443,16 @@ class Window:
         :type modal: (bool)
         :param enable_close_attempted_event: If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
         :type enable_close_attempted_event: (bool)
+        :param titlebar_background_color: If custom titlebar indicated by use_custom_titlebar, then use this as background color
+        :type titlebar_background_color: str | None
+        :param titlebar_text_color: If custom titlebar indicated by use_custom_titlebar, then use this as text color
+        :type titlebar_text_color: str | None
+        :param titlebar_font: If custom titlebar indicated by use_custom_titlebar, then use this as title font
+        :type titlebar_font:  str | Tuple[str, int] | None
+        :param titlebar_icon: If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
+        :type titlebar_icon: bytes | str
+        :param use_custom_titlebar: If True, then a custom titlebar will be used instead of the normal titlebar
+        :type use_custom_titlebar: bool
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -7522,15 +7548,19 @@ class Window:
         self.finalize_in_progress = False
         self.close_destroys_window = not enable_close_attempted_event if enable_close_attempted_event is not None else None
         self.override_custom_titlebar = False
+        self.use_custom_titlebar = use_custom_titlebar or USE_CUSTOM_TITLEBAR
+        self.titlebar_background_color = titlebar_background_color
+        self.titlebar_text_color = titlebar_text_color
+        self.titlebar_font = titlebar_font
+        self.titlebar_icon= titlebar_icon
 
 
-        if USE_CUSTOM_TITLEBAR:
+        if self.use_custom_titlebar:
             self.Margins = (0,0)
             self.NoTitleBar = True
 
         if no_titlebar is True:
             self.override_custom_titlebar = True
-
 
         if layout is not None and type(layout) not in (list, tuple):
             warnings.warn('Your layout is not a list or tuple... this is not good!')
@@ -7673,12 +7703,17 @@ class Window:
         :return: self so that you can chain method calls
         :rtype: (Window)
         """
-        if USE_CUSTOM_TITLEBAR and not self.override_custom_titlebar:
-            if self.WindowIcon == DEFAULT_WINDOW_ICON:
+        if self.use_custom_titlebar and not self.override_custom_titlebar:
+            if self.titlebar_icon is not None:
+                icon = self.titlebar_icon
+            elif CUSTOM_TITLEBAR_ICON is not None:
+                icon = CUSTOM_TITLEBAR_ICON
+            elif self.titlebar_icon is not None:
+                icon = self.titlebar_icon
+            elif self.WindowIcon == DEFAULT_WINDOW_ICON:
                 icon = DEFAULT_BASE64_ICON_16_BY_16
-            else:
-                icon = self.WindowIcon
-            new_rows = [[Titlebar(title=self.Title,icon=icon, text_color=None, background_color=None, )]] + rows
+
+            new_rows = [[Titlebar(title=self.Title, icon=icon, text_color=self.titlebar_text_color, background_color=self.titlebar_background_color, font=self.titlebar_font)]] + rows
         else:
             new_rows = rows
         self.AddRows(new_rows)
@@ -9241,10 +9276,9 @@ class Window:
         window['element key'].Update
 
         :param key: The key to find
-        :type key: str | int | tuple | object
-        :return: The element found or None if no element was found
-        :rtype: Element | None
-        """
+        :type key: str | int | tuple | object""
+        :rtype: Element |"""
+
         return self.FindElement(key)
 
 
@@ -9875,25 +9909,25 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
     perform operations such as making the column visible/invisible
 
     :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
-    :type icon: str or bytes
+    :type icon: str or bytes or None
     :param title: The "title" to show in the titlebar
     :type title: str
     :param text_color: Text color for titlebar
-    :type text_color: str
+    :type text_color: str | None
     :param background_color: Background color for titlebar
-    :type background_color: str
+    :type background_color: str | None
     :param font: Font to be used for the text and the symbols
-    :type font: str
+    :type font: str | None
     :return: A list of elements (i.e. a "row" for a layout)
     :param key: Identifies an Element. Should be UNIQUE to this window.
-    :type key: str | int | tuple | object
+    :type key: str | int | tuple | object | None
     :param k: Exactly the same as key.  Choose one of them to use
-    :type k: str | int | tuple | object
+    :type k: str | int | tuple | object | None
     :rtype: List[Element]
     """
-    bc = background_color or theme_button_color()[1]
-    tc = text_color or theme_button_color()[0]
-    font = font or ('Helvetica', 12)
+    bc = background_color or CUSTOM_TITLEBAR_BACKGROUND_COLOR or theme_button_color()[1]
+    tc = text_color or CUSTOM_TITLEBAR_TEXT_COLOR or theme_button_color()[0]
+    font = font or CUSTOM_TITLEBAR_FONT or ('Helvetica', 12)
     key = k or key
 
     if isinstance(icon, bytes):
@@ -9902,6 +9936,11 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
         icon_and_text_portion = []
     elif icon is not None:
         icon_and_text_portion = [Image(filename=icon, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
+    elif CUSTOM_TITLEBAR_ICON is not None:
+        if isinstance(CUSTOM_TITLEBAR_ICON, bytes):
+            icon_and_text_portion = [Image(data=CUSTOM_TITLEBAR_ICON, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
+        else:
+            icon_and_text_portion = [Image(filename=CUSTOM_TITLEBAR_ICON, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
     else:
         icon_and_text_portion = [Image(data=DEFAULT_BASE64_ICON_16_BY_16, background_color=bc, key=TITLEBAR_IMAGE_KEY)]
 
@@ -14070,7 +14109,7 @@ def SetGlobalIcon(icon):
 # ============================== SetOptions =========#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetOptions(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None),
+def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None),
                margins=(None, None),
                element_padding=(None, None), auto_size_text=None, auto_size_buttons=None, font=None, border_width=None,
                slider_border_width=None, slider_relief=None, slider_orientation=None,
@@ -14080,7 +14119,7 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: bytes | str
@@ -14114,7 +14153,6 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type message_box_line_width: ???
     :param progress_meter_border_depth: ???
     :type progress_meter_border_depth: ???
-
     :param progress_meter_style: You can no longer set a progress bar style. All ttk styles must be the same for the window
     :type progress_meter_style: ???
     :param progress_meter_relief:
@@ -14167,6 +14205,14 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     :type enable_mac_notitlebar_patch: (bool)
     :param use_custom_titlebar: If True then a custom titlebar is used instead of the normal system titlebar
     :type use_custom_titlebar: (bool)
+    :param titlebar_background_color: If custom titlebar indicated by use_custom_titlebar, then use this as background color
+    :type titlebar_background_color: str | None
+    :param titlebar_text_color: If custom titlebar indicated by use_custom_titlebar, then use this as text color
+    :type titlebar_text_color: str | None
+    :param titlebar_font: If custom titlebar indicated by use_custom_titlebar, then use this as title font
+    :type titlebar_font:  str | Tuple[str, int] | None
+    :param titlebar_icon: If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
+    :type titlebar_icon: bytes | str
     :return: None
     :rtype: None
     """
@@ -14212,6 +14258,10 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
     global ENABLE_TREEVIEW_869_PATCH
     global ENABLE_MAC_NOTITLEBAR_PATCH
     global USE_CUSTOM_TITLEBAR
+    global CUSTOM_TITLEBAR_BACKGROUND_COLOR
+    global CUSTOM_TITLEBAR_TEXT_COLOR
+    global CUSTOM_TITLEBAR_ICON
+    global CUSTOM_TITLEBAR_FONT
     # global _my_windows
 
     if icon:
@@ -14341,6 +14391,18 @@ def SetOptions(icon=None, button_color=None, element_size=(None, None), button_e
 
     if use_custom_titlebar is not None:
         USE_CUSTOM_TITLEBAR = use_custom_titlebar
+
+    if titlebar_background_color is not None:
+        CUSTOM_TITLEBAR_BACKGROUND_COLOR = titlebar_background_color
+
+    if titlebar_text_color is not None:
+        CUSTOM_TITLEBAR_TEXT_COLOR = titlebar_text_color
+
+    if titlebar_font is not None:
+        CUSTOM_TITLEBAR_FONT = titlebar_font
+
+    if titlebar_icon is not None:
+        CUSTOM_TITLEBAR_ICON = titlebar_icon
 
     return True
 
@@ -18363,7 +18425,7 @@ sgprint = Print
 sgprint_close = PrintClose
 rgb = RGB
 set_global_icon = SetGlobalIcon
-set_options = SetOptions
+SetOptions = set_options
 
 test = main
 
