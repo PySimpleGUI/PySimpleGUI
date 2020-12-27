@@ -65,7 +65,7 @@ Fonts should be in the format (font family, size).  You can use the older string
  
 ### Installing PySide2 for Python 3  
   
-It is _highly_ recommended that you use PySide2.  The code will attempt to use PyQt5 is pyside2 isn't found.  PyQt5 is **not** recommended.  
+It is _highly_ recommended that you use PySide2.  The code will attempt to use PyQt5 if pyside2 isn't found.  PyQt5 is **not** recommended.  
  
 To install Pyside2:  
   
