@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.16 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements, dummy element.update so docstrings will be happier, custom titlebar global settings, custom titlebar window-level settings"
+version = __version__ = "4.32.1.17 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements, dummy element.update so docstrings will be happier, custom titlebar global settings, custom titlebar window-level settings, spin fix in update by changing enable to normal"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2297,11 +2297,11 @@ class Spin(Element):
             self.TKSpinBox['state'] = 'readonly'
         elif readonly is False:
             self.Readonly = False
-            self.TKSpinBox['state'] = 'enable'
+            self.TKSpinBox['state'] = 'normal'
         if disabled is True:
             self.TKSpinBox['state'] = 'disable'
         elif disabled is False and not readonly:
-            self.TKSpinBox['state'] = 'enable'
+            self.TKSpinBox['state'] = 'normal'
 
         if disabled is not None:
             self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
@@ -3279,8 +3279,8 @@ class Button(Element):
         :type size: (int, int)
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
-        :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green".
-        :type button_color: Tuple[str, str] or str or None
+        :param button_color: Color of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background"
+        :type button_color: Tuple[str, str] | str | None
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
         :type disabled_button_color: Tuple[str, str]
         :param highlight_colors: colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button
@@ -7444,13 +7444,13 @@ class Window:
         :param enable_close_attempted_event: If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read
         :type enable_close_attempted_event: (bool)
         :param titlebar_background_color: If custom titlebar indicated by use_custom_titlebar, then use this as background color
-        :type titlebar_background_color: str | None
+        :type titlebar_background_color: (str | None)
         :param titlebar_text_color: If custom titlebar indicated by use_custom_titlebar, then use this as text color
-        :type titlebar_text_color: str | None
+        :type titlebar_text_color: (str | None)
         :param titlebar_font: If custom titlebar indicated by use_custom_titlebar, then use this as title font
-        :type titlebar_font:  str | Tuple[str, int] | None
+        :type titlebar_font:  (str | Tuple[str, int] | None)
         :param titlebar_icon: If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
-        :type titlebar_icon: bytes | str
+        :type titlebar_icon: (bytes | str)
         :param use_custom_titlebar: If True, then a custom titlebar will be used instead of the normal titlebar
         :type use_custom_titlebar: bool
         :param metadata: User metadata that can be set to ANYTHING
