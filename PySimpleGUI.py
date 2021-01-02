@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.32.1.17 Unreleased\nRemoved faking timeout message as it can happen when autoclose used, CLOSE_ATTEMPED_EVENT, button_color can have a None parameter, fill_color added to draw_arc, 16x16 icon, Titlebar element, set_option gets custom titlebar option, tons of sh*t for custom titlebars, if running on Trinket then use custom titlebars by default, smarter titlebar handling..auto remove, added key to titlebar image, renamed InputText to Input, massive nngogol Union docstring fix!, finally custom titlebar minimize works on Linux and can also be pinned and made invisible, .visible added to all elements, dummy element.update so docstrings will be happier, custom titlebar global settings, custom titlebar window-level settings, spin fix in update by changing enable to normal"
+version = __version__ = "4.33.0 Released 02-Jan-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -275,6 +275,23 @@ def _running_windows():
     :rtype: (bool)
     """
     return sys.platform.startswith('win')
+
+
+def _running_trinket():
+    """
+    A special case for Trinket.  Checks both the OS and the number of environment variables
+    Currently, Trinket only has ONE environment variable.  This fact is used to figure out if Trinket is being used.
+
+    Returns True if "Trinket" (in theory)
+
+    :return: True if sys.platform indicates Linux and the number of environment variables is 1
+    :rtype: (bool)
+    """
+    if len(os.environ) == 1 and sys.platform.startswith('linux'):
+        return True
+
+    return False
+
 
 
 # Handy python statements to increment and decrement with wrapping that I don't want to forget
@@ -759,7 +776,7 @@ class Element():
         self.Key = key  # dictionary key for return values
         self.Tooltip = tooltip
         self.TooltipObject = None
-        self.visible = visible
+        self._visible = visible
         self.TKRightClickMenu = None
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False          # needed because of right click menu code
@@ -773,6 +790,18 @@ class Element():
         if not hasattr(self, 'ItemFont'):
             self.ItemFont = None
 
+
+    @property
+    def visible(self):
+        """
+        Returns visibility state for the element.  This is a READONLY property
+        To control visibility, use the element's update method
+        :return: Visibility state for element
+        :rtype: (bool)
+        """
+        return self._visible
+
+
     def _RightClickMenuCallback(self, event):
         """
         Callback function that's called when a right click happens. Shows right click menu as result
@@ -782,6 +811,7 @@ class Element():
         """
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
+
 
     def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
         """
@@ -798,6 +828,7 @@ class Element():
         _exit_mainloop(self.ParentForm)
         # Window._window_that_exited = self.ParentForm
         # self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
+
 
     def _FindReturnKeyBoundButton(self, form):
         """
@@ -834,6 +865,7 @@ class Element():
                     if rc is not None:
                         return rc
         return None
+
 
     def _TextClickedHandler(self, event):
         """
@@ -989,6 +1021,7 @@ class Element():
         """
         self._generic_callback_handler('')
 
+
     def _user_bind_callback(self, bind_string, event):
         """
         Used when user binds a tkinter event directly to an element
@@ -1008,6 +1041,7 @@ class Element():
             key = bind_string
 
         self._generic_callback_handler(force_key_to_be=key)
+
 
     def bind(self, bind_string, key_modifier):
         """
@@ -1093,6 +1127,7 @@ class Element():
             except:
                 print('Warning, error setting height on element with key=', self.Key)
 
+
     def get_size(self):
         """
         Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
@@ -1107,6 +1142,7 @@ class Element():
             w = h = None
         return w, h
 
+
     def hide_row(self):
         """
         Hide the entire row an Element is located on.
@@ -1116,6 +1152,7 @@ class Element():
             self.ParentRowFrame.pack_forget()
         except:
             print('Warning, error hiding element row for key =', self.Key)
+
 
     def unhide_row(self):
         """
@@ -1165,6 +1202,7 @@ class Element():
         except Exception as e:
             print('Warning bad cursor specified ', cursor)
             print(e)
+
 
     def set_vscroll_position(self, percent_from_top):
         """
@@ -1370,7 +1408,7 @@ class Input(Element):
             self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             # self.TKEntry.pack(padx=self.pad_used[0], pady=self.pad_used[1], in_=self.ParentRowFrame)
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
 
     def Get(self):
@@ -1524,7 +1562,7 @@ class Combo(Element):
         elif visible is True:
             self.TKCombo.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def Get(self):
         """
@@ -1650,7 +1688,7 @@ class OptionMenu(Element):
         elif visible is True:
             self.TKOptionMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -1803,7 +1841,7 @@ class Listbox(Element):
             except:
                 print('Listbox.update error trying to change mode to: ', select_mode)
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def SetValue(self, values):
         """
@@ -2008,7 +2046,7 @@ class Radio(Element):
         elif visible is True:
             self.TKRadio.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def ResetGroup(self):
         """
@@ -2183,7 +2221,7 @@ class Checkbox(Element):
         elif visible is True:
             self.TKCheckbutton.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     get = Get
     set_focus = Element.SetFocus
@@ -2314,7 +2352,7 @@ class Spin(Element):
         elif visible is True:
             self.TKSpinBox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def _SpinChangedHandler(self, event):
         """
@@ -2561,7 +2599,7 @@ class Multiline(Element):
             except:
                 pass
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
 
     def Get(self):
@@ -2771,7 +2809,7 @@ class Text(Element):
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def Get(self):
         """
@@ -2895,7 +2933,7 @@ class StatusBar(Element):
         elif visible is True:
             self.TKText.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -3185,7 +3223,7 @@ class Output(Element):
         elif visible is True:
             self._TKOut.frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def Get(self):
         """
@@ -3735,7 +3773,7 @@ class Button(Element):
                                         disabled_button_color[1] if disabled_button_color[1] is not None else self.DisabledButtonColor[1])
 
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
 
     def GetText(self):
@@ -3895,7 +3933,7 @@ class ButtonMenu(Element):
         elif visible is True:
             self.TKButtonMenu.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def Click(self):
         """
@@ -4028,7 +4066,7 @@ class ProgressBar(Element):
         elif visible is True:
             self.TKProgressBar.TKProgressBarForReal.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
         self.TKProgressBar.Update(current_count, max=max)
         try:
@@ -4153,7 +4191,7 @@ class Image(Element):
         if filename is None and image is None and visible is None and size == (None, None):
             self.tktext_label.image = None
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
 
     def UpdateAnimation(self, source, time_between_frames=0):
@@ -4811,7 +4849,7 @@ class Graph(Element):
         elif visible is True:
             self._TKCanvas2.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def Move(self, x_direction, y_direction):
         """
@@ -5225,7 +5263,7 @@ class Frame(Element):
         if value is not None:
             self.TKFrame.config(text=str(value))
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     add_row = AddRow
     layout = Layout
@@ -5463,7 +5501,7 @@ class Tab(Element):
         if visible is False:
             state = 'hidden'
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
         self.ParentNotebook.tab(self.TabID, state=state)
 
@@ -5833,7 +5871,7 @@ class Slider(Element):
         if range != (None, None):
             self.TKScale.config(from_=range[0], to_=range[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def _SliderChangedHandler(self, event):
         """
@@ -6189,7 +6227,7 @@ class Column(Element):
             if self.ParentPanedWindow:
                 self.ParentPanedWindow.add(self.TKColFrame)
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def contents_changed(self):
         """
@@ -6287,7 +6325,7 @@ class Pane(Element):
         elif visible is True:
             self.PanedWindow.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -6638,7 +6676,7 @@ class Menu(Element):
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     set_focus = Element.SetFocus
     set_tooltip = Element.SetTooltip
@@ -6854,7 +6892,7 @@ class Table(Element):
                 else:
                     self.TKTreeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
     def _treeview_selected(self, event):
         """
@@ -7154,7 +7192,7 @@ class Tree(Element):
         elif visible is True:
             self.TKTreeview.pack(padx=self.pad_used[0], pady=self.pad_used[1])
         if visible is not None:
-            self.visible = visible
+            self._visible = visible
 
         return self
 
@@ -8780,7 +8818,7 @@ class Window:
                 self.TKrootDestroyed = True
                 self.XFound = True
             else:
-                self.LastButtonClicked = '-WINDOW CLOSE ATTEMPTED-'
+                self.LastButtonClicked = WINDOW_CLOSE_ATTEMPTED_EVENT
         elif Window._root_running_mainloop == Window.hidden_master_root:
             _exit_mainloop(self)
         else:
@@ -8788,7 +8826,7 @@ class Window:
                 self.TKroot.destroy()   # destroy this window
                 self.XFound = True
             else:
-                self.LastButtonClicked = '-WINDOW CLOSE ATTEMPTED-'
+                self.LastButtonClicked = WINDOW_CLOSE_ATTEMPTED_EVENT
         if self.close_destroys_window:
             self.RootNeedsDestroying = True
 
@@ -8863,7 +8901,8 @@ class Window:
     def AlphaChannel(self):
         """
         A property that changes the current alpha channel value (internal value)
-        :return: (float) the current alpha channel setting according to self, not read directly from tkinter
+        :return: the current alpha channel setting according to self, not read directly from tkinter
+        :rtype: (float)
         """
         return self._AlphaChannel
 
@@ -9277,7 +9316,8 @@ class Window:
 
         :param key: The key to find
         :type key: str | int | tuple | object""
-        :rtype: Element |"""
+        :rtype: Element | None
+        """
 
         return self.FindElement(key)
 
@@ -11291,14 +11331,6 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
             AddToReturnList(form, value)
             form.ReturnValuesDictionary[event] = value
 
-    # This is SO dodgy.... if the Titlebar element's X was clicked, act like the real window was closed
-    # if not initialize_only and event == TITLEBAR_CLOSE_KEY and form == top_level_form:
-    #     form._OnClosingCallback()
-    #     if form.close_destroys_window:
-    #         event = WINDOW_CLOSED
-    #     else:
-    #         event = WINDOW_CLOSE_ATTEMPTED_EVENT
-
     if not form.UseDictionary:
         form.ReturnValues = event, form.ReturnValuesList
     else:
@@ -13253,19 +13285,6 @@ def _convert_window_to_tk(window):
     master = window.TKroot
     master.title(window.Title)
     InitializeResults(window)
-    # try:
-    #     if window.NoTitleBar:
-    #         if sys.platform == 'linux':
-    #             window.TKroot.wm_attributes("-type", "splash")
-    #         else:
-    #             window.TKroot.wm_overrideredirect(True)
-    #             # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
-    #             if sys.platform.startswith('darwin') and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
-    #                 print('* Applying Mac no_titlebar patch *')
-    #                 window.TKroot.wm_overrideredirect(False)
-    # except:
-    #     print('** Problem setting no titlebar **')
-    #     pass
 
     PackFormIntoFrame(window, master, window)
 
@@ -17915,14 +17934,14 @@ def _copy_files_from_github(files, github_url=None):
 
     """
 
-    class ReturnInfo:
+    class _ReturnInfo:
         src = ""
         package = ""
         new_files = ""
         path = ""
         version = ""
 
-    info = ReturnInfo()
+    info = _ReturnInfo()
     info.src = files[0]
     info.package = path_stem(files[0])
 
@@ -17959,7 +17978,7 @@ def _copy_files_from_github(files, github_url=None):
         page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
         if version != "unknown":
             page_contents["__init__.py"] += ("from ." + info.package + " import __version__\n").encode()
-    if sys.platform.startswith("linux") or (sys.platform == "ios"):
+    if _running_linux() or _running_mac():
         dir_search = sys.path
     else:
         dir_search = site.getsitepackages()
@@ -17971,7 +17990,7 @@ def _copy_files_from_github(files, github_url=None):
     else:
         raise ModuleNotFoundError("Unable to find site-packages folder!")
 
-    path = str(sitepackages_path) + "\\" + str(info.package)
+    path = os.path.join(str(sitepackages_path), str(info.package))
     info.path = str(path)
 
     if (os.path.isfile(path)):
@@ -17981,10 +18000,10 @@ def _copy_files_from_github(files, github_url=None):
         os.mkdir(path)
 
     for file, contents in page_contents.items():
-        with open(str(path) + "/" + str(file), "wb") as f:
+        with open(os.path.join(str(path), str(file)), "wb") as f:
             f.write(contents)
 
-    if (sys.platform == "ios"):
+    if _running_mac():
         pypi_packages = str(sitepackages_path) + "/.pypi_packages"
         config = configparser.ConfigParser()
         config.read(pypi_packages)
@@ -18433,7 +18452,7 @@ test = main
 theme(CURRENT_LOOK_AND_FEEL)
 
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
-if len(os.environ) == 1:
+if _running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
 if tclversion_detailed.startswith('8.5'):
