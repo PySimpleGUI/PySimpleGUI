@@ -14829,8 +14829,8 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
 
     def sample_layout():
         return [[Text('Text element'), InputText('Input data here', size=(10, 1))],
-                [Button('Ok'), Button('Disabled', disabled=True), Slider((1, 10), orientation='h', size=(5, 15))]]
-
+                [Button('Ok',key=theme), Button('Disabled', disabled=True), Slider((1, 10), orientation='h', size=(5, 15))]]
+                # Make Ok button return the theme name in the key
 
     names = list_of_look_and_feel_values()
     names.sort()
@@ -14859,7 +14859,11 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     window = Window('Preview of Themes', layout, background_color=win_bg, resizable=True, location=location, keep_on_top=True, finalize=True, modal=True)
     window['-COL-'].expand(True, True, True)    # needed so that col will expand with the window
     window.read(close=True)
-    theme(current_theme)
+    # *******Max added on 12/29/20 ****
+    # theme(current_theme)
+    theme_name, values = window.read()  # get the theme name from event of clicking Ok button
+    change_look_and_feel(theme_name)    # and apply it
+
 
 
 preview_all_look_and_feel_themes = theme_previewer
