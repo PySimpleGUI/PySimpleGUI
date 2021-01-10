@@ -23,14 +23,14 @@ while True:     # Event Loop
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
     font_string = 'Helvitica '
-    font_string += str(values['-slider-'])
+    font_string += str(int(values['-slider-']))
     if values['-bold-']:
         font_string += ' bold'
     if values['-italics-']:
         font_string += ' italic'
     if values['-underline-']:
         font_string += ' underline'
-    text_elem.update(font=int(font_string.split(' ')[1].split('.')[0]))
+    text_elem.update(font=font_string)
     window['-fontstring-'].update('"'+font_string+'"')
     print(event, values)
 
