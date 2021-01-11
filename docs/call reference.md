@@ -103,7 +103,7 @@ Returns the current text shown on a button
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The text currently displayed on the button         |
+|(str)| **return** | The text currently displayed on the button |
 
 ### SetFocus
 
@@ -214,7 +214,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### get_text
 
@@ -224,7 +224,7 @@ Returns the current text shown on a button
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The text currently displayed on the button         |
+|(str)| **return** | The text currently displayed on the button |
 
 ### hide_row
 
@@ -368,7 +368,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## ButtonMenu Element 
 
@@ -522,7 +522,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -651,7 +651,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Canvas Element 
 
@@ -721,7 +721,7 @@ Returns the underlying tkiner Canvas widget
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | The tkinter canvas widget         |
+|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### bind
 
@@ -765,7 +765,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -841,7 +841,7 @@ Returns the underlying tkiner Canvas widget
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The tkinter canvas widget         |
+|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### unbind
 
@@ -875,7 +875,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Checkbox Element 
 
@@ -929,7 +929,7 @@ Return the current state of this checkbox
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Current state of checkbox         |
+|(bool)| **return** | Current state of checkbox |
 
 ### SetFocus
 
@@ -1026,7 +1026,7 @@ Return the current state of this checkbox
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Current state of checkbox         |
+|(bool)| **return** | Current state of checkbox |
 
 ### get_size
 
@@ -1036,7 +1036,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -1161,7 +1161,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Column Element 
 
@@ -1336,7 +1336,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -1479,7 +1479,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Combo Element 
 
@@ -1536,7 +1536,7 @@ You should be using values from your call to window.Read instead.  Know what you
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Returns the value of what is currently chosen         |
+|Any | None| **return** | Returns the value of what is currently chosen |
 
 ### SetFocus
 
@@ -1638,7 +1638,7 @@ You should be using values from your call to window.Read instead.  Know what you
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Returns the value of what is currently chosen         |
+|Any | None| **return** | Returns the value of what is currently chosen |
 
 ### get_size
 
@@ -1648,7 +1648,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -1777,7 +1777,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Frame Element 
 
@@ -1955,7 +1955,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -2085,7 +2085,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Graph Element 
 
@@ -2509,7 +2509,7 @@ Returns the underlying tkiner Canvas widget
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The tkinter canvas widget         |
+|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### Update
 
@@ -2852,7 +2852,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -2994,7 +2994,7 @@ Returns the underlying tkiner Canvas widget
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The tkinter canvas widget         |
+|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### unbind
 
@@ -3043,7 +3043,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## HorizontalSeparator Element 
 
@@ -3135,7 +3135,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -3235,7 +3235,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Image Element 
 
@@ -3381,7 +3381,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -3535,7 +3535,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Input Element 
 
@@ -3605,7 +3605,7 @@ Read and return the current value of the input element. Must call `Window.Read` 
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | current value of Input field or '' if error encountered         |
+|(str)| **return** | current value of Input field or '' if error encountered |
 
 ### SetFocus
 
@@ -3703,7 +3703,7 @@ Read and return the current value of the input element. Must call `Window.Read` 
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | current value of Input field or '' if error encountered         |
+|(str)| **return** | current value of Input field or '' if error encountered |
 
 ### get_size
 
@@ -3713,7 +3713,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -3853,7 +3853,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Listbox Element 
 
@@ -3916,7 +3916,7 @@ Returns the items currently selected as a list of indexes
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | A list of offsets into values that is currently selected         |
+|List[int]| **return** | A list of offsets into values that is currently selected |
 
 ### GetListValues
 
@@ -3926,7 +3926,7 @@ Returns list of Values provided by the user in the user's format
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | List of values. Can be any / mixed types -> []         |
+|List[Any]| **return** | List of values. Can be any / mixed types -> [] |
 
 ### SetFocus
 
@@ -4037,7 +4037,7 @@ to the value you would receive when performing a window.read() call.
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The list of currently selected items. The actual items are returned, not the indexes         |
+|List[Any]| **return** | The list of currently selected items. The actual items are returned, not the indexes |
 
 ### get_indexes
 
@@ -4047,7 +4047,7 @@ Returns the items currently selected as a list of indexes
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | A list of offsets into values that is currently selected         |
+|List[int]| **return** | A list of offsets into values that is currently selected |
 
 ### get_list_values
 
@@ -4057,7 +4057,7 @@ Returns list of Values provided by the user in the user's format
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | List of values. Can be any / mixed types -> []         |
+|List[Any]| **return** | List of values. Can be any / mixed types -> [] |
 
 ### get_size
 
@@ -4067,7 +4067,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -4219,7 +4219,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Menu Element 
 
@@ -4355,7 +4355,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -4470,7 +4470,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Multiline Element 
 
@@ -4550,7 +4550,7 @@ Return current contents of the Multiline Element
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | current contents of the Multiline Element (used as an input type of Multiline         |
+|(str)| **return** | current contents of the Multiline Element (used as an input type of Multiline |
 
 ### SetFocus
 
@@ -4656,7 +4656,7 @@ Return current contents of the Multiline Element
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | current contents of the Multiline Element (used as an input type of Multiline         |
+|(str)| **return** | current contents of the Multiline Element (used as an input type of Multiline |
 
 ### get_size
 
@@ -4666,7 +4666,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -4870,7 +4870,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## OptionMenu Element 
 
@@ -5003,7 +5003,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -5137,7 +5137,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Output Element 
 
@@ -5183,7 +5183,7 @@ Returns the current contents of the output.  Similar to Get method other Element
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | the current value of the output         |
+|(str)| **return** | the current value of the output |
 
 ### SetFocus
 
@@ -5221,7 +5221,7 @@ Returns the TKOutput object used to create the element
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The TKOutput object         |
+|(TKOutput)| **return** | The TKOutput object |
 
 ### Update
 
@@ -5279,7 +5279,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -5355,7 +5355,7 @@ Returns the TKOutput object used to create the element
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The TKOutput object         |
+|(TKOutput)| **return** | The TKOutput object |
 
 ### set_vscroll_position
 
@@ -5418,7 +5418,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Pane Element 
 
@@ -5542,7 +5542,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -5656,7 +5656,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## ProgressBar Element 
 
@@ -5802,7 +5802,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -5938,7 +5938,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Radio Element 
 
@@ -5995,7 +5995,7 @@ A snapshot of the value of Radio Button -> (bool)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | True if this radio button is selected         |
+|(bool)| **return** | True if this radio button is selected |
 
 ### ResetGroup
 
@@ -6099,7 +6099,7 @@ A snapshot of the value of Radio Button -> (bool)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | True if this radio button is selected         |
+|(bool)| **return** | True if this radio button is selected |
 
 ### get_size
 
@@ -6109,7 +6109,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -6241,7 +6241,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Slider Element 
 
@@ -6387,7 +6387,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -6507,7 +6507,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Spin Element 
 
@@ -6565,7 +6565,7 @@ item returned will be an int (not a string)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The currently visible entry         |
+|(Any)| **return** | The currently visible entry |
 
 ### SetFocus
 
@@ -6664,7 +6664,7 @@ item returned will be an int (not a string)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The currently visible entry         |
+|(Any)| **return** | The currently visible entry |
 
 ### get_size
 
@@ -6674,7 +6674,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -6799,7 +6799,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## StatusBar Element 
 
@@ -6939,7 +6939,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -7061,7 +7061,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Tab Element 
 
@@ -7244,7 +7244,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -7384,7 +7384,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## TabGroup Element 
 
@@ -7460,7 +7460,7 @@ are using this method correctly?
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The key of the currently selected tab or the tab's text if it has no key         |
+|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
 
 ### SetFocus
 
@@ -7550,7 +7550,7 @@ are using this method correctly?
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The key of the currently selected tab or the tab's text if it has no key         |
+|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
 
 ### get_size
 
@@ -7560,7 +7560,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -7674,7 +7674,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Table Element 
 
@@ -7764,7 +7764,7 @@ user when Table was created or Updated.
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | the current table values (for now what was originally provided up updated)         |
+|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
 
 ### SetFocus
 
@@ -7862,7 +7862,7 @@ user when Table was created or Updated.
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | the current table values (for now what was originally provided up updated)         |
+|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
 
 ### get_size
 
@@ -7872,7 +7872,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -7996,7 +7996,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Text Element 
 
@@ -8056,7 +8056,7 @@ Gets the current value of the displayed text
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The current value         |
+|(str)| **return** | The current value |
 
 ### SetFocus
 
@@ -8150,7 +8150,7 @@ Gets the current value of the displayed text
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The current value         |
+|(str)| **return** | The current value |
 
 ### get_size
 
@@ -8160,7 +8160,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -8282,7 +8282,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## Titlebar Element
 
@@ -8512,7 +8512,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -8650,7 +8650,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## TreeData (for Tree Element) 
 
@@ -8813,7 +8813,7 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | width and height of the element         |
+|Tuple[int, int]| **return** | width and height of the element |
 
 ### hide_row
 
@@ -8913,7 +8913,7 @@ To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
-| bool | **return** | Visibility state for element         |
+|(bool)| **return** | Visibility state for element |
 
 ## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
 
@@ -9012,7 +9012,7 @@ Note that you can display the dictionary in text format by printing the object i
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The current settings dictionary         |
+|Dict| **return** | The current settings dictionary |
 
 ### get_filename
 
@@ -9064,7 +9064,7 @@ Reads settings file and returns the dictionary.
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | settings dictionary         |
+|(dict)| **return** | settings dictionary |
 
 ### save
 
@@ -9285,7 +9285,7 @@ A property that changes the current alpha channel value (internal value)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
+|(float)| **return** | the current alpha channel setting according to self, not read directly from tkinter |
 
 ### BringToFront
 
@@ -9313,7 +9313,7 @@ Get the current location of the window's top left corner
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The x and y location in tuple form (x,y)         |
+|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
 
 ### Disable
 
@@ -9448,7 +9448,7 @@ Lots of action!
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)         |
+|(Window)| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
 
 ### Find
 
@@ -9524,7 +9524,7 @@ Returns the Element that currently has focus as reported by tkinter. If no eleme
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | An Element if one has been found with focus or None if no element found         |
+|Element | None| **return** | An Element if one has been found with focus or None if no element found |
 
 ### GetScreenDimensions
 
@@ -9534,7 +9534,7 @@ Get the screen dimensions.  NOTE - you must have a window already open for this 
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Tuple containing width and height of screen in pixels         |
+|Tuple[None, None] | Tuple[width, height]| **return** | Tuple containing width and height of screen in pixels |
 
 ### GrabAnyWhereOff
 
@@ -9674,7 +9674,7 @@ Without this call your changes to a Window will not be visible to the user until
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | `self` so that method calls can be easily "chained"         |
+|(Window)| **return** | `self` so that method calls can be easily "chained" |
 
 ### SaveToDisk
 
@@ -9755,7 +9755,7 @@ Return the current size of the window in pixels
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | (width, height) of the window         |
+|Tuple[(int), (int)] or Tuple[None, None]| **return** | (width, height) of the window |
 
 ### UnHide
 
@@ -9808,7 +9808,7 @@ A property that changes the current alpha channel value (internal value)
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | (float) the current alpha channel setting according to self, not read directly from tkinter |
+|(float)| **return** | the current alpha channel setting according to self, not read directly from tkinter |
 
 ### bind
 
@@ -9852,7 +9852,7 @@ Get the current location of the window's top left corner
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | The x and y location in tuple form (x,y)         |
+|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
 
 ### disable
 
@@ -9954,7 +9954,7 @@ Returns a list of all elements in the window
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | List of all elements in the window and container elements in the window         |
+|List[Element]| **return** | List of all elements in the window and container elements in the window |
 
 ### enable
 
@@ -10013,7 +10013,7 @@ Lots of action!
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!)         |
+|(Window)| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
 
 ### find
 
@@ -10089,7 +10089,7 @@ Returns the Element that currently has focus as reported by tkinter. If no eleme
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | An Element if one has been found with focus or None if no element found         |
+|Element | None| **return** | An Element if one has been found with focus or None if no element found |
 
 ### force_focus
 
@@ -10107,7 +10107,7 @@ Get the screen dimensions.  NOTE - you must have a window already open for this 
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | Tuple containing width and height of screen in pixels         |
+|Tuple[None, None] | Tuple[width, height]| **return** | Tuple containing width and height of screen in pixels |
 
 ### get_screen_size
 
@@ -10271,7 +10271,7 @@ Without this call your changes to a Window will not be visible to the user until
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | `self` so that method calls can be easily "chained"         |
+|(Window)| **return** | `self` so that method calls can be easily "chained" |
 
 ### save_to_disk
 
@@ -10309,6 +10309,20 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | float | alpha | 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through) |
+
+### set_cursor
+
+Sets the cursor for the window.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
 
 ### set_icon
 
@@ -10380,7 +10394,7 @@ Return the current size of the window in pixels
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | (width, height) of the window         |
+|Tuple[(int), (int)] or Tuple[None, None]| **return** | (width, height) of the window |
 
 ### un_hide
 
@@ -10407,7 +10421,7 @@ Returns True if the window was closed
 
 |Type|Name|Meaning|
 |---|---|---|
-|<type>| **return** | True if the window is closed         |
+|bool| **return** | True if the window is closed |
 
 ### write_event_value
 
