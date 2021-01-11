@@ -5346,6 +5346,46 @@ You'll find the pattern - `window.Element(key)` in older code.  All of code afte
 
 Note that to change a progress meter's progress, you call `update_bar`, not `update`.  A change to this is being considered for a future release.
 
+# Cursors - Setting for Elements and Windows
+
+It is possible to change the normal arrow cursor into something else by setting the cursor for an element or the entire window.  The result will be the cursor changing when you move the mouse over the elements or Window.
+
+One of the best examples is URLs.  Users are accustomed to seeing a hand cursor when the mouse is moved over a link.  By setting the cursor to a hand for a Text element that has text that is in the format of a URL, it signals to the user that it's a link that can be clicked.
+
+The `set_cursor` method is used to set the cursor for an element.  Perform an element look-up or use a variable containing an element, and call the `set_cursor` method, passing in a string that selects the cursor.  The valid cursor names are documented in the tkinter docs as this call maps directly to a tkinter call.  
+
+These cursor strings were obtained from the Tk manual and are what you pass into the `set_cursor` methods.
+
+## Windows Level Cursor
+
+You can also set the cursor for the Window as a whole, including the margins and areas elements don't directly fill.  Call `Window.set_cursor()` to set the cursor at the Window level.
+
+## Valid Cursor Strings
+
+ `X_cursor, arrow, based_arrow_down, based_arrow_up, boat, bogosity, bottom_left_corner, bottom_right_corner, bottom_side, bottom_tee, box_spiral, center_ptr, circle, clock, coffee_mug, cross, cross_reverse, crosshair, diamond_cross, dot, dotbox, double_arrow, draft_large, draft_small, draped_box, exchange, fleur, gobbler, gumby, hand1, hand2, heart, icon, iron_cross, left_ptr, left_side, left_tee, leftbutton, ll_angle, lr_angle, man, middlebutton, mouse, pencil, pirate, plus, question_arrow, right_ptr, right_side, right_tee, rightbutton, rtl_logo, sailboat, sb_down_arrow, sb_h_double_arrow, sb_left_arrow, sb_right_arrow, sb_up_arrow, sb_v_double_arrow, shuttle, sizing, spider, spraycan, star, target, tcross, top_left_arrow, top_left_corner, top_right_corner, top_side, top_tee, trek, ul_angle, umbrella, ur_angle, watch, xterm`
+
+## No Cursor
+
+To specify no cursor should be shown, the cursor `'no'` can be used on some platforms
+
+## Windows OS Specific
+
+One windows, these cursors map to native Windows cursors:
+
+`arrow, center_ptr, crosshair, fleur, ibeam, icon, sb_h_double_arrow, sb_v_double_arrow, watch, xterm`
+
+And these are also available:
+
+`no, starting, size, size_ne_sw, size_ns, size_nw_se, size_we, uparrow, wait`
+
+## Mac OS Specific
+
+`arrow, cross, crosshair, ibeam, plus, watch, xterm`
+
+And these additional native cursors are available for the Mac
+
+`copyarrow, aliasarrow, contextualmenuarrow, text, cross-hair, closedhand, openhand, pointinghand, resizeleft, resizeright, resizeleftright, resizeup, resizedown, resizeupdown, none, notallowed, poof, countinguphand, countingdownhand, countingupanddownhand, spinning`
+
 # Keyboard & Mouse Capture
 
 NOTE - keyboard capture is currently formatted uniquely among the ports. For basic letters and numbers there is no great differences, but when you start adding Shift and Control or special keyus, they all behave slightly differently.  Your best bet is to simply print what is being returned to you to determine what the format for the particular port is.
