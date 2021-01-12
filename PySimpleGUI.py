@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0 Released 02-Jan-2021"
+version = __version__ = "4.33.0.1 Unreleased\nAliases shown SDK reference"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -9188,6 +9188,7 @@ class Window:
         :param cursor: The tkinter cursor name
         :type cursor: (str)
         """
+
         if not self._is_window_created():
             return
         try:
@@ -18126,6 +18127,8 @@ def main_sdk_help():
     element_names = {element.__name__: element for element in element_classes}
     element_names['Window'] = Window
 
+    vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
+
     layout = [[Text('PySimpleGUI Element Reference', font='Any 20')]]
     button_col = Col([[B(e, pad=(0, 0), size=(15, 1))] for e in sorted(element_names.keys())])
     layout += [vtop([button_col, Multiline(size=(120, 50), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 9')])]
@@ -18141,6 +18144,11 @@ def main_sdk_help():
             elem = element_names[event]
             window['-ML-'].update('')
             print(help(elem))
+            # print the aliases for the class
+            print('\n--- Shortcut Aliases for Class ---')
+            for v in vars3:
+                if elem == v[1] and elem.__name__ != v[0]:
+                    print(v[0])
     window.close()
 
 
