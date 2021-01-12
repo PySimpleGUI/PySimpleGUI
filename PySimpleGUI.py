@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0.1 Unreleased\nAliases shown SDK reference"
+version = __version__ = "4.33.0.2 Unreleased\nAliases shown SDK reference, popup_scrolled fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -15378,7 +15378,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
                     button('OK', size=(5, 1), button_color=button_color)]]
 
 
-    window = Window(title=title or args[0], auto_size_text=True, button_color=button_color, auto_close=auto_close,
+    window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal)
 
