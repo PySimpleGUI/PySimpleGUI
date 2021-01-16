@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0.2 Unreleased\nAliases shown SDK reference, popup_scrolled fix"
+version = __version__ = "4.33.0.3 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -18129,26 +18129,45 @@ def main_sdk_help():
 
     vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
 
-    layout = [[Text('PySimpleGUI Element Reference', font='Any 20')]]
-    button_col = Col([[B(e, pad=(0, 0), size=(15, 1))] for e in sorted(element_names.keys())])
-    layout += [vtop([button_col, Multiline(size=(120, 50), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 9')])]
-    layout += [[Button('Exit', size=(15, 1))]]
+    # layout = [[Text('PySimpleGUI Element Reference', font='Any 12')]]
+    button_col = Col([[B(e, pad=(0, 0), size=(22, 1), font='Courier 8')] for e in sorted(element_names.keys())])
+    layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
+    layout += [[CBox('Summary Only', k='-SUMMARY-')]]
+    # layout += [[Button('Exit', size=(15, 1))]]
 
-    window = Window('PySimpleGUI Reference', layout, use_default_focus=False, keep_on_top=True)
-
+    window = Window('PySimpleGUI API Call Reference', layout, use_default_focus=False, keep_on_top=True)
+    ml = window['-ML-']
     while True:  # Event Loop
         event, values = window.read()
-        if event == WIN_CLOSED or event == 'Exit':
+        if event in (WIN_CLOSED, 'Exit'):
             break
         if event in element_names.keys():
-            elem = element_names[event]
             window['-ML-'].update('')
-            print(help(elem))
-            # print the aliases for the class
-            print('\n--- Shortcut Aliases for Class ---')
-            for v in vars3:
-                if elem == v[1] and elem.__name__ != v[0]:
-                    print(v[0])
+            if not values['-SUMMARY-']:
+                elem = element_names[event]
+                print(help(elem))
+                # print the aliases for the class
+                print('\n--- Shortcut Aliases for Class ---')
+                for v in vars3:
+                    if elem == v[1] and elem.__name__ != v[0]:
+                        print(v[0])
+            else:
+                elem = element_names[event]
+                element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
+                methods = inspect.getmembers(elem, inspect.isfunction)
+                methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
+
+                unique_methods = [m for m in methods if m not in element_methods and not m[0][0].isupper()]
+
+                properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
+                properties = [p[0] for p in properties if not p[0].startswith('_')]
+                ml.print('Methods', background_color='red', text_color='white')
+                ml.print('\n'.join(methods))
+                ml.print('Properties', background_color='red', text_color='white')
+                ml.print('\n'.join(properties))
+                if issubclass(elem, Element):
+                    ml.print('Methods Unique to This Element', background_color='red', text_color='white')
+                    ml.print('\n'.join(unique_methods))
     window.close()
 
 
