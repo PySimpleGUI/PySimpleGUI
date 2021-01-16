@@ -16,6 +16,8 @@ This section of the documentation is generated directly from the source code.  A
 
 Here are all of the Elements, the Window & SystemTray classes, and all functions
 
+---------
+
 ## Button Element 
 
     Button Element - Defines all possible buttons. The shortcuts such as Submit, FileBrowse, ... each create a Button
@@ -85,83 +87,6 @@ Parameter Descriptions:
 |                      str or int or tuple or object                       |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   bool                                   |        visible        | set visibility state of the element |
 |                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
-
-### Click
-
-Generates a click of the button as if the user clicked the button
-        Calls the tkinter invoke method for the button
-
-```python
-Click()
-```
-
-### GetText
-
-Returns the current text shown on a button
-
-`GetText()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(str)| **return** | The text currently displayed on the button |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(text = None,
-    button_color = (None, None),
-    disabled = None,
-    image_data = None,
-    image_filename = None,
-    visible = None,
-    image_subsample = None,
-    disabled_button_color = (None, None),
-    image_size = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|           str            |         text          | sets button text |
-| Tuple[str, str] or (str) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|           bool           |       disabled        | disable or enable state of the element |
-|       bytes or str       |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|           str            |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|     Tuple[str, str]      | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|           bool           |        visible        | control visibility of element |
-|           int            |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|        (int, int)        |      image_size       | Size of the image in pixels (width, height) |
 
 ### bind
 
@@ -370,6 +295,91 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Click
+
+Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+
+```python
+Click()
+```
+
+### GetText
+
+Returns the current text shown on a button
+
+`GetText()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(str)| **return** | The text currently displayed on the button |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(text = None,
+    button_color = (None, None),
+    disabled = None,
+    image_data = None,
+    image_filename = None,
+    visible = None,
+    image_subsample = None,
+    disabled_button_color = (None, None),
+    image_size = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|           str            |         text          | sets button text |
+| Tuple[str, str] or (str) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|           bool           |       disabled        | disable or enable state of the element |
+|       bytes or str       |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|           str            |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|     Tuple[str, str]      | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|           bool           |        visible        | control visibility of element |
+|           int            |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|        (int, int)        |      image_size       | Size of the image in pixels (width, height) |
+
+---------
+
 ## ButtonMenu Element 
 
     The Button Menu Element.  Creates a button that when clicked will show a menu similar to right click menu
@@ -427,58 +437,6 @@ Parameter Descriptions:
 |                                   bool                                   |       tearoff       | Determines if menus should allow them to be torn off |
 |                                   bool                                   |       visible       | set visibility state of the element |
 |                                   Any                                    |      metadata       | User metadata that can be set to ANYTHING |
-
-### Click
-
-Generates a click of the button as if the user clicked the button
-        Calls the tkinter invoke method for the button
-
-```python
-Click()
-```
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(menu_definition, visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List] | menu_definition | (New menu definition (in menu definition format) |
-|    bool    |     visible     | control visibility of element |
 
 ### bind
 
@@ -653,6 +611,66 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Click
+
+Generates a click of the button as if the user clicked the button
+        Calls the tkinter invoke method for the button
+
+```python
+Click()
+```
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(menu_definition, visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List] | menu_definition | (New menu definition (in menu definition format) |
+|    bool    |     visible     | control visibility of element |
+
+---------
+
 ## Canvas Element 
 
 ```
@@ -684,44 +702,6 @@ Parameter Descriptions:
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   int                                    |   border_width   | width of border around element in pixels. Not normally used with Canvas element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### TKCanvas
-
-#### property: TKCanvas
-
-Returns the underlying tkiner Canvas widget
-
-|Type|Name|Meaning|
-|---|---|---|
-|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### bind
 
@@ -877,6 +857,52 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### TKCanvas
+
+#### property: TKCanvas
+
+Returns the underlying tkiner Canvas widget
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tk.Canvas)| **return** | The tkinter canvas widget |
+
+---------
+
 ## Checkbox Element 
 
     Checkbox Element - Displays a checkbox and text next to it
@@ -920,69 +946,6 @@ Parameter Descriptions:
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### Get
-
-Return the current state of this checkbox
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(bool)| **return** | Current state of checkbox |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
-Note that changing visibility may cause element to change locations when made visible after invisible
-
-```
-Update(value = None,
-    text = None,
-    background_color = None,
-    text_color = None,
-    disabled = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool |      value       | if True checks the checkbox, False clears it |
-| str  |       text       | Text to display next to checkbox |
-| str  | background_color | color of background |
-| str  |    text_color    | color of the text. Note this also changes the color of the checkmark |
-| bool |     disabled     | disable or enable element |
-| bool |     visible      | control visibility of element |
 
 ### bind
 
@@ -1163,6 +1126,77 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Return the current state of this checkbox
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(bool)| **return** | Current state of checkbox |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
+Note that changing visibility may cause element to change locations when made visible after invisible
+
+```
+Update(value = None,
+    text = None,
+    background_color = None,
+    text_color = None,
+    disabled = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |      value       | if True checks the checkbox, False clears it |
+| str  |       text       | Text to display next to checkbox |
+| str  | background_color | color of background |
+| str  |    text_color    | color of the text. Note this also changes the color of the checkmark |
+| bool |     disabled     | disable or enable element |
+| bool |     visible      | control visibility of element |
+
+---------
+
 ## Column Element 
 
     A container element that is used to create a layout within your window's layout
@@ -1208,77 +1242,6 @@ Parameter Descriptions:
 |                                   bool                                   |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
 |                                   bool                                   |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
 |                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
-
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Column Element.
-
-```
-AddRow(args=*<1 or N object>)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[Element] | *args | The list of elements for this row |
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Element]] | rows | The rows of Elements |
-| (Column) | **RETURN** | Used for chaining
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | visible | control visibility of element |
 
 ### add_row
 
@@ -1481,6 +1444,85 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### AddRow
+
+Not recommended user call.  Used to add rows of Elements to the Column Element.
+
+```
+AddRow(args=*<1 or N object>)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[Element] | *args | The list of elements for this row |
+
+### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Element]] | rows | The rows of Elements |
+| (Column) | **RETURN** | Used for chaining
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | visible | control visibility of element |
+
+---------
+
 ## Combo Element 
 
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
@@ -1526,74 +1568,6 @@ Parameter Descriptions:
 |                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### Get
-
-Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
-You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Any | None| **return** | Returns the value of what is currently chosen |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
-Note that the state can be in 3 states only.... enabled, disabled, readonly even
-though more combinations are available. The easy way to remember is that if you
-change the readonly parameter then you are enabling the element.
-
-```
-Update(value = None,
-    values = None,
-    set_to_index = None,
-    disabled = None,
-    readonly = None,
-    font = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any          |    value     | change which value is current selected based on new list of previous list of choices |
-|       List[Any]       |    values    | change list of choices |
-|          int          | set_to_index | change selection to a particular choice starting with index = 0 |
-|         bool          |   disabled   | disable or enable state of the element |
-|         bool          |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
-| str or Tuple[str, int] |     font     | specifies the font family, size, etc |
-|         bool          |   visible    | control visibility of element |
 
 ### bind
 
@@ -1779,6 +1753,82 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
+You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Any | None| **return** | Returns the value of what is currently chosen |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
+
+```
+Update(value = None,
+    values = None,
+    set_to_index = None,
+    disabled = None,
+    readonly = None,
+    font = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any          |    value     | change which value is current selected based on new list of previous list of choices |
+|       List[Any]       |    values    | change list of choices |
+|          int          | set_to_index | change selection to a particular choice starting with index = 0 |
+|         bool          |   disabled   | disable or enable state of the element |
+|         bool          |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+| str or Tuple[str, int] |     font     | specifies the font family, size, etc |
+|         bool          |   visible    | control visibility of element |
+
+---------
+
 ## Frame Element 
 
     A Frame Element that contains other Elements. Encloses with a line around elements and a text label.
@@ -1826,78 +1876,6 @@ Parameter Descriptions:
 |                                   str                                    | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
 |                                   str                                    |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
 |                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
-
-### AddRow
-
-Not recommended user call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args=*<1 or N object>)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[Element] | *args | The list of elements for this row |
-
-### Layout
-
-Can use like the Window.Layout method, but it's better to use the layout parameter when creating
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Element]] | rows | The rows of Elements |
-| (Frame) | **RETURN** | Used for chaining
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None, visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any  |  value  | New text value to show on frame |
-| bool | visible | control visibility of element |
 
 ### add_row
 
@@ -2087,6 +2065,86 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### AddRow
+
+Not recommended user call.  Used to add rows of Elements to the Frame Element.
+
+```
+AddRow(args=*<1 or N object>)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[Element] | *args | The list of elements for this row |
+
+### Layout
+
+Can use like the Window.Layout method, but it's better to use the layout parameter when creating
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Element]] | rows | The rows of Elements |
+| (Frame) | **RETURN** | Used for chaining
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None, visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any  |  value  | New text value to show on frame |
+| bool | visible | control visibility of element |
+
+---------
+
 ## Graph Element 
 
     Creates an area for you to draw on.  The MAGICAL property this Element has is that you interact
@@ -2138,378 +2196,6 @@ Parameter Descriptions:
 |                                   bool                                   |   float_values    | If True x,y coordinates are returned as floats, not ints |
 |                                   int                                    |   border_width    | width of border around element in pixels. Not normally used for Graph Elements |
 |                                   Any                                    |     metadata      | User metadata that can be set to ANYTHING |
-
-### BringFigureToFront
-
-Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
-
-```
-BringFigureToFront(figure)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int | figure | value returned by tkinter when creating the figure / drawing |
-
-### DeleteFigure
-
-Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
-
-```
-DeleteFigure(id)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int | id | the id returned to you when calling one of the drawing methods |
-
-### DrawArc
-
-Draws different types of arcs.  Uses a "bounding box" to define location
-
-```
-DrawArc(top_left,
-    bottom_right,
-    extent,
-    start_angle,
-    style = None,
-    arc_color = "black",
-    line_width = 1,
-    fill_color = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of bounding rectangle |
-| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of bounding rectangle |
-|                 float                 |    extent    | Andle to end drawing. Used in conjunction with start_angle |
-|                 float                 | start_angle  | Angle to begin drawing. Used in conjunction with extent |
-|                  str                  |    style     | Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter' |
-|                  str                  |  arc_color   | color to draw arc with |
-|                  str                  |  fill_color  | color to fill the area |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the arc
-
-### DrawCircle
-
-Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
-
-```
-DrawCircle(center_location,
-    radius,
-    fill_color = None,
-    line_color = "black",
-    line_width = 1)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] | center_location | Center location using USER'S coordinate system |
-|             int or float              |     radius      | Radius in user's coordinate values. |
-|                  str                  |   fill_color    | color of the point to draw |
-|                  str                  |   line_color    | color of the outer line that goes around the circle (sorry, can't set thickness) |
-|                  int                  |   line_width    | width of the line around the circle, the outline, in pixels |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the circle
-
-### DrawImage
-
-Places an image onto your canvas.  It's a really important method for this element as it enables so much
-
-```
-DrawImage(filename = None,
-    data = None,
-    location = (None, None))
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                  str                  | filename | if image is in a file, path and filename for the image. (GIF and PNG only!) |
-|             str or bytes              |   data   | if image is in Base64 format or raw? format then use instead of filename |
-| Tuple[int, int] or Tuple[float, float] | location | the (x,y) location to place image's top left corner |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
-
-### DrawLine
-
-Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
-
-```
-DrawLine(point_from,
-    point_to,
-    color = "black",
-    width = 1)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] | point_from | Starting point for line |
-| Tuple[int, int] or Tuple[float, float] |  point_to  | Ending point for line |
-|                  str                  |   color    | Color of the line |
-|                  int                  |   width    | width of line in pixels |
-| int or None | **RETURN** | id returned from tktiner or None if user closed the window. id is used when you
-
-### DrawOval
-
-Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
-
-```
-DrawOval(top_left,
-    bottom_right,
-    fill_color = None,
-    line_color = None,
-    line_width = 1)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of bounding rectangle |
-| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of bounding rectangle |
-|                  str                  |  fill_color  | color of the interrior |
-|                  str                  |  line_color  | color of outline of oval |
-|                  int                  |  line_width  | width of the line around the oval, the outline, in pixels |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the oval
-
-### DrawPoint
-
-Draws a "dot" at the point you specify using the USER'S coordinate system
-
-```
-DrawPoint(point,
-    size = 2,
-    color = "black")
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] | point | Center location using USER'S coordinate system |
-|             int or float              | size  | Radius? (Or is it the diameter?) in user's coordinate values. |
-|                  str                  | color | color of the point to draw |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the point
-
-### DrawPolygon
-
-Draw a polygon given list of points
-
-```
-DrawPolygon(points,
-    fill_color = None,
-    line_color = None,
-    line_width = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[Tuple[int, int] or Tuple[float, float]] |   points   | list of points that define the polygon |
-|                     str                     | fill_color | color of the interior |
-|                     str                     | line_color | color of outline |
-|                     int                     | line_width | width of the line in pixels |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the rectangle
-
-### DrawRectangle
-
-Draw a rectangle given 2 points. Can control the line and fill colors
-
-```
-DrawRectangle(top_left,
-    bottom_right,
-    fill_color = None,
-    line_color = None,
-    line_width = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of rectangle |
-| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of rectangle |
-|                  str                  |  fill_color  | color of the interior |
-|                  str                  |  line_color  | color of outline |
-|                  int                  |  line_width  | width of the line in pixels |
-| int or None | **RETURN** | int | None id returned from tkinter that you'll need if you want to manipulate the rectangle
-
-### DrawText
-
-Draw some text on your graph.  This is how you label graph number lines for example
-
-```
-DrawText(text,
-    location,
-    color = "black",
-    font = None,
-    angle = 0,
-    text_location = "center")
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                  str                  |     text      | text to display |
-| Tuple[int, int] or Tuple[float, float] |   location    | location to place first letter |
-|                  str                  |     color     | text color |
-|        str or Tuple[str, int]         |     font      | specifies the font family, size, etc |
-|                 float                 |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
-|                 enum                  | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
-| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
-
-### Erase
-
-Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
-
-```python
-Erase()
-```
-
-### GetBoundingBox
-
-Given a figure, returns the upper left and lower right bounding box coordinates
-
-```
-GetBoundingBox(figure)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| object | figure | a previously drawing figure |
-| Tuple[int, int, int, int] or Tuple[float, float, float, float] | **RETURN** | upper left x, upper left y, lower right x, lower right y
-
-### GetFiguresAtLocation
-
-Returns a list of figures located at a particular x,y location within the Graph
-
-```
-GetFiguresAtLocation(location)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] or Tuple[float, float] | location | point to check |
-| List[int] | **RETURN** | a list of previously drawn "Figures" (returned from the drawing primitives)
-
-### Move
-
-Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
-
-```
-Move(x_direction, y_direction)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int or float | x_direction | how far to move in the "X" direction in your coordinates |
-| int or float | y_direction | how far to move in the "Y" direction in your coordinates |
-
-### MoveFigure
-
-Moves a previously drawn figure using a "delta" from current position
-
-```
-MoveFigure(figure,
-    x_direction,
-    y_direction)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|     id      |   figure    | Previously obtained figure-id. These are returned from all Draw methods |
-| int or float | x_direction | delta to apply to position in the X direction |
-| int or float | y_direction | delta to apply to position in the Y direction |
-
-### RelocateFigure
-
-Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
-uses absolute coordinates versus relative for Move
-
-```
-RelocateFigure(figure,
-    x,
-    y)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|     id      | figure | Previously obtained figure-id. These are returned from all Draw methods |
-| int or float |   x    | location on X axis (in user coords) to move the upper left corner of the figure |
-| int or float |   y    | location on Y axis (in user coords) to move the upper left corner of the figure |
-
-### SendFigureToBack
-
-Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
-
-```
-SendFigureToBack(figure)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int | figure | value returned by tkinter when creating the figure / drawing |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### TKCanvas
-
-#### property: TKCanvas
-
-Returns the underlying tkiner Canvas widget
-
-|Type|Name|Meaning|
-|---|---|---|
-|(tk.Canvas)| **return** | The tkinter canvas widget |
 
 ### Update
 
@@ -3045,25 +2731,345 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
-## HorizontalSeparator Element 
+---------
 
-    Horizontal Separator Element draws a Horizontal line at the given location.
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### BringFigureToFront
+
+Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
 ```
-HorizontalSeparator(color = None,
-    pad = None,
-    key = None,
-    k = None)
+BringFigureToFront(figure)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| int | figure | value returned by tkinter when creating the figure / drawing |
+
+### DeleteFigure
+
+Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
+
+```
+DeleteFigure(id)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | id | the id returned to you when calling one of the drawing methods |
+
+### DrawArc
+
+Draws different types of arcs.  Uses a "bounding box" to define location
+
+```
+DrawArc(top_left,
+    bottom_right,
+    extent,
+    start_angle,
+    style = None,
+    arc_color = "black",
+    line_width = 1,
+    fill_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of bounding rectangle |
+| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of bounding rectangle |
+|                 float                 |    extent    | Andle to end drawing. Used in conjunction with start_angle |
+|                 float                 | start_angle  | Angle to begin drawing. Used in conjunction with extent |
+|                  str                  |    style     | Valid choices are One of these Style strings- 'pieslice', 'chord', 'arc', 'first', 'last', 'butt', 'projecting', 'round', 'bevel', 'miter' |
+|                  str                  |  arc_color   | color to draw arc with |
+|                  str                  |  fill_color  | color to fill the area |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the arc
+
+### DrawCircle
+
+Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
+
+```
+DrawCircle(center_location,
+    radius,
+    fill_color = None,
+    line_color = "black",
+    line_width = 1)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] | center_location | Center location using USER'S coordinate system |
+|             int or float              |     radius      | Radius in user's coordinate values. |
+|                  str                  |   fill_color    | color of the point to draw |
+|                  str                  |   line_color    | color of the outer line that goes around the circle (sorry, can't set thickness) |
+|                  int                  |   line_width    | width of the line around the circle, the outline, in pixels |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the circle
+
+### DrawImage
+
+Places an image onto your canvas.  It's a really important method for this element as it enables so much
+
+```
+DrawImage(filename = None,
+    data = None,
+    location = (None, None))
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                  str                  | filename | if image is in a file, path and filename for the image. (GIF and PNG only!) |
+|             str or bytes              |   data   | if image is in Base64 format or raw? format then use instead of filename |
+| Tuple[int, int] or Tuple[float, float] | location | the (x,y) location to place image's top left corner |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the image
+
+### DrawLine
+
+Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
+
+```
+DrawLine(point_from,
+    point_to,
+    color = "black",
+    width = 1)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] | point_from | Starting point for line |
+| Tuple[int, int] or Tuple[float, float] |  point_to  | Ending point for line |
+|                  str                  |   color    | Color of the line |
+|                  int                  |   width    | width of line in pixels |
+| int or None | **RETURN** | id returned from tktiner or None if user closed the window. id is used when you
+
+### DrawOval
+
+Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
+
+```
+DrawOval(top_left,
+    bottom_right,
+    fill_color = None,
+    line_color = None,
+    line_width = 1)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of bounding rectangle |
+| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of bounding rectangle |
+|                  str                  |  fill_color  | color of the interrior |
+|                  str                  |  line_color  | color of outline of oval |
+|                  int                  |  line_width  | width of the line around the oval, the outline, in pixels |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the oval
+
+### DrawPoint
+
+Draws a "dot" at the point you specify using the USER'S coordinate system
+
+```
+DrawPoint(point,
+    size = 2,
+    color = "black")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] | point | Center location using USER'S coordinate system |
+|             int or float              | size  | Radius? (Or is it the diameter?) in user's coordinate values. |
+|                  str                  | color | color of the point to draw |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the point
+
+### DrawPolygon
+
+Draw a polygon given list of points
+
+```
+DrawPolygon(points,
+    fill_color = None,
+    line_color = None,
+    line_width = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[Tuple[int, int] or Tuple[float, float]] |   points   | list of points that define the polygon |
+|                     str                     | fill_color | color of the interior |
+|                     str                     | line_color | color of outline |
+|                     int                     | line_width | width of the line in pixels |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the rectangle
+
+### DrawRectangle
+
+Draw a rectangle given 2 points. Can control the line and fill colors
+
+```
+DrawRectangle(top_left,
+    bottom_right,
+    fill_color = None,
+    line_color = None,
+    line_width = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] |   top_left   | the top left point of rectangle |
+| Tuple[int, int] or Tuple[float, float] | bottom_right | the bottom right point of rectangle |
+|                  str                  |  fill_color  | color of the interior |
+|                  str                  |  line_color  | color of outline |
+|                  int                  |  line_width  | width of the line in pixels |
+| int or None | **RETURN** | int | None id returned from tkinter that you'll need if you want to manipulate the rectangle
+
+### DrawText
+
+Draw some text on your graph.  This is how you label graph number lines for example
+
+```
+DrawText(text,
+    location,
+    color = "black",
+    font = None,
+    angle = 0,
+    text_location = "center")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                  str                  |     text      | text to display |
+| Tuple[int, int] or Tuple[float, float] |   location    | location to place first letter |
+|                  str                  |     color     | text color |
+|        str or Tuple[str, int]         |     font      | specifies the font family, size, etc |
+|                 float                 |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
+|                 enum                  | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
+| int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
+
+### Erase
+
+Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
+
+```python
+Erase()
+```
+
+### GetBoundingBox
+
+Given a figure, returns the upper left and lower right bounding box coordinates
+
+```
+GetBoundingBox(figure)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| object | figure | a previously drawing figure |
+| Tuple[int, int, int, int] or Tuple[float, float, float, float] | **RETURN** | upper left x, upper left y, lower right x, lower right y
+
+### GetFiguresAtLocation
+
+Returns a list of figures located at a particular x,y location within the Graph
+
+```
+GetFiguresAtLocation(location)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] or Tuple[float, float] | location | point to check |
+| List[int] | **RETURN** | a list of previously drawn "Figures" (returned from the drawing primitives)
+
+### Move
+
+Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
+
+```
+Move(x_direction, y_direction)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int or float | x_direction | how far to move in the "X" direction in your coordinates |
+| int or float | y_direction | how far to move in the "Y" direction in your coordinates |
+
+### MoveFigure
+
+Moves a previously drawn figure using a "delta" from current position
+
+```
+MoveFigure(figure,
+    x_direction,
+    y_direction)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     id      |   figure    | Previously obtained figure-id. These are returned from all Draw methods |
+| int or float | x_direction | delta to apply to position in the X direction |
+| int or float | y_direction | delta to apply to position in the Y direction |
+
+### RelocateFigure
+
+Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
+uses absolute coordinates versus relative for Move
+
+```
+RelocateFigure(figure,
+    x,
+    y)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     id      | figure | Previously obtained figure-id. These are returned from all Draw methods |
+| int or float |   x    | location on X axis (in user coords) to move the upper left corner of the figure |
+| int or float |   y    | location on Y axis (in user coords) to move the upper left corner of the figure |
+
+### SendFigureToBack
+
+Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
+
+```
+SendFigureToBack(figure)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | figure | value returned by tkinter when creating the figure / drawing |
 
 ### SetFocus
 
@@ -3092,6 +3098,38 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | str | tooltip_text | the text to show in tooltip. |
+
+### TKCanvas
+
+#### property: TKCanvas
+
+Returns the underlying tkiner Canvas widget
+
+|Type|Name|Meaning|
+|---|---|---|
+|(tk.Canvas)| **return** | The tkinter canvas widget |
+
+---------
+
+## HorizontalSeparator Element 
+
+    Horizontal Separator Element draws a Horizontal line at the given location.
+
+```
+HorizontalSeparator(color = None,
+    pad = None,
+    key = None,
+    k = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                                   str                                    | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      str or int or tuple or object                       |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                      str or int or tuple or object                       |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### bind
 
@@ -3237,6 +3275,42 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+---------
+
 ## Image Element 
 
     Image Element - show an image in the window. Should be a GIF or a PNG only
@@ -3272,72 +3346,6 @@ Parameter Descriptions:
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   bool                                   |  enable_events   | Turns on the element specific events. For an Image element, the event is "image clicked" |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
-To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
-delete the previously shown image.
-
-```
-Update(filename = None,
-    data = None,
-    size = (None, None),
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|        str         | filename | filename to the new image to display. |
-| str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
-|   Tuple[int,int]   |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
-|        bool        | visible  | control visibility of element |
-
-### UpdateAnimation
-
-Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
-NOTE - does NOT perform a sleep call to delay
-
-```
-UpdateAnimation(source, time_between_frames = 0)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or bytes |       source        | Filename or Base64 encoded string containing Animated GIF |
-|     int     | time_between_frames | Number of milliseconds to wait between showing frames |
 
 ### bind
 
@@ -3537,6 +3545,80 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
+To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
+delete the previously shown image.
+
+```
+Update(filename = None,
+    data = None,
+    size = (None, None),
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|        str         | filename | filename to the new image to display. |
+| str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
+|   Tuple[int,int]   |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
+|        bool        | visible  | control visibility of element |
+
+### UpdateAnimation
+
+Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
+NOTE - does NOT perform a sleep call to delay
+
+```
+UpdateAnimation(source, time_between_frames = 0)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str or bytes |       source        | Filename or Base64 encoded string containing Animated GIF |
+|     int     | time_between_frames | Number of milliseconds to wait between showing frames |
+
+---------
+
 ## Input Element 
 
     Display a single text input field.  Based on the tkinter Widget `Entry`
@@ -3596,70 +3678,6 @@ Parameter Descriptions:
 |                      List[List[ List[str] or str ]]                      |          right_click_menu          | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |              visible               | set visibility state of the element (Default = True) |
 |                                   Any                                    |              metadata              | User metadata that can be set to ANYTHING |
-
-### Get
-
-Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(str)| **return** | current value of Input field or '' if error encountered |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    disabled = None,
-    select = None,
-    visible = None,
-    text_color = None,
-    background_color = None,
-    move_cursor_to = "end")
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|    str    |      value       | new text to display as default text in Input field |
-|   bool    |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
-|   bool    |      select      | if True, then the text will be selected |
-|   bool    |     visible      | change visibility of element |
-|    str    |    text_color    | change color of text being typed |
-|    str    | background_color | change color of the background |
-| int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
 
 ### bind
 
@@ -3855,6 +3873,78 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(str)| **return** | current value of Input field or '' if error encountered |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    disabled = None,
+    select = None,
+    visible = None,
+    text_color = None,
+    background_color = None,
+    move_cursor_to = "end")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|    str    |      value       | new text to display as default text in Input field |
+|   bool    |     disabled     | disable or enable state of the element (sets Entry Widget to readonly or normal) |
+|   bool    |      select      | if True, then the text will be selected |
+|   bool    |     visible      | change visibility of element |
+|    str    |    text_color    | change color of text being typed |
+|    str    | background_color | change color of the background |
+| int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
+
+---------
+
 ## Listbox Element 
 
     A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
@@ -3907,92 +3997,6 @@ Parameter Descriptions:
 |                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### GetIndexes
-
-Returns the items currently selected as a list of indexes
-
-`GetIndexes()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|List[int]| **return** | A list of offsets into values that is currently selected |
-
-### GetListValues
-
-Returns list of Values provided by the user in the user's format
-
-`GetListValues()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|List[Any]| **return** | List of values. Can be any / mixed types -> [] |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### SetValue
-
-Set listbox highlighted choices
-
-```
-SetValue(values)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[Any] | values | new values to choose based on previously set values |
-
-### Update
-
-Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values = None,
-    disabled = None,
-    set_to_index = None,
-    scroll_to_index = None,
-    select_mode = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|     List[Any]      |     values      | new list of choices to be shown to user |
-|        bool        |    disabled     | disable or enable state of the element |
-| int or list or tuple |  set_to_index   | highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted |
-|        int         | scroll_to_index | scroll the listbox so that this index is the first shown |
-|        str         |      mode       | changes the select mode according to tkinter's listbox widget |
-|        bool        |     visible     | control visibility of element |
 
 ### bind
 
@@ -4221,6 +4225,100 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### GetIndexes
+
+Returns the items currently selected as a list of indexes
+
+`GetIndexes()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|List[int]| **return** | A list of offsets into values that is currently selected |
+
+### GetListValues
+
+Returns list of Values provided by the user in the user's format
+
+`GetListValues()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|List[Any]| **return** | List of values. Can be any / mixed types -> [] |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### SetValue
+
+Set listbox highlighted choices
+
+```
+SetValue(values)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[Any] | values | new values to choose based on previously set values |
+
+### Update
+
+Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values = None,
+    disabled = None,
+    set_to_index = None,
+    scroll_to_index = None,
+    select_mode = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|     List[Any]      |     values      | new list of choices to be shown to user |
+|        bool        |    disabled     | disable or enable state of the element |
+| int or list or tuple |  set_to_index   | highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted |
+|        int         | scroll_to_index | scroll the listbox so that this index is the first shown |
+|        str         |      mode       | changes the select mode according to tkinter's listbox widget |
+|        bool        |     visible     | control visibility of element |
+
+---------
+
 ## Menu Element 
 
     Menu Element is the Element that provides a Menu Bar that goes across the top of the window, just below titlebar.
@@ -4269,49 +4367,6 @@ Parameter Descriptions:
 |                      str or int or tuple or object                       |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   bool                                   |       visible       | set visibility state of the element |
 |                                   Any                                    |      metadata       | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
-
-```
-Update(menu_definition = None, visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Tuple[str, List[str]]] | menu_definition | ??? |
-|               bool               |     visible     | control visibility of element |
 
 ### bind
 
@@ -4472,6 +4527,57 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
+
+```
+Update(menu_definition = None, visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Tuple[str, List[str]]] | menu_definition | ??? |
+|               bool               |     visible     | control visibility of element |
+
+---------
+
 ## Multiline Element 
 
     Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
@@ -4541,78 +4647,6 @@ Parameter Descriptions:
 |                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |      visible       | set visibility state of the element |
 |                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
-
-### Get
-
-Return current contents of the Multiline Element
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(str)| **return** | current contents of the Multiline Element (used as an input type of Multiline |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    disabled = None,
-    append = False,
-    font = None,
-    text_color = None,
-    background_color = None,
-    text_color_for_value = None,
-    background_color_for_value = None,
-    visible = None,
-    autoscroll = None,
-    justification = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str          |           value            | new text to display |
-|         bool          |          disabled          | disable or enable state of the element |
-|         bool          |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| str or Tuple[str, int] |            font            | specifies the font family, size, etc |
-|          str          |         text_color         | color of the text |
-|          str          |      background_color      | color of background |
-|          str          |    text_color_for_value    | color of the new text being added (the value paramter) |
-|          str          | background_color_for_value | color of the new background of the text being added (the value paramter) |
-|         bool          |          visible           | set visibility state of the element |
-|         bool          |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
-|          str          |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 
 ### bind
 
@@ -4872,6 +4906,86 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Return current contents of the Multiline Element
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(str)| **return** | current contents of the Multiline Element (used as an input type of Multiline |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    disabled = None,
+    append = False,
+    font = None,
+    text_color = None,
+    background_color = None,
+    text_color_for_value = None,
+    background_color_for_value = None,
+    visible = None,
+    autoscroll = None,
+    justification = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str          |           value            | new text to display |
+|         bool          |          disabled          | disable or enable state of the element |
+|         bool          |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
+| str or Tuple[str, int] |            font            | specifies the font family, size, etc |
+|          str          |         text_color         | color of the text |
+|          str          |      background_color      | color of background |
+|          str          |    text_color_for_value    | color of the new text being added (the value paramter) |
+|          str          | background_color_for_value | color of the new background of the text being added (the value paramter) |
+|         bool          |          visible           | set visibility state of the element |
+|         bool          |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
+|          str          |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+
+---------
+
 ## OptionMenu Element 
 
     Option Menu is an Element available ONLY on the tkinter port of PySimpleGUI.  It's is a widget that is unique
@@ -4912,54 +5026,6 @@ Parameter Descriptions:
 |                                   str                                    |     tooltip      | text that will appear when mouse hovers over this element |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    values = None,
-    disabled = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|    Any    |  value   | the value to choose by default |
-| List[Any] |  values  | Values to be displayed |
-|   bool    | disabled | disable or enable state of the element |
-|   bool    | visible  | control visibility of element |
 
 ### bind
 
@@ -5139,6 +5205,62 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    values = None,
+    disabled = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|    Any    |  value   | the value to choose by default |
+| List[Any] |  values  | Values to be displayed |
+|   bool    | disabled | disable or enable state of the element |
+|   bool    | visible  | control visibility of element |
+
+---------
+
 ## Output Element 
 
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
@@ -5174,69 +5296,6 @@ Parameter Descriptions:
 |                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |      visible       | set visibility state of the element |
 |                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
-
-### Get
-
-Returns the current contents of the output.  Similar to Get method other Elements
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(str)| **return** | the current value of the output |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### TKOut
-
-#### property: TKOut
-
-Returns the TKOutput object used to create the element
-
-|Type|Name|Meaning|
-|---|---|---|
-|(TKOutput)| **return** | The TKOutput object |
-
-### Update
-
-Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None, visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str  |  value  | string that will replace current contents of the output area |
-| bool | visible | control visibility of element |
 
 ### bind
 
@@ -5420,6 +5479,77 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Returns the current contents of the output.  Similar to Get method other Elements
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(str)| **return** | the current value of the output |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### TKOut
+
+#### property: TKOut
+
+Returns the TKOutput object used to create the element
+
+|Type|Name|Meaning|
+|---|---|---|
+|(TKOutput)| **return** | The TKOutput object |
+
+### Update
+
+Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None, visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str  |  value  | string that will replace current contents of the output area |
+| bool | visible | control visibility of element |
+
+---------
+
 ## Pane Element 
 
     A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
@@ -5457,48 +5587,6 @@ Parameter Descriptions:
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | visible | control visibility of element |
 
 ### bind
 
@@ -5658,6 +5746,56 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | visible | control visibility of element |
+
+---------
+
 ## ProgressBar Element 
 
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
@@ -5695,70 +5833,6 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      pad       | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   bool                                   |    visible     | set visibility state of the element |
 |                                   Any                                    |    metadata    | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
-Now has the ability to modify the count so that the update_bar method is not longer needed separately
-
-```
-Update(current_count,
-    max = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int  | current_count | sets the current value |
-| int  |      max      | changes the max value |
-| bool |    visible    | control visibility of element |
-| (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
-
-### UpdateBar
-
-DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
-Change what the bar shows by changing the current count and optionally the max count
-
-```
-UpdateBar(current_count, max = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int | current_count | sets the current value |
-| int |      max      | changes the max value |
 
 ### bind
 
@@ -5940,6 +6014,78 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
+Now has the ability to modify the count so that the update_bar method is not longer needed separately
+
+```
+Update(current_count,
+    max = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int  | current_count | sets the current value |
+| int  |      max      | changes the max value |
+| bool |    visible    | control visibility of element |
+| (bool) | **RETURN** | Returns True if update was OK.  False means something wrong with window or it was closed
+
+### UpdateBar
+
+DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
+Change what the bar shows by changing the current count and optionally the max count
+
+```
+UpdateBar(current_count, max = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | current_count | sets the current value |
+| int |      max      | changes the max value |
+
+---------
+
 ## Radio Element 
 
     Radio Button Element - Used in a group of other Radio Elements to provide user with ability to select only
@@ -5986,76 +6132,6 @@ Parameter Descriptions:
 |                                   bool                                   |  enable_events   | Turns on the element specific events. Radio Button events happen when an item is selected |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### Get
-
-A snapshot of the value of Radio Button -> (bool)
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(bool)| **return** | True if this radio button is selected |
-
-### ResetGroup
-
-Sets all Radio Buttons in the group to not selected
-
-```python
-ResetGroup()
-```
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    text = None,
-    background_color = None,
-    text_color = None,
-    disabled = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool |      value       | if True change to selected and set others in group to unselected |
-| str  |       text       | Text to display next to radio button |
-| str  | background_color | color of background |
-| str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
-| bool |     disabled     | disable or enable state of the element |
-| bool |     visible      | control visibility of element |
 
 ### bind
 
@@ -6243,6 +6319,84 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+A snapshot of the value of Radio Button -> (bool)
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(bool)| **return** | True if this radio button is selected |
+
+### ResetGroup
+
+Sets all Radio Buttons in the group to not selected
+
+```python
+ResetGroup()
+```
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    text = None,
+    background_color = None,
+    text_color = None,
+    disabled = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |      value       | if True change to selected and set others in group to unselected |
+| str  |       text       | Text to display next to radio button |
+| str  | background_color | color of background |
+| str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
+| bool |     disabled     | disable or enable state of the element |
+| bool |     visible      | control visibility of element |
+
+---------
+
 ## Slider Element 
 
     A slider, horizontal or vertical
@@ -6296,54 +6450,6 @@ Parameter Descriptions:
 |                                   str                                    |        tooltip         | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |        visible         | set visibility state of the element |
 |                                   Any                                    |        metadata        | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    range = (None, None),
-    disabled = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|             int or float             |  value   | sets current slider value |
-| Tuple[int, int] or Tuple[float, float |  range   | Sets a new range for slider |
-|                 bool                 | disabled | disable or enable state of the element |
-|                 bool                 | visible  | control visibility of element |
 
 ### bind
 
@@ -6509,6 +6615,62 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    range = (None, None),
+    disabled = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|             int or float             |  value   | sets current slider value |
+| Tuple[int, int] or Tuple[float, float |  range   | Sets a new range for slider |
+|                 bool                 | disabled | disable or enable state of the element |
+|                 bool                 | visible  | control visibility of element |
+
+---------
+
 ## Spin Element 
 
     A spinner with up/down buttons and a single line of text. Choose 1 values from list
@@ -6554,71 +6716,6 @@ Parameter Descriptions:
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### Get
-
-Return the current chosen value showing in spinbox.
-This value will be the same as what was provided as list of choices.  If list items are ints, then the
-item returned will be an int (not a string)
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(Any)| **return** | The currently visible entry |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
-Note that the state can be in 3 states only.... enabled, disabled, readonly even
-though more combinations are available. The easy way to remember is that if you
-change the readonly parameter then you are enabling the element.
-
-```
-Update(value = None,
-    values = None,
-    disabled = None,
-    readonly = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|    Any    |  value   | set the current value from list of choices |
-| List[Any] |  values  | set available choices |
-|   bool    | disabled | disable. Note disabled and readonly cannot be mixed. It must be one OR the other |
-|   bool    | readonly | make element readonly. Note disabled and readonly cannot be mixed. It must be one OR the other |
-|   bool    | visible  | control visibility of element |
 
 ### bind
 
@@ -6801,6 +6898,79 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Return the current chosen value showing in spinbox.
+This value will be the same as what was provided as list of choices.  If list items are ints, then the
+item returned will be an int (not a string)
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | The currently visible entry |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
+Note that the state can be in 3 states only.... enabled, disabled, readonly even
+though more combinations are available. The easy way to remember is that if you
+change the readonly parameter then you are enabling the element.
+
+```
+Update(value = None,
+    values = None,
+    disabled = None,
+    readonly = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|    Any    |  value   | set the current value from list of choices |
+| List[Any] |  values  | set available choices |
+|   bool    | disabled | disable. Note disabled and readonly cannot be mixed. It must be one OR the other |
+|   bool    | readonly | make element readonly. Note disabled and readonly cannot be mixed. It must be one OR the other |
+|   bool    | visible  | control visibility of element |
+
+---------
+
 ## StatusBar Element 
 
     A StatusBar Element creates the sunken text-filled strip at the bottom. Many Windows programs have this line
@@ -6846,56 +7016,6 @@ Parameter Descriptions:
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    background_color = None,
-    text_color = None,
-    font = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str          |      value       | new text to show |
-|          str          | background_color | color of background |
-|          str          |    text_color    | color of the text |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|         bool          |     visible      | set visibility state of the element |
 
 ### bind
 
@@ -7063,6 +7183,64 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    background_color = None,
+    text_color = None,
+    font = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str          |      value       | new text to show |
+|          str          | background_color | color of background |
+|          str          |    text_color    | color of the text |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|         bool          |     visible      | set visibility state of the element |
+
+---------
+
 ## Tab Element 
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
@@ -7105,88 +7283,6 @@ Parameter Descriptions:
 |                                   bool                                   |        visible        | set visibility state of the element |
 |                                   str                                    | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
 |                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
-
-### AddRow
-
-Not recommended use call.  Used to add rows of Elements to the Frame Element.
-
-```
-AddRow(args=*<1 or N object>)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[Element] | *args | The list of elements for this row |
-
-### Layout
-
-Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
-
-```
-Layout(rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Element]] | rows | List[List[Element]] The list of rows |
-
-### Select
-
-Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
-
-```python
-Select()
-```
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(title = None,
-    disabled = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str  |  title   | tab title |
-| bool | disabled | disable or enable state of the element |
-| bool | visible  | control visibility of element |
 
 ### add_row
 
@@ -7386,6 +7482,96 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### AddRow
+
+Not recommended use call.  Used to add rows of Elements to the Frame Element.
+
+```
+AddRow(args=*<1 or N object>)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[Element] | *args | The list of elements for this row |
+
+### Layout
+
+Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
+
+```
+Layout(rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Element]] | rows | List[List[Element]] The list of rows |
+
+### Select
+
+Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
+
+```python
+Select()
+```
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(title = None,
+    disabled = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str  |  title   | tab title |
+| bool | disabled | disable or enable state of the element |
+| bool | visible  | control visibility of element |
+
+---------
+
 ## TabGroup Element 
 
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
@@ -7433,62 +7619,6 @@ Parameter Descriptions:
 |                                   str                                    |          tooltip          | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |          visible          | set visibility state of the element |
 |                                   Any                                    |         metadata          | User metadata that can be set to ANYTHING |
-
-### FindKeyFromTabName
-
-Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
-
-```
-FindKeyFromTabName(tab_name)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tab_name | name of a tab |
-| key or None | **RETURN** | Returns the key or None if no key found
-
-### Get
-
-Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
-the tab if no key is defined.  Returns None if an error occurs.
-Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
-are using this method correctly?
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
 
 ### bind
 
@@ -7676,6 +7806,70 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### FindKeyFromTabName
+
+Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
+
+```
+FindKeyFromTabName(tab_name)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tab_name | name of a tab |
+| key or None | **RETURN** | Returns the key or None if no key found
+
+### Get
+
+Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
+the tab if no key is defined.  Returns None if an error occurs.
+Note that this is exactly the same data that would be returned from a call to Window.Read. Are you sure you
+are using this method correctly?
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Any | None| **return** | The key of the currently selected tab or the tab's text if it has no key |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+---------
+
 ## Table Element 
 
 ```
@@ -7753,70 +7947,6 @@ Parameter Descriptions:
 |                      List[List[ List[str] or str ]]                      |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |         visible         | set visibility state of the element |
 |                                   Any                                    |        metadata         | User metadata that can be set to ANYTHING |
-
-### Get
-
-Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
-edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
-user when Table was created or Updated.
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values = None,
-    num_rows = None,
-    visible = None,
-    select_rows = None,
-    alternating_row_color = None,
-    row_colors = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|       List[List[str or int or float]]        |        values         | A new 2-dimensional table to show |
-|                     int                      |       num_rows        | How many rows to display at a time |
-|                     bool                     |        visible        | if True then will be visible |
-|                  List[int]                   |      select_rows      | List of rows to select as if user did |
-|                     str                      | alternating_row_color | the color to make every other row |
-| List[Tuple[int, str] or Tuple[Int, str, str]] |      row_colors       | list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color) |
 
 ### bind
 
@@ -7998,6 +8128,78 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+
+Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
+edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
+user when Table was created or Updated.
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|List[List[Any]]| **return** | the current table values (for now what was originally provided up updated) |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values = None,
+    num_rows = None,
+    visible = None,
+    select_rows = None,
+    alternating_row_color = None,
+    row_colors = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|       List[List[str or int or float]]        |        values         | A new 2-dimensional table to show |
+|                     int                      |       num_rows        | How many rows to display at a time |
+|                     bool                     |        visible        | if True then will be visible |
+|                  List[int]                   |      select_rows      | List of rows to select as if user did |
+|                     str                      | alternating_row_color | the color to make every other row |
+| List[Tuple[int, str] or Tuple[Int, str, str]] |      row_colors       | list of tuples of (row, background color) OR (row, foreground color, background color). Changes the colors of listed rows to the color(s) provided (note the optional foreground color) |
+
+---------
+
 ## Text Element 
 
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
@@ -8047,66 +8249,6 @@ Parameter Descriptions:
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |     visible      | set visibility state of the element |
 |                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
-
-#### Get
-
-Gets the current value of the displayed text
-
-`Get()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(str)| **return** | The current value |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(value = None,
-    background_color = None,
-    text_color = None,
-    font = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str          |      value       | new text to show |
-|          str          | background_color | color of background |
-|          str          |    text_color    | color of the text |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|         bool          |     visible      | set visibility state of the element |
 
 ### bind
 
@@ -8284,6 +8426,74 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+#### Get
+
+Gets the current value of the displayed text
+
+`Get()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(str)| **return** | The current value |
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(value = None,
+    background_color = None,
+    text_color = None,
+    font = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str          |      value       | new text to show |
+|          str          | background_color | color of background |
+|          str          |    text_color    | color of the text |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|         bool          |     visible      | set visibility state of the element |
+
+---------
+
 ## Titlebar Element
 
 Note that while the Titlebar is an element, it is implemented using a function.
@@ -8403,58 +8613,6 @@ Parameter Descriptions:
 |                         List[List[str] or str]]                          |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |         visible         | set visibility state of the element |
 |                                   Any                                    |        metadata         | User metadata that can be set to ANYTHING |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
-
-### Update
-
-Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
-
-```
-Update(values = None,
-    key = None,
-    value = None,
-    text = None,
-    icon = None,
-    visible = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          TreeData          | values  | Representation of the tree |
-| str or int or tuple or object |   key   | identifies a particular item in tree to update |
-|            Any             |  value  | sets the node identified by key to a particular value |
-|            str             |  text   | sets the node identified by ket to this string |
-|        bytes or str        |  icon   | can be either a base64 icon or a filename for the icon |
-|            bool            | visible | control visibility of element |
 
 ### add_treeview_data
 
@@ -8652,6 +8810,66 @@ To control visibility, use the element's update method
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### Update
+
+Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
+
+```
+Update(values = None,
+    key = None,
+    value = None,
+    text = None,
+    icon = None,
+    visible = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          TreeData          | values  | Representation of the tree |
+| str or int or tuple or object |   key   | identifies a particular item in tree to update |
+|            Any             |  value  | sets the node identified by key to a particular value |
+|            str             |  text   | sets the node identified by ket to this string |
+|        bytes or str        |  icon   | can be either a base64 icon or a filename for the icon |
+|            bool            | visible | control visibility of element |
+
+---------
+
 ## TreeData (for Tree Element) 
 
     Class that user fills in to represent their tree data. It's a very simple tree representation with a root "Node"
@@ -8663,29 +8881,6 @@ Instantiate the object, initializes the Tree Data, creates a root node for you
 ```python
 TreeData()
 ```
-
-### Insert
-
-Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
-This is the ONLY user callable method in the TreeData class
-
-```
-Insert(parent,
-    key,
-    text,
-    values,
-    icon = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|            Node            | parent | the parent Node |
-| str or int or tuple or object |  key   | Used to uniquely identify this node |
-|            str             |  text  | The text that is displayed at this node's location |
-|         List[Any]          | values | The list of values that are displayed at this node |
-|        str or bytes        |  icon  | icon |
 
 ### Node
 
@@ -8722,6 +8917,31 @@ Parameter Descriptions:
 |         List[Any]          | values | The list of values that are displayed at this node |
 |        str or bytes        |  icon  | icon |
 
+### Insert
+
+Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
+This is the ONLY user callable method in the TreeData class
+
+```
+Insert(parent,
+    key,
+    text,
+    values,
+    icon = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|            Node            | parent | the parent Node |
+| str or int or tuple or object |  key   | Used to uniquely identify this node |
+|            str             |  text  | The text that is displayed at this node's location |
+|         List[Any]          | values | The list of values that are displayed at this node |
+|        str or bytes        |  icon  | icon |
+
+---------
+
 ## VerticalSeparator Element 
 
     Vertical Separator Element draws a vertical line at the given location. It will span 1 "row". Usually paired with
@@ -8742,34 +8962,6 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                      str or int or tuple or object                       |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                      str or int or tuple or object                       |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
-
-### SetFocus
-
-Sets the current focus to be on this element
-
-```
-SetFocus(force = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bool | force | if True will call focus_force otherwise calls focus_set |
-
-### SetTooltip
-
-Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
-
-```
-SetTooltip(tooltip_text)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | tooltip_text | the text to show in tooltip. |
 
 ### bind
 
@@ -8914,6 +9106,42 @@ To control visibility, use the element's update method
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+
+Sets the current focus to be on this element
+
+```
+SetFocus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### SetTooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+SetTooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+---------
 
 ## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
 
@@ -9143,6 +9371,8 @@ Parameter Descriptions:
 |--|--|--|
 | dict | settings_dict | The dictionary to be written to the currently defined settings file |
 
+---------
+
 ## Window 
 
     Represents a single Window
@@ -9250,6 +9480,583 @@ Parameter Descriptions:
 |              (bytes or str)               |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                   bool                    |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
 |                    Any                    |               metadata               | User metadata that can be set to ANYTHING |
+
+### add_row
+
+Adds a single row of elements to a window's self.Rows variables.
+Generally speaking this is NOT how users should be building Window layouts.
+Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
+
+```
+add_row(args=*<1 or N object>)
+```
+
+### add_rows
+
+Loops through a list of lists of elements and adds each row, list, to the layout.
+This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
+it as a parameter to the Window call is better.
+
+```
+add_rows(rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | A list of a list of elements |
+
+### alpha_channel
+
+#### property: alpha_channel
+
+A property that changes the current alpha channel value (internal value)
+
+|Type|Name|Meaning|
+|---|---|---|
+|(float)| **return** | the current alpha channel setting according to self, not read directly from tkinter |
+
+### bind
+
+Used to add tkinter events to a Window.
+The tkinter specific data is in the Window's member variable user_bind_event
+
+```
+bind(bind_string, key)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|            str             | bind_string | The string tkinter expected in its bind function |
+| str or int or tuple or object |     key     | The event that will be generated when the tkinter event occurs |
+
+### bring_to_front
+
+Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
+        on top")
+
+```python
+bring_to_front()
+```
+
+### close
+
+Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
+        a window so that resources are properly freed up within your thread.
+
+```python
+close()
+```
+
+### current_location
+
+Get the current location of the window's top left corner
+
+`current_location()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
+
+### disable
+
+Disables window from taking any input from the user
+
+```python
+disable()
+```
+
+### disable_debugger
+
+Disable the internal debugger. By default the debugger is ENABLED
+
+```python
+disable_debugger()
+```
+
+### disappear
+
+Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
+        channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
+        platforms.  The Raspberry Pi for example does not have an alpha setting
+
+```python
+disappear()
+```
+
+### elem
+
+### element
+
+### element_list
+
+Returns a list of all elements in the window
+
+`element_list()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|List[Element]| **return** | List of all elements in the window and container elements in the window |
+
+### enable
+
+Re-enables window to take user input after having it be Disabled previously
+
+```python
+enable()
+```
+
+### enable_debugger
+
+Enables the internal debugger. By default, the debugger IS enabled
+
+```python
+enable_debugger()
+```
+
+### extend_layout
+
+Adds new rows to an existing container element inside of this window
+
+```
+extend_layout(container, rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Frame or Column or Tab | container | The container Element the layout will be placed inside of |
+| (List[List[Element]]) |   rows    | The layout to be added |
+| (Window) | **RETURN** | (Window) self so could be chained
+
+### fill
+
+Fill in elements that are input fields with data based on a 'values dictionary'
+
+```
+fill(values_dict)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (Dict[Any, Any]) - {Element_key : value} | values_dict | pairs |
+| (Window) | **RETURN** | returns self so can be chained with other methods
+
+### finalize
+
+Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
+Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
+Lots of action!
+
+`finalize()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Window)| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
+
+### find
+
+### find_element
+
+Find element object associated with the provided key.
+THIS METHOD IS NO LONGER NEEDED to be called by the user
+
+You can perform the same operation by writing this statement:
+element = window[key]
+
+You can drop the entire "FindElement" function name and use [ ] instead.
+
+Typically used in combination with a call to element's Update method (or any other element method!):
+window[key].Update(new_value)
+
+Versus the "old way"
+window.FindElement(key).Update(new_value)
+
+This call can be abbreviated to any of these:
+FindElement == Element == Find
+Rememeber that this call will return None if no match is found which may cause your code to crash if not
+checked for.
+
+```
+find_element(key, silent_on_error = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str or int or tuple or object |       key       | Used with window.FindElement and with return values to uniquely identify this element |
+|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
+| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+
+### find_element_with_focus
+
+Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
+
+`find_element_with_focus()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Element | None| **return** | An Element if one has been found with focus or None if no element found |
+
+### force_focus
+
+Forces this window to take focus
+
+```python
+force_focus()
+```
+
+### get_screen_dimensions
+
+Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
+
+`get_screen_dimensions()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Tuple[None, None] | Tuple[width, height]| **return** | Tuple containing width and height of screen in pixels |
+
+### get_screen_size
+
+This is a "Class Method" meaning you call it by writing: width, height = Window.get_screen_size()
+Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
+
+```
+get_screen_size()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (int, int) | **RETURN** | Size of the screen in pixels as determined by tkinter
+
+### grab_any_where_off
+
+Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+grab_any_where_off()
+```
+
+### grab_any_where_on
+
+Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+
+```python
+grab_any_where_on()
+```
+
+### hide
+
+Hides the window from the screen and the task bar
+
+```python
+hide()
+```
+
+### layout
+
+Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
+a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
+has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
+from history and replace with sending as a parameter to Window.
+
+```
+layout(rows)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| List[List[Elements]] | rows | Your entire layout |
+| (Window) | **RETURN** | self so that you can chain method calls
+
+### load_from_disk
+
+Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
+
+```
+load_from_disk(filename)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | Pickle Filename to load |
+
+### make_modal
+
+Makes a window into a "Modal Window"
+        This means user will not be able to interact with other windows until this one is closed
+
+```python
+make_modal()
+```
+
+### maximize
+
+Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
+        the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
+        The reason for the difference is the title bar is removed in some cases when using fullscreen option
+
+```python
+maximize()
+```
+
+### minimize
+
+Minimize this window to the task bar
+
+```python
+minimize()
+```
+
+### move
+
+Move the upper left corner of this window to the x,y coordinates provided
+
+```
+move(x, y)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int | x | x coordinate in pixels |
+| int | y | y coordinate in pixels |
+
+### normal
+
+Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
+
+```python
+normal()
+```
+
+### read
+
+THE biggest deal method in the Window class! This is how you get all of your data from your Window.
+Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
+if no other GUI events happen first.
+
+```
+read(timeout = None,
+    timeout_key = "__TIMEOUT__",
+    close = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| int  |   timeout   | Milliseconds to wait until the Read will return IF no other GUI events happen first |
+| Any  | timeout_key | The value that will be returned from the call if the timer expired |
+| bool |    close    | if True the window will be closed prior to returning |
+| Tuple[(Any), Dict[Any, Any], List[Any], None] | **RETURN** | (event, values)
+
+### reappear
+
+Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
+
+```python
+reappear()
+```
+
+### refresh
+
+Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
+Use this call when you want something to appear in your Window immediately (as soon as this function is called).
+Without this call your changes to a Window will not be visible to the user until the next Read call
+
+`refresh()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Window)| **return** | `self` so that method calls can be easily "chained" |
+
+### save_to_disk
+
+Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
+ Note that every element in your layout that is to be saved must have a key assigned to it.
+
+```
+save_to_disk(filename)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | filename | Filename to save the values to in pickled form |
+
+### send_to_back
+
+Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
+
+```python
+send_to_back()
+```
+
+### set_alpha
+
+Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
+
+```
+set_alpha(alpha)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | alpha | 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through) |
+
+### set_cursor
+
+Sets the cursor for the window.
+
+```
+set_cursor(cursor)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | cursor | The tkinter cursor name |
+
+### set_icon
+
+Changes the icon that is shown on the title bar and on the task bar.
+NOTE - The file type is IMPORTANT and depends on the OS!
+Can pass in:
+* filename which must be a .ICO icon file for windows, PNG file for Linux
+* bytes object
+* BASE64 encoded file held in a variable
+
+```
+set_icon(icon = None, pngbase64 = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str |   icon    | Filename or bytes object |
+| str | pngbase64 | Base64 encoded image |
+
+### set_min_size
+
+Changes the minimum size of the window. Note Window must be read or finalized first.
+
+```
+set_min_size(size)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Tuple[int, int] | size | (width, height) tuple (int, int) of the desired window size in pixels |
+
+### set_title
+
+Change the title of the window
+
+```
+set_title(title)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | title | The string to set the title to |
+
+### set_transparent_color
+
+Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
+
+```
+set_transparent_color(color)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | color | Color string that defines the transparent color |
+
+### size
+
+#### property: size
+
+Return the current size of the window in pixels
+
+|Type|Name|Meaning|
+|---|---|---|
+|Tuple[(int), (int)] or Tuple[None, None]| **return** | (width, height) of the window |
+
+### un_hide
+
+Used to bring back a window that was previously hidden using the Hide method
+
+```python
+un_hide()
+```
+
+### visibility_changed
+
+When making an element in a column or someplace that has a scrollbar, then you'll want to call this function
+        prior to the column's contents_changed() method.
+
+```python
+visibility_changed()
+```
+
+### was_closed
+
+Returns True if the window was closed
+
+`was_closed()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|bool| **return** | True if the window is closed |
+
+### write_event_value
+
+Adds a key & value tuple to the queue that is used by threads to communicate with the window
+
+```
+write_event_value(key, value)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| Any |  key  | The key that will be returned as the event when reading the window |
+| Any | value | The value that will be in the values dictionary |
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
 
 ### AddRow
 
@@ -9774,669 +10581,7 @@ When making an element in a column or someplace that has a scrollbar, then you'l
 VisibilityChanged()
 ```
 
-### add_row
-
-Adds a single row of elements to a window's self.Rows variables.
-Generally speaking this is NOT how users should be building Window layouts.
-Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
-
-```
-add_row(args=*<1 or N object>)
-```
-
-### add_rows
-
-Loops through a list of lists of elements and adds each row, list, to the layout.
-This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
-it as a parameter to the Window call is better.
-
-```
-add_rows(rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Elements]] | rows | A list of a list of elements |
-
-### alpha_channel
-
-#### property: alpha_channel
-
-A property that changes the current alpha channel value (internal value)
-
-|Type|Name|Meaning|
-|---|---|---|
-|(float)| **return** | the current alpha channel setting according to self, not read directly from tkinter |
-
-### bind
-
-Used to add tkinter events to a Window.
-The tkinter specific data is in the Window's member variable user_bind_event
-
-```
-bind(bind_string, key)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|            str             | bind_string | The string tkinter expected in its bind function |
-| str or int or tuple or object |     key     | The event that will be generated when the tkinter event occurs |
-
-### bring_to_front
-
-Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
-        on top")
-
-```python
-bring_to_front()
-```
-
-### close
-
-Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
-        a window so that resources are properly freed up within your thread.
-
-```python
-close()
-```
-
-### current_location
-
-Get the current location of the window's top left corner
-
-`current_location()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
-
-### disable
-
-Disables window from taking any input from the user
-
-```python
-disable()
-```
-
-### disable_debugger
-
-Disable the internal debugger. By default the debugger is ENABLED
-
-```python
-disable_debugger()
-```
-
-### disappear
-
-Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
-        channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
-        platforms.  The Raspberry Pi for example does not have an alpha setting
-
-```python
-disappear()
-```
-
-### elem
-
-Find element object associated with the provided key.
-THIS METHOD IS NO LONGER NEEDED to be called by the user
-
-You can perform the same operation by writing this statement:
-element = window[key]
-
-You can drop the entire "FindElement" function name and use [ ] instead.
-
-Typically used in combination with a call to element's Update method (or any other element method!):
-window[key].Update(new_value)
-
-Versus the "old way"
-window.FindElement(key).Update(new_value)
-
-This call can be abbreviated to any of these:
-FindElement == Element == Find
-Rememeber that this call will return None if no match is found which may cause your code to crash if not
-checked for.
-
-```
-elem(key, silent_on_error = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or int or tuple or object |       key       | Used with window.FindElement and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
-
-### element
-
-Find element object associated with the provided key.
-THIS METHOD IS NO LONGER NEEDED to be called by the user
-
-You can perform the same operation by writing this statement:
-element = window[key]
-
-You can drop the entire "FindElement" function name and use [ ] instead.
-
-Typically used in combination with a call to element's Update method (or any other element method!):
-window[key].Update(new_value)
-
-Versus the "old way"
-window.FindElement(key).Update(new_value)
-
-This call can be abbreviated to any of these:
-FindElement == Element == Find
-Rememeber that this call will return None if no match is found which may cause your code to crash if not
-checked for.
-
-```
-element(key, silent_on_error = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or int or tuple or object |       key       | Used with window.FindElement and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
-
-### element_list
-
-Returns a list of all elements in the window
-
-`element_list()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|List[Element]| **return** | List of all elements in the window and container elements in the window |
-
-### enable
-
-Re-enables window to take user input after having it be Disabled previously
-
-```python
-enable()
-```
-
-### enable_debugger
-
-Enables the internal debugger. By default, the debugger IS enabled
-
-```python
-enable_debugger()
-```
-
-### extend_layout
-
-Adds new rows to an existing container element inside of this window
-
-```
-extend_layout(container, rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Frame or Column or Tab | container | The container Element the layout will be placed inside of |
-| (List[List[Element]]) |   rows    | The layout to be added |
-| (Window) | **RETURN** | (Window) self so could be chained
-
-### fill
-
-Fill in elements that are input fields with data based on a 'values dictionary'
-
-```
-fill(values_dict)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (Dict[Any, Any]) - {Element_key : value} | values_dict | pairs |
-| (Window) | **RETURN** | returns self so can be chained with other methods
-
-### finalize
-
-Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
-Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
-Lots of action!
-
-`finalize()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(Window)| **return** | Returns 'self' so that method "Chaining" can happen (read up about it as it's very cool!) |
-
-### find
-
-Find element object associated with the provided key.
-THIS METHOD IS NO LONGER NEEDED to be called by the user
-
-You can perform the same operation by writing this statement:
-element = window[key]
-
-You can drop the entire "FindElement" function name and use [ ] instead.
-
-Typically used in combination with a call to element's Update method (or any other element method!):
-window[key].Update(new_value)
-
-Versus the "old way"
-window.FindElement(key).Update(new_value)
-
-This call can be abbreviated to any of these:
-FindElement == Element == Find
-Rememeber that this call will return None if no match is found which may cause your code to crash if not
-checked for.
-
-```
-find(key, silent_on_error = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or int or tuple or object |       key       | Used with window.FindElement and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
-
-### find_element
-
-Find element object associated with the provided key.
-THIS METHOD IS NO LONGER NEEDED to be called by the user
-
-You can perform the same operation by writing this statement:
-element = window[key]
-
-You can drop the entire "FindElement" function name and use [ ] instead.
-
-Typically used in combination with a call to element's Update method (or any other element method!):
-window[key].Update(new_value)
-
-Versus the "old way"
-window.FindElement(key).Update(new_value)
-
-This call can be abbreviated to any of these:
-FindElement == Element == Find
-Rememeber that this call will return None if no match is found which may cause your code to crash if not
-checked for.
-
-```
-find_element(key, silent_on_error = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or int or tuple or object |       key       | Used with window.FindElement and with return values to uniquely identify this element |
-|            bool            | silent_on_error | If True do not display popup nor print warning of key errors |
-| Element or Error Element or None | **RETURN** | Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
-
-### find_element_with_focus
-
-Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
-
-`find_element_with_focus()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Element | None| **return** | An Element if one has been found with focus or None if no element found |
-
-### force_focus
-
-Forces this window to take focus
-
-```python
-force_focus()
-```
-
-### get_screen_dimensions
-
-Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
-
-`get_screen_dimensions()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|Tuple[None, None] | Tuple[width, height]| **return** | Tuple containing width and height of screen in pixels |
-
-### get_screen_size
-
-This is a "Class Method" meaning you call it by writing: width, height = Window.get_screen_size()
-Returns the size of the "screen" as determined by tkinter.  This can vary depending on your operating system and the number of monitors installed on your system.  For Windows, the primary monitor's size is returns. On some multi-monitored Linux systems, the monitors are combined and the total size is reported as if one screen.
-
-```
-get_screen_size()
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| (int, int) | **RETURN** | Size of the screen in pixels as determined by tkinter
-
-### grab_any_where_off
-
-Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
-        been Finalized or Read.
-
-```python
-grab_any_where_off()
-```
-
-### grab_any_where_on
-
-Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
-        been Finalized or Read.
-
-```python
-grab_any_where_on()
-```
-
-### hide
-
-Hides the window from the screen and the task bar
-
-```python
-hide()
-```
-
-### layout
-
-Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
-a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
-has been removed from examples contained in documents and in the Demo Programs. Trying to remove this call
-from history and replace with sending as a parameter to Window.
-
-```
-layout(rows)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| List[List[Elements]] | rows | Your entire layout |
-| (Window) | **RETURN** | self so that you can chain method calls
-
-### load_from_disk
-
-Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
-
-```
-load_from_disk(filename)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | filename | Pickle Filename to load |
-
-### make_modal
-
-Makes a window into a "Modal Window"
-        This means user will not be able to interact with other windows until this one is closed
-
-```python
-make_modal()
-```
-
-### maximize
-
-Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
-        the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
-        The reason for the difference is the title bar is removed in some cases when using fullscreen option
-
-```python
-maximize()
-```
-
-### minimize
-
-Minimize this window to the task bar
-
-```python
-minimize()
-```
-
-### move
-
-Move the upper left corner of this window to the x,y coordinates provided
-
-```
-move(x, y)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int | x | x coordinate in pixels |
-| int | y | y coordinate in pixels |
-
-### normal
-
-Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
-
-```python
-normal()
-```
-
-### read
-
-THE biggest deal method in the Window class! This is how you get all of your data from your Window.
-Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
-if no other GUI events happen first.
-
-```
-read(timeout = None,
-    timeout_key = "__TIMEOUT__",
-    close = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| int  |   timeout   | Milliseconds to wait until the Read will return IF no other GUI events happen first |
-| Any  | timeout_key | The value that will be returned from the call if the timer expired |
-| bool |    close    | if True the window will be closed prior to returning |
-| Tuple[(Any), Dict[Any, Any], List[Any], None] | **RETURN** | (event, values)
-
-### reappear
-
-Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
-
-```python
-reappear()
-```
-
-### refresh
-
-Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
-Use this call when you want something to appear in your Window immediately (as soon as this function is called).
-Without this call your changes to a Window will not be visible to the user until the next Read call
-
-`refresh()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|(Window)| **return** | `self` so that method calls can be easily "chained" |
-
-### save_to_disk
-
-Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
- Note that every element in your layout that is to be saved must have a key assigned to it.
-
-```
-save_to_disk(filename)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | filename | Filename to save the values to in pickled form |
-
-### send_to_back
-
-Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
-
-```python
-send_to_back()
-```
-
-### set_alpha
-
-Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
-
-```
-set_alpha(alpha)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| float | alpha | 0 to 1. 0 is completely transparent. 1 is completely visible and solid (can't see through) |
-
-### set_cursor
-
-Sets the cursor for the window.
-
-```
-set_cursor(cursor)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | cursor | The tkinter cursor name |
-
-### set_icon
-
-Changes the icon that is shown on the title bar and on the task bar.
-NOTE - The file type is IMPORTANT and depends on the OS!
-Can pass in:
-* filename which must be a .ICO icon file for windows, PNG file for Linux
-* bytes object
-* BASE64 encoded file held in a variable
-
-```
-set_icon(icon = None, pngbase64 = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str |   icon    | Filename or bytes object |
-| str | pngbase64 | Base64 encoded image |
-
-### set_min_size
-
-Changes the minimum size of the window. Note Window must be read or finalized first.
-
-```
-set_min_size(size)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Tuple[int, int] | size | (width, height) tuple (int, int) of the desired window size in pixels |
-
-### set_title
-
-Change the title of the window
-
-```
-set_title(title)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | title | The string to set the title to |
-
-### set_transparent_color
-
-Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
-
-```
-set_transparent_color(color)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str | color | Color string that defines the transparent color |
-
-### size
-
-#### property: size
-
-Return the current size of the window in pixels
-
-|Type|Name|Meaning|
-|---|---|---|
-|Tuple[(int), (int)] or Tuple[None, None]| **return** | (width, height) of the window |
-
-### un_hide
-
-Used to bring back a window that was previously hidden using the Hide method
-
-```python
-un_hide()
-```
-
-### visibility_changed
-
-When making an element in a column or someplace that has a scrollbar, then you'll want to call this function
-        prior to the column's contents_changed() method.
-
-```python
-visibility_changed()
-```
-
-### was_closed
-
-Returns True if the window was closed
-
-`was_closed()`
-
-|Type|Name|Meaning|
-|---|---|---|
-|bool| **return** | True if the window is closed |
-
-### write_event_value
-
-Adds a key & value tuple to the queue that is used by threads to communicate with the window
-
-```
-write_event_value(key, value)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| Any |  key  | The key that will be returned as the event when reading the window |
-| Any | value | The value that will be in the values dictionary |
+---------
 
 ## SystemTray 
 
@@ -10465,86 +10610,6 @@ Parameter Descriptions:
 |            bytes             | data_base64 | base-64 data for icon |
 |             str              |   tooltip   | tooltip string |
 |             Any              |  metadata   | User metadata that can be set to ANYTHING |
-
-### Close
-
-Close the system tray window
-
-```python
-Close()
-```
-
-### Hide
-
-Hides the icon
-
-```python
-Hide()
-```
-
-### Read
-
-Reads the context menu
-
-```
-Read(timeout = None)
-```
-
-### ShowMessage
-
-Shows a balloon above icon in system tray
-
-```
-ShowMessage(title,
-    message,
-    filename = None,
-    data = None,
-    data_base64 = None,
-    messageicon = None,
-    time = (1000, 3000))
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str          |    title    | Title shown in balloon |
-|          str          |   message   | Message to be displayed |
-|          str          |  filename   | Optional icon filename |
-|          b''          |    data     | Optional in-ram icon |
-|          b''          | data_base64 | Optional base64 icon |
-| int or Tuple[int, int] |    time     | Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration |
-| Any | **RETURN** | The event that happened during the display such as user clicked on message
-
-### UnHide
-
-Restores a previously hidden icon
-
-```python
-UnHide()
-```
-
-### Update
-
-Updates the menu, tooltip or icon
-
-```
-Update(menu = None,
-    tooltip = None,
-    filename = None,
-    data = None,
-    data_base64 = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| ??? |    menu     | menu defintion |
-| ??? |   tooltip   | string representing tooltip |
-| ??? |  filename   | icon filename |
-| ??? |    data     | icon raw image |
-| ??? | data_base64 | icon base 64 image |
 
 ### close
 
@@ -10638,6 +10703,92 @@ Updates the menu, tooltip or icon
 
 ```
 update(menu = None,
+    tooltip = None,
+    filename = None,
+    data = None,
+    data_base64 = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| ??? |    menu     | menu defintion |
+| ??? |   tooltip   | string representing tooltip |
+| ??? |  filename   | icon filename |
+| ??? |    data     | icon raw image |
+| ??? | data_base64 | icon base 64 image |
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Close
+
+Close the system tray window
+
+```python
+Close()
+```
+
+### Hide
+
+Hides the icon
+
+```python
+Hide()
+```
+
+### Read
+
+Reads the context menu
+
+```
+Read(timeout = None)
+```
+
+### ShowMessage
+
+Shows a balloon above icon in system tray
+
+```
+ShowMessage(title,
+    message,
+    filename = None,
+    data = None,
+    data_base64 = None,
+    messageicon = None,
+    time = (1000, 3000))
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str          |    title    | Title shown in balloon |
+|          str          |   message   | Message to be displayed |
+|          str          |  filename   | Optional icon filename |
+|          b''          |    data     | Optional in-ram icon |
+|          b''          | data_base64 | Optional base64 icon |
+| int or Tuple[int, int] |    time     | Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration |
+| Any | **RETURN** | The event that happened during the display such as user clicked on message
+
+### UnHide
+
+Restores a previously hidden icon
+
+```python
+UnHide()
+```
+
+### Update
+
+Updates the menu, tooltip or icon
+
+```
+Update(menu = None,
     tooltip = None,
     filename = None,
     data = None,
@@ -11774,49 +11925,6 @@ Parameter Descriptions:
 |         bool          |      keep_on_top      | If True the window will remain above all current windows |
 |    Tuple[int, int]    |       location        | Location of upper left corner of the window |
 |         bool          | do_not_reroute_stdout | do not reroute stdout |
-
-Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
-
-```
-sgprint(args=*<1 or N object>,
-    size = (None, None),
-    end = None,
-    sep = None,
-    location = (None, None),
-    font = None,
-    no_titlebar = False,
-    no_button = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    do_not_reroute_stdout = True,
-    text_color = None,
-    background_color = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout |
-
-Close a previously opened EasyPrint window
-
-```
-sgprint_close()
-```
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -13179,51 +13287,6 @@ Parameter Descriptions:
 |     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | None | **RETURN** | No return value
 
-Display a Popup without a titlebar.   Enables grab anywhere so you can move it
-
-```
-popup_annoying(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    grab_anywhere = True,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
 Popup that closes itself after some time period
 
 ```
@@ -13541,51 +13604,6 @@ Parameter Descriptions:
 |          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
-Display a Popup without a titlebar.   Enables grab anywhere so you can move it
-
-```
-popup_no_border(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    grab_anywhere = True,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
 Show a Popup but without any buttons
 
 ```
@@ -13626,51 +13644,6 @@ Parameter Descriptions:
 |    Tuple[int, int]    |      location       | Location of upper left corner of the window |
 |     str or bytes      |        image        | Image to include at the top of the popup window |
 |         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display a Popup without a titlebar.   Enables grab anywhere so you can move it
-
-```
-popup_no_frame(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    grab_anywhere = True,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13717,52 +13690,6 @@ Parameter Descriptions:
 |      str or bytes      |        image        | Image to include at the top of the popup window |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show Popup window and immediately return (does not block)
-
-```
-popup_no_wait(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None | **RETURN** | Reason for popup closing
 
 Show Popup window and immediately return (does not block)
 
@@ -14065,53 +13992,6 @@ Parameter Descriptions:
 |          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Popup that closes itself after some time period
-
-```
-popup_timed(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = True,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
