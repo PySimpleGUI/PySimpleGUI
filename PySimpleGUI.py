@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0.3 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help"
+version = __version__ = "4.33.0.4 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help, BIG PEP8 definition swap"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -173,21 +173,20 @@ g_time_delta = 0
 
 # These timer routines are to help you quickly time portions of code.  Please this TimerStart call at the point
 # you want to start timing and the TimerStop at the end point. As you can see, TimerStop prints the time delta in ms.
-def TimerStart():
+def timer_start():
     """ Time your code easily.... start the timer. """
     global g_time_start
 
     g_time_start = time.time()
 
 
-def TimerStop():
+def timer_stop():
     """ Time your code easily.... stop the timer and print the number of ms since the timer start """
     global g_time_delta, g_time_end
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
     print((g_time_delta * 1000))
-
 
 
 def _timeit(func):
@@ -534,7 +533,7 @@ else:
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
 # ====================================================================== #
-def RGB(red, green, blue):
+def rgb(red, green, blue):
     """
     Given integer values of Red, Green, Blue, return a color string "#RRGGBB"
     :param red: Red portion from 0 to 255
@@ -1071,7 +1070,7 @@ class Element():
         self.user_bind_dict.pop(bind_string, None)
 
 
-    def SetTooltip(self, tooltip_text):
+    def set_tooltip(self, tooltip_text):
         """
         Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
 
@@ -1088,7 +1087,7 @@ class Element():
         self.TooltipObject = ToolTip(self.Widget, text=tooltip_text, timeout=DEFAULT_TOOLTIP_TIME)
 
 
-    def SetFocus(self, force=False):
+    def set_focus(self, force=False):
         """
         Sets the current focus to be on this element
 
@@ -1275,8 +1274,8 @@ class Element():
         """
         return self.update(*args, **kwargs)
 
-    set_tooltip = SetTooltip
-    set_focus = SetFocus
+    SetTooltip = set_tooltip
+    SetFocus = set_focus
 
 
 # ---------------------------------------------------------------------- #
@@ -1360,7 +1359,7 @@ class Input(Element):
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end'):
+    def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end'):
         """
         Changes some of the settings for the Input Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1411,7 +1410,7 @@ class Input(Element):
             self._visible = visible
 
 
-    def Get(self):
+    def get(self):
         """
         Read and return the current value of the input element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -1424,10 +1423,8 @@ class Input(Element):
             text = ''
         return text
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 # -------------------------  INPUT TEXT Element lazy functions  ------------------------- #
@@ -1497,7 +1494,7 @@ class Combo(Element):
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
+    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
         """
         Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
@@ -1564,7 +1561,7 @@ class Combo(Element):
         if visible is not None:
             self._visible = visible
 
-    def Get(self):
+    def get(self):
         """
         Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
         You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
@@ -1581,10 +1578,8 @@ class Combo(Element):
             value = None  # only would happen if user closes window
         return value
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 # -------------------------  INPUT COMBO Element lazy functions  ------------------------- #
@@ -1646,7 +1641,7 @@ class OptionMenu(Element):
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, values=None, disabled=None, visible=None):
+    def update(self, value=None, values=None, disabled=None, visible=None):
         """
         Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: the value to choose by default
@@ -1690,9 +1685,7 @@ class OptionMenu(Element):
         if visible is not None:
             self._visible = visible
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 
 # -------------------------  OPTION MENU Element lazy functions  ------------------------- #
@@ -1782,7 +1775,7 @@ class Listbox(Element):
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
+    def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
         """
         Changes some of the settings for the Listbox Element. Must call `Window.Read` or `Window.Finalize` prior
         :param values: new list of choices to be shown to user
@@ -1843,7 +1836,7 @@ class Listbox(Element):
         if visible is not None:
             self._visible = visible
 
-    def SetValue(self, values):
+    def set_value(self, values):
         """
         Set listbox highlighted choices
 
@@ -1861,7 +1854,7 @@ class Listbox(Element):
                 pass
         self.DefaultValues = values
 
-    def GetListValues(self):
+    def get_list_values(self):
         # type: (Listbox) -> List[Any]
         """
         Returns list of Values provided by the user in the user's format
@@ -1871,7 +1864,7 @@ class Listbox(Element):
         """
         return self.Values
 
-    def GetIndexes(self):
+    def get_indexes(self):
         """
         Returns the items currently selected as a list of indexes
 
@@ -1898,12 +1891,10 @@ class Listbox(Element):
 
 
 
-    get_indexes = GetIndexes
-    get_list_values = GetListValues
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    set_value = SetValue
-    update = Update
+    GetIndexes = get_indexes
+    GetListValues = get_list_values
+    SetValue = set_value
+    Update = update
 
 
 LBox = Listbox
@@ -1975,7 +1966,7 @@ class Radio(Element):
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
             else:
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CircleBackgroundColor = RGB(*bg_rbg)
+            self.CircleBackgroundColor = rgb(*bg_rbg)
         except:
             self.CircleBackgroundColor = background_color if background_color else theme_background_color()
         self.ChangeSubmits = change_submits or enable_events
@@ -1986,7 +1977,7 @@ class Radio(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
+    def update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: if True change to selected and set others in group to unselected
@@ -2034,7 +2025,7 @@ class Radio(Element):
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
             else:
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CircleBackgroundColor = RGB(*bg_rbg)
+            self.CircleBackgroundColor = rgb(*bg_rbg)
             self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the checkbox
 
         if disabled == True:
@@ -2048,13 +2039,13 @@ class Radio(Element):
         if visible is not None:
             self._visible = visible
 
-    def ResetGroup(self):
+    def reset_group(self):
         """
         Sets all Radio Buttons in the group to not selected
         """
         self.TKIntVar.set(0)
 
-    def Get(self):
+    def get(self):
         # type: (Radio) -> bool
         """
         A snapshot of the value of Radio Button -> (bool)
@@ -2064,11 +2055,9 @@ class Radio(Element):
         """
         return self.TKIntVar.get() == self.EncodedRadioValue
 
-    get = Get
-    reset_group = ResetGroup
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    ResetGroup = reset_group
+    Update = update
 
 
 R = Radio
@@ -2136,7 +2125,7 @@ class Checkbox(Element):
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
             else:
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CheckboxBackgroundColor = RGB(*bg_rbg)
+            self.CheckboxBackgroundColor = rgb(*bg_rbg)
         except:
             self.CheckboxBackgroundColor = background_color if background_color else theme_background_color()
 
@@ -2147,7 +2136,7 @@ class Checkbox(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Get(self):
+    def get(self):
         # type: (Checkbox) -> bool
         """
         Return the current state of this checkbox
@@ -2157,7 +2146,7 @@ class Checkbox(Element):
         """
         return self.TKIntVar.get()
 
-    def Update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
+    def update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Checkbox Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that changing visibility may cause element to change locations when made visible after invisible
@@ -2209,7 +2198,7 @@ class Checkbox(Element):
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
             else:
                 bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CheckboxBackgroundColor = RGB(*bg_rbg)
+            self.CheckboxBackgroundColor = rgb(*bg_rbg)
             # except Exception as e:
             #     self.CheckboxBackgroundColor = self.BackgroundColor if self.BackgroundColor else theme_background_color()
             #     print(f'Update exception {e}')
@@ -2223,10 +2212,8 @@ class Checkbox(Element):
         if visible is not None:
             self._visible = visible
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 # -------------------------  CHECKBOX Element lazy functions  ------------------------- #
@@ -2297,7 +2284,7 @@ class Spin(Element):
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, values=None, disabled=None, readonly=None, visible=None):
+    def update(self, value=None, values=None, disabled=None, readonly=None, visible=None):
         """
         Changes some of the settings for the Spin Element. Must call `Window.Read` or `Window.Finalize` prior
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
@@ -2371,7 +2358,7 @@ class Spin(Element):
         #     Window._window_that_exited = self.ParentForm
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
-    def Get(self):
+    def get(self):
         """
         Return the current chosen value showing in spinbox.
         This value will be the same as what was provided as list of choices.  If list items are ints, then the
@@ -2387,10 +2374,8 @@ class Spin(Element):
                 break
         return value
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 Sp = Spin   # type: Spin
 
 # ---------------------------------------------------------------------- #
@@ -2498,7 +2483,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None, justification=None):
+    def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None, justification=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to display
@@ -2602,7 +2587,7 @@ class Multiline(Element):
             self._visible = visible
 
 
-    def Get(self):
+    def get(self):
         """
         Return current contents of the Multiline Element
 
@@ -2700,10 +2685,8 @@ class Multiline(Element):
 
 
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 ML = Multiline
@@ -2778,7 +2761,7 @@ class Text(Element):
 
         super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
+    def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Text Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to show
@@ -2811,7 +2794,7 @@ class Text(Element):
         if visible is not None:
             self._visible = visible
 
-    def Get(self):
+    def get(self):
         """
         Gets the current value of the displayed text
 
@@ -2822,10 +2805,8 @@ class Text(Element):
 
 
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 # -------------------------  Text Element lazy functions  ------------------------- #
@@ -2900,7 +2881,7 @@ class StatusBar(Element):
                          visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
+    def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
         Changes some of the settings for the Status Bar Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to show
@@ -2935,9 +2916,7 @@ class StatusBar(Element):
         if visible is not None:
             self._visible = visible
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 SBar = StatusBar
 
@@ -3191,7 +3170,7 @@ class Output(Element):
                          tooltip=tooltip, key=key, visible=visible, metadata=metadata)
 
     @property
-    def TKOut(self):
+    def tk_out(self):
         """
         Returns the TKOutput object used to create the element
 
@@ -3203,7 +3182,7 @@ class Output(Element):
             print('*** form = sg.Window("My Form").Layout(layout).Finalize() ***')
         return self._TKOut
 
-    def Update(self, value=None, visible=None):
+    def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Output Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3225,7 +3204,7 @@ class Output(Element):
         if visible is not None:
             self._visible = visible
 
-    def Get(self):
+    def get(self):
         """
         Returns the current contents of the output.  Similar to Get method other Elements
         :return: the current value of the output
@@ -3263,10 +3242,9 @@ class Output(Element):
         """
         self._TKOut.__del__()
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    tk_out = TKOut
-    update = Update
+    TKOut = tk_out
+    Update = update
+    Get = get
 
 
 # ---------------------------------------------------------------------- #
@@ -3676,7 +3654,7 @@ class Button(Element):
 
 
 
-    def Update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
+    def update(self, text=None, button_color=(None, None), disabled=None, image_data=None, image_filename=None,
                visible=None, image_subsample=None, disabled_button_color=(None, None), image_size=None):
         """
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
@@ -3776,7 +3754,7 @@ class Button(Element):
             self._visible = visible
 
 
-    def GetText(self):
+    def get_text(self):
         """
         Returns the current text shown on a button
 
@@ -3785,7 +3763,7 @@ class Button(Element):
         """
         return self.ButtonText
 
-    def Click(self):
+    def click(self):
         """
         Generates a click of the button as if the user clicked the button
         Calls the tkinter invoke method for the button
@@ -3795,11 +3773,9 @@ class Button(Element):
         except:
             print('Exception clicking button')
 
-    click = Click
-    get_text = GetText
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Click = click
+    GetText = get_text
+    Update = update
 
 
 # -------------------------  Button lazy functions  ------------------------- #
@@ -3910,7 +3886,7 @@ class ButtonMenu(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    def Update(self, menu_definition, visible=None):
+    def update(self, menu_definition, visible=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -3945,9 +3921,7 @@ class ButtonMenu(Element):
         except:
             print('Exception clicking button')
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 
 BMenu = ButtonMenu
@@ -4018,7 +3992,7 @@ class ProgressBar(Element):
                          visible=visible, metadata=metadata)
 
     # returns False if update failed
-    def UpdateBar(self, current_count, max=None):
+    def update_bar(self, current_count, max=None):
         """
         DEPRECATED BUT STILL USABLE - has been combined with the normal ProgressBar.update method.
         Change what the bar shows by changing the current count and optionally the max count
@@ -4041,7 +4015,7 @@ class ProgressBar(Element):
         return True
 
 
-    def Update(self, current_count, max=None, visible=None):
+    def update(self, current_count, max=None, visible=None):
         """
         Changes some of the settings for the ProgressBar Element. Must call `Window.Read` or `Window.Finalize` prior
         Now has the ability to modify the count so that the update_bar method is not longer needed separately
@@ -4078,10 +4052,8 @@ class ProgressBar(Element):
         return True
 
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
-    update_bar = UpdateBar
+    Update = update
+    UpdateBar = update_bar
 
 
 PBar = ProgressBar
@@ -4144,7 +4116,7 @@ class Image(Element):
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def Update(self, filename=None, data=None, size=(None, None), visible=None):
+    def update(self, filename=None, data=None, size=(None, None), visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
@@ -4194,7 +4166,7 @@ class Image(Element):
             self._visible = visible
 
 
-    def UpdateAnimation(self, source, time_between_frames=0):
+    def update_animation(self, source, time_between_frames=0):
         """
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
         NOTE - does NOT perform a sleep call to delay
@@ -4295,10 +4267,8 @@ class Image(Element):
 
 
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
-    update_animation = UpdateAnimation
+    Update = update
+    UpdateAnimation = update_animation
 Im = Image
 
 # ---------------------------------------------------------------------- #
@@ -4344,7 +4314,7 @@ class Canvas(Element):
         return
 
     @property
-    def TKCanvas(self):
+    def tk_canvas(self):
         """
         Returns the underlying tkiner Canvas widget
 
@@ -4356,9 +4326,7 @@ class Canvas(Element):
             print('*** window = sg.Window("My Form", layout, finalize=True) ***')
         return self._TKCanvas
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    tk_canvas = TKCanvas
+    TKCanvas = tk_canvas
 
 
 # ---------------------------------------------------------------------- #
@@ -4479,7 +4447,7 @@ class Graph(Element):
         else:
             return floor(new_x), floor(new_y)
 
-    def DrawLine(self, point_from, point_to, color='black', width=1):
+    def draw_line(self, point_from, point_to, color='black', width=1):
         """
         Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
         :param point_from: Starting point for line
@@ -4507,7 +4475,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawLines(self, points, color='black', width=1):
+    def draw_lines(self, points, color='black', width=1):
         """
         Draw a series of lines given list of points
 
@@ -4531,7 +4499,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawPoint(self, point, size=2, color='black'):
+    def draw_point(self, point, size=2, color='black'):
         """
         Draws a "dot" at the point you specify using the USER'S coordinate system
         :param point: Center location using USER'S coordinate system
@@ -4565,7 +4533,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawCircle(self, center_location, radius, fill_color=None, line_color='black', line_width=1):
+    def draw_circle(self, center_location, radius, fill_color=None, line_color='black', line_width=1):
         """
         Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
         :param center_location: Center location using USER'S coordinate system
@@ -4602,7 +4570,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawOval(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=1):
+    def draw_oval(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=1):
         """
         Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
         :param top_left: the top left point of bounding rectangle
@@ -4632,7 +4600,7 @@ class Graph(Element):
 
         return id
 
-    def DrawArc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1, fill_color=None):
+    def draw_arc(self, top_left, bottom_right, extent, start_angle, style=None, arc_color='black', line_width=1, fill_color=None):
         """
         Draws different types of arcs.  Uses a "bounding box" to define location
         :param top_left: the top left point of bounding rectangle
@@ -4668,7 +4636,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawRectangle(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=None):
+    def draw_rectangle(self, top_left, bottom_right, fill_color=None, line_color=None, line_width=None):
         """
         Draw a rectangle given 2 points. Can control the line and fill colors
 
@@ -4703,7 +4671,7 @@ class Graph(Element):
         return id
 
 
-    def DrawPolygon(self, points, fill_color=None, line_color=None, line_width=None):
+    def draw_polygon(self, points, fill_color=None, line_color=None, line_width=None):
         """
         Draw a polygon given list of points
 
@@ -4732,7 +4700,7 @@ class Graph(Element):
 
 
 
-    def DrawText(self, text, location, color='black', font=None, angle=0, text_location=TEXT_LOCATION_CENTER):
+    def draw_text(self, text, location, color='black', font=None, angle=0, text_location=TEXT_LOCATION_CENTER):
         """
         Draw some text on your graph.  This is how you label graph number lines for example
 
@@ -4765,7 +4733,7 @@ class Graph(Element):
             id = None
         return id
 
-    def DrawImage(self, filename=None, data=None, location=(None, None)):
+    def draw_image(self, filename=None, data=None, location=(None, None)):
         """
         Places an image onto your canvas.  It's a really important method for this element as it enables so much
 
@@ -4800,7 +4768,7 @@ class Graph(Element):
             id = None
         return id
 
-    def Erase(self):
+    def erase(self):
         """
         Erase the Graph - Removes all figures previously "drawn" using the Graph methods (e.g. DrawText)
         """
@@ -4814,7 +4782,7 @@ class Graph(Element):
         except:
             pass
 
-    def DeleteFigure(self, id):
+    def delete_figure(self, id):
         """
         Remove from the Graph the figure represented by id. The id is given to you anytime you call a drawing primitive
 
@@ -4830,7 +4798,7 @@ class Graph(Element):
         except:
             pass
 
-    def Update(self, background_color=None, visible=None):
+    def update(self, background_color=None, visible=None):
         """
         Changes some of the settings for the Graph Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4851,7 +4819,7 @@ class Graph(Element):
         if visible is not None:
             self._visible = visible
 
-    def Move(self, x_direction, y_direction):
+    def move(self, x_direction, y_direction):
         """
         Moves the entire drawing area (the canvas) by some delta from the current position.  Units are indicated in your coordinate system indicated number of ticks in your coordinate system
 
@@ -4869,7 +4837,7 @@ class Graph(Element):
             return None
         self._TKCanvas2.move('all', shift_amount[0], shift_amount[1])
 
-    def MoveFigure(self, figure, x_direction, y_direction):
+    def move_figure(self, figure, x_direction, y_direction):
         """
         Moves a previously drawn figure using a "delta" from current position
 
@@ -4888,7 +4856,7 @@ class Graph(Element):
             return None
         self._TKCanvas2.move(figure, shift_amount[0], shift_amount[1])
 
-    def RelocateFigure(self, figure, x, y):
+    def relocate_figure(self, figure, x, y):
         """
         Move a previously made figure to an arbitrary (x,y) location. This differs from the Move methods because it
         uses absolute coordinates versus relative for Move
@@ -4911,7 +4879,7 @@ class Graph(Element):
         xy = self._TKCanvas2.coords(figure)
         self._TKCanvas2.move(figure, shift_converted[0] - xy[0], shift_converted[1] - xy[1])
 
-    def SendFigureToBack(self, figure):
+    def send_figure_to_back(self, figure):
         """
         Changes Z-order of figures on the Graph.  Sends the indicated figure to the back of all other drawn figures
 
@@ -4920,7 +4888,7 @@ class Graph(Element):
         """
         self.TKCanvas.tag_lower(figure)  # move figure to the "bottom" of all other figure
 
-    def BringFigureToFront(self, figure):
+    def bring_figure_to_front(self, figure):
         """
         Changes Z-order of figures on the Graph.  Brings the indicated figure to the front of all other drawn figures
 
@@ -4930,7 +4898,7 @@ class Graph(Element):
         self.TKCanvas.tag_raise(figure)  # move figure to the "top" of all other figures
 
 
-    def GetFiguresAtLocation(self, location):
+    def get_figures_at_location(self, location):
         """
         Returns a list of figures located at a particular x,y location within the Graph
 
@@ -4943,7 +4911,7 @@ class Graph(Element):
         ids = self.TKCanvas.find_overlapping(x,y,x,y)
         return ids
 
-    def GetBoundingBox(self, figure):
+    def get_bounding_box(self, figure):
         """
         Given a figure, returns the upper left and lower right bounding box coordinates
 
@@ -4973,7 +4941,7 @@ class Graph(Element):
 
 
     @property
-    def TKCanvas(self):
+    def tk_canvas(self):
         """
         Returns the underlying tkiner Canvas widget
 
@@ -4986,7 +4954,7 @@ class Graph(Element):
         return self._TKCanvas2
 
     # button release callback
-    def ButtonReleaseCallBack(self, event):
+    def button_release_call_back(self, event):
         """
         Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
@@ -5012,7 +4980,7 @@ class Graph(Element):
         self.MouseButtonDown = False
 
     # button callback
-    def ButtonPressCallBack(self, event):
+    def button_press_call_back(self, event):
         """
         Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
@@ -5031,7 +4999,7 @@ class Graph(Element):
         self.MouseButtonDown = True
 
     # button callback
-    def MotionCallBack(self, event):
+    def motion_call_back(self, event):
         """
         Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
 
@@ -5050,32 +5018,31 @@ class Graph(Element):
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
         _exit_mainloop(self.ParentForm)
 
-    bring_figure_to_front = BringFigureToFront
-    button_press_call_back = ButtonPressCallBack
-    button_release_call_back = ButtonReleaseCallBack
-    delete_figure = DeleteFigure
-    draw_arc = DrawArc
-    draw_circle = DrawCircle
-    draw_image = DrawImage
-    draw_line = DrawLine
-    draw_oval = DrawOval
-    draw_point = DrawPoint
-    draw_polygon = DrawPolygon
-    draw_lines = DrawLines
-    draw_rectangle = DrawRectangle
-    draw_text = DrawText
-    get_figures_at_location = GetFiguresAtLocation
-    get_bounding_box = GetBoundingBox
-    erase = Erase
-    motion_call_back = MotionCallBack
-    move = Move
-    move_figure = MoveFigure
-    relocate_figure = RelocateFigure
-    send_figure_to_back = SendFigureToBack
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    tk_canvas = TKCanvas
-    update = Update
+    BringFigureToFront = bring_figure_to_front
+    ButtonPressCallBack = button_press_call_back
+    ButtonReleaseCallBack = button_release_call_back
+    DeleteFigure = delete_figure
+    DrawArc = draw_arc
+    DrawCircle = draw_circle
+    DrawImage = draw_image
+    DrawLine = draw_line
+    DrawOval = draw_oval
+    DrawPoint = draw_point
+    DrawPolygon = draw_polygon
+    DrawLines = draw_lines
+    DrawRectangle = draw_rectangle
+    DrawText = draw_text
+    GetFiguresAtLocation = get_figures_at_location
+    GetBoundingBox = get_bounding_box
+    Erase = erase
+    MotionCallBack = motion_call_back
+    Move = move
+    MoveFigure = move_figure
+    RelocateFigure = relocate_figure
+    SendFigureToBack = send_figure_to_back
+    TKCanvas = tk_canvas
+    Update = update
+
 G = Graph
 
 # ---------------------------------------------------------------------- #
@@ -5154,7 +5121,7 @@ class Frame(Element):
                          font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def AddRow(self, *args):
+    def add_row(self, *args):
         """
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -5205,7 +5172,7 @@ class Frame(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def layout(self, rows):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -5244,7 +5211,7 @@ class Frame(Element):
         element = row[col_num]
         return element
 
-    def Update(self, value=None, visible=None):
+    def update(self, value=None, visible=None):
         """
         Changes some of the settings for the Frame Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5265,11 +5232,9 @@ class Frame(Element):
         if visible is not None:
             self._visible = visible
 
-    add_row = AddRow
-    layout = Layout
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    AddRow = add_row
+    Layout = layout
+    Update = update
 Fr = Frame
 
 # ---------------------------------------------------------------------- #
@@ -5407,7 +5372,7 @@ class Tab(Element):
         super().__init__(ELEM_TYPE_TAB, background_color=background_color, text_color=title_color, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def AddRow(self, *args):
+    def add_row(self, *args):
         """
         Not recommended use call.  Used to add rows of Elements to the Frame Element.
 
@@ -5455,7 +5420,7 @@ class Tab(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def layout(self, rows):
         """
         Not user callable.  Use layout parameter instead. Creates the layout using the supplied rows of Elements
 
@@ -5479,7 +5444,7 @@ class Tab(Element):
         return self
 
 
-    def Update(self, title=None, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
+    def update(self, title=None, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5530,7 +5495,7 @@ class Tab(Element):
         element = row[col_num]
         return element
 
-    def Select(self):
+    def select(self):
         """
         Create a tkinter event that mimics user clicking on a tab. Must have called window.Finalize / Read first!
 
@@ -5542,13 +5507,10 @@ class Tab(Element):
             print('Exception Selecting Tab {}'.format(e))
 
 
-    add_row = AddRow
-    layout = Layout
-    select = Select
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
-
+    AddRow = add_row
+    Layout = layout
+    Select = select
+    Update = update
 
 # ---------------------------------------------------------------------- #
 #                           TabGroup                                     #
@@ -5629,7 +5591,7 @@ class TabGroup(Element):
                          pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def AddRow(self, *args):
+    def add_row(self, *args):
         """
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
@@ -5678,7 +5640,7 @@ class TabGroup(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def layout(self, rows):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -5717,7 +5679,7 @@ class TabGroup(Element):
         element = row[col_num]
         return element
 
-    def FindKeyFromTabName(self, tab_name):
+    def find_key_from_tab_name(self, tab_name):
         """
         Searches through the layout to find the key that matches the text on the tab. Implies names should be unique
 
@@ -5732,7 +5694,7 @@ class TabGroup(Element):
                     return element.Key
         return None
 
-    def Get(self):
+    def get(self):
         """
         Returns the current value for the Tab Group, which will be the currently selected tab's KEY or the text on
         the tab if no key is defined.  Returns None if an error occurs.
@@ -5752,12 +5714,10 @@ class TabGroup(Element):
             value = None
         return value
 
-    add_row = AddRow
-    find_key_from_tab_name = FindKeyFromTabName
-    get = Get
-    layout = Layout
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
+    AddRow = add_row
+    FindKeyFromTabName = find_key_from_tab_name
+    Get = get
+    Layout = layout
 
 
 # ---------------------------------------------------------------------- #
@@ -5838,7 +5798,7 @@ class Slider(Element):
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def Update(self, value=None, range=(None, None), disabled=None, visible=None):
+    def update(self, value=None, range=(None, None), disabled=None, visible=None):
         """
         Changes some of the settings for the Slider Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -5889,9 +5849,7 @@ class Slider(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 Sl = Slider
 
@@ -6108,7 +6066,7 @@ class Column(Element):
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
-    def AddRow(self, *args):
+    def add_row(self, *args):
         """
         Not recommended user call.  Used to add rows of Elements to the Column Element.
 
@@ -6157,7 +6115,7 @@ class Column(Element):
         # -------------------------  Append the row to list of Rows  ------------------------- #
         self.Rows.append(CurrentRow)
 
-    def Layout(self, rows):
+    def layout(self, rows):
         """
         Can use like the Window.Layout method, but it's better to use the layout parameter when creating
 
@@ -6197,7 +6155,7 @@ class Column(Element):
         element = row[col_num]
         return element
 
-    def Update(self, visible=None):
+    def update(self, visible=None):
         """
         Changes some of the settings for the Column Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6238,11 +6196,9 @@ class Column(Element):
 
 
 
-    add_row = AddRow
-    layout = Layout
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    AddRow = add_row
+    Layout = layout
+    Update = update
 
 
 Col = Column
@@ -6310,7 +6266,7 @@ class Pane(Element):
         super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
-    def Update(self, visible=None):
+    def update(self, visible=None):
         """
         Changes some of the settings for the Pane Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6327,9 +6283,7 @@ class Pane(Element):
         if visible is not None:
             self._visible = visible
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 
 # ---------------------------------------------------------------------- #
@@ -6636,7 +6590,7 @@ class Menu(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    def Update(self, menu_definition=None, visible=None):
+    def update(self, menu_definition=None, visible=None):
         """
         Update a menubar - can change the menu definition and visibility.  The entire menu has to be specified
 
@@ -6678,9 +6632,7 @@ class Menu(Element):
         if visible is not None:
             self._visible = visible
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
@@ -6818,7 +6770,7 @@ class Table(Element):
                          size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def Update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
+    def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
         """
         Changes some of the settings for the Table Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -6934,7 +6886,7 @@ class Table(Element):
             #     self.ParentForm.TKroot.quit()
             _exit_mainloop(self.ParentForm)
 
-    def Get(self):
+    def get(self):
         """
         Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
         edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
@@ -6945,10 +6897,8 @@ class Table(Element):
         """
         return self.Values
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
-    get = Get
+    Update = update
+    Get = get
 
 
 # ---------------------------------------------------------------------- #
@@ -7130,7 +7080,7 @@ class Tree(Element):
         for node in node.children:
             self.add_treeview_data(node)
 
-    def Update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
+    def update(self, values=None, key=None, value=None, text=None, icon=None, visible=None):
         """
         Changes some of the settings for the Tree Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -7196,9 +7146,7 @@ class Tree(Element):
 
         return self
 
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Update = update
 
 
 class TreeData(object):
@@ -7258,7 +7206,7 @@ class TreeData(object):
         """
         self.tree_dict[key] = node
 
-    def Insert(self, parent, key, text, values, icon=None):
+    def insert(self, parent, key, text, values, icon=None):
         """
         Inserts a node into the tree. This is how user builds their tree, by Inserting Nodes
         This is the ONLY user callable method in the TreeData class
@@ -7301,7 +7249,7 @@ class TreeData(object):
             [str(node.key) + ' : ' + str(node.text)] +
             [' ' * 4 * level + self._NodeStr(child, level + 1) for child in node.children])
 
-    insert = Insert
+    Insert = insert
 
 
 # ---------------------------------------------------------------------- #
@@ -7320,7 +7268,7 @@ class ErrorElement(Element):
 
         super().__init__(ELEM_TYPE_ERROR, key=key, metadata=metadata)
 
-    def Update(self, silent_on_error=True, *args, **kwargs):
+    def update(self, silent_on_error=True, *args, **kwargs):
         """
         Update method for the Error Element, an element that should not be directly used by developer
 
@@ -7336,7 +7284,7 @@ class ErrorElement(Element):
         print('** Your update is being ignored because you supplied a bad key earlier **')
         return self
 
-    def Get(self):
+    def get(self):
         """
         One of the method names found in other Elements. Used here to return an error string in case it's called
 
@@ -7345,10 +7293,8 @@ class ErrorElement(Element):
         """
         return 'This is NOT a valid Element!\nSTOP trying to do things with it or I will have to crash at some point!'
 
-    get = Get
-    set_focus = Element.SetFocus
-    set_tooltip = Element.SetTooltip
-    update = Update
+    Get = get
+    Update = update
 
 
 # ---------------------------------------------------------------------- #
@@ -7654,7 +7600,7 @@ class Window:
         return screen_width, screen_height
 
     # ------------------------- Add ONE Row to Form ------------------------- #
-    def AddRow(self, *args):
+    def add_row(self, *args):
         """
         Adds a single row of elements to a window's self.Rows variables.
         Generally speaking this is NOT how users should be building Window layouts.
@@ -7706,7 +7652,7 @@ class Window:
         self.Rows.append(CurrentRow)
 
     # ------------------------- Add Multiple Rows to Form ------------------------- #
-    def AddRows(self, rows):
+    def add_rows(self, rows):
         """
         Loops through a list of lists of elements and adds each row, list, to the layout.
         This is NOT the best way to go about creating a window.  Sending the entire layout at one time and passing
@@ -7729,7 +7675,7 @@ class Window:
             self.AddRow(*row)
 
 
-    def Layout(self, rows):
+    def layout(self, rows):
         """
         Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
         a parameter to Window object.  The parameter method is the currently preferred method. This call to Layout
@@ -7850,7 +7796,7 @@ class Window:
         return self.ReturnValues
 
     # ------------------------- SetIcon - set the window's fav icon ------------------------- #
-    def SetIcon(self, icon=None, pngbase64=None):
+    def set_icon(self, icon=None, pngbase64=None):
         """
         Changes the icon that is shown on the title bar and on the task bar.
         NOTE - The file type is IMPORTANT and depends on the OS!
@@ -7994,7 +7940,7 @@ class Window:
 
 
     # @_timeit_summary
-    def Read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
+    def read(self, timeout=None, timeout_key=TIMEOUT_KEY, close=False):
         """
         THE biggest deal method in the Window class! This is how you get all of your data from your Window.
             Pass in a timeout (in milliseconds) to wait for a maximum of timeout milliseconds. Will return timeout_key
@@ -8222,7 +8168,7 @@ class Window:
         self.TKAfterID = self.TKroot.after(int(duration * 1000), self._AutoCloseAlarmCallback)
 
 
-    def Finalize(self):
+    def finalize(self):
         """
         Use this method to cause your layout to built into a real tkinter window.  In reality this method is like
         Read(timeout=0).  It doesn't block and uses your layout to create tkinter widgets to represent the elements.
@@ -8256,7 +8202,7 @@ class Window:
             # return None, None
         return self
 
-    def Refresh(self):
+    def refresh(self):
         """
         Refreshes the window by calling tkroot.update().  Can sometimes get away with a refresh instead of a Read.
         Use this call when you want something to appear in your Window immediately (as soon as this function is called).
@@ -8274,7 +8220,7 @@ class Window:
             pass
         return self
 
-    def Fill(self, values_dict):
+    def fill(self, values_dict):
         """
         Fill in elements that are input fields with data based on a 'values dictionary'
 
@@ -8300,7 +8246,7 @@ class Window:
         return matches[0] if len(matches) else None
 
 
-    def FindElement(self, key, silent_on_error=False):
+    def find_element(self, key, silent_on_error=False):
         """
         Find element object associated with the provided key.
         THIS METHOD IS NO LONGER NEEDED to be called by the user
@@ -8372,11 +8318,11 @@ class Window:
                 raise KeyError(key)
         return element
 
-    Element = FindElement  # Shortcut function
-    Find = FindElement  # Shortcut function, most likely not used by many people.
-    Elem = FindElement  # NEW for 2019!  More laziness... Another shortcut
+    Element = find_element  # Shortcut function
+    Find = find_element  # Shortcut function, most likely not used by many people.
+    Elem = find_element  # NEW for 2019!  More laziness... Another shortcut
 
-    def FindElementWithFocus(self):
+    def find_element_with_focus(self):
         """
         Returns the Element that currently has focus as reported by tkinter. If no element is found None is returned!
         :return: An Element if one has been found with focus or None if no element found
@@ -8486,7 +8432,7 @@ class Window:
 
 
 
-    def SaveToDisk(self, filename):
+    def save_to_disk(self, filename):
         """
         Saves the values contained in each of the input areas of the form. Basically saves what would be returned from a call to Read.  It takes these results and saves them to disk using pickle.
          Note that every element in your layout that is to be saved must have a key assigned to it.
@@ -8507,7 +8453,7 @@ class Window:
         except:
             print('*** Error saving Window contents to disk ***')
 
-    def LoadFromDisk(self, filename):
+    def load_from_disk(self, filename):
         """
         Restore values from a previous call to SaveToDisk which saves the returned values dictionary in Pickle format
 
@@ -8520,7 +8466,7 @@ class Window:
         except:
             print('*** Error loading form to disk ***')
 
-    def GetScreenDimensions(self):
+    def get_screen_dimensions(self):
         """
         Get the screen dimensions.  NOTE - you must have a window already open for this to work (blame tkinter not me)
 
@@ -8534,7 +8480,7 @@ class Window:
         screen_height = self.TKroot.winfo_screenheight()
         return screen_width, screen_height
 
-    def Move(self, x, y):
+    def move(self, x, y):
         """
         Move the upper left corner of this window to the x,y coordinates provided
         :param x: x coordinate in pixels
@@ -8550,7 +8496,7 @@ class Window:
             pass
 
 
-    def Minimize(self):
+    def minimize(self):
         """
         Minimize this window to the task bar
         """
@@ -8560,7 +8506,7 @@ class Window:
         self.maximized = False
 
 
-    def Maximize(self):
+    def maximize(self):
         """
         Maximize the window. This is done differently on a windows system versus a linux or mac one.  For non-Windows
         the root attribute '-fullscreen' is set to True.  For Windows the "root" state is changed to "zoomed"
@@ -8577,7 +8523,7 @@ class Window:
         # self.TKroot.attributes('-fullscreen', True)
         self.maximized = True
 
-    def Normal(self):
+    def normal(self):
         """
         Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
         """
@@ -8767,7 +8713,7 @@ class Window:
         self.RootNeedsDestroying = True
         return
 
-    def Close(self):
+    def close(self):
         """
         Closes window.  Users can safely call even if window has been destroyed.   Should always call when done with
         a window so that resources are properly freed up within your thread.
@@ -8830,7 +8776,7 @@ class Window:
         if self.close_destroys_window:
             self.RootNeedsDestroying = True
 
-    def Disable(self):
+    def disable(self):
         """
         Disables window from taking any input from the user
         """
@@ -8839,7 +8785,7 @@ class Window:
         self.TKroot.attributes('-disabled', 1)
         # self.TKroot.grab_set_global()
 
-    def Enable(self):
+    def enable(self):
         """
         Re-enables window to take user input after having it be Disabled previously
         """
@@ -8848,7 +8794,7 @@ class Window:
         self.TKroot.attributes('-disabled', 0)
         # self.TKroot.grab_release()
 
-    def Hide(self):
+    def hide(self):
         """
         Hides the window from the screen and the task bar
         """
@@ -8857,7 +8803,7 @@ class Window:
         self._Hidden = True
         self.TKroot.withdraw()
 
-    def UnHide(self):
+    def un_hide(self):
         """
         Used to bring back a window that was previously hidden using the Hide method
         """
@@ -8867,7 +8813,7 @@ class Window:
             self.TKroot.deiconify()
             self._Hidden = False
 
-    def Disappear(self):
+    def disappear(self):
         """
         Causes a window to "disappear" from the screen, but remain on the taskbar. It does this by turning the alpha
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
@@ -8877,7 +8823,7 @@ class Window:
             return
         self.TKroot.attributes('-alpha', 0)
 
-    def Reappear(self):
+    def reappear(self):
         """
         Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
         """
@@ -8885,7 +8831,7 @@ class Window:
             return
         self.TKroot.attributes('-alpha', 255)
 
-    def SetAlpha(self, alpha):
+    def set_alpha(self, alpha):
         """
         Sets the Alpha Channel for a window.  Values are between 0 and 1 where 0 is completely transparent
 
@@ -8898,7 +8844,7 @@ class Window:
         self.TKroot.attributes('-alpha', alpha)
 
     @property
-    def AlphaChannel(self):
+    def alpha_channel(self):
         """
         A property that changes the current alpha channel value (internal value)
         :return: the current alpha channel setting according to self, not read directly from tkinter
@@ -8906,8 +8852,8 @@ class Window:
         """
         return self._AlphaChannel
 
-    @AlphaChannel.setter
-    def AlphaChannel(self, alpha):
+    @alpha_channel.setter
+    def alpha_channel(self, alpha):
         """
         The setter method for this "property".
         Planning on depricating so that a Set call is always used by users. This is more in line with the SDK
@@ -8919,7 +8865,7 @@ class Window:
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
 
-    def BringToFront(self):
+    def bring_to_front(self):
         """
         Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
@@ -8941,7 +8887,7 @@ class Window:
                 pass
 
 
-    def SendToBack(self):
+    def send_to_back(self):
         """
         Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
         """
@@ -8953,7 +8899,7 @@ class Window:
             pass
 
 
-    def CurrentLocation(self):
+    def current_location(self):
         """
         Get the current location of the window's top left corner
 
@@ -8966,7 +8912,7 @@ class Window:
 
 
     @property
-    def Size(self):
+    def size(self):
         """
         Return the current size of the window in pixels
 
@@ -8980,8 +8926,8 @@ class Window:
         return win_width, win_height
 
 
-    @Size.setter
-    def Size(self, size):
+    @size.setter
+    def size(self, size):
         """
         Changes the size of the window, if possible
 
@@ -9016,7 +8962,7 @@ class Window:
         self.refresh()
 
 
-    def SetTransparentColor(self, color):
+    def set_transparent_color(self, color):
         """
         Set the color that will be transparent in your window. Areas with this color will be SEE THROUGH.
 
@@ -9032,7 +8978,7 @@ class Window:
             print('Transparent color not supported on this platform (windows only)')
 
 
-    def GrabAnyWhereOn(self):
+    def grab_any_where_on(self):
         """
         Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -9044,7 +8990,7 @@ class Window:
         self.TKroot.bind("<B1-Motion>", self._OnMotion)
 
 
-    def GrabAnyWhereOff(self):
+    def grab_any_where_off(self):
         """
         Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
@@ -9110,7 +9056,7 @@ class Window:
         _Debugger.debugger._build_floating_window()
 
 
-    def EnableDebugger(self):
+    def enable_debugger(self):
         """
         Enables the internal debugger. By default, the debugger IS enabled
         """
@@ -9121,7 +9067,7 @@ class Window:
         self.DebuggerEnabled = True
 
 
-    def DisableDebugger(self):
+    def disable_debugger(self):
         """
         Disable the internal debugger. By default the debugger is ENABLED
         """
@@ -9353,47 +9299,44 @@ class Window:
         return False
 
 
-    add_row = AddRow
-    add_rows = AddRows
-    alpha_channel = AlphaChannel
-    bring_to_front = BringToFront
-    close = Close
-    current_location = CurrentLocation
-    disable = Disable
-    disable_debugger = DisableDebugger
-    disappear = Disappear
-    elem = Elem
-    element = Element
-    enable = Enable
-    enable_debugger = EnableDebugger
-    fill = Fill
-    finalize = Finalize
-    find = Find
-    find_element = FindElement
-    find_element_with_focus = FindElementWithFocus
-    get_screen_dimensions = GetScreenDimensions
-    grab_any_where_off = GrabAnyWhereOff
-    grab_any_where_on = GrabAnyWhereOn
-    hide = Hide
-    layout = Layout
-    load_from_disk = LoadFromDisk
-    maximize = Maximize
-    minimize = Minimize
-    move = Move
-    normal = Normal
-    read = Read
-    reappear = Reappear
-    refresh = Refresh
-    save_to_disk = SaveToDisk
-    send_to_back = SendToBack
-    set_alpha = SetAlpha
-    set_icon = SetIcon
-    set_transparent_color = SetTransparentColor
-    size = Size
-    un_hide = UnHide
+    AddRow = add_row
+    AddRows = add_rows
+    AlphaChannel = alpha_channel
+    BringToFront = bring_to_front
+    Close = close
+    CurrentLocation = current_location
+    Disable = disable
+    DisableDebugger = disable_debugger
+    Disappear = disappear
+    Enable = enable
+    EnableDebugger = enable_debugger
+    Fill = fill
+    Finalize = finalize
+    FindElement = find_element
+    FindElementWithFocus = find_element_with_focus
+    GetScreenDimensions = get_screen_dimensions
+    GrabAnyWhereOff = grab_any_where_off
+    GrabAnyWhereOn = grab_any_where_on
+    Hide = hide
+    Layout = layout
+    LoadFromDisk = load_from_disk
+    Maximize = maximize
+    Minimize = minimize
+    Move = move
+    Normal = normal
+    Read = read
+    Reappear = reappear
+    Refresh = refresh
+    SaveToDisk = save_to_disk
+    SendToBack = send_to_back
+    SetAlpha = set_alpha
+    SetIcon = set_icon
+    SetTransparentColor = set_transparent_color
+    Size = size
+    UnHide = un_hide
     VisibilityChanged = visibility_changed
-    CloseNonBlocking = Close
-    CloseNonBlockingForm = Close
+    CloseNonBlocking = close
+    CloseNonBlockingForm = close
 
     #
     # def __exit__(self, *a):
@@ -9634,7 +9577,7 @@ class SystemTray:
         self.window['-IMAGE-'].bind('<Double-Button-1>', '+DOUBLE_CLICK')
 
 
-    def Read(self, timeout=None):
+    def read(self, timeout=None):
         """
         Reads the context menu
         :param timeout: Optional.  Any value other than None indicates a non-blocking read
@@ -9653,21 +9596,21 @@ class SystemTray:
         return event
 
 
-    def Hide(self):
+    def hide(self):
         """
         Hides the icon
         """
         self.window.hide()
 
 
-    def UnHide(self):
+    def un_hide(self):
         """
         Restores a previously hidden icon
         """
         self.window.un_hide()
 
 
-    def ShowMessage(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=(SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS)):
+    def show_message(self, title, message, filename=None, data=None, data_base64=None, messageicon=None, time=(SYSTEM_TRAY_MESSAGE_FADE_IN_DURATION, SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS)):
         """
         Shows a balloon above icon in system tray
         :param title:  Title shown in balloon
@@ -9698,14 +9641,14 @@ class SystemTray:
         self.last_message_event = event
         return event
 
-    def Close(self):
+    def close(self):
         """
         Close the system tray window
         """
         self.window.close()
 
 
-    def Update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
+    def update(self, menu=None, tooltip=None,filename=None, data=None, data_base64=None,):
         """
         Updates the menu, tooltip or icon
         :param menu: menu defintion
@@ -9814,12 +9757,12 @@ class SystemTray:
 
         return EVENT_SYSTEM_TRAY_MESSAGE_CLICKED if event == '-GRAPH-' else event
 
-    close = Close
-    hide = Hide
-    read = Read
-    show_message = ShowMessage
-    un_hide = UnHide
-    update = Update
+    Close = close
+    Hide = hide
+    Read = read
+    ShowMessage = show_message
+    UnHide = un_hide
+    Update = update
 
 
 
@@ -11341,7 +11284,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
     return form.ReturnValues
 
 
-def FillFormWithValues(window, values_dict):
+def fill_form_with_values(window, values_dict):
     """
     Fills a window with values provided in a values dictionary { element_key : new_value }
 
@@ -13554,7 +13497,7 @@ def _GetNumLinesNeeded(text, max_line_width):
 
 # ==============================  PROGRESS METER ========================================== #
 
-def ConvertArgsToSingleString(*args):
+def convert_args_to_single_string(*args):
     """
 
     :param *args:
@@ -13701,7 +13644,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
+def one_line_progress_meter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
     """
     :param title: text to display in eleemnt
     :type title: (str)
@@ -13741,7 +13684,7 @@ def OneLineProgressMeter(title, current_value, max_value, key='OK for 1 meter', 
     return rc == METER_OK
 
 
-def OneLineProgressMeterCancel(key='OK for 1 meter'):
+def one_line_progress_meter_cancel(key='OK for 1 meter'):
     """
     Cancels and closes a previously created One Line Progress Meter window
 
@@ -13759,7 +13702,7 @@ def OneLineProgressMeterCancel(key='OK for 1 meter'):
         return
 
 
-def GetComplimentaryHex(color):
+def get_complimentary_hex(color):
     """
     :param color: color string, like "#RRGGBB"
     :type color: (str)
@@ -13879,7 +13822,7 @@ def PrintClose():
     EasyPrintClose()
 
 
-def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
+def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
@@ -13922,11 +13865,10 @@ def EasyPrint(*args, size=(None, None), end=None, sep=None, location=(None, None
     _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color, background_color=background_color)
 
 
-Print = EasyPrint
-eprint = EasyPrint
 
 
-def EasyPrintClose():
+
+def easy_print_close():
     """
     Close a previously opened EasyPrint window
 
@@ -14109,10 +14051,10 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     except:
         pass
 
-# ============================== SetGlobalIcon ======#
+# ============================== set_global_icon ====#
 # Sets the icon to be used by default                #
 # ===================================================#
-def SetGlobalIcon(icon):
+def set_global_icon(icon):
     """
     Sets the icon which will be used any time a window is created if an icon is not provided when the
     window is created.
@@ -14126,7 +14068,7 @@ def SetGlobalIcon(icon):
     Window._user_defined_icon = icon
 
 
-# ============================== SetOptions =========#
+# ============================== set_options ========#
 # Sets the icon to be used by default                #
 # ===================================================#
 def set_options(icon=None, button_color=None, element_size=(None, None), button_element_size=(None, None),
@@ -14601,7 +14543,7 @@ LOOK_AND_FEEL_TABLE = {
 
 
 
-def ListOfLookAndFeelValues():
+def list_of_look_and_feel_values():
     """
     Get a list of the valid values to pass into your call to change_look_and_feel
 
@@ -14945,7 +14887,7 @@ def theme_previewer_swatches():
     window.close()
     theme(current_theme)
 
-def ChangeLookAndFeel(index, force=False):
+def change_look_and_feel(index, force=False):
     """
     Change the "color scheme" of all future PySimpleGUI Windows.
     The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
@@ -15093,7 +15035,7 @@ def _hsl_to_hsv(h, s, l):
     return h, s, v
 
 # Converts an object's contents into a nice printable string.  Great for dumping debug data
-def ObjToStringSingleObj(obj):
+def obj_to_string_single_obj(obj):
     """
     Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
     Returns only the top-most object's variables instead of drilling down to dispolay more
@@ -15108,7 +15050,7 @@ def ObjToStringSingleObj(obj):
         (repr(item) + ' = ' + repr(obj.__dict__[item]) for item in sorted(obj.__dict__)))
 
 
-def ObjToString(obj, extra='    '):
+def obj_to_string(obj, extra='    '):
     """
     Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
     :param obj: The object to display
@@ -15141,7 +15083,7 @@ def ObjToString(obj, extra='    '):
 # ------------------------------------------------------------------------------------------------------------------ #
 # ----------------------------------- The mighty Popup! ------------------------------------------------------------ #
 
-def Popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=True):
+def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False, auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -15296,7 +15238,7 @@ def MsgBox(*args):
 
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
-def PopupScrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
+def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
                   size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, modal=True):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -15390,7 +15332,7 @@ def PopupScrolled(*args, title=None, button_color=None, background_color=None, t
     return button
 
 
-ScrolledTextBox = PopupScrolled
+ScrolledTextBox = popup_scrolled
 
 # ============================== sprint ======#
 # Is identical to the Scrolled Text Box       #
@@ -15399,11 +15341,11 @@ ScrolledTextBox = PopupScrolled
 # This is in addition to the Print function   #
 # which routes output to a "Debug Window"     #
 # ============================================#
-sprint = ScrolledTextBox
+sprint = popup_scrolled
 
 
-# --------------------------- PopupNoButtons ---------------------------
-def PopupNoButtons(*args, title=None, background_color=None, text_color=None, auto_close=False,
+# --------------------------- popup_no_buttons ---------------------------
+def popup_no_buttons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                    auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                    no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """Show a Popup but without any buttons
@@ -15447,8 +15389,8 @@ def PopupNoButtons(*args, title=None, background_color=None, text_color=None, au
           font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupNonBlocking ---------------------------
-def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
+# --------------------------- popup_non_blocking ---------------------------
+def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                      text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
                      line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                      location=(None, None), image=None, modal=False):
@@ -15500,11 +15442,11 @@ def PopupNonBlocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
                  font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-PopupNoWait = PopupNonBlocking
 
 
-# --------------------------- PopupQuick - a NonBlocking, Self-closing Popup  ---------------------------
-def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
+
+# --------------------------- popup_quick - a NonBlocking, Self-closing Popup  ---------------------------
+def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
     """
@@ -15557,8 +15499,8 @@ def PopupQuick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=Non
                  font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupQuick - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
-def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
+# --------------------------- popup_quick_message - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
+def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                       text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
                       font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
     """
@@ -15611,7 +15553,7 @@ def PopupQuickMessage(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, b
 
 
 # --------------------------- PopupNoTitlebar ---------------------------
-def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
+def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                     text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
                     line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15661,13 +15603,11 @@ def PopupNoTitlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_colo
                  font=font, no_titlebar=True, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-PopupNoFrame = PopupNoTitlebar
-PopupNoBorder = PopupNoTitlebar
-PopupAnnoying = PopupNoTitlebar
+
 
 
 # --------------------------- PopupAutoClose ---------------------------
-def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
+def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                    auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
                    line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
                    location=(None, None), image=None, modal=True):
@@ -15720,11 +15660,11 @@ def PopupAutoClose(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color
                  font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-PopupTimed = PopupAutoClose
 
 
-# --------------------------- PopupError ---------------------------
-def PopupError(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
+
+# --------------------------- popup_error ---------------------------
+def popup_error(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15775,8 +15715,8 @@ def PopupError(*args, title=None, button_color=(None, None), background_color=No
                  keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupCancel ---------------------------
-def PopupCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+# --------------------------- popup_cancel ---------------------------
+def popup_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15826,8 +15766,8 @@ def PopupCancel(*args, title=None, button_color=None, background_color=None, tex
                  keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupOK ---------------------------
-def PopupOK(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+# --------------------------- popup_ok ---------------------------
+def popup_ok(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
             auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
             no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15876,8 +15816,8 @@ def PopupOK(*args, title=None, button_color=None, background_color=None, text_co
                  keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupOKCancel ---------------------------
-def PopupOKCancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+# --------------------------- popup_ok_cancel ---------------------------
+def popup_ok_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                   auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
                   no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15927,8 +15867,8 @@ def PopupOKCancel(*args, title=None, button_color=None, background_color=None, t
                  grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
 
 
-# --------------------------- PopupYesNo ---------------------------
-def PopupYesNo(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+# --------------------------- popup_yes_no ---------------------------
+def popup_yes_no(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -15979,13 +15919,13 @@ def PopupYesNo(*args, title=None, button_color=None, background_color=None, text
 
 
 ##############################################################################
-#   The PopupGet_____ functions - Will return user input                     #
+#   The popup_get_____ functions - Will return user input                     #
 ##############################################################################
 
-# --------------------------- PopupGetFolder ---------------------------
+# --------------------------- popup_get_folder ---------------------------
 
 
-def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
+def popup_get_folder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
                    grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None, modal=True):
     """
@@ -16094,9 +16034,9 @@ def PopupGetFolder(message, title=None, default_path='', no_window=False, size=(
         return values['_INPUT_']
 
 
-# --------------------------- PopupGetFile ---------------------------
+# --------------------------- popup_get_file ---------------------------
 
-def PopupGetFile(message, title=None, default_path='', default_extension='', save_as=False, multiple_files=False,
+def popup_get_file(message, title=None, default_path='', default_extension='', save_as=False, multiple_files=False,
                  file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
@@ -16244,9 +16184,9 @@ def PopupGetFile(message, title=None, default_path='', default_extension='', sav
         return path
 
 
-# --------------------------- PopupGetText ---------------------------
+# --------------------------- popup_get_text ---------------------------
 
-def PopupGetText(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
+def popup_get_text(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                  background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
                  grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
     """
@@ -16482,7 +16422,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
 
 # --------------------------- PopupAnimated ---------------------------
 
-def PopupAnimated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
+def popup_animated(image_source, message=None, background_color=None, text_color=None, font=None, no_titlebar=True, grab_anywhere=True, keep_on_top=True, location=(None, None), alpha_channel=None, time_between_frames=0, transparent_color=None, title='', icon=None):
     """
      Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
      and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
@@ -18434,44 +18374,48 @@ def main():
 
 # ------------------------ PEP8-ify The SDK ------------------------#
 
-change_look_and_feel = ChangeLookAndFeel
-convert_args_to_single_string = ConvertArgsToSingleString
-easy_print = EasyPrint
-easy_print_close = EasyPrintClose
-fill_form_with_values = FillFormWithValues
-get_complimentary_hex = GetComplimentaryHex
-list_of_look_and_feel_values = ListOfLookAndFeelValues
-obj_to_string = ObjToString
-obj_to_string_single_obj = ObjToStringSingleObj
-one_line_progress_meter = OneLineProgressMeter
-one_line_progress_meter_cancel = OneLineProgressMeterCancel
-popup = Popup
-popup_animated = PopupAnimated
-popup_annoying = PopupAnnoying
-popup_auto_close = PopupAutoClose
-popup_cancel = PopupCancel
-popup_error = PopupError
-popup_get_file = PopupGetFile
-popup_get_folder = PopupGetFolder
-popup_get_text = PopupGetText
-popup_no_border = PopupNoBorder
-popup_no_buttons = PopupNoButtons
-popup_no_frame = PopupNoFrame
-popup_no_titlebar = PopupNoTitlebar
-popup_no_wait = PopupNoWait
-popup_non_blocking = PopupNonBlocking
-popup_ok = PopupOK
-popup_ok_cancel = PopupOKCancel
-popup_quick = PopupQuick
-popup_quick_message = PopupQuickMessage
-popup_scrolled = PopupScrolled
-popup_timed = PopupTimed
-popup_yes_no = PopupYesNo
-sgprint = Print
-sgprint_close = PrintClose
-rgb = RGB
-set_global_icon = SetGlobalIcon
+ChangeLookAndFeel = change_look_and_feel
+ConvertArgsToSingleString = convert_args_to_single_string
+EasyPrint = easy_print
+Print = easy_print
+eprint = easy_print
+EasyPrintClose = easy_print_close
+FillFormWithValues = fill_form_with_values
+GetComplimentaryHex = get_complimentary_hex
+ListOfLookAndFeelValues = list_of_look_and_feel_values
+ObjToString = obj_to_string
+ObjToStringSingleObj = obj_to_string_single_obj
+OneLineProgressMeter = one_line_progress_meter
+OneLineProgressMeterCancel = one_line_progress_meter_cancel
+Popup = popup
+PopupNoFrame = popup_no_titlebar
+PopupNoBorder = popup_no_titlebar
+PopupAnnoying = popup_no_titlebar
+PopupAnimated = popup_animated
+PopupAutoClose = popup_auto_close
+PopupCancel = popup_cancel
+PopupError = popup_error
+PopupGetFile = popup_get_file
+PopupGetFolder = popup_get_folder
+PopupGetText = popup_get_text
+PopupNoButtons = popup_no_buttons
+PopupNoTitlebar = popup_no_titlebar
+PopupNoWait = popup_non_blocking
+PopupNonBlocking = popup_non_blocking
+PopupOK = popup_ok
+PopupOKCancel = popup_ok_cancel
+PopupQuick = popup_quick
+PopupQuickMessage = popup_quick_message
+PopupScrolled = popup_scrolled
+PopupTimed = popup_auto_close
+PopupYesNo = popup_yes_no
+Print = easy_print
+PrintClose = easy_print_close
+RGB = rgb
+SetGlobalIcon = set_global_icon
 SetOptions = set_options
+TimerStart = timer_start
+TimerStop = timer_stop
 
 test = main
 
