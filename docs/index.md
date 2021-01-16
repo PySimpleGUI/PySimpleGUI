@@ -1433,7 +1433,7 @@ Popup - Display a popup Window with as many parms as you wish to include.  This 
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
 ```
-Popup(args=*<1 or N object>,
+popup(args=*<1 or N object>,
     title = None,
     button_color = None,
     background_color = None,
@@ -1564,52 +1564,6 @@ Note that the default max number of lines before scrolling happens is set to 50.
 If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow. 
 
 ### Non-Blocking Popups - popup_no_wait and the non_blocking parameter
-
-Show Popup window and immediately return (does not block)
-
-```
-popup_no_wait(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None | **RETURN** | Reason for popup closing
 
 The `popup` call `popup_no_wait` or `popup_non_blocking` will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
 
