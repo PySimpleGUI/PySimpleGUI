@@ -1,27 +1,1313 @@
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-▓▓  WHAT, HOW, WHEN?  ▓▓
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
+  <h2 align="center">Python GUIs for Humans</h2>
+</p>
 
-▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
-============= Format =============
+[![tkinter](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
+[![tkinter27](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tk 2.7
+[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
+[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
+[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
 
-## Title | shortcuts
+![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
+![Python Version](https://img.shields.io/badge/Python-2.7_3.4+-yellow.svg)
 
-Description
+[![PyPI Version](https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge)](https://pypi.org/project/pysimplegui/) tkinter
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) Qt
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiweb/) Web
+[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiwx/) Wx
+![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
+[![Last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
 
-PYTHON CODE
+# PySimpleGUI User's Manual
 
-IMAGE
+## Python GUI For Humans - Transforms tkinter, Qt, Remi, WxPython into portable people-friendly Pythonic interfaces
 
-init_call
+## <span>The Call Reference Section Moved to <a href="https://pysimplegui.readthedocs.io/en/latest/call%20reference/">here</a></span>
 
-methods
+### This manual is crammed full of answers so start your search for answers here. Read/Search this prior to opening an Issue on GitHub.  Press Control F and type.
+---
+
+# Jump-Start
+
+## Install
+
+```
+pip install pysimplegui
+or
+pip3 install pysimplegui
+```
+
+### This Code
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('DarkAmber')	# Add a touch of color
+# All the stuff inside your window.
+layout = [  [sg.Text('Some text on Row 1')],
+            [sg.Text('Enter something on Row 2'), sg.InputText()],
+            [sg.Button('Ok'), sg.Button('Cancel')] ]
+
+# Create the Window
+window = sg.Window('Window Title', layout)
+# Event Loop to process "events" and get the "values" of the inputs
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED or event == 'Cancel':	# if user closes window or clicks cancel
+        break
+    print('You entered ', values[0])
+
+window.close()
+```
+
+### Makes This Window
+
+and returns the value input as well as the button clicked.
+
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
+
+### Any Questions?  It's that simple.
 
 ---
 
-additions
+#### Looking for a GUI package?     Are you....
 
-<!-- Start from here -->
+* looking to take your Python code from the world of command lines and into the convenience of a GUI? 
+* sitting on a Raspberry **Pi** with a touchscreen that's going to waste because you don't have the time to learn a GUI SDK?
+* into Machine Learning and are sick of the command line?
+* an IT guy/gal that has written some cool tools but due to corporate policies are unable to share unless an EXE file?
+* want to share your program with your friends or families (that aren't so freakish that they have Python running)
+* wanting to run a program in your system tray?
+* a teacher wanting to teach your students how to program using a GUI?
+* a student that wants to put a GUI onto your project that will blow away your teacher?
+* looking for a GUI package that is "supported" and is being constantly developed to improve it?
+* longing for documentation and scores of examples?
+
+**Look no further, you've found your GUI package**.
+
+#### The basics
+
+* Create windows that look and operate _identically_ to those created directly with tkinter, Qt, WxPython, and Remi.
+* Requires 1/2 to 1/10th the amount of code as underlying frameworks.
+* One afternoon is all that is required to learn the PySimpleGUI package _and_ write your first custom GUI.
+* Students can begin using within their first week of Python education.
+* No callback functions. You do not need to write the word `class` _anywhere_ in your code.
+* Access to nearly every underlying GUI Framework's Widgets.
+* Supports both Python 2.7 & 3 when using tkinter
+* Supports both PySide2 and PyQt5 (limited support)
+* Effortlessly move across tkinter, Qt, WxPython, and the Web (Remi) by changing only the import statement
+* The *only* way to write both desktop and web based GUIs at the same time in Python
+* Developed from nothing as a pure Python implementation with Python friendly interfaces.
+* Run your program in the System Tray using WxPython. Or, change the import and run it on Qt with no other changes.
+* Works with Qt Designer
+* Built in Debugger
+* Actively maintained and enhanced - 4 ports are underway, all being used by users.
+* Corporate as well as home users.
+* Appealing to both newcomers to Python and experienced Pythonistas. 
+* The focus is entirely on the developer (you) and making their life easier, simplified, and in control.
+* 170+ Demo Programs teach you how to integrate with many popular packages like OpenCV, Matplotlib, PyGame, etc. 
+* 200 pages of documentation, a Cookbook, built-in help using docstrings, in short it's heavily documented
+
+## GUI Development does not have to be difficult nor painful.  It can be (and is) FUN
+
+#### What users are saying about PySimpleGUI
+
+***(None of these comments were solicited & are not paid endorsements - other than a huge thank you they received!)***
+
+"I've been working to learn PyQT for the past week in my off time as an intro to GUI design and how to apply it to my existing scripts... Took me ~30 minutes to figure out PySimpleGUI and get my scripts working with a GUI."
+
+"Python has been an absolute nightmare for me and I've avoided it like the plague.  Until I saw PySimpleGUI."
+
+"I've been pretty amazed at how much more intuitive it is than raw tk/qt. The dude developing it is super active on the project too so if you come across situations that you just can't get the code to do what you want you can make bug/enhancement issues that are almost assured to get a meaningful response."
+
+"This library is the easiest way of GUI programming in python! I'm totally in love with it"
+
+"Wow that readme is extensive and great." (hear the love for docs often)
+
+"Coming from R, Python is absolutely slick for GUIs. PySimpleGUI is a dream."
+
+"I have been writing Python programs for about 4 or 5 months now. Up until this week I never had luck with any UI libraries like Tkinter, Qt, Kivy.  I went from not even being able to load a window in Tkinter reliably to making a loading screen, and full program in one night with PySimpleGUI."
+
+"I love PySimpleGUI! I've been teaching it in my Python classes instead of Tkinter."
+
+"I wish PySimpleGUI was available for every friggin programming language"
+
+### START HERE - User Manual with Table of Contents
+
+[ReadTheDocs](http://www.PySimpleGUI.org)  <------ THE best place to read the docs due to TOC, all docs in 1 place, and better formatting. START here in your education.  Easy to remember PySimpleGUI.org.
+
+[The Call Reference](http://calls.PySimpleGUI.org) documentation is located on the same ReadTheDocs page as the main documentation, but it's on another tab that you'll find across the top of the page.
+
+The quick way to remember the documentation addresses is to use these addresses:
+
+http://docs.PySimpleGUI.org
+http://calls.PySimpleGUI.org
+
+#### Quick Links To Help and The Latest News and Releases
+
+[Homepage - Lastest Readme and Code - GitHub](http://www.PySimpleGUI.com)  Easy to remember: PySimpleGUI.com
+
+[Announcements of Latest Developments, Release news, Misc](https://github.com/PySimpleGUI/PySimpleGUI/issues/142)
+
+[COOKBOOK!](http://Cookbook.PySimpleGUI.org)
+
+[Trinket an online Cookbook](http://Trinket.PySimpleGUI.org)
+
+[Brief Tutorial](http://Tutorial.PySimpleGUI.org)
+
+[Latest Demos and Master Branch on GitHub](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms)
+
+[Repl.it Home for PySimpleGUI](https://repl.it/@PySimpleGUI)
+
+[Lots of screenshots](https://www.bountysource.com/issues/60766522-screen-shots)
+
+[How to submit an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/1646)
+
+[The YouTube videos](http://YouTube.PySimpleGUI.org) - If you like instructional videos, there are over 15 videos made by PySimpleGUI project over the first 18 months.
+In 2020 a new series was begun.  As of May 2020 there are 12 videos completed so far with many more to go....
+- [PySimpleGUI 2020 - The most up to date information about PySimpleGUI](https://www.youtube.com/playlist?list=PLl8dD0doyrvFfzzniWS7FXrZefWWExJ2e)
+- [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
+- [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
+- [The Naked Truth (An update on the technology)](https://youtu.be/BFTxBmihsUY)
+- There are numerous short videos also on that channel that demonstrate PySimpleGUI being used
+
+YouTube Videos made by others.  These have much higher production values than the above videos.
+
+- A ***fantastic*** tutorial [PySimpleGUI Concepts - Video 1](https://youtu.be/cLcfLm_GgiM)
+- Build a calculator [Python Calculator with GUI | PySimpleGUI | Texas Instruments DataMath II](https://youtu.be/x5LSTDdffFk)
+- Notepad [Notepad in Python - PySimpleGUI](https://youtu.be/JQY641uynKo)
+- File Search Engine [File Search Engine | Project for Python Portfolio with GUI | PySimpleGUI](https://youtu.be/IWDC9vcBIFQ)
+
+# About The PySimpleGUI Documentation System
+
+This User's Manual (also the project's readme) is one ***vital*** part of the PySimpleGUI programming environment.  The best place to read it is at http://www.PySimpleGUI.org
+
+If you are a professional or skilled in how to develop software, then you understand the role of documentation in the world of technology development. Use it, please.
+
+***It WILL be required, at times, for you to read or search this document in order to be successful.***
+
+Using Stack Overflow and other sites to post your questions has resulted in advice given by a lot of users that have never looked at the package and are sometimes just flat bad advice.  When possible, post an Issue on this GitHub. Definitely go through the Issue checklist.  Take a look through the docs, again.
+
+There are 5 resources that work together to provide to you the fastest path to success.  They are:
+
+1. This User's Manual
+2. The Cookbook
+3. The 170+ Demo Programs
+4. Docstrings enable you to access help directly from Python or your IDE
+5. Searching the GitHub Issues as a last resort (search both open and closed issues)
+
+Pace yourself.  The initial progress is exciting and FAST PACED.  However, GUIs take time and thought to build.  Take a deep breath and use the provided materials and you'll do fine.  Don't skip the design phase of your GUI after you run some demos and get the hang of things.  If you've tried other GUI frameworks before, successful or not, then you know you're already way ahead of the game using PySimpleGUI versus the underlying GUI frameworks.  It may feel like the 3 days you've been working on your code has been forever, but by comparison of 3 days learning Qt, PySimpleGUI will look trivial to learn.
+
+It is not by accident that this section, about documentation, is at the TOP of this document.
+
+This documentation is not HUGE in length for a package this size. In fact it's still one document and it's the readme for the GitHub.  It's not written in complex English.  It is understandable by complete beginners.  And pressing `Control+F` is all you need to do to search this document.  USUALLY you'll find less than 6 matches.
+
+## Documentation and Demos Get Out of Date
+
+Sometimes the documentation doesn't match exactly the version of the code you're running.  Sometimes demo programs haven't been updated to match a change made to the SDK.  Things don't happen simultaneously generally speaking.  So, it may very well be that you find an error or inconsistency or something no longer works with the latest version of an external library.
+
+If you've found one of these problems, and you've searched to make sure it's not a simple mistake on your part, then by ALL means log an Issue on the GitHub.  Don't be afraid to report problems if you've taken the simple steps of checking out the docs first.
+
+# Platforms
+
+## Hardware and OS Support
+
+PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and Remi do.  If you can get the underlying GUI Framework installed / running on your machine then PySimpleGUI will also run there.
+
+### Hardware
+
+* PC's, Desktop, Laptops
+* Macs of all types
+* Raspberry Pi
+* Android devices like phones and tablets
+* Virtual machine online (no hardware) - repl.it
+
+### OS
+
+* Windows 7, 8, 10
+* Linux on PC - Tested on several distributions
+* Linux on Raspberry Pi
+* Linux on Android - Can use either Termux or PyDroid3
+* Mac OS
+
+#### Python versions
+
+As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
+
+###### Python 2.7 Code will be deleted from this GitHub on Dec 31, 2019
+
+Note that the 2.7 port will *cease to exist on this GitHub* on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
+
+By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.  It sounds cruel, but experts in security particularly says 2.7 is a huge risk. Furthering it use only hurts the computing world.
+
+#### Warning - tkinter + Python 3.7.3 and later, including 3.8 has problems
+
+The version of tkinter that is being supplied with the 3.7.3 and later versions of Python is known to have a problem with table colors.  Basically, they don't work.  As a result, if you want to use the plain PySimpleGUI running on tkinter, you should be using 3.7.2 or less.  3.6 is the version PySimpleGUI has chosen as the recommended version for most users.
+
+## Output Devices
+
+In addition to running as a desktop GUI, you can also run your GUI in a web browser by running PySimpleGUIWeb. 
+
+This is ideal for "headless" setups like a Raspberry Pi that is at the core of a robot or other design that does not have a normal display screen.  For these devices, run a PySimpleGUIWeb program that never exits.  
+
+Then connect to your application by going to the Pi's IP address (and port #) using a browser and you'll be in communication with your application.  You can use it to make configuration changes or even control a robot or other piece of hardware using buttons in your GUI
+
+## A Complete PySimpleGUI Program (Getting The Gist)
+
+Before diving into details, here's a description of what PySimpleGUI is/does and why that is so powerful.
+
+You keep hearing "custom window" in this document because that's what you're making and using... your own custom windows.
+
+**ELEMENTS** is a word you'll see everywhere... in the code, documentation, ... Elements == PySimpleGUI's Widgets.  As to not confuse a tkinter Button Widget with a PySimpleGUI Button Element, it was decided that PySimpleGUI's Widgets will be called Elements to avoid confusion.
+
+Wouldn't it be nice if a GUI with 3 "rows" of Elements was defined in 3 lines of code?  That's exactly how it's done.  Each row of Elements is a list.  Put all those lists together and you've got a window.
+
+What about handling button clicks and stuff.  That's 4 lines of the code below beginning with the while loop.  
+
+Now look at the `layout` variable and then look at the window graphic below.  Defining a window is taking a design you can see visually and then visually creating it in code.  One row of Elements = 1 line of code (can span more if your window is crowded).  The window is exactly what we see in the code.  A line of text, a line of text and an input area, and finally ok and cancel buttons.
+
+This makes the coding process extremely quick and the amount of code very small
+
+```python
+import PySimpleGUI as sg
+sg.theme('DarkAmber')   # Add a little color to your windows
+# All the stuff inside your window. This is the PSG magic code compactor...
+layout = [  [sg.Text('Some text on Row 1')],
+            [sg.Text('Enter something on Row 2'), sg.InputText()],
+            [sg.OK(), sg.Cancel()]]
+
+# Create the Window
+window = sg.Window('Window Title', layout)
+# Event Loop to process "events"
+while True:             
+    event, values = window.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+
+window.close()
+```
+
+![image](https://user-images.githubusercontent.com/46163555/68713283-7cb38200-056b-11ea-990a-aa1603af5a11.png)
+
+You gotta admit that the code above is a lot more "fun" looking that tkinter code you've studied before.  Adding stuff to your GUI is ***trivial***.  You can clearly see the "mapping" of those 3 lines of code to specific Elements laid out in a Window.   It's not a trick.  It's how easy it is to code in PySimpleGUI.  With this simple concept comes the ability to create any window layout you wish.  There are parameters to move elements around inside the window should you need more control.
+
+It's a thrill to complete your GUI project way ahead of what you estimated.  Some people take that extra time to polish their GUI to make it even nicer, adding more bells and whistles because it's so easy and it's a lot of fun to see success after success as you write your program.
+
+Some are more advanced users and push the boundaries out and extend PySimpleGUI using their own extensions.
+
+Others, like IT people and hackers are busily cranking out GUI program after GUI program, and creating tools that others can use.  Finally there's an easy way to throw a GUI onto your program and give it to someone.  It's a pretty big leap in capability for some people.  It's GREAT to hear these successes.  It's motivating for everyone in the end.  Your success can easily motivate the next person to give it a try and also potentially be successful.
+
+Usually there's a one to one mapping of a PySimpleGUI Element to a GUI Widget. A "Text Element" in PySimpleGUI == "Label Widget" in tkinter.  What remains constant for you across all PySimpleGUI platforms is that no matter what the underlying GUI framework calls the thing that places text in your window, you'll always use the PySimpleGUI Text Element to access it.
+
+### The final bit of magic is in how Elements are created and changed.  
+
+So far you've seen simply layouts with no customization of the Elements.  Customizing and configuring Elements is another place PySimpleGUI utilizes the Python language to make your life easier.  
+
+What about Elements that have settings other than the standard system settings?   What if I want my Text to be blue, with a Courier font on a green background.  It's written quite simply:
+
+```python
+Text('This is some text', font='Courier 12', text_color='blue', background_color='green')
+```
+
+The Python named parameters are ***extensively*** in PySimpleGUI. They are key in making the code compact, readable, and trivial to write.
+
+As you'll learn in later sections that discuss the parameters to the Elements, there are a LOT of options available to you should you choose to use them.  The `Text Element` has 15 parameters that you can change.  This is one reason why PyCharm is suggested as your IDE... it does a fantastic job of displaying documentation as you type in your code.
+
+### That's *The* *Basics*
+
+What do you think?  Easier so far than your previous run-ins with GUIs in Python?  Some programs, many in fact, are as simple as this example has been.
+
+But PySimpleGUI certainly does **not** end here.  This is the beginning. The scaffolding you'll build upon.
+
+## The Underlying GUI Frameworks & Status of Each
+
+At the moment there are 4 actively developed and maintained "ports" of PySimpleGUI.  These include:
+
+1. tkinter - Fully complete
+2. Qt using Pyside2 - Alpha stage.  Not all features for all Elements are done
+3. WxPython - Development stage, pre-releaser.  Not all Elements are done. Some known problems with multiple windows
+4. Remi (Web browser support) - Development stage, pre-release.
+
+While PySimpleGUI, the tkinter port, is the only 100% completed version of PySimpleGUI, the other 3 ports have a LOT of functionality in them and are in active use by a large portion of the installations.  You can see the number of Pip installs at the very top of this document to get a comparison as to the size of the install base for each port.  The "badges" are right after the logo.
+
+# The PySimpleGUI "Family"
+
+## What's The Big Deal? What is it?
+
+PySimpleGUI wraps tkinter, Qt, WxPython and Remi so that you get all the same widgets, but you interact with them in a more friendly way that's common across the ports. 
+
+What does a wrapper do (Yo! PSG in the house!)?  It does the layout, boilerplate code, creates and manages the GUI Widgets for you and presents you with a **simple, efficient interface.**   Most importantly, it maps the Widgets in tkinter/Qt/Wx/Remi into PySimpleGUI Elements.  Finally, it replaces the GUIs' event loop with one of our own.  
+
+You've seen examples of the code already.  The big deal of all this is that anyone can create a GUI simply and quickly that matches GUIs written in the native GUI framework.  You can create complex layouts with complex element interactions.  And, that code you wrote to run on tkinter will also run on Qt by changing your import statement.
+
+If you want a deeper explanation about the [architecture of PySimpleGUI](https://pysimplegui.readthedocs.io/en/latest/architecture/), you'll find it on ReadTheDocs in the same document as the Readme & Cookbook. There is a tab at the top with labels for each document.
+
+## The "Ports"
+
+There are distinct ports happening as mentioned above.  Each have their own location on GitHub under the main project.  They have their own Readme with is an *augmentation* of this document... they are meant to be used together.
+
+PySimpleGUI is released on PyPI as 5 distinct packages.
+1. PySimpleGUI - tkinter version
+2. PySimpleGUI27 - tkinter version that runs on 2.7
+3. PySimpleGUIWx - WxPython version
+4. PySimpleGUIQt - PySided2 version
+5. PySimpleGUIWeb - The web (Remi) version
+
+You will need to install them separately
+
+There is also an accompanying debugger known as `imwatchingyou`.  If you are running the tkinter version of PySimpleGUI, you will not need to install the debugger as there is a version embedded directly into PySimpleGUI.
+
+## Qt Version
+
+Qt was the second port after tkinter.  It is the 2nd most complete with the original PySimpleGUI (tkinter) being the most complete and is likely to continue to be the front-runner.  All of the Elements are available on PySimpleGUIQt.
+
+As mentioned previously each port has an area.  For Qt, you can learn more on the [PySimpleGUIQt GitHub site](https://github.com/MikeTheWatchGuy/PySimpleGUI/tree/master/PySimpleGUIQt).  **There is a separate Readme file for the Qt version** that you'll find there.  This is true for all of the PySimpleGUI ports.
+
+Give it a shot if you're looking for something a bit more "modern".  PySimpleGUIQt is currently in **Alpha**.  *All of the widgets are operational but some may not yet be full-featured.*  If one is missing and your project needs it, log an Issue.  It's how new features are born.
+
+Here is a summary of the Qt Elements with no real effort spent on design clearly.  It's an example of the "test harness" that is a part of each port. If you run the PySimpleGUI.py file itself then you'll see one of these tests.
+
+As you can see, you've got a full array of GUI Elements to work with.  All the standard ones are there in a single window.  So don't be fooled into thinking PySimpleGUIQt is barely working or doesn't have many widgets to choose from.  You even get TWO "Bonus Elements" - `Dial` and `Stretch`
+
+## WxPython Version
+
+[PySimpleGUIWx GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx).  **There is a separate Readme file for the WxPython version**.
+
+Started in late December 2018 PySimpleGUIWx started with the SystemTray Icon feature.    This enabled the package to have one fully functioning feature that can be used along with tkinter to provide a complete program.    The System Tray feature is complete and working very well.  It was used not long ago in a corporate setting and has been performing with few problems reported.
+
+The Windowing code was coming together with Reads operational.  The elements were getting completed on a regular basis. But I ran into multiwindow problems.  And it was at about this time that Remi was suggested as a port.
+
+Remi (the "web port") overnight leapt the WxPython effort and Web became a #1 priority and continues to be.  The thought is that the desktop was well represented with PySimpleGUI, PySimpleGUIQt, and PySimpleGUIWx.  Between those ports is a solid windowing system and 2 system tray implementations and a nearly feature complete Qt effort.  So, the team was switched over to PySimpleGUIWeb.
+
+## Web Version (Remi)
+
+[PySimpleGUIWeb GitHub site](https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb).  **There is a separate Readme file for the Web version**.
+
+New for 2019, PySimpleGUIWeb.  This is an exciting development!  PySimpleGUI in your Web Browser!
+
+The underlying framework supplying the web capability is the Python package Remi.  https://github.com/dddomodossola/remi  Remi provides the widgets as well as a web server for you to connect to.  It's an exiting new platform to be running on and has temporarily bumped the WxPython port from the highest priority.  PySimpleGUIWeb is the current high priority project.
+
+**Use this solution for your Pi projects** that don't have anything connected in terms of input devices or display.  Run your Pi in "headless" mode and then access it via the Web interface.  This allows you to easily access and make changes to your Pi without having to hook up anything to it.
+
+****It's not meant to "serve up web pages"****
+
+PySimpleGUIWeb is first and foremost a **GUI**, a program's front-end. It is designed to have a single user connect and interact with the **GUI**.
+
+If more than 1 person connects at a time, then both users will see the exact same stuff and will be interacting with the program as if a single user was using it.
+
+## Android Version
+
+PySimpleGUI runs on Android devices with the help of either the PyDroid3 app or the Termux app.  Both are capable of running tkinter programs which means both are capable of running PySimpleGUI.
+
+To use with PyDroid3 you will need to add this import to the top of all of your PySimpleGUI program files:
+
+```python
+import tkinter
+```
+
+This evidently triggers PyDroid3 that the application is going to need to use the GUI.
+
+You will also want to create your windows with the `location` parameter set to `(0,0)`.
+
+Here's a quick demo that uses OpenCV2 to display your webcam in a window that runs on PyDroid3:
+
+```python
+import tkinter
+import cv2, PySimpleGUI as sg
+USE_CAMERA = 0      # change to 1 for front facing camera
+window, cap = sg.Window('Demo Application - OpenCV Integration', [[sg.Image(filename='', key='image')], ], location=(0, 0), grab_anywhere=True), cv2.VideoCapture(USE_CAMERA)
+while window(timeout=20)[0] != sg.WIN_CLOSED:
+    window['image'](data=cv2.imencode('.png', cap.read()[1])[1].tobytes())
+```
+
+You will need to pip install opencv-python as well as PySimpleGUI to run this program.
+
+Also, you must be using the Premium, yes paid, version of PyDroid3 in order to run OpenCV.  The cost is CHEAP when compared to the rest of things in life.  A movie ticket will cost you more.  Which is more fun, seeing **your Python program** running on your phone and using your phone's camera, or some random movie currently playing?  From experience, the Python choice is a winner.  If you're cheap, well, then you won't get to use OpenCV. No, there is no secret commercial pact between the PySimpleGUI project and the PyDroid3 app team.  
+
+## Source code compatibility
+
+In theory, your source code is completely portable from one platform to another by simply changing the import statement.  That's the GOAL and surprisingly many times this 1-line change works.  Seeing your code run on tkinter, then change the import to `import  PySimpleGUIWeb as sg` and instead of a tkinter window, up pops your default browser with your window running on it is an incredible feeling.
+
+But, ***caution is advised.***  As you've read already, some ports are further along than others.  That means when you move from one port to another, some features may not work.  There also may be some alignment tweaks if you have an application that precisely aligns Elements.
+
+What does this mean, assuming it works?  It means it takes a trivial amount of effort to move across GUI Frameworks.  Don't like the way your GUI looks on tkinter?  No problem, change over to try PySimpleGUIQt.  Made a nice desktop app but want to bring it to the web too?  Again, no problem, use PySimpleGUIWeb.
+
+## repl.it Version
+
+***Want to really get your mind blown?***  Check out this [PySimpleGUI program](https://repl.it/@PySimpleGUI/PySimpleGUIWeb-Demos) running in your web browser.
+
+Thanks to the magic of repl.it and Remi it's possible to run PySimpleGUI code in a browser window without having Python running on your computer.  This should be viewed as a teaching and demonstration aid.  It is not meant to be a way of serving up web pages. It wouldn't work any way as each user forks and gets their own, completely different, workspace.
+
+There are 2 ports of PySimpleGUI that run on repl.it - PySimpleGUI and PySimpleGUIWeb.
+
+### PySimpleGUI (tkinter based)
+
+The primary PySimpleGUI port works very well on repl.it due to the fact they've done an outstanding job getting tkinter to run on these virtual machines.  Creating a program from scratch, you will want to choose the "Python with tkinter" project type.
+
+The virtual screen size for the rendered windows isn't very large, so be mindful of your window's size or else you may end up with buttons you can't get to.
+
+You may have to "install" the PySimpleGUI package for your project.  If it doesn't automatically install it for you, then click on the cube along the left edge of the browser window and then type in PySimpleGUI or PySimpleGUIWeb depending on which you're using.
+
+### PySimpleGUIWeb (Remi based)
+
+For PySimpleGUIWeb programs you run using repl.it will automatically download and install the latest PySimpleGUIWeb from PyPI onto a virtual Python environment.  All that is required is to type `import PySimpleGUIWeb` you'll have a Python environment up and running with the latest PyPI release of PySimpleGUIWeb.
+
+### Creating a repl.it project from scratch / troubleshooting
+
+To create your own repl.it PySimpleGUI project from scratch, first choose the type of Python virtual machine you want.  For PySimpleGUI programs, choose the "Python with tkinter" project type.  For PySimpleGUIWeb, choose the normal Python project.
+
+There have been times where repl.it didn't do the auto import thing.  If that doesn't work for some reason, you can install packages by clicking on the package button on the left side of the interface, typing in the package name (PySimpleGUI or PySimpleGUIWeb) and install it. 
+
+### Why this is so cool (listen up Teachers, tutorial writers)
+
+***Educators*** in particular should be interested.  Students can not only post their homework easily for their teacher to access, but teachers can also run the students programs online.  No downloading needed.  Run it and check the results.
+
+For people wanting to share their code, especially when helping someone with a problem, it's a great place to do it.  Those wishing to see your work do not have to be running Python nor have PySimpleGUI installed.
+
+The way I use it is to first write my PySimpleGUI code on Windows, then copy and paste it into Repl.it.
+
+Finally, you can embed these Repl.it windows into web pages, forum posts, etc.  The "Share" button is capable of giving you the block of code for an "iframe" that will render into a working repl.it program in your page.  It's amazing to see, but it can be slow to load.
+
+### Repl.it is NOT a web server for you to "deploy" applications!
+
+Repl.it is not meant to serve up applications and web pages.  Trying to use it that way will not result in satisfactory results.  It's simply too slow and too technical of an interface for trying to "deploy" using it.  PySimpleGUIWeb isn't a great choice in serving web pages.  It's purpose is more to build a GUI that runs in a browser.
+
+## Macs
+
+It's surprising that Python GUI code is completely cross platform from Windows to Mac to Linux.  No source code changes.  This is true for both  PySimpleGUI and PySimpleGUIQt.
+
+Historically, PySimpleGUI using tkinter have struggled on Macs.  This was because of a problem setting button colors on the Mac.  However, two events has turned this problem around entirely.
+
+1. Use of ttk Buttons for Macs
+2. Ability for Mac users to install Python from python.org rather than the Homebrew version with button problems
+
+It's been a long road for Mac users with many deciding to use PySimpleGUIQt so that multi-colored windows could be made.  It's completely understandable to want to make attractive windows that utilize colors.  
+
+PySimpleGUI now supports Macs, Linux, and Windows equally well. They all are able to use the "Themes" that automatically add color to your windows.  
+
+Be aware that Macs default to using ttk buttons.  You can override this setting at the Window and Button levels.  If you installed Python from python.org, then it's likely you can use the non-ttk buttons should you wish.
+
+# Support
+
+## Don't Suffer Silently
+
+The GitHub Issues are checked *often*.  Very often.  **Please** post your questions and problems there and there only.  Please don't post on Reddit, Stackoverflow, on forums, until you've tried posting on the GitHub.
+
+Why?  *It will get you the best support possible.*  Second, you'll be helping the project as what you're experiencing might very well be a bug, or even a *known* bug. Why spend hours thrashing, fighting against a known bug?
+
+It's not a super-buggy package, but users do experience problems just the same.  Maybe something's not explained well enough in the docs.  Maybe you're making a common mistake.  Maybe that feature isn't complete yet.
+
+You won't look stupid posting an Issue on GitHub.  It's just the opposite.
+
+### How to log issues
+
+**PySimpleGUI is an active project.**  Bugs are fixed, features are added, often.  Should you run into trouble, **open an issue** on the [GitHub site](http://www.PySimpleGUI.com) and you'll receive help.  Posting questions on StackOverflow, Forums, Mailing lists, Reddit, etc, is not the fastest path to support and taking it may very well lead you astray as folks not familiar with the package struggle to help you. You may also run into the common response of "I don't know PySimpleGUI (and perhaps dislike it as a result), but I know you can do that with Qt".
+
+Why only 1 location?  It's simple.... it's where the bugs, enhancements, etc are tracked.  It's THE spot on the Internet for this project.  There's not driven by a freakish being in control, telling people how to do things, reasoning.  It's so that YOU get the best and quickest support possible.
+
+So, [open an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/new/choose), choose "custom form" and fill it out completely.  There are very good reasons behind all of the questions.  Cutting corners only cuts your chances of getting help and getting quality help as it's difficult enough to debug remotely.  Don't handicap people that want to help by not providing enough information.
+
+**Be sure and run your program outside of your IDE** ***first***.  Start your program from the shell using `python` or `python3` command.  On numerous occasions much time was spent chasing problems caused by the IDE.  By running from a command line, you take that whole question out of the problem, an important step.
+
+***Don't sit and stew, trying the same thing over and over***, until you hate life... stop, and post an Issue on the GitHub.  Someone **WILL** answer you.  Support is included in the purchase price for this package (the quality level matches the price as well I'm afraid).  Just don't be too upset when your free support turns out to be a little bit crappy, but it's free and typically good advice.
+
+### Target Audience
+
+PySimpleGUI is trying to serve the 80% of GUI *problems*. The other 20% go straight to tkinter, Qt, WxPython, Remi, or whatever fills that need.  That 80% is **a huge problem space**.  
+
+***The "Simple" of PySimpleGUI describes how easy it is to use, not the nature of the problem space it solves.***  Note that people are not part of that description.  It's not trying to solve GUI problems for 80% of the people trying it.  PySimpleGUI tries to solve 80% of GUI ***problems***, regardless of the programmer's experience level.
+
+Is file I/O in Python limited to only certain people?  Is starting a thread, building a multi-threaded Python program incredibly difficult such that it takes a year to learn?  No.  It's quite easy.  Like most things Python, you import the object from package and you use it.  It is 2 lines of Python code to create and start a thread.
+
+Why can't it be 2 lines of code to show a GUI window?  What's SO special about the Python GUI libraries that they require you to follow a specific Object Oriented model of development?  Other parts and packages of Python don't tend to do that.  
+
+The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a vaneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
+
+PySimpleGUI is designed with both the beginner and the experienced developer in mind.  Why?  Because both tend to like compact code.  Most like people, we just want to get sh\*t done, right?  And, why not do it in a way that's like how most of Python works?
+
+The beginners can begin working with GUIs ***in their first week of Python education***.  The professionals can jump right into the deep end of the pool to use the entire array of Elements and their capabilities to build stuff like a database application.
+
+Here's a good example of how PySimpleGUI serves these 2 groups.... the `InputText` Element has 16 potential parameters, yet you'll find 0 or 1 parameters set by beginners. Look at the examples throughout this document and you'll see the code fragments utilize a tiny fraction of the potential parameters / settings.  Simple... **keep it simple for the default case**.  This is part of the PySimpleGUI mission.  
+
+Some developers are heavily wedded to the existing GUI Framework Architectures (Qt, WxPython, tkinter).  They like the existing GUI architectures (they're all roughly the same, except this one).  If you're in that crowd, join the "20% Club" just down the street.  There's plenty of room there with plenty of possible solutions.
+
+But how about a quick stop-in for some open mindedness exercises.  Maybe you will come up with an interesting suggestion even if you don't use it.  Or maybe PySimpleGUI does something that inspires you to write something similar directly in Qt.  And please, at least be civil about it.  There is room for multiple architectures.  Remember, you will not be *harmed* by writing some PySimpleGUI code just like you won't by writing some tkinter or Qt code.  Your chances of feeling harmed is more likely from one of those 2.
+
+#### Beginners & Easier Programs
+
+There are a couple of reasons beginners stop in for a look.  The first is to simply throw a simple GUI onto the front of an existing command line application.  Or maybe you need to popup a box to get a filename.  These can often be simple 1-line `popup` calls.  Of course, you don't have to be a beginner to add a GUI onto one of your existing command line programs.  Don't feel like because you're an advanced programmer, you need to have an advanced solution.
+
+If you have a more intricate, complete, perhaps multi-window design in mind, then PySimpleGUI still could be your best choice.
+
+This package is not only great to use as your first GUI package, but it also teaches how to design and utilize a GUI. It does it better than the existing GUIs by removing the syntax, and lengthy code that can take an otherwise very simple appearing program into something that's completely unrecognizable.  With PySimpleGUI your 'layout' is all you need to examine to see the different GUI Elements that are being used.
+
+Why does PySimpleGUI make it any easier to learn about GUIs?  Because it removes the classes, callback functions, object oriented design to better get out of your way and let you focus entirely on your GUI and not how to represent it in code.  
+
+The result is 1/2 to 1/10th the amount of code that implements the exact same layout and widgets as you would get from coding yourself directly in Qt5.  It's been tested many times... again and again, PySimpleGUI produces significantly less code than Qt and the frameworks it runs on.
+
+Forget syntax completely and just look on the overall activities of a PySimpleGUI programmer.  You have to design your window.... determine your inputs and your outputs, place buttons in strategic places, create menus, .... You'll be busy just doing all those things to design and define your GUI completely independent upon the underlying framework. 
+
+After you get all those design things done and are ready to build your GUI, it's then that you face the task of learning a GUI SDK.  Why not start with the easy one that gives you many successes?  You're JUST getting ***started***, so cut yourself a break and use PySimpleGUI so that you can quickly get the job done and move on to the next GUI challenge.
+
+#### Advanced Programmers, Sharp Old-Timers, Code Slingers and Code Jockeys
+
+It's not perfect, but PySimpleGUI is an amazing bit of technology.  It's the programmer, the computer scientist, that has experience working with GUIs in the past that will recognize the power of this simple architecture.
+
+What I hear from seasoned professionals is that PySimpleGUI saves them a **ton** of time.  They've written GUI code before.  They know how to lay out a window.  These folks just want to get their window working and quick.
+
+With the help of IDE's like PyCharm, Visual Studio and Wing (the officially supported IDE list) you get instant documentation on the calls you are making.  On PyCharm you instantly see both the call signature but also the explanations about each parameter.
+
+If the screenshots, demo programs and documentation don't convince you to at least **give it a try, once**, then you're way too busy, or .....  I dunno, I stopped guessing "why?" some time ago.  
+
+Some of the most reluctant of people to try PySimpleGUI have turned out to be some of the biggest supporters.
+
+#### A Moment of Thanks To The PySimpleGUI Users
+
+I want to thank the early users of PySimpleGUI that started in 2018.  Your suggestions helped shape the package and have kept it moving forward at a fast pace.
+
+For all the users, while I can't tell you the count of the number of times someone has said "thank you for PySimpleGUI" as part of logging and Issue, or a private message or email, but I can tell you that it's been significant.
+
+***EVERY one of those "thank you" phrases, no matter how small you may think it is, helps tremendously.***
+
+Sometimes it's what gets me past a problem or gets me to write yet more documentation to try and help people understand quicker and better.  Let's just say the effect is always positive and often significant.
+
+PySimpleGUI users have been super-nice.  I doubt all Open Source Projects are this way, but I could be wrong and every GitHub repository has awesome users.  If so, that's even more awesome!
+
+**THANK YOU PySimpleGUI USERS!**
+
+-------------------
+
+# Learning Resources
+
+***This document.... you must be willing to read this document if you expect to learn and use PySimpleGUI.*** 
+
+If you're unwilling to even try to figure out how to do something or find a solution to a problem and have determined it's "easier to post a question first than to look at the docs", then this is not the GUI package for you.  *If you're unwilling to help yourself, then don't expect someone else to try first.*  You need to hold up your end of the bargain by at least doing some searches of this document.
+
+While PySimpleGUI enables you to write code easily, it doesn't mean that it magically fills your head with knowledge on how to use it.  The built-in docstrings help, but they can only go so far.  
+
+***Searching this document is as easy as pressing Control + F.***
+
+This document is on the GitHub homepage, as the readme. http://www.PySimpleGUI.com will get you there.  If you prefer a version with a Table of Contents on the left edge then you want to go to http://www.PySimpleGUI.org .  
+
+## The PySimpleGUI, Developer-Centric Model
+
+You may think that you're being fed a line about all these claims that PySimpleGUI is built specifically to make your life easier and a lot more fun than the alternatives.... especially after reading the bit above about reading this manual.
+
+### Psychological Warfare
+
+Brainwashed. Know that there is an active campaign to get you to be successful using PySimpleGUI.  The "Hook" to draw you in and keep you working on your program until you're satisfied is to work on the dopamine in your brain. Yes, your a PySimpleGUI rat, pressing on that bar that drops a food pellet reward in the form of a working program.
+
+The way this works is to give you success after success, with very short intervals between.  For this to work, what you're doing must work.  The code you run must work.  Make small changes to your program and run it over and over and over instead of trying to do one big massive set of changes.  Turn one knob at a time and you'll be fine.
+
+Find the keyboard shortcut for your IDE to run the currently shown program so that running the code requires 1 keystroke.  On PyCharm, the key to run what you see is Control + Shift + F10.  That's a lot to hold down at once.  I programmed a hotkey on my keyboard so that it emits that combination of keys when I press it.  Result is a single button to run.
+
+### Tools
+
+These tools were created to help you achieve a steady stream of these little successes.
+
+* This readme and its example pieces of code
+* The Cookbook - Copy, paste, run, success
+* Demo Programs - Copy these small programs to give yourself an instant headstart
+* Documentation shown in your IDE (docstrings) means you do not need to open any document to get the full assortment of options available to you for each Element & function call
+
+The initial "get up and running" portion of PySimpleGUI should take you less than 5 minutes.  The goal is 5 minutes from your decision "I'll give it a try" to having your first window up on the screen "Oh wow, it was that easy?!"
+
+The primary learning paths for PySimpleGUI are:
+
+* This readme document over 100 pages of PySimpleGUI User Manual 
+	* http://www.PySimpleGUI.org
+* The Cookbook - Recipes to get you going and quick
+	* http://Cookbook.PySimpleGUI.org
+* The Demo Programs - Start hacking on one of these running solutions
+	* http://www.PySimpleGUI.com
+* The YouTube videos - If you like instructional videos, there are 15+ videos
+	* [5 part series of basics](https://www.youtube.com/playlist?list=PLl8dD0doyrvHMoJGTdMtgLuHymaqJVjzt)
+	* [10 part series of more detail](https://www.youtube.com/playlist?list=PLl8dD0doyrvGyXjORNvirTIZxKopJr8s0)
+
+Everything is geared towards giving you a "quick start" whether that be a Recipe or a Demo Program.  The idea is to give you something running and let you hack away at it.  As a developer this saves tremendous amounts of time.
+
+You **start** with a working program, a GUI on the screen.  Then have at it.  If you break something (`"a happy little accident"` as Bob Ross put it), then you can always backtrack a little to a known working point.
+
+A high percentage of users report both learning PySimpleGUI and completing their project in a single day.
+
+This isn't a rare event and it's not bragging.  GUI programming doesn't HAVE to be difficult by definition and PySimpleGUI has certainly made it much much more approachable and easier (not to mention simpler).
+
+But, you need to look at this document when pushing into new, unknown territory.  Don't guess... or more specifically, don't guess and then give up when it doesn't work.
+
+## This Readme and Cookbook
+
+The readme and Cookbook, etc are best viewed on ReadTheDocs.  The quickest way there is to visit:
+http://www.PySimpleGUI.org
+
+You will be auto-forwarded to the right destination.  There are multiple tabs on ReadTheDocs.  One for the main readme and one for the Cookbook.  There are other documents there like an architectural design doc.
+
+The Cookbook has approx 27 "Recipes" or short programs that can be easily copied and pasted.
+
+## Demo Programs
+
+The GitHub repo has the Demo Programs.  There are ones built for plain PySimpleGUI that are usually portable to other versions of PySimpleGUI.  And there are some that are associated with one of the other ports.  The easiest way to the GitHub:
+
+http://www.PySimpleGUI.com
+
+As of this writing, on 2019-07-10 there are 177 Demo Programs for you to choose from.  
+
+These programs demonstrate to you how to use the Elements and especially how to integrate PySimpleGUI with some of the popular open source technologies such as OpenCV, PyGame, PyPlot, and Matplotlib to name a few.
+
+Many Demo Programs that are in the main folder will run on multiple ports of PySimpleGUI.  There are also port-specific Demo Programs.  You'll find those in the folder with the port.  So, Qt specific Demo Programs are in the PySimpleGUIQt folder.
+
+---
+
+# The Quick Tour
+
+Let's take a super-brief tour around PySimpleGUI before digging into the details.  There are 2 levels of windowing support in PySimpleGUI -  High Level and Customized.
+
+The high-level calls are those that perform a lot of work for you. These are not custom made windows (those are the other way of interacting with PySimpleGUI).
+
+Let's use one of these high level calls, the `popup` and use it to create our first window, the obligatory "Hello World".  It's a single line of code.  You can use these calls like print statements, adding as many parameters and types as you desire.
+
+```python
+import PySimpleGUI as sg
+
+sg.popup('Hello From PySimpleGUI!', 'This is the shortest GUI program ever!')
+```
+
+![hello world](https://user-images.githubusercontent.com/13696193/44960047-1f7f6380-aec6-11e8-9d5e-12ef935bcade.jpg)
+
+Or how about a ***custom GUI*** in 1 line of code?  No kidding this is a valid program and it uses Elements and produce the same Widgets like you normally would in a tkinter program.  It's just been compacted together is all, strictly for demonstration purposes as there's no need to go that extreme in compactness, unless you have a reason to and then you can be thankful it's possible to do.
+
+```python
+import PySimpleGUI as sg
+
+event, values = sg.Window('Get filename example', [[sg.Text('Filename')], [sg.Input(), sg.FileBrowse()], [sg.OK(), sg.Cancel()] ]).read(close=True)
+```
+
+![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
+
+## The Beauty of Simplicity
+
+> One day I will find the right words, and they will be simple.
+― Jack Kerouac
+
+That's nice that you can crunch things into 1 line, like in the above example, but it's not readable.  Let's add some whitespace so you can see the **beauty** of the PySimpleGUI code.
+
+Take a moment and look at the code below.  Can you "see" the window looking at the `layout` variable, knowing that each line of code represents a single row of Elements?  There are 3 "rows" of Elements shown in the window and there are 3 lines of code that define it.
+
+Creating and reading the user's inputs for the window occupy the last 2 lines of code, one to create the window, the last line shows the window to the user and gets the input values (what button they clicked, what was input in the Input Element)
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 3')  # please make your creations colorful
+
+layout = [	[sg.Text('Filename')],
+          	[sg.Input(), sg.FileBrowse()], 
+	  		[sg.OK(), sg.Cancel()]] 
+
+window = sg.Window('Get filename example', layout)
+
+event, values = window.read()
+window.close()
+```
+
+![get filename](https://user-images.githubusercontent.com/13696193/44960039-f1018880-aec5-11e8-8a43-3d7f8ff93b67.jpg)
+
+Unlike other GUI SDKs, you can likely understand every line of code you just read, even though you have not yet read a single instructional line from this document about how you write Elements in a layout.
+
+There are no pesky classes you are *required* to write, no callback functions to worry about.  None of that is required to show a window with some text, an input area and 2 buttons using PySimpleGUI.  
+
+The same code, in tkinter, is 5 times longer and I'm guessing you won't be able to just read it and understand it.  While you were reading through the code, did you notice there are no comments, yet you still were able to understand, using intuition alone.
+
+You will find this theme of Simple everywhere in and around PySimpleGUI.  It's a way of thinking as well as an architecture direction.  Remember, you, Mr./Ms. Developer, are at the center of the package.  So, from your vantage point, of course everything should look and feel simple.
+
+Not only that, it's the Pythonic thing to do.  Have a look at line 3 of the "Zen of Python".
+
+> The Zen of Python, by Tim Peters
+>
+> Beautiful is better than ugly.
+> Explicit is better than implicit.
+> Simple is better than complex.
+> Complex is better than complicated.
+> Flat is better than nested.
+> Sparse is better than dense.
+> Readability counts.
+> Special cases aren't special enough to break the rules.
+> Although practicality beats purity.
+> Errors should never pass silently.
+> Unless explicitly silenced.
+> In the face of ambiguity, refuse the temptation to guess.
+> There should be one-- and preferably only one --obvious way to do it.
+> Although that way may not be obvious at first unless you're Dutch.
+> Now is better than never.
+> Although never is often better than *right* now.
+> If the implementation is hard to explain, it's a bad idea.
+> If the implementation is easy to explain, it may be a good idea.
+> Namespaces are one honking great idea -- let's do more of those!
+
+I just hope reading all these pages of documentation is going to make you believe that we're breaking suggestion:
+> If the implementation is hard to explain, it's a bad idea.
+> If the implementation is easy to explain, it may be a good idea.
+
+I don't think PySimpleGUI is ***difficult*** to explain, but I am striving to fully explain it so that you don't do this:
+
+> In the face of ambiguity, refuse the temptation to guess.
+
+Sometimes you can guess and be fine.  Other times, things may work, but the side effects are potentially significant.  There may be a much better way to solve a problem - Log an Issue on GitHub!  
+
+------
+
+# Some Examples
+
+## Polishing Your Windows = Building "Beautiful Windows"
+
+And STILL the Zen of Python fits:
+
+> Beautiful is better than ugly.
+
+but this fits too:
+
+> Although practicality beats purity.
+
+Find a balance that works for you.
+
+"But tkinter sucks"
+"It looks like the 1990s" (this one is often said by people that were not alive in the 1990s)
+"What Python GUI SDK will make my window look beautiful?"  (posted to Reddit at least every 2 weeks)
+
+These windows below were ALL made using PySimpleGUI, the tkinter version and they look good enough to not be simply scoffed at and dismissed.  Remember, developer, you have a rather significant hand in how your application looks and operates.  You certainly cannot pin it all on the GUIs you're using.
+
+So many posts on Reddit asking which GUI is going to result in a "beautiful window", as if there's a magic GUI library that pretties things up for you.  There are some calls in PySimpleGUI that will help you.  For example, you can make a single call to "Chang the look and feel" which loads predefined color pallets so your windows can have some instant color and it matches.
+
+Beautiful windows are created, not simply given to you.  There are people that design and create artwork for user interfaces, you know that right?  Artists draw buttons, artwork that you include in the window to make it nicer.
+
+Some of these have been "polished", others like the Matplotlib example is more a functional example to show you it works.
+
+![batterup](https://user-images.githubusercontent.com/46163555/77781297-b624ef80-702b-11ea-857a-b0809f061dc9.png)
+
+![Uno](https://user-images.githubusercontent.com/46163555/77781360-d05ecd80-702b-11ea-90f9-cb9fb3339c05.png)
+
+This chess program is capable of running multiple AI chess engines and was written by another user using PySimpleGUI.
+
+![image](https://user-images.githubusercontent.com/13696193/61083102-e9214780-a3f8-11e9-9d1d-7c0a388625be.png)
+
+This downloader can download files as well as YouTube videos and metadata.  If you're worried about multiple windows working, don't.  Worried your project is "too much" or "too complex" for PySimpleGUI?  Do an initial assessment if you want.  Check out what others have done.  
+
+Your program have 2 or 3 windows and you're concerned?  Below you'll see 11 windows open, each running independently with multiple tabs per window and progress meters that are all being updated concurrently.  
+
+![concurrent_windows](https://user-images.githubusercontent.com/13696193/62832448-3eb96180-bbfc-11e9-8777-6f2669566c93.png)
+
+![pyplot 1](https://user-images.githubusercontent.com/13696193/44683336-11d46480-aa14-11e8-9d6c-f656796fc915.jpg)
+
+Just because you can't match a pair of socks doesn't mean your windows have to all look the same gray color.  Choose from over 100 different "Themes".  Add 1 line call to `theme` to instantly transform your window from gray to something more visually pleasing to interact with.  If you misspell the theme name badly or specify a theme name is is missing from the table of allowed names, then a theme will be randomly assigned for you.  Who knows, maybe the theme chosen you'll like and want to use instead of your original plan.
+
+In PySimpleGUI release 4.6 the number of themes was dramatically increased from a couple dozen to over 100.  To use the color schemes shown in the window below, add a call to `theme('Theme Name)` to your code, passing in the name of the desired color theme. To see this window and the list of available themes on your release of software, call the function `theme_previewer()`.  This will create a window with the frames like those below.  It will shows you exactly what's available in your version of PySimpleGUI.
+
+In release 4.9 another 32 Color Themes were added... here are the current choices
+
+![Dec 2019 Look And Feel Themes](https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg)
+
+Make beautiful looking, alpha-blended (partially transparent) Rainmeter-style Desktop Widgets that run in the background.
+
+![cpumeter](https://user-images.githubusercontent.com/46163555/77781418-ec626f00-702b-11ea-90b3-668fb71d63b5.png)
+
+Want to build a Crossword Puzzle?  No problem, the drawing primitives are there for you.
+
+![snag-0185](https://user-images.githubusercontent.com/13696193/47968340-98ba4480-e036-11e8-9d44-8a39ac174533.jpg)
+
+There are built-in drawing primitives
+
+![snag-0168](https://user-images.githubusercontent.com/13696193/47753225-2ed42080-dc6d-11e8-88d1-cf833db6c7ef.jpg)
+
+Frame from integration with a YOLO Machine Learning program that does object identification in realtime while allowing the user to adjust the algorithms settings using the sliders under the image.  This level of interactivity with an AI algorithm is still unusual to find due to difficulty of merging the technologies of AI and GUI.  It's no longer difficult.  This program is under 200 lines of code.
+
+![snag-0278](https://user-images.githubusercontent.com/13696193/48845583-e4752980-ed6a-11e8-9b2f-6c3d5d2442ba.jpg)
+
+# Pi Windows
+
+Perhaps you're looking for a way to interact with your **Raspberry Pi** in a more friendly way.  Your PySimpleGUI code will run on a Pi with no problem.  Tkinter is alive and well on the Pi platform. Here is a selection of some of the Elements shown on the Pi.  You get the same Elements on the Pi as you do Windows and Linux.
+
+![raspberry pi everything demo](https://user-images.githubusercontent.com/13696193/44279694-5b58ce80-a220-11e8-9ab6-d6021f5a944f.jpg)
+
+You can add custom artwork to make it look nice, like the Demo Program - Weather Forecast shown in this image:
+
+![weather pi](https://user-images.githubusercontent.com/13696193/47305324-1d4ca200-d5f7-11e8-8584-24a3992283ee.jpg)
+
+![weather alone](https://user-images.githubusercontent.com/13696193/47305323-1d4ca200-d5f7-11e8-8fb1-44b0a7a4580f.jpg)
+
+One thing to be aware of with Pi Windows, you cannot make them semi-transparent.  This means that the `Window.Disappear` method will not work.  Your window will not disappear.  Setting the Alpha Channel will have no effect.
+
+Don't forget that you can use custom artwork anywhere, including on the Pi.  The weather application looks beautiful on the Pi.  Notice there are no buttons or any of the normal looking Elements visible.  It's possible to build nice looking applications, even on the lower-end platforms.
+
+# Games
+
+It's possible to create some cool games by simply using the built-in PySimpleGUI graphic primitives' like those used in this game of pong.  PyGame can also be embedded into a PySimpleGUI window and code is provided to you demonstrating how.  There is also a demonstration of using the pymunk physics package that can also be used for games.
+
+Games haven't not been explored much, yet, using PySimpleGUI.
+
+![pong](https://user-images.githubusercontent.com/46163555/77781526-1c117700-702c-11ea-901b-4cb5f7a34cb4.png)
+
+# Windows Programs That Look Like Windows Programs
+
+***Do you have the desire to share your code with other people in your department, or with friends and family?*** Many of them may not have Python on their computer.  And in the corporate environment, it may not be possible for you to install Python on their computer.
+
+`PySimpleGUI + PyInstaller` to the rescue!!
+
+Combining PySimpleGUI with PyInstaller creates something truly remarkable and special, a Python program that looks like a Windows WinForms application.  
+
+The application you see below with a working menu was created in 20 lines of Python code.  It is a single .EXE file that launches straight into the screen you see.  And more good news, the only icon you see on the taskbar is the window itself... there is no pesky shell window.  Nice, huh? 
+
+![windowsprogram](https://user-images.githubusercontent.com/46163555/77781479-03a15c80-702c-11ea-9408-903e022e0418.png)
+
+With a simple GUI, it becomes practical to "associate" .py files with the python interpreter on Windows.  Double click a py file and up pops a GUI window, a more pleasant experience than opening a dos Window and typing a command line.
+
+There is even a PySimpleGUI program that will take your PySimpleGUI program and turn it into an EXE.  It's nice because you can use a GUI to select your file and all of the output is shown in the program's window, in realtime.
+
+# Background - Why PySimpleGUI Came to Be
+
+Feel free to skip all this if you don't care to know the backstory and reasons behind decisions.
+
+There was a project looming and a GUI was needed.  It wasn't a very complex GUI so thus began a search for a simplified GUI package that would enable me to work with tkinter easier.  I found a few, and they were pretty popular too, but they lacked the full-compliment of Widgets and it was impossible to define my own window using those widgets.
+
+A whacky idea came to mind... what if I wrote a simplified GUI and then used THAT to write my application.  It would be a lot less code and it would be "easy" to write my application then.  And that is exactly what was done.
+
+First an early version of PySimpleGUI was written that had a subset of the Elements available today.  It had just enough for my application.  Then I wrote my application in PySimpleGUI.
+
+Thus PySimpleGUI was born out of necessity and it's been the necessity of others that have helped evolve it into the package it is today.  It would not be 1/2 as good without the help of the community.
+
+Once PySimpleGUI was done, it was time to start working on "the ports".  And, of course, also this documentation.
+
+## The Non-OO and Non-Event-Driven Model
+
+The two "advanced concepts" that beginning Python students have with GUIs are the use of classes and callbacks with their associated communication and coordination mechanisms (semaphores, queues, etc)
+
+How do you make a GUI interface easy enough for first WEEK Python students? 
+
+This meant classes could be used to build and use it, but classes can not be part of the code the user writes.  Of course, an OO design is quite possible to use with PySimpleGUI, but it's not a ***requirement***.  The sample code and docs stay away from writing new classes in the user space for the most part.
+
+What about those pesky callbacks?  They're difficult for beginners to grasp and they're a bit of a pain in the ass to deal with.  The way PySimpleGUI got around events was to utilize ***a "message passing" architecture*** instead.  
+
+Instead of a user function being called when there's some event, instead the information is "passed" to the user when they call the function `Window.read()` 
+
+***Everything*** is returned through this `Window.read` call.  Of course the underlying GUI frameworks still perform callbacks, but they all happen inside of PySimpleGUI where they are turned into messages to pass to you.
+
+All of the boilerplate code, the event handling, widget creation, frames containing widgets, etc, are **exactly the same** objects and calls that you would be writing if you wrote directly in tkinter, Qt, etc.  With all of this code out of the way and done for you, that leaves you with the task of doing something useful with the information the user entered.  THAT, after all, is the goal here.... getting user information and acting on it.
+
+The full complement of Widgets are available to you via PySimpleGUI Elements.  And those widgets are presented to you in a unique and fun way.
+
+If you wish to learn more about the Architecture of PySimpleGUI, take a look at the [Architecture document located on ReadTheDocs](https://pysimplegui.readthedocs.io/en/latest/architecture/).
+
+### The Result
+
+A GUI that's appealing to a broad audience that is highly customizable, easy to program, and is solid with few bugs and rarely crashes (99% of the time it's some other error that causes a crash).
+
+PySimpleGUI is becoming more and more popular. The number of installs and the number of successes grows daily.  Pip installs have exceeded 350,000 in the first year of existence.  Over 300 people a day visit the GitHub and the project has 1,800 stars (thank you awesome users!)
+
+The number of ports is up to 4.  The number of integrations with other technologies is constantly being expanded.  It's a great time to try PySimpleGUI!  You've got no more than 5 or 10 minutes to lose.
+
+Caution is needed, however, when working with the unfinished ports.  PySimpleGUI, the tkinter version, is the only fully complete port.  Qt is next.  All of its Elements are completed, but not all of the options of each element are done.  PySimpleGUIWeb is next in order of completeness and then finally PySimpleGUIWx.
+
+# Features
+
+While simple to use, PySimpleGUI has significant depth to be explored by more advanced programmers.  The feature set goes way beyond the requirements of a beginner programmer, and into the  required features needed for complex multi-windowed GUIs.
+
+For those of you that have heard PySimpleGUI is only good for doing the most simplest of GUIs, this feature list should put that myth to rest.  **The SIMPLE part of PySimpleGUI is how much effort _you_ expend to write a GUI, not the complexity of the program you are able to create.**  It's literally "simple" to do... and it is not limited to simple problems.
+
+Features of PySimpleGUI include:
+
+- Support for Python versions 2.7 and 3
+- Text
+- Single Line Input
+- Buttons including these types:
+	- File Browse
+	- Files Browse
+	- Folder Browse
+	- SaveAs
+	- Normal button that returns event
+	- Close window
+	- Realtime
+	- Calendar chooser
+	- Color chooser
+	- Button Menu
+- TTK Buttons or "normal" TK Buttons
+- Checkboxes
+- Radio Buttons
+- Listbox
+- Option Menu
+- Menubar
+- Button Menu
+- Slider
+- Spinner
+- Dial
+- Graph
+- Frame with title
+- Icons
+- Multi-line Text Input
+- Scroll-able Output
+- Images
+- Tables
+- Trees
+- Progress Bar            Async/Non-Blocking Windows
+- Tabbed windows
+- Paned windows
+- Persistent Windows
+- Multiple Windows - Unlimited number of windows can be open at the same time
+- Redirect Python Output/Errors to scrolling window
+- 'Higher level' APIs (e.g. MessageBox, YesNobox, ...)
+- Single-Line-Of-Code Progress Bar & Debug Print
+- Complete control of colors, look and feel
+- Selection of pre-defined palettes
+- Button images
+- Horizontal and Vertical Separators
+- Return values as dictionary
+- Set focus
+- Bind return key to buttons
+- Group widgets into a column and place into window anywhere
+- Scrollable columns
+- Keyboard low-level key capture
+- Mouse scroll-wheel support
+- Get Listbox values as they are selected
+- Get slider, spinner, combo as they are changed
+- Update elements in a live window
+- Bulk window-fill operation
+- Save / Load window to/from disk
+- Borderless (no titlebar) windows (very classy looking)
+- Always on top windows
+- Menus with ALT-hotkey
+- Right click pop-up menu
+- Tooltips
+- Clickable text
+- Transparent windows
+- Movable windows
+- Animated GIFs
+- No async programming required (no callbacks to worry about)
+- Built-in debugger and REPL
+- User expandable by accessing underlying GUI Framework widgets directly
+
+---
+
+## Design Goals
+
+With the developer being the focus, the center of it all, it was important to keep this mindset at all times, including now, today.  Why is this such a big deal?  Because this package was written so that the universe of Python applications can grow and can **include EVERYONE into the GUI tent.**  
+
+> Up in 5 minutes
+
+Success #1 has to happen immediately.  Installing and then running your first GUI program.  FIVE minutes is the target.  The Pip install is under 1 minute.  Depending on your IDE and development environment, running your first piece of code could be a copy, paste, and run.  This isn't a joke target; it's for real serious.
+
+> Beginners and Advanced Together
+
+Design an interface that both the complete beginner can understand and use that has enough depth that an advanced programmer can make some very nice looking GUIs amd not feel like they're playing with a "toy".
+
+> Success After Success
+
+Success after success.... this is the model that will win developer's hearts.  This is what users love about PySimpleGUI.  Make your development progress in a way you can run and test your code often.  Add a little bit, run it, see it on your screen, smile, move on.
+
+> Copy, Paste, Run.
+
+The Cookbook and Demo Programs are there to fulfill this goal.  First get the user seeing on their screen a working GUI that's similar in some way to what they want to create.  
+
+If you're wanting to play with OpenCV download the OpenCV Demo Programs and give them a try.  Seeing your webcam running in the middle of a GUI window is quite a thrill if you're trying to integrate with the OpenCV package.  
+
+"Poof" instant running OpenCV based application == Happy Developer
+
+> Make Simpler Than Expected Interfaces
+
+The Single Line Progress Meter is a good example. It requires one and only 1 line of code.  Printing to a debug window is as easy as replacing `print` with `sg.Print` which will route your console output to a scrolling debug window.
+
+> Be Pythonic
+
+Be Pythonic... 
+
+This one is difficult for me to define.  The code implementing PySimpleGUI isn't PEP8 compliant, but it is consistent.  The important thing was what the user saw and experienced while coding, NOT the choices for naming conventions in the implementation code.  The user interface to PySimpleGUI now has a PEP8 compliant interface.  The methods are snake_case now (in addition to retaining the older CamelCase names)
+
+I ended up defining it as - attempt to use language constructs in a natural way and to exploit some of Python's interesting features.  It's Python's lists and optional parameters make PySimpleGUI work smoothly. 
+
+Here are some Python-friendly aspects to PySimpleGUI:
+
+- Windows are represented as Python lists of Elements 
+- Return values are an "event" such a button push and a list/dictionary of input values
+- The SDK calls collapse down into a single line of Python code that presents a custom GUI and returns values should you want that extreme of a single-line solution
+- Elements are all classes. Users interact with elements using class methods but are not required to write their own classes
+- Allow keys and other identifiers be any format you want. Don't limit user to particular types needlessly.
+- While some disagree with the single source file, I find the benefits greatly outweigh the negatives
+
+#### Lofty Goals
+
+> Teach GUI Programming to Beginners
+
+By and large PySimpleGUI is a "pattern based" SDK.  Complete beginners can copy these standard design patterns or demo programs and modify them without necessarily understanding all of the nuts and bolts of what's happening.  For example, they can modify a layout by adding elements even though they may not yet grasp the list of lists concept of layouts.  
+
+Beginners certainly can add more `if event == 'my button':` statements to the event loop that they copied from the same design pattern.  They will not have to write classes to use this package.
+
+> Capture Budding Graphic Designers & Non-Programmers
+
+The hope is that beginners that are interested in graphic design, and are taking a Python course, will have an easy way to express themselves, right from the start of their Python experience.  Even if they're not the best programmers they will be able express themselves to show custom GUI layouts, colors and artwork with ease.
+
+> Fill the GUI Gap (Democratize GUIs)
+
+There is a noticeable gap in the Python GUI solution.  Fill that gap and who knows what will happen.  At the moment, to make a traditional GUI window using tkinter, Qt, WxPython and Remi, it takes much more than a week, or a month of Python education to use these GUI packages.  
+
+They are out of reach of the beginners.  Often WAY out of reach.  And yet, time and time again, beginners that say they JUST STARTED with Python will ask on a Forum or Reddit for a GUI package recommendation.  9 times out of 10 Qt is recommended.  (smacking head with hand).  What a waste of characters.  You might as well have just told them, "give up".
+
+> Is There a There?
+
+Maybe there's no "there there".  ***Or*** maybe a simple GUI API will enable Python to dominate yet another computing discipline like it has so many others.  This is one attempt to find out.  So far, it sure looks like there's PLENTY of demand in this area.
+
+# Getting Started with PySimpleGUI
+
+There is a "Troubleshooting" section towards the end of this document should you run into real trouble.  It goes into more detail about what you can do to help yourself.
+
+## Installing PySimpleGUI
+
+Of course if you're installing for Qt, WxPython, Web, you'll use PySimpleGUIQt, PySimpleGUIWx, and PySimpleGUIWeb instead of straight PySimpleGUI in the instructions below.  You should already have the underlying GUI Framework installed and perhaps tested.  This includes tkinter, PySide2, WxPython, Remi
+
+### Installing on Python 3
+
+`pip install --upgrade PySimpleGUI`
+
+On some systems you need to run pip3. (Linux and Mac)
+
+`pip3 install --upgrade PySimpleGUI`
+
+On a Raspberry Pi, this is should work:
+
+`sudo pip3 install --upgrade pysimplegui`
+
+Some users have found that upgrading required using an extra flag on the pip `--no-cache-dir`.
+
+`pip install --upgrade --no-cache-dir PySimpleGUI`
+
+On some versions of Linux you will need to first install pip.  Need the Chicken before you can get the Egg (get it... Egg?)
+
+`sudo apt install python3-pip`
+
+`tkinter` is a requirement for PySimpleGUI (the only requirement).  Some OS variants, such as Ubuntu, do not some with `tkinter` already installed.  If you get an error similar to:
+
+`ImportError: No module named tkinter`
+
+then you need to install `tkinter`.
+
+For python 2.7
+
+`sudo apt-get install python-tk`
+
+For python 3
+`sudo apt-get install python3-tk`
+
+More information about installing tkinter can be found here: https://www.techinfected.net/2015/09/how-to-install-and-use-tkinter-in-ubuntu-debian-linux-mint.html
+
+### Installing typing module for Python 3.4 (Raspberry Pi)
+
+In order for the docstrings to work correctly the `typing` module is used.  In Python version 3.4 the typing module is not part of Python and must be installed separately. You'll see a warning printed on the console if this module isn't installed.
+
+You can pip install `typing` just like PySimpleGUI.  However it's not a requirement as PySimpleGUI will run fine without typing installed as it's only used by the docstrings.
+
+### Installing for Python 2.7
+
+**IMPORTANT** PySimpleGUI27 will disappear from the GitHub on Dec 31, 2019. PLEASE migrate to 3.6 at least.  It's not painful for most people.
+
+`pip install --upgrade PySimpleGUI27`
+or
+`pip2 install --upgrade PySimpleGUI27`
+
+You may need to also install "future" for version 2.7
+
+`pip install future`
+or
+`pip2 install future`
+
+Like above, you may have to install either pip or tkinter.  To do this on Python 2.7:
+
+`sudo apt install python-pip`
+
+`sudo apt install python-tkinter`
+
+## Upgrading from GitHub Using PySimpleGUI
+
+Starting in version 4.17.0 there is code in the PySimpleGUI package that upgrades your previously pip installed package using the latest version checked into GitHub.  
+
+Previously if you wanted to run the GitHub version, you would:
+* Download the PySimpleGUI.py file from GitHub
+* Place it in your applications's folder
+
+This required you to go back later and delete this file when you want to move on to the next version released to PyPI.  
+
+The new capability is the ability to overwrite your PySimpleGUI.py file that you installed using `pip` with the currently posted version on GitHub.  Using this method when you're ready to install the next version from PyPI or you want to maybe roll back to a PyPI release, you only need to run `pip`.  You don't have to find and delete any PySimpleGUI.py files.
+
+***Important - Linux Users*** - There is currently a problem using this utility on Linux systems.  It's being worked on and a patch will be released as soon as something is figured out.
+
+#### Command Line Upgrade
+
+To upgrade PySimpleGUI from the command line type this command into your dos window
+
+`python -m PySimpleGUI upgrade`
+
+You will first be shown a confirmation window:
+
+![image](https://user-images.githubusercontent.com/46163555/77477572-f0f01300-6df2-11ea-812f-98a36e7c28e0.png)
+
+If you choose yes, then the new version will be installed and you'll see a red "completed" window
+
+![image](https://user-images.githubusercontent.com/46163555/77477619-006f5c00-6df3-11ea-8b01-44b1bea22989.png)
+
+#### GUI Upgrade
+
+The PySimpleGUI Test Harness is another mechanism you can use to upgrade.  To start the test harness you "run" the PySimpleGUI package.  
+
+`python -m PySimpleGUI.PySimpleGUI`
+
+Of course if you're running Linux you may run `python3` instead.
+
+From your code you can call `PySimpleGUI.main()`.  This window may not look exactly like the one you see, but the thing that should be there is the red "Install" button.
+
+![image](https://user-images.githubusercontent.com/46163555/77478381-437dff00-6df4-11ea-994e-a443ff967917.png)
+
+Clicking the install button will bring up the same confirmation window shown as the command line upgrade above.
+
+### Testing your installation and Troubleshooting
+
+Once you have installed, or copied the .py file to your app folder, you can test the installation using python.  At the command prompt start up Python.
+
+#### The Quick Test
+
+The PySimpleGUI Test Harness pictured in the previous section on GUI upgrades is the short program that's built into PySimpleGUI that serves multiple purposes.  It exercises many/most of the available Elements, displays version and location data and works as a quick self-test.
+
+From your command line type:
+`python -m PySimpleGUI.PySimpleGUI`
+
+If you're on Linux/Mac and need to run using the command `python3` then of course type that.
+
+This will display the test harness window.  
+
+You can also test by using the REPL....
+
+#### Instructions for Testing Python 2.7:
+```python
+>>> import PySimpleGUI27
+>>> PySimpleGUI27.main()
+```
+
+#### Instructions for Testing Python 3:
+
+```python3
+>>> import PySimpleGUI
+>>> PySimpleGUI.main()
+```
+
+You will see a "test harness" that exercises the SDK, tells you the version number, allows you to try a number of features as well as access the built-in GitHub upgrade utility.
+
+### Finding Out Where Your PySimpleGUI Is Coming From
+
+It's **critical** for you to be certain where your code is coming from and which version you're running.
+
+Sometimes when debugging, questions arise as to exactly which PySimpleGUI you are running.  The quick way to find this out is to again, run Python from the command line.  This time you'll type:
+
+```python3
+>>> import PySimpleGUI as sg
+>>> sg
+```
+
+When you type sg, Python will tell you the full patch to your PySimpleGUI file / package.  This is critical information to know when debugging because it's really easy to forget you've got an old copy of PySimpleGUI laying around somewhere.
+
+### Finding Out Where Your PySimpleGUI Is Coming From (from within your code)
+
+If you continue to have troubles with getting the right version of PySimpleGUI loaded, THE ***definitive*** way to determine where your program is getting PySimpleGUI from is to add a print to your program.  It's that *simple*!  You can also get the version you are running by also printing
+
+```python
+import PySimpleGUI as sg
+
+print(sg)
+print(sg.version)
+```
+
+Just like when using the REPL >>> to determine the location, this `print` in your code will display the same path information.
+
+### Manual installation
+
+If you're not connected to the net on your target machine, or pip isn't working, or you want to run the latest code from GitHub, then all you have to do is place the single PySimpleGUI source file `PySimpleGUI.py` (for tkinter port) and place it in your application's folder (the folder where the py file is that imports PySimpleGUI).  Your application will load that local copy of PySimpleGUI as if it were a package.
+
+Be ***sure*** that you delete this PySimpleGUI.py file if you install a newer pip version.  Often the sequence of events is that a bug you've reported was fixed and checked into GitHub.  You download the PySimpleGUI.py file (or the appropriately named one for your port) and put with your app.  Then later your fix is posted with a new release on PyPI.  You'll want to delete the GitHub one before you install from pip.
+
+### Prerequisites
+
+Python 2.7 or Python 3
+tkinter
+
+PySimpleGUI Runs on all Python3 platforms that have tkinter running on them.  It has been tested on Windows, Mac, Linux, Raspberry Pi.  Even runs on `pypy3`.
+
+### EXE file creation
+
+If you wish to create an EXE from your PySimpleGUI application, you will need to install `PyInstaller`.  There are instructions on how to create an EXE at the bottom of this document.
+
+## IDEs
+
+A lot of people ask about IDEs, and many outright fear PyCharm.  Listen up.... compared to your journey of learning Python, learning to use PyCharm as your IDE is NOTHING.  It's a DAY typically (from 1 to 8 hours).  Or, if you're really really new, perhaps as much as a week *to get used to*.  So, we're not talking about you needing to learn to flap your arms and fly.
+
+To sum up that paragraph, stop whining like a little b*tch.  You're a grown man/woman, act like it.  "But it's hard..."  If you found this package, then you're a bright person :-)  Have some confidence in yourself for Christ sake.... I do.  Not going to lead you off some cliff, promise!
+
+Some IDEs provide virtual environments, but it's optional.  PyCharm is one example.  For these, you will either use their GUI interface to add packages or use their built-in terminal to do pip installs.  **It's not recommended for beginners to be working with Virtual Environments.**  They can be quite confusing.  However, if you are a seasoned professional developer and know what you're doing, there is nothing about PySimpleGUI that will prevent you from working this way.  It's mostly a caution for beginners because more often than not, they get really messed up and confused.
+
+### Officially Supported IDEs
+
+A number of IDEs have **known problems with PySimpleGUI**.  IDLE, Spyder, and Thonny all have known, demonstrable, problems with intermittent or inconsistent results, **especially when a program exits** and you want to continue to work with it. *** Any IDE that is based on tkinter is going to have issues with the straight PySimpleGUI port.***  This is NOT a PySimpleGUI problem.
+
+The official list of supported IDEs is:
+1. PyCharm (or course this is THE IDE to use for use with PySimpleGUI)
+2. Wing
+3. Visual Studio
+
+If you're on a Raspberry Pi or some other limited environment, then you'll may have to use IDLE or Thonny.  Just be aware there could be problems using the debugger to debug due to both using tkinter.
+
+### Using The Docstrings (Don't skip this section)
+
+Beginning with the 4.0 release of PySimpleGUI, the tkinter port, a whole new world opened up for PySimpleGUI programmers, one where referencing the readme and ReadTheDocs documentation is no longer needed.  PyCharm and Wing both support these docstrings REALLY well and I'm sure Visual Studio does too.  Why is this important?  Because it will teach you the PySimpleGUI SDK as you use the package.  
+
+Don't know the parameters and various options for the `InputText` Element?  It's a piece of cake with PyCharm.  You can set PyCharm to automatically display documentation about the class, function, method, etc, that your cursor is currently sitting on.  You can also manually bring up the documentation by pressing CONTROL+Q.  When you do, you'll be treated to a window similar to this:
+
+![image](https://user-images.githubusercontent.com/13696193/61997565-46f89500-b071-11e9-968e-83a99ecb718a.png)
+
+Note that my cursor is on `InputText`.  On the left side of the screen, the `InputText` element's parameters are not just shown to you, but they are each individually described to you, and, the type is shown as well.  *I mean, honestly, how much more could you ask for?*
+
+OK, I suppose you could ask for a smaller window that just shows the parameters are you're typing them in.  Well, OK, in PyCharm, when your cursor is between the  `(   )` press CONTROL+P.  When you do, you'll be treated to a little window like this one:
+
+![image](https://user-images.githubusercontent.com/13696193/61997590-aa82c280-b071-11e9-8d76-7d9c811f8fcc.png)
+
+See.... written with the "Developer" in mind, at all times.  It's about YOU, Mr/Ms Developer!  So enjoy your package.
+
+The other ports of PySimpleGUI (Qt, WxPython, Web) have not yet had their docstrings updated.  They're NEXT in line to be better documented.  Work on a tool has already begun to make that happen sooner than later.
+
+#### Type Checking With Docstrings
+
+In version 4.17.0 a new format started being used for docstrings.  This new format more clearly specified the types for each parameter.  It will take some time to get all of the parameter types correctly identified and documented.  
+
+Pay attention when you're working with PyCharm and you'll see where you may have a mismatch... or where there's a bad docstring, take your pick. It will shade your code in a way that makes mismatched types very clear to see.
+
+## Using  - Python 3
+
+To use in your code, simply import....
+`import PySimpleGUI as sg`
+
+Then use either "high level" API calls or build your own windows.
+
+`sg.popup('This is my first popup')`
+
+![first popup](https://user-images.githubusercontent.com/13696193/44957300-c7813680-ae9e-11e8-9a8c-c70198db7907.jpg)
+
+Yes, it's just that easy to have a window appear on the screen using Python.  With PySimpleGUI, making a custom window appear isn't much more difficult.  The goal is to get you running on your GUI within ***minutes***, not hours nor days.
+
+### Python 3.7
+
+If you must run 3.7, try 3.7.2.  It does work with PySimpleGUI with no known issues.
+
+***PySimpleGUI with Python 3.7.3 and 3.7.4+.***  tkinter is having issues with all the newer releases.  Things like Table colors stopped working entirely.  
+
+March 2020 - Still not quite sure if all issues have been ironed out with tkinter in the 3.7 and 3.8 releases.
+
+## Python 2.7
+
+On December 31, 2019 the Python 2.7 version of PySimpleGUI will be **deleted** from the GitHub.  Sorry but Legacy Python has no permanent home here.  The security experts claim that supporting 2.7 is doing a disservice to the Python community.  I understand why.  There are some very narrow cases where 2.7 is required.  If you have one, make a copy of PySimpleGUI27.py quickly before it disappears for good.
+
+---
 
 # PEP8 Bindings For Methods and Functions
 
@@ -52,7 +1338,6 @@ To convert a CamelCase method/function name to snake_case, you simply place an `
 ## Class Variables
 
 For the time being, class variables will remain the way they are currently.  It is unusual, in PySimpleGUI, for class variables to be modified or read by the user code so the impact of leaving them is rarely seen in your code.
-
 
 # High Level API Calls  - Popup's
 
@@ -88,7 +1373,6 @@ popup_quick_message
 popup_scrolled
 popup_timed
 popup_yes_no
-
 
 ## Popup Output
 
@@ -145,7 +1429,57 @@ Preview of popups:
 	<img src="https://user-images.githubusercontent.com/13696193/44957595-9e15da00-aea1-11e8-8909-6b6121b74509.jpg">
 </p>
 
-<!-- <+func.popup+> -->
+Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
+"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
+
+```
+popup(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    button_type = 0,
+    auto_close = False,
+    auto_close_duration = None,
+    custom_text = (None, None),
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    any_key_closes = False,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                   Any                   |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
+|                   str                   |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
+|         Tuple[str, str] or None         |    button_color     | Color of the buttons shown (text color, button color) |
+|                   str                   |  background_color   | Window's background color |
+|                   str                   |     text_color      | text color |
+|                   int                   |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
+|                  bool                   |     auto_close      | If True the window will automatically close |
+|                   int                   | auto_close_duration | time in seconds to keep window open before closing it automatically |
+|         Tuple[str, str] or str          |     custom_text     | A string or pair of strings that contain the text to display on the buttons |
+|                  bool                   |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. |
+|              str or bytes               |        icon         | icon to display on the window. Same format as a Window call |
+|                   int                   |     line_width      | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
+| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc |
+|                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
+|                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
+|             Tuple[int, int]             |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
+|                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|              str or bytes               |        image        | Image to include at the top of the popup window |
+|                  bool                   |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 The other output Popups are variations on parameters.  Usually the button_type parameter is the primary one changed.
 
@@ -165,8 +1499,51 @@ POPUP_BUTTONS_NO_BUTTONS
 ### Scrolled Output
 There is a scrolled version of Popups should you have a lot of information to display.
 
-<!-- <+func.popup_scrolled+> -->
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
 
+```
+popup_scrolled(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    yes_no = False,
+    auto_close = False,
+    auto_close_duration = None,
+    size = (None, None),
+    location = (None, None),
+    non_blocking = False,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    font = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
+|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Typical usage:
 
@@ -174,9 +1551,7 @@ Typical usage:
 sg.popup_scrolled(my_text)
 ```
 
-
 ![scrolledtextbox 2](https://user-images.githubusercontent.com/13696193/43667324-712aa0d4-9745-11e8-83a9-a0d0570d0865.jpg)
-
 
 The `popup_scrolled` will auto-fit the window size to the size of the text.  Specify `None` in the height field of a `size` parameter to get auto-sized height. 
 
@@ -188,21 +1563,15 @@ Note that the default max number of lines before scrolling happens is set to 50.
 
 If `non_blocking` parameter is set, then  the call will not blocking waiting for the user to close the window.  Execution will immediately return to the user.  Handy when you want to dump out debug info without disrupting the program flow. 
 
-
 ### Non-Blocking Popups - popup_no_wait and the non_blocking parameter
-
-<!-- <+func.popup_no_wait+> -->
 
 The `popup` call `popup_no_wait` or `popup_non_blocking` will create a popup window and then immediately return control back to you.  You can turn other popup calls into non-blocking popups if they have a `non_blocking` parameter.  Setting `non_blocking` to True will cause the function to return immediately rather than waiting for the window to be closed.
 
 This function is very handy for when you're **debugging** and want to display something as output but don't want to change the programs's overall timing by blocking.  Think of it like a `print` statement. There are no return values on one of these Popups. 
 
-
 ### Popup Parameter Combinations
 
 So that you don't have to specify a potentially long list common parameters there are a number of popup functions that set combinations of parameters.  For example `popup_quick_message` will show a non-blocking popup that autocloses and does not have a titlebar.  You could achieve this same end result using the plain `popup` call.
-
-
 
 ## Popup Input
 
@@ -214,12 +1583,51 @@ There are Popup calls for single-item inputs. These follow the pattern of `popup
 
 Use these Popups instead of making  a custom window to get one data value, call the Popup input function to get the item from the user.  If you find the parameters are unable to create the kind of window you are looking for, then it's time for you to create your own window.
 
-
 ### popup_get_text
 Use this Popup to get a line of text from the user.
 
-<!-- <+func.popup_get_text+> -->
+Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
+```
+popup_get_text(message,
+    title = None,
+    default_text = "",
+    password_char = "",
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |     message      | message displayed to user |
+|          str           |      title       | Window title |
+|          str           |   default_text   | default value to put into input area |
+|          str           |  password_char   | character to be shown instead of actually typed characters |
+|       (int, int)       |       size       | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color   | Color of the button (text, background) |
+|          str           | background_color | background color of the entire window |
+|          str           |    text_color    | color of the message text |
+|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|          bool          |   no_titlebar    | If True no titlebar will be shown |
+|          bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|          bool          |   keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location     | (x,y) Location on screen to display the upper left corner of window |
+|      str or bytes      |      image       | Image to include at the top of the popup window |
+|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 ```python
 import PySimpleGUI as sg
@@ -235,8 +1643,58 @@ sg.popup('Results', 'The value returned from PopupGetText', text)
 
 Gets one or more filenames from the user.  There are options to configure the type of dialog box to show.  Normally an "Open File" dialog box is shown.
 
-<!-- <+func.popup_get_file+> -->
+Display popup window with text entry field and browse button so that a file can be chosen by user.
 
+```
+popup_get_file(message,
+    title = None,
+    default_path = "",
+    default_extension = "",
+    save_as = False,
+    multiple_files = False,
+    file_types = (('ALL Files', '*.*'),),
+    no_window = False,
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    initial_folder = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |      message      | message displayed to user |
+|          str           |       title       | Window title |
+|          str           |   default_path    | path to display to user as starting point (filled into the input field) |
+|          str           | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|          bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
+|          bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+| Tuple[Tuple[str,str]]  |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|          bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|       (int, int)       |       size        | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color    | Color of the button (text, background) |
+|          str           | background_color  | background color of the entire window |
+|          str           |    text_color     | color of the text |
+|      bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
+|          bool          |    no_titlebar    | If True no titlebar will be shown |
+|          bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |    keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location      | Location of upper left corner of the window |
+|          str           |  initial_folder   | location in filesystem to begin browsing |
+|      str or bytes      |       image       | Image to include at the top of the popup window |
+|          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this. 
 
@@ -261,7 +1719,50 @@ sg.popup('Results', 'The value returned from popup_get_file', text)
 
 The window created to get a folder name looks the same as the get a file name.  The difference is in what the browse button does.  `popup_get_file` shows an Open File dialog box while `popup_get_folder`  shows an Open Folder dialog box.
 
-<!-- <+func.popup_get_folder+> -->
+Display popup with text entry field and browse button so that a folder can be chosen.
+
+```
+popup_get_folder(message,
+    title = None,
+    default_path = "",
+    no_window = False,
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    initial_folder = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |     message      | message displayed to user |
+|          str           |      title       | Window title |
+|          str           |   default_path   | path to display to user as starting point (filled into the input field) |
+|          bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|       (int, int)       |       size       | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color   | button color (foreground, background) |
+|          str           | background_color | color of background |
+|          str           |    text_color    | color of the text |
+|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|          bool          |   no_titlebar    | If True no titlebar will be shown |
+|          bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |   keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location     | Location of upper left corner of the window |
+|          str           |  initial_folder  | location in filesystem to begin browsing |
+|      str or bytes      |      image       | Image to include at the top of the popup window |
+|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 This is a typical call
 
@@ -278,16 +1779,85 @@ This is a typical call
 
 The animated Popup enables you to easily display a "loading" style animation specified through a GIF file that is either stored in a file or a base64 variable.
 
-<!-- <+func.popup_animated+> -->
+Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
+ and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
+ event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+ loop.
 
+```
+popup_animated(image_source,
+    message = None,
+    background_color = None,
+    text_color = None,
+    font = None,
+    no_titlebar = True,
+    grab_anywhere = True,
+    keep_on_top = True,
+    location = (None, None),
+    alpha_channel = None,
+    time_between_frames = 0,
+    transparent_color = None,
+    title = "",
+    icon = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str or bytes |    image_source     | Either a filename or a base64 string. |
+|     str     |       message       | An optional message to be shown with the animation |
+|     str     |  background_color   | color of background |
+|     str     |     text_color      | color of the text |
+| str or tuple |        font         | specifies the font family, size, etc |
+|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|     int     | time_between_frames | Amount of time in milliseconds between each frame |
+|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|     str     |        title        | Title that will be shown on the window |
+|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| None | **RETURN** | No return value
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
-
 
 # Progress Meters!
 We all have loops in our code.  'Isn't it joyful waiting, watching a counter scrolling past in a text window?  How about one line of code to get a progress meter, that contains statistics about your code?
 
-<!-- <+func.one_line_progress_meter+> -->
+```
+one_line_progress_meter(title,
+    current_value,
+    max_value,
+    key = "OK for 1 meter",
+    args=*<1 or N object>,
+    orientation = "v",
+    bar_color = (None, None),
+    button_color = None,
+    size = (20, 20),
+    border_width = None,
+    grab_anywhere = False,
+    no_titlebar = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|            str             |     title     | text to display in eleemnt |
+|            int             | current_value | current value |
+|            int             |   max_value   | max value of QuickMeter |
+| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
+|            Any             |     *args     | stuff to output |
+|            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
+|      Tuple(str, str)       |   bar_color   | color of a bar line |
+|   Tuple[str, str] or str   | button_color  | button color (foreground, background) |
+|         (int, int)         |     size      | (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE) |
+|            int             | border_width  | width of border around element |
+|            bool            | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
+|            bool            |  no_titlebar  | If True: no titlebar will be shown on the window |
+| (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
 
 Here's the one-line Progress Meter in action!
 
@@ -344,11 +1914,9 @@ There is an option to tell PySimpleGUI to reroute all of your stdout and stderr 
 
 If you close the debug window it will re-open the next time you Print to it.  If you wish to close the window using your code, then you can call either `easy_print_close()` or `PrintClose()`
 
-
 ### Printing To Multiline Elements
 
 Another technique for outputting information that you would normally print is to use the function `Multiline.print`.  You'll find it discussed further into this document.  The basic idea is that you can easily modify your normal `print` calls to route your printed information to your window.
-
 
 ---
 # Custom window API Calls  (Your First window)
@@ -439,8 +2007,6 @@ sg.Popup(event, values[0])
 
 Your call to `read` will normally return a dictionary, but will "look like a list" in how you access it.  The first input field will be entry 0, the next one is 1, etc..  Later you'll learn about the `key` parameter which allows you to use your own values to identify elements instead of them being numbered for you.
 
-
-
 ### Example 2 - Get a filename
 Let's say you've got a utility you've written that operates on some input file and you're ready to use a GUI to enter than filename rather than the command line.  Follow the same steps as the previous example - draw your window on paper, break it up into rows, label the elements.
 
@@ -484,7 +2050,6 @@ import PySimpleGUI as sg
 
 sg.theme('Dark Blue 3')  # please make your windows colorful
 
-
 layout = [[sg.Text('SHA-1 and SHA-256 Hashes for the file')],
 				 [sg.InputText(), sg.FileBrowse()],
 				 [sg.Submit(), sg.Cancel()]]
@@ -512,7 +2077,6 @@ event, values  = sg.Window('SHA-1 & 256 Hash', [[sg.Text('SHA-1 and SHA-256 Hash
 
 source_filename = values[0]     # the first input element is values[0]
 ```
-
 
 ## Pattern 2 A - Persistent window (multiple reads using an event loop)
 
@@ -611,7 +2175,6 @@ The first line of code after the import is a call to `theme`.
 
 Until Dec 2019 the way a "theme" was specific in PySimpleGUI was to call `change_look_and_feel`.  That call has been replaced by the more simple function `theme`.  
 
-
 ### Window contents (The Layout)
 
 Let's agree the window has 4 rows.
@@ -647,7 +2210,6 @@ folder_path, file_path = values[0], values[1]
 In one statement we both show the window and read the user's inputs.  In the next line of code the *dictionary* of return values is split into individual variables `folder_path` and `file_path`.
 
 Isn't this what a Python programmer looking for a GUI wants? Something easy to work with to get the values and move on to the rest of the program, where the real action is taking place.  Why write pages of GUI code when the same layout can be achieved with PySimpleGUI in 3 or 4 lines of code.  4 lines or 40?  Most would choose 4.
-
 
 ## Return values
 
@@ -730,7 +2292,6 @@ This if statement is the same as:
 
 Instead of `'Exit'` use the name/key of the button you want to exit the window (Cancel, Quit, etc.)
 
-
 ### Button Click Events
 
 By default buttons will always return a click event, or in the case of realtime buttons, a button down event.  You don't have to do anything to enable button clicks.  To disable the events, disable the button using its Update method.
@@ -763,13 +2324,9 @@ while True:
 		break
 ```
 
-
-
-
 ### Element Events
 
 Some elements are capable of generating events when something happens to them.  For example, when a slider is moved, or list item clicked on or table row clicked on.  These events are not enabled by default.  To enable events for an Element, set the parameter `enable_events=True`.  This is the same as the older `click_submits` parameter.  You will find the `click_submits` parameter still in the function definition.  You can continue to use it. They are the same setting.  An 'or' of the two values is used.  In the future, click_submits will be removed so please migrate your code to using `enable_events`.
-
 
 |Name|events|
 | ---  | --- |
@@ -792,7 +2349,6 @@ Some elements are capable of generating events when something happens to them.  
 | ButtonMenu | menu item chosen |
 | Right click menu | menu item chosen |
 
-
 ### Other Events
 
 #### Menubar menu item chosen for MenuBar menus and ButtonMenu menus
@@ -803,7 +2359,6 @@ definition.
 #### Right Click menu item chosen
 
 Unlike menu bar and button menus, you will directly receive the menu item text and its key value.  You will not do a dictionary lookup to get the value.  It is the event code returned from WindowRead().
-
 
 #### Windows - keyboard, mouse scroll wheel
 
@@ -888,8 +2443,6 @@ One convention you'll see in many of the demo programs is keys being named in al
 The reason for this naming convention is that when you are scanning the code, these key values jump out at you.   You instantly know it's a key.  Try scanning the code above and see if those keys pop out.
 `key = '-NAME-'`
 
-
-
 ## The Event Loop / Callback Functions
 
 All GUIs have one thing in common, an "event loop".  Usually the GUI framework runs the event loop for you, but sometimes you want greater control and will run your own event loop.  You often hear the term event loop when discussing embedded systems or on a Raspberry Pi.
@@ -968,15 +2521,11 @@ No, let's be clear here... this window will take a massive amount of code using 
 
 Note this window even has a menubar across the top, something easy to miss.
 
-
 ![image](https://user-images.githubusercontent.com/13696193/62234730-4295ea00-b399-11e9-9281-5defb91886f6.png)
 
 Clicking the Submit button caused the window call to return.  The call to Popup resulted in this window.
 
-
 ![image](https://user-images.githubusercontent.com/13696193/62234737-47f33480-b399-11e9-8a2c-087cc49868cd.png)
-
-
 
 **`Note, event values can be None`**.  The value for `event` will be the text that is displayed on the button element when it was created or the key for the button.  If the user closed the window using the "X" in the upper right corner of the window, then `event` will be `sg.WIN_CLOSED` which is equal to `None`.   It is ***vitally*** ***important*** that your code contain the proper checks for `sg.WIN_CLOSED`. 
 
@@ -1000,7 +2549,6 @@ If, on the other hand, your operation is not under your control or you are unabl
 
 There are a couple of demo programs available for you to see how to do this.  You basically put your work into a thread.  When the thread is completed, it tells the GUI by sending a message through a queue.  The event loop will run with a timer set to a value that represents how "responsive" you want your GUI to be to the work completing.  
 
-
 ### The "New Way" - `Window.write_event_value`
 
 This new function that is available currently only in the tkinter port as of July 2020 is exciting and represents the future way multi-threading will be handled in PySimpleGUI (or so is hoped).
@@ -1018,20 +2566,19 @@ import threading
 import time
 import PySimpleGUI as sg
 
-
 """
     Threaded Demo - Uses Window.write_event_value communications
-    
+
     Requires PySimpleGUI.py version 4.25.0 and later
-    
+
     This is a really important demo  to understand if you're going to be using multithreading in PySimpleGUI.
-    
+
     Older mechanisms for multi-threading in PySimpleGUI relied on polling of a queue. The management of a communications
     queue is now performed internally to PySimpleGUI.
 
     The importance of using the new window.write_event_value call cannot be emphasized enough.  It will hav a HUGE impact, in
     a positive way, on your code to move to this mechanism as your code will simply "pend" waiting for an event rather than polling.
-    
+
     Copyright 2020 PySimpleGUI.org
 """
 
@@ -1051,7 +2598,6 @@ def the_thread(window):
         window.write_event_value('-THREAD-', (threading.current_thread().name, i))      # Data sent is a tuple of thread name and counter
         cp('This is cheating from the thread', c='white on green')
         i += 1
-
 
 def main():
     """
@@ -1081,11 +2627,9 @@ def main():
             cp(f'{values[THREAD_EVENT]}', colors='white on red')
     window.close()
 
-
 if __name__ == '__main__':
     main()
 ```
-
 
 ### Multithreaded Programs
 
@@ -1102,7 +2646,6 @@ Demo_Multithreaded_Queued.py
 Once again a **warning** is in order for plain PySimpleGUI (tkinter based) - your GUI must never run as anything but the main program thread and no threads can directly call PySimpleGUI calls.
 
 ---
-
 
 # Building Custom Windows
 
@@ -1147,12 +2690,9 @@ As of this writing, these are your available themes.
 
 ![image](https://user-images.githubusercontent.com/46163555/71362356-cd070200-2563-11ea-9455-9315b9423d7e.png)
 
-
 In Dec 2019 the default for all PySimpleGUI windows changed from the system gray with blue buttons to a more complete theme using a grayish blue with white text.  Previously users were nagged into choosing  color theme other than gray.  Now it's done for you instead of nagging you.
 
 If you're struggling with this color theme, then add a call to `theme` to change it.
-
-
 
 ## Theme Name Formula
 
@@ -1175,7 +2715,6 @@ Color can be Blue, Green, Black, Gray, Purple, Brown, Teal, Red.   The # is opti
 If you're bent on having no colors at all in your window, then choose `Default 1` or `System Default 1`.
 
 If you want the original PySimpleGUI color scheme of a blue button and everything else gray then you can get that with the theme `Default` or `System Default`.
-
 
 ## Theme Functions
 
@@ -1205,7 +2744,6 @@ theme_list
 theme_previewer
 ```
 
-
 # Window Object - Beginning a window
 
 The first step is to create the window object using the desired window customizations.  
@@ -1224,16 +2762,13 @@ To make a Modal  Wio=ndow you have 2 options.
 
 2. Call the method `Window.make_modal()` to chance a window from non-modal to modal.  There is no modal to non-modal.  Don't see the need for one. If one comes up, sure!
 
-
 ### Disabling modal windows
 
 Popups that block are the only windows that have modal on by default. There is a modal parameter than you  can set to False to turn it off.
 
 For the earlier than 4.25.0 and other ports of PySimpleGUI There is no direct support for "**modal windows**" in PySimpleGUI.  All windows are accessible at all times unless you manually change the windows' settings.
 
-
 **IMPORTANT** - Many of the `Window` methods require you to either call `Window.read` or `Window.Finalize` (or set `finalize=True` in your `Window` call) before you call the method. This is because these 2 calls are what actually creates the window using the underlying GUI Framework.  Prior to one of those calls, the methods are likely to crash as they will not yet have their underlying widgets created.
-
 
 ### Window Location
 
@@ -1242,7 +2777,7 @@ PySimpleGUI computes the exact center of your window and centers the window on t
 #### Multiple Monitors and Linux
 
 The auto-centering (default) location for your PySimpleGUI window may not be correct if you have multiple monitors on a Linux system.  On Windows multiple monitors appear to work ok as the primary monitor the tkinter utilizes and reports on.  
- 
+
 Linux users with multiple monitors that have a problem when running with the default location will need to specify the location the window should be placed when creating the window by setting the `location` parameter.
 
 ### Window Size
@@ -1256,7 +2791,6 @@ To finalize your window:
 ```python
 window = Window('My Title', layout, finalize=True)
 ```
-
 
 ### Element Sizes
 
@@ -1272,7 +2806,6 @@ The default Element size for PySimpleGUI is `(45,1)`.
 
 There are a couple of widgets where one of the size values is in pixels rather than characters.  This is true for Progress Meters and Sliders.  The second parameter is the 'height' in pixels.
 
-
 ### No Titlebar
 
 Should you wish to create cool looking windows that are clean with no windows titlebar, use the no_titlebar option when creating the window.
@@ -1285,9 +2818,7 @@ Windows without a titlebar can be used to easily create a floating launcher.
 
 Linux users!  Note that this setting has side effects for some of the other Elements.  Multi-line input doesn't work at all, for example  So, use with caution.
 
-
 ![floating launcher](https://user-images.githubusercontent.com/13696193/45258246-71bafb80-b382-11e8-9f5e-79421e6c00bb.jpg)
-
 
 ### Grab Anywhere
 
@@ -1390,7 +2921,6 @@ Call to force a window to go through the final stages of initialization.  This w
 
 If you want to call an element's `Update` method or call a `Graph` element's drawing primitives, you ***must*** either call `Read` or `Finalize` prior to making those calls.
 
-
 #### read(timeout=None, timeout_key=TIMEOUT_KEY, close=False)
 
 Read the Window's input values and button clicks in a blocking-fashion
@@ -1398,7 +2928,6 @@ Read the Window's input values and button clicks in a blocking-fashion
 Returns event, values.  Adding a timeout can be achieved by setting timeout=*number of milliseconds* before the Read times out after which a "timeout event" is returned.  The value of timeout_key will be returned as the event.   If you do not specify a timeout key, then the value `TIMEOUT_KEY` will be returned.
 
 If you set the timeout = 0, then the Read will immediately return rather than waiting for input or for a timeout.  It's a truly non-blocking "read" of the window.
-
 
 # Layouts
 
@@ -1420,7 +2949,6 @@ Many times your window definition / layout will be a static, straightforward to 
 
 However, window layouts are not limited to being one of these statically defined list of Elements.
 
-
 # Generated Layouts (For sure want to read if you have > 5 repeating elements/rows)
 
 There are 5 specific techniques of generating layouts discussed in this section. They can be used alone or in combination with each other.
@@ -1430,7 +2958,6 @@ There are 5 specific techniques of generating layouts discussed in this section.
 3. List Comprehension to generate a row `[A for x in range(10)] = [A,A,A,A,A...]`
 4. List Comprehension to generate multiple rows `[[A] for x in range(10)] = [[A],[A],...]`
 5. User Defined Elements / Compound Elements
-
 
 ## Example - List Comprehension To Concatenate Multiple Rows - "To Do" List Example
 
@@ -1458,9 +2985,7 @@ The output from this script was this window:
 
 ![SNAG-0451](https://user-images.githubusercontent.com/46163555/63563849-90cd8180-c530-11e9-80d7-4954b11deebd.jpg)
 
-
 Take a moment and look at the code and the window that's generated.  Are you able to look at the layout and envision the Window on the screen?
-
 
 ### Build By Concatenating Rows
 
@@ -1538,7 +3063,6 @@ import PySimpleGUI as sg
 
 event, values = sg.Window('To Do List Example', layout=[[sg.Text(f'{i}. '), sg.In(key=i)] for i in range(1,6)] + [[sg.Button('Save'), sg.Button('Exit')]]).read()
 ```
-
 
 ## Example - List Comprehension to Build Rows - Table Simulation - Grid of Inputs
 
@@ -1619,7 +3143,6 @@ input_rows = [[sg.Input(size=(15,1), pad=(0,0)) for col in range(4)] for row in 
 
 The first part should look familiar since it was just discussed as being what builds a single row.  To make the matrix, we simply take that single row and create 10 of them, each being a list.
 
-
 ### Putting it all together
 
 Here is our final program that uses simple addition to add the headers onto the top of the input matrix.  To make it more attractive, the color theme is set to 'Dark Brown 1'.
@@ -1641,7 +3164,6 @@ event, values = window.read()
 ```
 
 ![image](https://user-images.githubusercontent.com/46163555/70472374-f7a18700-1a9c-11ea-9cd1-27d386cd9066.png)
-
 
 ## User Defined Elements / Compound Elements
 
@@ -1749,7 +3271,6 @@ And the window it creates looks like this:
 
 ![image](https://user-images.githubusercontent.com/46163555/63628682-cda28280-c5db-11e9-92a4-44ec2cb6ccf9.png)
 
-
 ---
 
 # Elements
@@ -1807,7 +3328,6 @@ Keys are used in these ways:
 * Returned as events. If an element causes an event, its key will be used
 * In the `values` dictionary that is returned from `window.read()`
 * To make updates (changes), to an element that's in the window
-
 
 After you put a key in an element's definition, the values returned from `window.read` will use that key to tell you the value.  For example, if you have an input element in your layout:
 
@@ -1920,7 +3440,6 @@ def main():
         window['-O U T'].update(values['-IN-'])
     window.close()
 
-
 def func():
 
     main()
@@ -1936,7 +3455,6 @@ A few things to note about it:
 
 This key error recovery algorithm only applies to element keys being used to lookup keys inside of windows.  The `values` key lookup is a plain dictionary and so nothing fancy is done for that lookup.
 
-
 ### Example 1 - Simple text string misspelling
 
 In our example, this line of code has an error:
@@ -1951,11 +3469,9 @@ When the program runs, you'll first see the layout with no apparent problems:
 
 ![SNAG-0882](https://user-images.githubusercontent.com/46163555/88704649-60954800-d0dc-11ea-885a-1ebadba039b7.jpg)
 
-
 Clicking the OK button will cause the program to return from `window.read()` and thus hit our bad key.  The result will be a popup window that resembles this:
 
 ![SNAG-0883](https://user-images.githubusercontent.com/46163555/88704635-5bd09400-d0dc-11ea-88a2-42e7386b076b.jpg)
-
 
 Note a few things about this error popup.  Your shown your bad key and you're also shown what you likely meant.  Additionally, you're shown the filename, the line number and the line of code itself that has the error.
 
@@ -1963,20 +3479,17 @@ Because this error was recoverable, the program continues to run after you close
 
 ![SNAG-0884](https://user-images.githubusercontent.com/46163555/88704691-71de5480-d0dc-11ea-8800-9379044a3f1f.jpg)
 
-
 ### Example 2 - Tuple error
 
 Keys can be a variety of types, including tuples.  In this particular program we have a tuple specified in the layout and have used an incorrect tuple in the lookup.  Once again the recovery process worked and the program continued.
 
 ![SNAG-0885](https://user-images.githubusercontent.com/46163555/88705188-2d9f8400-d0dd-11ea-9a91-f92cef9f6219.jpg)
 
-
 ### Example 3 - No close match found
 
 In this example, as you can see in the error popup, there was such a mismatch that no substitution could be performed.  
 
 ![SNAG-0886](https://user-images.githubusercontent.com/46163555/88705707-e6fe5980-d0dd-11ea-8fcc-bc024298705d.jpg)
-
 
 This is an unrecoverable error, so a key error exception is raised.
 
@@ -1998,11 +3511,9 @@ KeyError: (1, 2, 3)
 
 If you're running an IDE such as PyCharm, you can use the information from the assert to jump to the line of code in your IDE based on the crash data provided.
 
-
 ### Choose Your Desired Combination
 
 There are enough controls on this error handling that you can control how you want your program to fail.  If you don't want any popups, and no guessing and would instead like to simply get an exception when the key error happens, then call `set_options` with this combination:
-
 
 ```python
     sg.set_options(suppress_raise_key_errors=False, suppress_error_popups=True, suppress_key_guessing=True)
@@ -2026,9 +3537,6 @@ Traceback (most recent call last):
 KeyError: '-O U T'
 ```
 
-
-
-
 ## Common Element Parameters
 
 Some parameters that you  will see on almost all Element creation calls include:
@@ -2049,7 +3557,6 @@ Tooltips are text boxes that popup next to an element if you hold your mouse ove
 Tooltips are one of those "polish" items that really dress-up a GUI and show's a level of sophistication.  Go ahead, impress people, throw some tooltips into your GUI.  You can change the color of the background of the tooltip on the tkinter version of PySimpleGUI by setting `TOOLTIP_BACKGROUND_COLOR` to the color string of your choice.  The default value for the color is:
 
 `TOOLTIP_BACKGROUND_COLOR = "#ffffe0"`
-
 
 #### Size
 
@@ -2072,7 +3579,6 @@ If you're curious about the math used to do the character to pixels conversion, 
 `DEFAULT_PIXELS_TO_CHARS_SCALING = (10,26)`
 
 The conversion simply takes your `size[0]` and multiplies by 10 and your `size[1]` and multiplies it by 26.
-
 
 #### Colors
 
@@ -2113,7 +3619,6 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 
 See the section above that has full information about keys.
 
-
 #### Visible
 
 Beginning in version 3.17 you can create Elements that are initially invisible that you can later make visible.
@@ -2136,7 +3641,6 @@ If you want to not only make the element invisible, on tkinter you can call `Ele
 
 Qt elements tend to hold their place really well and the window resizes itself nicely.  It is more precise and less clunky.
 
-
 ## Shortcut Functions / Multiple Function Names
 
 Perhaps not the best idea, but one that's done none the less is the naming of methods and functions.  Some of the more "Heavily Travelled Elements" (and methods/functions) have "shortcuts".  
@@ -2149,13 +3653,9 @@ The shortcuts aren't limited to Elements.  The `Window` method `Window.FindEleme
 
 It's an ongoing thing.  If you don't stay up to date and one of the newer shortcuts is used, you'll need to simply rename that shortcut in the code.  For examples Replace sg.T with sg.Text if your version doesn't have sg.T in it.
 
-
-<!-- %!% -->
 ## Text Element | `T == Txt == Text`
 
 Basic Element. It displays text.
-
-
 
 ```python
 layout = [
@@ -2165,13 +3665,9 @@ layout = [
 
 ![simple text](https://user-images.githubusercontent.com/13696193/44959877-e9d97b00-aec3-11e8-9d24-b4405ee4a148.jpg)
 
-
 When creating a Text Element that you will later update, make sure you reserve enough characters for the new text.  When a Text Element is created without a size parameter, it is created to exactly fit the characters provided. 
 
 With proportional spaced fonts (normally the default) the pixel size of one set of characters will differ from the pixel size of a different set of characters even though the set is of the same number of characters.  In other words, not all letters use the same number of pixels.  Look at the text you're reading right now and you will see this.  An "i" takes up a less space then an "A".
-
-
-
 
 ---
 
@@ -2193,7 +3689,6 @@ window[key].update(new_value)
 This change has been released to PyPI for PySimpleGUI
 
 MANY Thanks is owed to the nngogol that suggested and showed me how to do this.  It's an incredible find as have been many of his suggestions.
-
 
 ## `Element.update()` ->  `Element()` shortcut
 
@@ -2233,8 +3728,6 @@ window = sg.Window(....)
 event, values = window.read()
 ```
 
-
-
 It is confusing looking however so when used, it might be a good idea to write a comment at the end of the statement to help out the poor beginner programmer coming along behind you.
 
 Because it's such a foreign construct that someone with 1 week of Python classes will not recognize, the demos will continue to use the `.update` method.  
@@ -2252,7 +3745,6 @@ graph_element(background_color='blue')      # this calls Graph.update for the pr
 ```
 
 Hopefully this isn't too confusing.  Note that the methods these shortcuts replace will not be removed.  You can continue to use the old constructs without changes.
-
 
 ---
 
@@ -2273,7 +3765,6 @@ A `True` value for `auto_size_text`, when placed on Text Elements, indicates tha
 
 `Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
 
-
 ### Chortcut functions
 The shorthand functions for `Text` are `Txt` and `T`
 
@@ -2281,17 +3772,14 @@ The shorthand functions for `Text` are `Txt` and `T`
 
 If you set the parameter `enable_events` then you will get an event if the user clicks on the Text.
 
-
 ## Multiline Element
 This Element doubles as both an input and output Element.
-
 
 ```python
 layout = [[sg.Multiline('This is what a Multi-line Text Element looks like', size=(45,5))]]
 ```
 
 ![multiline](https://user-images.githubusercontent.com/13696193/44959853-b139a180-aec3-11e8-972f-f52188510c88.jpg)
-
 
 This element has been expanded upon quite a bit over time.  Two of the more exciting additions have been
 
@@ -2320,7 +3808,6 @@ window['-MULTILINE KEY-'].print('My variables are', a, b, c, text_color='red', b
 
 ```
 
-
 ### Redefine print
 
 Another way to use this print capability is to redefine the `print` statement itself.  This will allow you to leave your code entirely as is.  By adding this line of code your entire program will output all printed information to a multiline element.
@@ -2329,9 +3816,7 @@ Another way to use this print capability is to redefine the `print` statement it
 print = lambda *args, **kwargs: window['-MULTILINE KEY-'].print(*args, **kwargs)
 ```
 
-
 ## Text Input Element  | `InputText == Input == In`
-
 
 ```python
 layout = [[sg.InputText('Default text')]]
@@ -2339,18 +3824,14 @@ layout = [[sg.InputText('Default text')]]
 
 ![inputtext 2](https://user-images.githubusercontent.com/13696193/44959861-b5fe5580-aec3-11e8-8040-53ec241b5079.jpg)
 
-
 ---
 
 #### Note about the `do_not_clear` parameter
 
 This used to really trip people up, but don't think so anymore.  The `do_not_clear` parameter is initialized when creating the InputText Element.  If set to False, then the input field's contents will be erased after every `Window.read()` call.  Use this setting for when your window is an "Input Form" type of window where you want all of the fields to be erased and start over again every time.
 
-
-
 ## Combo Element | `Combo == InputCombo == DropDown == Drop`
 Also known as a drop-down list.  Only required parameter is the list of choices.  The return value is a string matching what's visible on the GUI.
-
 
 ```python
 layout = [[sg.Combo(['choice 1', 'choice 2'])]]
@@ -2358,17 +3839,14 @@ layout = [[sg.Combo(['choice 1', 'choice 2'])]]
 
 ![combobox](https://user-images.githubusercontent.com/13696193/44959860-b565bf00-aec3-11e8-82fe-dbe41252458b.jpg)
 
-
 ## Listbox Element
 The standard listbox like you'll find in most GUIs.  Note that the return values from this element will be a ***list of results, not a single result***. This is because the user can select more than 1 item from the list (if you set the right mode).
-
 
 ```python
 layout = [[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6))]]
 ```
 
 ![listbox 2](https://user-images.githubusercontent.com/13696193/44959859-b4cd2880-aec3-11e8-881c-1e369d5c6337.jpg)
-
 
 ---
 
@@ -2379,7 +3857,6 @@ Another way ListBoxes can cause Reads to return is if the flag bind_return_key i
 ## Slider Element
 
 Sliders have a couple of slider-specific settings as well as appearance settings. Examples include the `orientation` and `range` settings.
-
 
 ```python
 layout = [[sg.Slider(range=(1,500),
@@ -2399,7 +3876,6 @@ There is an important difference between Qt and tkinter sliders.  On Qt, the sli
 
 Creates one radio button that is assigned to a group of radio buttons.  Only 1 of the buttons in the group can be selected at any one time.
 
-
 ```python
 layout =  [
 	[sg.Radio('My first Radio!', "RADIO1", default=True),
@@ -2409,27 +3885,22 @@ layout =  [
 
 ![radio](https://user-images.githubusercontent.com/13696193/44959857-b4349200-aec3-11e8-8e2d-e6a49ffbd0b6.jpg)
 
-
 ## Checkbox Element | `CBox == CB == Check`
 Checkbox elements are like Radio Button elements.  They return a bool indicating whether or not they are checked.
-
 
 ```python
 layout =  [[sg.Checkbox('My first Checkbox!', default=True), sg.Checkbox('My second Checkbox!')]]
 ```
 ![checkbox](https://user-images.githubusercontent.com/13696193/44959906-6f5d2b00-aec4-11e8-9c8a-962c787f0286.jpg)
 
-
 ## Spin Element
 An up/down spinner control.  The valid values are passed in as a list.
-
 
 ```python
 layout =  [[sg.Spin([i for i in range(1,11)], initial_value=1), sg.Text('Volume level')]]
 ```
 
 ![spinner](https://user-images.githubusercontent.com/13696193/44959855-b1d23800-aec3-11e8-9f51-afb2109879da.jpg)
-
 
 ## Image Element
 
@@ -2441,9 +3912,7 @@ layout = [
          ]
 ```
 
-
 ![image](https://user-images.githubusercontent.com/13696193/61885709-4e326e00-aecc-11e9-8695-7193df2831ec.png)
-
 
 You can specify an animated GIF as an image and can animate the GIF by calling `UpdateAnimation`.  Exciting stuff!
 
@@ -2466,7 +3935,6 @@ The Types of buttons include:
 * Realtime
 * Calendar Chooser
 * Color Chooser
-
 
 Close window - Normal buttons like Submit, Cancel, Yes, No, do NOT close the window... they used to.  Now to close a window you need to use a CloseButton / CButton.
 
@@ -2500,7 +3968,6 @@ In Oct 2018, the definition of Button changed.  Previously Button would CLOSE th
 Your PySimpleGUI program is most likely going to contain only `Button` calls. The others are generally not found in user code.
 
 The most basic Button element call to use is `Button`
-
 
 ```python
 layout =  [[sg.Button('Ok'), sg.Button('Cancel')]]
@@ -2578,9 +4045,7 @@ If a value of `(None, None)` is chosen for the target, then the button itself wi
 
 Let's examine this window as an example:
 
-
 ![file browse](https://user-images.githubusercontent.com/13696193/44959944-d1b62b80-aec4-11e8-8a68-9d79d37b2c81.jpg)
-
 
 The `InputText` element is located at (1,0)... row 1, column 0.  The `Browse` button is located at position (2,0).  The Target for the button could be any of these values:
 
@@ -2619,7 +4084,6 @@ There are 4 different types of File/Folder open dialog box available.  If you ar
 
 ![saveas](https://user-images.githubusercontent.com/13696193/45243807-2beb2e00-b2c3-11e8-8549-ba71cdc05951.jpg)
 
-
 ### Calendar Buttons
 
 These buttons pop up a calendar chooser window.  The chosen date is returned as a string.
@@ -2631,7 +4095,6 @@ These buttons pop up a calendar chooser window.  The chosen date is returned as 
 These buttons pop up a standard color chooser window.  The result is returned as a tuple.  One of the returned values is an RGB hex representation.
 
 ![color](https://user-images.githubusercontent.com/13696193/45243375-99965a80-b2c1-11e8-9779-b71bed85fab6.jpg)
-
 
 ### Custom Buttons
 Not all buttons are created equal.  A button that closes a window is different that a button that returns from the window without closing it.  If you want to define your own button, you will generally do this with the Button Element `Button`, which closes the window when clicked.
@@ -2649,7 +4112,6 @@ layout =  [[sg.Button('My Button', key='_BUTTON_KEY_')]]
 ```
 
 With this layout, the event that is returned from a `Window.read()` call when the button is clicked will be "`_BUTTON_KEY_`"
-
 
 ### Button Images
 
@@ -2705,7 +4167,6 @@ Normally buttons are considered "clicked" when the mouse button is let UP after 
 
 ![robot remote](https://user-images.githubusercontent.com/13696193/44959958-ff9b7000-aec4-11e8-99ea-7450926409be.jpg)
 
-
 This window has 2 button types.  There's the normal "Read Button" (Quit) and 4 "Realtime Buttons".
 
 Here is the code to make, show and get results from this window:
@@ -2758,27 +4219,21 @@ NOTE - Mac users will not be able to use the file_types parameter.  tkinter has 
 The Enter Key can be "bound" to a particular button so that when the key is pressed, it causes the window to return as if the button was clicked.  This is done using the `bind_return_key` parameter in the button calls.
 If there are more than 1 button on a window, the FIRST button that is of type Close window or Read window is used.  First is determined by scanning the window, top to bottom and left to right.
 
-
 ## ButtonMenu Element
 
 The ButtonMenu element produces a unique kind of effect.  It's a button, that when clicked, shows you a menu.   It's like clicking one of the top-level menu items on a MenuBar.  As a result, the menu definition take the format of a single  menu entry from  a normal menu definition.  A normal menu definition is  a list of lists.  This definition is one of those lists.
-
 
 ```python
  ['Menu', ['&Pause Graph', 'Menu item::optional_key']]
 ```
 
-
 The very first string normally specifies what is shown on the menu bar.  In this case, the value is **not used**.  You set the text for the button using a different parameter, the `button_text` parm.
-
 
 One use of this element is to make a "fake menu bar" that has a colored background.  Normal menu bars cannot have their background color changed.  Not so with ButtonMenus.
 
 ![buttonmenu](https://user-images.githubusercontent.com/13696193/50387000-bc0d8180-06c0-11e9-8d17-3b22ed665e78.gif)
 
 Return values for ButtonMenus are sent via the return values dictionary.  If a selection is made, then an event is generated that will equal the ButtonMenu's key value.  Use that key value to look up the value selected by the user.  This is the same mechanism as the Menu Bar Element, but differs from the pop-up (right click) menu.
-
-
 
 ## VerticalSeparator Element
 
@@ -2790,10 +4245,7 @@ It works best when placed between columns or elements that span multiple rows.  
 VerticalSeparator(pad=None)
 ```
 
-
-
 ![snag-0129](https://user-images.githubusercontent.com/13696193/47376041-a92a0100-d6bf-11e8-8f5b-0c0df56cf0f3.jpg)
-
 
 ## HorizontalSeparator Element
 
@@ -2804,7 +4256,6 @@ An easy way to get a horizontal line in PySimpleGUI is to use a `Text` Element t
 ```python
 sg.Text('_'*30)             # make a horizontal line stretching 30 characters
 ```
-
 
 ## ProgressBar Element
 The `ProgressBar` element is used to build custom Progress Bar windows.  It is HIGHLY recommended that you use OneLineProgressMeter that provides a complete progress meter solution for you.  Progress Meters are not easy to work with because the windows have to be non-blocking and they are tricky to debug.
@@ -2820,10 +4271,8 @@ The return value for `OneLineProgressMeter` is:
 `True` if meter updated correctly
 `False` if user clicked the Cancel button, closed the window, or vale reached the max value.
 
-
 #### Progress Meter in Your window
 Another way of using a Progress Meter with PySimpleGUI is to build a custom window with a `ProgressBar` Element in the window.  You will need to run your window as a non-blocking window.  When you are ready to update your progress bar, you call the `UpdateBar` method for the `ProgressBar` element itself.
-
 
 ```python
 import PySimpleGUI as sg
@@ -2850,8 +4299,6 @@ window.close()
 
 ![progress custom](https://user-images.githubusercontent.com/13696193/45243969-c3508100-b2c3-11e8-82bc-927d0307e093.jpg)
 
-
-
 ## Output Element
 
 The Output Element is a re-direction of Stdout.
@@ -2862,7 +4309,6 @@ If you are looking for a way to quickly add the ability to show scrolling text w
 
 ***IMPORTANT***  You will NOT see what you `print` until you call either `window.read` or `window.Refresh`.  If you want to immediately see what was printed, call `window.Refresh()` immediately after your print statement.
 
-
 ```python
 Output(size=(80,20))
 ```
@@ -2870,7 +4316,6 @@ Output(size=(80,20))
 ![output](https://user-images.githubusercontent.com/13696193/44959863-b72f8280-aec3-11e8-8caa-7bc743149953.jpg)
 
 ----
-
 
 Here's a complete solution for a chat-window using an Output Element.  To display data that's received, you would to simply "print" it and it will show up in the output area.  You'll find this technique used in several Demo Programs including the HowDoI application.
 
@@ -2896,7 +4341,6 @@ def ChatBot():
     window.close()
 ChatBot()
 ```
-
 
 ## Column Element & Frame, Tab "Container" Elements
 
@@ -2948,7 +4392,6 @@ sg.Popup(event, values, line_width=200)
 
 ```
 
-
 ## Columns As a Way to Modify Elements
 
 Sometimes Columns are used to contain a single elemnet, but to give that elemously it was difficult to do these kinds of layouts, if not impossible.
@@ -2961,15 +4404,9 @@ With these parameter's it is possible to create windows that have their contents
 
 This is currently only available in the primary PySimpleGUI port.
 
-
-
-
 They can also be used to justify a group of elements in a particular way.
 
 Placing `Column` elements inside `Columns` elements make it possible to create a multitude of 
-
-
-
 
 ## Sizer Element
 
@@ -2984,21 +4421,17 @@ The implementation of a `Sizer` is quite simple.  It returns an empty `Column` e
 
 This feature is only available in the tkinter port of PySimpleGUI at the moment.  A cross port is needed.
 
-
 ----
 
 ## Frame Element (Labelled Frames, Frames with a title)
 
 Frames work exactly the same way as Columns.  You create layout that is then used to initialize the Frame.  Like a Column element, it's a "Container Element" that holds one or more elements inside.
 
-
 ![frame element](https://user-images.githubusercontent.com/13696193/45889173-c2245700-bd8d-11e8-8f73-1e5f1be3ddb1.jpg)
 
 Notice how the Frame layout looks identical to a window layout. A window works exactly the same way as a Column and a Frame.  They all are "container elements" - elements that contain other elements.
 
 *These container Elements can be nested as deep as you want.* That's a pretty spiffy feature, right?  Took a lot of work so be appreciative.  Recursive code isn't trivial.
-
-
 
 This code creates a window with a Frame and 2 buttons.
 
@@ -3014,8 +4447,6 @@ layout = [
 
 window = sg.Window('Frame with buttons', layout, font=("Helvetica", 12))
 ```
-
-
 
 ## Canvas Element
 
@@ -3048,14 +4479,12 @@ The order of operations to obtain a tkinter Canvas Widget is:
     # create the window and show it without the plot
     window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout).Finalize()
 
-
     # add the plot to the window
     fig_photo = draw_figure(window['canvas'].TKCanvas, fig)
 
     # show it all again and get buttons
     event, values = window.read()
 ```
-
 
 To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
 * Add Canvas Element to your window
@@ -3068,11 +4497,9 @@ To get a tkinter Canvas Widget from PySimpleGUI, follow these steps:
 
 See `Demo_Matplotlib.py` for a Recipe you can copy.
 
-
 ### Methods & Properties
 
 TKCanvas - not a method but a property. Returns the tkinter Canvas Widget
-
 
 ## Graph Element
 
@@ -3137,8 +4564,6 @@ graph {'graph': (154, 254)}
 graph+UP {'graph': (154, 254)}
 ```
 
-
-
 ## Table Element
 
 Table and Tree Elements are of the most complex in PySimpleGUI.  They have a lot of options and a lot of unusual characteristics.
@@ -3152,7 +4577,6 @@ The values returned from a `Window.read` call for the Table Element are a list o
 New in **PySimpleGUIQt** is the addition of the `Table` method `Get`.  This method returns the table that is currently being shown in the GUI.  This method was required in order to obtain any edits the user may have made to the table.
 
 For the tkinter port, it will return the same values that was passed in when the table was created because tkinter Tables cannot be modified by the user (please file an Issue if you know a way).
-
 
 ### Known `Table` visualization problem....
 
@@ -3181,7 +4605,6 @@ There are two ways to get events generated from Table Element.
 ## Tree Element
 
 The Tree Element and Table Element are close cousins.   Many of the parameters found in the Table Element apply to Tree Elements.  In particular the heading information, column widths, etc..
-
 
 Unlike Tables there is no standard format for trees.  Thus the data structure passed to the Tree Element must be constructed.  This is done using the TreeData class.  The process is as follows:
 
@@ -3224,7 +4647,6 @@ Here is the result of showing an icon with a tree entry.
 
 ![image](https://user-images.githubusercontent.com/13696193/51087270-2b561e80-171f-11e9-8260-6142ea9b1137.png)
 
-
 ## Tab and Tab Group Elements
 
 Tabs are another of PySimpleGUI "Container Elements".  It is capable of "containing" a layout just as a window contains a layout.  Other container elements include the `Column` and `Frame` elements.
@@ -3246,8 +4668,6 @@ Let's look at this Window as an example:
 View of second tab:
 
 ![tabbed 2](https://user-images.githubusercontent.com/13696193/45992809-b10f6a80-c059-11e8-94e6-3bf543c9b0bd.jpg)
-
-
 
 ```python
 tab1_layout =  [[sg.T('This is inside tab 1')]]
@@ -3279,24 +4699,17 @@ Check out Tabs 7 and 8.  We've got a Window with a Column containing Tabs 5 and 
 
 As of Release 3.8.0, not all of *options* shown in the API definitions of the Tab and TabGroup Elements are working. They are there as placeholders.
 
-
 First we have the Tab layout definitions. They mirror what you see in the screen shots.  Tab 1 has 1 Text Element in it.  Tab 2 has a Text and an Input Element.
-
 
 ### Reading Tab Groups
 
 Tab Groups now return a value when a Read returns.  They return which tab is currently selected.  There is also a `enable_events` parameter that can be set that causes a Read to return if a Tab in that group is selected / changed.  The key or title belonging to the Tab that was switched to will be returned as the value
 
-
-
-
 x## Pane Element
 
 New in version 3.20 is the Pane Element, a super-cool tkinter feature.  You won't find this one in PySimpleGUIQt, only PySimpleGUI.   It's difficult to describe one of these things.  Think of them as "Tabs without labels" that you can slide.
 
-
 ![pane3](https://user-images.githubusercontent.com/13696193/50035040-fcd50e80-ffcd-11e8-939c-df8ab8d64712.gif)
-
 
 ***Each "Pane" of a Pane Element must be a Column Element***.  The parameter `pane_list` is a list of Column Elements.
 
@@ -3308,7 +4721,6 @@ sg.Pane([col5, sg.Column([[sg.Pane([col1, col2, col4], handle_size=15, orientati
 
 Combing these with *visibility* make for an interesting interface with entire panes being hidden from view until neded by the user.  It's one way of producing "dynamic" windows.
 
-
 ## Colors
 Starting in version 2.5 you can change the background colors for the window and the Elements.
 
@@ -3319,7 +4731,6 @@ Your windows can go from this:
 to this... with one function call...
 
 ![snap0156](https://user-images.githubusercontent.com/13696193/43273880-aa1955e6-90cb-11e8-94b6-673ecdb2698c.jpg)
-
 
 While you can do it on an element by element or window level basis, the easier way is to use either the `theme` calls or `set_options`.  These calls will set colors for all window that are created.
 
@@ -3338,7 +4749,6 @@ SetOptions(background_color='#9FB8AD',
 ```
 
 # SystemTray
-
 
 In addition to running normal windows, it's now also possible to have an icon down in the system tray that you can read to get menu events.  There is a new SystemTray object that is used much like a Window object.  You first get one, then you perform Reads in order to get events.
 
@@ -3414,7 +4824,6 @@ For testing you may find using the built-in PySimpleGUI icon is a good place to 
 tray = sg.SystemTray(menu=menu_def, data_base64=sg.DEFAULT_BASE64_ICON)
 ```
 
-
 ## Menu Definition
 ```python
 menu_def = ['BLANK', ['&Open', '&Save', ['1', '2', ['a', 'b']], '!&Properties', 'E&xit']]
@@ -3446,7 +4855,6 @@ If you want a separator between 2 items, add the entry `'---'` and it will add a
 
 If you want to disable a menu entry, place a `!` before the menu entry
 
-
 ## SystemTray Methods
 
 ### Read - Read the context menu or check for events
@@ -3472,7 +4880,6 @@ EVENT_SYSTEM_TRAY_ICON_ACTIVATED - Tray icon was single clicked
 EVENT_SYSTEM_TRAY_MESSAGE_CLICKED - a message balloon was clicked
 TIMEOUT_KEY is returned if no events are available if the timeout value is set in the Read call
 
-
 ### Hide
 
 Hides the icon.  Note that no message balloons are shown while an icon is hidden.
@@ -3487,7 +4894,6 @@ Does the same thing as hide
 ```python
 def Close()
 ```
-
 
 ### UnHide
 
@@ -3528,7 +4934,6 @@ Note, on windows it may be necessary to make a registry change to enable message
 
 ![snag-0285](https://user-images.githubusercontent.com/13696193/49056144-6381bc00-f1c8-11e8-9f44-199394823369.jpg)
 
-
 ### Update
 
 You can update any of these items within a SystemTray object
@@ -3537,21 +4942,6 @@ You can update any of these items within a SystemTray object
 * Tooltip
 
  Change them all or just 1.
-
-
-<!-- ```python
-Update(menu=None, tooltip=None,filename=None, data=None, data_base64=None,)
-    '''
- Updates the menu, tooltip or icon
- :param menu: menu defintion
- :param tooltip: string representing tooltip
- :param filename:  icon filename
- :param data:  icon raw image
- :param data_base64: icon base 64 image
- :return:
- '''
-```
- -->
 
 ### Notify Class Method
 
@@ -3571,7 +4961,6 @@ Will show this window, fading it in and out:
 
 This is a blocking call so expect it to take a few seconds if you're fading the window in and out.  There are options to control the fade, how long things are displayed, the alpha channel, etc..  See the call signature at the end of this document.
 
-
 # Global Settings
 
 There are multiple ways to customize PySimpleGUI.  The call with the most granularity (allows access to specific and precise settings).  The `ChangeLookAndFeel` call is in reality a single call to `SetOptions` where it changes 13 different settings.  
@@ -3581,7 +4970,7 @@ There are multiple ways to customize PySimpleGUI.  The call with the most granul
 **These settings apply to all windows that are created in the future.**
 
  `SetOptions`.  The  options and Element options will take precedence over these settings.  Settings can be thought of as levels of settings with the window-level being the highest and the Element-level the lowest.  Thus the levels are:
- 
+
  - Global
  - Window
  - Element
@@ -3591,7 +4980,6 @@ Each lower level overrides the settings of the higher level.  Once settings have
 # Persistent windows (Window stays open after button click)
 
 Early versions of PySimpleGUI did not have a concept of "persisent window". Once a user clicked a button, the window would close.  After some time, the functionality was expanded so that windows remained open by default.
-
 
 ## Input Fields that Auto-clear
 Note that `InputText` and `MultiLine` Elements can be **cleared** when performing a `read`.  If you want your input field to be cleared after a `window.read` then you can set the `do_not_clear` parameter to False when creating those elements. The clear is turned on and off on an element by element basis.
@@ -3619,7 +5007,6 @@ while True:
 
 window.close()
 ```
-
 
 ## Read(timeout = t, timeout_key=TIMEOUT_KEY, close=False)
 
@@ -3655,7 +5042,6 @@ while True:             # Event Loop
 
 This event loop will run every 100 ms.  You're making a `read` call, so anything that the use does will return back to you immediately, and you're waiting up to 100ms for the user to do something.  If the user doesn't do anything, then the read will timeout and execution will return to the program.
 
-
 ## sg.TIMEOUT_KEY
 
 If you're using a read with a timeout value, then an event value of None signifies that the window was closed, just like a normal `window.read`.  That leaves the question of what it is set to when not other events are happening.  This value will be the value of `TIMEOUT_KEY`.  If you did not specify a timeout_key value in your call to read, then it will be set to a default value of:
@@ -3670,7 +5056,6 @@ while True:
     if event == sg.TIMEOUT_KEY:
         print("Nothing happened")
 ```
-
 
 Use async windows sparingly.  It's possible to have a window that appears to be async, but it is not.  **Please** try to find other methods before going to async windows.  The reason for this plea is that async windows poll tkinter over and over.  If you do not have a timeout in your Read and you've got nothing else your program will block on, then you will eat up 100% of the CPU time. It's important to be a good citizen.   Don't chew up CPU cycles needlessly.  Sometimes your mouse wants to move ya know?
 
@@ -3688,8 +5073,6 @@ Be a good computing citizen.  Run with a non-zero timeout so that other programs
 
 ***Do Not*** use a timeout of less than 10ms.  Otherwise you will simply thrash, spending your time trying to do some GUI stuff, only to be interruped by a timeout timer before it can get anything done.  The results are potentially disasterous.
 
-
-
 There is a hybrid approach... a read with a timeout.   You'll score much higher points on the impressive meter if you're able to use a lot less CPU time by using this type of read.
 
 The most legit time to use a non-blocking window is when you're working directly with hardware.  Maybe you're driving a serial bus.  If you look at the Event Loop in the Demo_OpenCV_Webcam.py program, you'll see that the read is a non-blocking read.  However, there is a place in the event loop where blocking occurs.   The point in the loop where you will block is the call to read frames from the webcam.  When a frame is available you want to quickly deliver it to the output device, so you don't want your GUI blocking.  You want the read from the hardware to block.
@@ -3697,7 +5080,6 @@ The most legit time to use a non-blocking window is when you're working directly
 Another example can be found in the demo for controlling a robot on a Raspberry Pi.  In that application you want to read the direction buttons, forward, backward, etc., and immediately take action.  If you are using RealtimeButtons, your only option at the moment is to use non-blocking windows.  You have to set the timeout to zero if you want the buttons to be real-time responsive.
 
 However, with these buttons, adding a sleep to your event loop will at least give other processes time to execute.  It will, however, starve your GUI. The entire time you're sleeping, your GUI isn't executing.
-
 
 ### Periodically Calling`Read`
 
@@ -3742,7 +5124,6 @@ event, values = sg.Window('This is my customn popup',
 
 Notice the height parameter of size is `None` in this case.  For the tkinter port of PySimpleGUI this will cause the number of rows to "fit" the contents of the string to be displayed.
 
-
 ## Persistent Window Example - Running timer that updates
 
 See the sample code on the GitHub named Demo Media Player for another example of Async windows.  We're going to make a window and update one of the elements of that window every .01 seconds.    Here's the entire code to do that.
@@ -3777,9 +5158,7 @@ while (True):
                                                                   current_time % 100))
 ```
 
-
 Previously this program was implemented using a sleep in the loop to control the clock tick.  This version uses the new timeout parameter.  The result is a window that reacts quicker then the one with the sleep and the accuracy is just as good.
-
 
 ## Instead of a Non-blocking Read --- Use `enable_events = True` or `return_keyboard_events = True`
 
@@ -3792,9 +5171,6 @@ Any time you are thinking "I want an X Element to cause a Y Element to do someth
 One example is you have an input field that changes as you press buttons on an on-screen keypad.
 
 ![keypad 3](https://user-images.githubusercontent.com/13696193/45260275-a2198e80-b3b0-11e8-85fe-a4ce6484510f.jpg)
-
-
-
 
 # Updating Elements (changing element's values in an active window)
 
@@ -3838,7 +5214,6 @@ while True:             # Event Loop
         break
 ```
 
-
 Persistent windows remain open and thus continue to interact with the user after the Read has returned.  Often the program wishes to communicate results (output information) or change an Element's values (such as populating a List Element).
 
 You can use Update to do things like:
@@ -3854,9 +5229,7 @@ The way this is done is via an Update method that is available for nearly all of
 
 ![snap0272](https://user-images.githubusercontent.com/13696193/45260249-ec4e4000-b3af-11e8-853b-9b29d0bf7797.jpg)
 
-
 In some programs these updates happen in response to another Element.  This program takes a Spinner and a Slider's input values and uses them to resize a Text Element.  The Spinner and Slider are on the left, the Text element being changed is on the right.
-
 
 ```python
 # Testing async window, see if can have a slider
@@ -3888,7 +5261,6 @@ while True:
 
 print("Done.")
 ```
-
 
 Inside the event loop we read the value of the Spinner and the Slider using those Elements' keys.
 For example, `values['slider']` is the value of the Slider Element.
@@ -3924,7 +5296,6 @@ window[key]
 
 You'll find the pattern - `window.Element(key)` in older code.  All of code after about 4.0 uses the shortened `window[key]` notation.
 
-
 ### ProgressBar / Progress Meters
 
 Note that to change a progress meter's progress, you call `update_bar`, not `update`.  A change to this is being considered for a future release.
@@ -3947,7 +5318,6 @@ You can also set the cursor for the Window as a whole, including the margins and
 
  `X_cursor, arrow, based_arrow_down, based_arrow_up, boat, bogosity, bottom_left_corner, bottom_right_corner, bottom_side, bottom_tee, box_spiral, center_ptr, circle, clock, coffee_mug, cross, cross_reverse, crosshair, diamond_cross, dot, dotbox, double_arrow, draft_large, draft_small, draped_box, exchange, fleur, gobbler, gumby, hand1, hand2, heart, icon, iron_cross, left_ptr, left_side, left_tee, leftbutton, ll_angle, lr_angle, man, middlebutton, mouse, pencil, pirate, plus, question_arrow, right_ptr, right_side, right_tee, rightbutton, rtl_logo, sailboat, sb_down_arrow, sb_h_double_arrow, sb_left_arrow, sb_right_arrow, sb_up_arrow, sb_v_double_arrow, shuttle, sizing, spider, spraycan, star, target, tcross, top_left_arrow, top_left_corner, top_right_corner, top_side, top_tee, trek, ul_angle, umbrella, ur_angle, watch, xterm`
 
-
 ## No Cursor
 
 To specify no cursor should be shown, the cursor `'no'` can be used on some platforms
@@ -3969,7 +5339,6 @@ And these are also available:
 And these additional native cursors are available for the Mac
 
 `copyarrow, aliasarrow, contextualmenuarrow, text, cross-hair, closedhand, openhand, pointinghand, resizeleft, resizeright, resizeleftright, resizeup, resizedown, resizeupdown, none, notallowed, poof, countinguphand, countingdownhand, countingupanddownhand, spinning`
-
 
 # Keyboard & Mouse Capture
 
@@ -4013,13 +5382,11 @@ while True:
 
 You want to turn off the default focus so that there no buttons that will be selected should you press the spacebar.
 
-
 # Menus
 
 ## MenuBar
 
 Beginning in version 3.01 you can add a MenuBar to your window.  You specify the menus in much the same way as you do window layouts, with lists.  Menu selections are returned as events and as of 3.17, also as in the values dictionary.  The value returned will be the entire menu entry, including the key if you specified one.
-
 
 ```python
     menu_def = [['File', ['Open', 'Save', 'Exit',]],
@@ -4084,7 +5451,6 @@ menu_def = [['&File', ['&Open', '&Save', '---', 'Properties', 'E&xit'  ]],
   And this is the spiffy menu it produced:
   ![menus with shortcuts](https://user-images.githubusercontent.com/13696193/46251674-f5b74f00-c427-11e8-95c6-547adc59041b.jpg)
 
-
 ## Disabled Menu Entries
 
 If you want one of your menu items to be disabled, then place a '!' in front of the menu entry.  To disable the Paste menu entry in the previous examples, the entry would be:
@@ -4102,7 +5468,6 @@ To add the `key` `_MY_KEY_` to the Special menu entry, the code would be:
 
  If you want to change the characters that indicate a key follows from '::' to something else, change the variable `MENU_KEY_SEPARATOR`
 
-
 ## The Menu Definitions
 
 Having read through the Menu section, you may have noticed that the right click menu and the button menu have a format that is a little odd as there is a part of it that is not utilized (the first very string).  Perhaps the words "Not Used" should be in the examples.... But, there's a reason to retain words there that make sense.
@@ -4116,8 +5481,6 @@ menu_bar = [right_click_menu_1, right_click_menu_2, button_menu_def ]
 ```
 
 And, of course, the direction works the opposite too.  You can take a Menu Bar definition and pull out an individual menu item to create a right click or button menu. 
-
-
 
 # Running Multiple Windows
 
@@ -4184,7 +5547,6 @@ while True:
             win2.close()
 ```
 
-
 ## Multi-Window Design Pattern 2 - only 1 active window
 
 ```python
@@ -4221,9 +5583,7 @@ while True:
                 break
 ```
 
-
 ---
-
 
 # The PySimpleGUI Debugger
 
@@ -4242,7 +5602,6 @@ So far no one has reported anything at all about the debugger.  The assumption i
 
 The plain PySimpleGUI module has a debugger builtin.  For the other ports, please use the package `imwatchingyou`.
 
-
 ## What is it?  Why use it?  What the heck?  I already have an IDE.
 
 This debugger provides you with something unique to most typical Python developers, the ability to "see" and interact with your code, **while it is running**.  You can change variable values while your code continues to run.
@@ -4259,7 +5618,6 @@ And would prefer to see this window updating continuously in the upper right cor
 ![image](https://user-images.githubusercontent.com/13696193/62793751-54197900-baa0-11e9-9a98-f780259062b1.png)
 
 Notice how easy it is, using this window alone, to get the location that your PySimpleGUI package is coming from ***for sure***, no guessing.  Expect this window to be in your debugging future as it'll get asked for from time to time.
-
 
 ## Preparing To Run the Debugger
 
@@ -4312,7 +5670,6 @@ window.close()
 
 ## Debugger Windows
 
-
 ### "Popout Debugger Window"
 
 There are 2 debugger windows. One is called the "Popout" debugger window.  The Popout window displays as many currently in-scope local variables as possible.  This window is not interactive.  It is meant to be a frequently updated "dashboard" or "snapshot" of your variables.
@@ -4328,7 +5685,6 @@ There are 3 ways of opening the Popout window.
 1. Press the `BREAK` key on your keyboard.
 2. Call the function `show_debugger_popout_window(location=(x,y))`
 3. Add `Debug()` button to your layout - adds a little purple and yellow PySimpleGUI logo to your window
-
 
 #### When you are asked for the "Location of your PySimpleGUI package or PySimpleGUI.py file" do this
 
@@ -4348,7 +5704,6 @@ If your variable's value is too long and doesn't fit, then you'lll need to colle
 
 The Popup window is a "Snapshot" of your local variables at the time the window was opened. This means **any variables that did not exist at the time the Popout was created will not be shown**.   This window does **NOT** expand in size by adding new variables.  Maybe in the future.
 
-
 ### The "Main Debugger Window"
 
 Now we're talking serious Python debugging!
@@ -4365,7 +5720,6 @@ There are 3 ways to open the Main Debugger Window
 2. From the Popout Debug Window, right click and choose `Debugger` from the right click menu
 3. From your code call `show_debugger_window(location=(x,y))`
 
-
 #### The "Variables" Tab of Main Debugger Window
 
 ![SNAG-0440](https://user-images.githubusercontent.com/13696193/62797391-a01ceb80-baa9-11e9-845d-3cd02ca0dbcc.jpg)
@@ -4379,7 +5733,6 @@ The maximum number of "watches" you can have any any one time is 9.
 You can simply click "Show All Variable" button and the list of watched variables will be automatically populard by the first 9 variables it finds.  Or you can click the "Choose Variables to Auto Watch" button where you can individually choose what variables, **and expressions** you wish to display.
 
 ![SNAG-0442](https://user-images.githubusercontent.com/13696193/62797520-e96d3b00-baa9-11e9-8ba0-794e479b6fc5.jpg)
-
 
 In this window we're checking checkboxes to display these variables:
 
@@ -4395,12 +5748,9 @@ In this example the Custom Watch entered was `values[0]`.  After clicking on the
 
 We can see the variables we checked as well as the defined expression `values[0]`.  If you leave this window open, these values with continuously be updated, on the fly, every time we call the line in our example code `window.read(timeout=500)`.  This means that the Main Debugger Window and these variables we defined will be updated every 500 milliseconds.
 
-
-
 #### The REPL & Watches Tab
 
 ![SNAG-0441](https://user-images.githubusercontent.com/13696193/62797507-e7a37780-baa9-11e9-93c4-6ff0c8acb11d.jpg)
-
 
 This tab is provided to you as a way to interact with your running program on a real-time basis.  
 
@@ -4409,7 +5759,6 @@ If you want to quickly look at the values of variables, nearly ANY variables, th
 ***Immediately*** after typing the character 'w', the information to the right was displayed.  No button needs to be clicked.  You merely neeed to type in a valid experession and it will be displayed to you.... and it will be displayed on an on-going, constantly-refreshing-basis.
 
 ![SNAG-0447](https://user-images.githubusercontent.com/13696193/62797393-a0b58200-baa9-11e9-8016-1cadca4d97e7.jpg)
-
 
 If the area to the right of the input field is too small, then you can click on the "Detail" button and you will be shown a popup, scrolled window with all of the information displayed as if it were printed.  
 
@@ -4424,7 +5773,6 @@ Oh, Python, -sigh-.  I just want to see my `window` object printed.
 PySimpleGUI has a fun and very useful function that is discussed in the docs named `ObjToString` which takes an object and converts it's **contents** it into a nicely formatted string.  This function is used to create the text output when you click the `Obj` button.  The result is this instead of the tiny window shown previously:
 
 ![SNAG-0446](https://user-images.githubusercontent.com/13696193/62797508-e7a37780-baa9-11e9-96bf-b2c066e72d78.jpg)
-
 
 ## The REPL Prompt
 
@@ -4517,7 +5865,6 @@ There are 2 ways to access User Settings
 
 They both offer the same basic operations.  The class interface has an added benefit of being able to access the individual settings using the same syntax as Python dictionary.
 
-
 ## List of Calls for Function Interface
 
 |Function|Description|
@@ -4533,7 +5880,6 @@ They both offer the same basic operations.  The class interface has an added ben
 |user_settings_set_entry|Sets an entry to a particular value
 |user_settings_write_new_dictionary|Writes a specified dictionary to settings file|
 
-
 ## Operations
 
 There are 2 categories that the calls can be divided into.
@@ -4546,7 +5892,7 @@ File operations involve working with the JSON file itself.  They include:
 * Load/save the file (these are somewhat optional as the saving loading/saving is done automatically)
 * Deleting the settings file
 * Checking if settings file exists
-  
+
 Generally speaking, a setting is specified with a key which is generally a string.  Settings operations are for working with the individual settings and include:
 * Get the value of a setting (returns a default value if not found)
 * Set the value of a setting (also saves the settings to disk)
@@ -4568,7 +5914,6 @@ In addition to the filename having a default value, the path to the file also ha
 When calling the User Settings APIs, if a parameter is named `filename`, you can specify a full path or just the filename.  This will save you the trouble of having to split up your path and filename in your code.  If you specify only the path, the the filename will be added to that path and named as defined earlier.
 
 Like the rest of PySimpleGUI, the idea is for you to write as little code as possible.  The default values for the filename and path should be fine for you to use.  They will be stored in a location on your system that is meant to store user settings.  
-
 
 ### Setting Filename
 
@@ -4607,11 +5952,9 @@ You are not restricted to naming your settings file to an extension of .json.  T
 
 Maybe you don't care about the settings filename itself, but you do care about where the settings are stored.  Let's say you want the settings to be stored in the same folder as your Python source file.  Specifying `path='.'` will achieve this.
 
-
 #### Setting a fully qualified filename
 
 If you want to specify the full absolute path and filename of the settings file, you can do it by using the filename parameter.  Instead of passing the filename only, pass in a fully qualified path and filename.  If you want to name your settings file `a:\temp\my_settings`, then your call will look like this:
-
 
 ```python
 sg.user_settings_filename(filename=r'a:\temp\my_settings')
@@ -4623,11 +5966,9 @@ You are not required to break your file down into 2 parameters.  You could if yo
 sg.user_settings_filename(filename='my_settings' , path=r'a:\temp')
 ```
 
-
 ### Getting the current filename
 
 Calling `user_settings_filename` with no parameters will return the full path and filename of your settings file as a single string.
-
 
 ### File Loading / Saving
 
@@ -4652,7 +5993,6 @@ settings = sg.UserSettings()
 ```
 
 This is the same as calling `sg.user_settings_filename()`
-
 
 ### Reading, Writing, and Deleting an Individual Settings Using [ ] Syntax
 
@@ -4700,7 +6040,6 @@ value = settings.get('-item-', '')
 
 It's the same kind of syntax that you're used to using with dictionaries.
 
-
 ### Default Value
 
 Normally the default value will be `None` if a key is not found and you get the value of the entry using the bracket format:
@@ -4710,7 +6049,6 @@ item_value = settings['-item-']
 ```
 
 You can change the default value by calling `settings.set_default_value(new_default)`.  This will set the default value to return in the case when no key is found.  Note that an exception is not raised when there is a key error (see next section on error handling).  Instead, the default value is returned with a warning displayed.
-
 
 ## Displaying the Settings Dictionary
 
@@ -4755,7 +6093,7 @@ def main():
 ```
 
 Then you'll get an error when trying to set the '-test-' entry because `'...'` is not a valid path.
- 
+
 ```
 *** Error saving settings to file:***
  ...\scratch_1065.json [Errno 2] No such file or directory: '...\\scratch_1065.json'
@@ -4776,7 +6114,6 @@ If you're the type that doesn't want to see any error messages printed out on yo
 When using the class interface, there is a parameter `silent_on_error` that you can set to `True`.
 
 For the function interface, call the function `user_settings_silent_on_error()` and set the parameter to `True`
-
 
 ## Coding Convention for User Settings Keys
 
@@ -4875,11 +6212,9 @@ settings.set_default_value('')      # Set the default not-found value to ''
 
 Strictly speaking, this line isn't needed because the Input Element now takes `None` to be the same as a value of `''`, but to produce identical results I added this line of code.
 
-
 ## Demo Programs
 
 There are a number of demo programs that show how to use UserSettings to create a richer experience for your users by remember the last value input into input elements or by adding a Combobox with a history of previously entered values.  These upgrades make for a much easier to use GUI, especially when you find yourself typing in the same values or using the same files/folders.
-
 
 ## Brief Caution - User Settings Stick Around
 
@@ -4889,9 +6224,7 @@ Also, because the settings automatically save after every update, it can be easy
 
 To save your Python dictionary to a settings file, simply call `user_settings_write_new_dictionary(dict)`, passing in your dictionary as the parameter.
 
-
 -------------------------
-
 
 # Extending PySimpleGUI
 
@@ -4934,7 +6267,6 @@ window = sg.Window('Window Title', layout, finalize=True)
 ```
 
 It's cleaner and less confusing for beginners who aren't necessarily trained in how chaining calls work.  Py**Simple**GUI.
-
 
 ### Example Use of `Element.Widget`
 
@@ -4988,7 +6320,6 @@ Either way you'll access it using the same `Window` variable `sg.Window.TKroot`
 
 Watch this space in the future for the more standardized variable name for this object.  It may be something like `Window.Widget` as the Elements use or something like `Window.GUIWindow`.
 
-
 ## Binding tkiner "events"
 
 If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
@@ -5015,7 +6346,6 @@ Three events are being bound.
 1. Any button clicks in the window will return an event "Window Click" from window.read()
 2. Right clicking the "Go" buttons will return an event "Go+RIGHT CLICK+" from window.read()
 3. When the Input Element receives focus, an event "-IN-+FOCUS+" will be returned from window.read()
-
 
 ```python
 import PySimpleGUI as sg
@@ -5045,5 +6375,1956 @@ window.close(); del window
 There is no way to "unbind" and event at this time.  (sorry, didn't think of it before releasing)
 ---
 
-
 ------------------
+
+---
+
+# "Demo Programs" Applications
+
+There are too many to list!!
+
+There are over 170 sample programs to give you a jump start.
+
+These programs are an integral part of the overall PySimpleGUI documentation and learning system.  They will give you a headstart in a way you can learn from and understand.  They also show you integration techiques to other packages that have been figured out for you.
+
+You will find Demo Programs located in a subfolder named "Demo Programs" under the top level and each of the PySimpleGUI ports on GitHub.
+
+Demo programs for plain PySimpleGUI (tkinter)
+https://github.com/PySimpleGUI/PySimpleGUI/tree/master/DemoPrograms
+
+Demo programs for PySimpleGUIQt:
+https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIQt/Demo%20Programs
+
+Demo programs for PySimpleGUIWx:
+https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWx/Demo%20Programs
+
+Demo programs for PySimpleGUIWeb:
+https://github.com/PySimpleGUI/PySimpleGUI/tree/master/PySimpleGUIWeb/Demo%20Programs
+
+There are not many programs under each of the port's folders because the main Demo Programs should run on all of the other platforms with minimal changes (often only the import statement changes).
+
+You will also find a lot of demos running on Trinket
+http://Trinket.PySimpleGUI.org
+
+## Packages Used In Demos
+
+  While the core PySimpleGUI code  does not utilize any 3rd party packages, some of the demos do.  They add a GUI to a few popular packages.  These packages include:
+  * [Chatterbot](https://github.com/gunthercox/ChatterBot)
+  * [Mido](https://github.com/olemb/mido)
+  * [Matplotlib](https://matplotlib.org/)
+  * [PyMuPDF](https://github.com/rk700/PyMuPDF)
+  * OpenCV
+  * pymunk
+  * psutil
+  * pygame
+  * Forecastio
+
+# Creating a Windows .EXE File
+
+It's possible to create a single .EXE file that can be distributed to Windows users. There is no requirement to install the Python interpreter on the PC you wish to run it on. Everything it needs is in the one EXE file, assuming you're running a somewhat up to date version of Windows.
+
+Installation of the packages, you'll need to install PySimpleGUI and PyInstaller (you need to install only once)
+
+```bash
+pip install PySimpleGUI
+pip install PyInstaller
+
+```
+
+To create your EXE file from your program that uses PySimpleGUI,  `my_program.py`, enter this command in your Windows command prompt:
+
+```bash
+pyinstaller -wF my_program.py
+
+```
+
+You will be left with a single file,  `my_program.exe`, located in a folder named  `dist`  under the folder where you executed the  `pyinstaller`  command.
+
+That's all... Run your  `my_program.exe`  file on the Windows machine of your choosing.
+
+> "It's just that easy."
+
+(famous last words that screw up just about anything being referenced)
+
+Your EXE file should run without creating a "shell window". Only the GUI window should show up on your taskbar.
+
+If you get a crash with something like:
+```python
+ValueError: script '.......\src\tkinter' not found
+```
+
+Then try adding **`--hidden-import tkinter`** to your command
+
+# Creating a Mac App File
+
+There are reports that PyInstaller can be used to create App files.  It's not been officially tested.
+
+Run this command on your Mac
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
+Another also mentioned it may be helpful to add the "windowed" option so that a console is not opened.  That should make the command:
+
+> pyinstaller --onefile --add-binary='/System/Library/Frameworks/Tk.framework/Tk':'tk' --windowed --add-binary='/System/Library/Frameworks/Tcl.framework/Tcl':'tcl' your_program.py
+
+This info was located on Reddit with the source traced back to:
+https://github.com/pyinstaller/pyinstaller/issues/1350
+
+# Debug Output
+
+Be sure and check out the EasyPrint (Print) function described in the high-level API section.  Leave your code the way it is, route your stdout and stderror to a scrolling window.
+
+For a fun time, add these lines to the top of your script
+
+```python
+    import PySimpleGUI as sg
+    print = sg.Print
+```
+This will turn all of your print statements into prints that display in a window on your screen rather than to the terminal.
+
+# Look and Feel
+
+You can change defaults and colors of a large number of things in PySimpleGUI quite easily.
+
+##  `ChangleLookAndFeel`
+
+Want a quick way of making your windows look a LOT better?  Try calling `ChangeLookAndFeel`.  It will, in a single call, set various color values to widgets, background, text, etc.
+
+Or dial in the look and feel (and a whole lot more) that you like with the `SetOptions` function.  You can change all of the defaults in one function call.  One line of code to customize the entire GUI.
+
+```python
+    sg.ChangeLookAndFeel('GreenTan')
+```
+
+Valid look and feel values are currently:
+
+```python
+SystemDefault
+Reddit
+Topanga
+GreenTan
+Dark
+LightGreen
+Dark2
+Black
+Tan
+TanBlue
+DarkTanBlue
+DarkAmber
+DarkBlue
+Reds
+Green
+BluePurple
+Purple
+BlueMono
+GreenMono
+BrownBlue
+BrightColors
+NeutralBlue
+Kayak
+SandyBeach
+TealMono
+```
+
+The way this call actually works is that it calls `SetOptions` with a LOT of color settings.  Here is the actual call that's made.  As you can see lots of stuff is defined for you.
+
+```python
+SetOptions(background_color=colors['BACKGROUND'],
+            text_element_background_color=colors['BACKGROUND'],
+            element_background_color=colors['BACKGROUND'],
+            text_color=colors['TEXT'],
+            input_elements_background_color=colors['INPUT'],
+            button_color=colors['BUTTON'],
+            progress_meter_color=colors['PROGRESS'],
+            border_width=colors['BORDER'],
+            slider_border_width=colors['SLIDER_DEPTH'],
+            progress_meter_border_depth=colors['PROGRESS_DEPTH'],
+            scrollbar_color=(colors['SCROLL']),
+            element_text_color=colors['TEXT'],
+            input_text_color=colors['TEXT_INPUT'])
+```
+
+To see the latest list of color choices you can call `ListOfLookAndFeelValues()`
+
+You can also combine the `ChangeLookAndFeel` function with the `SetOptions` function to quickly modify one of the canned color schemes.  Maybe you like the colors but was more depth to your bezels.  You can dial in exactly what you want.
+
+**ObjToString**
+Ever wanted to easily display an objects contents easily?  Use ObjToString to get a nicely formatted recursive walk of your objects.
+This statement:
+
+    print(sg.ObjToSting(x))
+
+And this was the output
+
+    <class '__main__.X'>
+        abc = abc
+        attr12 = 12
+        c = <class '__main__.C'>
+            b = <class '__main__.B'>
+                a = <class '__main__.A'>
+                    attr1 = 1
+                    attr2 = 2
+                    attr3 = three
+                attr10 = 10
+                attrx = x
+
+You'll quickly wonder how you ever coded without it.
+
+---
+# Known Issues
+
+Well, there are a few quirks, and problems of course.  Check the [GitHub Issues database](https://github.com/PySimpleGUI/PySimpleGUI/issues) for a list of them.
+
+As previously mentioned **this is where you should post all problems and enhancements.**
+
+Random crashes have been rare.  The code is stable and hasn't been "quirky" nor have there been many "emergency" releases.
+
+## MACS & tkinter
+
+Macs and PySimpleGUI did not play well together up until Nov 2019 and the release of ttk buttons.  Prior to that buttons had to be white.  Now the Mac can use any color for buttons and they work great.  Images on buttons work as well.
+
+The problems were the normal tk.Button was not working correctly on the Mac.  You couldn't set the button color.  If you tried it appeared as if the text was missing.
+
+Users have recently reported the ability to install Python 3.7 from the Python.org website and not use the Homebrew version.  This resolved all of the button color problems. 
+
+Regardless of where you get your Python / tkinter, Macs can now enjoy using all of the look and feel color themes that Windows and Linux users are able to achieve.
+
+Many PySimpleGUI users have switched from PySimpleGUI to PySimpleGUIQt due to the button problems.  IF you're one of them, ***you should consider switching back***.  One reason to return to PySimpleGUI is that features tend to get implemented on PySimpleGUI (tkinter version) and then later on the  other ports.  There are a number of other reasons to give tkinter another try.
+
+## Multiple threads
+
+Consider this is a ***stern warning***
+
+### **Do not attempt** to call `PySimpleGUI` from multiple threads! At least the `tkinter` based port because tkinter is not threadsafe and has known issues with multiple threads
+
+Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
+
+Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+
+Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
+
+### The dreaded "Tcl_AsyncDelete: async handler deleted by the wrong thread" error
+
+This crash has plagued and mystified tkinter users for some time now.  It happens when the user is running multiple threads in their application.  Even if the user doesn't make any calls that are into tkinter, this problem can still cause your program to crash.
+
+I'm thrilled to say there's a solution and it's easy to implement.  If you're getting this error, then here is what is causing it.
+
+When you close a window and delete the layout, the tkinter widgets that were in use in the window are no longer needed.  Python marks them to be handled by the "Garbage Collector".  They're deleted but not quite gone from memory.  Then, later, while your thread is running, the Python Garbage Collect algorithm decides it's time to run garbage collect.  When it tells tkinter to free up the memory, the tkinter code looks to see what context it is running under.  It sees that it's a thread, not the main thread, and generates this exception.  
+
+The way around this is actually quite easy.
+
+When you are finished with a window, be sure to:
+
+* Close the Window
+* Set the `layout` variable to None
+* Set the `window` variable to None
+* Trigger Python's Garbage Collect to run immediately
+
+The sequence looks like this in code:
+
+```python
+    import gc
+
+    # Do all your windows stuff... make a layout... show your window... then when time to exit
+    window.close()
+    layout = None
+    window = None
+    gc.collect()
+```
+
+This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidently run the Garbage Collect
+
+# Contributing to PySimpleGUI
+
+### Open Source License, but Private Development
+
+PySimpleGUI is different than most projects on GitHub.  It is licensed using the "Open Source License" LGPL3.  However, the coding and development of the project is not "open source".
+
+This project does not accept user submitted code.
+
+#### Write Applications, Use PySimpleGUI, Write Tutorials, Teach Others
+
+These are a few of the ways you can directly contribute to PySimpleGUI.  Using the package to make cool stuff and helping others learn how to use it to make cool stuff and a big help to PySimpleGUI.   **Everyone** learns from seeing other people's implementations.  It's through user's creating applications that new problems and needs are discovered.  These have had a profound and positive impact on the project in the past.
+
+#### Pull Requests
+
+Pull requests are *not being accepted* for the project.  This includes sending code changes via other means than "pull requests".  Plainly put, core code you send will not be used.
+
+#### Bug Fixes
+
+If you file an Issue for a bug, have located the bug, and found a fix in 10 lines of code or less.... and you wish to share your fix with the community, then feel free to include it with the filed Issue.  If it's longer than 10 lines and wish to discuss it, then send an email to help@PySimpleGUI.org.
+
+## Thank You
+
+The support from the user community has been amazing.  Your passion for creating PySimpleGUI applications is infectious.  Every "thank you" is noticed and appreciated!  Your passion for wanting to see PySimpleGUI improve is neither ignored nor unappreciated.
+
+It's understood that this way of development of a Python package is unorthodox.  You may find it frustrating and slow, but hope you can respect the decision for it to operate in this manner and be supportive.
+
+## GitHub Repos
+
+If you've created a GitHub for your project that uses PySimpleGUI then please post screenshots in in the "User's Screenshots" Issue on the PySimpleGUI GitHub.  Say a little something about it and I'll also add it to the announcements. People *love* success stories and showing your GUI's screen visually communicates your success. 
+
+## Versions
+|Version | Description |
+|--|--|
+| 1.0.9   | July 10, 2018 - Initial Release |
+| 1.0.21 | July 13, 2018 - Readme updates  |
+| 2.0.0 | July 16, 2018 - ALL optional parameters renamed from CamelCase to all_lower_case
+| 2.1.1 | July 18, 2018 - Global settings exposed, fixes
+| 2.2.0| July 20, 2018 - Image Elements, Print output
+| 2.3.0 | July 23, 2018 - Changed form.Read return codes, Slider Elements, Listbox element. Renamed some methods but left legacy calls in place for now.
+| 2.4.0 | July 24, 2018 - Button images. Fixes so can run on Raspberry Pi
+| 2.5.0 | July 26, 2018 - Colors. Listbox scrollbar. tkinter Progress Bar instead of homegrown.
+| 2.6.0 | July 27, 2018 - auto_size_button setting.  License changed to LGPL 3+
+| 2.7.0 | July 30, 2018 - realtime buttons, window_location default setting
+| 2.8.0 | Aug 9, 2018 - New None default option for Checkbox element, text color option for all elements, return values as a dictionary, setting focus, binding return key
+| 2.9.0 | Aug 16,2018 - Screen flash fix, `do_not_clear` input field option, `autosize_text` defaults to `True` now, return values as ordered dict, removed text target from progress bar, rework of return values and initial return values, removed legacy Form.Refresh() method (replaced by Form.ReadNonBlockingForm()), COLUMN elements!!, colored text defaults
+| 2.10.0 | Aug 25, 2018 - Keyboard & Mouse features (Return individual keys as if buttons, return mouse scroll-wheel as button, bind return-key to button, control over keyboard focus), SaveAs Button, Update & Get methods for InputText, Update for Listbox, Update & Get for Checkbox, Get for Multiline, Color options for Text Element Update, Progress bar Update can change max value, Update for Button to change text & colors, Update for Image Element, Update for Slider, Form level text justification, Turn off default focus, scroll bar for Listboxes, Images can be from filename or from in-RAM, Update for Image).  Fixes - text wrapping in buttons, msg box, removed slider borders entirely and others
+| 2.11.0 | Aug 29, 2018 - Lots of little changes that are needed for the demo programs to work. Buttons have their own default element size, fix for Mac default button color, padding support for all elements, option to immediately return if list box gets selected, FilesBrowse button, Canvas Element, Frame Element, Slider resolution option, Form.Refresh method, better text wrapping, 'SystemDefault' look and feel setting
+| 2.20.0 | Sept 4, 2018 - Some sizable features this time around of interest to advanced users.  Renaming of the MsgBox functions to Popup. Renaming GetFile, etc, to PopupGetFile. High-level windowing capabilities start with Popup, PopupNoWait/PopupNonblocking, PopupNoButtons, default icon, change_submits option for Listbox/Combobox/Slider/Spin/, New OptionMenu element, updating elements after shown, system default color option for progress bars, new button type (Dummy Button) that only closes a window, SCROLLABLE Columns!! (yea, playing in the Big League now), LayoutAndShow function removed, form.Fill - bulk updates to forms, FindElement - find element based on key value (ALL elements have keys now), no longer use grid packing for row elements (a potentially huge change), scrolled text box sizing changed, new look and feel themes (Dark, Dark2, Black, Tan, TanBlue, DarkTanBlue, DarkAmber, DarkBlue, Reds, Green)
+| 2.30.0 | Sept 6, 2018 - Calendar Chooser (button), borderless windows, load/save form to disk
+| 3.0.0 | Sept 7, 2018 - The "fix for poor choice of 2.x numbers" release. Color Chooser (button), "grab anywhere" windows are on by default, disable combo boxes, Input Element text justification (last part needed for 'tables'), Image Element changes to support OpenCV?, PopupGetFile and PopupGetFolder have better no_window option
+| 3.01.01 | Sept 10, 2018 - Menus! (sort of a big deal)
+| 3.01.02 | Step 11, 2018 - All Element.Update functions have a `disabled` parameter so they can be disabled.  Renamed some parameters in Update function (sorry if I broke your code), fix for bug in Image.Update. Wasn't setting size correctly, changed grab_anywhere logic again,added grab anywhere option to PupupGetText (assumes disabled)
+| 3.02.00 | Sept 14, 2018 - New Table Element (Beta release), MsgBox removed entirely, font setting for InputText Element, **packing change** risky change that allows some Elements to be resized,removed command parameter from Menu Element, new function names for ReadNonBlocking (Finalize, PreRead), change to text element autosizing and wrapping (yet again), lots of parameter additions to Popup functions (colors, etc).
+| 3.03.00 | New feature - One Line Progress Meters, new display_row_numbers for Table Element, fixed bug in EasyProgresssMeters (function will soon go away), OneLine and Easy progress meters set to grab anywhere but can be turned off.
+| 03,04.00 | Sept 18, 2018 - New features - Graph Element, Frame Element, more settings exposed to Popup calls.  See notes below for more.
+| 03.04.01 | Sept 18, 2018 - See release notes
+| 03.05.00 | Sept 20, 2018 - See release notes
+| 03.05.01 | Sept 22, 2018 - See release notes
+| 03.05.02 | Sept 23, 2018 - See release notes
+| 03.06.00 | Sept 23, 2018 - Goodbye FlexForm, hello Window
+| 03.08.00 | Sept 25, 2018 - Tab and TabGroup Elements\
+| 01.00.00 for 2.7 | Sept 25, 2018 - First release for 2.7
+| 03.08.04 | Sept 30, 2018 - See release notes
+| 03.09.00 | Oct 1, 2018 |
+| 2.7 01.01.00 | Oct 1, 2018
+| 2.7 01.01.02 | Oct 8, 2018
+| 03.09.01 | Oct 8, 2018
+| 3.9.3 & 1.1.3 | Oct 11, 2018
+| 3.9.4 & 1.1.4 | Oct 16, 2018
+| 3.10.1 & 1.2.1 | Oct 20, 2018
+| 3.10.3 & 1.2.3 | Oct 23, 2018
+| 3.11.0 & 1.11.0 | Oct 28, 2018
+| 3.12.0 & 1.12.0 | Oct 28, 2018
+| 3.13.0 & 1.13.0 | Oct 29, 2018
+| 3.14.0 & 1.14.0 | Nov 2, 2018
+| 3.15.0 & 1.15.0 | Nov 20, 2018
+| 3.16.0 & 1.16.0 | Nov 26, 2018
+| 3.17.0 & 1.17.0 | Dec 1, 2018
+
+## Release Notes
+2.3 - Sliders, Listbox's and Image elements (oh my!)
+
+If using Progress Meters, avoid cancelling them when you have another window open.  It could lead to future windows being blank. It's being worked on.
+
+New debug printing capability.  `sg.Print`
+
+2.5 Discovered issue with scroll bar on `Output` elements.  The bar will match size of ROW not the size of the element.  Normally you never notice this due to where on a form the `Output` element goes.
+
+Listboxes are still without scrollwheels. The mouse can drag to see more items.  The mouse scrollwheel will also scroll the list and will `page up` and `page down` keys.
+
+2.7 Is the "feature complete" release. Pretty much all features are done and in the code
+
+2.8 More text color controls.  The caller has more control over things like the focus and what buttons should be clicked when enter key is pressed. Return values as a dictionary! (NICE addition)
+
+2.9 COLUMNS!  This is the biggest feature and had the biggest impact on the code base.  It was a difficult feature to add, but it was worth it.  Can now make even more layouts. Almost any layout is possible with this addition.
+
+.................. insert releases 2.9 to 2.30 .................
+
+3.0 We've come a long way baby!  Time for a major revision bump.  One reason is that the numbers started to confuse people  the latest release was 2.30, but some people read it as 2.3 and thought it went backwards.  I kinda messed up the 2.x series of numbers, so why not start with a clean slate.  A lot has happened anyway so it's well earned.
+
+One change that will set PySimpleGUI apart is the parlor trick of being able to move the window by clicking on it anywhere.  This is turned on by default.  It's not a common way to interact with windows.  Normally you have to move using the titlebar.  Not so with PySimpleGUI.  Now you can drag using any part of the window.  You will want to turn off for windows with sliders.  This feature is enabled in the Window call.
+
+Related to the Grab Anywhere feature is the no_titlebar option, again found in the call to Window.  Your window will be a spiffy, borderless window.  It's a really interesting effect.  Slight problem is that you do not have an icon on the taskbar with these types of windows, so if you don't supply a button to close the window, there's no way to close it other than task manager.
+
+3.0.2 Still making changes to Update methods with many more ahead in the future.  Continue to mess with grab anywhere option.  Needed to disable in more places such as the PopupGetText function.  Any time these is text input on a form, you generally want to turn off the grab anywhere feature.
+
+#### 3.2.0
+ Biggest change was the addition of the Table Element.  Trying to make changes so that form resizing is a possibility but unknown if will work in the long run.  Removed all MsgBox, Get* functions and replaced with Popup functions.  Popups had multiple new parameters added to change the look and feel of a popup.
+
+#### 3.3.0
+OneLineProgressMeter function added which gives you not only a one-line solution to progress meters, but it also gives you the ability to have more than 1 running at the same time, something not possible with the EasyProgressMeterCall
+
+#### 3.4.0
+
+* Frame - New Element - a labelled frame for grouping elements. Similar
+   to Column
+* Graph (like a Canvas element except uses the caller's
+   coordinate system rather than tkinter's).
+* initial_folder - sets starting folder for browsing type buttons (browse for file/folder).
+* Buttons return  key value rather than button text **If** a `key` is specified,
+*
+   OneLineProgressMeter!  Replaced EasyProgressMeter (sorry folks that's
+   the way progress works sometimes)
+ * Popup - changed ALL of the Popup calls to   provide many more customization settings
+    * Popup
+    * PopupGetFolder
+    * PopupGetFile
+    * PopupGetText
+    * Popup
+    * PopupNoButtons
+    * PopupNonBlocking
+    * PopupNoTitlebar
+    * PopupAutoClose
+    * PopupCancel
+    * PopupOK
+    * PopupOKCancel
+    * PopupYesNo
+
+#### 3.4.1
+* Button.GetText - Button class method.  Returns the current text being shown on a button.
+* Menu - Tearoff option. Determines if menus should allow them to be torn off
+* Help - Shorcut button. Like Submit, cancel, etc
+* ReadButton - shortcut for ReadFormButton
+
+#### 3.5.0
+* Tool Tips for all elements
+* Clickable text
+* Text Element relief setting
+* Keys as targets for buttons
+* New names for buttons:
+   * Button = SimpleButton
+   * RButton = ReadButton = ReadFormButton
+* Double clickable list entries
+* Auto sizing table widths works now
+* Feature DELETED - Scaling. Removed from all elements
+
+#### 3.5.1
+* Bug fix for broken PySimpleGUI if Python version < 3.6 (sorry!)
+* LOTS of Readme changes
+
+#### 3.5.2
+* Made `Finalize()` in a way that it can be chained
+* Fixed bug in return values from Frame Element contents
+
+#### 3.6.0
+* Renamed FlexForm to Window
+* Removed LookAndFeel capability from Mac platform.
+
+#### 3.8.0
+* Tab and TabGroup Elements - awesome new capabilities
+
+#### 1.0.0 Python 2.7
+It's official.  There is a 2.7 version of PySimpleGUI!
+
+#### 3.8.2
+* Exposed `TKOut` in Output Element
+* `DrawText` added to Graph Elements
+* Removed `Window.UpdateElements`
+* `Window.grab_anywere` defaults to False
+
+#### 3.8.3
+* Listbox, Slider, Combobox, Checkbox,  Spin, Tab Group - if change_submits is set, will return the Element's key rather than ''
+* Added change_submits capability to Checkbox, Tab Group
+* Combobox - Can set value to an Index into the Values table rather than the Value itself
+* Warnings added to Drawing routines for Graph element (rather than crashing)
+* Window - can "force top level" window to be used rather than a normal window.  Means that instead of calling Tk to get a window, will call TopLevel to get the window
+* Window Disable / Enable - Disables events (button clicks, etc) for a Window.  Use this when you open a second window and want to disable the first window from doing anything. This will simulate a 'dialog box'
+* Tab Group returns a value with Window is Read.  Return value is the string of the selected tab
+* Turned off grab_anywhere for Popups
+* New parameter, default_extension, for PopupGetFile
+* Keyboard shortcuts for menu items. Can hold ALT key to select items in men
+* Removed old-style Tabs - Risky change because it hit fundamental window packing and creation. Will also break any old code using this style tab (sorry folks this is how progress happens)
+
+#### 3.8.6
+
+* Fix for Menus.
+* Fixed table colors. Now they work
+* Fixed returning keys for tabs
+* Window Hide / UnHide methods
+* Changed all Popups to remove context manager
+* Error checking for Graphing objects and for Element Updates
+
+### 3.9.0 & 1.1.0
+* The FIRST UNIFIED version of the code!
+* Python 2.7 got a TON of features . Look back to 1.0 release for the list
+* Tab locations - Can place Tabs on top, bottom, left, right now instead of only the top
+
+### 3.9.1 & 1.1.2
+* Tab features
+   * Themes
+   * Enable / Disable
+   * Tab text colors
+   * Selected tab color
+* New GetListValues method for Listbox
+* Can now have multiple progress bars in 1 window
+* Fix for closing debug-output window with other windows open
+* Topanga Look and Feel setting
+* User can create new look and feel settings / can access the look and feel table
+* New PopupQuick call. Shows a non-blocking popup window with auto-close
+* Tree Element partially done (don't use despite it showing up)
+
+### 3.9.3 & 1.1.3
+
+* Disabled setting when creating element for:
+   * Input
+  * Combo
+  * Option Menu
+  * Listbox
+  * Radio
+  * Checkbox
+  * Spinner
+  * Multiline
+  * Buttons
+  * Slider
+* Doc strings on all Elements updated
+* Buttons can take image data as well as image files
+* Button Update can change images
+* Images can have background color
+* Table element new num_rows parameter
+* Table Element new alternating_row_color parameter
+* Tree Element
+* Window Disappear / Reappear methods
+* Popup buttons resized to same size
+* Exposed look and feel table
+
+###  3.9.4 & 1.1.4
+
+* Parameter order change for Button.Update so that new button ext is at front
+* New Graph.DrawArc method
+* Slider tick interval parameter for labeling sliders
+* Menu tearoff now disabled by default
+* Tree Data printing simplified and made prettier
+* Window resizable parameter.  Defaults to not resizable
+* Button images can have text over them now
+* BUG fix in listbox double-click.  First bug fix in months
+* New Look And Feel capability.  List predefined settings using ListOfLookAndFeelValues
+
+### 3.10.1 & 1.2.1
+* Combobox new readonly parameter in init and Update
+* Better default sizes for Slider
+* Read of Tables now returns which rows are selected (big damned deal feature)
+* PARTIAL support of Table.Update with new values (use at your own peril)
+* Alpha channel setting for Windows
+* Timeout setting for Window.Read (big damned deal feature)
+* Icon can be base64 image now in SetIcon call
+* Window.FindElementWithFocus call
+* Window.Move allows moving window anywhere on screen
+* Window.Minimize will minimize to taskbar
+* Button background color can be set to system default (i.e. not changed)
+
+### 3.10.2 & 1.2.2
+Emergency patch release... going out same day as previous release
+* The timeout timer for the new Read with timer wasn't being properly shut down
+* The Image.Update method appears to not have been written correctly.  It didn't handle base64 images like the other elements that deal with images (buttons)
+
+### 3.10.3 & 1.2.3
+
+* New element - Vertical Separator
+* New parameter for InputText - change_submits. If True will cause Read to return when a button fills in the InputText element
+* Read with timeout = 0 is same as read non blocking and is the new preferred method
+  * Will return event == None if window closed
+* New Close method will close all window types
+* Scrollbars for Tables automatically added (no need for a Column Element)
+* Table Update method complete
+* Turned off expand when packing row frame... was accidentally turned on (primary reason for this release)
+* Try added to Image Update so won't crash if bad image passed in
+
+### 3.11.0 & 1.11.0
+* Syncing up the second digit of the releases so that they stay in sync better.  the 2.7 release is built literally from the 3.x code so they really are the same
+* Reworked Read call... significantly.
+* Realtime buttons work with timeouts or blocking read
+* Removed default value parm on Buttons and Button Updates
+* New Tree Element parm show_expanded. Causes Tree to be shown as fully expanded
+* Tree Element now returns which rows are selected when Read
+* New Window method BringToFront
+* Shortcut buttons no longer close windows!
+* Added CloseButton, CButton that closes the windows
+
+### 3.12.0 & 1.12.0
+* Changed Button to be the same as ReadButton which means it will no longer close the window
+* All shortcut buttons no longer close the window
+* Updating a table clears selected rows information in return values
+* Progress meter uses new CloseButton
+* Popups use new CloseButton
+
+### 3.13.0 & 1.13.0
+* Improved multiple window handling of Popups when the X is used to close
+* Change submits added for:
+  * Multiline
+  * Input Text
+  * Table
+  * Tree
+ * Option to close calendar chooser when date selected
+ * Update for Tree Element
+ * Scroll bars for Trees
+
+### 3.14.0 & 1.14.0
+* More windowing changes...
+    * using a hidden root windowing (Tk())
+    * all children are Toplevel() windows
+* Read only setting for:
+    * Input Text
+    * Multiline
+* Font setting for InputCombo, Multiline
+* change_submits setting for Radio Element
+* SetFocus for multiline, input elements
+* Default mon, day, year for calendar chooser button
+* Tree element update, added ability to change a single key
+* Message parm removed from ReadNonBlocking
+* Fix for closing windows using X
+* CurrentLocation method for Windows
+* Debug Window options
+    * location
+    * font
+    * no_button
+    * no_titlebar
+    * grab_anywhere
+    * keep_on_top
+* New Print / EasyPrint options
+    * location
+    * font
+    * no_button
+    * no_titlebar
+    * grab_anywhere
+    * keep_on_top
+* New popup, PopupQuickMessage
+* PopupGetFolder, PopupGetFile new initial_folder parm
+
+### 3.15.0 & 1.15.0
+
+* Error checking for InputText.Get method
+* Text color, background color added to multiline element.Update
+* Update method for Output Element - gives ability to clear the output
+* Graph Element - Read returns values if new flages set
+    * Change submits, drag submits
+    *   Returns x,y coordinates
+* Column element new parm vertical_scroll_only
+* Table element new parm - bind return key - returns if return or double click
+* New Window parms - size, disable_close
+* "Better" multiwindow capabilities
+* Window.Size property
+* Popups - new title parm, custom_text
+    * title sets the window title
+    * custom_text - single string or tuple string sets text on button(s)
+
+### 3.16.0 & 1.16.0
+* Bug fix in PopupScrolled
+* New `Element` shortcut function for `FindElement`
+* Dummy Stretch Element made for backwards compatibility with Qt
+* Timer function prints in milliseconds now, was seconds
+
+### 3.17.0 &1.17.0 2-Dec-2018
+3.17.0 2-Dec-2017
+* Tooltip offset now programmable.  Set variable DEFAULT_TOOLTIP_OFFSET.  Defaults to (20,-20)
+* Tooltips are always on top now
+* Disable menu items
+* Menu items can have keys
+* StatusBar Element (preparing for a real status bar in Qt)
+* enable_events parameter added to ALL Elements capable of generating events
+* InputText.Update select parameter will select the input text
+* Listbox.Update - set_to_index parameter will select a single items
+* Menus can be updated!
+* Menus have an entry in the return values
+* LayoutAndRead depricated
+* Multi-window support continues (X detection)
+* PopupScrolled now has a location parameter
+* row_height parameter to Table Element
+* Stretch Element (DUMMY) so that can be source code compatible with Qt
+* ButtonMenu Element (DUMMY) so can be source code compat with Qt.  Will implement eventually
+
+## 3.18.0  11-Dec-2018
+
+ NOTE - **Menus are broken** on version 2.7.  Don't know how long they've been this way.  Please get off legacy Python if that's what you're running.
+
+* Default progress bar length changed to shorter
+* Master window and tracking of num open windows moved from global to Window class variable
+* Element visibility setting (when created and when Updating element)
+* Input text visiblity
+* Combo visiblity
+* Combo replaces InputCombo as the primary class name
+* Option menu visibility
+* Listbox visiblity
+* Listbox new SetFocus method
+* Radio visibility
+* Checkbox visibility
+* Spin visiblity
+* Spin new Get method returns current value
+* Multiline visiblity
+* Text visibility
+* StatusBar visiblity
+* Output visibility
+* Button visibility
+* Button SetFocus
+* ProgressBar - New Update method (used only for visibility)
+* Image - clickable images!  enable_events parameter
+* Image visibility
+* Canvas visibility
+* Graph visibility
+* Graph - new DrawImage capability (finally)
+* Frame visibility
+* Tab visibility (may not be fully functional)
+* TabGroup visibility
+* Slider visibility
+* Slider - new disable_number_display parameter
+* Column visibilty
+* Menu visibility - Not functional
+* Table visibility
+* Table - new num_rows parm for Update - changes number of visible rows
+* Tree visiblity
+* Window - New element_padding parameter will get padding for entire window
+* OneLineProgressMeter - Completely REPLACED the implementation
+* OneLineProgressMeter - can get reason for the cancellation (cancel button versus X)
+* EasyProgressMeter - completely removed. Use OneLineProgressMeter instead
+* Debug window, EasyPrint, Print - debug window will re-open if printed to after being closed
+* SetOptions - can change the error button color
+* Much bigger window created when running PySimpleGUI.py by itself.  Meant to help with regression testing
+
+## 3.19.2  13-Dec-2018
+
+* Warning for Mac's when trying to change button color
+* New parms for Button.Update - image_size and image_subsample
+* Buttons - remove highlight when border depth == 0
+* OneLineProgressMeter - better layout implementation
+
+## 3.20.0 & 1.20.0 18-Dec-2018
+
+* New Pane Element
+* Graph.DeleteFigure method
+* disable_minimize - New parameter for Window
+* Fix for 2.7 menus
+* Debug Window no longer re-routes stdout by default
+* Can re-route by specifying in Print / EasyPrint call
+* New non-blocking for PopupScrolled
+* Can set title for PopupScrolled window
+
+## 3.21.0 & 1.21.0 28-Dec-2018
+
+* ButtonMenu Element
+* Embedded base64 default icon
+* Input Text Right click menu
+* Disabled Input Text are now 'readonly' instead of disabled
+* Listbox right click menu
+* Multiline right click menu
+* Text right click menu
+* Output right click menu
+* Image right click menu
+* Canvas right click menu
+* Graph right click menu
+* Frame right click menu
+* Tab, tabgroup right click menu (unsure if works correctly)
+* Column right click menu
+* Table right click menu
+* Tree right click menu
+* Window level right click menu
+* Window icon can be filename or bytes (Base64 string)
+* Window.Maximize method
+* Attempted to use Styles better with Combobox
+* Fixed bug blocking setting bar colors in OneLineProgressMeter
+
+# 3.22.0 PySimpleGUI / 1.22.0 PySimpleGUI27
+
+* Added type hints to some portions of the code
+* Output element can be made invisible
+* Image sizing and subsample for Button images
+* Invisibility for ButtonMenusup
+* Attempt at specifying size of Column elements (limited success)
+* Table Element
+  * New row_colors parameter
+  * New vertical_scroll_only parameter - NOTE - will have to disable to get horizontal scrollbars
+* Tree Element
+  * New row_height parameter
+  * New feature - Icons for tree entries using filename or Base64 images
+* Fix for bug sending back continuous mouse events
+* New parameter silence_on_error for FindElement / Element calls
+* Slider returns float now
+* Fix for Menus when using Python 2.7
+* Combobox Styling (again)
+
+# 3.2.0 PySimpleGUI /  1.23.0 PySimpleGUI27 16-Jan-2019
+
+* Animated GIFs!
+* Calendar Chooser stays on top of other windows
+* Fixed bug of no column headings for Tables
+* Tables now use the font parameter
+
+# 3.24.0 1.24.0 16-Jan-2019
+
+* PopupAnimated - A popup call for showing "loading" type of windows
+
+# 3.25 & 1.25 20-Feb-2019
+
+* Comments :-)
+* Convert Text to string right away
+* Caught exceptions when main program shut down with X
+* Caught exceptions in all of the graphics primitives
+* Added parameter exportselection=False to Listbox so can use multiple listboxes
+* OneLineProgressMeter - Can now change the text on every call if desired
+
+## 3.27.0 PySimpleGUI  31-Mar-2019
+
+Mixup.... 3.26 changes don't appear to have been correctly released so releasing in 3.27 now
+
+* do_not_clear now defaults to TRUE!!!
+  * Input Element
+  * Multiline Element
+* Enable Radio Buttons to be in different containers
+* Ability to modify Autoscroll setting in Multiline.Update call
+* PopupGetFolder, PopupGetFile, PopupGetText - title defaults to message if none provided
+* PopupAnimated - image_source can be a filename or bytes (base64)
+* Option Menu can now have values updated
+
+## 3.28.0 11-Apr-2019 PySimpleGUI
+
+* NEW Window Parameter - layout - second parameter. Can pass in layout directly now!
+* New shortcuts
+    * I = InputText
+    * B = Btn = Butt = Button
+* Convert button text to string when creating buttons
+* Buttons are returned now as well as input fields when searching for element with focus
+
+## 3.29 22-Apr-2019
+
+* New method for `Graph` - `RelocateFigure`
+* Output Element no longer accepts focus
+
+## 3.32.0 PySimpleGUI 24-May-2019
+
+* Rework of ALLL Tooltips. Was always displaying at uttuper left part of element. Not displays closer to where mouse entered or edited
+* New Element.Widget base class variable. Brings tkinter into the newer architecture of user accessibility to underlying GUI Frameworks' widgets
+* New SetTooltip Element method. Means all Elements gain this method. Can set the tooltip on the fly now for all elements
+* Include scroll bar when making visible / invisible Listbox Elements
+* New Radio Element method - `Radio.ResetGroup()` sets all elements in the Radio Group to False* Added borderwidth to Multiline Element
+* `Button.Click()` - new method - Generates a button click even as if a user clicked a button (at the tkinter level)
+* Made a Graph.Images dictionary to keep track of images being used in a graph.  When graph is deleted, all of the accociated images should be deleted too.'
+* Added `Graph.SetFocus()` to give a Graph Element the focus just as you can input elements
+* Table new parameter - `hide_vertical_scroll` if True will hide the table's vertical bars
+* Window - new parameter - `transparent_color`. Causes a single color to become completely transparent such that you see through the window, you can click through the window. Its like tineows never was there.
+* The new `Window.AllKeysDict = {}` has been adopted by all PySimpleGUI ports.  It's a new method of automatically creating missing keys, storing and retrieving keys in general for a window.
+* Changed how `window.Maximize` is implemented previously used the '-fullscreen' attribute.  Now uses the 'zoomed' state
+* Window gets a new `Normal()` method to return from Maximize state.  Sets root.state('normal')
+* Window.Close() now closes the special `Window.hidden_master_root` window when the "last" window is closed
+* `Window.SetTransparentColor` method added.  Same effect as if window was created with parameter set
+* An Element's Widget stored in `.Widget` attribute
+* Making ComboBox's ID unique by using it's Key
+* Changed Multiline to be sunken and have a border depth setting now
+* Removed a second canvas that was being used for Graph element.
+* Changed how no titlebar is implemented running on Linux versus Windows. -type splash now used for Linux
+* PopupScrolled - Added back using CloseButton to close the window
+* Fixed PopupGetFolder to use correct PySimpleGUI program constructs (keys)
+* PopupGetText populated values carrectly using the value variable, used keys
+* PopupAnimated finally gets a completely transparent background
+
+## 3.33.0 and 1.33 PySimpleGUI 25-May-2019
+
+* Emergency fix due to debugger.  Old bug was that Image Element was not testing for COLOR_SYSTEM_DEFAULT correctly.
+
+## 3.34.0 PySimpleGUI & 1.34.0 PySimpleGUI27 25-May-2019
+
+  pip rhw  w cenf
+* Fixed Window.Maximize and Window.Normal - needed special code for Linux
+* Check for DEFAULT_SCROLLBAR_COLOR not being the COLOR_SYSTEM_DEFAULT (crashed)
+
+## 3.35 PySimpleGUI & 1.35 PySimpleGUI27 27-May-2019
+
+* Bug fix - when setting default for Checkbox it was also disabling the element!
+
+## 3.36 PySimpleGUI & 1.36 PySimpleGUI27 29-May-2019
+
+A combination of user requests, and needs of new `imwatchingyou` debugger
+
+* New Debugger Icon for future built-in debugger
+* Fixed bug in FindBoundReturnKey - needed to also check Panes
+* NEW Window functions to turn on/off the Grab Anywhere feature
+    * `Window.GrabAnyWhereOn()`
+    * `Window.GrabAnyWhereOff()`
+* New "Debugger" button that's built-in like other buttons.  It's a TINY button with a logo. For future use when a debugger is built into PySimpleGUI itself (SOON!)
+* Change Text Element Wrap Length calculation.  Went fromn +40 pixels to +10 pixels in formula
+* PopupGetFile has new parameter - `multiple_files`. If True then allows selection of multiple files
+
+## 3.37 PySimpleGUI & 1.37 PySimpleGUI27 1-June-2019
+
+* The built-in debugger is HERE - might not WORK exactly yet, but a lot of code went into te PySimpleGUI.py file for this.  At the moment, the `imwatchingyou` package is THE way to use a PySimpleGUI debugger. But soon enough you won't need that project in order to debug your program.
+* Some strange code reformatting snuck in.  There are 351 differences between this and previous release.  I'm not sure what happened but am looking at every change by hand.
+* New Calendar Button features
+    * locale, format - new parameters to TKCalendar call
+    * Use custom icon for window if one has been set
+    * New parameters to CalendarButton - `locale`, `format`
+* The bulk of the built-in PySimpleGUI debugger has been added but is not yet "officially supported".  Try pressing "break" or "ctrl+break" on your keyboard.
+    * New bindings for break / pause button and debugger
+    * New Debug button will launch debugger.
+    * New parameter `debugger_enabled` added to Window call.  Default is __enabled__.
+    * Your progam's call to Read is all that's needed to refresh debugger
+    * New `Window` methods to control debugger access
+        * `EnableDebugger` - turns on HOTKEYS to debugger
+        * `DisableDebugger` - turns off HOTKEYS to debugger
+* Restored wrap len for Text elements back from +10 to +40 pixels
+* `PopupGetFolder`, `PopupGetFile` - fixed so that the "hidden" master window stays hidden (a Linux problem)
+* Added support for Multiple Files to `PopupGetFiles` when no_window option has been set.
+
+## 3.38 PySimpleGUI, 1.38 PySimpleGUI27
+
+* Multiline - now has a "read only" state if created as "Disabled"
+* Multiline - If window is created as resizable, then Multiline Elements will now expand when the window is enlarged, a feature long asked for.
+* Output Element expands in the Y Direction
+* "Expandable Rows" option added to PackFormIntoFrame allowing future elements to also expand
+* Error Element - silence_on_error option
+* Text Element wrapping - FINALLY got it right?  No more "Fudge factor" added
+* PopupScrolled - Windows are now resizable
+* Option to "launch built-in debugger" from the test harness
+* Rememeber that the Debugger is still in this code!  It may or may not be operational as it's one version back from the latest release of the `imwatchingyou` debugger code. This code needs to be integrated back in
+
+## 3.39 PySimpleGUI & 1.39 PySimpleGUI27 13-June-2019
+
+* Ported the imwatchingyou debugger code into PySimpleGUI code
+    * Replaced old debugger built-in code with the newer imwatchingyou version
+    * Required removing all of the 'sg.' before PySimpleGUI calls since not importing
+    * Dynamically create the debugger object when first call to `refresh` or `show` is made
+* Started the procecss of renaming Class Methods that are private to start with _
+* Needed for the automatic documentation generation that's being worked on
+* Fixed crash when clicking the Debug button
+* Fixed bug in DeleteFigure. Needed to delete image separately
+* Added more type hints
+* New `TabGroup` method `SelectTab(index)` selects a `Tab` within a `TabGroup`
+* New `Table.Update` parameter - `select_rows`. List of rows to select (0 is first)
+* Error checking in `Window.Layout` provides error "hints" to the user
+    * Looks for badly placed ']'
+    * Looks for functions missing '()'
+    * Pops up a window warning user instead of crashing
+    * May have to revisit if the popups start getting in the way
+* New implementations of `Window.Disable()` and `Window.Enable()`
+    * Previously did not work correctly at all
+    * Now using the "-disabled" attribute
+* Allow Comboboxes to have empty starting values
+    * Was crashing
+    * Enables application to fill these in later
+
+# 4.0.0 PySimpleGUI & 2.0.0 PySimpleGUI27   19-June-2019
+
+* DOC STRINGS DOCS STRINGS DOC STRINGS!
+	* Your IDE is about to become very happy
+	* All Elements have actual documentation in the call signature
+	* The Readme and ReadTheDocs will be generated going forward using the CODE
+	* HUGE Thanks for @nngogol for both copying & adding all those strings, but also for making an entire document creation system.
+* New __version__ string for PySimpleGUI.py
+* New parameter to ALL `SetFocus` calls. 	
+	* def SetFocus(self, force=False)
+	* If force is True, then a call to `focus_force` is made instead of `focus_set`
+* Get - New Radio Button Method.  Returns True is the Radio Button is set
+* Rename of Debugger class to _Debugger so IDEs don't get confused
+* User read access to last Button Color set now available via property `Button.ButtonColor`
+* Rename of a number of callback handlers to start with _
+* Fix for memory leak in Read call. Every call to read lost a little memory due to root.protocol calls
+* Listbox.Update - New parameter - scroll_to_index - scroll view so that index is shown at the top
+* First PyPI release to use new documentation!
+
+## PySimpleGUI 4.1 Anniversary Release!  4-Aug-2019
+
+NEVER has there been this long of a lag, sorry to all users!
+Long time coming.  Docstrings continue to be a focus.
+
+* Version can be found using PySimpleGUI.version
+* New bit of licensing info at the top of the file
+* Types used in the doc strings. Also type hints in some comments. Because also running on 2.7 can't use full typing
+* Added using of Warnings. Just getting started using this mechanism. May be great, maybe not. We'll see with this change
+* Added TOOLTIP_BACKGROUND_COLOR which can be changed (it's tkinter only setting however so undertand this!)
+* Graph.DrawText.  Ability to set `text_location` when drawing text onto a Graph Element.  Determines what part of the text will be located at the point you provide when you draw the text.   Choices are:
+	* TEXT_LOCATION_TOP
+	* TEXT_LOCATION_BOTTOM
+	* TEXT_LOCATION_LEFT
+	* TEXT_LOCATION_RIGHT
+	* TEXT_LOCATION_TOP_LEFT
+	* TEXT_LOCATION_TOP_RIGHT
+	* TEXT_LOCATION_BOTTOM_LEFT
+	* TEXT_LOCATION_BOTTOM_RIGT
+	* TEXT_LOCATION_CENTER
+* Flag ENABLE_TK_WINDOWS = False.  If True, all windows will be made using only tk.Tk()
+* SetFocus available for all elements now due to it being added to base class. May NOT work on all elements however
+* Added Combo.GetSElectedItemsIndexes() - returns a list of all currently selected items
+* Fixed Listbox.Update - set_to_index changed to be an int, list or tuple
+* Added parent parameter to call to tkinter's askopenfilename, directory, filenames.  Not sure why the root wasn't passed in before
+* Button.Update - also sets the activebackground to the button's background color
+* Graph - New parameter when creating. `float_values`.  If True, then you're indicating that your coordinate system is float not int based
+* Graph.Update - made background color optional parm so that visible only can be set
+* Frame.Layout returns self now for chaining
+* TabGroup.Layout returns self now for chaining
+* Column.Layout returns self now for chaining
+* Menu.Update menu_definition is now optional to allow for changing visibility only
+* Added inivisiblity support for menu bars
+* Table.Update supports setting alternating row color and row_colors (list of rows and the color to set)
+* Set window.TimeoutKey to TIMEOUT_KEY initially
+* Window - check for types for title (should be string) and layout (should be list) and warns user if not correct
+* Window - renamed some methods by adding _ in front (like Show) as they are NOT user callable
+* Another shortcut! Elem = Element = FindElement
+* SaveToDisk - will not write buttons to file.  Fixed problems due to buttons having keys
+* Remapped Windowl.CloseNonBlockingForm, Window.CloseNonBlocking to be Window.CloseNonBlocking
+* Fix for returning values from a combo list. Wasn't handling current value not in list of provided values
+* Spin - Returns an actual value from list provided when Spin was created or updated
+* Chaneged FillFormWithValues to use the new internal AllKeysDict dictionary
+* Added try when creating combo. Problem happens when window is created twice.  Prior window had already created the style
+* Added list of table (tree) ids to the Table element
+* Enabled autoclose to use fractions of a second
+* Added a try around one of the destroys because it could fail if user aborted
+* Popup - Icon is no longer set to default by default
+* Fix for debugger trying to execute a REPL comand.  The exec is only avilable in Python 3
+* main() will display the version number in big letters when program is running
+
+### 4.2 PySimpleGUI  2.2 for PySimpleGUI27  18 - Aug 2019
+
+The cool lookup release!  No more need for FindElement. You can continue to use FindElement.
+However, your code will look weird and ancient.  ;-)  (i.e. readable)
+MORE Docstring and main doc updates!
+
+* Finally 2.7 gets an upgrade and with it doc strings.  It however doesn't get a full-version bump like main PySimpleGUI as this may be its last release.
+* New `window[key] == window.FindElement(key)`
+* New Update calling method. Can directly call an Element and it will call its Update method
+	* `window[key](value=new_value)    ==     window.FindElement(key).Update(value=new_value)`
+* Made Tearoff part of element so anything can be a menu in theory
+* Removed a bunch of `__del__` calls. Hoping it doesn't bite me in memory leaks
+* Combo.Get method added
+* Combo.GetSelectedItemsIndexes removed
+* New Graph methods SendFigureToBack, BringFigureToFront
+* Butten release changed for better Graph Dragging
+	* Now returns key+"Up" for the event
+	* Also returns the x,y coords in the values
+* Tab.Select method added
+* TabGroup.Get method added - returns key of currently selected Tab
+* Window finalize parameter added - Will call finalize if a layout is also included.  No more need for Finalize!!
+* Quiet, steady change to PEP8 user interface started
+	* Now available are Window methods - read, layout, finalize, find_element, element, close
+	* Should provide 100% PEP with these alone for most PySimpleGUI programs
+* Added finding focus across ALL elements by using the .Widget member variable
+* Fixed sizing Columns!  NOW they will finally be the size specified
+* Fixed not using the initialdir paramter in PopupGetFile if the no_window option is set
+
+## 4.3 PySimpleGUI Release 22-Aug-2019
+
+PEP8 PEP8 PEP8
+Layout controls!  Can finally center stuff
+Some rather impactful changes this time
+Let's hope it doesn't all blow up in our faces!
+
+* PEP8 interfaces added for Class methods & functions
+	* Finally a PEP8 compliant interface for PySimpleGUI!!
+	* The "old CamelCase" are still in place and will be for quite some time
+	* Can mix and match at will if you want, but suggest picking one and sticking with it
+	* All docs and demo programs will need to be changed
+* Internally saving parent row frame for layout checks
+* Warnings on all Update calls - checks if Window.Read or Window.Finalize has been called
+* Warning if a layout is attempted to be used twice
+	* Shows an "Error Popup" to get the user's attention for sure
+* Removed all element-specific SetFocus methods and made it available to ALL elements
+* Listbox - no_scrollbar parameter added. If True then no scrollbar will be shown
+* NEW finalize bool parameter added to Window. Removes need to "chain" .Finalize() call.
+* NEW element_justification parameter for Column, Frame, Tab Elements and Window
+	* Valid values are 'left', 'right', 'center'. Only first letter checked so can use 'l', 'c','r'
+	* Default = 'left'
+	* Result is that all Elements INSIDE of this container will be justified as specified
+	* Works well with new Sizer Elements
+* NEW justification parameter for Column elements.  
+	* Justifies Column AND the row it's on to this setting (left, right, center)
+	* Enables individual rows to be justified in addition to the entire window
+* NEW Sizer Element
+	* Has width and height parameters.  Can set one or both
+	* Causes the element it is contained within to expand according to width and height of Sizer Element
+	* Helps greatly with centering.  Frames will shrink to fit the contents for example. Use Sizer to pad out to right size
+* Added Window.visibility_changed to match the PySimpleGUIQt call
+* Fixed Debugger so that popout window shows any newly added locals
+
+## 4.4 PySimpleGUI Release 5-Sep-2019
+
+* window() - "Calling" your Window object will perform a Read call
+* InputText - move cursor to end following Update
+* Shortcuts - trying to get a manageable and stable set of Normal, Short, Super-short
+	* DD - DropDown (Combo)
+	* LB, LBox - Listbox
+	* R, Rad - Radio
+	* ML, MLine - Multiline
+	* BMenu - ButtonMenu
+	* PBar, Prog - ProgressBar
+	* Col - Column
+* Listbox - new method GetIndexes returns currently selected items as a list of indexes
+* Output - new method Get returns the contents of the output element
+* Button - For Macs don't don't allow setting button color. Previously only warned
+* ButtonMenu - new Click method will click the button just like a normal Button's Click method
+* Column scrolling finally works correctly with mousewheel. Shift+Mouse Scroll will scroll horizontally
+* Table - Get method is a dummy version a Get because Qt port got a real Get method
+* Table - Will add numerical column headers if Column Headsing is set to None when creating Table Element
+* Table - FIXED the columns crazily resizing themselves bug!!
+* Table - Can resize individual columns now
+* Tree - was not returning Keys but instead the string representation of the key
+* SetIcon will set to default base64 icon if there's an error loading icon
+* Fix for duplicate key error. Was attempting to add a "unique key counter" onto end of keys if duplicate, but needed to turn into string first
+* Columns
+	* No longer expand nor fill
+	* Sizing works for both scrolled and normal
+* Setting focus - fixed bug when have tabs, columns, frames that have elements that can get the focus. Setting focus on top-level window
+* InputText elements will now cause rows to expand due to X direction expansion
+* Frame - Trying to set the size but doesn't seem to be setting it correctly
+* Tabs will now expand & fill now (I hope this is OK!!!)
+
+## 4.5 PySimpleGUI Release 04-Nov-2019
+
+* Metadata!
+	* All elements have a NEW metadata parameter that you can set to anything and access with Element.metadata
+	* Windows can have metadata too
+* Window.finalize() - changed internally to do a fully window.read with timeout=1 so that it will complete all initializations correctly
+* Removed typing import
+* ButtonReboundCallback - Used with tkinter's Widget.bind method. Use this as a "target" for your bind and you'll get the event back via window.read()
+* NEW Element methods that will work on a variety of elements:
+	* set_size - sets width, height. Can set one or both
+	* get_size - returns width, heigh of Element (underlying Widget), usually in PIXELS
+	* hide_row - hides the entire row that an element occupies
+	* unhide_row - makes visible the entire row that an element occupies
+	* expand - causes element to expand to fill available space in X or Y or both directions
+* InputText Element - Update got new parameters: text_color=None, background_color=None, move_cursor_to='end'
+* RadioButton - fix in Update. Was causing problems with loading a window from disk
+* Text Element - new border width parameter that is used when there's a relief set for the text element
+* Output Element - special expand method like the one for all other elements
+* Frame element - Can change the text for the frame using Update method
+* Slider element - can change range. Previously had to change value to change the range
+* Scrollable frame / column - change to how mousewheel scrolls.  Was causing all things to scroll when scrolling a single column
+	* NOTE - may have a bad side effect for scrolling tables with a mouse wheel
+* Fix for icon setting when creating window.  Wasn't defaulting to correct icon
+* Window.get_screen_size() returns the screen width and height.  Does not have to be a window that's created already as this is a class method
+* Window.GetScreenDimensions - will return size even if the window has been destroyed by using get_screen_size
+* Now deleting window read timers every time done with them
+* Combo no longer defaults to first entry
+* New Material1 and Material2 look and feel color schemes
+* change_look_and_feel has new "force" parameter.  Set to True to force colors when using a Mac
+* Fix in popup_get_files when 0 length of filename
+* Fix in Window.SetIcon - properly sets icon using file with Linux now. Was always defaulting
+
+## 4.6 PySimpleGUI 16-Nov-2019
+
+* Themes!!!
+* Added a LOT of Look and Feel themes. Total < 100 now
+* Doctring comments for some missing functions
+* PEP8 bindings for button_rebound_collback, set_tooltip, set_focus
+* Spin Element Update - shortened code
+* Allow tk.PhotoImage objeft to be passed into Image.update as the data
+* DrawRectangle - added line_width parameter. Defaults to 1
+* Fix for Slider - was only setting the trough color if the background color was being set_focus
+* Added a deiconify call to Window.Normal so it can be used to restore a window that has been minimized.  Not working on Linux
+* Combo - Fix for not allowing a "0" to be specified as the default
+* Table - Saving the Frame that contains a table in the member variable table_frame.  This will enable the frame to be changed to expandable in the future so that the table can be resized as a window expands.
+* LOTS AND LOTS of Look and Feel themes!!!!
+* Added SystemDefaultForReal to look and feel that will prodce 100% not styled windows
+* Changed the "gray" strings in look and feel table into RGB strtings (e.g. gray25 = #404040). No all graphics subsystems
+* Removed Mac restriction from Look and Feel setting changes.  All color settings are changed EXCEPT for the button color now on a Mac
+* "Fuzzy Logic" Look and Feel Theme Selection - No longer have to memorize every character and get the case right. Now can get "close enough" and it'll working
+* New function - preview_all_look_and_feel_themes.  Causes a window to be shown that shows all of the currently available look and feel themes
+* Removed use of CloseButton in popup get file, folder, text.  Was causing problems where input fields stopped working.  See bug on GitHub
+
+## 4.7.0 PySimpleGUI 26-Nov-2019
+
+TTK WIDGETS!  Welcome back Mac Users!
+
+* Significant progress on using ttk widgets properly
+* Added ttk buttons - MACS can use colored buttons again!!  (Big damned deal)
+* The existing ttk based Elements are now correctly being colored and styled
+* Ability to set the ttk theme for individual windows or system-wide, but no longer on a single Element basis
+* Ability to use ttk buttons on a selective basis for non-Mac systems
+* port variable == 'PySimpleGUI' so that your code can determine which PySimpleGUI is running
+* InputText new parameter - use_readonly_for_dsiable defaults to True enables user to switch between a true disable and readonly setting when disabling
+* Rework of progress bar's ttk style name
+* Button - new parameter use_ttk_buttons - True = force use, False = force not used, None = let PySimpleGUI determine use
+* Macs are forced to use ttk buttons EXCEPT when an image is added to the button
+* TabGroup - can no longer set ttk theme directly
+* Window new parameters
+	* ttk_theme - sets the theme for the entire window
+	* use_ttk_buttons - sets ttk button use policy for the entire window
+* More Window layout error checking - checks that rows are iterables (a list). If not, an error popup is shown to help user find error
+* Fixed progessbars not getting a key auto assigned to theme
+* New Window method - send_to_back (SendToBack) - sends the window to the bottom of stack of all windows
+* Fixed normal tk button text - was left justifying instead of centering
+* Fixed table colors - wasn't setting correctly due to bad ttk styling
+* Fixed tree ccolors - wasn't setting correctly due to bad ttk styling
+* TabGroups now function correction with colors including currently selected tab color and background color of non-tab area (next to the tabs)
+* New set_options parameters
+	* use_ttk_buttons - sets system-wide policy for using ttk buttons. Needed for things like popups to work with ttk buttons
+	* ttk_theme - sets system-wide tth theme
+	* progress_meter_style parameter no longer used and generates a warning
+* list_of_look_and_feel_values now sorts the list prior to returning
+* Removed Mac restriction on Button colors from look and feel calls. Now can set button colors to anything!
+* popup_scrolled new parameters - all popups need more parameters but these are for sure needed for the scrolled popup
+	* background_color
+	* text_color
+	* no_titlebar
+	* grab_anywhere
+	* keep_on_top
+	* font
+* Test harness changes to help test new ttk stuff (want to shrink this window in the future so will fit on Trinket, Pi, etc	
+
+## 4.8.0 PySimpleGUI 4-Dec-2019
+
+Multicolored multiline text!  Often asked for feature going way back
+ttk Buttons can have images
+Print in color!
+
+* Multiline Element got 2 new parameters to the update method
+	* text_color_for_value - color for the newly added text
+	* background_color_for_value - background color of the newly added text
+* New Print/EasyPrint parameters and capability
+	* text_color, background_color - control the text's color and background color when printing to "Debug Window"
+	* Must be done only when used in mode where stdout is not re-routed (the default)
+	* Wouldn't it be really nice if normal print calls had this parameter?
+	* Print(event, text_color='green', background_color='white',  end='')
+* ttk Buttons
+	* can have images. No longer forces Buttons with images to be the old tk Butons. Now you can choose either	
+	* can update the button color
+	* can update the button image
+* Set warning filter so that warnings are repeated
+* New global variables:
+	* CURRENT_LOOK_AND_FEEL - The current look and feel setting in use. Starts out as "Default"
+	* BROWSE_FILES_DELIMITER - Defaults to ";"  It is the string placed between entries returned from a FilesBrowse button
+	* TRANSPARENT_BUTTON - Depricated - was being used incorrectly as it was a relic from the early days. It's value was a color of gray
+* Window - gentle reminder if you don't choose a look and feel for your window. It's easy to stop them. Add a change_look_and_feel line
+* Test harness uses a debug window so don't be shocked when 2 windows appear when running PySimpleGUI by itself
+	* Prints the "Event" in Green on White text
+	* Prints the "values" normally
+
+## 4.9.0 PySimpleGUI 7-Dec-2019
+
+The "Finally Nailed Tabs" release
+
+* Colors for Tabs!
+	* When creating TabGroup can now specify
+	* Text & Background color of all tabs
+	* Text & Background color of selected tab
+	* If nothing is specified then the Look and Feel theme will be used (which turned out GREAT)
+* Tab visibility - Can finally control individual tab's visibility using update and when creating
+* More "Look and Feel" Themes!  There's no excuse to be grey again. There are now 126 themes to choose from.  Here are the 32 new themes"
+	DefaultNoMoreNagging
+	DarkBlack1
+	DarkBlue12
+	DarkBlue13
+	DarkBlue14
+	DarkBlue15
+	DarkBlue16
+	DarkBlue17
+	DarkBrown5
+	DarkBrown6
+	DarkGreen2
+	DarkGreen3
+	DarkGreen4
+	DarkGreen5
+	DarkGreen6
+	DarkGrey4
+	DarkGrey5
+	DarkGrey6
+	DarkGrey7
+	DarkPurple6
+	DarkRed2
+	DarkTeal10
+	DarkTeal11
+	DarkTeal12
+	DarkTeal9
+	LightBlue6
+	LightBlue7
+	LightBrown12
+	LightBrown13
+	LightGray1
+	LightGreen10
+	LightGreen9
+	LightGrey6
+* preview_all_look_and_feel_themes now has a columns parameter to control number of entries per rows
+	* also made each theme display smaller due to large number of themes
+
+## 4.10.0 PySimpleGUI 9-Dec-2019
+
+"Oh crap the debugger is broken!" + "Pretty Progress Bars" release
+
+* Fix for built-in debugger not working
+	* Important due to upcoming educational usage
+	* Has been broken since 4.5.0 when a change to Finalize was made
+* ProgessBar element colors set using Look and Feel colors
+	* Combination of button color, input element, and input element text are used
+
+## 4.11.0 PySimpleGUI 10-Dec-2019
+
+The Element & Window bindings release
+
+* Element.bind - New method of all Elements
+	* Enables tkinter bindings to be added to any element
+	* Will get an event returned from window.read() if the tkinter event happens
+* Window.bind - New method for Windows, just like Elements
+	* Enables tkinter bindings to be added to Windows
+	* Will get an event returned from window.read() if the tkinter event happens
+* TabGroup fonts - can now set the font and font size for Tab text
+
+## 4.12.0 PySimpleGUI 14-Dec-2019
+
+Finally no more outlines around TK Elements on Linux
+
+* Fixed a long-term problem of the mysterious white border around (almost) all TK Elements on Linux
+* Ability to set the disabled button colors
+	* New Button and Button.update parameter - disabled_button_color
+	* Specified as (Text Color, Background Color) just like button colors
+	* For Normal / TK Buttons - can set button text color only
+	* For TTK Buttons - can set both a disabled button and text color
+	* Either parameter can be None to use current setting
+* Removed use of CloseButton from Popups (still have a bug in the CloseButton code but not in popups now)
+* Combobox - removed requirement of setting disabled if want to set to readonly using update method
+* Fix for cancelling out of file/folder browse on Linux caused target to be cleared instead of just cancelling
+* Removed try block around setting button colors - if user sets a bad color, well don't do that
+* Now deleting windows after closing them for popup
+
+## 4.13.0 PySimpleGUI 18-Dec-2019
+
+Table and Tree header colors, expanded Graph methods
+
+* Element.expand new parameter - expand_row. If true then row will expand along with the widgets. Provides better resizing control
+* Using math.floor now instead of an int cast in Graph Element's unit conversions
+* Graph.draw_point - now using caller's graph units for specifying point size
+* Graph.draw_circle - converted radius size from user's graph units.
+* Graph.draw_circle - added line_width parameter
+* Graph.draw_oval - added line_width parameter
+* Graph.get_figures_at_location - new method for getting a list of figures at a particular point
+* Graph.get_bounding_box - returns bounding box for a previously drawn figure
+* Table and Tree Elements
+	* 3 new element creation parameters
+		* header_text_color - color of the text for the column headings
+		* header_background_color - color of the background of column headings
+		* header_font - font family, style , size for the column headings
+	* Defaults to using the current look and feel setting
+		* Uses similar algorithm as Tabs - Input Text background and text colors are used
+* Spin element - fixed bug that showed "None" if default value is "None"
+* Test Harness sets incorrect look and feel on purpose so a random one is chosen
+
+## 4.14.0 PySimpleGUI 23-Dec-2019
+
+THEMES!
+
+* theme is replacing change_look_and_feel. The old calls will still be usable however
+* LOTS of new theme functions.  Search for "theme_" to find them in this documentation.  There's a section discussing themes too
+* "Dark Blue 3" is the default theme now.  All windows will be colored using this theme unless the user sets another one
+* Removed the code that forced Macs to use gray
+* New element.set_cursor - can now set a cursor for any of the elements.  Pass in a cursor string and cursor will appear when mouse over widget
+* Combo - enable setting to any value, not just those in the list
+* Combo - changed how initial value is set
+* Can change the font on tabs by setting font parameter in TabGroup
+* Table heading font now defaults correctly
+* Tree heading font now defaults correctly
+* Renamed DebugWin to _DebugWin to discourage use
+
+## 4.15.0 PySimpleGUI 08-Jan-2020
+
+Dynamic Window Layouts!  Extend your layouts with `Window.extend_layout`
+Lots of fixes
+
+* Window.extend_layout
+* Graph.change_coordinates - realtime change of coordinate systems for the Graph element
+* theme_text_element_background_color - new function to expose this setting
+* Radio & Checkbox colors changed to be ligher/darker than background
+* Progress bar - allow updates of value > max value
+* Output element does deletes now so that cleanup works. Can use in multiple windows as a result
+* DrawArc (draw_arc) - New width / line width parameter
+* RGB does more error checking, converts types
+* More descriptive errors for find element	
+* popup_error used interally now sets keep on top
+* Element Re-use wording changed so that it's clear the element is the problem not the layout when re-use detected
+* Window.Close (Window.close) - fix for not immediately seeing the window disappear on Linux when clicking "X"
+* Window.BringToFront (bring_to_front) - on Windows needed to use topmost to bring window to front insteade of lift
+* Multiline Scrollbar - removed the scrollbar color. It doesn't work on Windows so keeping consistent
+* Changed how Debug Windows are created.  Uses finalize now instead of the read non-blocking
+* Fix for Debug Window being closed by X causing main window to also close
+* Changed all "black" and "white" in the Look and Feel table to #000000 and #FFFFFF
+* Added new color processing functions for internal use (hsl and hsv related)
+* popup - extended the automatic wrapping capabilities to messages containing \n
+* Test harness uses a nicer colors for event, value print outs.
+* _timeit decorator for timing functions
+
+## 4.15.1 PySimpleGUI 09-Jan-2020
+
+Quick patch to remove change to popup
+
+## 4.15.2 PySimpleGUI 15-Jan-2020
+
+Quick patch to remove f-string for 3.5 compat.
+
+## 4.16.0 PySimpleGUI 20-Feb-2020
+
+The "LONG time coming" release.  System Tray, Read with close + loads more changes
+Note - there is a known problem with the built-in debugger created when the new read with close was added
+
+* System Tray - Simulates the System Tray feature currently in PySimpleGUIWx and PySimpleGUIQt. All calls are the same. The icon is located just above the system tray (bottom right corner)
+* Window.read - NEW close parameter will close the window for you after the read completes. Can make a single line window using this
+* Window.element_list - Returns a list of all elements in the window
+* Element.unbind - can remove a previously created binding
+* Element.set_size - retries using "length" if "height" setting fails
+* Listbox.update - select_mode parameter added
+* Listbox.update - no longer selects the first entry when all values are changed
+* Listbox.get - new. use to get the current values.  Will be the same as the read return dictionary
+* Checkbox.update - added ability to change background and text colors.  Uses the same combuted checkbox background color (may remove)
+* Multiline.update - fix for when no value is specified
+* Multiline - Check for None when creating. Ignores None rather than converting to string
+* Text.update - added changing value to string. Assumed caller was passing in string previously.
+* Text Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Input Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* StatusBar Element - justification can be specified with a single character. l=left, r=right, c=center. Previously had to fully spell out
+* Image Element - can specify no image when creating.  Previously gave a warning and required filename = '' to indicate nothing set
+* Table Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Tree Element - justification can be specified as an "l" or "r" instead of full word left/right
+* Graph.draw_point - changed to using 1/2 the size rather than size. Set width = 0 so no outline will be drawn
+* Graph.draw_polygon - new drawing method!  Can now draw polygons that fill
+* Layout error checking and reporting added for - Frame, Tab, TabGroup, Column, Window
+* Menu - Ability to set the font for the menu items
+* Debug window - fix for problem closing using the "Quit" button
+* print_to_element - print-like call that can be used to output to a Multiline element as if it is an Output element
+
+## 4.17.0 PySimpleGUI 24-Mar-2020
+
+The "it's been a minute" release
+Improved DocStrings and documentation!
+Upgrade utility
+"Printing" directly to Multiline
+
+* New upgrade utility to upgrade your installed package using GitHub version
+    * Can invoke from command line. Run      `python -m PySimpleGUI.PySimpleGUI upgrade`
+	* The test harness GUI has an upgrade button
+* Multiline.print - Add multiline element to the front of any print statement.  Also supports color output
+* Debug informmation like path and version displayed in test harness GUI
+* Added back the TRANSPARENT_BUTTON variable until can find a better way to deprecate
+* All elements were losing padding when made invisible. Fixed
+* Image.update - fixed crash due to not checking for type before getting size
+* Image.update_animation_no_buffering - playback GIF animations of any length
+* Graph element - Fixed divide by zero error in convert function
+* TabGroup will now autonumber keys if none specified
+* Measuring strings more accurately during layout
+	* Using specific font for measurement
+	* Used to compute TTK button height
+	* Used to compute Slider length
+	* Used to compute header widths in Tables, Trees
+	* Used to compute column widths in Tables, Trees
+	* Used to compute row heights in Tables
+* Removed padx from row frames.  Was using window's margins. Now padx & pady = 0. Was causing too every Column element to have extra padding
+* Added no_titlebar to one line progress meter
+* popup_notify - Creates a "notification window" that is like the System Tray Message window
+* shell_with_animation - launch a shell command that runs while an animated GIF is shown
+* Fixed problem with debugger not working after the recent close parameter addition to Window.read
+
+## 4.18.0 PySimpleGUI 26-Mar-2020
+
+An "Oh F**k" Release - Table column sizes were bad
+
+* Fixed bug in Table Element's column size computation
+* popup_animated has new title parameter
+* Checkbox - update can change the text
+
+## 4.18.1 PySimpleGUI 12-Apr-2020
+
+Emergency patch - f-string managed to get into the code resulting crashes on 3.5 systems (Pi's for example) 
+
+## 4.18.2 PySimpleGUI 12-Apr-2020
+
+The Epic Fail release.... import error on 3.5 for subprocess.
+
+## 4.19.0 PySimpleGUI 5-May-2020
+
+New Date Chooser
+Scrollable columns with mousewheel!! (oh please work right!)
+WINDOW_CLOSE & WIN_CLOSE events
+Long list of stuff!
+
+* Imported from typing again to get correct docstrings
+* Print and MLine.Print fixed sep char handling 
+* New parameter to Muliline.print(autoscroll parameter)
+* New autoscroll parameter added to _print_to_element
+* popup_get_date 
+* Complete reworking on Calendar Chooser Button
+	* Has a LOT more paramteter
+	* Can set location!
+* icon parm popup_animated 
+* popup button size (6,1) for all popups
+* NEW CALENDAR chooser integrated 
+* Graph.draw_lines - new method to allow for multiline lines that may not be a full polygon
+* System Tray fixed the docstrings
+* color chooser set parent window (needed for icon?)
+* scrollable column scrollwheel fixed 
+* fixed TabGroup border width (wasn't getting set properly at all)
+* EXPERIMENTAL Scrollable Columns 
+* Fixed Debug Printing to work like a normal "print"
+* Fixed _print_to_element to work like a normal "print"
+* Fixed light green 1 theme definition - Text color wasn't being set
+* fix for install from GitHub 
+* fix for Column scrolling with comboboxes 
+* Added Text.get 
+* Spin.update fix 
+* import typing again 
+* fixes for Pi 
+* test for valid ttk_theme names 
+* fix for Text.get docstring 
+* added tuples to some docstrings 
+* added code for better tag handling for Multiline elements (fixes a potential memory leak... thanks Ruud)
+* WIN_CLOSE & WINDOW_CLOSED constants added.  Both are None
+* EVENT_TIMEOUT and TIMEOUT_EVENT constants added to both be the same as TIMEOUT_KEY
+* Some changes in test harness that tested recent changes (may still need shortening for trinket or others)
+* Changed the misleading TRANSPARENT_BUTTON constant with an attempt using themes calls
+
+## 4.20.0 PySimpleGUI 6-Jun-2020
+
+Fixes and new features... broad range
+
+* Fix for Typing import for Pi (3.4) users.  Now "tries" to import typing
+* Tooltip fonts - can change the font for tooltips
+* Fixed tearoff for Menus.  Had stoppped working
+* Radio - If element is updated to False, the entire group of radio buttons will be set to false tooltips
+* Multiline - fix for colors. Only set tags for output that has specific colors
+* Multiline - keeping track of disabled with Disabled mumber variable
+* Progress bar
+	* Added class variable "uniqueness counter" so that every bar will have its own settings
+	* Needed in case the same key is used in another window
+* Fix for stdout being reset if someone sets flush on their call to print
+* Mac special case added to tkfiledialog.askdirectory just like on askopenfilename
+* Tab - can "update" the title
+* Menu update - was not applying font when updating the menu
+* Window.set_title - allows you to change the title for a window
+* Added searching through Panes when looking for element with focus
+* Removed Python 2 Add Menu Item code
+* Added font to buttonmenu.
+* Added font to the combobox drop-down list (wow what a pain)
+* Table now uses the element's padding rather than 0,0
+* Tree now uses the element's padding rather than 0,0
+* set_options - added ability to set the tooltip font
+* Fixed a couple of docstrings
+* Reworked main() test harness to display DETAILED tkinter info and use better colors
+
+## 4.21.0 PySimpleGUI 27-Jun-2020
+
+Horizontal Separator, cprint, docstrings
+
+* New color printing function cprint - enables easy color printing to an element
+* Tons of docstring fixups (300+ changes)
+* Removed old Python2 checks
+* Added Element.set_vscroll_position - scroll to a particular % of the way into a scrollable widget
+* Input Text - new parameters
+	* border_width
+	* read_only (for tkinter will have to be disabled OR readonly.  Cannot be both)
+	* disabled_readonly_background_color
+	* disabled_readonly_text_color
+* Radio - Backed out the change that cleared all buttons in group because already have that ability using reset_group
+* Graph drag mouse up events returned as either a string + "+UP" (as before) or as a tuple with "+UP" being added onto a tuple key
+* Vertical separator - added key and color - color defaults to text color
+* Horizontal separator!  (FINALLY). Color defaults to text color
+* Fix for Table and Tree elements not automatically getting a key generated if one wasn't supplied
+* Made key parameter for one_line_progress_meter have a default value so don't have to specify it when you have only 1 running
+* theme_add_new - adds a new theme entry given a theme name and a dictionary entry. This way you don't have to directly modify the theme dictionary
+* Added initial_folder to popup_get_folder when there is no window
+* Added default_path to popup_get_file when there is no window
+* Fix for removing too many PySimpleGUI installs when using the GitHub upgrade tooltip
+
+## 4.22.0 PySimpleGUI 28-Jun-2020
+
+More cprint stuff
+
+* Additional window and key parameter to cprint
+	* May seem like a small change, but the results are powerful
+	* Can now easily "print" to anywhere, in color!
+	
+
+## 4.23.0 PySimpleGUI 3-Jul-2020
+
+Table Colors Fix - workaround for problems with tables and tree colors in Python 3.7.2 to 3.9+
+Mac crash fixed - tkinter.TclError: expected boolean value but got "" (hopefully)
+New shortcut "k" parameter for all elements that is the same as "key" - may be experimental / temporary if not well received
+More error checks
+popup extensions
+
+* Fix for missing Table and Tree colors created in tk 8.6.9
+	* This is a problem in all versions of  Python 3.7.2 - 3.9.0 with no target fix date published
+	* As a result of no fixes in sight, added a fix in PySimpleGUI if the tk version is 8.6.9
+* New Element creation parameter "k" - exact same thing as "key" but shorter. Helps with complex layouts
+* New error reporting on all element.update calls - checks to see if element has been fully created
+* set_options - new option to supress popup_errors coming from PySimpleGUI.py
+* Mac specific crash fix - if on a Mac, no longer calling wm_overrideredirect as it crashes the Mac now
+* Additional error checking (shows error instead of asserting:
+	* Check for Widget creation before widget operations like bind, unbind, expand
+	* Check for window finalize / read before some window operations like maximize, hide, etc
+* docstrings - more added.  Fixed up a number of missing / erroneous ones
+* Tree element - caches images so that will not create new ones if previously used on another Tree item
+* popup - two new options
+	* any_key_closes - bool.  If True, any key pressed will close the window
+	* image - can be a bytes (base64) or string (filename). Image will be shown at top of the popup
+* all popups - new image parameter (base64 or string)
+* a few new built-in icons
+	
+
+## 4.24.0 PySimpleGUI 3-Jul-2020
+
+Selective control over tk 8.6.9 treeview color patch
+
+* Disabled the code that patched the problem with background colors for Tree and Table elements
+* Can enable the patched code by calling set_options
+	* To enable set parameter enable_treeview_869_patch = True (defaults to false)
+
+## 4.25.0 PySimpleGUI 17-Jul-2020
+
+Biggest / most impactful set of changes in a while (fingers crossed)
+Modal windows
+Multithreaded Window.write_event_value method
+stdout re-route to any Multiline
+table/tree highlights
+k element parameter
+
+* New "k" parameter for all elements. 
+	* Same as "key"
+	* Created so layouts can be even more compact if desired
+	* New docstring for keys (basically anything except a list)
+* Popups
+	* New text wrap behavior. Will wrap text between \n in user's string
+	* All popups are now "modal" unless they are non-blocking (can be turned off using new parameter)
+* New button color and table/tree highlight color format
+	* Colors can still be tuple (text, background)
+	* Can also be a single string with format "text on background" (e.g. "white on red")
+* Multiline
+	* Automatically refresh window when updating multiline or output elements
+	* For cprint use Multiline's autoscroll setting
+	* New autoscroll parameter in Multiline.print
+	* New parameters to make the print and cprint stuff much easier
+		* write_only=False (so that it's not returned when read)
+		* auto_refresh=False
+		* reroute_stdout=False
+		* reroute_stderr=False
+		* reroute_cprint=False (removes need to call the cprint cprint_set_output_destination function)
+* Table / Tree Elements
+	* Re-enabled the tk 8.6.9 background color fix again
+	* selected_row_colors=(None, None) - tuple or string
+	* Automatically sets the selected row color based on the theme colors! (uses the button color)
+	* Can use 2 other constants for colors
+		* OLD_TABLE_TREE_SELECTED_ROW_COLORS - ('#FFFFFF', '#4A6984') the old blueish color
+		* ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS - (SystemHighlightText, SystemHighlight)
+	* Tree image caching happens at the element level now
+* Window	
+	* make_modal - new method to turn a window into a modal window
+	* modal parameter when window is created.  Default is False
+	* write_event_value - new method that can be called by threads!  This will "queue" an event and a value for the next window.read()
+	* Display an error popup if read a closed window 100+ times (stops you from eating 100% of the CPU time)
+	* was_closed method added - returns True if a window has been closed
+* Combo - don't select first entry if updated with a new set of values
+* Tooltip - fix for stuck-on tooltips
+* New theme_previewer with scrollbars. 3 new parameters	
+* cprint - now has all parameters shown in docstring versus using *args **kwargs	
+* New global variable __tclversion_detailed__ - string with full tkinter version (3 numbers instead of 2)
+* Warning is displayed if tcl version is found to be 8.5.
+
+## 4.26.0 PySimpleGUI 18-Jul-2020
+
+* Multi-threaded tkvar initialization location changed so that thread doesn't intialize it now
+* Removed thread key - no longer needed
+* Window.write_event_values - now requires both parms
+* Upgrade button typo
+
+## 4.27.4 PySimpleGUI 3-Aug-2020
+
+Multi-window support done right!
+New capabilities for printing, Multiline
+Main app additions
+Theme searching
+
+* read_all_windows - function that reads all currently open windows.
+	* Finally the efficient multi-window solution
+	* No longer need to do round-robin type scheduling
+	* Easily convert existing programs from single to multi-windows
+	* Demo programs with multi-window design patterns all updated
+	* Ideal for "floating palette / toolbar" window adds-ons
+	* Can read with timeout including timeout=0
+* theme_previewer
+	* search option
+	* button in main app
+	* reset to previous theme following preview
+* Sponsor button in main app
+* Theme previewer in main app
+* Progress bar 
+	* colors can use the single string "foreground on background" color format
+	* update_bar combined with update for a single update interface
+* Better element key error handling
+	* 3 options to control how lookup errors are handled
+	* popup now shows
+		* file, function, line #, actual line of code with error
+		* erroneous key provided
+		* best matching key
+	* will automatically try to continue with best matching key
+	* can assert with key error if desired (true by default)
+* fix for get item
+* Up/down arrow bindings for spinner if enabling events
+* Multiline 
+	* new justification parameter on creation and update
+	* print - justification parameter added
+* cprint - justification parameter added - note tricky to set color of single word but possible	
+* Added mousewheel for Linux return_keyboard_events enabled
+* Added get_globals function for extending easier
+* Refactored callbacks
+* Image element - can clear image by not setting any parameters when calling update
+* Column Element's Widget member variable now being set
+* Window's starting window location saved
+* Early experimental "Move all windows in sync" when using grab_anywhere (coming soon)
+* Fix for 3.4 (can't use f-strings)
+
+## 4.28.0 PySimpleGUI 3-Aug-2020
+
+Element pinning for invisibility!
+
+* Better visible/invisible handling
+	* pin - new function to place an element in a layout that will hold its position
+	* border_width added to Canvas and Graph (so that they will default to 0)
+* Combobox
+	* button color will match theme's button color
+	* background color set correctly when readonly indicated
+* Spin element
+	* spin button color set to background color of spinner
+	* spin arrow color automatically set to text color
+* Bad element key popup - fix for displaying correct line info in some situations
+
+## 4.29.0 PySimpleGUI 25-Aug-2020
+
+Custom titlebar capabilities (several new features required)
+Better Alignment
+Calendar button works again
+
+* Window.visiblity_changed now refreshes the window 
+* Added Column.contents_changed which will update the scrollbar so corrently match the contents
+* Separators expand only in 1 direction now
+* Added 8 SYMBOLS:
+	SYMBOL_SQUARE = '█'
+	SYMBOL_CIRCLE = '⚫'
+	SYMBOL_CIRCLE_OUTLINE = '◯'
+	SYMBOL_UP =    '▲'
+	SYMBOL_RIGHT = '►'
+	SYMBOL_LEFT =  '◄'
+	SYMBOL_DOWN =  '▼'
+	SYMBOL_X = '❎'
+* New dark themes - dark grey 8, dark grey 9, dark green 9, dark purple 7
+* When closing window no longer deletes the tkroot variable and rows but instead set to None
+* Changd no-titlebar code to use try/except. Previously removed for Mac due to tk 8.6.10 errors calling wm_overrideredirect
+* Fix for Column/window element justification
+* New vertical_alignment parm for Column, Frame, pin
+* New layout helper functions - vtop/vcenter/vbottom - Can pass an element or a row of elements
+* Fixed statusbar expansion
+* Added disabled button to theme previewer
+* Fixed grab anywhere stop motion bug - was setting position to None and causing error changed to event.x
+* Expanded main to include popup tests, theme tests, ability to hide tabs
+* Grab parameter for Text Element, Column Element
+* Added tclversion_detailed to get the detailed tkinter version
+* All themes changed the progress bar definition that had a "DEFAULT" indicator. New constant DEFAULT_PROGRESS_BAR_COMPUTE indicates the other theme colors should be used to create the progess bar colors.
+* Added expand_x and expand_y parameters to Columns
+* Fix for Calendar Button.  Still needs to be fixed for read_all_windows
+* Force focus when no-titlebar window. Needed for Raspberry Pi
+* Added Window.force_focus
+* No longer closes the hidden master window. Closing it caused a memory leak within tkinter
+* Disable close on one_line_progress_meter. There is a cancel button that will close the window
+* Changed back toplevel to no parent - was causing problems with timeout=0 windows
+
+## 4.30.0 PySimpleGUI 14-Oct-2020
+
+User Settings APIs, lots more themes, theme swatch previewer, test harness additions
+
+* Added shrink parameter to pin, 
+* added variable Window.maximized, 
+* added main_sdk_help_window function, 
+* New themes - DarkGrey10,DarkGrey11 DarkGrey12 DarkGrey13 DarkGrey14, Python, DarkBrown7
+* Highlight Thickness for Button, Radio, Input elements
+	* Set to 1 now instead of 0 so that focus can be seen
+	* Color is automatically set for buttons, checkboxes, radio buttons
+	* Color can be manually set for Buttons using `highlight_colors` parameter
+	* Only used by Linux
+* user_settings APIs
+	* Whole new set of API calls for handling "user settings"
+	* Settings are saved to json file
+	* For more info, see the documentation
+* Radio.update - added text, background & text colors parameters
+* Multiline & Output Elements:
+	* added parameter echo_stdout_stderr
+	* if True then stdout & stderr will go to the console AND to the Multiline
+* "ver" is shortened version string
+* modal docstring fix in some popups
+* image parameter implemented in popup_scrolled
+* Graph.draw_image - removed color, font, angle parameters
+* fixed blank entry with main program's theme previewer
+* added Window.set_min_size
+* error message function for soft errors
+* focus indicator for Button Checkbox Radio using highlights
+* added main_sdk_help Window
+* added theme_previewer_swatches function
+* added "Buy Me A Coffee" button
+* updated `pin` layout helper function - added `shrink` parameter
+* Main debugger window set to keep on top
+
+## 4.31.0 PySimpleGUI 13-Nov-2020
+
+User Settings class, write_event_value fixes, Menus get colors, Mac no_titlebar patch
+
+* InputText element - Now treating None as '' for default
+* Combo - handling update calls with both disabled and readonly set
+* Spin - readonly 
+	* Added parameter added when creating
+	* Added parameter to update
+* Spin.get() now returns value rather than string version of value
+* Multiline print now autoscrolls by default
+* FileSaveAs and SaveAs now has  default_extension parameter like the popup_get_file has
+* Button Menu - Color and font changes
+	* New create parameters - background color, text color, disabled text color, item font
+	* Fixed problem with button always being flat
+* Menu (Menubar) - Color changes
+	* New create paramters - text color, disabled text color.
+	* Hooked up background color parameter that was already there but not functional
+* write_event_value - fixed race conditions
+	* Window.read() and read_all_windows() now checks the thread queue for events before starting tkinter's mainloop in case events are queued
+* Window.set_cursor added so that window's cursor can be set just like can be set for individual elements
+* Icon is now set when no_window option used on popup_get_file or popup_get_folder
+* Reformatted the theme definitions to save a LOT of lines of code
+* UserSettings class
+	* Added a class interface for User Settings
+	* Can still use the function interface if desired
+	* One advantage of class is that [ ] can be used to get and set entries
+	* Looks and acts much like a "persistent global dictionary"
+	* The User Settings function interfaces now use the class
+* main_get_debug_data() 
+	* Function added that will display a popup and add to the clipboard data needed for GitHub Issues
+	* Added button to Test Harness to display the popup with version data
+* Mac - Added parm enable_mac_notitlebar_patch to set_options to enable apply a "patch" if the Window has no_titlebar set.
+
+## 4.32.0 PySimpleGUI 17-Nov-2020
+
+Menu colors and font, fixes
+
+* Menu, ButtonMenu, and right click menu now default to theme colors and Window font
+	* The background color for menus is the InputText background color
+	* The text color for menus is the InputText text color
+	* The font defaults to the Window font
+	* These theme colors have worked well in the past as they are the settings used for Table and Tree headers
+	* All settings can be changed
+* Added ability to set the right click menu colors and font
+	* New parameters added to Window to control right click look
+* Fixed problem with Button.update. 
+	* Was crashing if button color changed to COLOR_SYSTEM_DEFAULT
+* Fixed problem with right click menus introduced in the previous release
+* Auto-close windows can now be finalized (previously could not do this)
+* Window.read with timeout is faster
+
+## 4.32.1 PySimpleGUI 17-Nov-2020
+
+* Bug in finalize code
+
+## 4.33.0 PySimpleGUI 2-Jan-2021 (Happy New Year!)
+
+The let's kickoff 2021 release!
+
+Custom Titlebars, Fix for Docstrings so PyCharm 2020 works correctly, New shortcuts, Window Close Attempted
+
+* Custom Titlebar - new element
+	* Initial reason was Trinket, but great feature overall
+	* Allows windows to be styled to match the colors of the window
+	* Automatically uses theme for colors
+	* Automatically used when running on Trinket
+	* Can specify using them by using set_options, a Titlebar element, or parameters in Window creation
+	* Documentation is coming soonish
+	* Demo exists showing how to use (it's enough that you won't need a Cookbook / detailed docs to add it to your own program)
+	* Changes include adding a 16x16 pixel version of the PySimpleGUI icon
+	* popups - If custom titlebar is set using set_options (and is thus globally applied) then popups will use the custom titlebar
+* MASSIVE number of changes to docstrings so that PyCharm again works correctly.  All Unions had to be changed to use "|" instead
+* Internal functions added to check what OS is being used rather than having os.platform checks all over thee place
+* Element.Visible removed. Element.visible property returns current visibility state for element
+	* This is a read-only property
+* Added dummy Element.update method so that PyCharm doesn't complain about a missing method
+* InputElement class changed to Input.  Both will work as InputElement is now an alias
+* Fix in Spin.update.  Was using an illegal state value of "enable" rather than "normal"
+* New Shortcuts for Elements
+	* Sp = Spin
+	* SBar = StatusBar
+	* BM = ButtonMenu
+	* Progress = ProgressBar
+	* Im = Image
+	* G = Graph
+	* Fr = Frame
+	* Sl = Slider
+* Button - Allow button color background to be specified as None. This will cause the theme's color to be auto chosen as background
+* Image.DrawArc - fill_color parameter added
+* Column - update now uses the expand information so that a column will re-pack correctly when made invisible to visible. Added fill parm to pack call
+* New Window parameters:
+	* enable_close_attempted_event=False
+    * titlebar_background_color=None
+	* titlebar_text_color=None
+	* titlebar_font=None
+	* titlebar_icon=None
+    * use_custom_titlebar=None
+* Removed "Faking Timeout" print because the state that triggered it can be reached using a normal auto-closing window
+* Can now intercept window close attempts when the user clicks X
+	* If you don't want "X" to close the window, set enable_close_attempted_event to True when creating window
+	* When enabled a WINDOW_CLOSE_ATTEMPTED_EVENT will be returned from read instead of WIN_CLOSED
+	* Multiple aliases for the key: WINDOW_CLOSE_ATTEMPTED_EVENT, WIN_X_EVENT, WIN_CLOSE_ATTEMPTED_EVENT
+* New Window property - key_dict
+	* Returns the "All keys dictionary" which has keys and elements for all elements that have keys specified
+* pin helper function got 2 new parameters - expand_x=None, expand_y=None.  Was needed for the Titlebar element
+* no_titlebar implementation changed on Linux. Not using "splash" and instead using "dock". Was needed to get the minimize/restore to work
+* New set_options parameters in support of custom Titlebar element
+	* use_custom_titlebar=None
+	* titlebar_background_color=None
+	* titlebar_text_color=None
+	* titlebar_font=None
+	* titlebar_icon=None
+* get_globals removed - not required for normal PySimpleGUI.  Was only used by patched packages which will need to fork PySimpleGUI for this feature.
+* popup - support for custom titlebar!
+* Changed from pathlib to os.path
+
+## Upcoming
+
+The future for PySimpleGUI looks bright!  
+
+The overall roadmap is a simple one:
+* Continue to build-out the tkinter port
+* Continue to bring features forward from the tkinter port to the other ports (Qt, WxPython, Remi)
+* Add mobile applications (native built applications instead of PyDriod3 that's used today)
+
+## Code Condition
+
+    Make it run
+    Make it right
+    Make it fast
+
+It's a recipe for success if done right.  PySimpleGUI has completed the "Make it run" phase.  It's far from "right" in many ways.  These are being worked on.  The module has historically been particularly poor for PEP8 compliance.  It was a learning exercise that turned into a somewhat complete GUI solution for lightweight problems.
+
+While the internals to PySimpleGUI are a tad sketchy, the public interfaces into the SDK are more strictly defined and comply with PEP8 naming conventions.  A set of "PEP8 Bindings" was released in summer of 2019 to ensure the externally facing interfaces all adhere to PEP8 names.
+
+Please log bugs and suggestions **only on the PySimpleGUI GitHub**!  It will only make the code stronger and better in the end, a good thing for us all, right?  Logging them elsewhere doesn't enable the core developer and other PySimpleGUI users to help.  To make matters worse, you may get bad advice from other sites because there are simply not many PySimpleGUI experts, yet.
+
+## Design
+
+A moment about the design-spirit of `PySimpleGUI`.  From the beginning, this package was meant to take advantage of Python's capabilities with the goal of programming ease.
+
+**Single File**
+While not the best programming practice, the implementation resulted in a single file solution.  Only one file is needed, PySimpleGUI.py.  You can post this file, email it, and easily import it using one statement.
+
+**Functions as objects**
+In Python, functions behave just like object. When you're placing a Text Element into your form, you may be sometimes calling a function and other times declaring an object.  If you use the word Text, then you're getting an object.  If you're using `Txt`, then you're calling a function that returns a `Text` object.
+
+**Lists**
+It seemed quite natural to use Python's powerful list constructs when possible.  The form is specified as a series of lists.  Each "row" of the GUI is represented as a list of Elements. 
+
+**Dictionaries**
+Want to view your form's results as a dictionary instead of a list... no problem, just use the `key` keyword on your elements.  For complex forms with a lot of values that need to be changed frequently, this is by far the best way of consuming the results.
+
+You can also look up elements using their keys.  This is an excellent way to update elements in reaction to another element.  Call `form.FindElement(key)` to get the Element.
+
+**Named / Optional Parameters**
+This is a language feature that is featured **heavily**  in all of the API calls, both functions and classes.  Elements are configured, in-place, by setting one or more optional parameters.  For example, a Text element's color is chosen by setting the optional `text_color` parameter.
+
+**tkinter**
+tkinter is the "official" GUI that Python supports.  It runs on Windows, Linux, and Mac.  It was chosen as the first target GUI framework due to its ***ubiquity***.  Nearly all Python installations, with the exception of Ubuntu Linux, come pre-loaded with tkinter.   It is the "simplest" of the GUI frameworks to get up an running (among Qt, WxPython, Kivy, etc).
+
+From the start of the PSG project, tkinter was not meant to be the only underlying GUI framework for PySimpleGUI.  It is merely a starting point.  All journeys begin with one step forward and choosing tkinter was the first of many steps for PySimpleGUI.  Now there are 4 ports up and running - tkinter, WxPython, Qt and Remi (web support)
+
+# Author & Owner
+
+Written and owned by The PySimpleGUI Organization
+
+This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+
+Send correspondence to PySimpleGUI@PySimpleGUI.com
+
+## License
+
+GNU Lesser General Public License (LGPL 3) +
+
+## Acknowledgments
+
+There are a number of people that have been key contributors to this project both directly and indirectly.  Paid professional help has been deployed a number of critical times in the project's history.  This happens in the life of software development from time to time.
+
+If you've helped, I sure hope that you feel like you've been properly thanked.  That you have been recognized.  If not, then say something.... drop an email to comments@PySimpleGUI.org. 
+
+## Support
+
+In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
+
+To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free, but until then we'll all enjoy the successes we're having.

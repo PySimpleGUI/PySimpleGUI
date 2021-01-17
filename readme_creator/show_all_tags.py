@@ -1,7 +1,5 @@
-import PySimpleGUI as sg
+import PySimpleGUI;sg = PySimpleGUI
 import datetime, inspect
-
-module_to_process = sg
 
 """ 
     Create All Possible Tags
@@ -29,7 +27,7 @@ def valid_field(pair):
 
 
 #                                                                                       # ]
-psg_members  = [i for i in inspect.getmembers(module_to_process) if valid_field(i)]        # ]
+psg_members  = [i for i in inspect.getmembers(PySimpleGUI) if valid_field(i)]        # ] 
 psg_funcs    = [o[0] for o in psg_members if inspect.isfunction(o[1])]                  # ] Grabing PSG objects
 psg_classes  = [o for o in psg_members if inspect.isclass(o[1])]                        # ] 
 # psg_props    = [o for o in psg_members if type(o[1]).__name__ == 'property']          # ]
