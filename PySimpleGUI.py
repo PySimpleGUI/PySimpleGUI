@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0.4 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help, BIG PEP8 definition swap"
+version = __version__ = "4.33.0.5 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help, BIG PEP8 definition swap, changed metadata into a class property, docstring change for element lookups"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -766,6 +766,8 @@ class Element():
         self.TKEntry = None
         self.TKImage = None
 
+        self._metadata = None  # type: Any
+
         self.ParentForm = None  # type: Window
         self.ParentContainer = None  # will be a Form, Column, or Frame element # UNBIND
         self.TextInputDefault = None
@@ -780,7 +782,7 @@ class Element():
         self.Widget = None  # Set when creating window. Has the main tkinter widget for element
         self.Tearoff = False          # needed because of right click menu code
         self.ParentRowFrame = None  # type tk.Frame
-        self.metadata = metadata  # type: Any
+        self.metadata = metadata
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.pad_used    = (0,0)        # the amount of pad used when was inserted into the layout
@@ -794,11 +796,30 @@ class Element():
     def visible(self):
         """
         Returns visibility state for the element.  This is a READONLY property
-        To control visibility, use the element's update method
         :return: Visibility state for element
         :rtype: (bool)
         """
         return self._visible
+
+
+    @property
+    def metadata(self):
+        """
+        Metadata is an Element property that you can use at any time to hold any value
+        :return: the current metadata value
+        :rtype: (Any)
+        """
+        return self._metadata
+
+
+    @metadata.setter
+    def metadata(self, value):
+        """
+         Metadata is an Element property that you can use at any time to hold any value
+        :param value: Anything you want it to be
+        :type value: (Any)
+        """
+        self._metadata = value
 
 
     def _RightClickMenuCallback(self, event):
@@ -7441,6 +7462,7 @@ class Window:
         :type metadata: (Any)
         """
 
+        self._metadata = None  # type: Any
         self.AutoSizeText = auto_size_text if auto_size_text is not None else DEFAULT_AUTOSIZE_TEXT
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = str(title)
@@ -7598,6 +7620,26 @@ class Window:
         screen_height = root.winfo_screenheight()
         root.destroy()
         return screen_width, screen_height
+
+    @property
+    def metadata(self):
+        """
+        Metadata is available for all windows. You can set to any value.
+        :return: the current metadata value
+        :rtype: (Any)
+        """
+        return self._metadata
+
+
+    @metadata.setter
+    def metadata(self, value):
+        """
+        Metadata is available for all windows. You can set to any value.
+        :param value: Anything you want it to be
+        :type value: (Any)
+        """
+        self._metadata = value
+
 
     # ------------------------- Add ONE Row to Form ------------------------- #
     def add_row(self, *args):
@@ -9262,8 +9304,8 @@ class Window:
         window['element key'].Update
 
         :param key: The key to find
-        :type key: str | int | tuple | object""
-        :rtype: Element | None
+        :type key: str | int | tuple | object
+        :rtype: Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
         """
 
         return self.FindElement(key)
@@ -9552,6 +9594,7 @@ class SystemTray:
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        self._metadata = None
         self.Menu = menu
         self.TrayIcon = None
         self.Shown = False
@@ -9575,6 +9618,26 @@ class SystemTray:
         self.window = Window('Window Title', layout, element_padding=(0, 0), margins=(0, 0), grab_anywhere=True, no_titlebar=True, transparent_color='red', keep_on_top=True, right_click_menu=menu, location=(screen_size[0] - 100, screen_size[1] - 100),  finalize=True)
 
         self.window['-IMAGE-'].bind('<Double-Button-1>', '+DOUBLE_CLICK')
+
+    @property
+    def metadata(self):
+        """
+        Metadata is an SystemTray property that you can use at any time to hold any value
+        :return: the current metadata value
+        :rtype: (Any)
+        """
+        return self._metadata
+
+
+    @metadata.setter
+    def metadata(self, value):
+        """
+        Metadata is an SystemTray property that you can use at any time to hold any value
+        :param value: Anything you want it to be
+        :type value: (Any)
+        """
+        self._metadata = value
+
 
 
     def read(self, timeout=None):
