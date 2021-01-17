@@ -25,7 +25,11 @@ HOW DO I INSERT IMAGES ???
 
  -->
 
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
+  <h2 align="center">Python GUIs for Humans</h2>
+</p>
 
 [![tkinter](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
 [![tkinter27](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tk 2.7
@@ -1198,7 +1202,7 @@ Like above, you may have to install either pip or tkinter.  To do this on Python
 
 `sudo apt install python-tkinter`
 
-### Upgrading from GitHub Using PySimpleGUI
+## Upgrading from GitHub Using PySimpleGUI
 
 Starting in version 4.17.0 there is code in the PySimpleGUI package that upgrades your previously pip installed package using the latest version checked into GitHub.  
 

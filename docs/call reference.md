@@ -160,6 +160,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -289,7 +299,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -491,6 +500,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -605,7 +624,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -756,6 +774,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -851,7 +879,6 @@ unhide_row()
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -1010,6 +1037,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -1120,7 +1157,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -1325,6 +1361,16 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Column) | **RETURN** | Used for chaining
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -1438,7 +1484,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -1633,6 +1678,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -1747,7 +1802,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -1959,6 +2013,16 @@ Parameter Descriptions:
 | List[List[Element]] | rows | The rows of Elements |
 | (Frame) | **RETURN** | Used for chaining
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -2059,7 +2123,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -2615,6 +2678,16 @@ Parameter Descriptions:
 |--|--|--|
 | int | figure | value returned by tkinter when creating the figure / drawing |
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -2725,7 +2798,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -3184,6 +3256,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -3269,7 +3351,6 @@ unhide_row()
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -3399,6 +3480,16 @@ Hide the entire row an Element is located on.
 ```python
 hide_row()
 ```
+
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
 
 ### set_cursor
 
@@ -3539,7 +3630,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -3742,6 +3832,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -3867,7 +3967,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -4082,6 +4181,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -4219,7 +4328,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -4421,6 +4529,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -4521,7 +4639,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -4767,6 +4884,16 @@ Restore a previously re-reouted stdout back to the original destination
 restore_stdout()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -4900,7 +5027,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -5080,6 +5206,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -5199,7 +5335,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -5349,6 +5484,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -5473,7 +5618,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -5641,6 +5785,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -5740,7 +5894,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -5887,6 +6040,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -6008,7 +6171,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -6204,6 +6366,16 @@ Sets all Radio Buttons in the group to not selected
 reset_group()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -6313,7 +6485,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -6504,6 +6675,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -6609,7 +6790,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -6782,6 +6962,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -6892,7 +7082,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -7070,6 +7259,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -7177,7 +7376,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -7373,6 +7571,16 @@ Create a tkinter event that mimics user clicking on a tab. Must have called wind
 select()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -7476,7 +7684,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -7701,6 +7908,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -7800,7 +8017,6 @@ unhide_row()
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -8013,6 +8229,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -8122,7 +8348,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -8313,6 +8538,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -8420,7 +8655,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -8681,6 +8915,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -8804,7 +9048,6 @@ Parameter Descriptions:
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -9016,6 +9259,16 @@ Hide the entire row an Element is located on.
 hide_row()
 ```
 
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
 ### set_cursor
 
 Sets the cursor for the current Element.
@@ -9101,7 +9354,6 @@ unhide_row()
 #### property: visible
 
 Returns visibility state for the element.  This is a READONLY property
-To control visibility, use the element's update method
 
 |Type|Name|Meaning|
 |---|---|---|
@@ -9814,6 +10066,16 @@ Maximize the window. This is done differently on a windows system versus a linux
 ```python
 maximize()
 ```
+
+### metadata
+
+#### property: metadata
+
+Metadata is available for all windows. You can set to any value.
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
 
 ### minimize
 
@@ -10626,6 +10888,16 @@ Hides the icon
 ```python
 hide()
 ```
+
+### metadata
+
+#### property: metadata
+
+Metadata is an SystemTray property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
 
 ### notify
 

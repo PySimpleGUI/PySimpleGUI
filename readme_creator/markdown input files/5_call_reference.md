@@ -16,24 +16,11 @@ This section of the documentation is generated directly from the source code.  A
 
 Here are all of the Elements, the Window & SystemTray classes, and all functions
 
+---------
+
 ## Button Element 
 <!-- <+Button.doc+> -->
 <!-- <+Button.__init__+> -->
-
-### Click
-<!-- <+Button.Click+> -->
-
-### GetText
-<!-- <+Button.GetText+> -->
-
-### SetFocus
-<!-- <+Button.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Button.SetTooltip+> -->
-
-### Update
-<!-- <+Button.Update+> -->
 
 ### bind
 <!-- <+Button.bind+> -->
@@ -52,6 +39,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Button.hide_row+> -->
+
+### metadata
+<!-- <+Button.metadata+> -->
 
 ### set_cursor
 <!-- <+Button.set_cursor+> -->
@@ -77,21 +67,36 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Button.update+> -->
 
+### visible
+<!-- <+Button.visible+> -->
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Click
+<!-- <+Button.Click+> -->
+
+### GetText
+<!-- <+Button.GetText+> -->
+
+### SetFocus
+<!-- <+Button.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Button.SetTooltip+> -->
+
+### Update
+<!-- <+Button.Update+> -->
+
+---------
+
 ## ButtonMenu Element 
 <!-- <+ButtonMenu.doc+> -->
 <!-- <+ButtonMenu.__init__+> -->
 
-### Click
-<!-- <+ButtonMenu.Click+> -->
-
-### SetFocus
-<!-- <+ButtonMenu.SetFocus+> -->
-
-### SetTooltip
-<!-- <+ButtonMenu.SetTooltip+> -->
-
-### Update
-<!-- <+ButtonMenu.Update+> -->
 
 ### bind
 <!-- <+ButtonMenu.bind+> -->
@@ -104,6 +109,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+ButtonMenu.hide_row+> -->
+
+### metadata
+<!-- <+ButtonMenu.metadata+> -->
 
 ### set_cursor
 <!-- <+ButtonMenu.set_cursor+> -->
@@ -129,18 +137,34 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+ButtonMenu.update+> -->
 
+### visible
+<!-- <+ButtonMenu.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### Click
+<!-- <+ButtonMenu.Click+> -->
+
+### SetFocus
+<!-- <+ButtonMenu.SetFocus+> -->
+
+### SetTooltip
+<!-- <+ButtonMenu.SetTooltip+> -->
+
+### Update
+<!-- <+ButtonMenu.Update+> -->
+
+---------
+
 ## Canvas Element 
 <!-- <+Canvas.doc+> -->
 <!-- <+Canvas.__init__+> -->
-
-### SetFocus
-<!-- <+Canvas.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Canvas.SetTooltip+> -->
-
-### TKCanvas
-<!-- <+Canvas.TKCanvas+> -->
 
 ### bind
 <!-- <+Canvas.bind+> -->
@@ -153,6 +177,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Canvas.hide_row+> -->
+
+### metadata
+<!-- <+Canvas.metadata+> -->
 
 ### set_cursor
 <!-- <+Canvas.set_cursor+> -->
@@ -172,25 +199,33 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### unbind
 <!-- <+Canvas.unbind+> -->
 
-
 ### unhide_row
 <!-- <+Canvas.unhide_row+> -->
+
+### visible
+<!-- <+Canvas.visible+> -->
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+Canvas.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Canvas.SetTooltip+> -->
+
+### TKCanvas
+<!-- <+Canvas.TKCanvas+> -->
+
+---------
 
 ## Checkbox Element 
 <!-- <+Checkbox.doc+> -->
 <!-- <+Checkbox.__init__+> -->
-
-### Get
-<!-- <+Checkbox.Get+> -->
-
-### SetFocus
-<!-- <+Checkbox.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Checkbox.SetTooltip+> -->
-
-### Update
-<!-- <+Checkbox.Update+> -->
 
 ### bind
 <!-- <+Checkbox.bind+> -->
@@ -206,6 +241,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Checkbox.hide_row+> -->
+
+### metadata
+<!-- <+Checkbox.metadata+> -->
 
 ### set_cursor
 <!-- <+Checkbox.set_cursor+> -->
@@ -228,24 +266,34 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Checkbox.update+> -->
 
+### visible
+<!-- <+Checkbox.visible+> -->
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+<!-- <+Checkbox.Get+> -->
+
+### SetFocus
+<!-- <+Checkbox.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Checkbox.SetTooltip+> -->
+
+### Update
+<!-- <+Checkbox.Update+> -->
+
+
+---------
+
+
 ## Column Element 
 <!-- <+Column.doc+> -->
 <!-- <+Column.__init__+> -->
-
-### AddRow
-<!-- <+Column.AddRow+> -->
-
-### Layout
-<!-- <+Column.Layout+> -->
-
-### SetFocus
-<!-- <+Column.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Column.SetTooltip+> -->
-
-### Update
-<!-- <+Column.Update+> -->
 
 ### add_row
 <!-- <+Column.add_row+> -->
@@ -264,6 +312,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### layout
 <!-- <+Column.layout+> -->
+
+### metadata
+<!-- <+Column.metadata+> -->
 
 ### set_cursor
 <!-- <+Column.set_cursor+> -->
@@ -289,21 +340,39 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Column.update+> -->
 
+### visible
+<!-- <+Column.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### AddRow
+<!-- <+Column.AddRow+> -->
+
+### Layout
+<!-- <+Column.Layout+> -->
+
+### SetFocus
+<!-- <+Column.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Column.SetTooltip+> -->
+
+### Update
+<!-- <+Column.Update+> -->
+
+
+---------
+
+
 ## Combo Element 
 <!-- <+Combo.doc+> -->
 <!-- <+Combo.__init__+> -->
-
-### Get
-<!-- <+Combo.Get+> -->
-
-### SetFocus
-<!-- <+Combo.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Combo.SetTooltip+> -->
-
-### Update
-<!-- <+Combo.Update+> -->
 
 ### bind
 <!-- <+Combo.bind+> -->
@@ -319,6 +388,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Combo.hide_row+> -->
+
+### metadata
+<!-- <+Combo.metadata+> -->
 
 ### set_cursor
 <!-- <+Combo.set_cursor+> -->
@@ -341,25 +413,35 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Combo.update+> -->
 
+### visible
+<!-- <+Combo.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+<!-- <+Combo.Get+> -->
+
+### SetFocus
+<!-- <+Combo.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Combo.SetTooltip+> -->
+
+### Update
+<!-- <+Combo.Update+> -->
+
+
+---------
+
 
 ## Frame Element 
 <!-- <+Frame.doc+> -->
 <!-- <+Frame.__init__+> -->
-
-### AddRow
-<!-- <+Frame.AddRow+> -->
-
-### Layout
-<!-- <+Frame.Layout+> -->
-
-### SetFocus
-<!-- <+Frame.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Frame.SetTooltip+> -->
-
-### Update
-<!-- <+Frame.Update+> -->
 
 ### add_row
 <!-- <+Frame.add_row+> -->
@@ -378,6 +460,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### layout
 <!-- <+Frame.layout+> -->
+
+### metadata
+<!-- <+Frame.metadata+> -->
 
 ### set_cursor
 <!-- <+Frame.set_cursor+> -->
@@ -400,72 +485,39 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Frame.update+> -->
 
+### visible
+<!-- <+Frame.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### AddRow
+<!-- <+Frame.AddRow+> -->
+
+### Layout
+<!-- <+Frame.Layout+> -->
+
+### SetFocus
+<!-- <+Frame.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Frame.SetTooltip+> -->
+
+### Update
+<!-- <+Frame.Update+> -->
+
+---------
+
+
 ## Graph Element 
 <!-- <+Graph.doc+> -->
 <!-- <+Graph.__init__+> -->
 
-### BringFigureToFront
-<!-- <+Graph.BringFigureToFront+> -->
 
-### DeleteFigure
-<!-- <+Graph.DeleteFigure+> -->
-
-### DrawArc
-<!-- <+Graph.DrawArc+> -->
-
-### DrawCircle
-<!-- <+Graph.DrawCircle+> -->
-
-### DrawImage
-<!-- <+Graph.DrawImage+> -->
-
-### DrawLine
-<!-- <+Graph.DrawLine+> -->
-
-### DrawOval
-<!-- <+Graph.DrawOval+> -->
-
-### DrawPoint
-<!-- <+Graph.DrawPoint+> -->
-
-### DrawPolygon
-<!-- <+Graph.DrawPolygon+> -->
-
-### DrawRectangle
-<!-- <+Graph.DrawRectangle+> -->
-
-### DrawText
-<!-- <+Graph.DrawText+> -->
-
-### Erase
-<!-- <+Graph.Erase+> -->
-
-### GetBoundingBox
-<!-- <+Graph.GetBoundingBox+> -->
-
-### GetFiguresAtLocation
-<!-- <+Graph.GetFiguresAtLocation+> -->
-
-### Move
-<!-- <+Graph.Move+> -->
-
-### MoveFigure
-<!-- <+Graph.MoveFigure+> -->
-
-### RelocateFigure
-<!-- <+Graph.RelocateFigure+> -->
-
-### SendFigureToBack
-<!-- <+Graph.SendFigureToBack+> -->
-
-### SetFocus
-<!-- <+Graph.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Graph.SetTooltip+> -->
-
-### TKCanvas
-<!-- <+Graph.TKCanvas+> -->
 
 ### Update
 <!-- <+Graph.Update+> -->
@@ -539,6 +591,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### send_figure_to_back
 <!-- <+Graph.send_figure_to_back+> -->
 
+### metadata
+<!-- <+Graph.metadata+> -->
+
 ### set_cursor
 <!-- <+Graph.set_cursor+> -->
 
@@ -563,17 +618,86 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Graph.update+> -->
 
+### visible
+<!-- <+Graph.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### BringFigureToFront
+<!-- <+Graph.BringFigureToFront+> -->
+
+### DeleteFigure
+<!-- <+Graph.DeleteFigure+> -->
+
+### DrawArc
+<!-- <+Graph.DrawArc+> -->
+
+### DrawCircle
+<!-- <+Graph.DrawCircle+> -->
+
+### DrawImage
+<!-- <+Graph.DrawImage+> -->
+
+### DrawLine
+<!-- <+Graph.DrawLine+> -->
+
+### DrawOval
+<!-- <+Graph.DrawOval+> -->
+
+### DrawPoint
+<!-- <+Graph.DrawPoint+> -->
+
+### DrawPolygon
+<!-- <+Graph.DrawPolygon+> -->
+
+### DrawRectangle
+<!-- <+Graph.DrawRectangle+> -->
+
+### DrawText
+<!-- <+Graph.DrawText+> -->
+
+### Erase
+<!-- <+Graph.Erase+> -->
+
+### GetBoundingBox
+<!-- <+Graph.GetBoundingBox+> -->
+
+### GetFiguresAtLocation
+<!-- <+Graph.GetFiguresAtLocation+> -->
+
+### Move
+<!-- <+Graph.Move+> -->
+
+### MoveFigure
+<!-- <+Graph.MoveFigure+> -->
+
+### RelocateFigure
+<!-- <+Graph.RelocateFigure+> -->
+
+### SendFigureToBack
+<!-- <+Graph.SendFigureToBack+> -->
+
+### SetFocus
+<!-- <+Graph.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Graph.SetTooltip+> -->
+
+### TKCanvas
+<!-- <+Graph.TKCanvas+> -->
+
+
+---------
 
 
 ## HorizontalSeparator Element 
 <!-- <+HorizontalSeparator.doc+> -->
 <!-- <+HorizontalSeparator.__init__+> -->
-
-### SetFocus
-<!-- <+HorizontalSeparator.SetFocus+> -->
-
-### SetTooltip
-<!-- <+HorizontalSeparator.SetTooltip+> -->
 
 ### bind
 <!-- <+HorizontalSeparator.bind+> -->
@@ -586,6 +710,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+HorizontalSeparator.hide_row+> -->
+
+### metadata
+<!-- <+HorizontalSeparator.metadata+> -->
 
 ### set_cursor
 <!-- <+HorizontalSeparator.set_cursor+> -->
@@ -605,23 +732,29 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### unhide_row
 <!-- <+HorizontalSeparator.unhide_row+> -->
 
+### visible
+<!-- <+HorizontalSeparator.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+HorizontalSeparator.SetFocus+> -->
+
+### SetTooltip
+<!-- <+HorizontalSeparator.SetTooltip+> -->
+
+---------
 
 
 ## Image Element 
 <!-- <+Image.doc+> -->
 <!-- <+Image.__init__+> -->
-
-### SetFocus
-<!-- <+Image.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Image.SetTooltip+> -->
-
-### Update
-<!-- <+Image.Update+> -->
-
-### UpdateAnimation
-<!-- <+Image.UpdateAnimation+> -->
 
 ### bind
 <!-- <+Image.bind+> -->
@@ -634,6 +767,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Image.hide_row+> -->
+
+### metadata
+<!-- <+Image.metadata+> -->
 
 ### set_cursor
 <!-- <+Image.set_cursor+> -->
@@ -662,79 +798,107 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update_animation_no_buffering
 <!-- <+Image.update_animation_no_buffering+> -->
 
-## InputText Element 
-<!-- <+InputText.doc+> -->
-<!-- <+InputText.__init__+> -->
+### visible
+<!-- <+Image.visible+> -->
 
-### Get
-<!-- <+InputText.Get+> -->
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
 
 ### SetFocus
-<!-- <+InputText.SetFocus+> -->
+<!-- <+Image.SetFocus+> -->
 
 ### SetTooltip
-<!-- <+InputText.SetTooltip+> -->
+<!-- <+Image.SetTooltip+> -->
 
 ### Update
-<!-- <+InputText.Update+> -->
+<!-- <+Image.Update+> -->
+
+### UpdateAnimation
+<!-- <+Image.UpdateAnimation+> -->
+
+---------
+
+
+## Input Element 
+<!-- <+Input.doc+> -->
+<!-- <+Input.__init__+> -->
 
 ### bind
-<!-- <+InputText.bind+> -->
+<!-- <+Input.bind+> -->
 
 ### expand
-<!-- <+InputText.expand+> -->
+<!-- <+Input.expand+> -->
 
 ### get
-<!-- <+InputText.get+> -->
+<!-- <+Input.get+> -->
 
 ### get_size
-<!-- <+InputText.get_size+> -->
+<!-- <+Input.get_size+> -->
 
 ### hide_row
-<!-- <+InputText.hide_row+> -->
+<!-- <+Input.hide_row+> -->
+
+### metadata
+<!-- <+Input.metadata+> -->
 
 ### set_cursor
-<!-- <+InputText.set_cursor+> -->
+<!-- <+Input.set_cursor+> -->
 
 ### set_focus
-<!-- <+InputText.set_focus+> -->
+<!-- <+Input.set_focus+> -->
 
 ### set_size
-<!-- <+InputText.set_size+> -->
+<!-- <+Input.set_size+> -->
 
 ### set_tooltip
-<!-- <+InputText.set_tooltip+> -->
+<!-- <+Input.set_tooltip+> -->
+
+### set_vscroll_position
+<!-- <+Input.set_vscroll_position+> -->
 
 ### unbind
-<!-- <+InputText.unbind+> -->
+<!-- <+Input.unbind+> -->
 
 ### unhide_row
-<!-- <+InputText.unhide_row+> -->
+<!-- <+Input.unhide_row+> -->
 
 ### update
-<!-- <+InputText.update+> -->
+<!-- <+Input.update+> -->
+
+### visible
+<!-- <+Input.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+<!-- <+Input.Get+> -->
+
+### SetFocus
+<!-- <+Input.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Input.SetTooltip+> -->
+
+### Update
+<!-- <+Input.Update+> -->
+
+
+---------
+
 
 ## Listbox Element 
 <!-- <+Listbox.doc+> -->
 <!-- <+Listbox.__init__+> -->
-
-### GetIndexes
-<!-- <+Listbox.GetIndexes+> -->
-
-### GetListValues
-<!-- <+Listbox.GetListValues+> -->
-
-### SetFocus
-<!-- <+Listbox.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Listbox.SetTooltip+> -->
-
-### SetValue
-<!-- <+Listbox.SetValue+> -->
-
-### Update
-<!-- <+Listbox.Update+> -->
 
 ### bind
 <!-- <+Listbox.bind+> -->
@@ -756,6 +920,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Listbox.hide_row+> -->
+
+### metadata
+<!-- <+Listbox.metadata+> -->
 
 ### set_cursor
 <!-- <+Listbox.set_cursor+> -->
@@ -784,18 +951,40 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Listbox.update+> -->
 
+### visible
+<!-- <+Listbox.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### GetIndexes
+<!-- <+Listbox.GetIndexes+> -->
+
+### GetListValues
+<!-- <+Listbox.GetListValues+> -->
+
+### SetFocus
+<!-- <+Listbox.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Listbox.SetTooltip+> -->
+
+### SetValue
+<!-- <+Listbox.SetValue+> -->
+
+### Update
+<!-- <+Listbox.Update+> -->
+
+---------
+
+
 ## Menu Element 
 <!-- <+Menu.doc+> -->
 <!-- <+Menu.__init__+> -->
-
-### SetFocus
-<!-- <+Menu.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Menu.SetTooltip+> -->
-
-### Update
-<!-- <+Menu.Update+> -->
 
 ### bind
 <!-- <+Menu.bind+> -->
@@ -808,6 +997,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Menu.hide_row+> -->
+
+### metadata
+<!-- <+Menu.metadata+> -->
 
 ### set_cursor
 <!-- <+Menu.set_cursor+> -->
@@ -830,21 +1022,32 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Menu.update+> -->
 
+### visible
+<!-- <+Menu.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+Menu.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Menu.SetTooltip+> -->
+
+### Update
+<!-- <+Menu.Update+> -->
+
+---------
+
+
 ## Multiline Element 
 <!-- <+Multiline.doc+> -->
 <!-- <+Multiline.__init__+> -->
-
-### Get
-<!-- <+Multiline.Get+> -->
-
-### SetFocus
-<!-- <+Multiline.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Multiline.SetTooltip+> -->
-
-### Update
-<!-- <+Multiline.Update+> -->
 
 ### bind
 <!-- <+Multiline.bind+> -->
@@ -863,6 +1066,21 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### print
 <!-- <+Multiline.print+> -->
+
+### reroute_stderr_to_here
+<!-- <+Multiline.reroute_stderr_to_here+> -->
+
+### reroute_stdout_to_here
+<!-- <+Multiline.reroute_stdout_to_here+> -->
+
+### restore_stderr
+<!-- <+Multiline.restore_stderr+> -->
+
+### restore_stdout
+<!-- <+Multiline.restore_stdout+> -->
+
+### metadata
+<!-- <+Multiline.metadata+> -->
 
 ### set_cursor
 <!-- <+Multiline.set_cursor+> -->
@@ -888,22 +1106,39 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Multiline.update+> -->
 
+### visible
+<!-- <+Multiline.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### Get
+<!-- <+Multiline.Get+> -->
+
+### SetFocus
+<!-- <+Multiline.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Multiline.SetTooltip+> -->
+
+### Update
+<!-- <+Multiline.Update+> -->
+
+---------
+
+
 ## OptionMenu Element 
 <!-- <+OptionMenu.doc+> -->
 <!-- <+OptionMenu.__init__+> -->
 
-### SetFocus
-<!-- <+OptionMenu.SetFocus+> -->
-
-### SetTooltip
-<!-- <+OptionMenu.SetTooltip+> -->
-
-### Update
-<!-- <+OptionMenu.Update+> -->
 
 ### bind
 <!-- <+OptionMenu.bind+> -->
-
 
 ### expand
 <!-- <+OptionMenu.expand+> -->
@@ -913,6 +1148,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+OptionMenu.hide_row+> -->
+
+### metadata
+<!-- <+OptionMenu.metadata+> -->
 
 ### set_cursor
 <!-- <+OptionMenu.set_cursor+> -->
@@ -938,24 +1176,33 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+OptionMenu.update+> -->
 
+### visible
+<!-- <+OptionMenu.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+
+### SetFocus
+<!-- <+OptionMenu.SetFocus+> -->
+
+### SetTooltip
+<!-- <+OptionMenu.SetTooltip+> -->
+
+### Update
+<!-- <+OptionMenu.Update+> -->
+
+---------
+
+
 ## Output Element 
 <!-- <+Output.doc+> -->
 <!-- <+Output.__init__+> -->
-
-### Get
-<!-- <+Output.Get+> -->
-
-### SetFocus
-<!-- <+Output.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Output.SetTooltip+> -->
-
-### TKOut
-<!-- <+Output.TKOut+> -->
-
-### Update
-<!-- <+Output.Update+> -->
 
 ### bind
 <!-- <+Output.bind+> -->
@@ -968,6 +1215,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Output.hide_row+> -->
+
+### metadata
+<!-- <+Output.metadata+> -->
 
 ### set_cursor
 <!-- <+Output.set_cursor+> -->
@@ -984,10 +1234,8 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### tk_out
 <!-- <+Output.tk_out+> -->
 
-
 ### set_vscroll_position
 <!-- <+Output.set_vscroll_position+> -->
-
 
 ### unbind
 <!-- <+Output.unbind+> -->
@@ -998,18 +1246,38 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Output.update+> -->
 
+### visible
+<!-- <+Output.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### Get
+<!-- <+Output.Get+> -->
+
+### SetFocus
+<!-- <+Output.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Output.SetTooltip+> -->
+
+### TKOut
+<!-- <+Output.TKOut+> -->
+
+### Update
+<!-- <+Output.Update+> -->
+
+---------
+
+
 ## Pane Element 
 <!-- <+Pane.doc+> -->
 <!-- <+Pane.__init__+> -->
-
-### SetFocus
-<!-- <+Pane.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Pane.SetTooltip+> -->
-
-### Update
-<!-- <+Pane.Update+> -->
 
 ### bind
 <!-- <+Pane.bind+> -->
@@ -1022,6 +1290,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Pane.hide_row+> -->
+
+### metadata
+<!-- <+Pane.metadata+> -->
 
 ### set_cursor
 <!-- <+Pane.set_cursor+> -->
@@ -1044,21 +1315,34 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Pane.update+> -->
 
+### visible
+<!-- <+Pane.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+Pane.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Pane.SetTooltip+> -->
+
+### Update
+<!-- <+Pane.Update+> -->
+
+
+---------
+
+
 ## ProgressBar Element 
 <!-- <+ProgressBar.doc+> -->
 <!-- <+ProgressBar.__init__+> -->
 
-### SetFocus
-<!-- <+ProgressBar.SetFocus+> -->
-
-### SetTooltip
-<!-- <+ProgressBar.SetTooltip+> -->
-
-### Update
-<!-- <+ProgressBar.Update+> -->
-
-### UpdateBar
-<!-- <+ProgressBar.UpdateBar+> -->
 
 ### bind
 <!-- <+ProgressBar.bind+> -->
@@ -1071,6 +1355,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+ProgressBar.hide_row+> -->
+
+### metadata
+<!-- <+ProgressBar.metadata+> -->
 
 ### set_cursor
 <!-- <+ProgressBar.set_cursor+> -->
@@ -1096,24 +1383,36 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update_bar
 <!-- <+ProgressBar.update_bar+> -->
 
+### visible
+<!-- <+ProgressBar.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+ProgressBar.SetFocus+> -->
+
+### SetTooltip
+<!-- <+ProgressBar.SetTooltip+> -->
+
+### Update
+<!-- <+ProgressBar.Update+> -->
+
+### UpdateBar
+<!-- <+ProgressBar.UpdateBar+> -->
+
+---------
+
+
 ## Radio Element 
 <!-- <+Radio.doc+> -->
 <!-- <+Radio.__init__+> -->
 
-### Get
-<!-- <+Radio.Get+> -->
-
-### ResetGroup
-<!-- <+Radio.ResetGroup+> -->
-
-### SetFocus
-<!-- <+Radio.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Radio.SetTooltip+> -->
-
-### Update
-<!-- <+Radio.Update+> -->
 
 ### bind
 <!-- <+Radio.bind+> -->
@@ -1132,6 +1431,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### reset_group
 <!-- <+Radio.reset_group+> -->
+
+### metadata
+<!-- <+Radio.metadata+> -->
 
 ### set_cursor
 <!-- <+Radio.set_cursor+> -->
@@ -1154,18 +1456,39 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Radio.update+> -->
 
+### visible
+<!-- <+Radio.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### Get
+<!-- <+Radio.Get+> -->
+
+### ResetGroup
+<!-- <+Radio.ResetGroup+> -->
+
+### SetFocus
+<!-- <+Radio.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Radio.SetTooltip+> -->
+
+### Update
+<!-- <+Radio.Update+> -->
+
+
+---------
+
+
 ## Slider Element 
 <!-- <+Slider.doc+> -->
 <!-- <+Slider.__init__+> -->
-
-### SetFocus
-<!-- <+Slider.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Slider.SetTooltip+> -->
-
-### Update
-<!-- <+Slider.Update+> -->
 
 ### bind
 <!-- <+Slider.bind+> -->
@@ -1178,6 +1501,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Slider.hide_row+> -->
+
+### metadata
+<!-- <+Slider.metadata+> -->
 
 ### set_cursor
 <!-- <+Slider.set_cursor+> -->
@@ -1200,21 +1526,32 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Slider.update+> -->
 
+### visible
+<!-- <+Slider.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+<!-- <+Slider.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Slider.SetTooltip+> -->
+
+### Update
+<!-- <+Slider.Update+> -->
+
+---------
+
+
 ## Spin Element 
 <!-- <+Spin.doc+> -->
 <!-- <+Spin.__init__+> -->
 
-### Get
-<!-- <+Spin.Get+> -->
-
-### SetFocus
-<!-- <+Spin.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Spin.SetTooltip+> -->
-
-### Update
-<!-- <+Spin.Update+> -->
 
 ### bind
 <!-- <+Spin.bind+> -->
@@ -1230,6 +1567,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Spin.hide_row+> -->
+
+### metadata
+<!-- <+Spin.metadata+> -->
 
 ### set_cursor
 <!-- <+Spin.set_cursor+> -->
@@ -1252,18 +1592,34 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Spin.update+> -->
 
+### visible
+<!-- <+Spin.visible+> -->
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+<!-- <+Spin.Get+> -->
+
+### SetFocus
+<!-- <+Spin.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Spin.SetTooltip+> -->
+
+### Update
+<!-- <+Spin.Update+> -->
+
+---------
+
+
 ## StatusBar Element 
 <!-- <+StatusBar.doc+> -->
 <!-- <+StatusBar.__init__+> -->
 
-### SetFocus
-<!-- <+StatusBar.SetFocus+> -->
-
-### SetTooltip
-<!-- <+StatusBar.SetTooltip+> -->
-
-### Update
-<!-- <+StatusBar.Update+> -->
 
 ### bind
 <!-- <+StatusBar.bind+> -->
@@ -1276,6 +1632,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+StatusBar.hide_row+> -->
+
+### metadata
+<!-- <+StatusBar.metadata+> -->
 
 ### set_cursor
 <!-- <+StatusBar.set_cursor+> -->
@@ -1298,70 +1657,32 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+StatusBar.update+> -->
 
-## SystemTray 
-<!-- <+SystemTray.doc+> -->
-<!-- <+SystemTray.__init__+> -->
+### visible
+<!-- <+StatusBar.visible+> -->
 
-### Close
-<!-- <+SystemTray.Close+> -->
 
-### Hide
-<!-- <+SystemTray.Hide+> -->
+---------
 
-### Read
-<!-- <+SystemTray.Read+> -->
+### These are non-PEP8 Compliant Methods - do NOT use
 
-### ShowMessage
-<!-- <+SystemTray.ShowMessage+> -->
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
 
-### UnHide
-<!-- <+SystemTray.UnHide+> -->
+### SetFocus
+<!-- <+StatusBar.SetFocus+> -->
+
+### SetTooltip
+<!-- <+StatusBar.SetTooltip+> -->
 
 ### Update
-<!-- <+SystemTray.Update+> -->
+<!-- <+StatusBar.Update+> -->
 
-### close
-<!-- <+SystemTray.close+> -->
+---------
 
-### hide
-<!-- <+SystemTray.hide+> -->
-
-### notify
-<!-- <+SystemTray.notify+> -->
-
-### read
-<!-- <+SystemTray.read+> -->
-
-### show_message
-<!-- <+SystemTray.show_message+> -->
-
-### un_hide
-<!-- <+SystemTray.un_hide+> -->
-
-### update
-<!-- <+SystemTray.update+> -->
 
 ## Tab Element 
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
 
-### AddRow
-<!-- <+Tab.AddRow+> -->
-
-### Layout
-<!-- <+Tab.Layout+> -->
-
-### Select
-<!-- <+Tab.Select+> -->
-
-### SetFocus
-<!-- <+Tab.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Tab.SetTooltip+> -->
-
-### Update
-<!-- <+Tab.Update+> -->
 
 ### add_row
 <!-- <+Tab.add_row+> -->
@@ -1384,6 +1705,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### select
 <!-- <+Tab.select+> -->
 
+### metadata
+<!-- <+Tab.metadata+> -->
+
 ### set_cursor
 <!-- <+Tab.set_cursor+> -->
 
@@ -1405,22 +1729,42 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Tab.update+> -->
 
+### visible
+<!-- <+Tab.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### AddRow
+<!-- <+Tab.AddRow+> -->
+
+### Layout
+<!-- <+Tab.Layout+> -->
+
+### Select
+<!-- <+Tab.Select+> -->
+
+### SetFocus
+<!-- <+Tab.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Tab.SetTooltip+> -->
+
+### Update
+<!-- <+Tab.Update+> -->
+
+
+---------
+
+
 ## TabGroup Element 
 <!-- <+TabGroup.doc+> -->
 <!-- <+TabGroup.__init__+> -->
-
-
-### FindKeyFromTabName
-<!-- <+TabGroup.FindKeyFromTabName+> -->
-
-### Get
-<!-- <+TabGroup.Get+> -->
-
-### SetFocus
-<!-- <+TabGroup.SetFocus+> -->
-
-### SetTooltip
-<!-- <+TabGroup.SetTooltip+> -->
 
 ### bind
 <!-- <+TabGroup.bind+> -->
@@ -1440,6 +1784,8 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### hide_row
 <!-- <+TabGroup.hide_row+> -->
 
+### metadata
+<!-- <+TabGroup.metadata+> -->
 
 ### set_cursor
 <!-- <+TabGroup.set_cursor+> -->
@@ -1456,28 +1802,42 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_vscroll_position
 <!-- <+Table.set_vscroll_position+> -->
 
-
 ### unbind
 <!-- <+TabGroup.unbind+> -->
 
 ### unhide_row
 <!-- <+TabGroup.unhide_row+> -->
 
+### visible
+<!-- <+TabGroup.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### FindKeyFromTabName
+<!-- <+TabGroup.FindKeyFromTabName+> -->
+
+### Get
+<!-- <+TabGroup.Get+> -->
+
+### SetFocus
+<!-- <+TabGroup.SetFocus+> -->
+
+### SetTooltip
+<!-- <+TabGroup.SetTooltip+> -->
+
+
+---------
+
+
 ## Table Element 
 <!-- <+Table.doc+> -->
 <!-- <+Table.__init__+> -->
 
-### Get
-<!-- <+Table.Get+> -->
-
-### SetFocus
-<!-- <+Table.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Table.SetTooltip+> -->
-
-### Update
-<!-- <+Table.Update+> -->
 
 ### bind
 <!-- <+Table.bind+> -->
@@ -1494,6 +1854,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Table.hide_row+> -->
+
+### metadata
+<!-- <+Table.metadata+> -->
 
 ### set_cursor
 <!-- <+Table.set_cursor+> -->
@@ -1516,21 +1879,34 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Table.update+> -->
 
+### visible
+<!-- <+Table.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### Get
+<!-- <+Table.Get+> -->
+
+### SetFocus
+<!-- <+Table.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Table.SetTooltip+> -->
+
+### Update
+<!-- <+Table.Update+> -->
+
+---------
+
+
 ## Text Element 
 <!-- <+Text.doc+> -->
 <!-- <+Text.__init__+> -->
-
-#### Get
-<!-- <+Text.Get+> -->
-
-### SetFocus
-<!-- <+Text.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Text.SetTooltip+> -->
-
-### Update
-<!-- <+Text.Update+> -->
 
 ### bind
 <!-- <+Text.bind+> -->
@@ -1546,6 +1922,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Text.hide_row+> -->
+
+### metadata
+<!-- <+Text.metadata+> -->
 
 ### set_cursor
 <!-- <+Text.set_cursor+> -->
@@ -1568,19 +1947,44 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Text.update+> -->
 
+### visible
+<!-- <+Text.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+#### Get
+<!-- <+Text.Get+> -->
+
+### SetFocus
+<!-- <+Text.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Text.SetTooltip+> -->
+
+### Update
+<!-- <+Text.Update+> -->
+
+
+---------
+
+
+## Titlebar Element
+
+Note that while the Titlebar is an element, it is implemented using a function.
+It is actually a "compound element" that consists of several elements combined into a single Column element.
+See the Column element to get a list of method calls available.  The function returns a Column element.
+
+<!-- <+func.Titlebar+> -->
+
 
 ## Tree Element 
 <!-- <+Tree.doc+> -->
 <!-- <+Tree.__init__+> -->
-
-### SetFocus
-<!-- <+Tree.SetFocus+> -->
-
-### SetTooltip
-<!-- <+Tree.SetTooltip+> -->
-
-### Update
-<!-- <+Tree.Update+> -->
 
 ### add_treeview_data
 <!-- <+Tree.add_treeview_data+> -->
@@ -1596,6 +2000,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+Tree.hide_row+> -->
+
+### metadata
+<!-- <+Tree.metadata+> -->
 
 ### set_cursor
 <!-- <+Tree.set_cursor+> -->
@@ -1621,12 +2028,33 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### update
 <!-- <+Tree.update+> -->
 
+### visible
+<!-- <+Tree.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+### SetFocus
+<!-- <+Tree.SetFocus+> -->
+
+### SetTooltip
+<!-- <+Tree.SetTooltip+> -->
+
+### Update
+<!-- <+Tree.Update+> -->
+
+
+---------
+
+
+
 ## TreeData (for Tree Element) 
 <!-- <+TreeData.doc+> -->
 <!-- <+TreeData.__init__+> -->
-
-### Insert
-<!-- <+TreeData.Insert+> -->
 
 ### Node
 <!-- <+TreeData.Node+> -->
@@ -1634,15 +2062,16 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### insert
 <!-- <+TreeData.insert+> -->
 
+### Insert
+<!-- <+TreeData.Insert+> -->
+
+---------
+
+
+
 ## VerticalSeparator Element 
 <!-- <+VerticalSeparator.doc+> -->
 <!-- <+VerticalSeparator.__init__+> -->
-
-### SetFocus
-<!-- <+VerticalSeparator.SetFocus+> -->
-
-### SetTooltip
-<!-- <+VerticalSeparator.SetTooltip+> -->
 
 ### bind
 <!-- <+VerticalSeparator.bind+> -->
@@ -1655,6 +2084,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 
 ### hide_row
 <!-- <+VerticalSeparator.hide_row+> -->
+
+### metadata
+<!-- <+VerticalSeparator.metadata+> -->
 
 ### set_cursor
 <!-- <+VerticalSeparator.set_cursor+> -->
@@ -1674,127 +2106,79 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### unhide_row
 <!-- <+VerticalSeparator.unhide_row+> -->
 
+### visible
+<!-- <+VerticalSeparator.visible+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### SetFocus
+<!-- <+VerticalSeparator.SetFocus+> -->
+
+### SetTooltip
+<!-- <+VerticalSeparator.SetTooltip+> -->
+
+
+---------
+
+
+## UserSettings (Class interface to User Settings APIs... can also use the function call interface) 
+<!-- <+UserSettings.doc+> -->
+<!-- <+UserSettings.__init__+> -->
+
+### delete_entry
+<!-- <+UserSettings.delete_entry+> -->
+
+### delete_file
+<!-- <+UserSettings.delete_file+> -->
+
+### exists
+<!-- <+UserSettings.exists+> -->
+
+### get
+<!-- <+UserSettings.get+> -->
+
+### get_dict
+<!-- <+UserSettings.get_dict+> -->
+
+### get_filename
+<!-- <+UserSettings.get_filename+> -->
+
+### load
+<!-- <+UserSettings.load+> -->
+
+### read
+<!-- <+UserSettings.read+> -->
+
+### save
+<!-- <+UserSettings.save+> -->
+
+### set
+<!-- <+UserSettings.set+> -->
+
+### set_default_value
+<!-- <+UserSettings.set_default_value+> -->
+
+### set_location
+<!-- <+UserSettings.set_location+> -->
+
+### write_new_dictionary
+<!-- <+UserSettings.write_new_dictionary+> -->
+
+
+---------
+
+
 
 ## Window 
 <!-- <+Window.doc+> -->
 <!-- <+Window.__init__+> -->
 
-### AddRow
-<!-- <+Window.AddRow+> -->
-
-### AddRows
-<!-- <+Window.AddRows+> -->
-
-### AlphaChannel
-<!-- <+Window.AlphaChannel+> -->
-
-### BringToFront
-<!-- <+Window.BringToFront+> -->
-
-### Close
-<!-- <+Window.Close+> -->
-
-### CurrentLocation
-<!-- <+Window.CurrentLocation+> -->
-
-### Disable
-<!-- <+Window.Disable+> -->
-
-### DisableDebugger
-<!-- <+Window.DisableDebugger+> -->
-
-### Disappear
-<!-- <+Window.Disappear+> -->
-
-### Elem
-<!-- <+Window.Elem+> -->
-
-### Element
-<!-- <+Window.Element+> -->
-
-### Enable
-<!-- <+Window.Enable+> -->
-
-### EnableDebugger
-<!-- <+Window.EnableDebugger+> -->
-
-### Fill
-<!-- <+Window.Fill+> -->
-
-### Finalize
-<!-- <+Window.Finalize+> -->
-
-### Find
-<!-- <+Window.Find+> -->
-
-### FindElement
-<!-- <+Window.FindElement+> -->
-
-### FindElementWithFocus
-<!-- <+Window.FindElementWithFocus+> -->
-
-### GetScreenDimensions
-<!-- <+Window.GetScreenDimensions+> -->
-
-### GrabAnyWhereOff
-<!-- <+Window.GrabAnyWhereOff+> -->
-
-### GrabAnyWhereOn
-<!-- <+Window.GrabAnyWhereOn+> -->
-
-### Hide
-<!-- <+Window.Hide+> -->
-
-### Layout
-<!-- <+Window.Layout+> -->
-
-### LoadFromDisk
-<!-- <+Window.LoadFromDisk+> -->
-
-### Maximize
-<!-- <+Window.Maximize+> -->
-
-### Minimize
-<!-- <+Window.Minimize+> -->
-
-### Move
-<!-- <+Window.Move+> -->
-
-### Normal
-<!-- <+Window.Normal+> -->
-
-### Read
-<!-- <+Window.Read+> -->
-
-### Reappear
-<!-- <+Window.Reappear+> -->
-
-### Refresh
-<!-- <+Window.Refresh+> -->
-
-### SaveToDisk
-<!-- <+Window.SaveToDisk+> -->
-
-### SendToBack
-<!-- <+Window.SendToBack+> -->
-
-### SetAlpha
-<!-- <+Window.SetAlpha+> -->
-
-### SetIcon
-<!-- <+Window.SetIcon+> -->
-
-### SetTransparentColor
-<!-- <+Window.SetTransparentColor+> -->
-
-### Size
-<!-- <+Window.Size+> -->
-
-### UnHide
-<!-- <+Window.UnHide+> -->
-
-### VisibilityChanged
-<!-- <+Window.VisibilityChanged+> -->
 
 ### add_row
 <!-- <+Window.add_row+> -->
@@ -1859,6 +2243,10 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### find_element_with_focus
 <!-- <+Window.find_element_with_focus+> -->
 
+### force_focus
+<!-- <+Window.force_focus+> -->
+
+
 ### get_screen_dimensions
 <!-- <+Window.get_screen_dimensions+> -->
 
@@ -1880,8 +2268,14 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### load_from_disk
 <!-- <+Window.load_from_disk+> -->
 
+### make_modal
+<!-- <+Window.make_modal+> -->
+
 ### maximize
 <!-- <+Window.maximize+> -->
+
+### metadata
+<!-- <+Window.metadata+> -->
 
 ### minimize
 <!-- <+Window.minimize+> -->
@@ -1910,8 +2304,14 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### set_alpha
 <!-- <+Window.set_alpha+> -->
 
+### set_cursor
+<!-- <+Window.set_cursor+> -->
+
 ### set_icon
 <!-- <+Window.set_icon+> -->
+
+### set_min_size
+<!-- <+Window.set_min_size+> -->
 
 ### set_title
 <!-- <+Window.set_title+> -->
@@ -1928,13 +2328,19 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### visibility_changed
 <!-- <+Window.visibility_changed+> -->
 
+### was_closed
+<!-- <+Window.was_closed+> -->
+
+### write_event_value
+<!-- <+Window.write_event_value+> -->
 
 
+---------
 
+### These are non-PEP8 Compliant Methods - do NOT use
 
-## Window 
-<!-- <+Window.doc+> -->
-<!-- <+Window.__init__+> -->
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
 
 ### AddRow
 <!-- <+Window.AddRow+> -->
@@ -2053,140 +2459,73 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### VisibilityChanged
 <!-- <+Window.VisibilityChanged+> -->
 
-### add_row
-<!-- <+Window.add_row+> -->
 
-### add_rows
-<!-- <+Window.add_rows+> -->
+---------
 
-### alpha_channel
-<!-- <+Window.alpha_channel+> -->
 
-### bind
-<!-- <+Window.bind+> -->
-
-### bring_to_front
-<!-- <+Window.bring_to_front+> -->
+## SystemTray 
+<!-- <+SystemTray.doc+> -->
+<!-- <+SystemTray.__init__+> -->
 
 ### close
-<!-- <+Window.close+> -->
-
-### current_location
-<!-- <+Window.current_location+> -->
-
-### disable
-<!-- <+Window.disable+> -->
-
-### disable_debugger
-<!-- <+Window.disable_debugger+> -->
-
-### disappear
-<!-- <+Window.disappear+> -->
-
-### elem
-<!-- <+Window.elem+> -->
-
-### element
-<!-- <+Window.element+> -->
-
-### element_list
-<!-- <+Window.element_list+> -->
-
-### enable
-<!-- <+Window.enable+> -->
-
-### enable_debugger
-<!-- <+Window.enable_debugger+> -->
-
-### extend_layout
-<!-- <+Window.extend_layout+> -->
-
-### fill
-<!-- <+Window.fill+> -->
-
-### finalize
-<!-- <+Window.finalize+> -->
-
-### find
-<!-- <+Window.find+> -->
-
-### find_element
-<!-- <+Window.find_element+> -->
-
-### find_element_with_focus
-<!-- <+Window.find_element_with_focus+> -->
-
-### get_screen_dimensions
-<!-- <+Window.get_screen_dimensions+> -->
-
-### get_screen_size
-<!-- <+Window.get_screen_size+> -->
-
-### grab_any_where_off
-<!-- <+Window.grab_any_where_off+> -->
-
-### grab_any_where_on
-<!-- <+Window.grab_any_where_on+> -->
-
+<!-- <+SystemTray.close+> -->
 
 ### hide
-<!-- <+Window.hide+> -->
+<!-- <+SystemTray.hide+> -->
 
-### layout
-<!-- <+Window.layout+> -->
+### metadata
+<!-- <+SystemTray.metadata+> -->
 
-### load_from_disk
-<!-- <+Window.load_from_disk+> -->
-
-### maximize
-<!-- <+Window.maximize+> -->
-
-### minimize
-<!-- <+Window.minimize+> -->
-
-### move
-<!-- <+Window.move+> -->
-
-### normal
-<!-- <+Window.normal+> -->
+### notify
+<!-- <+SystemTray.notify+> -->
 
 ### read
-<!-- <+Window.read+> -->
+<!-- <+SystemTray.read+> -->
 
-### reappear
-<!-- <+Window.reappear+> -->
-
-### refresh
-<!-- <+Window.refresh+> -->
-
-### save_to_disk
-<!-- <+Window.save_to_disk+> -->
-
-### send_to_back
-<!-- <+Window.send_to_back+> -->
-
-### set_alpha
-<!-- <+Window.set_alpha+> -->
-
-### set_icon
-<!-- <+Window.set_icon+> -->
-
-### set_transparent_color
-<!-- <+Window.set_transparent_color+> -->
-
-### size
-<!-- <+Window.size+> -->
+### show_message
+<!-- <+SystemTray.show_message+> -->
 
 ### un_hide
-<!-- <+Window.un_hide+> -->
+<!-- <+SystemTray.un_hide+> -->
 
-### visibility_changed
-<!-- <+Window.visibility_changed+> -->
+### update
+<!-- <+SystemTray.update+> -->
+
+
+---------
+
+### These are non-PEP8 Compliant Methods - do NOT use
+
+The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
+
+
+### Close
+<!-- <+SystemTray.Close+> -->
+
+### Hide
+<!-- <+SystemTray.Hide+> -->
+
+### Read
+<!-- <+SystemTray.Read+> -->
+
+### ShowMessage
+<!-- <+SystemTray.ShowMessage+> -->
+
+### UnHide
+<!-- <+SystemTray.UnHide+> -->
+
+### Update
+<!-- <+SystemTray.Update+> -->
 
 
 ## Function Reference
 
 These are the functions available for you to call
+
+## Multi-window Interface
+
+<!-- <+func.read_all_windows+> -->
+
 
 ## Button Related
 
@@ -2315,11 +2654,6 @@ Same as popup_scrolled
 <!-- <+func.obj_to_string+> -->
 <!-- <+func.obj_to_string_single_obj+> -->
 
-## Settings 
-
-<!-- <+func.set_global_icon+> -->
-<!-- <+func.set_options+> -->
-
 
 ### Non PEP8 version (same as PEP8 version)
 
@@ -2332,6 +2666,7 @@ Same as popup_scrolled
 Used to test the installation, get information about the versions, upgrade from GitHub
 
 <!-- <+func.main+> -->
+<!-- <+func.main_sdk_help+> -->
 <!-- <+func.test+> -->
 
 
@@ -2355,6 +2690,7 @@ Used to test the installation, get information about the versions, upgrade from 
 <!-- <+func.theme_input_text_color+> -->
 <!-- <+func.theme_list+> -->
 <!-- <+func.theme_previewer+> -->
+<!-- <+func.theme_previewer_swatches+> -->
 <!-- <+func.theme_progress_bar_border_width+> -->
 <!-- <+func.theme_progress_bar_color+> -->
 <!-- <+func.theme_slider_border_width+> -->
@@ -2363,11 +2699,38 @@ Used to test the installation, get information about the versions, upgrade from 
 <!-- <+func.theme_text_element_background_color+> -->
 
 
+## User Settings
+
+<!-- <+func.user_settings+> -->
+<!-- <+func.user_settings_delete_entry+> -->
+<!-- <+func.user_settings_delete_filename+> -->
+<!-- <+func.user_settings_file_exists+> -->
+<!-- <+func.user_settings_filename+> -->
+<!-- <+func.user_settings_get_entry+> -->
+<!-- <+func.user_settings_load+> -->
+<!-- <+func.user_settings_save+> -->
+<!-- <+func.user_settings_set_entry+> -->
+<!-- <+func.user_settings_silent_on_error+> -->
+<!-- <+func.user_settings_write_new_dictionary+> -->
+
 ## Misc
 
 <!-- <+func.FillFormWithValues+> -->
 <!-- <+func.fill_form_with_values+> -->
 
+
+## Layout Helper Funcs
+
+<!-- <+func.pin+> -->
+<!-- <+func.vbottom+> -->
+<!-- <+func.vcenter+> -->
+<!-- <+func.vtop+> -->
+
+## Configuration / Settings / Extensions
+
+<!-- <+func.get_globals+> -->
+<!-- <+func.set_global_icon+> -->
+<!-- <+func.set_options+> -->
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
