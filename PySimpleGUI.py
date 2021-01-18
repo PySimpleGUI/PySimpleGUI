@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.33.0.5 Unreleased\nAliases shown SDK reference, popup_scrolled fix, summary mode for SDK help, BIG PEP8 definition swap, changed metadata into a class property, docstring change for element lookups"
+version = __version__ = "4.34.0 Released 18-Jan-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1909,7 +1909,6 @@ class Listbox(Element):
         except:
             value = []
         return value
-
 
 
     GetIndexes = get_indexes
@@ -7399,7 +7398,7 @@ class Window:
         :param auto_close_duration: Number of seconds to wait before closing the window
         :type auto_close_duration: (int)
         :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
-        :type icon: str
+        :type icon: (str | bytes)
         :param force_toplevel: If True will cause this window to skip the normal use of a hidden master window
         :type force_toplevel: (bool)
         :param alpha_channel: Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change.
@@ -14632,6 +14631,7 @@ def theme(new_theme=None):
     return CURRENT_LOOK_AND_FEEL
 
 
+
 def theme_background_color(color=None):
     """
     Sets/Returns the background color currently in use
@@ -15395,7 +15395,6 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     return button
 
 
-ScrolledTextBox = popup_scrolled
 
 # ============================== sprint ======#
 # Is identical to the Scrolled Text Box       #
@@ -15404,7 +15403,7 @@ ScrolledTextBox = popup_scrolled
 # This is in addition to the Print function   #
 # which routes output to a "Debug Window"     #
 # ============================================#
-sprint = popup_scrolled
+
 
 
 # --------------------------- popup_no_buttons ---------------------------
@@ -18131,9 +18130,8 @@ def main_sdk_help():
     element_names['Window'] = Window
 
     vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
-
     # layout = [[Text('PySimpleGUI Element Reference', font='Any 12')]]
-    button_col = Col([[B(e, pad=(0, 0), size=(22, 1), font='Courier 8')] for e in sorted(element_names.keys())])
+    button_col = Col([[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())])
     layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
     layout += [[CBox('Summary Only', k='-SUMMARY-')]]
     # layout += [[Button('Exit', size=(15, 1))]]
@@ -18477,10 +18475,14 @@ PrintClose = easy_print_close
 RGB = rgb
 SetGlobalIcon = set_global_icon
 SetOptions = set_options
+sprint = popup_scrolled
+ScrolledTextBox = popup_scrolled
 TimerStart = timer_start
 TimerStop = timer_stop
 
 test = main
+sdk_help = main_sdk_help
+
 
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
 theme(CURRENT_LOOK_AND_FEEL)
