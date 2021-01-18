@@ -40,7 +40,7 @@ def get_demo_git_files():
     :rtype: Tuple[List[str], List[str]]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '')
+    demo_path = sg.user_settings_get_entry('-demos folder-', '.')
 
     try:
         demo_files = os.listdir(demo_path)
@@ -89,11 +89,11 @@ def settings_window():
     """
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20,1)), sg.In(sg.user_settings_get_entry('-demos folder-', ''), k='-DEMOS-'), sg.FolderBrowse()],
+              [sg.T('Path to Demos', size=(20,1)), sg.In(sg.user_settings_get_entry('-demos folder-', '.'), k='-DEMOS-'), sg.FolderBrowse()],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-Editor Program-', ''),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
-              [sg.B('Ok'), sg.B('Cancel')],
+              [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
 
     window = sg.Window('Settings', layout)
@@ -157,7 +157,7 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '')
+    demo_path = sg.user_settings_get_entry('-demos folder-', '.')
     editor_program = sg.user_settings_get_entry('-Editor Program-', '')
     demo_files = get_demo_git_files()
 
