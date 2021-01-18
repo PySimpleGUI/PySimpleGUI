@@ -12,6 +12,11 @@ Some programs are not well-suited for PySimpleGUI however.  By definition, PySim
 
 [Japanese version of this readme](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
 
+<a href="https://www.buymeacoffee.com/PySimpleGUI" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee" width="217px" ></a>
+
+I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project.
+
+
 <hr>
 
 # Statistics :chart_with_upwards_trend:
