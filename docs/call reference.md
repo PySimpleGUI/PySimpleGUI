@@ -9701,7 +9701,7 @@ Parameter Descriptions:
 |                    int                    |             border_depth             | Default border depth (width) for all elements in the window |
 |                   bool                    |              auto_close              | If True, the window will automatically close itself |
 |                    int                    |         auto_close_duration          | Number of seconds to wait before closing the window |
-|                    str                    |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|              (str or bytes)               |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 |                   bool                    |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
 |                   float                   |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
 |                   bool                    |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
