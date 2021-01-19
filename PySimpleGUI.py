@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0 Released 18-Jan-2021"
+version = __version__ = "4.34.0.1 Unreleased\nSDK Help Expanded to init & update parms"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -392,6 +392,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[1], BLUES[1])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (BLUES[0], BLUES[0])     # a nice green progress bar
 # DEFAULT_PROGRESS_BAR_COLOR = (PURPLES[1],PURPLES[0])    # a nice purple progress bar
+
 
 # A transparent button is simply one that matches the background
 # TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
@@ -18128,9 +18129,43 @@ def main_sdk_help():
     element_classes = Element.__subclasses__()
     element_names = {element.__name__: element for element in element_classes}
     element_names['Window'] = Window
-
+    element_classes.append(Window)
+    element_arg_default_dict, element_arg_default_dict_update = {}, {}
     vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
-    # layout = [[Text('PySimpleGUI Element Reference', font='Any 12')]]
+
+    for element in element_classes:
+        # Build info about init method
+        args = inspect.getargspec(element.__init__).args[1:]
+        defaults = inspect.getargspec(element.__init__).defaults
+        # print('------------- {element}----------')
+        # print(args)
+        # print(defaults)
+        if len(args) != len(defaults):
+            diff = len(args) - len(defaults)
+            defaults = ('NO DEFAULT',)*diff + defaults
+        args_defaults = []
+        for i, a in enumerate(args):
+            args_defaults.append((a, defaults[i]))
+        element_arg_default_dict[element.__name__] = args_defaults
+
+        # Build info about update method
+        try:
+            args = inspect.getargspec(element.update).args[1:]
+            defaults = inspect.getargspec(element.update).defaults
+            if args is None or defaults is None:
+                element_arg_default_dict_update[element.__name__] = (('',''),)
+                continue
+            if len(args) != len(defaults):
+                diff = len(args) - len(defaults)
+                defaults = ('NO DEFAULT',)*diff + defaults
+            args_defaults = []
+            for i, a in enumerate(args):
+                args_defaults.append((a, defaults[i]))
+            element_arg_default_dict_update[element.__name__] = args_defaults if len(args_defaults) else (('',''),)
+        except Exception as e:
+            pass
+
+
     button_col = Col([[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())])
     layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
     layout += [[CBox('Summary Only', k='-SUMMARY-')]]
@@ -18146,14 +18181,16 @@ def main_sdk_help():
             window['-ML-'].update('')
             if not values['-SUMMARY-']:
                 elem = element_names[event]
-                print(help(elem))
+                ml.print(help(elem))
                 # print the aliases for the class
-                print('\n--- Shortcut Aliases for Class ---')
+                ml.print('\n--- Shortcut Aliases for Class ---')
                 for v in vars3:
                     if elem == v[1] and elem.__name__ != v[0]:
                         print(v[0])
+                ml.print('\n--- Init Parms ---')
             else:
                 elem = element_names[event]
+
                 element_methods = [m[0] for m in inspect.getmembers(Element, inspect.isfunction) if not m[0].startswith('_') and not m[0][0].isupper()]
                 methods = inspect.getmembers(elem, inspect.isfunction)
                 methods = [m[0] for m in methods if not m[0].startswith('_') and not m[0][0].isupper()]
@@ -18162,13 +18199,24 @@ def main_sdk_help():
 
                 properties = inspect.getmembers(elem, lambda o: isinstance(o, property))
                 properties = [p[0] for p in properties if not p[0].startswith('_')]
-                ml.print('Methods', background_color='red', text_color='white')
+                ml.print('--- Methods ---', background_color='red', text_color='white')
                 ml.print('\n'.join(methods))
-                ml.print('Properties', background_color='red', text_color='white')
+                ml.print('--- Properties ---', background_color='red', text_color='white')
                 ml.print('\n'.join(properties))
                 if issubclass(elem, Element):
                     ml.print('Methods Unique to This Element', background_color='red', text_color='white')
                     ml.print('\n'.join(unique_methods))
+                ml.print('========== Init Parms ==========', background_color='#FFFF00', text_color='black')
+                elem_text_name = event
+                for parm, default in element_arg_default_dict[elem_text_name]:
+                    ml.print('{:18}'.format(parm), end=' = ')
+                    ml.print(default, end = ',\n')
+                if elem_text_name in element_arg_default_dict_update:
+                    ml.print('========== Update Parms ==========', background_color='#FFFF00', text_color='black')
+                    for parm, default in element_arg_default_dict_update[elem_text_name]:
+                        ml.print('{:18}'.format(parm), end=' = ')
+                        ml.print(default, end = ',\n')
+            ml.set_vscroll_position(0)       # scroll to top of multoline
     window.close()
 
 
@@ -18499,6 +18547,9 @@ if __name__ == '__main__':
     # python -m PySimpleGUI.PySimpleGUI upgrade
     if len(sys.argv) > 1 and sys.argv[1] == 'upgrade':
         _upgrade_gui()
+        exit(0)
+    elif len(sys.argv) > 1 and sys.argv[1] == 'help':
+        main_sdk_help()
         exit(0)
     main()
     exit(0)
