@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.1 Unreleased\nSDK Help Expanded to init & update parms"
+version = __version__ = "4.34.0.2 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14869,7 +14869,6 @@ def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None),
     else:
         layout = [[Text('List of all themes', font='Default 18', background_color=win_bg)]]
 
-
     col_layout = []
     row = []
     for count, theme_name in enumerate(names):
@@ -18133,6 +18132,9 @@ def main_sdk_help():
     element_arg_default_dict, element_arg_default_dict_update = {}, {}
     vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
 
+    functions = [m for m in inspect.getmembers(sys.modules[__name__], inspect.isfunction)]
+    functions_names = [n[0] for n in functions]
+
     for element in element_classes:
         # Build info about init method
         args = inspect.getargspec(element.__init__).args[1:]
@@ -18166,7 +18168,10 @@ def main_sdk_help():
             pass
 
 
-    button_col = Col([[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())])
+    buttons = [[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())]
+    buttons += [[B('Func Search', pad=(0, 0), size=(22, 1), font='Courier 10')]]
+    button_col = Col(buttons)
+
     layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
     layout += [[CBox('Summary Only', k='-SUMMARY-')]]
     # layout += [[Button('Exit', size=(15, 1))]]
@@ -18217,6 +18222,13 @@ def main_sdk_help():
                         ml.print('{:18}'.format(parm), end=' = ')
                         ml.print(default, end = ',\n')
             ml.set_vscroll_position(0)       # scroll to top of multoline
+        elif event == 'Func Search':
+            search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
+            if search_string is not None:
+                ml.update('')
+                for f in functions_names:
+                    if search_string in f.lower() and not f.startswith('_'):
+                        ml.print(f)
     window.close()
 
 
