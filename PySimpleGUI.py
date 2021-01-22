@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.2 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search"
+version = __version__ = "4.34.0.3 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -570,7 +570,7 @@ BUTTON_TYPE_CALENDAR_CHOOSER = 30
 BUTTON_TYPE_COLOR_CHOOSER = 40
 BUTTON_TYPE_SHOW_DEBUGGER = 50
 
-BROWSE_FILES_DELIMITER = ';'  # the delimeter to be used between each file in the returned string
+BROWSE_FILES_DELIMITER = ';'  # the delimiter to be used between each file in the returned string
 
 # -------------------------  Element types  ------------------------- #
 
@@ -3394,6 +3394,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.UseTtkButtons = use_ttk_buttons
+        self._files_delimiter = BROWSE_FILES_DELIMITER        # used by the file browse button. used when multiple files are selected by user
         if sys.platform.startswith('darwin'):
             self.UseTtkButtons = True
         # if image_filename or image_data:
@@ -3558,7 +3559,7 @@ class Button(Element):
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
             if file_name:
-                file_name = BROWSE_FILES_DELIMITER.join(file_name)  # normally a ';'
+                file_name = self._files_delimiter.join(file_name)  # normally a ';'
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
@@ -10033,6 +10034,8 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: The Button created
     :rtype: (Button)
     """
@@ -10078,6 +10081,8 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10091,10 +10096,9 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, key=None, k=None, metadata=None):
+                font=None, pad=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
     """
-    Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
-    BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
+    Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
     :param button_text: text in the button (Default value = 'Browse')
     :type button_text: (str)
@@ -10125,13 +10129,19 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param files_delimiter: String to place between files when multiple files are selected. Normally a ;
+    :type files_delimiter: str
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
+    button = Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                   tooltip=tooltip, size=size, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
+    button._files_delimiter = files_delimiter
+    return button
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
@@ -10172,6 +10182,8 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10219,6 +10231,8 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10257,6 +10271,8 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10294,6 +10310,8 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10332,6 +10350,8 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10369,6 +10389,8 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10406,6 +10428,8 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10442,6 +10466,8 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10478,6 +10504,8 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10514,6 +10542,8 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10550,6 +10580,8 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10586,6 +10618,8 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10622,6 +10656,8 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10707,6 +10743,8 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10755,6 +10793,8 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
+    :param metadata: Anything you want to store along with this button
+    :type metadata: (Any)
     :return: returns a button
     :rtype: (Button)
     """
@@ -10892,6 +10932,8 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type image_size: (Default = (None))
     :param image_subsample:amount to reduce the size of the image
     :type image_subsample: amount to reduce the size of the image
+    :param border_width: width of border around element
+    :type border_width: (int)
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
@@ -10916,8 +10958,6 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type k: str | int | tuple | object
     :param metadata: Anything you want to store along with this button
     :type metadata: (Any)
-    :param border_width: width of border around element
-    :type border_width: (int)
     :return: returns a button
     :rtype: (Button)
     """
@@ -15280,7 +15320,8 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
         #     window.finalize()
         #     window.make_modal()
         button, values = window.read()
-        window.close(); del window
+        window.close()
+        del window
 
     return button
 
@@ -15391,7 +15432,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         button, values = window.Read(timeout=0)
     else:
         button, values = window.Read()
-        window.close(); del window
+        window.close()
+        del window
     return button
 
 
@@ -15497,7 +15539,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :rtype: str | None
     """
 
-    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
@@ -15554,7 +15596,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :rtype: str | None | TIMEOUT_KEY
     """
 
-    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
@@ -15607,7 +15649,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: str | None | TIMEOUT_KEY
     """
-    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
@@ -15658,7 +15700,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: str | None | TIMEOUT_KEY
     """
-    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
@@ -15715,7 +15757,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :rtype: str | None | TIMEOUT_KEY
     """
 
-    return Popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_color=button_color, background_color=background_color, text_color=text_color,
                  button_type=button_type,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, non_blocking=non_blocking, icon=icon,
                  line_width=line_width,
@@ -15770,7 +15812,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :rtype: str | None | TIMEOUT_KEY
     """
     tbutton_color = DEFAULT_ERROR_BUTTON_COLOR if button_color == (None, None) else button_color
-    return Popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_ERROR, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=tbutton_color,
                  auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
@@ -15821,7 +15863,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: str | None | TIMEOUT_KEY
     """
-    return Popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_CANCELLED, background_color=background_color,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
@@ -15872,7 +15914,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: str | None | TIMEOUT_KEY
     """
-    return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_OK, background_color=background_color, text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color, auto_close=auto_close,
                  auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere,
                  keep_on_top=keep_on_top, location=location, image=image, modal=modal)
@@ -15922,7 +15964,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :return: clicked button
     :rtype: "OK" | "Cancel" | None
     """
-    return Popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color,
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_OK_CANCEL, background_color=background_color,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
@@ -15973,7 +16015,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :return: clicked button
     :rtype: "Yes" | "No" | None
     """
-    return Popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
@@ -16102,7 +16144,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                  file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None), initial_folder=None, image=None, modal=True):
+                 location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -16146,6 +16188,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type initial_folder: (str)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param files_delimiter: String to place between files when multiple files are selected. Normally a ;
+    :type files_delimiter: str
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: string representing the file(s) chosen, None if cancelled or window closed with X
@@ -16215,7 +16259,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     if save_as:
         browse_button = SaveAs(file_types=file_types, initial_folder=initial_folder)
     elif multiple_files:
-        browse_button = FilesBrowse(file_types=file_types, initial_folder=initial_folder)
+        browse_button = FilesBrowse(file_types=file_types, initial_folder=initial_folder, files_delimiter=files_delimiter)
     else:
         browse_button = FileBrowse(file_types=file_types, initial_folder=initial_folder)
 
@@ -16307,7 +16351,8 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
 
 
     button, values = window.Read()
-    window.close(); del window
+    window.close()
+    del window
     if button != 'Ok':
         return None
     else:
@@ -16349,7 +16394,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Tuple containing (month, day, year) of chosen date or None if was cancelled
-    :rtype: None or (int, int, int)
+    :rtype: None | (int, int, int)
     """
 
     if month_names is not None and len(month_names) != 12:
@@ -16491,8 +16536,8 @@ def popup_animated(image_source, message=None, background_color=None, text_color
      event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
      loop.
 
-    :param image_source: Either a filename or a base64 string.
-    :type image_source: str | bytes
+    :param image_source: Either a filename or a base64 string. Use None to close the window.
+    :type image_source: str | bytes | None
     :param message: An optional message to be shown with the animation
     :type message: (str)
     :param background_color: color of background
