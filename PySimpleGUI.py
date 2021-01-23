@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.3 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file"
+version = __version__ = "4.34.0.4 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -18178,7 +18178,9 @@ def main_sdk_help():
     vars3 = [m for m in inspect.getmembers(sys.modules[__name__])]
 
     functions = [m for m in inspect.getmembers(sys.modules[__name__], inspect.isfunction)]
-    functions_names = [n[0] for n in functions]
+    functions_names_lower = [f for f in functions if f[0][0].islower()]
+    functions_names_upper = [f for f in functions if f[0][0].isupper()]
+    functions_names = sorted(functions_names_lower) + sorted(functions_names_upper)
 
     for element in element_classes:
         # Build info about init method
@@ -18218,7 +18220,7 @@ def main_sdk_help():
     button_col = Col(buttons)
 
     layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
-    layout += [[CBox('Summary Only', k='-SUMMARY-')]]
+    layout += [[CBox('Summary Only', k='-SUMMARY-'),CBox('Display Only PEP8 Functions',default=True, k='-PEP8-') ]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
     window = Window('PySimpleGUI API Call Reference', layout, use_default_focus=False, keep_on_top=True)
@@ -18270,10 +18272,18 @@ def main_sdk_help():
         elif event == 'Func Search':
             search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
             if search_string is not None:
-                ml.update('')
-                for f in functions_names:
-                    if search_string in f.lower() and not f.startswith('_'):
-                        ml.print(f)
+                    ml.update('')
+                    for f_entry in functions_names:
+                        f = f_entry[0]
+                        if search_string in f.lower() and not f.startswith('_'):
+                            if (values['-PEP8-'] and not f[0].isupper()) or not values['-PEP8-']:
+                                if values['-SUMMARY-']:
+                                    ml.print(f)
+                                else:
+                                    ml.print('=========== ' + f +'===========' , background_color='#FFFF00', text_color='black')
+                                    ml.print(help(f_entry[1]))
+            ml.set_vscroll_position(0)       # scroll to top of multoline
+
     window.close()
 
 
