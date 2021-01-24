@@ -7,6 +7,9 @@ def TableSimulation():
     """
     Display data in a table format
     """
+
+    sg.popup_quick_message('Hang on for a moment, this will take a bit to create....', auto_close=True, non_blocking=True, font='Default 18')
+
     sg.set_options(element_padding=(0, 0))
 
     menu_def = [['File', ['Open', 'Save', 'Exit']],
@@ -16,8 +19,7 @@ def TableSimulation():
     MAX_ROWS = 20
     MAX_COL = 10
 
-    columm_layout =  [[sg.Text(str(i), size=(4, 1), justification='right')] + [sg.Input(size=(10, 1), pad=(
-            1, 1), justification='right', key=(i, j)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
+    columm_layout =  [[sg.Text(str(i), size=(4, 1), justification='right')] + [sg.InputText(size=(10, 1), pad=(1,1),border_width=0, justification='right', key=(i, j)) for j in range(MAX_COL)] for i in range(MAX_ROWS)]
 
 
     layout = [[sg.Menu(menu_def)],
@@ -26,9 +28,9 @@ def TableSimulation():
                sg.Input(key='inputrow', justification='right', size=(8, 1), pad=(1, 1)),
                sg.Input(key='inputcol', size=(8, 1), pad=(1, 1), justification='right'),
                sg.Input(key='value', size=(8, 1), pad=(1, 1), justification='right')],
-              [sg.Col(columm_layout, size=(800, 600), scrollable=True)]]
+              [sg.Col(columm_layout, size=(800, 600), scrollable=True,)]]
 
-    window = sg.Window('Table', layout, return_keyboard_events=True)
+    window = sg.Window('Table', layout,  return_keyboard_events=True)
 
     while True:
         event, values = window.read()
