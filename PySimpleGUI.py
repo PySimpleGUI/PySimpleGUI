@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.5 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly"
+version = __version__ = "4.34.0.6 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -15017,29 +15017,32 @@ def change_look_and_feel(index, force=False):
     #     print('*** Changing look and feel is not supported on Mac platform ***')
     #     return
 
-    theme = index
-    # normalize available l&f values
-    lf_values = [item.lower() for item in list_of_look_and_feel_values()]
+    requested_theme_name = index
+    theme_names_list = list_of_look_and_feel_values()
+    # normalize available l&f values by setting all to lower case
+    lf_values_lowercase = [item.lower() for item in theme_names_list]
     # option 1
-    opt1 = theme.replace(' ', '').lower()
+    opt1 = requested_theme_name.replace(' ', '').lower()
 
     # option 2 (reverse lookup)
-    optx = theme.lower().split(' ')
+    optx = requested_theme_name.lower().split(' ')
     optx.reverse()
     opt2 = ''.join(optx)
 
     # search for valid l&f name
-    if opt1 in lf_values:
-        ix = lf_values.index(opt1)
-    elif opt2 in lf_values:
-        ix = lf_values.index(opt2)
+    if requested_theme_name in theme_names_list:
+        ix = theme_names_list.index(requested_theme_name)
+    elif opt1 in lf_values_lowercase:
+        ix = lf_values_lowercase.index(opt1)
+    elif opt2 in lf_values_lowercase:
+        ix = lf_values_lowercase.index(opt2)
     else:
-        ix = random.randint(0, len(lf_values) - 1)
+        ix = random.randint(0, len(lf_values_lowercase) - 1)
         print('** Warning - {} Theme is not a valid theme. Change your theme call. **'.format(index))
         print('valid values are', list_of_look_and_feel_values())
         print('Instead, please enjoy a random Theme named {}'.format(list_of_look_and_feel_values()[ix]))
 
-    selection = list_of_look_and_feel_values()[ix]
+    selection = theme_names_list[ix]
     CURRENT_LOOK_AND_FEEL = selection
     try:
         colors = LOOK_AND_FEEL_TABLE[selection]
