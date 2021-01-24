@@ -128,9 +128,11 @@ def make_window():
 
     left_col = [
         [sg.Listbox(values=demo_files, select_mode=sg.SELECT_MODE_EXTENDED, size=(40, 20), key='-DEMO LIST-')],
-        [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip)],
+        [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
+         sg.T(size=(20,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
-        [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip)]]
+        [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
+         sg.T(size=(20,1), k='-FIND NUMBER-')]]
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -185,9 +187,13 @@ def main():
         elif event == '-FILTER-':
             new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
+            window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
+            window['-FIND NUMBER-'].update('')
         elif event == '-FIND-':
             file_list = find_in_file(values['-FIND-'])
             window['-DEMO LIST-'].update(sorted(file_list))
+            window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+            window['-FILTER NUMBER-'].update('')
         elif event == 'Settings':
             if settings_window() is True:
                 window.close()
@@ -199,6 +205,8 @@ def main():
             window['-FILTER-'].update('')
             window['-FIND-'].update('')
             window['-DEMO LIST-'].update(demo_files)
+            window['-FILTER NUMBER-'].update('')
+            window['-FIND NUMBER-'].update('')
 
     window.close()
 
