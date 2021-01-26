@@ -5209,7 +5209,7 @@ window = sg.Window('My new window', layout, finalize=True)
 window['-TEXT-'].update('My new text value')
 
 while True:             # Event Loop
-  event, values = window.read()
+    event, values = window.read()
     if event == sg.WIN_CLOSED:
         break
 ```
@@ -5517,7 +5517,7 @@ Here is ***some*** of the code patterns you'll find when looking through the dem
 ```python
 import PySimpleGUI as sg
 
-# Design pattern 2 - First window remains active
+# Design pattern 1 - First window remains active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
@@ -5533,7 +5533,7 @@ while True:
     if ev1 == sg.WIN_CLOSED or ev1 == 'Exit':
         break
 
-     if not win2_active and ev1 == 'Launch 2':
+    if not win2_active and ev1 == 'Launch 2':
         win2_active = True
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
@@ -5552,7 +5552,7 @@ while True:
 ```python
 import PySimpleGUIQt as sg
 
-# Design pattern 1 - First window does not remain active
+# Design pattern 2 - First window does not remain active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
