@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.6 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name"
+version = __version__ = "4.34.0.8 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -139,7 +139,8 @@ from math import floor
 from math import fabs
 from functools import wraps
 try:        # Because Raspberry Pi is still on 3.4....
-    from subprocess import run, PIPE
+    from subprocess import run, PIPE, Popen
+    import subprocess
 except: pass
 
 from threading import Thread
@@ -1218,6 +1219,8 @@ class Element():
         :param cursor: The tkinter cursor name
         :type cursor: (str)
         """
+        if not self._widget_was_created():
+            return
         try:
             self.Widget.config(cursor=cursor)
         except Exception as e:
@@ -1248,11 +1251,14 @@ class Element():
         if self.Widget is not None:
             return True
         else:
-            warnings.warn('You cannot Update element with key = {} until the window has been Read or Finalized'.format(self.Key), UserWarning)
+            warnings.warn('You cannot Update element with key = {} until the window.read() is called or finalized=True when creating window'.format(self.Key), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
                 popup_error('Unable to complete operation on element with key {}'.format(self.Key),
-                            'You cannot perform operations (such as calling update) on an Element until Window is read or finalized.',
-                            'Adding a "finalize=True" parameter to your Window creation will likely fix this.', image=_random_error_icon())
+                            'You cannot perform operations (such as calling update) on an Element until:',
+                            ' window.read() is called or finalize=True when Window created.',
+                            'Adding a "finalize=True" parameter to your Window creation will likely fix this.',
+                            _create_error_message(),
+                            image=_random_error_icon())
             return False
 
 
@@ -10700,7 +10706,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
-                  auto_size_button=auto_size_button, button_color=COLOR_SYSTEM_DEFAULT, font=font, disabled=disabled,
+                  auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
                   image_subsample=4, border_width=0, metadata=metadata)
 
@@ -16382,7 +16388,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :type location: (int, int)
     :param title: Title that will be shown on the window
     :type title: (str)
-    :param close_when_chosen: MIKE_please_add_text_here
+    :param close_when_chosen: If True, the window will close and function return when a day is clicked
     :type close_when_chosen: (bool)
     :param locale: locale used to get the day names
     :type locale: (str)
@@ -17347,6 +17353,35 @@ def user_settings():
     return settings.get_dict()
 
 
+
+#####################################################################################################
+# Subprocess
+#####################################################################################################
+
+
+def execute_subprocess_nonblocking(command, *args):
+    """
+    Runs the specified command as a subprocess.
+    The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
+    Returns a subprocess Popen object.
+
+    :param command: Filename to load settings from (and save to in the future)
+    :type command: (str)
+    :param *args:  Variable number of arguments that are passed to the program being started as command line parms
+    :type *args: (Any)
+    :return: Popen object
+    :rtype: (subprocess.Popen)
+    """
+    expanded_args = [str(a) for a in args]
+
+    try:
+        sp = Popen([command, expanded_args], shell=True, stdout=PIPE, stderr=PIPE)
+    except Exception as e:
+        print('execute_subprocess_nonblocking... Popen reported an error', e)
+    return sp
+
+
+
 #####################################################################################################
 # Debugger
 #####################################################################################################
@@ -18226,7 +18261,7 @@ def main_sdk_help():
     layout += [[CBox('Summary Only', k='-SUMMARY-'),CBox('Display Only PEP8 Functions',default=True, k='-PEP8-') ]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
-    window = Window('PySimpleGUI API Call Reference', layout, use_default_focus=False, keep_on_top=True)
+    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=ICON_BASE64_BLOB_THINK)
     ml = window['-ML-']
     while True:  # Event Loop
         event, values = window.read()

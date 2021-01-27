@@ -189,11 +189,13 @@ def main():
             window['-DEMO LIST-'].update(new_list)
             window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
             window['-FIND NUMBER-'].update('')
+            window['-FIND-'].update('')
         elif event == '-FIND-':
             file_list = find_in_file(values['-FIND-'])
             window['-DEMO LIST-'].update(sorted(file_list))
             window['-FIND NUMBER-'].update(f'{len(file_list)} files')
             window['-FILTER NUMBER-'].update('')
+            window['-FILTER-'].update('')
         elif event == 'Settings':
             if settings_window() is True:
                 window.close()
