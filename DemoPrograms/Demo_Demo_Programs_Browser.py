@@ -40,7 +40,7 @@ def get_demo_git_files():
     :rtype: Tuple[List[str], List[str]]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '.')
+    demo_path = get_demo_path()
 
     try:
         demo_files = os.listdir(demo_path)
@@ -49,6 +49,29 @@ def get_demo_git_files():
 
     return demo_files
 
+
+def get_demo_path():
+    demo_path = sg.user_settings_get_entry('-demos folder-', os.path.dirname(__file__))
+
+    return demo_path
+
+
+def get_editor():
+    try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
+        if sg.pysimplegui_user_settings:
+            global_editor = sg.pysimplegui_user_settings.get('-editor program-')
+        else:
+            global_editor = ''
+    except:
+        global_editor = ''
+
+    return sg.user_settings_get_entry('-editor program-', global_editor)
+
+
+def get_theme():
+    global_theme = sg.theme()
+
+    return sg.user_settings_get_entry('-theme-', global_theme)
 
 def find_in_file(string):
     """
@@ -60,7 +83,7 @@ def find_in_file(string):
     :rtype: List[str]
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-')
+    demo_path = get_demo_path()
     demo_files = get_demo_git_files()
     string = string.lower()
     file_list = []
@@ -88,11 +111,13 @@ def settings_window():
     :rtype: (bool)
     """
 
+    editor_program = get_editor()
+
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
               [sg.T('Path to Demos', size=(20,1)), sg.In(sg.user_settings_get_entry('-demos folder-', '.'), k='-DEMOS-'), sg.FolderBrowse()],
-              [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-Editor Program-', ''),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
-              [sg.Combo(sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
+              [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
 
@@ -100,8 +125,10 @@ def settings_window():
     event, values = window.read(close=True)
     if event == 'Ok':
         sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
-        sg.user_settings_set_entry('-Editor Program-', values['-EDITOR PROGRAM-'])
-        sg.user_settings_set_entry('-theme-', values['-THEME-'])
+        new_editor = global_editor if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
+        sg.user_settings_set_entry('-editor program-', new_editor)
+        new_theme = sg.theme_global() if values['-THEME-'] == '' else values['-THEME-']
+        sg.user_settings_set_entry('-theme-', new_theme)
         return True
 
     return False
@@ -114,7 +141,8 @@ def make_window():
     :rtype: (Window)
     """
 
-    theme = sg.user_settings_get_entry('-theme-')
+    theme = get_theme()
+    editor = get_editor()
     demo_files = get_demo_git_files()
     if not theme:
         theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
@@ -159,10 +187,9 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    demo_path = sg.user_settings_get_entry('-demos folder-', '.')
-    editor_program = sg.user_settings_get_entry('-Editor Program-', '')
+    demo_path = get_demo_path()
+    editor_program = get_editor()
     demo_files = get_demo_git_files()
-
     window = make_window()
 
     while True:
@@ -171,12 +198,12 @@ def main():
             break
         if event == 'Edit':
             for file in values['-DEMO LIST-']:
-                sg.cprint(f'opening (in editor)', text_color='white', background_color='red', end='')
+                sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
                 sg.cprint(f'{os.path.join(demo_path, file)}', text_color='white', background_color='purple')
                 execute_command_subprocess(f'{editor_program}', os.path.join(demo_path, file))
         elif event == 'Run':
-            sg.cprint('Running Demo Programs....', c='white on green', end='')
+            sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
             for file in values['-DEMO LIST-']:
                 sg.cprint(os.path.join(demo_path, file),text_color='white', background_color='purple')
@@ -200,9 +227,10 @@ def main():
             if settings_window() is True:
                 window.close()
                 window = make_window()
-                demo_path = sg.user_settings_get_entry('-demos folder-')
-                editor_program = sg.user_settings_get_entry('-Editor Program-')
+                demo_path = get_demo_path()
+                editor_program = get_editor()
                 demo_files = get_demo_git_files()
+                theme = get_theme()
         elif event == 'Clear':
             window['-FILTER-'].update('')
             window['-FIND-'].update('')

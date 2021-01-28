@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.9 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path"
+version = __version__ = "4.34.0.9 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -542,6 +542,7 @@ DEFAULT_USER_SETTINGS_MAC_PATH =r'~/Library/Application Support/PySimpleGUI/sett
 DEFAULT_USER_SETTINGS_UNKNOWN_OS_PATH =r'~/Library/Application Support/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_PATH = None       # value set by user to override all paths above
 DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = None       # location of the global PySimpleGUI settings
+DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME = '_PySimpleGUI_settings_global_.json'       # location of the global PySimpleGUI settings
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
@@ -14201,7 +14202,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: bytes | str
@@ -14299,6 +14300,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type user_settings_path: (str)
     :param pysimplegui_settings_path: default path for the global PySimpleGUI user_settings
     :type pysimplegui_settings_path: (str)
+    :param pysimplegui_settings_filename: default filename for the global PySimpleGUI user_settings
+    :type pysimplegui_settings_filename: (str)
     :return: None
     :rtype: None
     """
@@ -14350,7 +14353,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global CUSTOM_TITLEBAR_FONT
     global DEFAULT_USER_SETTINGS_PATH
     global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH
-
+    global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME
+    global _pysimplegui_user_settings
     # global _my_windows
 
     if icon:
@@ -14498,6 +14502,13 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if pysimplegui_settings_path is not None:
         DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = pysimplegui_settings_path
+
+    if pysimplegui_settings_filename is not None:
+        DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME = pysimplegui_settings_filename
+
+    if pysimplegui_settings_filename is not None or pysimplegui_settings_filename is not None:
+        _pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME,
+                                                  path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 
     return True
 
@@ -14895,6 +14906,20 @@ def theme_add_new(new_theme_name, new_theme_dict):
         print('Exception during adding new theme {}'.format(e))
 
 
+def theme_global(new_theme=None):
+    """
+    Sets / Gets the global PySimpleGUI Theme.  If none is specified then returns the global theme from user settings
+
+    :param new_theme: the new theme name to use
+    :type new_theme: (str)
+    :return: the currently selected theme
+    :rtype: (str)
+    """
+    if new_theme is not None:
+        pysimplegui_user_settings.set('-theme-', new_theme)
+        return new_theme
+    else:
+        return pysimplegui_user_settings.get('-theme-', CURRENT_LOOK_AND_FEEL)
 
 
 def theme_previewer(columns=12, scrollable=False, scroll_area_size=(None, None), search_string=None, location=(None, None)):
@@ -17104,13 +17129,15 @@ class UserSettings:
         :type key: (Any)
         :param value: Value to save as the setting's value. Can be anything
         :type value: (Any)
+        :return: value that key was set to
+        :rtype: (Any)
         """
         if self.full_filename is None:
             self.set_location()
         self.read()
         self.dict[key] = value
         self.save()
-
+        return value
 
     def get(self, key, default=None):
         """
@@ -18229,6 +18256,35 @@ def main_get_debug_data(suppress_popup=False):
 
     return message
 
+def main_global_pysimplegui_settings():
+    """
+    Window to set settings that will be used across all PySimpleGUI programs that choose to use them.
+    Use set_options to set the path to the folder for all PySimpleGUI settings.
+
+    :return: True if settings were changed
+    :rtype: (bool)
+    """
+
+    settings = pysimplegui_user_settings.read()
+
+    layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
+              [T('Editor Program', size=(20,1)), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-'), FileBrowse()],
+              [T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
+              [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-')],
+              [B('Ok', bind_return_key=True), B('Cancel')],
+              ]
+
+    window = Window('Settings', layout, keep_on_top=True)
+    event, values = window.read(close=True)
+    if event == 'Ok':
+        new_theme = OFFICIAL_PYSIMPLEGUI_THEME if values['-THEME-'] == '' else values['-THEME-']
+        pysimplegui_user_settings.set('-editor program-', values['-EDITOR PROGRAM-'])
+        pysimplegui_user_settings.set('-theme-', new_theme)
+        return True
+    return False
+
+
+
 def main_sdk_help():
     """
     Display a window that will display the docstrings for each PySimpleGUI Element and the Window object
@@ -18498,6 +18554,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
          Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
+         Button('Global Settings', tooltip='Settings across all PySimpleGUI programs'),
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
           B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub'),
@@ -18592,6 +18649,12 @@ def main():
             window['-HIDE TABS-'].update(text=SYMBOL_UP if window['-TAB GROUP-'].metadata else SYMBOL_DOWN)
         elif event == 'SDK Reference':
             main_sdk_help()
+        elif event == 'Global Settings':
+            if main_global_pysimplegui_settings():
+                theme(pysimplegui_user_settings.get('-theme-', OFFICIAL_PYSIMPLEGUI_THEME))
+                window.close()
+                window = _create_main_window()
+                graph_elem = window['+GRAPH+']
         elif event.startswith('P '):
             if event == 'P ':
                 popup('Normal Popup - Modal', keep_on_top=True)
@@ -18663,9 +18726,10 @@ TimerStop = timer_stop
 test = main
 sdk_help = main_sdk_help
 
-
+pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
-theme(CURRENT_LOOK_AND_FEEL)
+
+theme(theme_global())
 
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
 if _running_trinket():
