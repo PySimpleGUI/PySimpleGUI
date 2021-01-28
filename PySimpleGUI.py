@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.8 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color"
+version = __version__ = "4.34.0.9 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -531,6 +531,17 @@ else:
     SYMBOL_TITLEBAR_MINIMIZE = '_'
     SYMBOL_TITLEBAR_MAXIMIZE = 'O'
     SYMBOL_TITLEBAR_CLOSE = 'X'
+
+#################### PATHS for user_settings APIs ####################
+# These paths are passed to os.path.expanduser to get the default path for user_settings
+# They can be changed using set_options
+
+DEFAULT_USER_SETTINGS_WIN_PATH = r'~\AppData\Local\PySimpleGUI\settings'
+DEFAULT_USER_SETTINGS_LINUX_PATH = r'~/.config/PySimpleGUI/settings'
+DEFAULT_USER_SETTINGS_MAC_PATH =r'~/Library/Application Support/PySimpleGUI/settings'
+DEFAULT_USER_SETTINGS_UNKNOWN_OS_PATH =r'~/Library/Application Support/PySimpleGUI/settings'
+DEFAULT_USER_SETTINGS_PATH = None       # value set by user to override all paths above
+DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = None       # location of the global PySimpleGUI settings
 
 # ====================================================================== #
 # One-liner functions that are handy as f_ck                             #
@@ -14190,7 +14201,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                text_justification=None, background_color=None, element_background_color=None,
                text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
-               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None):
+               window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None):
     """
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: bytes | str
@@ -14284,6 +14295,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type titlebar_font:  str | Tuple[str, int] | None
     :param titlebar_icon: If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
     :type titlebar_icon: bytes | str
+    :param user_settings_path: default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user
+    :type user_settings_path: (str)
+    :param pysimplegui_settings_path: default path for the global PySimpleGUI user_settings
+    :type pysimplegui_settings_path: (str)
     :return: None
     :rtype: None
     """
@@ -14333,6 +14348,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global CUSTOM_TITLEBAR_TEXT_COLOR
     global CUSTOM_TITLEBAR_ICON
     global CUSTOM_TITLEBAR_FONT
+    global DEFAULT_USER_SETTINGS_PATH
+    global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH
+
     # global _my_windows
 
     if icon:
@@ -14474,6 +14492,12 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if titlebar_icon is not None:
         CUSTOM_TITLEBAR_ICON = titlebar_icon
+
+    if user_settings_path is not None:
+        DEFAULT_USER_SETTINGS_PATH = user_settings_path
+
+    if pysimplegui_settings_path is not None:
+        DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = pysimplegui_settings_path
 
     return True
 
@@ -16873,13 +16897,16 @@ class UserSettings:
 
         if path is None:
             if self.path is not None:
-                path = self.path
+                # path = self.path
+                path = os.path.expanduser(self.path)    # expand user provided path in case it has user ~ in it. Don't think it'll hurt
+            elif DEFAULT_USER_SETTINGS_PATH is not None:    # if user set the path manually system-wide using set options
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_PATH)
             elif sys.platform.startswith('win'):
-                path = os.path.expanduser(r'~\AppData\Local\PySimpleGUI\settings')
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_WIN_PATH)
             elif sys.platform.startswith('linux'):
-                path = os.path.expanduser(r'~/.config/PySimpleGUI/settings')
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_LINUX_PATH)
             elif sys.platform.startswith('darwin'):
-                path = os.path.expanduser(r'~/Library/Application Support/PySimpleGUI/settings')
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_MAC_PATH)
             else:
                 path = '.'
 
