@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.9 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams"
+version = __version__ = "4.34.0.10 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17427,11 +17427,11 @@ def execute_subprocess_nonblocking(command, *args):
     :rtype: (subprocess.Popen)
     """
     expanded_args = [str(a) for a in args]
-
     try:
         sp = Popen([command, expanded_args], shell=True, stdout=PIPE, stderr=PIPE)
     except Exception as e:
         print('execute_subprocess_nonblocking... Popen reported an error', e)
+        sp = None
     return sp
 
 
