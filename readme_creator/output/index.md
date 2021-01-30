@@ -1666,6 +1666,7 @@ popup_get_file(message,
     location = (None, None),
     initial_folder = None,
     image = None,
+    files_delimiter = ";",
     modal = True)
 ```
 
@@ -1693,6 +1694,7 @@ Parameter Descriptions:
 |    Tuple[int, int]     |     location      | Location of upper left corner of the window |
 |          str           |  initial_folder   | location in filesystem to begin browsing |
 |      str or bytes      |       image       | Image to include at the top of the popup window |
+|          str           |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -1805,20 +1807,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |    image_source     | Either a filename or a base64 string. |
-|     str     |       message       | An optional message to be shown with the animation |
-|     str     |  background_color   | color of background |
-|     str     |     text_color      | color of the text |
-| str or tuple |        font         | specifies the font family, size, etc |
-|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
-|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
-|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
-| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
-|     int     | time_between_frames | Amount of time in milliseconds between each frame |
-|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
-|     str     |        title        | Title that will be shown on the window |
-|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| str or bytes or None |    image_source     | Either a filename or a base64 string. Use None to close the window. |
+|        str         |       message       | An optional message to be shown with the animation |
+|        str         |  background_color   | color of background |
+|        str         |     text_color      | color of the text |
+|    str or tuple    |        font         | specifies the font family, size, etc |
+|        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+|     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|        int         | time_between_frames | Amount of time in milliseconds between each frame |
+|        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str         |        title        | Title that will be shown on the window |
+|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | None | **RETURN** | No return value
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
@@ -6322,14 +6324,13 @@ Watch this space in the future for the more standardized variable name for this 
 
 ## Binding tkiner "events"
 
-If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.  
+If you wish to receive events directly from tkinter, but do it in a PySimpleGUI way, then you can do that and get those events returned to you via your standard `Window.read()` call.
 
-Both the Elements and Window objects have a method called `bind`.  You specify 2 parameters to this function.  One is the string that is used to tell tkinter what events to bind.  The other is a "key modifier" for Elements and a "key" for Windows.
+Both the Elements and Window objects have a method called `bind`. You specify 2 parameters to this function. One is the string that is used to tell tkinter what events to bind. The other is a "key modifier" for Elements and a "key" for Windows.
 
 The `key_modifier` in the `Element.bind` call is something that is added to your key. If your key is a string, then this modifier will be appended to your key and the event will be a single string.
 
-If your element's key is not a string, then a tuple will be returned as the event
-(your_key, key_modifier)
+If your element's key is not a string, then a tuple will be returned as the event (your_key, key_modifier)
 
 This will enable you to continue to use your weird, non-string keys. Just be aware that you'll be getting back a tuple instead of your key in these situations.
 
@@ -6337,15 +6338,65 @@ The best example of when this can happen is in a Minesweeper game where each but
 
 It'll be tricky for the user to parse these events, but it's assumed you're an advanced user if you're using this capability and are also using non-string keys.
 
-There are 2 member variables that have also been added as shown in the documentation for the bind methods. This added variable contains the tkinter specific event information. In other words, the 'event' that tkinter normally sends back when a callback happens.
+An Element member variable `user_bind_event` will contain information that tkinter passed back along with the event. It's not required for most operations and none of the demos currently use this variable, but it's there just in case. The contents of the variable are tkinter specific and set by tkinter so you'll be digging into the tkinter docs if you're using an obscure binding of some kind.
 
-Here is sample code that shows how to make these calls.
+tkinter events must be in between angle brackets
 
-Three events are being bound.
+```python
+window['-KEY-'].bind('<TKINTER EVENT>', 'STRING TO APPEND')
+```
+
+Events can also be binded to the window
+```python
+window.bind('<TKINTER EVENT>', 'STRING TO APPEND')
+```
+
+List of tkinter events:
+
+| Event                            | Description                                                  |
+| :------------------------------- | ------------------------------------------------------------ |
+| Button-1  / ButtonPress-1 / 1    | Left button is pressed over an element. 1 corresponds to the left button, 2 to the middle button, 3 to the right button. <br>Buttons can go up to 5 |
+| ButtonRelease-1                  | Left button is released over an element.                     |
+| Double-Button-1                  | An element was double clicked. The 'Double' modifier was used. See below for more modifiers. |
+| B1-Motion                        | Left button is held and moved around over an element.        |
+| Motion                           | Mouse pointer is moved over an element                       |
+| Enter                            | Mouse pointer entered the element                            |
+| Leave                            | Mouse pointer left the element                               |
+| Key / KeyPress<br>Keypress-a / a | A key was pressed. [Keysyms](https://www.tcl.tk/man/tcl8.6/TkCmd/keysyms.htm) can be used to bind specific key/s. <br>When using keysyms, 'Key' or 'KeyPress' can be omitted. <br> |
+| KeyReleased                      | A key was released.                                          |
+| FocusIn                      | Keyboard has focused on element.       |
+| FocusOut                      | Keyboard switched focus from element.  |
+| Visibility | Some part of the element is seen on screen |
+
+Modifier keys can be put in front of events.
+
+| Windows | MacOS   |
+| ------- | ------- |
+| Control | Command |
+| Alt     | Option  |
+| Shift            |<==|
+| Double  | <== |
+| Triple | <== |
+| Quadruple | <== |
+
+The following will bind Ctrl+z to the window:
+```python
+window.bind('<Control-z>', 'STRING TO APPEND')
+```
+
+To unbind an event from an element, use the `unbind` method.
+```python
+window['-KEY-'].unbind('TKINTER EVENT')
+```
+
+Here is sample code that shows these bindings in action.
+
+Four main things are occurring.
 
 1. Any button clicks in the window will return an event "Window Click" from window.read()
-2. Right clicking the "Go" buttons will return an event "Go+RIGHT CLICK+" from window.read()
-3. When the Input Element receives focus, an event "-IN-+FOCUS+" will be returned from window.read()
+2. Right clicking the "Go" buttons will return an event "Go +RIGHT CLICK+" from window.read()
+3. When the second Input Element receives focus, an event "-IN2- +FOCUS+" will be returned from window.read()
+4. If the "Unbind " button is pressed, the right click binding of the "Go" button will be unbinded.
 
 ```python
 import PySimpleGUI as sg
@@ -6353,27 +6404,29 @@ import PySimpleGUI as sg
 sg.theme('Dark Green 2')
 
 layout = [  [sg.Text('My Window')],
-            [sg.Input(key='-IN-'), sg.Text(size=(15,1), key='-OUT-')],
-            [sg.Button('Go'), sg.Button('Exit')]
+            [sg.Input(key='-IN1-')],
+            [sg.Input(key='-IN2-')],
+            [sg.Button('Go'), sg.Button('Unbind'),sg.Button('Exit')]
               ]
 
 window = sg.Window('Window Title', layout, finalize=True)
 
-window['-IN-'].bind("<FocusIn>", '+FOCUS+')
 window.bind("<Button-1>", 'Window Click')
-window['Go'].bind("<Button-3>", '+RIGHT CLICK+')
+window['Go'].bind("<Button-3>", ' +RIGHT CLICK+')
+window['-IN2-'].bind("<FocusIn>", ' +FOCUS+')
 
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
+    if event == 'Unbind':
+        window['Go'].unbind('<Button-3>')
 
-window.close(); del window
+window.close()
 ```
 
-There is no way to "unbind" and event at this time.  (sorry, didn't think of it before releasing)
----
+[Tkinter bindings documentation](https://tcl.tk/man/tcl8.6/TkCmd/bind.htm#M18)
 
 ------------------
 
@@ -8257,6 +8310,24 @@ Custom Titlebars, Fix for Docstrings so PyCharm 2020 works correctly, New shortc
 * get_globals removed - not required for normal PySimpleGUI.  Was only used by patched packages which will need to fork PySimpleGUI for this feature.
 * popup - support for custom titlebar!
 * Changed from pathlib to os.path
+
+## 4.34.0 PySimpleGUI 18-Jan-2021
+
+Fix popup_scrolled, big swap of PEP8 names from alias to def statements
+
+* Quick "Emergency" release since popup_scrolled crashes. BAD bad thing that has to be corrected ASAP
+* Changed all of the functions and methods so that the definition is PEP8 compliant and and alias is not compliant
+* Built-in SDK help
+	* Added a "Summary mode"
+	* Make window smaller to fit on more monitors
+	* Added aliases to end of help for each element
+* metadata
+	* Changed into a class Property so that it shows up in the docs correctly
+	* The Element, Window and SystemTray classes all got this same change
+* Added all elements to the docstring for window[key] style lookups to make PyCharm happier
+* Moved all PEP8 function aliases to a centralized spot at the end of the code
+* sdk_help alias of main_sdk_help
+* Several new demos including a demo browser
 
 ## Upcoming
 

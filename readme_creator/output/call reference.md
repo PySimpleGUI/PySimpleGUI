@@ -4832,25 +4832,47 @@ hide_row()
 
 Print like Python normally prints except route the output to a multline element and also add colors if desired
 
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+There are also "aliases" for text_color, background_color and colors (t, b, c)
+t - An alias for color of the text (makes for shorter calls)
+b - An alias for the background_color parameter
+c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+With the aliases it's possible to write the same print but in more compact ways:
+cprint('This will print white text on red background', c=('white', 'red'))
+cprint('This will print white text on red background', c='white on red')
+cprint('This will print white text on red background', text_color='white', background_color='red')
+cprint('This will print white text on red background', t='white', b='red')
+
 ```
 print(args=*<1 or N object>,
     end = None,
     sep = None,
     text_color = None,
     background_color = None,
-    justification = None)
+    justification = None,
+    colors = None,
+    t = None,
+    b = None,
+    c = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any |       args       | The arguments to print |
-| str |       end        | The end char to use just like print uses |
-| str |       sep        | The separation character like print uses |
-| str |    text_color    | The color of the text |
-| str | background_color | The background color of the line |
-| str |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|           Any           |       args       | The arguments to print |
+|           str           |       end        | The end char to use just like print uses |
+|           str           |       sep        | The separation character like print uses |
+|           str           |    text_color    | The color of the text |
+|           str           | background_color | The background color of the line |
+|           str           |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+| str) or Tuple[str, str] |      colors      | Either a tuple or a string that has both the text and background colors |
+|           str           |        t         | Color of the text |
+|           str           |        b         | The background color of the line |
+| str) or Tuple[str, str] |        c         | Either a tuple or a string that has both the text and background colors |
 
 ### reroute_stderr_to_here
 
@@ -9579,6 +9601,7 @@ Parameter Descriptions:
 |--|--|--|
 | Any |  key  | Setting to be saved. Can be any valid dictionary key type |
 | Any | value | Value to save as the setting's value. Can be anything |
+| (Any) | **RETURN** | value that key was set to
 
 ### set_default_value
 
@@ -9701,7 +9724,7 @@ Parameter Descriptions:
 |                    int                    |             border_depth             | Default border depth (width) for all elements in the window |
 |                   bool                    |              auto_close              | If True, the window will automatically close itself |
 |                    int                    |         auto_close_duration          | Number of seconds to wait before closing the window |
-|                    str                    |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|              (str or bytes)               |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 |                   bool                    |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
 |                   float                   |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
 |                   bool                    |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
@@ -11200,6 +11223,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11313,6 +11337,7 @@ Parameter Descriptions:
 |                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
 |                            (Default = (None))                            |    image_size    | image size (O.K.) |
 |                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
+|                                   int                                    |   border_width   | width of border around element |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
@@ -11325,7 +11350,6 @@ Parameter Descriptions:
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   Any                                    |     metadata     | Anything you want to store along with this button |
-|                                   int                                    |   border_width   | width of border around element |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11359,6 +11383,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11397,6 +11422,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11438,10 +11464,10 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
-Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
-BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
+Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
 ```
 FilesBrowse(button_text = "Browse",
@@ -11459,6 +11485,7 @@ FilesBrowse(button_text = "Browse",
     pad = None,
     key = None,
     k = None,
+    files_delimiter = ";",
     metadata = None)
 ```
 
@@ -11480,6 +11507,8 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   str                                    | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11517,6 +11546,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
 |                      str or int or tuple or object                       |       key        | Used with window.FindElement and with return values to uniquely identify this element |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | The Button created
 
 ```
@@ -11550,6 +11580,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11583,6 +11614,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11617,6 +11649,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -11679,6 +11712,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11713,6 +11747,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11746,6 +11781,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11825,6 +11861,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11866,6 +11903,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11900,6 +11938,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11933,9 +11972,10 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
-## Button No Longer To Be Used
+## Button Functions No Longer Used (DO NOT USE)
 
 Note - These are no longer recommended! 
 They are shown here in case you run into them in some old code.
@@ -12071,6 +12111,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -12114,6 +12155,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ## Debug Window Output
@@ -12453,7 +12495,955 @@ Parameter Descriptions:
 | Any | key | Key used when meter was created |
 | None | **RETURN** | None
 
-## Popup Functions
+## Popups PEP8 Versions
+
+Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
+"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
+
+```
+popup(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    button_type = 0,
+    auto_close = False,
+    auto_close_duration = None,
+    custom_text = (None, None),
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    any_key_closes = False,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                   Any                   |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
+|                   str                   |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
+|         Tuple[str, str] or None         |    button_color     | Color of the buttons shown (text color, button color) |
+|                   str                   |  background_color   | Window's background color |
+|                   str                   |     text_color      | text color |
+|                   int                   |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
+|                  bool                   |     auto_close      | If True the window will automatically close |
+|                   int                   | auto_close_duration | time in seconds to keep window open before closing it automatically |
+|         Tuple[str, str] or str          |     custom_text     | A string or pair of strings that contain the text to display on the buttons |
+|                  bool                   |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. |
+|              str or bytes               |        icon         | icon to display on the window. Same format as a Window call |
+|                   int                   |     line_width      | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
+| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc |
+|                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
+|                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
+|             Tuple[int, int]             |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
+|                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
+|                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
+|              str or bytes               |        image        | Image to include at the top of the popup window |
+|                  bool                   |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
+ and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
+ event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
+ loop.
+
+```
+popup_animated(image_source,
+    message = None,
+    background_color = None,
+    text_color = None,
+    font = None,
+    no_titlebar = True,
+    grab_anywhere = True,
+    keep_on_top = True,
+    location = (None, None),
+    alpha_channel = None,
+    time_between_frames = 0,
+    transparent_color = None,
+    title = "",
+    icon = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str or bytes or None |    image_source     | Either a filename or a base64 string. Use None to close the window. |
+|        str         |       message       | An optional message to be shown with the animation |
+|        str         |  background_color   | color of background |
+|        str         |     text_color      | color of the text |
+|    str or tuple    |        font         | specifies the font family, size, etc |
+|        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+|     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|        int         | time_between_frames | Amount of time in milliseconds between each frame |
+|        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str         |        title        | Title that will be shown on the window |
+|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| None | **RETURN** | No return value
+
+Popup that closes itself after some time period
+
+```
+popup_auto_close(args=*<1 or N object>,
+    title = None,
+    button_type = 0,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = True,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Display Popup with "cancelled" button text
+
+```
+popup_cancel(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Popup with colored button and 'Error' as button text
+
+```
+popup_error(args=*<1 or N object>,
+    title = None,
+    button_color = (None, None),
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
+
+```
+popup_get_date(start_mon = None,
+    start_day = None,
+    start_year = None,
+    begin_at_sunday_plus = 0,
+    no_titlebar = True,
+    title = "Choose Date",
+    keep_on_top = True,
+    location = (None, None),
+    close_when_chosen = False,
+    icon = None,
+    locale = None,
+    month_names = None,
+    day_abbreviations = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|    int     |      start_mon       | The starting month |
+| int or None |      start_day       | The starting day - optional. Set to None or 0 if no date to be chosen at start |
+|    int     |      start_year      | The starting year |
+|    int     | begin_at_sunday_plus | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
+|    str     |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| (int, int) |       location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|    str     |        title         | Title that will be shown on the window |
+|    bool    |  close_when_chosen   | If True, the window will close and function return when a day is clicked |
+|    str     |        locale        | locale used to get the day names |
+|    bool    |     no_titlebar      | If True no titlebar will be shown |
+|    bool    |     keep_on_top      | If True the window will remain above all current windows |
+| List[str]  |     month_names      | optional list of month names to use (should be 12 items) |
+| List[str]  |  day_abbreviations   | optional list of abbreviations to display as the day of week |
+|    bool    |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
+
+Display popup window with text entry field and browse button so that a file can be chosen by user.
+
+```
+popup_get_file(message,
+    title = None,
+    default_path = "",
+    default_extension = "",
+    save_as = False,
+    multiple_files = False,
+    file_types = (('ALL Files', '*.*'),),
+    no_window = False,
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    initial_folder = None,
+    image = None,
+    files_delimiter = ";",
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |      message      | message displayed to user |
+|          str           |       title       | Window title |
+|          str           |   default_path    | path to display to user as starting point (filled into the input field) |
+|          str           | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|          bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
+|          bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+| Tuple[Tuple[str,str]]  |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|          bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|       (int, int)       |       size        | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color    | Color of the button (text, background) |
+|          str           | background_color  | background color of the entire window |
+|          str           |    text_color     | color of the text |
+|      bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
+|          bool          |    no_titlebar    | If True no titlebar will be shown |
+|          bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |    keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location      | Location of upper left corner of the window |
+|          str           |  initial_folder   | location in filesystem to begin browsing |
+|      str or bytes      |       image       | Image to include at the top of the popup window |
+|          str           |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
+|          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
+
+Display popup with text entry field and browse button so that a folder can be chosen.
+
+```
+popup_get_folder(message,
+    title = None,
+    default_path = "",
+    no_window = False,
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    initial_folder = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |     message      | message displayed to user |
+|          str           |      title       | Window title |
+|          str           |   default_path   | path to display to user as starting point (filled into the input field) |
+|          bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|       (int, int)       |       size       | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color   | button color (foreground, background) |
+|          str           | background_color | color of background |
+|          str           |    text_color    | color of the text |
+|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|          bool          |   no_titlebar    | If True no titlebar will be shown |
+|          bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |   keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location     | Location of upper left corner of the window |
+|          str           |  initial_folder  | location in filesystem to begin browsing |
+|      str or bytes      |      image       | Image to include at the top of the popup window |
+|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
+
+Display Popup with text entry field. Returns the text entered or None if closed / cancelled
+
+```
+popup_get_text(message,
+    title = None,
+    default_text = "",
+    password_char = "",
+    size = (None, None),
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    icon = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          str           |     message      | message displayed to user |
+|          str           |      title       | Window title |
+|          str           |   default_text   | default value to put into input area |
+|          str           |  password_char   | character to be shown instead of actually typed characters |
+|       (int, int)       |       size       | (width, height) of the InputText Element |
+| Tuple[str, str] or str |   button_color   | Color of the button (text, background) |
+|          str           | background_color | background color of the entire window |
+|          str           |    text_color    | color of the message text |
+|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+|          bool          |   no_titlebar    | If True no titlebar will be shown |
+|          bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|          bool          |   keep_on_top    | If True the window will remain above all current windows |
+|    Tuple[int, int]     |     location     | (x,y) Location on screen to display the upper left corner of window |
+|      str or bytes      |      image       | Image to include at the top of the popup window |
+|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
+
+Show a Popup but without any buttons
+
+```
+popup_no_buttons(args=*<1 or N object>,
+    title = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any          |        *args        | Variable number of items to display |
+|          str          |        title        | Title to display in the window. |
+|          str          |  background_color   | color of background |
+|          str          |     text_color      | color of the text |
+|         bool          |     auto_close      | if True window will close itself |
+|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|         bool          |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
+|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int          |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|         bool          |     no_titlebar     | If True no titlebar will be shown |
+|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|    Tuple[int, int]    |      location       | Location of upper left corner of the window |
+|     str or bytes      |        image        | Image to include at the top of the popup window |
+|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Display a Popup without a titlebar.   Enables grab anywhere so you can move it
+
+```
+popup_no_titlebar(args=*<1 or N object>,
+    title = None,
+    button_type = 0,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    grab_anywhere = True,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show Popup window and immediately return (does not block)
+
+```
+popup_non_blocking(args=*<1 or N object>,
+    title = None,
+    button_type = 0,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = True,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+| str or None | **RETURN** | Reason for popup closing
+
+Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
+
+The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
+
+The return code specifies why the call is returning (e.g. did the user click the message to dismiss it)
+
+```
+popup_notify(args=*<1 or N object>,
+    title = "",
+    icon = ...,
+    display_duration_in_ms = 3000,
+    fade_in_duration = 1000,
+    alpha = 0.9,
+    location = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|       str       |         title          | Text to be shown at the top of the window in a larger font |
+|       str       |        message         | Text message that makes up the majority of the window |
+|  bytes or str   |          icon          | A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window |
+|       int       | display_duration_in_ms | Number of milliseconds to show the window |
+|       int       |    fade_in_duration    | Number of milliseconds to fade window in and out |
+|      float      |         alpha          | Alpha channel. 0 - invisible 1 - fully visible |
+| Tuple[int, int] |        location        | Location on the screen to display the window |
+| (int) | **RETURN** | reason for returning
+
+Display Popup with OK button only
+
+```
+popup_ok(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Display popup with OK and Cancel buttons
+
+```
+popup_ok_cancel(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = ...,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| "OK" or "Cancel" or None | **RETURN** | clicked button
+
+Show Popup box that doesn't block and closes itself
+
+```
+popup_quick(args=*<1 or N object>,
+    title = None,
+    button_type = 0,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = True,
+    auto_close_duration = 2,
+    non_blocking = True,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show Popup window with no titlebar, doesn't block, and auto closes itself.
+
+```
+popup_quick_message(args=*<1 or N object>,
+    title = None,
+    button_type = 5,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = True,
+    auto_close_duration = 2,
+    non_blocking = True,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = True,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+popup_scrolled(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    yes_no = False,
+    auto_close = False,
+    auto_close_duration = None,
+    size = (None, None),
+    location = (None, None),
+    non_blocking = False,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    font = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
+|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Display Popup with Yes and No buttons
+
+```
+popup_yes_no(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    auto_close = False,
+    auto_close_duration = None,
+    non_blocking = False,
+    icon = None,
+    line_width = None,
+    font = None,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    location = (None, None),
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
+|          int           |     line_width      | Width of lines in characters |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| "Yes" or "No" or None | **RETURN** | clicked button
+
+### Popup Alias - Same as popup_scrolled
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+sprint(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    yes_no = False,
+    auto_close = False,
+    auto_close_duration = None,
+    size = (None, None),
+    location = (None, None),
+    non_blocking = False,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    font = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
+|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
+want, just like a print statement.
+
+```
+ScrolledTextBox(args=*<1 or N object>,
+    title = None,
+    button_color = None,
+    background_color = None,
+    text_color = None,
+    yes_no = False,
+    auto_close = False,
+    auto_close_duration = None,
+    size = (None, None),
+    location = (None, None),
+    non_blocking = False,
+    no_titlebar = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    font = None,
+    image = None,
+    modal = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|          Any           |        *args        | Variable number of items to display |
+|          str           |        title        | Title to display in the window. |
+| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
+|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|          bool          |     auto_close      | if True window will close itself |
+|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
+|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
+|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|          str           |  background_color   | color of background |
+|          str           |     text_color      | color of the text |
+|          bool          |     no_titlebar     | If True no titlebar will be shown |
+|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|          bool          |     keep_on_top     | If True the window will remain above all current windows |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+|      str or bytes      |        image        | Image to include at the top of the popup window |
+|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
+
+## Popup Not PEP8 Compliant names
+
+These versions of the popup functions are here only for backwards compatibility.  You should not use these function names.  Instead use the popup functions that have snake_case rather than CamelCase.
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -12533,20 +13523,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |    image_source     | Either a filename or a base64 string. |
-|     str     |       message       | An optional message to be shown with the animation |
-|     str     |  background_color   | color of background |
-|     str     |     text_color      | color of the text |
-| str or tuple |        font         | specifies the font family, size, etc |
-|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
-|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
-|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
-| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
-|     int     | time_between_frames | Amount of time in milliseconds between each frame |
-|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
-|     str     |        title        | Title that will be shown on the window |
-|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| str or bytes or None |    image_source     | Either a filename or a base64 string. Use None to close the window. |
+|        str         |       message       | An optional message to be shown with the animation |
+|        str         |  background_color   | color of background |
+|        str         |     text_color      | color of the text |
+|    str or tuple    |        font         | specifies the font family, size, etc |
+|        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+|     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|        int         | time_between_frames | Amount of time in milliseconds between each frame |
+|        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str         |        title        | Title that will be shown on the window |
+|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | None | **RETURN** | No return value
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -12754,6 +13744,7 @@ PopupGetFile(message,
     location = (None, None),
     initial_folder = None,
     image = None,
+    files_delimiter = ";",
     modal = True)
 ```
 
@@ -12781,6 +13772,7 @@ Parameter Descriptions:
 |    Tuple[int, int]     |     location      | Location of upper left corner of the window |
 |          str           |  initial_folder   | location in filesystem to begin browsing |
 |      str or bytes      |       image       | Image to include at the top of the popup window |
+|          str           |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -13463,950 +14455,6 @@ Parameter Descriptions:
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
 
-## Popups PEP8 Versions
-
-Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
-"print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
-
-```
-popup(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    button_type = 0,
-    auto_close = False,
-    auto_close_duration = None,
-    custom_text = (None, None),
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    any_key_closes = False,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                   Any                   |        *args        | Variable number of your arguments. Load up the call with stuff to see! |
-|                   str                   |        title        | Optional title for the window. If none provided, the first arg will be used instead. |
-|         Tuple[str, str] or None         |    button_color     | Color of the buttons shown (text color, button color) |
-|                   str                   |  background_color   | Window's background color |
-|                   str                   |     text_color      | text color |
-|                   int                   |     button_type     | NOT USER SET! Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). There are many Popup functions and they call Popup, changing this parameter to get the desired effect. |
-|                  bool                   |     auto_close      | If True the window will automatically close |
-|                   int                   | auto_close_duration | time in seconds to keep window open before closing it automatically |
-|         Tuple[str, str] or str          |     custom_text     | A string or pair of strings that contain the text to display on the buttons |
-|                  bool                   |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. |
-|              str or bytes               |        icon         | icon to display on the window. Same format as a Window call |
-|                   int                   |     line_width      | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
-| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc |
-|                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
-|                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
-|             Tuple[int, int]             |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
-|                  bool                   |     keep_on_top     | If True the window will remain above all current windows |
-|                  bool                   |   any_key_closes    | If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed. Normally the return key only will close the window. Default is false. |
-|              str or bytes               |        image        | Image to include at the top of the popup window |
-|                  bool                   |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show animation one frame at a time.  This function has its own internal clocking meaning you can call it at any frequency
- and the rate the frames of video is shown remains constant.  Maybe your frames update every 30 ms but your
- event loop is running every 10 ms.  You don't have to worry about delaying, just call it every time through the
- loop.
-
-```
-popup_animated(image_source,
-    message = None,
-    background_color = None,
-    text_color = None,
-    font = None,
-    no_titlebar = True,
-    grab_anywhere = True,
-    keep_on_top = True,
-    location = (None, None),
-    alpha_channel = None,
-    time_between_frames = 0,
-    transparent_color = None,
-    title = "",
-    icon = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| str or bytes |    image_source     | Either a filename or a base64 string. |
-|     str     |       message       | An optional message to be shown with the animation |
-|     str     |  background_color   | color of background |
-|     str     |     text_color      | color of the text |
-| str or tuple |        font         | specifies the font family, size, etc |
-|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
-|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
-|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
-| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
-|     int     | time_between_frames | Amount of time in milliseconds between each frame |
-|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
-|     str     |        title        | Title that will be shown on the window |
-|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-| None | **RETURN** | No return value
-
-Popup that closes itself after some time period
-
-```
-popup_auto_close(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = True,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display Popup with "cancelled" button text
-
-```
-popup_cancel(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Popup with colored button and 'Error' as button text
-
-```
-popup_error(args=*<1 or N object>,
-    title = None,
-    button_color = (None, None),
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
-
-```
-popup_get_date(start_mon = None,
-    start_day = None,
-    start_year = None,
-    begin_at_sunday_plus = 0,
-    no_titlebar = True,
-    title = "Choose Date",
-    keep_on_top = True,
-    location = (None, None),
-    close_when_chosen = False,
-    icon = None,
-    locale = None,
-    month_names = None,
-    day_abbreviations = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|    int     |      start_mon       | The starting month |
-| int or None |      start_day       | The starting day - optional. Set to None or 0 if no date to be chosen at start |
-|    int     |      start_year      | The starting year |
-|    int     | begin_at_sunday_plus | Determines the left-most day in the display. 0=sunday, 1=monday, etc |
-|    str     |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-| (int, int) |       location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    str     |        title         | Title that will be shown on the window |
-|    bool    |  close_when_chosen   | MIKE_please_add_text_here |
-|    str     |        locale        | locale used to get the day names |
-|    bool    |     no_titlebar      | If True no titlebar will be shown |
-|    bool    |     keep_on_top      | If True the window will remain above all current windows |
-| List[str]  |     month_names      | optional list of month names to use (should be 12 items) |
-| List[str]  |  day_abbreviations   | optional list of abbreviations to display as the day of week |
-|    bool    |        modal         | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| None or (int, int, int) | **RETURN** | Tuple containing (month, day, year) of chosen date or None if was cancelled
-
-Display popup window with text entry field and browse button so that a file can be chosen by user.
-
-```
-popup_get_file(message,
-    title = None,
-    default_path = "",
-    default_extension = "",
-    save_as = False,
-    multiple_files = False,
-    file_types = (('ALL Files', '*.*'),),
-    no_window = False,
-    size = (None, None),
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    icon = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    initial_folder = None,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str           |      message      | message displayed to user |
-|          str           |       title       | Window title |
-|          str           |   default_path    | path to display to user as starting point (filled into the input field) |
-|          str           | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|          bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
-|          bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]]  |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|          bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       (int, int)       |       size        | (width, height) of the InputText Element |
-| Tuple[str, str] or str |   button_color    | Color of the button (text, background) |
-|          str           | background_color  | background color of the entire window |
-|          str           |    text_color     | color of the text |
-|      bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
-|          bool          |    no_titlebar    | If True no titlebar will be shown |
-|          bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |    keep_on_top    | If True the window will remain above all current windows |
-|    Tuple[int, int]     |     location      | Location of upper left corner of the window |
-|          str           |  initial_folder   | location in filesystem to begin browsing |
-|      str or bytes      |       image       | Image to include at the top of the popup window |
-|          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
-
-Display popup with text entry field and browse button so that a folder can be chosen.
-
-```
-popup_get_folder(message,
-    title = None,
-    default_path = "",
-    no_window = False,
-    size = (None, None),
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    icon = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    initial_folder = None,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str           |     message      | message displayed to user |
-|          str           |      title       | Window title |
-|          str           |   default_path   | path to display to user as starting point (filled into the input field) |
-|          bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|       (int, int)       |       size       | (width, height) of the InputText Element |
-| Tuple[str, str] or str |   button_color   | button color (foreground, background) |
-|          str           | background_color | color of background |
-|          str           |    text_color    | color of the text |
-|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|          bool          |   no_titlebar    | If True no titlebar will be shown |
-|          bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |   keep_on_top    | If True the window will remain above all current windows |
-|    Tuple[int, int]     |     location     | Location of upper left corner of the window |
-|          str           |  initial_folder  | location in filesystem to begin browsing |
-|      str or bytes      |      image       | Image to include at the top of the popup window |
-|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
-
-Display Popup with text entry field. Returns the text entered or None if closed / cancelled
-
-```
-popup_get_text(message,
-    title = None,
-    default_text = "",
-    password_char = "",
-    size = (None, None),
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    icon = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          str           |     message      | message displayed to user |
-|          str           |      title       | Window title |
-|          str           |   default_text   | default value to put into input area |
-|          str           |  password_char   | character to be shown instead of actually typed characters |
-|       (int, int)       |       size       | (width, height) of the InputText Element |
-| Tuple[str, str] or str |   button_color   | Color of the button (text, background) |
-|          str           | background_color | background color of the entire window |
-|          str           |    text_color    | color of the message text |
-|      bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|          bool          |   no_titlebar    | If True no titlebar will be shown |
-|          bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|          bool          |   keep_on_top    | If True the window will remain above all current windows |
-|    Tuple[int, int]     |     location     | (x,y) Location on screen to display the upper left corner of window |
-|      str or bytes      |      image       | Image to include at the top of the popup window |
-|          bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
-
-Show a Popup but without any buttons
-
-```
-popup_no_buttons(args=*<1 or N object>,
-    title = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]    |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display a Popup without a titlebar.   Enables grab anywhere so you can move it
-
-```
-popup_no_titlebar(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    grab_anywhere = True,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show Popup window and immediately return (does not block)
-
-```
-popup_non_blocking(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None | **RETURN** | Reason for popup closing
-
-Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
-
-The window will slowly fade in and out if desired.  Clicking on the window will cause it to move through the end the current "phase". For example, if the window was fading in and it was clicked, then it would immediately stop fading in and instead be fully visible.  It's a way for the user to quickly dismiss the window.
-
-The return code specifies why the call is returning (e.g. did the user click the message to dismiss it)
-
-```
-popup_notify(args=*<1 or N object>,
-    title = "",
-    icon = ...,
-    display_duration_in_ms = 3000,
-    fade_in_duration = 1000,
-    alpha = 0.9,
-    location = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|       str       |         title          | Text to be shown at the top of the window in a larger font |
-|       str       |        message         | Text message that makes up the majority of the window |
-|  bytes or str   |          icon          | A base64 encoded PNG/GIF image or PNG/GIF filename that will be displayed in the window |
-|       int       | display_duration_in_ms | Number of milliseconds to show the window |
-|       int       |    fade_in_duration    | Number of milliseconds to fade window in and out |
-|      float      |         alpha          | Alpha channel. 0 - invisible 1 - fully visible |
-| Tuple[int, int] |        location        | Location on the screen to display the window |
-| (int) | **RETURN** | reason for returning
-
-Display Popup with OK button only
-
-```
-popup_ok(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display popup with OK and Cancel buttons
-
-```
-popup_ok_cancel(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = ...,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| "OK" or "Cancel" or None | **RETURN** | clicked button
-
-Show Popup box that doesn't block and closes itself
-
-```
-popup_quick(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = True,
-    auto_close_duration = 2,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show Popup window with no titlebar, doesn't block, and auto closes itself.
-
-```
-popup_quick_message(args=*<1 or N object>,
-    title = None,
-    button_type = 5,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = True,
-    auto_close_duration = 2,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = True,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-popup_scrolled(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    yes_no = False,
-    auto_close = False,
-    auto_close_duration = None,
-    size = (None, None),
-    location = (None, None),
-    non_blocking = False,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    font = None,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Display Popup with Yes and No buttons
-
-```
-popup_yes_no(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = False,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| "Yes" or "No" or None | **RETURN** | clicked button
-
-Same as popup_scrolled
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-sprint(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    yes_no = False,
-    auto_close = False,
-    auto_close_duration = None,
-    size = (None, None),
-    location = (None, None),
-    non_blocking = False,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    font = None,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
-Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
-want, just like a print statement.
-
-```
-ScrolledTextBox(args=*<1 or N object>,
-    title = None,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    yes_no = False,
-    auto_close = False,
-    auto_close_duration = None,
-    size = (None, None),
-    location = (None, None),
-    non_blocking = False,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    font = None,
-    image = None,
-    modal = True)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|       (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|    Tuple[int, int]     |      location       | Location on the screen to place the upper left corner of the window |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|          bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-| str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
-
 ## PEP8 Function Bindings
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -14437,126 +14485,9 @@ Parameter Descriptions:
 | Any | obj | The object to display |
 | (str) | **RETURN** | Formatted output of the object's values
 
-### Non PEP8 version (same as PEP8 version)
-
-Sets the icon which will be used any time a window is created if an icon is not provided when the
-window is created.
-
-```
-SetGlobalIcon(icon)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-| bytes or str | icon | Either a Base64 byte string or a filename |
-| None | **RETURN** | None
-
-```
-SetOptions(icon = None,
-    button_color = None,
-    element_size = (None, None),
-    button_element_size = (None, None),
-    margins = (None, None),
-    element_padding = (None, None),
-    auto_size_text = None,
-    auto_size_buttons = None,
-    font = None,
-    border_width = None,
-    slider_border_width = None,
-    slider_relief = None,
-    slider_orientation = None,
-    autoclose_time = None,
-    message_box_line_width = None,
-    progress_meter_border_depth = None,
-    progress_meter_style = None,
-    progress_meter_relief = None,
-    progress_meter_color = None,
-    progress_meter_size = None,
-    text_justification = None,
-    background_color = None,
-    element_background_color = None,
-    text_element_background_color = None,
-    input_elements_background_color = None,
-    input_text_color = None,
-    scrollbar_color = None,
-    text_color = None,
-    element_text_color = None,
-    debug_win_size = (None, None),
-    window_location = (None, None),
-    error_button_color = (None, None),
-    tooltip_time = None,
-    tooltip_font = None,
-    use_ttk_buttons = None,
-    ttk_theme = None,
-    suppress_error_popups = None,
-    suppress_raise_key_errors = None,
-    suppress_key_guessing = None,
-    enable_treeview_869_patch = None,
-    enable_mac_notitlebar_patch = None,
-    use_custom_titlebar = None,
-    titlebar_background_color = None,
-    titlebar_text_color = None,
-    titlebar_font = None,
-    titlebar_icon = None)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|                  bytes or str                  |              icon               | filename or base64 string to be used for the window's icon |
-|             Tuple[str, str] or str             |          button_color           | Color of the button (text, background) |
-|                   (int, int)                   |          element_size           | element size (width, height) in characters |
-|                   (int, int)                   |       button_element_size       | Size of button |
-|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
-|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|             str or Tuple[str, int]             |              font               | specifies the font family, size, etc |
-|                      int                       |          border_width           | width of border around element |
-|                      ???                       |       slider_border_width       | ??? |
-|                      ???                       |          slider_relief          | ??? |
-|                      ???                       |       slider_orientation        | ??? |
-|                      ???                       |         autoclose_time          | ??? |
-|                      ???                       |     message_box_line_width      | ??? |
-|                      ???                       |   progress_meter_border_depth   | ??? |
-|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
-|                      ???                       |      progress_meter_relief      |  |
-|                      ???                       |      progress_meter_color       | ??? |
-|                      ???                       |       progress_meter_size       | ??? |
-|         'left' or 'right' or 'center'          |       text_justification        | Default text justification for all Text Elements in window |
-|                      str                       |        background_color         | color of background |
-|                      str                       |    element_background_color     | element background color |
-|                      str                       |  text_element_background_color  | text element background color |
-|                 idk_yetReally                  | input_elements_background_color | ??? |
-|                      ???                       |        input_text_color         | ??? |
-|                      ???                       |         scrollbar_color         | ??? |
-|                      str                       |           text_color            | color of the text |
-|                      ???                       |       element_text_color        | ??? |
-|                Tuple[int, int]                 |         debug_win_size          | window size |
-|                      ???                       |         window_location         | (Default = (None)) |
-|                      ???                       |       error_button_color        | (Default = (None)) |
-|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
-| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
-|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
-|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
-|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
-|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
-|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
-|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
-|                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
-|                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |
-|                  str or None                   |    titlebar_background_color    | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
-|                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
-|                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
-| None | **RETURN** | None
-
 ## The Test Harness
 
-Used to test the installation, get information about the versions, upgrade from GitHub
+Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub
 
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
 
@@ -15010,7 +14941,7 @@ Parameter Descriptions:
 Fills a window with values provided in a values dictionary { element_key : new_value }
 
 ```
-FillFormWithValues(window, values_dict)
+fill_form_with_values(window, values_dict)
 ```
 
 Parameter Descriptions:
@@ -15024,7 +14955,7 @@ Parameter Descriptions:
 Fills a window with values provided in a values dictionary { element_key : new_value }
 
 ```
-fill_form_with_values(window, values_dict)
+FillFormWithValues(window, values_dict)
 ```
 
 Parameter Descriptions:
@@ -15158,7 +15089,10 @@ set_options(icon = None,
     titlebar_background_color = None,
     titlebar_text_color = None,
     titlebar_font = None,
-    titlebar_icon = None)
+    titlebar_icon = None,
+    user_settings_path = None,
+    pysimplegui_settings_path = None,
+    pysimplegui_settings_filename = None)
 ```
 
 Parameter Descriptions:
@@ -15211,6 +15145,132 @@ Parameter Descriptions:
 |                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
 |         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
+|                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
+|                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
+| None | **RETURN** | None
+
+### Non PEP8 versions
+
+Sets the icon which will be used any time a window is created if an icon is not provided when the
+window is created.
+
+```
+SetGlobalIcon(icon)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bytes or str | icon | Either a Base64 byte string or a filename |
+| None | **RETURN** | None
+
+```
+SetOptions(icon = None,
+    button_color = None,
+    element_size = (None, None),
+    button_element_size = (None, None),
+    margins = (None, None),
+    element_padding = (None, None),
+    auto_size_text = None,
+    auto_size_buttons = None,
+    font = None,
+    border_width = None,
+    slider_border_width = None,
+    slider_relief = None,
+    slider_orientation = None,
+    autoclose_time = None,
+    message_box_line_width = None,
+    progress_meter_border_depth = None,
+    progress_meter_style = None,
+    progress_meter_relief = None,
+    progress_meter_color = None,
+    progress_meter_size = None,
+    text_justification = None,
+    background_color = None,
+    element_background_color = None,
+    text_element_background_color = None,
+    input_elements_background_color = None,
+    input_text_color = None,
+    scrollbar_color = None,
+    text_color = None,
+    element_text_color = None,
+    debug_win_size = (None, None),
+    window_location = (None, None),
+    error_button_color = (None, None),
+    tooltip_time = None,
+    tooltip_font = None,
+    use_ttk_buttons = None,
+    ttk_theme = None,
+    suppress_error_popups = None,
+    suppress_raise_key_errors = None,
+    suppress_key_guessing = None,
+    enable_treeview_869_patch = None,
+    enable_mac_notitlebar_patch = None,
+    use_custom_titlebar = None,
+    titlebar_background_color = None,
+    titlebar_text_color = None,
+    titlebar_font = None,
+    titlebar_icon = None,
+    user_settings_path = None,
+    pysimplegui_settings_path = None,
+    pysimplegui_settings_filename = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                  bytes or str                  |              icon               | filename or base64 string to be used for the window's icon |
+|             Tuple[str, str] or str             |          button_color           | Color of the button (text, background) |
+|                   (int, int)                   |          element_size           | element size (width, height) in characters |
+|                   (int, int)                   |       button_element_size       | Size of button |
+|                Tuple[int, int]                 |             margins             | (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|   Tuple[int, int] or ((int, int),(int,int))    |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
+|                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|             str or Tuple[str, int]             |              font               | specifies the font family, size, etc |
+|                      int                       |          border_width           | width of border around element |
+|                      ???                       |       slider_border_width       | ??? |
+|                      ???                       |          slider_relief          | ??? |
+|                      ???                       |       slider_orientation        | ??? |
+|                      ???                       |         autoclose_time          | ??? |
+|                      ???                       |     message_box_line_width      | ??? |
+|                      ???                       |   progress_meter_border_depth   | ??? |
+|                      ???                       |      progress_meter_style       | You can no longer set a progress bar style. All ttk styles must be the same for the window |
+|                      ???                       |      progress_meter_relief      |  |
+|                      ???                       |      progress_meter_color       | ??? |
+|                      ???                       |       progress_meter_size       | ??? |
+|         'left' or 'right' or 'center'          |       text_justification        | Default text justification for all Text Elements in window |
+|                      str                       |        background_color         | color of background |
+|                      str                       |    element_background_color     | element background color |
+|                      str                       |  text_element_background_color  | text element background color |
+|                 idk_yetReally                  | input_elements_background_color | ??? |
+|                      ???                       |        input_text_color         | ??? |
+|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       |           text_color            | color of the text |
+|                      ???                       |       element_text_color        | ??? |
+|                Tuple[int, int]                 |         debug_win_size          | window size |
+|                      ???                       |         window_location         | (Default = (None)) |
+|                      ???                       |       error_button_color        | (Default = (None)) |
+|                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
+| str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
+|                      bool                      |         use_ttk_buttons         | if True will cause all buttons to be ttk buttons |
+|                      str                       |            ttk_theme            | Theme to use with ttk widgets. Choices (on Windows) include - 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
+|                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
+|                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
+|                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
+|                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |
+|                  str or None                   |    titlebar_background_color    | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
+|                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
+|         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
+|                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
+|                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
