@@ -58,10 +58,7 @@ def get_demo_path():
 
 def get_editor():
     try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
-        if sg.pysimplegui_user_settings:
-            global_editor = sg.pysimplegui_user_settings.get('-editor program-')
-        else:
-            global_editor = ''
+        global_editor = sg.pysimplegui_user_settings.get('-editor program-')
     except:
         global_editor = ''
 
@@ -90,7 +87,7 @@ def find_in_file(string):
     for file in demo_files:
         filename = os.path.join(demo_path, file)
         try:
-            with open(filename, 'r') as f:
+            with open(filename, 'r', encoding="utf8") as f:
                 for line in f.readlines():
                     if string in line.lower():
                         file_list.append(file)
@@ -125,7 +122,7 @@ def settings_window():
     event, values = window.read(close=True)
     if event == 'Ok':
         sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
-        new_editor = global_editor if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
+        new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
         sg.user_settings_set_entry('-editor program-', new_editor)
         new_theme = sg.theme_global() if values['-THEME-'] == '' else values['-THEME-']
         sg.user_settings_set_entry('-theme-', new_theme)
@@ -200,8 +197,8 @@ def main():
             for file in values['-DEMO LIST-']:
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
-                sg.cprint(f'{os.path.join(demo_path, file)}', text_color='white', background_color='purple')
-                execute_command_subprocess(f'{editor_program}', os.path.join(demo_path, file))
+                sg.cprint(f'{os.path.join(demo_path, file)}', t='white', b='purple')
+                execute_command_subprocess(f'{editor_program}', f'"{os.path.join(demo_path, file)}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
@@ -209,8 +206,8 @@ def main():
                 sg.cprint(os.path.join(demo_path, file),text_color='white', background_color='purple')
                 run_py(os.path.join(demo_path, file))
         elif event.startswith('Edit Me'):
-            sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', text_color='white', background_color='green', end='')
-            execute_command_subprocess(f'{editor_program}', __file__)
+            sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', t='white', b='green', end='')
+            execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
             new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
