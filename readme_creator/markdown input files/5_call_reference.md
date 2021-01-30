@@ -2553,7 +2553,7 @@ These are the functions available for you to call
 <!-- <+func.Submit+> -->
 <!-- <+func.Yes+> -->
 
-## Button No Longer To Be Used
+## Button Functions No Longer Used (DO NOT USE)
 
 Note - These are no longer recommended! 
 They are shown here in case you run into them in some old code.
@@ -2590,7 +2590,38 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.one_line_progress_meter_cancel+> -->
 
 
-## Popup Functions
+## Popups PEP8 Versions
+
+<!-- <+func.popup+> -->
+<!-- <+func.popup_animated+> -->
+<!-- <+func.popup_auto_close+> -->
+<!-- <+func.popup_cancel+> -->
+<!-- <+func.popup_error+> -->
+<!-- <+func.popup_get_date+> -->
+<!-- <+func.popup_get_file+> -->
+<!-- <+func.popup_get_folder+> -->
+<!-- <+func.popup_get_text+> -->
+<!-- <+func.popup_no_buttons+> -->
+<!-- <+func.popup_no_titlebar+> -->
+<!-- <+func.popup_non_blocking+> -->
+<!-- <+func.popup_notify+> -->
+<!-- <+func.popup_ok+> -->
+<!-- <+func.popup_ok_cancel+> -->
+<!-- <+func.popup_quick+> -->
+<!-- <+func.popup_quick_message+> -->
+<!-- <+func.popup_scrolled+> -->
+<!-- <+func.popup_yes_no+> -->
+
+
+### Popup Alias - Same as popup_scrolled
+
+<!-- <+func.sprint+> -->
+<!-- <+func.ScrolledTextBox+> -->
+
+
+## Popup Not PEP8 Compliant names
+
+These versions of the popup functions are here only for backwards compatibility.  You should not use these function names.  Instead use the popup functions that have snake_case rather than CamelCase.
 
 <!-- <+func.Popup+> -->
 <!-- <+func.PopupAnimated+> -->
@@ -2616,37 +2647,6 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.PopupYesNo+> -->
 
 
-## Popups PEP8 Versions
-
-<!-- <+func.popup+> -->
-<!-- <+func.popup_animated+> -->
-<!-- <+func.popup_annoying+> -->
-<!-- <+func.popup_auto_close+> -->
-<!-- <+func.popup_cancel+> -->
-<!-- <+func.popup_error+> -->
-<!-- <+func.popup_get_date+> -->
-<!-- <+func.popup_get_file+> -->
-<!-- <+func.popup_get_folder+> -->
-<!-- <+func.popup_get_text+> -->
-<!-- <+func.popup_no_border+> -->
-<!-- <+func.popup_no_buttons+> -->
-<!-- <+func.popup_no_frame+> -->
-<!-- <+func.popup_no_titlebar+> -->
-<!-- <+func.popup_no_wait+> -->
-<!-- <+func.popup_non_blocking+> -->
-<!-- <+func.popup_notify+> -->
-<!-- <+func.popup_ok+> -->
-<!-- <+func.popup_ok_cancel+> -->
-<!-- <+func.popup_quick+> -->
-<!-- <+func.popup_quick_message+> -->
-<!-- <+func.popup_scrolled+> -->
-<!-- <+func.popup_timed+> -->
-<!-- <+func.popup_yes_no+> -->
-
-Same as popup_scrolled
-
-<!-- <+func.sprint+> -->
-<!-- <+func.ScrolledTextBox+> -->
 
 
 ## PEP8 Function Bindings
@@ -2655,15 +2655,10 @@ Same as popup_scrolled
 <!-- <+func.obj_to_string_single_obj+> -->
 
 
-### Non PEP8 version (same as PEP8 version)
-
-<!-- <+func.SetGlobalIcon+> -->
-<!-- <+func.SetOptions+> -->
-
 
 ## The Test Harness
 
-Used to test the installation, get information about the versions, upgrade from GitHub
+Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub
 
 <!-- <+func.main+> -->
 <!-- <+func.main_sdk_help+> -->
@@ -2715,8 +2710,8 @@ Used to test the installation, get information about the versions, upgrade from 
 
 ## Misc
 
-<!-- <+func.FillFormWithValues+> -->
 <!-- <+func.fill_form_with_values+> -->
+<!-- <+func.FillFormWithValues+> -->
 
 
 ## Layout Helper Funcs
@@ -2726,11 +2721,19 @@ Used to test the installation, get information about the versions, upgrade from 
 <!-- <+func.vcenter+> -->
 <!-- <+func.vtop+> -->
 
+
 ## Configuration / Settings / Extensions
 
 <!-- <+func.get_globals+> -->
 <!-- <+func.set_global_icon+> -->
 <!-- <+func.set_options+> -->
+
+### Non PEP8 versions
+
+<!-- <+func.SetGlobalIcon+> -->
+<!-- <+func.SetOptions+> -->
+
+
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
