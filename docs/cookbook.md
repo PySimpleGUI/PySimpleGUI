@@ -2976,7 +2976,7 @@ while True:
     ev1, vals1 = win1.Read(timeout=100)  
     if ev1 == sg.WIN_CLOSED:  
         break  
-  win1.['_OUTPUT_'].update(vals1[0])  
+    win1['_OUTPUT_'].update(vals1[0])
   
     if ev1 == 'Launch 2'  and not win2_active:  
         win2_active = True  
