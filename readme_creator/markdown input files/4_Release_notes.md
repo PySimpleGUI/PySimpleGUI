@@ -1639,6 +1639,25 @@ Custom Titlebars, Fix for Docstrings so PyCharm 2020 works correctly, New shortc
 
 
 
+## 4.34.0 PySimpleGUI 18-Jan-2021
+
+Fix popup_scrolled, big swap of PEP8 names from alias to def statements
+
+* Quick "Emergency" release since popup_scrolled crashes. BAD bad thing that has to be corrected ASAP
+* Changed all of the functions and methods so that the definition is PEP8 compliant and and alias is not compliant
+* Built-in SDK help
+	* Added a "Summary mode"
+	* Make window smaller to fit on more monitors
+	* Added aliases to end of help for each element
+* metadata
+	* Changed into a class Property so that it shows up in the docs correctly
+	* The Element, Window and SystemTray classes all got this same change
+* Added all elements to the docstring for window[key] style lookups to make PyCharm happier
+* Moved all PEP8 function aliases to a centralized spot at the end of the code
+* sdk_help alias of main_sdk_help
+* Several new demos including a demo browser
+
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  

@@ -1,4 +1,13 @@
 {
-  "README_FILENAME": "output/readme.md",
-  "CALL_REFERENCE_FILENAME": "output/call reference.md"
+  "show_time": false,
+  "use_psg_color": true,
+  "README_OFILE": "output/index.md",
+  "CALL_REF_OFILE": "output/call reference.md",
+  "_PyCharm_path_": "C:/Program Files/JetBrains/PyCharm Community Edition 2019.1.1/bin/pycharm.bat",
+  "_text_editor_combo_": 0,
+  "toggle_progressbar": false,
+  "_filter_empty_tables_ml_": "PrintClose\nEasyPrintClose\nmain\ntheme\nRead\n\n\n",
+  "_filter_tkinter_class_methods_": "SetFocus\nSetTooltip\nUpdate\n__init__\nbind\nexpand\nset_cursor\nset_size\n\n\n",
+  "checkbox_enable_empty_tables_filter": true,
+  "checkbox_enable_filter_tkinter_class_methods": true
 }
