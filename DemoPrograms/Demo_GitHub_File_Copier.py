@@ -72,7 +72,7 @@ def find_in_file(string):
     for file in demo_files:
         filename = os.path.join(demo_path, file)
         try:
-            with open(filename, 'r') as f:
+            with open(filename, 'r', encoding="utf8") as f:
                 for line in f.readlines():
                     if string in line.lower():
                         file_list.append(file)
