@@ -1,7 +1,6 @@
 import os.path
 import subprocess
 import sys
-from idlelib import tooltip
 
 import PySimpleGUI as sg
 
@@ -129,7 +128,7 @@ def settings_window():
         sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
         new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
         sg.user_settings_set_entry('-editor program-', new_editor)
-        new_theme = sg.theme_global() if values['-THEME-'] == '' else values['-THEME-']
+        new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
         sg.user_settings_set_entry('-theme-', new_theme)
         return True
 
@@ -203,7 +202,7 @@ def main():
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
                 sg.cprint(f'{demo_files_dict[file]}', text_color='white', background_color='purple')
-                sg.execute_subprocess_nonblocking(f'{editor_program}', f'"{demo_files_dict[file]}"')
+                execute_command_subprocess(f'{editor_program}', f'"{demo_files_dict[file]}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
@@ -211,11 +210,11 @@ def main():
             for file in values['-DEMO LIST-']:
                 file_to_run = str(demo_files_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
-                sg.execute_subprocess_nonblocking('python' if sg._running_windows() else 'python3', f'"{file_to_run}"')
+                execute_command_subprocess('python', f'{file_to_run}')
                 # run_py(file_to_run)
         elif event.startswith('Edit Me'):
             sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', text_color='white', background_color='green', end='')
-            sg.execute_subprocess_nonblocking(f'{editor_program}', f'"{__file__}"')
+            execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
             new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
@@ -243,6 +242,25 @@ def main():
             window['-FIND NUMBER-'].update('')
 
     window.close()
+
+
+
+def execute_command_subprocess(command, *args, wait=False):
+
+    if sys.platform == 'linux':
+        arg_string = ''
+        for arg in args:
+            arg_string += ' ' + str(arg)
+        sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        expanded_args = ' '.join(args)
+        sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if wait:
+        out, err = sp.communicate()
+        if out:
+            print(out.decode("utf-8"))
+        if err:
+            print(err.decode("utf-8"))
 
 
 if __name__ == '__main__':
