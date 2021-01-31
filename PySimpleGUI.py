@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.10 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix"
+version = __version__ = "4.34.0.11 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2507,7 +2507,8 @@ class Multiline(Element):
         self.WriteOnly = write_only
         self.AutoRefresh = auto_refresh
         key = key if key is not None else k
-        self.previous_stdout = self.previous_stderr = None
+        self.previous_stdout = None
+        self.previous_stderr = None
         self.reroute_cprint = reroute_cprint
         self.echo_stdout_stderr = echo_stdout_stderr
         self.Justification = 'left' if justification is None else justification
@@ -2637,9 +2638,23 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None,colors=None, t=None, b=None,  c=None, ):
         """
-        Print like Python normally prints except route the output to a multline element and also add colors if desired
+        Print like Python normally prints except route the output to a multiline element and also add colors if desired
+
+        colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+        There are also "aliases" for text_color, background_color and colors (t, b, c)
+        t - An alias for color of the text (makes for shorter calls)
+        b - An alias for the background_color parameter
+        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+        c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+        With the aliases it's possible to write the same print but in more compact ways:
+        cprint('This will print white text on red background', c=('white', 'red'))
+        cprint('This will print white text on red background', c='white on red')
+        cprint('This will print white text on red background', text_color='white', background_color='red')
+        cprint('This will print white text on red background', t='white', b='red')
 
         :param args: The arguments to print
         :type args: (Any)
@@ -2653,8 +2668,31 @@ class Multiline(Element):
         :type background_color: (str)
         :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification: (str)
+        :param colors: Either a tuple or a string that has both the text and background colors
+        :type colors: (str) or Tuple[str, str]
+        :param t: Color of the text
+        :type t: (str)
+        :param b: The background color of the line
+        :type b: (str)
+        :param c: Either a tuple or a string that has both the text and background colors
+        :type c: (str) or Tuple[str, str]
         """
-        _print_to_element(self, *args, end=end, sep=sep, text_color=text_color, background_color=background_color, justification=justification, autoscroll=True )
+
+        kw_text_color = text_color or t
+        kw_background_color = background_color or b
+        dual_color = colors or c
+        try:
+            if isinstance(dual_color, tuple):
+                kw_text_color = dual_color[0]
+                kw_background_color = dual_color[1]
+            elif isinstance(dual_color, str):
+                kw_text_color = dual_color.split(' on ')[0]
+                kw_background_color = dual_color.split(' on ')[1]
+        except Exception as e:
+            print('* cprint warning * you messed up with color formatting', e)
+
+
+        _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=True )
 
 
     def reroute_stdout_to_here(self):
@@ -2679,7 +2717,7 @@ class Multiline(Element):
         """
         if self.previous_stdout:
             sys.stdout = self.previous_stdout
-
+            self.previous_stdout = None         # indicate no longer routed here
 
     def restore_stderr(self):
         """
@@ -2687,7 +2725,7 @@ class Multiline(Element):
         """
         if self.previous_stderr:
             sys.stderr = self.previous_stderr
-
+            self.previous_stderr = None         # indicate no longer routed here
 
     def write(self, txt):
         """
@@ -12476,9 +12514,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Multiline
                 width, height = element_size
                 bd = element.BorderWidth
-                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height,
-                                                                               wrap='word', bd=bd, font=font,
-                                                                               relief=RELIEF_SUNKEN)
+                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
@@ -14136,7 +14172,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
 
 def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None):
     """
-    Print like Python normally prints except route the output to a multline element and also add colors if desired
+    Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
     :param multiline_element: The multiline element to be output to
     :type multiline_element: (Multiline)
