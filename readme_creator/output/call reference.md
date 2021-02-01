@@ -4830,7 +4830,7 @@ hide_row()
 
 ### print
 
-Print like Python normally prints except route the output to a multline element and also add colors if desired
+Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
 colors -(str, str) or str.  A combined text/background color definition in a single parameter
 
