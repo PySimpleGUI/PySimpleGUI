@@ -4830,7 +4830,21 @@ hide_row()
 
 ### print
 
-Print like Python normally prints except route the output to a multline element and also add colors if desired
+Print like Python normally prints except route the output to a multiline element and also add colors if desired
+
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+
+There are also "aliases" for text_color, background_color and colors (t, b, c)
+t - An alias for color of the text (makes for shorter calls)
+b - An alias for the background_color parameter
+c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+With the aliases it's possible to write the same print but in more compact ways:
+cprint('This will print white text on red background', c=('white', 'red'))
+cprint('This will print white text on red background', c='white on red')
+cprint('This will print white text on red background', text_color='white', background_color='red')
+cprint('This will print white text on red background', t='white', b='red')
 
 ```
 print(args=*<1 or N object>,
@@ -4838,19 +4852,27 @@ print(args=*<1 or N object>,
     sep = None,
     text_color = None,
     background_color = None,
-    justification = None)
+    justification = None,
+    colors = None,
+    t = None,
+    b = None,
+    c = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any |       args       | The arguments to print |
-| str |       end        | The end char to use just like print uses |
-| str |       sep        | The separation character like print uses |
-| str |    text_color    | The color of the text |
-| str | background_color | The background color of the line |
-| str |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|           Any           |       args       | The arguments to print |
+|           str           |       end        | The end char to use just like print uses |
+|           str           |       sep        | The separation character like print uses |
+|           str           |    text_color    | The color of the text |
+|           str           | background_color | The background color of the line |
+|           str           |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+| str) or Tuple[str, str] |      colors      | Either a tuple or a string that has both the text and background colors |
+|           str           |        t         | Color of the text |
+|           str           |        b         | The background color of the line |
+| str) or Tuple[str, str] |        c         | Either a tuple or a string that has both the text and background colors |
 
 ### reroute_stderr_to_here
 
@@ -9579,6 +9601,7 @@ Parameter Descriptions:
 |--|--|--|
 | Any |  key  | Setting to be saved. Can be any valid dictionary key type |
 | Any | value | Value to save as the setting's value. Can be anything |
+| (Any) | **RETURN** | value that key was set to
 
 ### set_default_value
 
@@ -11200,6 +11223,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11313,6 +11337,7 @@ Parameter Descriptions:
 |                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
 |                            (Default = (None))                            |    image_size    | image size (O.K.) |
 |                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
+|                                   int                                    |   border_width   | width of border around element |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
@@ -11325,7 +11350,6 @@ Parameter Descriptions:
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   Any                                    |     metadata     | Anything you want to store along with this button |
-|                                   int                                    |   border_width   | width of border around element |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11359,6 +11383,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11397,6 +11422,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11438,10 +11464,10 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
-Allows browsing of multiple files. File list is returned as a single list with the delimeter defined using the variable
-BROWSE_FILES_DELIMETER.  This defaults to ';' but is changable by the user
+Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
 ```
 FilesBrowse(button_text = "Browse",
@@ -11459,6 +11485,7 @@ FilesBrowse(button_text = "Browse",
     pad = None,
     key = None,
     k = None,
+    files_delimiter = ";",
     metadata = None)
 ```
 
@@ -11480,6 +11507,8 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   str                                    | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11517,6 +11546,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
 |                      str or int or tuple or object                       |       key        | Used with window.FindElement and with return values to uniquely identify this element |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | The Button created
 
 ```
@@ -11550,6 +11580,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11583,6 +11614,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11617,6 +11649,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -11679,6 +11712,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11713,6 +11747,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11746,6 +11781,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11825,6 +11861,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11866,6 +11903,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11900,6 +11938,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -11933,6 +11972,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |      focus       | if focus should be set to this :param pad: Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ## Button Functions No Longer Used (DO NOT USE)
@@ -12071,6 +12111,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -12114,6 +12155,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.FindElement) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                   Any                                    |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ## Debug Window Output
@@ -12533,20 +12575,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |    image_source     | Either a filename or a base64 string. |
-|     str     |       message       | An optional message to be shown with the animation |
-|     str     |  background_color   | color of background |
-|     str     |     text_color      | color of the text |
-| str or tuple |        font         | specifies the font family, size, etc |
-|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
-|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
-|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
-| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
-|     int     | time_between_frames | Amount of time in milliseconds between each frame |
-|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
-|     str     |        title        | Title that will be shown on the window |
-|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| str or bytes or None |    image_source     | Either a filename or a base64 string. Use None to close the window. |
+|        str         |       message       | An optional message to be shown with the animation |
+|        str         |  background_color   | color of background |
+|        str         |     text_color      | color of the text |
+|    str or tuple    |        font         | specifies the font family, size, etc |
+|        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+|     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|        int         | time_between_frames | Amount of time in milliseconds between each frame |
+|        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str         |        title        | Title that will be shown on the window |
+|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | None | **RETURN** | No return value
 
 Popup that closes itself after some time period
@@ -12716,7 +12758,7 @@ Parameter Descriptions:
 |    str     |         icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | (int, int) |       location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
 |    str     |        title         | Title that will be shown on the window |
-|    bool    |  close_when_chosen   | MIKE_please_add_text_here |
+|    bool    |  close_when_chosen   | If True, the window will close and function return when a day is clicked |
 |    str     |        locale        | locale used to get the day names |
 |    bool    |     no_titlebar      | If True no titlebar will be shown |
 |    bool    |     keep_on_top      | If True the window will remain above all current windows |
@@ -12748,6 +12790,7 @@ popup_get_file(message,
     location = (None, None),
     initial_folder = None,
     image = None,
+    files_delimiter = ";",
     modal = True)
 ```
 
@@ -12775,6 +12818,7 @@ Parameter Descriptions:
 |    Tuple[int, int]     |     location      | Location of upper left corner of the window |
 |          str           |  initial_folder   | location in filesystem to begin browsing |
 |      str or bytes      |       image       | Image to include at the top of the popup window |
+|          str           |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -13479,20 +13523,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |    image_source     | Either a filename or a base64 string. |
-|     str     |       message       | An optional message to be shown with the animation |
-|     str     |  background_color   | color of background |
-|     str     |     text_color      | color of the text |
-| str or tuple |        font         | specifies the font family, size, etc |
-|    bool     |     no_titlebar     | If True then the titlebar and window frame will not be shown |
-|    bool     |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
-|    bool     |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
-| (int, int)  |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
-|    float    |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
-|     int     | time_between_frames | Amount of time in milliseconds between each frame |
-|     str     |  transparent_color  | This color will be completely see-through in your window. Can even click through |
-|     str     |        title        | Title that will be shown on the window |
-|     str     |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+| str or bytes or None |    image_source     | Either a filename or a base64 string. Use None to close the window. |
+|        str         |       message       | An optional message to be shown with the animation |
+|        str         |  background_color   | color of background |
+|        str         |     text_color      | color of the text |
+|    str or tuple    |        font         | specifies the font family, size, etc |
+|        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
+|        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
+|        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
+|     (int, int)     |      location       | (x,y) location on the screen to place the top left corner of your window. Default is to center on screen |
+|       float        |    alpha_channel    | Window transparency 0 = invisible 1 = completely visible. Values between are see through |
+|        int         | time_between_frames | Amount of time in milliseconds between each frame |
+|        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
+|        str         |        title        | Title that will be shown on the window |
+|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | None | **RETURN** | No return value
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -13700,6 +13744,7 @@ PopupGetFile(message,
     location = (None, None),
     initial_folder = None,
     image = None,
+    files_delimiter = ";",
     modal = True)
 ```
 
@@ -13727,6 +13772,7 @@ Parameter Descriptions:
 |    Tuple[int, int]     |     location      | Location of upper left corner of the window |
 |          str           |  initial_folder   | location in filesystem to begin browsing |
 |      str or bytes      |       image       | Image to include at the top of the popup window |
+|          str           |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
 |          bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -15043,7 +15089,10 @@ set_options(icon = None,
     titlebar_background_color = None,
     titlebar_text_color = None,
     titlebar_font = None,
-    titlebar_icon = None)
+    titlebar_icon = None,
+    user_settings_path = None,
+    pysimplegui_settings_path = None,
+    pysimplegui_settings_filename = None)
 ```
 
 Parameter Descriptions:
@@ -15096,6 +15145,9 @@ Parameter Descriptions:
 |                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
 |         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
+|                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
+|                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -15160,7 +15212,10 @@ SetOptions(icon = None,
     titlebar_background_color = None,
     titlebar_text_color = None,
     titlebar_font = None,
-    titlebar_icon = None)
+    titlebar_icon = None,
+    user_settings_path = None,
+    pysimplegui_settings_path = None,
+    pysimplegui_settings_filename = None)
 ```
 
 Parameter Descriptions:
@@ -15213,6 +15268,9 @@ Parameter Descriptions:
 |                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
 |         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
+|                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
+|                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
