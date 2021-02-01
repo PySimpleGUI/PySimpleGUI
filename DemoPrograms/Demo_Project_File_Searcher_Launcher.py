@@ -1,6 +1,7 @@
 import os.path
 import subprocess
 import sys
+import mmap, re
 
 import PySimpleGUI as sg
 
@@ -22,6 +23,8 @@ import PySimpleGUI as sg
     
     Additional operations
         * Edit this file in editor
+        
+    Keeps a "history" of the previously chosen folders to easy switching between projects
                 
     Copyright 2021 PySimpleGUI.org
 """
@@ -75,6 +78,8 @@ def get_theme():
 
     return sg.user_settings_get_entry('-theme-', global_theme)
 
+
+
 def find_in_file(string):
     """
     Search through the demo files for a string.
@@ -85,20 +90,38 @@ def find_in_file(string):
     :rtype: List[str]
     """
 
+    # So you face a prediciment here. You wish to read files, both small and large; however the bigger the file/bigger the list, the longer to read the file.
+    # This probably isn't what you want, right?
+    # Well, we can't use a direct command line to run grep and parse. But it is an option. The user may not have it.
+    # We could check if grep exists and if not use our method; but it isn't the best way.
+    # So using background knowldge, we know that grep is *very* fast.
+    #
+    # Why?
+    # Grep reads a *ton* of files into memory then searches through the memory to find the string or regex/pattern corresponding to the file.
+    # How can we load a file into memory on python as fast as grep whilst keeping it universal?
+    # memory mapping (mmap).
+    # We can't load a lot of files into memory as we may face issues with watchdog on other operating systems. So we load one file at a time and search though there.
+    # This will allow the fastest searching and loading of a file without sacrificing read times.
+    # 2.8 seconds on the highend for both small and large files in memory.
+    # We also don't have to iterate over lines this way.
     demo_files_dict = get_demo_git_files()
-    string = string.lower()
     file_list = []
+
+
     for file in demo_files_dict:
-        full_filename = demo_files_dict[file]
         try:
-            with open(full_filename, 'r', encoding="utf8") as f:
-                for line in f.readlines():
-                    if string in line.lower():
-                        file_list.append(file)
-                        # print(f'{os.path.basename(file)} -- {line}')
+            full_filename = demo_files_dict[file]
+
+            with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
+                if re.search(br'(?i)' + bytes(re.escape(string.lower()), 'utf-8'), s):
+                    #                         ^^^^^^^^^-----------------------------------> re.escape
+                    #                         (In case the user types ( or any other character that can be treated like a regex)
+                    file_list.append(file)
+        except ValueError:
+            pass    # caused by an empty file so no problem skipping it
         except Exception as e:
-            pass
-            print(f'{file}',e)
+            print(f'{file}', e)
+
     return list(set(file_list))
 
 
@@ -115,7 +138,9 @@ def settings_window():
     editor_program = get_editor()
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20,1)), sg.In(sg.user_settings_get_entry('-demos folder-', '.'), k='-DEMOS-'), sg.FolderBrowse()],
+              [sg.T('Path to Demos', size=(20,1)),
+                 sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-'),
+                 sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
@@ -123,16 +148,30 @@ def settings_window():
               ]
 
     window = sg.Window('Settings', layout)
-    event, values = window.read(close=True)
-    if event == 'Ok':
-        sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
-        new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
-        sg.user_settings_set_entry('-editor program-', new_editor)
-        new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
-        sg.user_settings_set_entry('-theme-', new_theme)
-        return True
 
-    return False
+    settings_changed = False
+
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', sg.WIN_CLOSED):
+            break
+        if event == 'Ok':
+            sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
+            new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
+            sg.user_settings_set_entry('-editor program-', new_editor)
+            new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
+            sg.user_settings_set_entry('-theme-', new_theme)
+            sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
+            settings_changed = True
+            break
+        elif event == 'Clear History':
+            sg.user_settings_set_entry('-filenames-', [])
+            sg.user_settings_set_entry('-last filename-', '')
+            window['-FOLDERNAME-'].update(values=[], value='')
+
+    window.close()
+    return settings_changed
+
 
 # --------------------------------- Create the window ---------------------------------
 def make_window():
@@ -156,7 +195,7 @@ def make_window():
     ML_KEY = '-ML-'         # Multline's key
 
     left_col = [
-        [sg.Listbox(values=list(demo_files_dict.keys()), select_mode=sg.SELECT_MODE_EXTENDED, size=(40, 20), key='-DEMO LIST-')],
+        [sg.Listbox(values=list(demo_files_dict.keys()), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(20,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
@@ -172,7 +211,8 @@ def make_window():
     # ----- Full layout -----
 
     layout = [[sg.Text('PySimpleGUI Project File Searcher & Launcher', font='Any 20')],
-              [sg.T('Click settings to set top of your tree')],
+              [sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
+               sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)],
               sg.vtop([sg.Column(left_col, element_justification='c'), sg.Col(right_col, element_justification='c') ])]
 
     # --------------------------------- Create Window ---------------------------------
@@ -240,6 +280,11 @@ def main():
             window['-DEMO LIST-'].update(demo_files)
             window['-FILTER NUMBER-'].update('')
             window['-FIND NUMBER-'].update('')
+        elif event == '-FOLDERNAME-':
+            sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
+            demo_files_dict = get_demo_git_files()
+            demo_files = demo_files_dict.keys()
+            window['-DEMO LIST-'].update(demo_files)
 
     window.close()
 
