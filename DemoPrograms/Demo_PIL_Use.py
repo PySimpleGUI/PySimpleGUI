@@ -3,6 +3,7 @@ import PIL
 from PIL import Image
 import io
 import base64
+import random
 
 """
     Using PIL with PySimpleGUI - for Images and Buttons
@@ -24,7 +25,7 @@ def make_square(im, min_size=256, fill_color=(0, 0, 0, 0)):
 
 
 def convert_to_bytes(file_or_bytes, resize=None, fill=False):
-    '''
+    """
     Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
     Turns into  PNG format in the process so that can be displayed by tkinter
     :param file_or_bytes: either a string filename or a bytes base64 image object
@@ -35,7 +36,7 @@ def convert_to_bytes(file_or_bytes, resize=None, fill=False):
     :type fill: (bool)
     :return: (bytes) a byte-string object
     :rtype: (bytes)
-    '''
+    """
     if isinstance(file_or_bytes, str):
         img = PIL.Image.open(file_or_bytes)
     else:
@@ -58,17 +59,19 @@ def convert_to_bytes(file_or_bytes, resize=None, fill=False):
         del img
         return bio.getvalue()
 
+def random_image():
+    return random.choice(sg.ICON_BASE64_LIST)
 
 def make_toolbar():
     layout = [[sg.T('❎', enable_events=True, key='Exit')]]
     for i in range(6):
-        layout += [[sg.B(image_data = convert_to_bytes(sg._random_error_icon(), (30,30))),
-                    sg.B(image_data = convert_to_bytes(sg._random_error_icon(), (30,30)))]]
+        layout += [[sg.B(image_data = convert_to_bytes(random_image(), (30,30))),
+                    sg.B(image_data = convert_to_bytes(random_image(), (30,30)))]]
     return sg.Window('', layout, element_padding=(0,0), margins=(0,0), finalize=True, no_titlebar=True, grab_anywhere=True)
 
 def main():
 
-    image = sg._random_error_icon()
+    image = random_image()
     size = (60,60)
     image = convert_to_bytes(image, size, fill=False)
 
@@ -89,7 +92,7 @@ def main():
             if size[0] > 20:
                 size = (size[0]-20, size[1]-20)
         elif event in ('Next', '-BUTTON IMAGE-'):
-            image = sg._random_error_icon()
+            image = random.choice(sg.ICON_BASE64_LIST)
         elif event_window == toolbar:
             image = event_window[event].ImageData
 
