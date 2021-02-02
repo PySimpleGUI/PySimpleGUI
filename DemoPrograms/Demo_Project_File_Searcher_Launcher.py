@@ -31,20 +31,21 @@ import PySimpleGUI as sg
 
 
 
-def get_demo_git_files():
+def get_file_list_dict():
     """
-    Get the files in the demo and the GitHub folders
-    Returns files as 2 lists
+    Returns dictionary of files
+    Key is short filename
+    Value is the full filename and path
 
-    :return: two lists of files
-    :rtype: Tuple[List[str], List[str]]
+    :return: Dictionary of demo files
+    :rtype: Dict[str:str]
     """
 
     demo_path = get_demo_path()
     demo_files_dict = {}
     for dirname, dirnames, filenames in os.walk(demo_path):
         for filename in filenames:
-            if filename.endswith('.py'):
+            if filename.endswith('.py') or filename.endswith('.pyw'):
                 fname_full = os.path.join(dirname, filename)
                 if filename not in demo_files_dict.keys():
                     demo_files_dict[filename] = fname_full
@@ -55,13 +56,36 @@ def get_demo_git_files():
     return demo_files_dict
 
 
+def get_file_list():
+    """
+    Returns list of filenames of files to display
+    No path is shown, only the short filename
+
+    :return: List of filenames
+    :rtype: List[str]
+    """
+    return list(get_file_list_dict().keys())
+
+
 def get_demo_path():
+    """
+    Get the top-level folder path
+    :return: Path to list of files using the user settings for this file.  Returns folder of this file if not found
+    :rtype: str
+    """
     demo_path = sg.user_settings_get_entry('-demos folder-', os.path.dirname(__file__))
 
     return demo_path
 
 
+
 def get_editor():
+    """
+    Get the path to the editor based on user settings or on PySimpleGUI's global settings
+
+    :return: Path to the editor
+    :rtype: str
+    """
     try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
         global_editor = sg.pysimplegui_user_settings.get('-editor program-')
     except:
@@ -71,11 +95,18 @@ def get_editor():
 
 
 def get_theme():
+    """
+    Get the theme to use for the program
+    Value is in this program's user settings. If none set, then use PySimpleGUI's global default theme
+    :return: The theme
+    :rtype: str
+    """
+    # First get the current global theme for PySimpleGUI to use if none has been set for this program
     try:
         global_theme = sg.theme_global()
     except:
-        global_theme = sg.theme()
-
+        global_theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
+    # Get theme from user settings for this program.  Use global theme if no entry found
     return sg.user_settings_get_entry('-theme-', global_theme)
 
 
@@ -104,13 +135,13 @@ def find_in_file(string):
     # This will allow the fastest searching and loading of a file without sacrificing read times.
     # 2.8 seconds on the highend for both small and large files in memory.
     # We also don't have to iterate over lines this way.
-    demo_files_dict = get_demo_git_files()
+    file_list_dict = get_file_list_dict()
     file_list = []
 
 
-    for file in demo_files_dict:
+    for file in file_list_dict:
         try:
-            full_filename = demo_files_dict[file]
+            full_filename = file_list_dict[file]
 
             with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
                 if re.search(br'(?i)' + bytes(re.escape(string.lower()), 'utf-8'), s):
@@ -138,7 +169,7 @@ def settings_window():
     editor_program = get_editor()
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20,1)),
+              [sg.T('Path to Tree', size=(20,1)),
                  sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-'),
                  sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
@@ -165,7 +196,7 @@ def settings_window():
             settings_changed = True
             break
         elif event == 'Clear History':
-            sg.user_settings_set_entry('-filenames-', [])
+            sg.user_settings_set_entry('-folder names-', [])
             sg.user_settings_set_entry('-last filename-', '')
             window['-FOLDERNAME-'].update(values=[], value='')
 
@@ -182,8 +213,6 @@ def make_window():
     """
 
     theme = get_theme()
-    editor = get_editor()
-    demo_files_dict = get_demo_git_files()
     if not theme:
         theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
     sg.theme(theme)
@@ -195,7 +224,7 @@ def make_window():
     ML_KEY = '-ML-'         # Multline's key
 
     left_col = [
-        [sg.Listbox(values=list(demo_files_dict.keys()), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
+        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(20,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
@@ -216,7 +245,7 @@ def make_window():
               sg.vtop([sg.Column(left_col, element_justification='c'), sg.Col(right_col, element_justification='c') ])]
 
     # --------------------------------- Create Window ---------------------------------
-    window = sg.Window('PSG Finder Launcher', layout)
+    window = sg.Window('PSG Finder Launcher', layout, finalize=True)
 
     sg.cprint_set_output_destination(window, ML_KEY)
     return window
@@ -229,9 +258,10 @@ def main():
     """
 
     editor_program = get_editor()
-    demo_files_dict = get_demo_git_files()
-    demo_files = demo_files_dict.keys()
+    file_list_dict = get_file_list_dict()
+    file_list = get_file_list()
     window = make_window()
+    window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
 
     while True:
         event, values = window.read()
@@ -241,14 +271,13 @@ def main():
             for file in values['-DEMO LIST-']:
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
-                sg.cprint(f'{demo_files_dict[file]}', text_color='white', background_color='purple')
-                execute_command_subprocess(f'{editor_program}', f'"{demo_files_dict[file]}"')
+                sg.cprint(f'{file_list_dict[file]}', text_color='white', background_color='purple')
+                execute_command_subprocess(f'{editor_program}', f'"{file_list_dict[file]}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
-            sg.cprint(f"Chose {values['-DEMO LIST-']}")
             for file in values['-DEMO LIST-']:
-                file_to_run = str(demo_files_dict[file])
+                file_to_run = str(file_list_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
                 execute_command_subprocess('python', f'{file_to_run}')
                 # run_py(file_to_run)
@@ -256,7 +285,7 @@ def main():
             sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', text_color='white', background_color='green', end='')
             execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
-            new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
+            new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
             window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
             window['-FIND NUMBER-'].update('')
@@ -272,19 +301,22 @@ def main():
                 window.close()
                 window = make_window()
                 editor_program = get_editor()
-                demo_files_dict = get_demo_git_files()
-                demo_files = demo_files_dict.keys()
+                file_list_dict = get_file_list_dict()
+                file_list = get_file_list()
+                window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
         elif event == 'Clear':
             window['-FILTER-'].update('')
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
             window['-FIND-'].update('')
-            window['-DEMO LIST-'].update(demo_files)
-            window['-FILTER NUMBER-'].update('')
+            window['-DEMO LIST-'].update(file_list)
             window['-FIND NUMBER-'].update('')
         elif event == '-FOLDERNAME-':
             sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
-            demo_files_dict = get_demo_git_files()
-            demo_files = demo_files_dict.keys()
-            window['-DEMO LIST-'].update(demo_files)
+            file_list_dict = get_file_list_dict()
+            file_list = get_file_list()
+            window['-DEMO LIST-'].update(values=file_list)
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
+
 
     window.close()
 
@@ -309,6 +341,4 @@ def execute_command_subprocess(command, *args, wait=False):
 
 
 if __name__ == '__main__':
-
-
     main()
