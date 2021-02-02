@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.12 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated"
+version = __version__ = "4.34.0.13 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -11883,12 +11883,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ExpandX and element.ExpandY:
                     fill = tk.BOTH
                     row_fill_direction = tk.BOTH
+                    row_should_expand = True
                 elif element.ExpandX:
                     fill = tk.X
                     row_fill_direction = tk.X
                 elif element.ExpandY:
                     fill = tk.Y
                     row_fill_direction = tk.Y
+                    row_should_expand = True
                 else:
                     fill = tk.NONE
                     expand=False
