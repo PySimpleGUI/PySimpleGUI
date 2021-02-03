@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.14 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens"
+version = __version__ = "4.34.0.15 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1067,7 +1067,7 @@ class Element():
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
         if self.Type == ELEM_TYPE_GRAPH:
-            self.button_press_call_back(event)
+            self._user_bound_event_callback(event)
         if self.Key is not None:
             if isinstance(self.Key, str):
                 key = self.Key + str(key_suffix)
@@ -5077,6 +5077,19 @@ class Graph(Element):
         #     self.ParentForm.TKroot.quit()  # kick out of loop if read was called
         _exit_mainloop(self.ParentForm)
         self.MouseButtonDown = True
+
+
+    # user bound event callback
+    def _user_bound_event_callback(self, event):
+        """
+        Not a user callable method.  Indirectly called by tkinter when any user bound event happens
+
+        :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
+        """
+
+        self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
+        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
+
 
     # button callback
     def motion_call_back(self, event):
