@@ -6,6 +6,8 @@ from PIL import ImageGrab
 
     This demo shows how to use a Graph Element to (optionally) display an image and then use the
     mouse to "drag" and draw rectangles and circles.
+    
+    Copyright 2020 PySimpleGUI.org
 """
 
 def save_element_as_file(element, filename):
@@ -35,7 +37,7 @@ def main():
            [sg.R('Send to back', 1, key='-BACK-', enable_events=True)],
            [sg.R('Bring to front', 1, key='-FRONT-', enable_events=True)],
            [sg.R('Move Everything', 1, key='-MOVEALL-', enable_events=True)],
-           [sg.R('Move Stuff', 1, True, key='-MOVE-', enable_events=True)],
+           [sg.R('Move Stuff', 1, key='-MOVE-', enable_events=True)],
            [sg.B('Save Image', key='-SAVE-')],
            ]
 
@@ -46,8 +48,8 @@ def main():
                 key="-GRAPH-",
                 enable_events=True,
                 background_color='lightblue',
-                drag_submits=True), sg.Col(col) ],
-            [sg.Text(key='info', size=(60, 1))]]
+                drag_submits=True), sg.Col(col, key='-COL-') ],
+            [sg.Text(key='-INFO-', size=(60, 1))]]
 
     window = sg.Window("Drawing and Moving Stuff Around", layout, finalize=True)
 
@@ -58,17 +60,17 @@ def main():
     dragging = False
     start_point = end_point = prior_rect = None
     graph.bind('<Button-3>', '+RIGHT+')
+
     while True:
         event, values = window.read()
         print(event, values)
         if event == sg.WIN_CLOSED:
             break  # exit
+
         if event in ('-MOVE-', '-MOVEALL-'):
-            graph.Widget.config(cursor='fleur')
-            # graph.set_cursor(cursor='fleur')          # not yet released method... coming soon!
+            graph.set_cursor(cursor='fleur')          # not yet released method... coming soon!
         elif not event.startswith('-GRAPH-'):
-            # graph.set_cursor(cursor='left_ptr')       # not yet released method... coming soon!
-            graph.Widget.config(cursor='left_ptr')
+            graph.set_cursor(cursor='left_ptr')       # not yet released method... coming soon!
 
         if event == "-GRAPH-":  # if there's a "Graph" event, then it's a mouse
             x, y = values["-GRAPH-"]
@@ -109,12 +111,15 @@ def main():
                 elif values['-BACK-']:
                     for fig in drag_figures:
                         graph.send_figure_to_back(fig)
+            window["-INFO-"].update(value=f"mouse {values['-GRAPH-']}")
+
         elif event.endswith('+UP'):  # The drawing has ended because mouse up
-            info = window["info"]
-            info.update(value=f"grabbed rectangle from {start_point} to {end_point}")
+            window["-INFO-"].update(value=f"grabbed rectangle from {start_point} to {end_point}")
             start_point, end_point = None, None  # enable grabbing a new rect
             dragging = False
             prior_rect = None
+        elif event.endswith('+RIGHT+'):  # Righ click
+            window["-INFO-"].update(value=f"Right clicked location {values['-GRAPH-']}")
         elif event == '-SAVE-':
             # filename = sg.popup_get_file('Choose file (PNG, JPG, GIF) to save to', save_as=True)
             filename=r'test.jpg'
