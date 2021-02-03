@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.13 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True"
+version = __version__ = "4.34.0.14 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1066,6 +1066,8 @@ class Element():
         """
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
+        if self.Type == ELEM_TYPE_GRAPH:
+            self.button_press_call_back(event)
         if self.Key is not None:
             if isinstance(self.Key, str):
                 key = self.Key + str(key_suffix)
@@ -12771,8 +12773,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Canvas
                 width, height = element_size
                 if element._TKCanvas is None:
-                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height,
-                                                  bd=border_depth)
+                    element._TKCanvas = tk.Canvas(tk_row_frame, width=width, height=height, bd=border_depth)
                 else:
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -13982,9 +13983,16 @@ def PrintClose():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
+
+    In addition to the normal text and background colors, you can use a "colors" tuple/string
+    The "colors" or "c" parameter defines both the text and background in a single parm.
+    It can be a tuple or a single single. Both text and background colors need to be specified
+    colors -(str, str) or str.  A combined text/background color definition in a single parameter
+    c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+    c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     :param *args: stuff to output
     :type *args: (Any)
@@ -14014,6 +14022,10 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type location: Tuple[int, int]
     :param do_not_reroute_stdout: do not reroute stdout
     :type do_not_reroute_stdout: (bool)
+    :param colors: Either a tuple or a string that has both the text and background colors
+    :type colors: (str) or Tuple[str, str]
+    :param c: Either a tuple or a string that has both the text and background colors
+    :type c: (str) or Tuple[str, str]
     :return:
     :rtype:
     """
@@ -14021,7 +14033,8 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
         _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                                            do_not_reroute_stdout=do_not_reroute_stdout)
-    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color, background_color=background_color)
+    txt_color, bg_color = _parse_colors_parm(c or colors)
+    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color)
 
 
 
@@ -14209,6 +14222,35 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
             multiline_element.ParentForm.refresh()
     except:
         pass
+
+
+def _parse_colors_parm(colors):
+    """
+    Parse a colors parameter into its separate colors.
+    Some functions accept a dual colors string/tuple.
+    This function parses the parameter into the component colors
+
+    :param colors: Either a tuple or a string that has both the text and background colors
+    :type colors: (str) or Tuple[str, str]
+    :return: tuple with the individual text and background colors
+    :rtype: Tuple[str, str]
+    """
+    if colors is None:
+        return None, None
+    dual_color = colors
+    kw_text_color = kw_background_color = None
+    try:
+        if isinstance(dual_color, tuple):
+            kw_text_color = dual_color[0]
+            kw_background_color = dual_color[1]
+        elif isinstance(dual_color, str):
+            kw_text_color = dual_color.split(' on ')[0]
+            kw_background_color = dual_color.split(' on ')[1]
+    except Exception as e:
+        print('* warning * you messed up with color formatting', e)
+
+    return kw_text_color, kw_background_color
+
 
 # ============================== set_global_icon ====#
 # Sets the icon to be used by default                #
