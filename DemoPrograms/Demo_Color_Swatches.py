@@ -671,14 +671,15 @@ color_map = {
 
 
 def make_window():
-    layout = [[sg.Text(f'Swatches for {n} Colors', justification='center', font='Default 14')]]
+    layout = [[sg.Text(f'Swatches for {len(color_list)} Colors', font='Default 14'),],
+              [sg.Text(f'Hover - see color "name"\nRight click - see hex value\nClick - see buttons & hex value copied to clipboard', font='Default 12')]]
 
-    for rows in range(n//COLORS_PER_ROW+1):
+    for rows in range(len(color_list)//COLORS_PER_ROW+1):
         row = []
         for i in range(COLORS_PER_ROW):
             try:
                 color = color_list[rows*COLORS_PER_ROW+i]
-                row.append(sg.T(sg.SYMBOL_SQUARE, text_color=color, background_color='black', pad=(0, 0), font=('Default', font_size), right_click_menu=['Nothing', color_map[color]],
+                row.append(sg.T(sg.SYMBOL_SQUARE, text_color=color, pad=(0, 0), font=('Default', font_size), right_click_menu=['Nothing', color_map[color]],
                              tooltip=color, enable_events=True, key=(color, color_map[color])))
             except Exception as e:
                 pass
@@ -687,6 +688,7 @@ def make_window():
     return sg.Window('Color Swatches Viewer', layout, font='Any 9', element_padding=(0,0), border_depth=0)
 
 def main():
+    sg.theme('black')
     window = make_window()
     # -- Event loop --
     while True:
@@ -704,10 +706,11 @@ def main():
         window2 = sg.Window('Buttons with white and black text', layout2, keep_on_top=True, finalize=True)
         window2.TKroot.clipboard_clear()
         window2.TKroot.clipboard_append(color_hex)
+
     window.close()
 
 if __name__ == '__main__':
-    sg.popup_quick_message('Building your table... one moment please...', background_color='red', text_color='white', font='Any 14')
+    sg.popup_quick_message('Building your color window... one moment please...', background_color='red', text_color='white', font='Any 14')
 
     sg.set_options(button_element_size=(12, 1),
                    element_padding=(0, 0),
@@ -717,7 +720,6 @@ if __name__ == '__main__':
     # -- Create primary color viewer window --
     hex_to_color = {v: k for k, v in color_map.items()}
     color_list = [key for key in color_map]
-    n = len(color_list)
     COLORS_PER_ROW = 40
     font_size = 18
     main()
