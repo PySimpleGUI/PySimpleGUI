@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.15 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events"
+version = __version__ = "4.34.0.16 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -845,7 +845,8 @@ class Element():
         """
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
         self.TKRightClickMenu.grab_release()
-
+        if self.Type == ELEM_TYPE_GRAPH:
+            self._update_position_for_returned_values(event)
 
     def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
         """
@@ -1067,7 +1068,7 @@ class Element():
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
         if self.Type == ELEM_TYPE_GRAPH:
-            self._user_bound_event_callback(event)
+            self._update_position_for_returned_values(event)
         if self.Key is not None:
             if isinstance(self.Key, str):
                 key = self.Key + str(key_suffix)
@@ -5079,16 +5080,16 @@ class Graph(Element):
         self.MouseButtonDown = True
 
 
-    # user bound event callback
-    def _user_bound_event_callback(self, event):
+    def _update_position_for_returned_values(self, event):
         """
-        Not a user callable method.  Indirectly called by tkinter when any user bound event happens
+        Updates the variable that's used when the values dictionary is returned from a window read.
+
+        Not called by the user.  It's called from another method/function that tkinter calledback
 
         :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
         """
 
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
-        self.ParentForm.LastButtonClickedWasRealtime = self.DragSubmits
 
 
     # button callback
