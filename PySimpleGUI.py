@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.16 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected"
+version = __version__ = "4.34.0.17 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -18384,6 +18384,37 @@ def main_sdk_help():
     Display a window that will display the docstrings for each PySimpleGUI Element and the Window object
 
     """
+    online_help_links = {
+                        'Button': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#button-element',
+                        'ButtonMenu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#buttonmenu-element',
+                        'Canvas': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#canvas-element',
+                        'Checkbox': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#checkbox-element',
+                        'Column': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#column-element',
+                        'Combo': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#combo-element',
+                        'Frame': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#frame-element',
+                        'Graph': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#graph-element',
+                        'HorizontalSeparator': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#horizontalseparator-element',
+                        'Image': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#image-element',
+                        'Input': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#input-element',
+                        'Listbox': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#listbox-element',
+                        'Menu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#menu-element',
+                        'Multiline': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#multiline-element',
+                        'OptionMenu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#optionmenu-element',
+                        'Output': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#output-element',
+                        'Pane': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#pane-element',
+                        'ProgressBar': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#progressbar-element',
+                        'Radio': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#radio-element',
+                        'Slider': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#slider-element',
+                        'Spin': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#spin-element',
+                        'StatusBar': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#statusbar-element',
+                        'Tab': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tab-element',
+                        'TabGroup': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tabgroup-element',
+                        'Table': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#table-element',
+                        'Text': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#text-element',
+                        'Tree': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tree-element',
+                        'VerticalSeparator': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#verticalseparator-element',
+                        'Window': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#window',
+                         }
 
     element_classes = Element.__subclasses__()
     element_names = {element.__name__: element for element in element_classes}
@@ -18433,19 +18464,27 @@ def main_sdk_help():
     buttons = [[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())]
     buttons += [[B('Func Search', pad=(0, 0), size=(22, 1), font='Courier 10')]]
     button_col = Col(buttons)
-
-    layout = [vtop([button_col, Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')])]
+    mline_col = Column([[Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')],
+                        [T(size=(80,1), font='Courier 10 underline', k='-DOC LINK-', enable_events=True)]], pad=(0,0))
+    layout = [vtop([button_col, mline_col])]
     layout += [[CBox('Summary Only', k='-SUMMARY-'),CBox('Display Only PEP8 Functions',default=True, k='-PEP8-') ]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
-    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=ICON_BASE64_BLOB_THINK)
+    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=ICON_BASE64_BLOB_THINK, finalize=True)
+    window['-DOC LINK-'].set_cursor('hand1')
+    online_help_link = ''
     ml = window['-ML-']
     while True:  # Event Loop
         event, values = window.read()
         if event in (WIN_CLOSED, 'Exit'):
             break
+        if event == '-DOC LINK-':
+            if webbrowser_available and online_help_link:
+                webbrowser.open_new_tab(online_help_link)
         if event in element_names.keys():
             window['-ML-'].update('')
+            online_help_link = online_help_links.get(event,'')
+            window['-DOC LINK-'].update(online_help_link)
             if not values['-SUMMARY-']:
                 elem = element_names[event]
                 ml.print(help(elem))
@@ -18487,6 +18526,8 @@ def main_sdk_help():
         elif event == 'Func Search':
             search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
             if search_string is not None:
+                    online_help_link = ''
+                    window['-DOC LINK-'].update('')
                     ml.update('')
                     for f_entry in functions_names:
                         f = f_entry[0]
