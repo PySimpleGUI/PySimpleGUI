@@ -48,7 +48,9 @@ def main():
                 key="-GRAPH-",
                 enable_events=True,
                 background_color='lightblue',
-                drag_submits=True), sg.Col(col, key='-COL-') ],
+                drag_submits=True,
+                right_click_menu=[[],['Erase item',]]
+                ), sg.Col(col, key='-COL-') ],
             [sg.Text(key='-INFO-', size=(60, 1))]]
 
     window = sg.Window("Drawing and Moving Stuff Around", layout, finalize=True)
@@ -59,7 +61,7 @@ def main():
 
     dragging = False
     start_point = end_point = prior_rect = None
-    graph.bind('<Button-3>', '+RIGHT+')
+    # graph.bind('<Button-3>', '+RIGHT+')
 
     while True:
         event, values = window.read()
@@ -112,7 +114,6 @@ def main():
                     for fig in drag_figures:
                         graph.send_figure_to_back(fig)
             window["-INFO-"].update(value=f"mouse {values['-GRAPH-']}")
-
         elif event.endswith('+UP'):  # The drawing has ended because mouse up
             window["-INFO-"].update(value=f"grabbed rectangle from {start_point} to {end_point}")
             start_point, end_point = None, None  # enable grabbing a new rect
@@ -120,10 +121,18 @@ def main():
             prior_rect = None
         elif event.endswith('+RIGHT+'):  # Righ click
             window["-INFO-"].update(value=f"Right clicked location {values['-GRAPH-']}")
+        elif event.endswith('+MOTION+'):  # Righ click
+            window["-INFO-"].update(value=f"mouse freely moving {values['-GRAPH-']}")
         elif event == '-SAVE-':
             # filename = sg.popup_get_file('Choose file (PNG, JPG, GIF) to save to', save_as=True)
             filename=r'test.jpg'
             save_element_as_file(window['-GRAPH-'], filename)
+        elif event == 'Erase item':
+            window["-INFO-"].update(value=f"Right click erase at {values['-GRAPH-']}")
+            if values['-GRAPH-'] != (None, None):
+                drag_figures = graph.get_figures_at_location(values['-GRAPH-'])
+                for figure in drag_figures:
+                    graph.delete_figure(figure)
 
     window.close()
 
