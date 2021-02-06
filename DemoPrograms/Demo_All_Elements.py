@@ -42,7 +42,7 @@ def make_window(theme):
                [sg.Image(data=sg.DEFAULT_BASE64_ICON,  k='-IMAGE-')],
                [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='-PROGRESS BAR-'), sg.Button('Test Progress bar')]]
 
-    logging_layout = [[sg.Text("Anything printed will display here!")], [sg.Output(size=(60,15),echo_stdout_stderr=True, font='Courier 8')]]
+    logging_layout = [[sg.Text("Anything printed will display here!")], [sg.Output(size=(60,15), font='Courier 8')]]
     
     graphing_layout = [[sg.Text("Anything you would use to graph will display here!")],
                       [sg.Graph((200,200), (0,0),(200,200),background_color="black", key='-GRAPH-', enable_events=True)],
