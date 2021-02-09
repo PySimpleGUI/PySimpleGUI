@@ -111,7 +111,10 @@ def get_theme():
 
 
 
-def find_in_file(string):
+old_file_list = None
+
+def find_in_file(string, demo_files_dict, regex=False, verbose=False):
+    global old_file_list
     """
     Search through the demo files for a string.
     The case of the string and the file contents are ignored
@@ -120,6 +123,7 @@ def find_in_file(string):
     :return: List of files containing the string
     :rtype: List[str]
     """
+
 
     # So you face a prediciment here. You wish to read files, both small and large; however the bigger the file/bigger the list, the longer to read the file.
     # This probably isn't what you want, right?
@@ -135,25 +139,40 @@ def find_in_file(string):
     # This will allow the fastest searching and loading of a file without sacrificing read times.
     # 2.8 seconds on the highend for both small and large files in memory.
     # We also don't have to iterate over lines this way.
-    file_list_dict = get_file_list_dict()
     file_list = []
+    new_demo_files_dict = {}
 
-
-    for file in file_list_dict:
+    for file in demo_files_dict:
         try:
-            full_filename = file_list_dict[file]
-
+            full_filename = demo_files_dict[file]
             with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
-                if re.search(br'(?i)' + bytes(re.escape(string.lower()), 'utf-8'), s):
-                    #                         ^^^^^^^^^-----------------------------------> re.escape
-                    #                         (In case the user types ( or any other character that can be treated like a regex)
-                    file_list.append(file)
+                if (regex):
+                    matches = re.finditer(bytes(string, 'utf-8'), s, re.MULTILINE)
+                    for match in matches:
+                        if verbose:
+                            sg.cprint(f"{file}: ", c = 'white on green')
+                            sg.cprint(f"{match.group(0).decode('utf-8')}\n")
+                        file_list.append(file)
+                    #if re.search(bytes(string, 'utf-8'), s, re.MULTILINE):
+                    #    file_list.append(file)
+                else:
+                    if re.search(br'(?i)' + bytes(re.escape(string.lower()), 'utf-8'), s):
+                        #                         ^^^^^^^^^-----------------------------------> re.escape (In case the user types ( or any other character that can be treated like a regex)
+                        file_list.append(file)
+                        # DICT
+                        if file not in new_demo_files_dict.keys():
+                            new_demo_files_dict[file] = full_filename
+                        else:
+                            new_demo_files_dict[f'{file}_1'] = fname_full
         except ValueError:
-            pass    # caused by an empty file so no problem skipping it
+            pass
         except Exception as e:
-            print(f'{file}', e)
+            print(f'{file}', e, file=sys.stderr)
 
-    return list(set(file_list))
+    old_file_list = new_demo_files_dict
+
+    file_list = list(set(file_list))
+    return file_list
 
 
 def settings_window():
@@ -211,7 +230,6 @@ def make_window():
     :return: The main window object
     :rtype: (Window)
     """
-
     theme = get_theme()
     if not theme:
         theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
@@ -220,16 +238,22 @@ def make_window():
 
     find_tooltip = "Find in file\nEnter a string in box to search for string inside of the files.\nFile list will update with list of files string found inside."
     filter_tooltip = "Filter files\nEnter a string in box to narrow down the list of files.\nFile list will update with list of files with string in filename."
+    find_re_tooltip = "Find in file using Regular Expression\nEnter a string in box to search for string inside of the files.\nSearch is performed after clicking the FindRE button."
 
     ML_KEY = '-ML-'         # Multline's key
 
-    left_col = [
+    left_col = sg.Col([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(20,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
         [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
-         sg.T(size=(20,1), k='-FIND NUMBER-')]]
+         sg.T(size=(20,1), k='-FIND NUMBER-')],
+    ], element_justification='c')
+
+    lef_col_find_re = sg.Col([
+        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE'), sg.CB('Verbose', k='-VERBOSE-')]
+    ])
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -242,7 +266,7 @@ def make_window():
     layout = [[sg.Text('PySimpleGUI Project File Searcher & Launcher', font='Any 20')],
               [sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
                sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)],
-              sg.vtop([sg.Column(left_col, element_justification='c'), sg.Col(right_col, element_justification='c') ])]
+              sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ])]
 
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Finder Launcher', layout, finalize=True, icon=icon)
@@ -256,6 +280,8 @@ def main():
     The main program that contains the event loop.
     It will call the make_window function to create the window.
     """
+
+    old_typed_value = None
 
     editor_program = get_editor()
     file_list_dict = get_file_list_dict()
@@ -291,7 +317,24 @@ def main():
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
         elif event == '-FIND-':
-            file_list = find_in_file(values['-FIND-'])
+            global old_file_list
+            current_typed_value = str(values['-FIND-'])
+            if old_file_list is None or old_typed_value is None:
+                # New search.
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict())
+            elif current_typed_value.startswith(old_typed_value):
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], old_file_list)
+            else:
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict())
+            window['-DEMO LIST-'].update(sorted(file_list))
+            window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+            window['-FILTER NUMBER-'].update('')
+            window['-FILTER-'].update('')
+        elif event == 'Find RE':
+            file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), True, values['-VERBOSE-'])
             window['-DEMO LIST-'].update(sorted(file_list))
             window['-FIND NUMBER-'].update(f'{len(file_list)} files')
             window['-FILTER NUMBER-'].update('')
@@ -305,11 +348,14 @@ def main():
                 file_list = get_file_list()
                 window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
         elif event == 'Clear':
+            file_list = get_file_list()
             window['-FILTER-'].update('')
             window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
             window['-FIND-'].update('')
             window['-DEMO LIST-'].update(file_list)
             window['-FIND NUMBER-'].update('')
+            window['-FIND RE-'].update('')
+            window['-ML-'].update('')
         elif event == '-FOLDERNAME-':
             sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
             file_list_dict = get_file_list_dict()
