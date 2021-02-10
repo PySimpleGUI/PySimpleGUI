@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.18 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added"
+version = __version__ = "4.34.0.19 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1607,7 +1607,7 @@ class Combo(Element):
     def get(self):
         """
         Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
-        You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+        You should be using values from your call to window.read instead.  Know what you're doing if you use it.
 
         :return: Returns the value of what is currently chosen
         :rtype: Any | None
@@ -1741,7 +1741,7 @@ InputOptionMenu = OptionMenu
 class Listbox(Element):
     """
     A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
-    when a window.Read() is executed.
+    when a window.read() is executed.
     """
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
@@ -1953,7 +1953,7 @@ class Radio(Element):
     """
 
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
+                 background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True, metadata=None):
         """
         :param text: Text to display next to button
@@ -1972,6 +1972,8 @@ class Radio(Element):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
+        :param circle_color: color of background of the circle that has the dot selection indicator in it
+        :type circle_color: (str)
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int]
         :param key: Used with window.FindElement and with return values to uniquely identify this element
@@ -1999,18 +2001,21 @@ class Radio(Element):
         self.Value = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else theme_text_color()
-        # ---- compute color of circle background ---
-        try:          # something in here will fail if a color is not specified in Hex
-            text_hsl = _hex_to_hsl(self.TextColor)
-            background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
-            l_delta = abs(text_hsl[2] - background_hsl[2])/10
-            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
-                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
-            else:
-                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CircleBackgroundColor = rgb(*bg_rbg)
-        except:
-            self.CircleBackgroundColor = background_color if background_color else theme_background_color()
+        if circle_color is None:
+            # ---- compute color of circle background ---
+            try:          # something in here will fail if a color is not specified in Hex
+                text_hsl = _hex_to_hsl(self.TextColor)
+                background_hsl = _hex_to_hsl(background_color if background_color else theme_background_color())
+                l_delta = abs(text_hsl[2] - background_hsl[2])/10
+                if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                    bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+                else:
+                    bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+                self.CircleBackgroundColor = rgb(*bg_rbg)
+            except:
+                self.CircleBackgroundColor = background_color if background_color else theme_background_color()
+        else:
+            self.CircleBackgroundColor = circle_color
         self.ChangeSubmits = change_submits or enable_events
         self.EncodedRadioValue = None
         key = key if key is not None else k
@@ -2019,9 +2024,9 @@ class Radio(Element):
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, text=None, background_color=None, text_color=None, disabled=None, visible=None):
+    def update(self, value=None, text=None, background_color=None, text_color=None, circle_color=None, disabled=None, visible=None):
         """
-        Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
+        Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
         :param value: if True change to selected and set others in group to unselected
         :type value: (bool)
         :param text: Text to display next to radio button
@@ -2030,6 +2035,8 @@ class Radio(Element):
         :type background_color: (str)
         :param text_color: color of the text. Note this also changes the color of the selection dot
         :type text_color: (str)
+        :param circle_color: color of background of the circle that has the dot selection indicator in it
+        :type circle_color: (str)
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param visible: control visibility of element
@@ -2058,17 +2065,22 @@ class Radio(Element):
         if text_color is not None:
             self.TKRadio.configure(fg=text_color)
             self.TextColor = text_color
-        if self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
-            # ---- compute color of circle background ---
-            text_hsl = _hex_to_hsl(self.TextColor)
-            background_hsl = _hex_to_hsl(self.BackgroundColor if self.BackgroundColor else theme_background_color())
-            l_delta = abs(text_hsl[2] - background_hsl[2])/10
-            if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
-                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
-            else:
-                bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
-            self.CircleBackgroundColor = rgb(*bg_rbg)
-            self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the checkbox
+
+        if circle_color is not None:
+            self.CircleBackgroundColor = circle_color
+            self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the radio button
+        elif text_color or background_color:
+            if self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
+                # ---- compute color of circle background ---
+                text_hsl = _hex_to_hsl(self.TextColor)
+                background_hsl = _hex_to_hsl(self.BackgroundColor if self.BackgroundColor else theme_background_color())
+                l_delta = abs(text_hsl[2] - background_hsl[2])/10
+                if text_hsl[2] > background_hsl[2]:      # if the text is "lighter" than the background then make background darker
+                    bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1], background_hsl[2]-l_delta)
+                else:
+                    bg_rbg = _hsl_to_rgb(background_hsl[0], background_hsl[1],background_hsl[2]+l_delta)
+                self.CircleBackgroundColor = rgb(*bg_rbg)
+                self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the checkbox
 
         if disabled == True:
             self.TKRadio['state'] = 'disabled'
@@ -9389,9 +9401,9 @@ class Window:
 
     def __call__(self, *args, **kwargs):
         """
-        Call window.Read but without having to type it out.
-        window() == window.Read()
-        window(timeout=50) == window.Read(timeout=50)
+        Call window.read but without having to type it out.
+        window() == window.read()
+        window(timeout=50) == window.read(timeout=50)
 
         :return: The famous event, values that Read returns.
         :rtype: Tuple[Any, Dict[Any, Any]]
@@ -13783,7 +13795,7 @@ class QuickMeter(object):
         self.window.Element('_STATS_').Update('\n'.join(self.ComputeProgressStats()))
         self.window.Element('_OPTMSG_').Update(
             value=''.join(map(lambda x: str(x) + '\n', args)))  ###  update the string with the args
-        event, values = self.window.Read(timeout=0)
+        event, values = self.window.read(timeout=0)
         if event in ('Cancel', None) or current_value >= max_value:
             self.window.Close()
             del (QuickMeter.active_meters[self.key])
@@ -13961,13 +13973,13 @@ class _DebugWin():
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
-        event, values = self.window.Read(timeout=0)
+        event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
-            event, values = self.window.Read(timeout=0)
+            event, values = self.window.read(timeout=0)
         # print(f'Printing {ObjToStringSingleObj(self.output_element)}')
         if self.do_not_reroute_stdout:
             end_str = str(end) if end is not None else '\n'
@@ -15584,9 +15596,9 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal)
 
     if non_blocking:
-        button, values = window.Read(timeout=0)
+        button, values = window.read(timeout=0)
     else:
-        button, values = window.Read()
+        button, values = window.read()
         window.close()
         del window
     return button
@@ -16285,7 +16297,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
                     font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                     location=location, modal=modal)
 
-    button, values = window.Read()
+    button, values = window.read()
     window.close(); del window
     if button != 'Ok':
         return None
@@ -16436,7 +16448,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal)
 
-    button, values = window.Read()
+    button, values = window.read()
     window.close(); del window
     if button != 'Ok':
         return None
@@ -16505,7 +16517,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color, no_titlebar=no_titlebar, background_color=background_color, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, finalize=True, modal=modal)
 
 
-    button, values = window.Read()
+    button, values = window.read()
     window.close()
     del window
     if button != 'Ok':
@@ -17650,7 +17662,7 @@ class _Debugger():
     def _refresh_main_debugger_window(self, mylocals, myglobals):
         if not self.watcher_window:  # if there is no window setup, nothing to do
             return False
-        event, values = self.watcher_window.Read(timeout=1)
+        event, values = self.watcher_window.read(timeout=1)
         if event in (None, 'Exit', '_EXIT_'):  # EXIT BUTTON / X BUTTON
             try:
                 self.watcher_window.Close()
@@ -17855,7 +17867,7 @@ class _Debugger():
         window = Window('All Locals', layout, icon=PSGDebugLogo).Finalize()
 
         while True:  # event loop
-            event, values = window.Read()
+            event, values = window.read()
             if event in (None, 'Cancel'):
                 break
             elif event == 'Ok':
@@ -17983,7 +17995,7 @@ class _Debugger():
             if self.popout_choices[key] is True and key in self.locals:
                 if key is not None and self.popout_window is not None:
                     self.popout_window.Element(key, silent_on_error=True).Update(self.locals.get(key))
-        event, values = self.popout_window.Read(timeout=1)
+        event, values = self.popout_window.read(timeout=1)
         if event in (None, '_EXIT_', 'Exit::RightClick'):
             self.popout_window.Close()
             self.popout_window = None
@@ -18731,7 +18743,7 @@ def main():
     # Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     # print(window.element_list())
     while True:  # Event Loop
-        event, values = window.Read(timeout=5)
+        event, values = window.read(timeout=5)
         if event != TIMEOUT_KEY:
             print(event, values)
             # Print(event, text_color='white', background_color='red', end='')
