@@ -110,10 +110,9 @@ def get_theme():
     return sg.user_settings_get_entry('-theme-', global_theme)
 
 
-
 old_file_list = None
 
-def find_in_file(string, demo_files_dict, regex=False, verbose=False):
+def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None):
     global old_file_list
     """
     Search through the demo files for a string.
@@ -141,35 +140,47 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False):
     # We also don't have to iterate over lines this way.
     file_list = []
     new_demo_files_dict = {}
-
+    num_files = 0
     for file in demo_files_dict:
         try:
             full_filename = demo_files_dict[file]
             with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
                 if (regex):
-                    matches = re.finditer(bytes(string, 'utf-8'), s, re.MULTILINE)
-                    for match in matches:
-                        if verbose:
-                            sg.cprint(f"{file}: ", c = 'white on green')
-                            sg.cprint(f"{match.group(0).decode('utf-8')}\n")
-                        file_list.append(file)
-                    #if re.search(bytes(string, 'utf-8'), s, re.MULTILINE):
-                    #    file_list.append(file)
+                    window['-FIND NUMBER-'].update(f'{num_files} files')
+                    window.refresh()
+                    matches = re.finditer(bytes(string + ".*", 'utf-8'), s, re.MULTILINE)
+                    if matches:
+                        for match in matches:
+                            if match is not None:
+                                if file not in file_list:
+                                    file_list.append(file)
+                                    num_files += 1
+                                if verbose:
+                                    sg.cprint(f"{file}:", c = 'white on green')
+                                    sg.cprint(f"{match.group(0).decode('utf-8')}\n")
                 else:
-                    if re.search(br'(?i)' + bytes(re.escape(string.lower()), 'utf-8'), s):
-                        #                         ^^^^^^^^^-----------------------------------> re.escape (In case the user types ( or any other character that can be treated like a regex)
+                    window['-FIND NUMBER-'].update(f'{num_files} files')
+                    window.refresh()
+                    matches = re.search(br'(?i)' + bytes(re.escape(string.lower()) + ".*", 'utf-8'), s)
+                    if matches:
                         file_list.append(file)
+                        num_files += 1
+                        if verbose:
+                            sg.cprint(f"{file}:", c = 'white on green')
+                            sg.cprint(f"{matches.group(0).decode('utf-8')}\n")
                         # DICT
                         if file not in new_demo_files_dict.keys():
                             new_demo_files_dict[file] = full_filename
                         else:
-                            new_demo_files_dict[f'{file}_1'] = fname_full
+                            new_demo_files_dict[f'{file}_1'] = full_filename
+                del matches
         except ValueError:
             pass
         except Exception as e:
             print(f'{file}', e, file=sys.stderr)
 
-    old_file_list = new_demo_files_dict
+    if not regex:
+        old_file_list = new_demo_files_dict
 
     file_list = list(set(file_list))
     return file_list
@@ -222,6 +233,7 @@ def settings_window():
     window.close()
     return settings_changed
 
+ML_KEY = '-ML-'         # Multline's key
 
 # --------------------------------- Create the window ---------------------------------
 def make_window():
@@ -240,7 +252,6 @@ def make_window():
     filter_tooltip = "Filter files\nEnter a string in box to narrow down the list of files.\nFile list will update with list of files with string in filename."
     find_re_tooltip = "Find in file using Regular Expression\nEnter a string in box to search for string inside of the files.\nSearch is performed after clicking the FindRE button."
 
-    ML_KEY = '-ML-'         # Multline's key
 
     left_col = sg.Col([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
@@ -252,7 +263,7 @@ def make_window():
     ], element_justification='c')
 
     lef_col_find_re = sg.Col([
-        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE'), sg.CB('Verbose', k='-VERBOSE-')]
+        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE'), sg.CB('Verbose', enable_events=True, k='-VERBOSE-')]
     ])
 
     right_col = [
@@ -280,6 +291,7 @@ def main():
     The main program that contains the event loop.
     It will call the make_window function to create the window.
     """
+    global old_file_list
 
     old_typed_value = None
 
@@ -316,28 +328,34 @@ def main():
             window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
+            window['-FIND RE-'].update('')
         elif event == '-FIND-':
-            global old_file_list
             current_typed_value = str(values['-FIND-'])
+            if values['-VERBOSE-']:
+                window[ML_KEY].update('')
             if old_file_list is None or old_typed_value is None:
                 # New search.
                 old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], get_file_list_dict())
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
             elif current_typed_value.startswith(old_typed_value):
                 old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], old_file_list)
+                file_list = find_in_file(values['-FIND-'], old_file_list,  verbose=values['-VERBOSE-'],window=window)
             else:
                 old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], get_file_list_dict())
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
+
             window['-DEMO LIST-'].update(sorted(file_list))
             window['-FIND NUMBER-'].update(f'{len(file_list)} files')
             window['-FILTER NUMBER-'].update('')
+            window['-FIND RE-'].update('')
             window['-FILTER-'].update('')
         elif event == 'Find RE':
-            file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), True, values['-VERBOSE-'])
+            window['-ML-'].update('')
+            file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
             window['-DEMO LIST-'].update(sorted(file_list))
             window['-FIND NUMBER-'].update(f'{len(file_list)} files')
             window['-FILTER NUMBER-'].update('')
+            window['-FIND-'].update('')
             window['-FILTER-'].update('')
         elif event == 'Settings':
             if settings_window() is True:
@@ -362,7 +380,28 @@ def main():
             file_list = get_file_list()
             window['-DEMO LIST-'].update(values=file_list)
             window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
-
+        elif event == '-VERBOSE-':
+            window[ML_KEY].update('')
+            if values['-FIND-']:
+                current_typed_value = str(values['-FIND-'])
+                if old_file_list is None or old_typed_value is None:
+                    # New search.
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
+                elif current_typed_value.startswith(old_typed_value):
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], old_file_list,  verbose=values['-VERBOSE-'],window=window)
+                else:
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
+            elif values['-FIND RE-']:
+                window['-ML-'].update('')
+                file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
+                window['-DEMO LIST-'].update(sorted(file_list))
+                window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+                window['-FILTER NUMBER-'].update('')
+                window['-FIND-'].update('')
+                window['-FILTER-'].update('')
 
     window.close()
 
