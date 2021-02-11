@@ -2,7 +2,7 @@ import os.path
 import subprocess
 import sys
 import mmap, re
-
+import warnings
 import PySimpleGUI as sg
 
 """
@@ -13,13 +13,15 @@ import PySimpleGUI as sg
 
     Filter the list of :
         * Search using filename
-        * Searching within the demo program's source code (like grep)
+        * Searching within the programs' source code (like grep)
     
     The basic file operations are
         * Edit a file in your editor
         * Run a file
         * Filter file list
         * Search in files
+        * Run a regular expression search on all files
+        * Display the matching line in a file
     
     Additional operations
         * Edit this file in editor
@@ -110,10 +112,12 @@ def get_theme():
     return sg.user_settings_get_entry('-theme-', global_theme)
 
 
-old_file_list = None
+# We handle our code properly. But in case the user types in a flag, the flags are now in the middle of a regex. Ignore this warning.
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None):
-    global old_file_list
     """
     Search through the demo files for a string.
     The case of the string and the file contents are ignored
@@ -148,7 +152,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                 if (regex):
                     window['-FIND NUMBER-'].update(f'{num_files} files')
                     window.refresh()
-                    matches = re.finditer(bytes(string + ".*", 'utf-8'), s, re.MULTILINE)
+                    matches = re.finditer(bytes("^.*(" + string + ").*$", 'utf-8'), s, re.MULTILINE)
                     if matches:
                         for match in matches:
                             if match is not None:
@@ -161,7 +165,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                 else:
                     window['-FIND NUMBER-'].update(f'{num_files} files')
                     window.refresh()
-                    matches = re.search(br'(?i)' + bytes(re.escape(string.lower()) + ".*", 'utf-8'), s)
+                    matches = re.search(br'(?i)^' + bytes(".*("+re.escape(string.lower()) + ").*$", 'utf-8'), s, re.M)
                     if matches:
                         file_list.append(file)
                         num_files += 1
@@ -180,10 +184,11 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
             print(f'{file}', e, file=sys.stderr)
 
     if not regex:
-        old_file_list = new_demo_files_dict
+        find_in_file.old_file_list = new_demo_files_dict
 
     file_list = list(set(file_list))
     return file_list
+
 
 
 def settings_window():
@@ -200,8 +205,8 @@ def settings_window():
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
               [sg.T('Path to Tree', size=(20,1)),
-                 sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-'),
-                 sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
+               sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-'),
+               sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
@@ -284,6 +289,8 @@ def make_window():
 
     sg.cprint_set_output_destination(window, ML_KEY)
     return window
+
+
 # --------------------------------- Main Program Layout ---------------------------------
 
 def main():
@@ -291,7 +298,8 @@ def main():
     The main program that contains the event loop.
     It will call the make_window function to create the window.
     """
-    global old_file_list
+
+    find_in_file.old_file_list = None
 
     old_typed_value = None
 
@@ -320,7 +328,8 @@ def main():
                 execute_command_subprocess('python', f'{file_to_run}')
                 # run_py(file_to_run)
         elif event.startswith('Edit Me'):
-            sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', text_color='white', background_color='green', end='')
+            sg.cprint(f'opening using {editor_program}:')
+            sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
             execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
             new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
@@ -333,13 +342,13 @@ def main():
             current_typed_value = str(values['-FIND-'])
             if values['-VERBOSE-']:
                 window[ML_KEY].update('')
-            if old_file_list is None or old_typed_value is None:
+            if find_in_file.old_file_list is None or old_typed_value is None:
                 # New search.
                 old_typed_value = current_typed_value
                 file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
             elif current_typed_value.startswith(old_typed_value):
                 old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], old_file_list,  verbose=values['-VERBOSE-'],window=window)
+                file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
             else:
                 old_typed_value = current_typed_value
                 file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
@@ -384,13 +393,13 @@ def main():
             window[ML_KEY].update('')
             if values['-FIND-']:
                 current_typed_value = str(values['-FIND-'])
-                if old_file_list is None or old_typed_value is None:
+                if find_in_file.old_file_list is None or old_typed_value is None:
                     # New search.
                     old_typed_value = current_typed_value
                     file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
                 elif current_typed_value.startswith(old_typed_value):
                     old_typed_value = current_typed_value
-                    file_list = find_in_file(values['-FIND-'], old_file_list,  verbose=values['-VERBOSE-'],window=window)
+                    file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
                 else:
                     old_typed_value = current_typed_value
                     file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
