@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.19 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added"
+version = __version__ = "4.34.0.21 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3413,6 +3413,7 @@ class Button(Element):
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
+        :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
 
@@ -5840,7 +5841,7 @@ class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
-                 text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 text_color=None, trough_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param range: slider's range (min value, max value)
         :type range: Tuple[int, int] | Tuple[float, float]
@@ -5872,6 +5873,8 @@ class Slider(Element):
         :type background_color: (str)
         :param text_color: color of the slider's text
         :type text_color: (str)
+        :param trough_color: color of the slider's trough
+        :type trough_color: (str)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -5897,7 +5900,7 @@ class Slider(Element):
         self.Disabled = disabled
         self.TickInterval = tick_interval
         self.DisableNumericDisplay = disable_number_display
-        self.TroughColor = DEFAULT_SCROLLBAR_COLOR
+        self.TroughColor = trough_color or DEFAULT_SCROLLBAR_COLOR
         temp_size = size
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
@@ -14333,10 +14336,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type font: str | Tuple[str, int]
     :param border_width: width of border around element
     :type border_width: (int)
-    :param slider_border_width: ???
-    :type slider_border_width: ???
-    :param slider_relief: ???
-    :type slider_relief: ???
+    :param slider_border_width: Width of the border around sliders
+    :type slider_border_width: (int)
+    :param slider_relief: Type of relief to use for sliders
+    :type slider_relief: (str)
     :param slider_orientation: ???
     :type slider_orientation: ???
     :param autoclose_time: ???
@@ -14361,20 +14364,20 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type element_background_color: (str)
     :param text_element_background_color: text element background color
     :type text_element_background_color: (str)
-    :param input_elements_background_color: ???
-    :type input_elements_background_color: idk_yetReally
-    :param input_text_color: ???
-    :type input_text_color: ???
-    :param scrollbar_color: ???
-    :type scrollbar_color: ???
+    :param input_elements_background_color: Default color to use for the background of input elements
+    :type input_elements_background_color: (str)
+    :param input_text_color: Default color to use for the text for Input elements
+    :type input_text_color: (str)
+    :param scrollbar_color: Default color to use for the slider trough
+    :type scrollbar_color: (str)
     :param text_color: color of the text
     :type text_color: (str)
-    :param element_text_color: ???
-    :type element_text_color: ???
+    :param element_text_color: Default color to use for Text elements
+    :type element_text_color: (str)
     :param debug_win_size: window size
     :type debug_win_size: Tuple[int, int]
-    :param window_location: (Default = (None))
-    :type window_location: ???
+    :param window_location: Default location to place windows. Not setting will center windows on the display
+    :type window_location: Tuple[int, int] | None
     :param error_button_color: (Default = (None))
     :type error_button_color: ???
     :param tooltip_time: time in milliseconds to wait before showing a tooltip. Default is 400ms
@@ -18482,13 +18485,14 @@ def main_sdk_help():
     mline_col = Column([[Multiline(size=(100, 46), key='-ML-', write_only=True, reroute_stdout=True, font='Courier 10')],
                         [T(size=(80,1), font='Courier 10 underline', k='-DOC LINK-', enable_events=True)]], pad=(0,0))
     layout = [vtop([button_col, mline_col])]
-    layout += [[CBox('Summary Only', k='-SUMMARY-'),CBox('Display Only PEP8 Functions',default=True, k='-PEP8-') ]]
+    layout += [[CBox('Summary Only', enable_events=True, k='-SUMMARY-'),CBox('Display Only PEP8 Functions',default=True, k='-PEP8-') ]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
     window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=ICON_BASE64_BLOB_THINK, finalize=True)
     window['-DOC LINK-'].set_cursor('hand1')
     online_help_link = ''
     ml = window['-ML-']
+    current_element = ''
     while True:  # Event Loop
         event, values = window.read()
         if event in (WIN_CLOSED, 'Exit'):
@@ -18496,7 +18500,11 @@ def main_sdk_help():
         if event == '-DOC LINK-':
             if webbrowser_available and online_help_link:
                 webbrowser.open_new_tab(online_help_link)
+        if event == '-SUMMARY-':
+            event = current_element
+
         if event in element_names.keys():
+            current_element = event
             window['-ML-'].update('')
             online_help_link = online_help_links.get(event,'')
             window['-DOC LINK-'].update(online_help_link)
