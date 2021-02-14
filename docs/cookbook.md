@@ -697,12 +697,7 @@ One of the demo programs provided on the PySimpleGUI GitHub is called "Demo_Base
 
 Another demo program, "Demo_Base64_Single_Image_Encoder.py" will convert the input file to a base64 string and place the string onto the clipboard. Paste the result into your code and assign it to a variable. 
 
-You can also use an online conversion tool such as https://base64.guru/converter/encode/image
-
-On that page I chose to use the "Remote URL" (see above), pasted it into the input box and clicked "Encode image to Base64". Under the encode button is an area labeled "Base64".  If your conversion was successful, you'll see it filled with data like shown here:
-
-![SNAG-0551](https://user-images.githubusercontent.com/46163555/68682006-6ccb7c00-0532-11ea-8053-4513e32b2017.jpg)
-
+Both are in the Demos folder (Demos.PySimpleGUI.org)
 
 #### Step 3 - Make Base64 String Variable
 
