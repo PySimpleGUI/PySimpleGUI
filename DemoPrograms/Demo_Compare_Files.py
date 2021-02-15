@@ -8,7 +8,7 @@ import PySimpleGUI as sg
 sg.theme('Dark Blue 3')
 
 def GetFilesToCompare():
-    form_rows = [[sg.Text('Enter 2 files to comare')],
+    form_rows = [[sg.Text('Enter 2 files to compare')],
                  [sg.Text('File 1', size=(15, 1)),
                     sg.InputText(key='-file1-'), sg.FileBrowse()],
                  [sg.Text('File 2', size=(15, 1)), sg.InputText(key='-file2-'),
