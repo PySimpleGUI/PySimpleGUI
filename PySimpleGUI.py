@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.23 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added"
+version = __version__ = "4.34.0.24 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -113,7 +113,7 @@ from tkinter.colorchooser import askcolor
 from tkinter import ttk
 import tkinter.scrolledtext as tkst
 import tkinter.font
-# end of tkitner specific imports
+# end of tkinter specific imports
 # get the tkinter detailed version
 tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
@@ -2380,7 +2380,7 @@ class Spin(Element):
             except:
                 pass
 
-        if readonly:
+        if readonly is True:
             self.Readonly = True
             self.TKSpinBox['state'] = 'readonly'
         elif readonly is False:
@@ -2388,15 +2388,12 @@ class Spin(Element):
             self.TKSpinBox['state'] = 'normal'
         if disabled is True:
             self.TKSpinBox['state'] = 'disable'
-        elif disabled is False and not readonly:
-            self.TKSpinBox['state'] = 'normal'
+        elif disabled is False:
+            if self.Readonly:
+                self.TKSpinBox['state'] = 'readonly'
+            else:
+                self.TKSpinBox['state'] = 'normal'
 
-        if disabled is not None:
-            self.TKSpinBox.configure(state='disabled' if disabled else 'normal')
-        # if disabled == True:
-        #     self.TKSpinBox.configure(state='disabled')
-        # elif disabled == False:
-        #     self.TKSpinBox.configure(state='normal')
         if visible is False:
             self.TKSpinBox.pack_forget()
         elif visible is True:
@@ -3763,8 +3760,8 @@ class Button(Element):
         Changes some of the settings for the Button Element. Must call `Window.Read` or `Window.Finalize` prior
         :param text: sets button text
         :type text: (str)
-        :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color: Tuple[str, str] or (str)
+        :param button_color: Color of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background"
+        :type button_color: Tuple[str, str] | str | None
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -8435,12 +8432,15 @@ class Window:
                 if not SUPPRESS_ERROR_POPUPS:
                     key_message = 'A close key was found: {}'.format(closest_key) if closest_key is not None else 'No key found that resembles your key'
 
-                    popup_error('Key error in locating your element',
+                    button_clicked = popup_error('Key error in locating your element',
                                 'Bad key = {}\n'.format(key),
                                 key_message,
                                 error_message,
+                                # custom_text=('Close', 'Take me to error'),
                                 line_width=100,
                                 keep_on_top=True, image=_random_error_icon())
+                    if button_clicked == 'Take me to error':
+                        print('Coming soon!')
                 # if not SUPPRESS_RAISE_KEY_ERRORS:
                 #     raise KeyError(key)
                 # else:
@@ -13961,8 +13961,7 @@ class _DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.output_element = Multiline(size=win_size, autoscroll=True,
-                                        key='_MULTILINE_') if do_not_reroute_stdout else Output(size=win_size)
+        self.output_element = Multiline(size=win_size, autoscroll=True, reroute_stdout=False if do_not_reroute_stdout else True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
         else:
@@ -13974,7 +13973,7 @@ class _DebugWin():
         # self.window.NonBlocking = True        # if finalizing this window, then need to uncommment this line
         return
 
-    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None):
+    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
@@ -13982,6 +13981,8 @@ class _DebugWin():
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
+        if erase_all:
+            self.window['-MULTILINE-'].update('')
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
@@ -14021,7 +14022,7 @@ def PrintClose():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None, erase_all=False):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -14064,6 +14065,8 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type colors: (str) or Tuple[str, str]
     :param c: Either a tuple or a string that has both the text and background colors
     :type c: (str) or Tuple[str, str]
+    :param erase_all: If True when erase the output before printing
+    :type erase_all: (bool)
     :return:
     :rtype:
     """
@@ -14072,7 +14075,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
                                            do_not_reroute_stdout=do_not_reroute_stdout)
     txt_color, bg_color = _parse_colors_parm(c or colors)
-    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color)
+    _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color, erase_all=erase_all)
 
 
 
@@ -15466,7 +15469,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
         else:
             layout += [[PopupButton(custom_text[0], button_color=button_color, focus=True, bind_return_key=True,
                                     size=(len(custom_text[0]), 1)),
-                        PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[0]), 1))]]
+                        PopupButton(custom_text[1], button_color=button_color, size=(len(custom_text[1]), 1))]]
     elif button_type is POPUP_BUTTONS_YES_NO:
         layout += [[PopupButton('Yes', button_color=button_color, focus=True, bind_return_key=True, pad=((20, 5), 3),
                                 size=(5, 1)), PopupButton('No', button_color=button_color, size=(5, 1))]]
@@ -18142,10 +18145,6 @@ def _random_error_icon():
 
 
 
-def path_stem(path):
-    head, tail = os.path.split(path)
-    retval = tail or os.path.basename(head)
-    return os.path.splitext(retval)[0]
 
 
 def _copy_files_from_github(files, github_url=None):
@@ -18191,6 +18190,12 @@ def _copy_files_from_github(files, github_url=None):
         new_files = ""
         path = ""
         version = ""
+
+    def path_stem(path):
+        head, tail = os.path.split(path)
+        retval = tail or os.path.basename(head)
+        return os.path.splitext(retval)[0]
+
 
     info = _ReturnInfo()
     info.src = files[0]
@@ -18380,6 +18385,9 @@ def main_global_pysimplegui_settings():
 
     layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
               [T('Editor Program', size=(20,1)), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-'), FileBrowse()],
+              [T('String to launch your editor to edit at a particular line #.  Use <editor> <file> <line> to specify')],
+              [T('the string that will be executed to edit python files using your editor')],
+              [T('Edit Format String', size=(20,1)), In(settings.get('-editor format string-', ''),k='-EDITOR FORMAT-')],
               [T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-')],
               [B('Ok', bind_return_key=True), B('Cancel')],
@@ -18390,6 +18398,7 @@ def main_global_pysimplegui_settings():
     if event == 'Ok':
         new_theme = OFFICIAL_PYSIMPLEGUI_THEME if values['-THEME-'] == '' else values['-THEME-']
         pysimplegui_user_settings.set('-editor program-', values['-EDITOR PROGRAM-'])
+        pysimplegui_user_settings.set('-editor format string-', values['-EDITOR FORMAT-'])
         pysimplegui_user_settings.set('-theme-', new_theme)
         return True
     return False
