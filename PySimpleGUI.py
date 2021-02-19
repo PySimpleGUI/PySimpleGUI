@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.24 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled"
+version = __version__ = "4.34.0.25 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1573,6 +1573,9 @@ class Combo(Element):
             except:
                 pass
             self.Values = values
+            if value is None:
+                self.TKCombo.set('')
+
         if value is not None:
             if value not in self.Values:
                 self.TKCombo.set(value)
@@ -1710,19 +1713,16 @@ class OptionMenu(Element):
             self.TKOptionMenu['menu'].delete(0, 'end')
 
             # Insert list of new options (tk._setit hooks them up to var)
-            self.TKStringVar.set(self.Values[0])
+            # self.TKStringVar.set(self.Values[0])
             for new_value in self.Values:
                 self.TKOptionMenu['menu'].add_command(label=new_value, command=tk._setit(self.TKStringVar, new_value))
+            if value is None:
+                self.TKStringVar.set('')
 
-        if self.Values is not None:
-            for index, v in enumerate(self.Values):
-                if v == value:
-                    try:
-                        self.TKStringVar.set(value)
-                    except:
-                        pass
-                    self.DefaultValue = value
-                    break
+        if value is not None:
+            self.DefaultValue = value
+            self.TKStringVar.set(value)
+
         if disabled == True:
             self.TKOptionMenu['state'] = 'disabled'
         elif disabled == False:
@@ -4146,7 +4146,7 @@ class ProgressBar(Element):
         try:
             self.ParentForm.TKroot.update()
         except:
-            Window._DecrementOpenCount()
+            # Window._DecrementOpenCount()
             # _my_windows.Decrement()
             return False
         return True
@@ -12388,7 +12388,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if auto_size_text is False:
                     width = element_size[0]
                 else:
-                    width = max_line_len
+                    width = max_line_len + 1
                 element.TKStringVar = tk.StringVar()
                 style_name = 'TCombobox'
                 s = ttk.Style()
@@ -12481,14 +12481,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  OPTION MENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
+                element:OptionMenu
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
                     width = element_size[0]
                 else:
                     width = max_line_len
                 element.TKStringVar = tk.StringVar()
-                default = element.DefaultValue if element.DefaultValue else element.Values[0]
-                element.TKStringVar.set(default)
+                if element.DefaultValue:
+                    element.TKStringVar.set(element.DefaultValue)
                 element.TKOptionMenu = element.Widget = tk.OptionMenu(tk_row_frame, element.TKStringVar,
                                                                       *element.Values)
                 element.TKOptionMenu.config(highlightthickness=0, font=font, width=width)
