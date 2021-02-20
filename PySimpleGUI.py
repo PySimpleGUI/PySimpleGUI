@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.25 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider"
+version = __version__ = "4.34.0.27 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1499,8 +1499,8 @@ class Combo(Element):
         :type values: List[Any] or Tuple[Any]
         :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value: (Any)
-        :param size: width = characters-wide, height = rows-high
-        :type size: (int, int) (width, height)
+        :param size: width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
+        :type size: (int, int)
         :param auto_size_text: True if element should be the same size as the contents
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -1543,7 +1543,7 @@ class Combo(Element):
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
-    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None):
+    def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None)):
         """
         Changes some of the settings for the Combo Element. Must call `Window.Read` or `Window.Finalize` prior.
         Note that the state can be in 3 states only.... enabled, disabled, readonly even
@@ -1563,6 +1563,8 @@ class Combo(Element):
         :type font: str | Tuple[str, int]
         :param visible: control visibility of element
         :type visible: (bool)
+        :param size: width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
+        :type size: (int, int)
         """
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
@@ -1575,7 +1577,17 @@ class Combo(Element):
             self.Values = values
             if value is None:
                 self.TKCombo.set('')
-
+            if size == (None, None):
+                max_line_len = max([len(str(l)) for l in self.Values]) if len(self.Values) else 0
+                if self.AutoSizeText is False:
+                    width = self.Size[0]
+                else:
+                    width = max_line_len + 1
+                self.TKCombo.configure(height=self.Size[1])
+                self.TKCombo.configure(width=width)
+            else:
+                self.TKCombo.configure(height=size[1])
+                self.TKCombo.configure(width=size[0])
         if value is not None:
             if value not in self.Values:
                 self.TKCombo.set(value)
@@ -1659,8 +1671,8 @@ class OptionMenu(Element):
         :type values: List[Any] or Tuple[Any]
         :param default_value: the value to choose by default
         :type default_value: (Any)
-        :param size: size in characters (wide) and rows (high)
-        :type size: (int, int) (width, height)
+        :param size: (width, height) size in characters (wide), height is ignored and present to be consistent with other elements
+        :type size: (int, int) (width, UNUSED)
         :param disabled: control enabled / disabled
         :type disabled: (bool)
         :param auto_size_text: True if size of Element should match the contents of the items
@@ -1693,7 +1705,7 @@ class OptionMenu(Element):
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
-    def update(self, value=None, values=None, disabled=None, visible=None):
+    def update(self, value=None, values=None, disabled=None, visible=None, size=(None, None)):
         """
         Changes some of the settings for the OptionMenu Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: the value to choose by default
@@ -1704,6 +1716,8 @@ class OptionMenu(Element):
         :type disabled: (bool)
         :param visible: control visibility of element
         :type visible: (bool)
+        :param size: (width, height) size in characters (wide), height is ignored and present to be consistent with other elements
+        :type size: (int, int) (width, UNUSED)
         """
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
@@ -1718,6 +1732,17 @@ class OptionMenu(Element):
                 self.TKOptionMenu['menu'].add_command(label=new_value, command=tk._setit(self.TKStringVar, new_value))
             if value is None:
                 self.TKStringVar.set('')
+
+            if size == (None, None):
+                max_line_len = max([len(str(l)) for l in self.Values]) if len(self.Values) else 0
+                if self.AutoSizeText is False:
+                    width = self.Size[0]
+                else:
+                    width = max_line_len + 1
+                self.TKOptionMenu.configure(width=width)
+            else:
+                self.TKOptionMenu.configure(width=size[0])
+
 
         if value is not None:
             self.DefaultValue = value
@@ -12479,7 +12504,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
-            # -------------------------  OPTION MENU placement Element (Like ComboBox but different) element  ------------------------- #
+            # -------------------------  OPTIONMENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 element:OptionMenu
                 max_line_len = max([len(str(l)) for l in element.Values])
@@ -12493,11 +12518,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKOptionMenu = element.Widget = tk.OptionMenu(tk_row_frame, element.TKStringVar,
                                                                       *element.Values)
                 element.TKOptionMenu.config(highlightthickness=0, font=font, width=width)
+                element.TKOptionMenu['menu'].config(font=font)
                 element.TKOptionMenu.config(borderwidth=border_depth)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKOptionMenu.configure(background=element.BackgroundColor)
+                    element.TKOptionMenu['menu'].config(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
+                    element.TKOptionMenu['menu'].config(fg=element.TextColor)
                 element.TKOptionMenu.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 if element.visible is False:
                     element.TKOptionMenu.pack_forget()
