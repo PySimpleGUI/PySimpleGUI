@@ -28,7 +28,7 @@ def popup(*args, **kwargs):
     if mainthread_queue:
         mainthread_queue.put((args, kwargs))
 
-def the_thread():
+def the_thread(count):
     """
     The thread that communicates with the application through the window's events.
 
@@ -37,7 +37,7 @@ def the_thread():
     i = 0
     while True:
         time.sleep(2)
-        popup('Hello, this is the thread', 'My counter value', i, text_color='white', background_color='red', non_blocking=True)
+        popup(f'Hello, this is the thread #{count}', 'My counter value', i, text_color='white', background_color='red', non_blocking=True, keep_on_top=True, location=(1000-200*count, 400))
         i += 1
 
 
@@ -66,8 +66,8 @@ def main():
                 [sg.Input(key='-IN-', size=(30,1))],
                 [sg.B('Start A Thread'), sg.B('Dummy'), sg.Button('Exit')]  ]
 
-    window = sg.Window('Window Title', layout, finalize=True)
-
+    window = sg.Window('Window Title', layout, finalize=True, keep_on_top=True)
+    count = 0
     while True:             # Event Loop
         event, values = window.read(timeout=500)
         sg.cprint(event, values) if event != sg.TIMEOUT_EVENT else None
@@ -75,7 +75,8 @@ def main():
             break
         process_popup()
         if event.startswith('Start'):
-            threading.Thread(target=the_thread, daemon=True).start()
+            threading.Thread(target=the_thread, args=(count,), daemon=True).start()
+            count += 1
     window.close()
 
 
