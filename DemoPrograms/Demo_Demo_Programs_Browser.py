@@ -43,7 +43,7 @@ def get_demo_git_files():
     demo_path = get_demo_path()
 
     try:
-        demo_files = os.listdir(demo_path)
+        demo_files = [f for f in os.listdir(demo_path) if f.endswith('.py')]
     except:
         demo_files = []
 
@@ -66,9 +66,20 @@ def get_editor():
 
 
 def get_theme():
-    global_theme = sg.theme()
-
+    """
+    Get the theme to use for the program
+    Value is in this program's user settings. If none set, then use PySimpleGUI's global default theme
+    :return: The theme
+    :rtype: str
+    """
+    # First get the current global theme for PySimpleGUI to use if none has been set for this program
+    try:
+        global_theme = sg.theme_global()
+    except:
+        global_theme = sg.theme()
+    # Get theme from user settings for this program.  Use global theme if no entry found
     return sg.user_settings_get_entry('-theme-', global_theme)
+
 
 def find_in_file(string):
     """
@@ -124,7 +135,7 @@ def settings_window():
         sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
         new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
         sg.user_settings_set_entry('-editor program-', new_editor)
-        new_theme = sg.theme_global() if values['-THEME-'] == '' else values['-THEME-']
+        new_theme =  get_theme() if values['-THEME-'] == '' else values['-THEME-']
         sg.user_settings_set_entry('-theme-', new_theme)
         return True
 
@@ -154,10 +165,10 @@ def make_window():
     left_col = [
         [sg.Listbox(values=demo_files, select_mode=sg.SELECT_MODE_EXTENDED, size=(40, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
-         sg.T(size=(20,1), k='-FILTER NUMBER-')],
+         sg.T(size=(8,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
         [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
-         sg.T(size=(20,1), k='-FIND NUMBER-')]]
+         sg.T(size=(8,1), k='-FIND NUMBER-')]]
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -255,7 +266,7 @@ def execute_command_subprocess(command, *args, wait=False):
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
-        sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen([command + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         expanded_args = ' '.join(args)
         sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
