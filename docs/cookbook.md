@@ -409,7 +409,9 @@ If you have not yet downloaded the Demo Programs, then follow these instructions
 ![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/download_demos.jpg)
 * Unzip the downloaded zip and place the folder `DemoPrograms` somewere on your local disk drive that you have write access
 
+
 To set up the Demo Browser:
+
 * Run the program `Demo_Demo_Programs_Browser.py` that is in the folder you unzipped
 * Click the "Settings" button
 * Fill in the input fields labelled Path to Demos and Editor Program
@@ -443,6 +445,7 @@ This screenshot shows that the theme used for these demos is entirely under your
 ### "Open Folder" feature
 
 It has the same settings window with an additional field: `File Explorer Program`:
+
 * Windows - Defaults to `explorer`
 * Linux - defaults to `nemo`
 
@@ -456,7 +459,9 @@ The Project File Searcher & Launcher (hmmmm... will change the name of this demo
 
 ### Settings Window
 
+
 The settings window has a few changesfrom the basic Demo Browser.  These include:
+
 * A history of previously chosen folders
 * A "File Explorer Program" that is needed if you want to use the "Open Folder" button
 
@@ -472,6 +477,7 @@ Verbose mode will show you the full matching line from the file.  This is handy 
 As you can see from the note in the window, there are a few features that are still being developed.  
 
 Currently:
+
 * When searching within the files, the case is ignored
     * If using the Regular Expression search, then the case is not ignored.  It must be a perfect match.
 * Verbose displays only the first line - will enable showing all lines in the file that match in the future
