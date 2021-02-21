@@ -353,7 +353,7 @@ def main():
             for file in values['-DEMO LIST-']:
                 file_to_run = str(file_list_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
-                execute_command_subprocess('python', f'{file_to_run}')
+                execute_command_subprocess('python' if running_windows() else 'python3', f'{file_to_run}')
                 # run_py(file_to_run)
         elif event.startswith('Edit Me'):
             sg.cprint(f'opening using {editor_program}:')
