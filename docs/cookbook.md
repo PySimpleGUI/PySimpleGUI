@@ -2,9 +2,7 @@
 
 ![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
     
-# 2020 - Updates are in Progress
-
-It's been a little while getting back around to the Cookbook.  As a result, some of the information was using older design patterns and some better examples need to be included.  There have been about 1/3 of the changes made so far that need to get made, so be patient.        
+     
 # The PySimpleGUI Cookbook      
       
 Welcome to the PySimpleGUI Cookbook!  It's provided as but one component of a larger documentation effort for the PySimpleGUI package.  Its purpose is to give you a jump start.      
@@ -14,9 +12,15 @@ This document is not a replacement for the main documentation at http://www.PySi
   
 See the main doc on installation.  Typically it's `pip install pysimplegui` to install.
   
+# Constantly Being Updated
+
+Because PySimpleGUI is an active project, new capabilities are being added frequently, and the recommended method for doing operations evolves over time, that means this Cookbook will also change over time.  However, the speed the Cookbook gets updated will, by definition, lag behind the code changes.  
+
+The Demo Programs are going to be the most up to date examples for you, but even those get out of date.  It's an imperfect world, but let's make the most of what we've got.
+
 # The "Demo Programs" Are Also Recipes
 
-If you like this Cookbook, then you'll LOVE the 200 sample programs that are just like these.  You'll find them in the GitHub at http://Demos.PySimpleGUI.com.  They are located in the folder `DemoPrograms` and there is also a `Demo Programs` folder for each of the PySimpleGUI ports. 
+If you like this Cookbook, then you'll LOVE the 300 sample programs that are just like these.  You'll find them in the GitHub at http://Demos.PySimpleGUI.com.  They are located in the folder `DemoPrograms` and there is also a `Demo Programs` folder for each of the PySimpleGUI ports. 
 
 These programs are updated frequently, much more so than this Cookbook document.  It's there that you'll find the largest potential for a big jump-start on your project.
 
@@ -392,6 +396,85 @@ Of course your overall design can be OOP.
 
 The point is that there is no concept of an "App" or a never-ending event loop or callback functions.  PySimpleGUI is different than tkinter and Qt.  Trying to code in that style is likely to not result in success.  If you're writing a subclass for `Window` as a starting point, it's highly likely you're doing something wrong.
 
+------
+
+# Recipe - The Demo Browser
+
+There are so many demo programs that a way of quickly searching them was needed.  There are 2 programs for doing this.  There is the "Demo Programs Browser" and a more generalized "Project Browser".
+
+If you have not yet downloaded the Demo Programs, then follow these instructions to download the repo and demos:
+
+* Go to http://www.PySimpleGUI.com (the PySimpleGUI GitHub)
+* Download the repo as a ZIP file
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/download_demos.jpg)
+* Unzip the downloaded zip and place the folder `DemoPrograms` somewere on your local disk drive that you have write access
+
+To set up the Demo Browser:
+* Run the program `Demo_Demo_Programs_Browser.py` that is in the folder you unzipped
+* Click the "Settings" button
+* Fill in the input fields labelled Path to Demos and Editor Program
+* Path to Demos - Defaults to the location of the Demo when you run it the first time. You can leave unchanged if this program is going to remain with the other demos.  Use an absolute path.
+* Editor Program - If you want to be able to use the "Edit" button in this browser to open and edit the demo programs, then fill in the name of the .EXE (for windows) of your editor/IDE. 
+    * PyCharm
+        * Windows - it's not an EXE but a batch file.  It will look something like this:
+    `C:\Program Files\JetBrains\PyCharm Community Edition 2020.3\bin\pycharm.bat`
+        * Linux - it's a bit trickier.  It may resemble something like this:
+    `/home/mike/.local/share/JetBrains/Toolbox/apps/PyCharm-C/ch-0/202.8194.15/bin/pycharm.sh`
+        * Mac - I dunno yet.... there's an open Issue on GitHub asking for help from Mac user
+    * Notepad++
+        * Windows - Something along the lines of `C:\Program Files\NotePad++\notepad++.exe`
+    * Notepad
+        * Windows - `c:\windows\notepad`
+        * Linux - `/usr/bin/notepad`
+    * Custom
+        * Assuming your editor is invoked using "editor filename" when you can use any editor you wish by filling in the "Editor Program" field with a path to the editor executable
+    
+## The Project Browser - A More Generalized Solution
+
+There is an extended version of the Demo Browser that allows you to search for filenames and inside of files for ***any directory tree*** of your choosing.  The tree is flattened and you are shown a single list of files.
+
+Look for the demo - `Demo_Project_File_Searcher_Launcher.py`
+
+This screenshot shows that the theme used for these demos is entirely under your control.  I've simply set the theme to "Dark Gray 13" in the settings window and this is the result.
+
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_Main_Window.jpg)
+
+
+### "Open Folder" feature
+
+It has the same settings window with an additional field: `File Explorer Program`:
+* Windows - Defaults to `explorer`
+* Linux - defaults to `nemo`
+
+This is the program you want to launch when the "Open Folder" button is clicked
+
+### Window Explanation
+
+The Project File Searcher & Launcher (hmmmm... will change the name of this demo as it's too long) has a number of upgraded features.  This diagram explains a few of the differences.
+
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_Main_Window_Explained.jpg)
+
+### Settings Window
+
+The settings window has a few changesfrom the basic Demo Browser.  These include:
+* A history of previously chosen folders
+* A "File Explorer Program" that is needed if you want to use the "Open Folder" button
+
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_Settings_Window.jpg)
+
+
+Verbose mode will show you the full matching line from the file.  This is handy for when you're looking for a specific way something is used.
+
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_In_Use.jpg)
+
+### Features still under development
+
+As you can see from the note in the window, there are a few features that are still being developed.  
+
+Currently:
+* When searching within the files, the case is ignored
+    * If using the Regular Expression search, then the case is not ignored.  It must be a perfect match.
+* Verbose displays only the first line - will enable showing all lines in the file that match in the future
 
 -----
 
