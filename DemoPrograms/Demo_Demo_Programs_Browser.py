@@ -122,7 +122,7 @@ def settings_window():
     editor_program = get_editor()
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20,1)), sg.In(sg.user_settings_get_entry('-demos folder-', '.'), k='-DEMOS-'), sg.FolderBrowse()],
+              [sg.T('Path to Demos', size=(20,1)), sg.In(get_demo_path(), k='-DEMOS-'), sg.FolderBrowse()],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
@@ -261,15 +261,14 @@ def run_py(pyfile, parms=None):
 
 
 def execute_command_subprocess(command, *args, wait=False):
-
     if sys.platform == 'linux':
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
-        sp = subprocess.Popen([command + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen(command + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         expanded_args = ' '.join(args)
-        sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen([command, args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if wait:
         out, err = sp.communicate()
         if out:
