@@ -254,10 +254,11 @@ def run(app_name, parm=''):
 
 
 def run_py(pyfile, parms=None):
+    python = 'python' if sys.platform.startswith('win') else 'python3'
     if parms is not None:
-        execute_command_subprocess('python', pyfile, parms)
+        execute_command_subprocess(python, pyfile, parms)
     else:
-        execute_command_subprocess('python', pyfile)
+        execute_command_subprocess(python, pyfile)
 
 
 def execute_command_subprocess(command, *args, wait=False):
