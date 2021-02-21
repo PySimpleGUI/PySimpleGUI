@@ -31,7 +31,11 @@ import PySimpleGUI as sg
     Copyright 2021 PySimpleGUI.org
 """
 
+def running_linux():
+    return sys.platform.startswith('linux')
 
+def running_windows():
+    return sys.platform.startswith('win')
 
 def get_file_list_dict():
     """
@@ -96,6 +100,19 @@ def get_editor():
     return sg.user_settings_get_entry('-editor program-', global_editor)
 
 
+def get_explorer():
+    """
+    Get the path to the file explorer program
+
+    :return: Path to the file explorer EXE
+    :rtype: str
+    """
+    # TODO - need to add a default for Macs
+    default_explorer = 'explorer' if running_windows() else 'nemo'
+    return sg.user_settings_get_entry('-explorer program-', default_explorer)
+
+
+
 def get_theme():
     """
     Get the theme to use for the program
@@ -107,7 +124,7 @@ def get_theme():
     try:
         global_theme = sg.theme_global()
     except:
-        global_theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
+        global_theme = sg.theme()
     # Get theme from user settings for this program.  Use global theme if no entry found
     return sg.user_settings_get_entry('-theme-', global_theme)
 
@@ -202,14 +219,16 @@ def settings_window():
     """
 
     editor_program = get_editor()
+    explorer_program = get_explorer()
 
     layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
               [sg.T('Path to Tree', size=(20,1)),
-               sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-'),
+               sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.T('File Explorer Program', size=(20,1)), sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
-              [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
+              [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', None), readonly=True,  k='-THEME-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
 
@@ -228,6 +247,7 @@ def settings_window():
             new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
             sg.user_settings_set_entry('-theme-', new_theme)
             sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
+            sg.user_settings_set_entry('-explorer program-', values['-EXPLORER PROGRAM-'])
             settings_changed = True
             break
         elif event == 'Clear History':
@@ -261,14 +281,15 @@ def make_window():
     left_col = sg.Col([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
-         sg.T(size=(20,1), k='-FILTER NUMBER-')],
-        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
+         sg.T(size=(15,1), k='-FILTER NUMBER-')],
+        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
         [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
-         sg.T(size=(20,1), k='-FIND NUMBER-')],
-    ], element_justification='c')
+         sg.T(size=(15,1), k='-FIND NUMBER-')],
+    ], element_justification='l')
 
     lef_col_find_re = sg.Col([
-        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE'), sg.CB('Verbose', enable_events=True, k='-VERBOSE-')]
+        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')],
+
     ])
 
     right_col = [
@@ -277,12 +298,18 @@ def make_window():
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
     ]
 
+    options_at_bottom = [sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
+                         sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
+                         sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
+                         sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]
     # ----- Full layout -----
 
     layout = [[sg.Text('PySimpleGUI Project File Searcher & Launcher', font='Any 20')],
               [sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
-               sg.Combo(sg.user_settings_get_entry('-folder names-', []), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)],
-              sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ])]
+               sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)],
+              sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ]),
+              options_at_bottom
+              ]
 
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Finder Launcher', layout, finalize=True, icon=icon)
@@ -304,6 +331,7 @@ def main():
     old_typed_value = None
 
     editor_program = get_editor()
+    explorer_program = get_explorer()
     file_list_dict = get_file_list_dict()
     file_list = get_file_list()
     window = make_window()
@@ -371,6 +399,7 @@ def main():
                 window.close()
                 window = make_window()
                 editor_program = get_editor()
+                explorer_program = get_explorer()
                 file_list_dict = get_file_list_dict()
                 file_list = get_file_list()
                 window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
@@ -411,6 +440,17 @@ def main():
                 window['-FILTER NUMBER-'].update('')
                 window['-FIND-'].update('')
                 window['-FILTER-'].update('')
+        elif event == 'Open Folder':
+            if explorer_program:
+                sg.cprint('Opening Folder....', c='white on green', end='')
+                sg.cprint('')
+                for file in values['-DEMO LIST-']:
+                    file_selected = str(file_list_dict[file])
+                    file_path = os.path.dirname(file_selected)
+                    if running_windows():
+                        file_path = file_path.replace('/', '\\')
+                    sg.cprint(file_path, text_color='white', background_color='purple')
+                    execute_command_subprocess(explorer_program, file_path)
 
     window.close()
 
@@ -422,10 +462,10 @@ def execute_command_subprocess(command, *args, wait=False):
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
-        sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         expanded_args = ' '.join(args)
-        sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen([command, args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     if wait:
         out, err = sp.communicate()
         if out:
