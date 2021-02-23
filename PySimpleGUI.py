@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.27 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update"
+version = __version__ = "4.34.0.29 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1860,8 +1860,8 @@ class Listbox(Element):
         :type set_to_index: int | list | tuple
         :param scroll_to_index: scroll the listbox so that this index is the first shown
         :type scroll_to_index: (int)
-        :param mode: changes the select mode according to tkinter's listbox widget
-        :type mode: (str)
+        :param select_mode: changes the select mode according to tkinter's listbox widget
+        :type select_mode: (str)
         :param visible: control visibility of element
         :type visible: (bool)
         """
@@ -1869,9 +1869,9 @@ class Listbox(Element):
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
 
-        if disabled == True:
+        if disabled is True:
             self.TKListbox.configure(state='disabled')
-        elif disabled == False:
+        elif disabled is False:
             self.TKListbox.configure(state='normal')
         if values is not None:
             self.TKListbox.delete(0, 'end')
@@ -1915,7 +1915,7 @@ class Listbox(Element):
         Set listbox highlighted choices
 
         :param values: new values to choose based on previously set values
-        :type values: List[Any]
+        :type values: List[Any] | Tuple[Any]
 
         """
         for index, item in enumerate(self.Values):
@@ -2684,7 +2684,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None,colors=None, t=None, b=None,  c=None, ):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None,colors=None, t=None, b=None,  c=None):
         """
         Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -3626,6 +3626,8 @@ class Button(Element):
         #     except:
         #         pass
 
+        if self.Disabled:
+            return
         target_element, strvar, should_submit_window = self._find_target()
 
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
@@ -3832,8 +3834,10 @@ class Button(Element):
                                 button_color[1] if button_color[1] is not None else self.ButtonColor[1])
         if disabled == True:
             self.TKButton['state'] = 'disabled'
+            self.Disabled = True
         elif disabled == False:
             self.TKButton['state'] = 'normal'
+            self.Disabled = False
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
             if image_size is not None:
@@ -8457,11 +8461,11 @@ class Window:
                 if not SUPPRESS_ERROR_POPUPS:
                     key_message = 'A close key was found: {}'.format(closest_key) if closest_key is not None else 'No key found that resembles your key'
 
-                    button_clicked = popup_error('Key error in locating your element',
+                    button_clicked = popup('Key error in locating your element',
                                 'Bad key = {}\n'.format(key),
                                 key_message,
                                 error_message,
-                                # custom_text=('Close', 'Take me to error'),
+                                custom_text=('Close', 'Take me to error'),
                                 line_width=100,
                                 keep_on_top=True, image=_random_error_icon())
                     if button_clicked == 'Take me to error':
@@ -9530,7 +9534,8 @@ def _exit_mainloop(exiting_window):
     #       f'running mainloop = {Window._window_running_mainloop}')
     if exiting_window == Window._window_running_mainloop or Window._root_running_mainloop == Window.hidden_master_root:
         Window._window_that_exited = exiting_window
-        Window._root_running_mainloop.quit()
+        if Window._root_running_mainloop is not None:
+            Window._root_running_mainloop.quit()
         # print('** Exited window mainloop **')
 
 
@@ -12506,7 +12511,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  OPTIONMENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
-                element:OptionMenu
                 max_line_len = max([len(str(l)) for l in element.Values])
                 if auto_size_text is False:
                     width = element_size[0]
@@ -14858,8 +14862,11 @@ def theme(new_theme=None):
     :return: the currently selected theme
     :rtype: (str)
     """
+    global TRANSPARENT_BUTTON
+
     if new_theme is not None:
         change_look_and_feel(new_theme)
+        TRANSPARENT_BUTTON = (theme_background_color(), theme_background_color())
     return CURRENT_LOOK_AND_FEEL
 
 
@@ -14878,8 +14885,11 @@ def theme_background_color(color=None):
         set_options(background_color=color)
     return DEFAULT_BACKGROUND_COLOR
 
+
+
 # This "constant" is misleading but rather than remove and break programs, will try this method instead
 TRANSPARENT_BUTTON = (theme_background_color(), theme_background_color())  # replaces an older version that had hardcoded numbers
+
 
 
 def theme_element_background_color(color=None):
@@ -14947,7 +14957,7 @@ def theme_button_color(color=None):
     Sets/Returns the button color currently in use
 
     :return: Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
-    :rtype: (str)
+    :rtype: Tuple[str, str]
     """
     if color is not None:
         set_options(button_color=color)
@@ -14959,7 +14969,7 @@ def theme_progress_bar_color(color=None):
     Sets/Returns the progress bar colors by the current color theme
 
     :return: Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
-    :rtype: (str)
+    :rtype: Tuple[str, str]
     """
     if color is not None:
         set_options(progress_meter_color=color)
@@ -14970,7 +14980,7 @@ def theme_slider_color(color=None):
     """
     Sets/Returns the slider color (used for sliders)
 
-    :return: (str) - color string of the slider color currently in use
+    :return: color string of the slider color currently in use
     :rtype: (str)
     """
     if color is not None:
@@ -14983,8 +14993,8 @@ def theme_border_width(border_width=None):
     Sets/Returns the border width currently in use
     Used by non ttk elements at the moment
 
-    :return: (int) - border width currently in use
-    :rtype: (str)
+    :return: border width currently in use
+    :rtype: (int)
     """
     if border_width is not None:
         set_options(border_width=border_width)
@@ -14995,8 +15005,8 @@ def theme_slider_border_width(border_width=None):
     """
     Sets/Returns the slider border width currently in use
 
-    :return: (int) - border width currently in use
-    :rtype: (str)
+    :return: border width currently in use for sliders
+    :rtype: (int)
     """
     if border_width is not None:
         set_options(slider_border_width=border_width)
@@ -15007,8 +15017,8 @@ def theme_progress_bar_border_width(border_width=None):
     """
     Sets/Returns the progress meter border width currently in use
 
-    :return: (int) - border width currently in use
-    :rtype: (str)
+    :return: border width currently in use for progress meters
+    :rtype: (int)
     """
     if border_width is not None:
         set_options(progress_meter_border_depth=border_width)
@@ -15020,7 +15030,7 @@ def theme_element_text_color(color=None):
     """
     Sets/Returns the text color used by elements that have text as part of their display (Tables, Trees and Sliders)
 
-    :return: (str) - color string currently in use
+    :return: color string currently in use
     :rtype: (str)
     """
     if color is not None:
@@ -15032,7 +15042,7 @@ def theme_list():
     """
     Returns a sorted list of the currently available color themes
 
-    :return: List[str] - A sorted list of the currently available color themes
+    :return: A sorted list of the currently available color themes
     :rtype: List[str]
     """
     return list_of_look_and_feel_values()
