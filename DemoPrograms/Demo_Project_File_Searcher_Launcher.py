@@ -221,7 +221,7 @@ def settings_window():
     editor_program = get_editor()
     explorer_program = get_explorer()
 
-    layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
+    layout = [[sg.T('Program Settings', font='DEFAULT 18')],
               [sg.T('Path to Tree', size=(20,1)),
                sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
