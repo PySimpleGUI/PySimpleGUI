@@ -1,68 +1,135 @@
 import os.path
 import subprocess
 import sys
-
+import mmap, re
+import warnings
 import PySimpleGUI as sg
 
 """
-    Demo Browser
+    PySimpleGUI Demo Program Browser
+
+    Originaly written for PySimpleGUI Demo Programs, but expanded to
+    be a general purpose tool. Enable Advanced Mode in settings for more fun
     
-    Makes using the Demo Programs each even more powerful.
-    Now you can quickly filter and search to find the demo you need.
-    You can launch editing the demo using your favorite editor.
-    
-    On first run, click settings button to enter location of your demo programs.
-    
-    Filter the list of demos using:
+    Use to filter and search your source code tree.
+        Then run or edit your files
+
+    Filter the list of :
         * Search using filename
-        * Searching within the demo program's source code (like grep)
+        * Searching within the programs' source code (like grep)
     
     The basic file operations are
         * Edit a file in your editor
         * Run a file
         * Filter file list
         * Search in files
+        * Run a regular expression search on all files
+        * Display the matching line in a file
     
     Additional operations
         * Edit this file in editor
+        
+    Keeps a "history" of the previously chosen folders to easy switching between projects
                 
     Copyright 2021 PySimpleGUI.org
 """
 
+def running_linux():
+    return sys.platform.startswith('linux')
 
+def running_windows():
+    return sys.platform.startswith('win')
 
-def get_demo_git_files():
+def get_file_list_dict():
     """
-    Get the files in the demo and the GitHub folders
-    Returns files as 2 lists
+    Returns dictionary of files
+    Key is short filename
+    Value is the full filename and path
 
-    :return: two lists of files
-    :rtype: Tuple[List[str], List[str]]
+    :return: Dictionary of demo files
+    :rtype: Dict[str:str]
     """
 
     demo_path = get_demo_path()
+    demo_files_dict = {}
+    for dirname, dirnames, filenames in os.walk(demo_path):
+        for filename in filenames:
+            if filename.endswith('.py') or filename.endswith('.pyw'):
+                fname_full = os.path.join(dirname, filename)
+                if filename not in demo_files_dict.keys():
+                    demo_files_dict[filename] = fname_full
+                else:
+                    # Allow up to 100 dupicated names. After that, give up
+                    for i in range(1, 100):
+                        new_filename = f'{filename}_{i}'
+                        if new_filename not in demo_files_dict:
+                            demo_files_dict[new_filename] = fname_full
+                            break
 
-    try:
-        demo_files = [f for f in os.listdir(demo_path) if f.endswith('.py')]
-    except:
-        demo_files = []
+    return demo_files_dict
 
-    return demo_files
+
+def get_file_list():
+    """
+    Returns list of filenames of files to display
+    No path is shown, only the short filename
+
+    :return: List of filenames
+    :rtype: List[str]
+    """
+    return sorted(list(get_file_list_dict().keys()))
 
 
 def get_demo_path():
+    """
+    Get the top-level folder path
+    :return: Path to list of files using the user settings for this file.  Returns folder of this file if not found
+    :rtype: str
+    """
     demo_path = sg.user_settings_get_entry('-demos folder-', os.path.dirname(__file__))
 
     return demo_path
 
 
+
 def get_editor():
+    """
+    Get the path to the editor based on user settings or on PySimpleGUI's global settings
+
+    :return: Path to the editor
+    :rtype: str
+    """
     try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
         global_editor = sg.pysimplegui_user_settings.get('-editor program-')
     except:
         global_editor = ''
 
     return sg.user_settings_get_entry('-editor program-', global_editor)
+
+
+def get_explorer():
+    """
+    Get the path to the file explorer program
+
+    :return: Path to the file explorer EXE
+    :rtype: str
+    """
+    # TODO - need to add a default for Macs
+    default_explorer = 'explorer' if running_windows() else 'nemo'
+    return sg.user_settings_get_entry('-explorer program-', default_explorer)
+
+
+
+
+def advanced_mode():
+    """
+    Returns True is advanced GUI should be shown
+
+    :return: True if user indicated wants the advanced GUI to be shown (set in the settings window)
+    :rtype: bool
+    """
+    return sg.user_settings_get_entry('-advanced mode-', False)
+
 
 
 def get_theme():
@@ -81,7 +148,12 @@ def get_theme():
     return sg.user_settings_get_entry('-theme-', global_theme)
 
 
-def find_in_file(string):
+# We handle our code properly. But in case the user types in a flag, the flags are now in the middle of a regex. Ignore this warning.
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+
+def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None):
     """
     Search through the demo files for a string.
     The case of the string and the file contents are ignored
@@ -91,22 +163,68 @@ def find_in_file(string):
     :rtype: List[str]
     """
 
-    demo_path = get_demo_path()
-    demo_files = get_demo_git_files()
-    string = string.lower()
+
+    # So you face a prediciment here. You wish to read files, both small and large; however the bigger the file/bigger the list, the longer to read the file.
+    # This probably isn't what you want, right?
+    # Well, we can't use a direct command line to run grep and parse. But it is an option. The user may not have it.
+    # We could check if grep exists and if not use our method; but it isn't the best way.
+    # So using background knowldge, we know that grep is *very* fast.
+    #
+    # Why?
+    # Grep reads a *ton* of files into memory then searches through the memory to find the string or regex/pattern corresponding to the file.
+    # How can we load a file into memory on python as fast as grep whilst keeping it universal?
+    # memory mapping (mmap).
+    # We can't load a lot of files into memory as we may face issues with watchdog on other operating systems. So we load one file at a time and search though there.
+    # This will allow the fastest searching and loading of a file without sacrificing read times.
+    # 2.8 seconds on the highend for both small and large files in memory.
+    # We also don't have to iterate over lines this way.
     file_list = []
-    for file in demo_files:
-        filename = os.path.join(demo_path, file)
+    new_demo_files_dict = {}
+    num_files = 0
+    for file in demo_files_dict:
         try:
-            with open(filename, 'r', encoding="utf8") as f:
-                for line in f.readlines():
-                    if string in line.lower():
+            full_filename = demo_files_dict[file]
+            with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
+                if (regex):
+                    window['-FIND NUMBER-'].update(f'{num_files} files')
+                    window.refresh()
+                    matches = re.finditer(bytes("^.*(" + string + ").*$", 'utf-8'), s, re.MULTILINE)
+                    if matches:
+                        for match in matches:
+                            if match is not None:
+                                if file not in file_list:
+                                    file_list.append(file)
+                                    num_files += 1
+                                if verbose:
+                                    sg.cprint(f"{file}:", c = 'white on green')
+                                    sg.cprint(f"{match.group(0).decode('utf-8')}\n")
+                else:
+                    window['-FIND NUMBER-'].update(f'{num_files} files')
+                    window.refresh()
+                    matches = re.search(br'(?i)^' + bytes(".*("+re.escape(string.lower()) + ").*$", 'utf-8'), s, re.M)
+                    if matches:
                         file_list.append(file)
-                        # print(f'{os.path.basename(file)} -- {line}')
-        except Exception as e:
+                        num_files += 1
+                        if verbose:
+                            sg.cprint(f"{file}:", c = 'white on green')
+                            sg.cprint(f"{matches.group(0).decode('utf-8')}\n")
+                        # DICT
+                        if file not in new_demo_files_dict.keys():
+                            new_demo_files_dict[file] = full_filename
+                        else:
+                            new_demo_files_dict[f'{file}_1'] = full_filename
+                del matches
+        except ValueError:
             pass
-            # print(e)
-    return list(set(file_list))
+        except Exception as e:
+            print(f'{file}', e, file=sys.stderr)
+
+    if not regex:
+        find_in_file.old_file_list = new_demo_files_dict
+
+    file_list = list(set(file_list))
+    return file_list
+
 
 
 def settings_window():
@@ -120,26 +238,48 @@ def settings_window():
     """
 
     editor_program = get_editor()
+    explorer_program = get_explorer()
 
-    layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
-              [sg.T('Path to Demos', size=(20,1)), sg.In(get_demo_path(), k='-DEMOS-'), sg.FolderBrowse()],
-              [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+    layout = [[sg.T('Program Settings', font='DEFAULT 18')],
+              [sg.T('Path to Tree', size=(20,1)),
+               sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
+               sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
-              [sg.Combo(['']+sg.theme_list(), sg.user_settings_get_entry('-theme-', None), k='-THEME-')],
+              [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.T('File Explorer Program', size=(20,1)), sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
+              [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', None), readonly=True,  k='-THEME-')],
+              [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
 
     window = sg.Window('Settings', layout)
-    event, values = window.read(close=True)
-    if event == 'Ok':
-        sg.user_settings_set_entry('-demos folder-', values['-DEMOS-'])
-        new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
-        sg.user_settings_set_entry('-editor program-', new_editor)
-        new_theme =  get_theme() if values['-THEME-'] == '' else values['-THEME-']
-        sg.user_settings_set_entry('-theme-', new_theme)
-        return True
 
-    return False
+    settings_changed = False
+
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', sg.WIN_CLOSED):
+            break
+        if event == 'Ok':
+            sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
+            new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
+            sg.user_settings_set_entry('-editor program-', new_editor)
+            new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
+            sg.user_settings_set_entry('-theme-', new_theme)
+            sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
+            sg.user_settings_set_entry('-explorer program-', values['-EXPLORER PROGRAM-'])
+            sg.user_settings_set_entry('-advanced mode-', values['-ADVANCED MODE-'])
+            settings_changed = True
+            break
+        elif event == 'Clear History':
+            sg.user_settings_set_entry('-folder names-', [])
+            sg.user_settings_set_entry('-last filename-', '')
+            window['-FOLDERNAME-'].update(values=[], value='')
+
+    window.close()
+    return settings_changed
+
+ML_KEY = '-ML-'         # Multline's key
 
 # --------------------------------- Create the window ---------------------------------
 def make_window():
@@ -148,10 +288,7 @@ def make_window():
     :return: The main window object
     :rtype: (Window)
     """
-
     theme = get_theme()
-    editor = get_editor()
-    demo_files = get_demo_git_files()
     if not theme:
         theme = sg.OFFICIAL_PYSIMPLEGUI_THEME
     sg.theme(theme)
@@ -159,16 +296,20 @@ def make_window():
 
     find_tooltip = "Find in file\nEnter a string in box to search for string inside of the files.\nFile list will update with list of files string found inside."
     filter_tooltip = "Filter files\nEnter a string in box to narrow down the list of files.\nFile list will update with list of files with string in filename."
+    find_re_tooltip = "Find in file using Regular Expression\nEnter a string in box to search for string inside of the files.\nSearch is performed after clicking the FindRE button."
 
-    ML_KEY = '-ML-'         # Multline's key
 
-    left_col = [
-        [sg.Listbox(values=demo_files, select_mode=sg.SELECT_MODE_EXTENDED, size=(40, 20), key='-DEMO LIST-')],
+    left_col = sg.Col([
+        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
         [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
-         sg.T(size=(8,1), k='-FILTER NUMBER-')],
-        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear')],
+         sg.T(size=(15,1), k='-FILTER NUMBER-')],
+        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
         [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
-         sg.T(size=(8,1), k='-FIND NUMBER-')]]
+         sg.T(size=(15,1), k='-FIND NUMBER-')],
+    ], element_justification='l')
+
+    lef_col_find_re = sg.pin(sg.Col([
+        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -176,17 +317,33 @@ def make_window():
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
     ]
 
+    options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
+                                           sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
+                                           sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
+                                           sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]], pad=(0,0), k='-OPTIONS BOTTOM-'))
+
+    choose_folder_at_top = sg.pin(sg.Column([[sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
+                                              sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
     # ----- Full layout -----
 
-    layout = [[sg.Text('Demo Programs Browser', font='Any 20')],
-              [sg.T('Click settings to specify location of demo files')],
-                sg.vtop([sg.Column(left_col, element_justification='c'),sg.Col(right_col, element_justification='c') ])]
+    layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
+              [choose_folder_at_top],
+              sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ]),
+              [options_at_bottom]
+              ]
 
     # --------------------------------- Create Window ---------------------------------
-    window = sg.Window('PySimpleGUI Demo Program Browser', layout, icon=icon)
+    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon)
+
+    if not advanced_mode():
+        window['-FOLDER CHOOSE-'].update(visible=False)
+        window['-RE COL-'].update(visible=False)
+        window['-OPTIONS BOTTOM-'].update(visible=False)
 
     sg.cprint_set_output_destination(window, ML_KEY)
     return window
+
+
 # --------------------------------- Main Program Layout ---------------------------------
 
 def main():
@@ -195,78 +352,143 @@ def main():
     It will call the make_window function to create the window.
     """
 
-    demo_path = get_demo_path()
+    find_in_file.old_file_list = None
+
+    old_typed_value = None
+
     editor_program = get_editor()
-    demo_files = get_demo_git_files()
+    explorer_program = get_explorer()
+    file_list_dict = get_file_list_dict()
+    file_list = get_file_list()
     window = make_window()
+    window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
 
     while True:
         event, values = window.read()
-        if event == sg.WINDOW_CLOSED or event == 'Exit':
+        if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
         if event == 'Edit':
             for file in values['-DEMO LIST-']:
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
-                sg.cprint(f'{os.path.join(demo_path, file)}', t='white', b='purple')
-                execute_command_subprocess(f'{editor_program}', f'"{os.path.join(demo_path, file)}"')
+                sg.cprint(f'{file_list_dict[file]}', text_color='white', background_color='purple')
+                execute_command_subprocess(f'{editor_program}', f'"{file_list_dict[file]}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
             for file in values['-DEMO LIST-']:
-                sg.cprint(os.path.join(demo_path, file),text_color='white', background_color='purple')
-                run_py(os.path.join(demo_path, file))
+                file_to_run = str(file_list_dict[file])
+                sg.cprint(file_to_run,text_color='white', background_color='purple')
+                execute_command_subprocess('python' if running_windows() else 'python3', f'{file_to_run}')
+                # run_py(file_to_run)
         elif event.startswith('Edit Me'):
-            sg.cprint(f'opening using {editor_program}\nThis file - {__file__}', t='white', b='green', end='')
+            sg.cprint(f'opening using {editor_program}:')
+            sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
             execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
-            new_list = [i for i in demo_files if values['-FILTER-'].lower() in i.lower()]
+            new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
             window['-FILTER NUMBER-'].update(f'{len(new_list)} files')
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
+            window['-FIND RE-'].update('')
         elif event == '-FIND-':
-            file_list = find_in_file(values['-FIND-'])
+            current_typed_value = str(values['-FIND-'])
+            if values['-VERBOSE-']:
+                window[ML_KEY].update('')
+            if find_in_file.old_file_list is None or old_typed_value is None:
+                # New search.
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
+            elif current_typed_value.startswith(old_typed_value):
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
+            else:
+                old_typed_value = current_typed_value
+                file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
+
             window['-DEMO LIST-'].update(sorted(file_list))
             window['-FIND NUMBER-'].update(f'{len(file_list)} files')
             window['-FILTER NUMBER-'].update('')
+            window['-FIND RE-'].update('')
+            window['-FILTER-'].update('')
+        elif event == 'Find RE':
+            window['-ML-'].update('')
+            file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
+            window['-DEMO LIST-'].update(sorted(file_list))
+            window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+            window['-FILTER NUMBER-'].update('')
+            window['-FIND-'].update('')
             window['-FILTER-'].update('')
         elif event == 'Settings':
             if settings_window() is True:
                 window.close()
                 window = make_window()
-                demo_path = get_demo_path()
                 editor_program = get_editor()
-                demo_files = get_demo_git_files()
-                theme = get_theme()
+                explorer_program = get_explorer()
+                file_list_dict = get_file_list_dict()
+                file_list = get_file_list()
+                window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
         elif event == 'Clear':
+            file_list = get_file_list()
             window['-FILTER-'].update('')
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
             window['-FIND-'].update('')
-            window['-DEMO LIST-'].update(demo_files)
-            window['-FILTER NUMBER-'].update('')
+            window['-DEMO LIST-'].update(file_list)
             window['-FIND NUMBER-'].update('')
+            window['-FIND RE-'].update('')
+            window['-ML-'].update('')
+        elif event == '-FOLDERNAME-':
+            sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
+            file_list_dict = get_file_list_dict()
+            file_list = get_file_list()
+            window['-DEMO LIST-'].update(values=file_list)
+            window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
+        elif event == '-VERBOSE-':
+            window[ML_KEY].update('')
+            if values['-FIND-']:
+                current_typed_value = str(values['-FIND-'])
+                if find_in_file.old_file_list is None or old_typed_value is None:
+                    # New search.
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
+                elif current_typed_value.startswith(old_typed_value):
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
+                else:
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
+            elif values['-FIND RE-']:
+                window['-ML-'].update('')
+                file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
+                window['-DEMO LIST-'].update(sorted(file_list))
+                window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+                window['-FILTER NUMBER-'].update('')
+                window['-FIND-'].update('')
+                window['-FILTER-'].update('')
+        elif event == 'Open Folder':
+            if explorer_program:
+                sg.cprint('Opening Folder....', c='white on green', end='')
+                sg.cprint('')
+                for file in values['-DEMO LIST-']:
+                    file_selected = str(file_list_dict[file])
+                    file_path = os.path.dirname(file_selected)
+                    if running_windows():
+                        file_path = file_path.replace('/', '\\')
+                    sg.cprint(file_path, text_color='white', background_color='purple')
+                    execute_command_subprocess(explorer_program, file_path)
 
     window.close()
 
 
-def run(app_name, parm=''):
-    execute_command_subprocess(app_name, parm)
-
-
-def run_py(pyfile, parms=None):
-    python = 'python' if sys.platform.startswith('win') else 'python3'
-    if parms is not None:
-        execute_command_subprocess(python, pyfile, parms)
-    else:
-        execute_command_subprocess(python, pyfile)
-
 
 def execute_command_subprocess(command, *args, wait=False):
+
     if sys.platform == 'linux':
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
-        sp = subprocess.Popen(command + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     else:
         expanded_args = ' '.join(args)
         sp = subprocess.Popen([command, args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -279,7 +501,7 @@ def execute_command_subprocess(command, *args, wait=False):
 
 
 if __name__ == '__main__':
+    # https://www.vecteezy.com/free-vector/idea-bulb is where I got the icon
 
-    icon = b'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'
-
+    icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsSAAALEgHS3X78AAAK/2lUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4NCjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDA3IDEuMTM2ODgxLCAyMDEwLzA2LzEwLTE4OjExOjM1ICAgICAgICAiPg0KICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPg0KICAgIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PSIiIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1wTU06RG9jdW1lbnRJRD0iRUM4REZFNUEyMEM0QjcwMzFBMjNBRDA4NENCNzZCODAiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0iRUM4REZFNUEyMEM0QjcwMzFBMjNBRDA4NENCNzZCODAiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OUVBNkIyNzA3NjYyRTkxMThDQzNFODdFN0ZEQTgwNTEiIGRjOmZvcm1hdD0iaW1hZ2UvanBlZyIgeG1wOlJhdGluZz0iNSIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wNC0xOVQxMjoxMTozOSswNDozMCI+DQogICAgICA8eG1wTU06SGlzdG9yeT4NCiAgICAgICAgPHJkZjpTZXE+DQogICAgICAgICAgPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOkYwNjRBQzcwNzY2MkU5MTFBNkU1QzYwODhFRTUxMzM5IiBzdEV2dDp3aGVuPSIyMDE5LTA0LTE5VDEyOjExOjM5KzA0OjMwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgQ2FtZXJhIFJhdyA3LjAiIHN0RXZ0OmNoYW5nZWQ9Ii9tZXRhZGF0YSIgLz4NCiAgICAgICAgICA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6OUVBNkIyNzA3NjYyRTkxMThDQzNFODdFN0ZEQTgwNTEiIHN0RXZ0OndoZW49IjIwMTktMDQtMTlUMTI6MTE6MzkrMDQ6MzAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDYW1lcmEgUmF3IDcuMCAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii9tZXRhZGF0YSIgLz4NCiAgICAgICAgPC9yZGY6U2VxPg0KICAgICAgPC94bXBNTTpIaXN0b3J5Pg0KICAgICAgPGRjOnRpdGxlPg0KICAgICAgICA8cmRmOkFsdD4NCiAgICAgICAgICA8cmRmOmxpIHhtbDpsYW5nPSJ4LWRlZmF1bHQiPkJ1bGIgSWNvbiBEZXNpZ248L3JkZjpsaT4NCiAgICAgICAgPC9yZGY6QWx0Pg0KICAgICAgPC9kYzp0aXRsZT4NCiAgICAgIDxkYzpjcmVhdG9yPg0KICAgICAgICA8cmRmOlNlcT4NCiAgICAgICAgICA8cmRmOmxpPklZSUtPTjwvcmRmOmxpPg0KICAgICAgICA8L3JkZjpTZXE+DQogICAgICA8L2RjOmNyZWF0b3I+DQogICAgICA8ZGM6ZGVzY3JpcHRpb24+DQogICAgICAgIDxyZGY6QWx0Pg0KICAgICAgICAgIDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+QnVsYiBJY29uIERlc2lnbg0KPC9yZGY6bGk+DQogICAgICAgIDwvcmRmOkFsdD4NCiAgICAgIDwvZGM6ZGVzY3JpcHRpb24+DQogICAgICA8ZGM6c3ViamVjdD4NCiAgICAgICAgPHJkZjpCYWc+DQogICAgICAgICAgPHJkZjpsaT5idWxiPC9yZGY6bGk+DQogICAgICAgICAgPHJkZjpsaT5lbmVyZ3k8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmlkZWE8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmxpZ2h0PC9yZGY6bGk+DQogICAgICAgICAgPHJkZjpsaT5saWdodGJ1bGI8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmJ1bGIgaWNvbjwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+ZW5lcmd5IGljb248L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmlkZWEgaWNvbjwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+bGlnaHQgaWNvbjwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+bGlnaHRidWxiIGljb248L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmljb248L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmlsbHVzdHJhdGlvbjwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+ZGVzaWduPC9yZGY6bGk+DQogICAgICAgICAgPHJkZjpsaT5zaWduPC9yZGY6bGk+DQogICAgICAgICAgPHJkZjpsaT5zeW1ib2w8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmdyYXBoaWM8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmxpbmU8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmxpbmVhcjwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+b3V0bGluZTwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+ZmxhdDwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+Z2x5cGg8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPmdyYWRpZW50PC9yZGY6bGk+DQogICAgICAgICAgPHJkZjpsaT5jaXJjbGU8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPnNoYWRvdzwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+bG93IHBvbHk8L3JkZjpsaT4NCiAgICAgICAgICA8cmRmOmxpPnBvbHlnb25hbDwvcmRmOmxpPg0KICAgICAgICAgIDxyZGY6bGk+c3F1YXJlPC9yZGY6bGk+DQogICAgICAgIDwvcmRmOkJhZz4NCiAgICAgIDwvZGM6c3ViamVjdD4NCiAgICA8L3JkZjpEZXNjcmlwdGlvbj4NCiAgPC9yZGY6UkRGPg0KPC94OnhtcG1ldGE+DQo8P3hwYWNrZXQgZW5kPSJyIj8+ncdlNwAABG5JREFUWMPtV2tMk1cYfr6vINBRKpVLpVIuGZfOjiARochYO/EyMWHDjOIYYSyQ6MaignEkEgJLyNxMRthmJBkalKmgUacsjMiCBRFWqKsBFJEwtkILLYxBuQi0/c5+sE5mJmvBxR/zJO+fc877vE/ey5NzKEIInuWi8YzXcwIrInCtuirlWnVVykowHGy9qFYqo+bn5pyj4uIarXtBope6H7+nbGp6dZWT0+yGqCjlUyUQEBTUW15SkiOOiLj9/eXLu1sVN6Q6jUYIAD5CoUYilSleT0q6dLO+fmvmwYOfP/UScN3df+cLBIPvbN92fWpijJedtk5XWQT6TM5PkR9Izrw72ZpRkRrr/yvfhz/MXe02aSsuZYsOMAxDH87MPMlfJxjcn7OnitWReg7GjrDH75ktQGkVMDz/csdnFReSWZzgnmVnwGwyOSbLpI1davWGY/n5xaFhYR2HPko/zWrb0vBPwQHAgQXkpgKhvM6wY+/HNXU1X0xOlkkbzSaT4xMZEEKeaDPT02xVy62YrKQ3rxDGQltubmq31NDEFsuUUKTthPjezNQkZ6kYS/aAC5s9U1lWti+36OMCMvxtEsZVG22tbU4qhW8u3hU5G69vX3YTMgxDD/T3B4SIxZ1EVyW3Z75D/IABPcBoq+XLJjA0MOArDAj4GQAwcSfCXpERegO6PnXEsglMTU1xXN3cjAtdaXSz7s/MAl19gHZKqNGOAF0634GZOQcz3GNaF/u7soHpyUd+dhPw8PQ06HVDPgAA57W6v2aXAgrKCBrazKyGzrVDBSfmHSn/vWXU6si2xf6GMWCN9yM/u5VwjZeXYdSg9559+JDt5LWzlvw5fi5OQFoChS+qtAK88GLv/rzs4+zASBVpkd2w+s7OASPjgEfQztoVCdH5k+WZo3q994e5WV8zivXdMI3xFsYX2H2YAC4C7ZXbGl/SvqsWhrodVr+vLgAeXryxt4vviuDkZVi2FMsz3julutWyuV31IJgKr0gHxbJYyyDfRkH+ik6AcWX04uDt9wDVfdoiP1SRvlRwmwjQNM2UVlamfZKXd7T3t4B+SvxltvWMRS8YmDkn616vBvj0NFB66ng2i5/w3b+OylIqtdi0Go0wMUbSOjQ4KGB6CossNTSpPrBgzKhCaqmhibaCJokiigw2FxbZimszAUIIutTq8D3xW36wmE0OFmVC7WICpqs0SQmnSOf5hFpCGMpWTAd7hGV9ePgdiVSmyNu7r8zPx3egU7XQwCOl51J/URJItr5xVZxYcgCgbH9q25MBQgiM4+NcmUjUrair23FJFtt81hnkrDPIZhZIf37eUXvx7H4TcrjcCZ6nx0hsfHx9nEzWsJEGImiAC8B1leP8f/Ym/JvEctwm5a/JFMyQzsc0T4EBwIuK/pGbkVVuN5i9KSOE4C2ZVMFYLPRI4ZHiHjbIfTbILhbISOGRYnuxqOV8zaL9/TR+gYF98w96Qs3DQ3wA0HO4xmalctOq4JAee7Co53/D/z2BPwAlMRlLdQS6SQAAAABJRU5ErkJggg=='
     main()
