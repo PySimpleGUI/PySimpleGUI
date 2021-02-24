@@ -56,8 +56,12 @@ def get_file_list_dict():
                 if filename not in demo_files_dict.keys():
                     demo_files_dict[filename] = fname_full
                 else:
-                    # print(f'duplicate filename found {filename} path {dirname}')
-                    demo_files_dict[f'{filename}_1'] = fname_full
+                    # Allow up to 100 dupicated names. After that, give up
+                    for i in range(1, 100):
+                        new_filename = f'{filename}_{i}'
+                        if new_filename not in demo_files_dict:
+                            demo_files_dict[new_filename] = fname_full
+                            break
 
     return demo_files_dict
 
@@ -70,7 +74,7 @@ def get_file_list():
     :return: List of filenames
     :rtype: List[str]
     """
-    return list(get_file_list_dict().keys())
+    return sorted(list(get_file_list_dict().keys()))
 
 
 def get_demo_path():
@@ -110,6 +114,18 @@ def get_explorer():
     # TODO - need to add a default for Macs
     default_explorer = 'explorer' if running_windows() else 'nemo'
     return sg.user_settings_get_entry('-explorer program-', default_explorer)
+
+
+
+
+def advanced_mode():
+    """
+    Returns True is advanced GUI should be shown
+
+    :return: True if user indicated wants the advanced GUI to be shown (set in the settings window)
+    :rtype: bool
+    """
+    return sg.user_settings_get_entry('-advanced mode-', False)
 
 
 
@@ -221,14 +237,15 @@ def settings_window():
     editor_program = get_editor()
     explorer_program = get_explorer()
 
-    layout = [[sg.T('Program Settings', font='DEFAIULT 18')],
+    layout = [[sg.T('Program Settings', font='DEFAULT 18')],
               [sg.T('Path to Tree', size=(20,1)),
                sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
+              [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T('File Explorer Program', size=(20,1)), sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
-              [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', None), readonly=True,  k='-THEME-')],
+              [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
 
@@ -248,6 +265,7 @@ def settings_window():
             sg.user_settings_set_entry('-theme-', new_theme)
             sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
             sg.user_settings_set_entry('-explorer program-', values['-EXPLORER PROGRAM-'])
+            sg.user_settings_set_entry('-advanced mode-', values['-ADVANCED MODE-'])
             settings_changed = True
             break
         elif event == 'Clear History':
@@ -287,10 +305,8 @@ def make_window():
          sg.T(size=(15,1), k='-FIND NUMBER-')],
     ], element_justification='l')
 
-    lef_col_find_re = sg.Col([
-        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')],
-
-    ])
+    lef_col_find_re = sg.pin(sg.Col([
+        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -298,21 +314,28 @@ def make_window():
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
     ]
 
-    options_at_bottom = [sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
+    options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
                          sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
                          sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
-                         sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]
+                         sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]], pad=(0,0), k='-OPTIONS BOTTOM-'))
+
+    choose_folder_at_top = sg.pin(sg.Column([[sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
+                                       sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
     # ----- Full layout -----
 
-    layout = [[sg.Text('PySimpleGUI Project File Searcher & Launcher', font='Any 20')],
-              [sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
-               sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)],
+    layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
+              [choose_folder_at_top],
               sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ]),
-              options_at_bottom
+              [options_at_bottom]
               ]
 
     # --------------------------------- Create Window ---------------------------------
-    window = sg.Window('PSG Finder Launcher', layout, finalize=True, icon=icon)
+    window = sg.Window('PSG Project Browser', layout, finalize=True, icon=icon)
+
+    if not advanced_mode():
+        window['-FOLDER CHOOSE-'].update(visible=False)
+        window['-RE COL-'].update(visible=False)
+        window['-OPTIONS BOTTOM-'].update(visible=False)
 
     sg.cprint_set_output_destination(window, ML_KEY)
     return window
