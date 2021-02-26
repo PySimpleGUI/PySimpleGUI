@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.33 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors"
+version = __version__ = "4.34.0.34 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14058,7 +14058,7 @@ class _DebugWin():
         self.do_not_reroute_stdout = do_not_reroute_stdout
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.output_element = Multiline(size=win_size, autoscroll=True, reroute_stdout=False if do_not_reroute_stdout else True, key='-MULTILINE-')
+        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
         else:
@@ -17636,6 +17636,8 @@ def user_settings():
 
 #####################################################################################################
 # Subprocess
+# These are the "Exec" API calls.  They will start up new subprocesses and do other execution
+# related operations.  Starting your editor at a specific line number in a specific file needs these
 #####################################################################################################
 
 
@@ -17659,6 +17661,46 @@ def execute_subprocess_nonblocking(command, *args):
         print('execute_subprocess_nonblocking... Popen reported an error', e)
         sp = None
     return sp
+
+
+def execute_command_subprocess(command, *args, wait=False):
+    if _running_linux():
+        arg_string = ''
+        for arg in args:
+            arg_string += ' ' + str(arg)
+        sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    else:
+        expanded_args = ' '.join(args)
+        sp = subprocess.Popen([command, args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if wait:
+        out, err = sp.communicate()
+        if out:
+            print(out.decode("utf-8"))
+        if err:
+            print(err.decode("utf-8"))
+
+
+def execute_editor(file_to_edit, line_number=None):
+    editor_program = pysimplegui_user_settings.get('-editor program-', None)
+    if editor_program is not None:
+        print(f'editor = {editor_program} file to edit = {file_to_edit}')
+        execute_command_subprocess(editor_program, file_to_edit)
+    else:
+        print('No editor has been configured')
+
+def _get_editor():
+    """
+    Get the path to the editor based on user settings or on PySimpleGUI's global settings
+
+    :return: Path to the editor
+    :rtype: str
+    """
+    try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
+        global_editor = pysimplegui_user_settings.get('-editor program-')
+    except:
+        global_editor = ''
+
+    return sg.user_settings_get_entry('-editor program-', global_editor)
 
 
 
