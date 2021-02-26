@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.31 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window"
+version = __version__ = "4.34.0.32 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -584,6 +584,8 @@ BUTTON_TYPE_COLOR_CHOOSER = 40
 BUTTON_TYPE_SHOW_DEBUGGER = 50
 
 BROWSE_FILES_DELIMITER = ';'  # the delimiter to be used between each file in the returned string
+
+BUTTON_DISABLED_MEANS_IGNORE = 'ignore'
 
 # -------------------------  Element types  ------------------------- #
 
@@ -3397,8 +3399,8 @@ class Button(Element):
         :type initial_folder: (str)
         :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
         :type default_extension: (str)
-        :param disabled: If True button will be created disabled
-        :type disabled: (bool)
+        :param disabled: If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinger
+        :type disabled: (bool | str)
         :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. If this button is a target, should it generate an event when filled in
@@ -3625,7 +3627,7 @@ class Button(Element):
         #     except:
         #         pass
 
-        if self.Disabled:
+        if self.Disabled == BUTTON_DISABLED_MEANS_IGNORE:
             return
         target_element, strvar, should_submit_window = self._find_target()
 
@@ -3788,8 +3790,8 @@ class Button(Element):
         :type text: (str)
         :param button_color: Color of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background"
         :type button_color: Tuple[str, str] | str | None
-        :param disabled: disable or enable state of the element
-        :type disabled: (bool)
+        :param disabled: True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors)
+        :type disabled: (bool | str)
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
         :type image_data: bytes | str
         :param image_filename: image filename if there is a button image. GIFs and PNGs only.
@@ -3831,12 +3833,15 @@ class Button(Element):
                     self.TKButton.config(background=button_color[1], activebackground=button_color[1])
             self.ButtonColor = (button_color[0] if button_color[0] is not None else self.ButtonColor[0],
                                 button_color[1] if button_color[1] is not None else self.ButtonColor[1])
-        if disabled == True:
+        if disabled is True:
             self.TKButton['state'] = 'disabled'
             self.Disabled = True
-        elif disabled == False:
+        elif disabled is False:
             self.TKButton['state'] = 'normal'
             self.Disabled = False
+        elif disabled == BUTTON_DISABLED_MEANS_IGNORE:
+            self.TKButton['state'] = 'normal'
+            self.Disabled = BUTTON_DISABLED_MEANS_IGNORE
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
             if image_size is not None:
