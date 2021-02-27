@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.35 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, added execute_py_file to exec APIs"
+version = __version__ = "4.34.0.35 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -241,7 +241,7 @@ def _timeit_summary(func):
     return wrapper
 
 
-def running_linux():
+def _running_linux():
     """
     Determines the OS is Linux by using sys.platform
 
@@ -253,7 +253,7 @@ def running_linux():
     return sys.platform.startswith('linux')
 
 
-def running_mac():
+def _running_mac():
     """
     Determines the OS is Mac by using sys.platform
 
@@ -265,7 +265,7 @@ def running_mac():
     return sys.platform.startswith('darwin')
 
 
-def running_windows():
+def _running_windows():
     """
     Determines the OS is Windows by using sys.platform
 
@@ -277,7 +277,7 @@ def running_windows():
     return sys.platform.startswith('win')
 
 
-def running_trinket():
+def _running_trinket():
     """
     A special case for Trinket.  Checks both the OS and the number of environment variables
     Currently, Trinket only has ONE environment variable.  This fact is used to figure out if Trinket is being used.
@@ -915,7 +915,7 @@ class Element():
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
             # if sys.platform == 'linux':
-            if running_linux():
+            if _running_linux():
                 print('* linix minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
                 # self.ParentForm.TKroot.state('icon')
@@ -945,7 +945,7 @@ class Element():
 
     def _titlebar_restore(self, event):
         # if sys.platform == 'linux':
-        if running_linux():
+        if _running_linux():
             print('linux restore')
             # if self._skip_first_restore_callback:
             #     self._skip_first_restore_callback = False
@@ -8462,6 +8462,8 @@ class Window:
                                 'Bad key = {}\n'.format(key),
                                 key_message,
                                 error_message,
+                                "error part [0]=", error_parts[0],
+                                           'error part[1] =', error_parts[1],
                                 custom_text=('Close', 'Take me to error'),
                                 line_width=100,
                                 keep_on_top=True, image=_random_error_icon())
@@ -9266,7 +9268,7 @@ class Window:
         if not self._is_window_created():
             return
 
-        if running_mac():
+        if _running_mac():
             return
 
         try:
@@ -17664,29 +17666,35 @@ def execute_subprocess_nonblocking(command, *args):
     return sp
 
 
-def execute_py_file(pyfile, parms=None, cwd=None):
-    if parms is not None:
-        execute_command_subprocess('python' if running_windows() else 'python3', pyfile, parms, wait=False, cwd=cwd)
-    else:
-        execute_command_subprocess('python' if running_windows() else 'python3', pyfile, wait=False, cwd=cwd)
-
-
-
 def execute_command_subprocess(command, *args, wait=False, cwd=None):
-    if running_linux():
+    if _running_linux():
         arg_string = ''
         for arg in args:
             arg_string += ' ' + str(arg)
         sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
     else:
-        expanded_args = ' '.join(args)
-        sp = subprocess.Popen([command, *args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+        # print('executing subprocess command:',command, 'args:',args)
+        if args is not None:
+            expanded_args = ' '.join(args)
+            sp = subprocess.Popen([command, (expanded_args,)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+        else:
+            sp = subprocess.Popen([command, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
     if wait:
         out, err = sp.communicate()
         if out:
             print(out.decode("utf-8"))
         if err:
             print(err.decode("utf-8"))
+
+
+
+
+def execute_py_file(pyfile, parms=None, cwd=None):
+    if parms is not None:
+        execute_command_subprocess('python' if _running_windows() else 'python3', pyfile, parms, wait=False, cwd=cwd)
+    else:
+        execute_command_subprocess('python' if _running_windows() else 'python3', pyfile, wait=False, cwd=cwd)
+
 
 
 def execute_editor(file_to_edit, line_number=None):
@@ -17741,7 +17749,7 @@ def _get_editor():
     except:
         global_editor = ''
 
-    return sg.user_settings_get_entry('-editor program-', global_editor)
+    return user_settings_get_entry('-editor program-', global_editor)
 
 
 
@@ -18441,7 +18449,7 @@ def _copy_files_from_github(files, github_url=None):
         page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
         if version != "unknown":
             page_contents["__init__.py"] += ("from ." + info.package + " import __version__\n").encode()
-    if running_linux() or running_mac():
+    if _running_linux() or _running_mac():
         dir_search = sys.path
     else:
         dir_search = site.getsitepackages()
@@ -18466,7 +18474,7 @@ def _copy_files_from_github(files, github_url=None):
         with open(os.path.join(str(path), str(file)), "wb") as f:
             f.write(contents)
 
-    if running_mac():
+    if _running_mac():
         pypi_packages = str(sitepackages_path) + "/.pypi_packages"
         config = configparser.ConfigParser()
         config.read(pypi_packages)
@@ -19105,7 +19113,7 @@ pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLE
 theme(theme_global())
 
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
-if running_trinket():
+if _running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
 if tclversion_detailed.startswith('8.5'):
