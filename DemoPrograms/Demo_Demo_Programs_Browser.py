@@ -6,8 +6,6 @@ import warnings
 import PySimpleGUI as sg
 
 
-# execute_command_subprocess = sg.execute_command_subprocess
-
 """
     PySimpleGUI Demo Program Browser
 
