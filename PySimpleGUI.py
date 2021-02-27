@@ -319,7 +319,7 @@ def _running_trinket():
     available for all functions.  If you've got a serious enough problem with 100% PEP8 compliance
     that you'll pass on this package, then that's your right and I invite you to do so.  However, if
     perhaps you're a practical thinker where it's the results that matter, then you'll have no
-    trouble with this code base.  There is consisency however.  
+    trouble with this code base.  There is consistency however.  
 
     I truly hope you get a lot of enjoyment out of using PySimpleGUI.  It came from good intentions.
 """
@@ -396,7 +396,7 @@ DEFAULT_SCROLLBAR_COLOR = None
 
 
 # A transparent button is simply one that matches the background
-# TRANSPARENT_BUTTON = 'This constant has been depricated. You must set your button background = background it is on for it to be transparent appearing'
+# TRANSPARENT_BUTTON = 'This constant has been deprecated. You must set your button background = background it is on for it to be transparent appearing'
 
 
 # --------------------------------------------------------------------------------
@@ -408,7 +408,7 @@ RELIEF_RIDGE = 'ridge'
 RELIEF_GROOVE = 'groove'
 RELIEF_SOLID = 'solid'
 
-# These are the spepific themes that tkinter offers
+# These are the specific themes that tkinter offers
 THEME_DEFAULT = 'default'           # this is a TTK theme, not a PSG theme!!!
 THEME_WINNATIVE = 'winnative'
 THEME_CLAM = 'clam'
@@ -698,7 +698,7 @@ class ToolTip:
 
     def showtip(self):
         """
-        Creates a topoltip window with the tooltip text inside of it
+        Creates a tooltip window with the tooltip text inside of it
         """
         if self.tipwindow:
             return
@@ -977,7 +977,7 @@ class Element():
 
     def _generic_callback_handler(self, alternative_to_key=None, force_key_to_be=None):
         """
-        Peforms the actions that were in many of the callback functions previously.  Combined so that it's
+        Performs the actions that were in many of the callback functions previously.  Combined so that it's
         easier to modify and is in 1 place now
 
         :param event: From tkinter and is not used
@@ -1027,7 +1027,7 @@ class Element():
 
     def _CheckboxHandler(self):
         """
-        Internal callback for when a checkbnox is selected and enable events was set for checkbox
+        Internal callback for when a checkbox is selected and enable events was set for checkbox
         """
         self._generic_callback_handler('')
 
@@ -1043,7 +1043,7 @@ class Element():
 
     def _KeyboardHandler(self, event):
         """
-        Internal callback for when a key is pressed andd return keyboard events was set for window
+        Internal callback for when a key is pressed and return keyboard events was set for window
 
         :param event: Event data passed in by tkinter (not used)
         """
@@ -1247,7 +1247,7 @@ class Element():
 
     def set_vscroll_position(self, percent_from_top):
         """
-        Attempts to set the vertical scroll postition for an element's Widget
+        Attempts to set the vertical scroll position for an element's Widget
         :param percent_from_top: From 0 to 1.0, the percentage from the top to move scrollbar to
         :type percent_from_top: (float)
         """
@@ -1355,7 +1355,7 @@ class Input(Element):
         :type tooltip: (str)
         :param border_width: width of border around element in pixels
         :type border_width: (int)
-        :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: * DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False)
         :type enable_events: (bool)
@@ -1508,7 +1508,7 @@ class Combo(Element):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
-        :param change_submits: DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. Combo event is when a choice is made
         :type enable_events: (bool)
@@ -1791,7 +1791,7 @@ class Listbox(Element):
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. Listbox generates events when an item is clicked
         :type enable_events: (bool)
-        :param bind_return_key: If True, then the return key will cause a the Listbox to generate an event
+        :param bind_return_key: If True, then the return key will cause the Listbox to generate an event
         :type bind_return_key: (bool)
         :param size: width = characters-wide, height = rows-high
         :type size: Tuple(int, int) (width, height)
@@ -1857,7 +1857,7 @@ class Listbox(Element):
         :type values: List[Any]
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
-        :param set_to_index: highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted
+        :param set_to_index: highlights the item(s) indicated. If param is an int one entry will be set. If is a list, then each entry in list is highlighted
         :type set_to_index: int | list | tuple
         :param scroll_to_index: scroll the listbox so that this index is the first shown
         :type scroll_to_index: (int)
@@ -2245,7 +2245,7 @@ class Checkbox(Element):
         :type text: (str)
         :param background_color: color of background
         :type background_color: (str)
-        :param text_color: color of the text. Note this also changes the color of the checkmark
+        :param text_color: color of the text. Note this also changes the color of the check mark
         :type text_color: (str)
         :param disabled: disable or enable element
         :type disabled: (bool)
@@ -2584,9 +2584,9 @@ class Multiline(Element):
         :type text_color: (str)
         :param background_color: color of background
         :type background_color: (str)
-        :param text_color_for_value: color of the new text being added (the value paramter)
+        :param text_color_for_value: color of the new text being added (the value parameter)
         :type text_color_for_value: (str)
-        :param background_color_for_value: color of the new background of the text being added (the value paramter)
+        :param background_color_for_value: color of the new background of the text being added (the value parameter)
         :type background_color_for_value: (str)
         :param visible: set visibility state of the element
         :type visible: (bool)
@@ -2693,7 +2693,7 @@ class Multiline(Element):
         There are also "aliases" for text_color, background_color and colors (t, b, c)
         t - An alias for color of the text (makes for shorter calls)
         b - An alias for the background_color parameter
-        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, background)
         c - str - can also be a string of the format "foreground on background"  ("white on red")
 
         With the aliases it's possible to write the same print but in more compact ways:
@@ -2759,7 +2759,7 @@ class Multiline(Element):
 
     def restore_stdout(self):
         """
-        Restore a previously re-reouted stdout back to the original destination
+        Restore a previously re-routed stdout back to the original destination
         """
         if self.previous_stdout:
             sys.stdout = self.previous_stdout
@@ -2767,7 +2767,7 @@ class Multiline(Element):
 
     def restore_stderr(self):
         """
-        Restore a previously re-reouted stderr back to the original destination
+        Restore a previously re-routed stderr back to the original destination
         """
         if self.previous_stderr:
             sys.stderr = self.previous_stderr
@@ -3148,7 +3148,7 @@ class TKProgressBar():
 class TKOutput(tk.Frame):
     """
     tkinter style class. Inherits Frame class from tkinter. Adds a tk.Text and a scrollbar together.
-    Note - This is NOT a user controlled class. Users should NOT be directly using it unless making an extention
+    Note - This is NOT a user controlled class. Users should NOT be directly using it unless making an extension
     to PySimpleGUI by directly manipulating tkinter.
     """
 
@@ -3634,7 +3634,7 @@ class Button(Element):
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
 
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            if sys.platform == 'darwin':        # macs don't like seeing the parent window (go firgure)
+            if sys.platform == 'darwin':        # macs don't like seeing the parent window (go figure)
                 folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             else:
                 folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
@@ -4492,7 +4492,7 @@ class Graph(Element):
         :type background_color: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: * DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param drag_submits: if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
         :type drag_submits: (bool)
@@ -4708,7 +4708,7 @@ class Graph(Element):
         :type top_left: Tuple[int, int] | Tuple[float, float]
         :param bottom_right: the bottom right point of bounding rectangle
         :type bottom_right: Tuple[int, int] | Tuple[float, float]
-        :param fill_color: color of the interrior
+        :param fill_color: color of the interior
         :type fill_color: (str)
         :param line_color: color of outline of oval
         :type line_color: (str)
@@ -4738,7 +4738,7 @@ class Graph(Element):
         :type top_left: Tuple[int, int] | Tuple[float, float]
         :param bottom_right: the bottom right point of bounding rectangle
         :type bottom_right: Tuple[int, int] | Tuple[float, float]
-        :param extent: Andle to end drawing. Used in conjunction with start_angle
+        :param extent: Angle to end drawing. Used in conjunction with start_angle
         :type extent: (float)
         :param start_angle: Angle to begin drawing. Used in conjunction with extent
         :type start_angle: (float)
@@ -5546,10 +5546,10 @@ class Tab(Element):
                            'This item will be stripped from your layout', keep_on_top=True, image=_random_error_icon())
                 continue
             if element.ParentContainer is not None:
-                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                warnings.warn('*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
                 PopupError('Error creating Tab layout',
                            'The layout specified has already been used',
-                           'You MUST start witha "clean", unused layout every time you create a window',
+                           'You MUST start with a "clean", unused layout every time you create a window',
                            'The offensive Element = ',
                            element,
                            'and has a key = ', element.Key,
@@ -5685,7 +5685,7 @@ class TabGroup(Element):
         :type background_color: (str)
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int]
-        :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: * DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then switching tabs will generate an Event
         :type enable_events: (bool)
@@ -5693,7 +5693,7 @@ class TabGroup(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param border_width: width of border around element in pixels
         :type border_width: (int)
-        :param theme: DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
+        :param theme: DEPRECATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
         :type theme: (enum)
         :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key: str | int | tuple | object
@@ -5766,7 +5766,7 @@ class TabGroup(Element):
                            'This item will be stripped from your layout', keep_on_top=True, image=_random_error_icon())
                 continue
             if element.ParentContainer is not None:
-                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                warnings.warn('*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
                 PopupError('Error creating Tab layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
@@ -5893,7 +5893,7 @@ class Slider(Element):
         :type border_width: (int)
         :param relief: relief style. Use constants - RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID
         :type relief: str | None
-        :param change_submits: * DEPRICATED DO NOT USE. Use `enable_events` instead
+        :param change_submits: * DEPRECATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: If True then moving the slider will generate an Event
         :type enable_events: (bool)
@@ -6158,7 +6158,7 @@ class Column(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param scrollable: if True then scrollbars will be added to the column
         :type scrollable: (bool)
-        :param vertical_scroll_only: if Truen then no horizontal scrollbar will be shown
+        :param vertical_scroll_only: if True then no horizontal scrollbar will be shown
         :type vertical_scroll_only: (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[ List[str] | str ]]
@@ -6243,7 +6243,7 @@ class Column(Element):
                            'This item will be stripped from your layout', keep_on_top=True, image=_random_error_icon())
                 continue
             if element.ParentContainer is not None:
-                warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
+                warnings.warn('*** YOU ARE ATTEMPTING TO REUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
                 PopupError('Error creating Column layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
@@ -6335,7 +6335,7 @@ class Column(Element):
 
     def contents_changed(self):
         """
-        When a scrollable column has part of its layout changed by making elements visibile or invisible, then this function
+        When a scrollable column has part of its layout changed by making elements visible or invisible, then this function
         should be called so that the new scroll area is computed to match the new contents.
         """
         self.TKColFrame.canvas.config(scrollregion=self.TKColFrame.canvas.bbox('all'))
@@ -6665,7 +6665,7 @@ class Menu(Element):
     Is a List of -  "Item String" + List
     Where Item String is what will be displayed on the Menubar itself.
     The List that follows the item represents the items that are shown then Menu item is clicked
-    Notice how an "entry" in a mennu can be a list which means it branches out and shows another menu, etc. (resursive)
+    Notice how an "entry" in a menu can be a list which means it branches out and shows another menu, etc. (recursive)
     menu_def = [['&File', ['!&Open', '&Save::savekey', '---', '&Properties', 'E&xit']],
                 ['!&Edit', ['!&Paste', ['Special', 'Normal', ], 'Undo'], ],
                 ['&Debugger', ['Popout', 'Launch Debugger']],
@@ -7235,7 +7235,7 @@ class Tree(Element):
         :type key: str | int | tuple | object
         :param value: sets the node identified by key to a particular value
         :type value: (Any)
-        :param text: sets the node identified by ket to this string
+        :param text: sets the node identified by key to this string
         :type text: (str)
         :param icon: can be either a base64 icon or a filename for the icon
         :type icon: bytes | str
@@ -7926,7 +7926,7 @@ class Window:
 
         :param non_blocking: if True, this is a non-blocking call
         :type non_blocking: (bool)
-        :return: Tuple[Any, Dict] The event, values turple that is returned from Read calls
+        :return: Tuple[Any, Dict] The event, values tuple that is returned from Read calls
         """
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
@@ -8032,7 +8032,7 @@ class Window:
 
     def _AutoCloseAlarmCallback(self):
         """
-        Function that's called by tkinter when autoclode timer expires.  Closes the window
+        Function that's called by tkinter when autoclose timer expires.  Closes the window
 
         """
         try:
@@ -9653,7 +9653,7 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
 ##    ##     ## ##     ##    ##
 
 # ------------------------------------------------------------------------- #
-#                       SystemTray - class for implementing a psyeudo tray  #
+#                       SystemTray - class for implementing a pseudo tray  #
 # ------------------------------------------------------------------------- #
 
 # -------------------------------- System Tray Begins Here -------------------------------- #
@@ -10070,10 +10070,10 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
     NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
     should have no problem and it should function as a normal window would.
 
-    This titlebar is created from a row of elements that is then encapulated into a
+    This titlebar is created from a row of elements that is then encapsulated into a
     single Column element which is what the Titlebar returns to you.
 
-    A custom titlebar removes the margins from your window.  Ify ou want the  remainder
+    A custom titlebar removes the margins from your window.  If you want the remainder
     of your Window to have margins, place the layout after the Titlebar into a Column and
     set the pad of that Column to the dimensions you would like your margins to have.
 
@@ -10420,7 +10420,7 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = True) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
@@ -10460,7 +10460,7 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = True) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
@@ -10499,7 +10499,7 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = True) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
@@ -10538,7 +10538,7 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :type button_color: Tuple[str, str] or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = True) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
@@ -10581,7 +10581,7 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :type tooltip: (str)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10619,7 +10619,7 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :type tooltip: (str)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10657,7 +10657,7 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :type tooltip: (str)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10695,7 +10695,7 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :type tooltip: (str)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = True) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10771,7 +10771,7 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :type font: str | Tuple[str, int]
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10809,7 +10809,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :type font: str | Tuple[str, int]
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10855,7 +10855,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type button_color: Tuple[str, str] or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
@@ -10905,7 +10905,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type button_color: Tuple[str, str] or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
@@ -10957,7 +10957,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type button_color: Tuple[str, str] or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
@@ -11016,7 +11016,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type font: str | Tuple[str, int]
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :type focus: (bool)
@@ -11070,7 +11070,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type font: str | Tuple[str, int]
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: if focus should be set to this
     :type focus: (bool)
@@ -11132,7 +11132,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: (Default = False) If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: bool
     :param focus: if focus should be set to this
     :type focus: bool
@@ -11214,7 +11214,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
-    :param bind_return_key: If True, then the return key will cause a the Listbox to generate an event
+    :param bind_return_key: If True, then the return key will cause the Listbox to generate an event
     :type bind_return_key: (bool)
     :param focus: Determines if initial focus should go to this element.
     :type focus: (bool)
@@ -11243,7 +11243,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 def button_color_to_tuple(color_tuple_or_string, default=None):
     """
     Convert a color tuple or color string into 2 components
-    :param color_tuple_or_string: Button color - tuple or a simplied color string with word "on" between color
+    :param color_tuple_or_string: Button color - tuple or a simple color string with word "on" between color
     :type  color_tuple_or_string: str | Tuple[str, str]
     :param default: The 2 colors to use if there is a problem. Otherwise defaults to the theme's button color
     :type  default: Tuple[str, str]
@@ -11584,7 +11584,7 @@ def fill_form_with_values(window, values_dict):
 
     :param window: The window object to fill
     :type window: (Window)
-    :param values_dict: A dictionary with element keys as key and value is values parm for Update call
+    :param values_dict: A dictionary with element keys as key and value is values param for Update call
     :type values_dict: (Dict[Any, Any])
     :return: None
     :rtype: None
@@ -13941,13 +13941,13 @@ class QuickMeter(object):
 
 def one_line_progress_meter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
     """
-    :param title: text to display in eleemnt
+    :param title: text to display in element
     :type title: (str)
     :param current_value: current value
     :type current_value: (int)
     :param max_value: max value of QuickMeter
     :type max_value: (int)
-    :param key: Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
+    :param key: Used to differentiate between multiple meters. Used to cancel meter early. Now optional as there is a default value for single meters
     :type key: str | int | tuple | object
     :param *args: stuff to output
     :type *args: (Any)
@@ -14126,7 +14126,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     The "colors" or "c" parameter defines both the text and background in a single parm.
     It can be a tuple or a single single. Both text and background colors need to be specified
     colors -(str, str) or str.  A combined text/background color definition in a single parameter
-    c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+    c - Tuple[str, str] - Colors tuple has format (foreground, background)
     c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     :param *args: stuff to output
@@ -14230,7 +14230,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
     window and element key can be saved and used here to route the output, OR used the window
-    and key parameters to the cprint function to specicy these items.
+    and key parameters to the cprint function to specify these items.
 
     args is a variable number of things you want to print.
 
@@ -15249,7 +15249,7 @@ def theme_previewer_swatches():
     """
     Display themes in a window as color swatches.
     Click on a color swatch to see the hex value printed on the console.
-    If you hover over a color or right click it you'll also see the hext value.
+    If you hover over a color or right click it you'll also see the hex value.
     """
     current_theme = theme()
     popup_quick_message('This is going to take a minute...', text_color='white', background_color='red', font='Default 20', keep_on_top=True)
@@ -15429,7 +15429,7 @@ def _hsl_to_hsv(h, s, l):
 def obj_to_string_single_obj(obj):
     """
     Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
-    Returns only the top-most object's variables instead of drilling down to dispolay more
+    Returns only the top-most object's variables instead of drilling down to display more
     :param obj: The object to display
     :type obj: (Any)
     :return: Formatted output of the object's values
@@ -16944,7 +16944,7 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
 def _process_thread(*args):
     global __shell_process__
 
-    # start running the command with arugments
+    # start running the command with arguments
     try:
         __shell_process__ = run(args, shell=True, stdout=PIPE)
     except Exception as e:
@@ -16976,7 +16976,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     :type no_titlebar: (bool)
     :param grab_anywhere: If True then you can move the window just clicking anywhere on window, hold and drag
     :type grab_anywhere: (bool)
-    :param keep_on_top: If True then Window will remain on top of all other windows currently shownn
+    :param keep_on_top: If True then Window will remain on top of all other windows currently shown
     :type keep_on_top: (bool)
     :param location: (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
     :type location: (int, int)
@@ -17083,7 +17083,7 @@ def _create_error_message():
 
 class UserSettings:
     # A reserved settings object for use by the setting functions. It's a way for users
-    # to access the user settings without diarectly using the UserSettings class
+    # to access the user settings without directly using the UserSettings class
     _default_for_function_interface = None             # type: UserSettings
 
     def __init__(self, filename=None, path=None, silent_on_error=False):
@@ -17183,7 +17183,7 @@ class UserSettings:
 
     def get_filename(self, filename=None, path=None):
         """
-        Sets the filename and path for your settings file.  Either paramter can be optional.
+        Sets the filename and path for your settings file.  Either parameter can be optional.
 
         If you don't choose a path, one is provided for you that is OS specific
         Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
@@ -17211,7 +17211,7 @@ class UserSettings:
         Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
         previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
 
-        :param filename: The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
+        :param filename: The filename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
         :type filename: (str or None)
         :param path: The (optional) path to use to save the file.
         :type path: (str or None)
@@ -17253,7 +17253,7 @@ class UserSettings:
 
     def delete_file(self, filename=None, path=None):
         """
-        Deltes the filename and path for your settings file.  Either paramter can be optional.
+        Deltes the filename and path for your settings file.  Either parameter can be optional.
         If you don't choose a path, one is provided for you that is OS specific
         Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
         If you don't choose a filename, your application's filename + '.json' will be used
@@ -17462,7 +17462,7 @@ if UserSettings._default_for_function_interface is None:
 
 def user_settings_filename(filename=None, path=None):
     """
-    Sets the filename and path for your settings file.  Either paramter can be optional.
+    Sets the filename and path for your settings file.  Either parameter can be optional.
 
     If you don't choose a path, one is provided for you that is OS specific
     Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
@@ -17485,7 +17485,7 @@ def user_settings_filename(filename=None, path=None):
 
 def user_settings_delete_filename(filename=None, path=None):
     """
-    Deltes the filename and path for your settings file.  Either paramter can be optional.
+    Deltes the filename and path for your settings file.  Either parameter can be optional.
     If you don't choose a path, one is provided for you that is OS specific
     Windows path default = users/name/AppData/Local/PySimpleGUI/settings.
     If you don't choose a filename, your application's filename + '.json' will be used
@@ -17551,9 +17551,9 @@ def user_settings_get_entry(key, default=None):
 def user_settings_save(filename=None, path=None):
     """
     Saves the current settings dictionary.  If a filename or path is specified in the call, then it will override any
-    previously specitfied filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
+    previously specified filename to create a new settings file.  The settings dictionary is then saved to the newly defined file.
 
-    :param filename: The fFilename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
+    :param filename: The filename to save to. Can specify a path or just the filename. If no filename specified, then the caller's filename will be used.
     :type filename: (str)
     :param path: The (optional) path to use to save the file.
     :type path: (str)
@@ -17649,7 +17649,7 @@ def execute_subprocess_nonblocking(command, *args):
 
     :param command: Filename to load settings from (and save to in the future)
     :type command: (str)
-    :param *args:  Variable number of arguments that are passed to the program being started as command line parms
+    :param *args:  Variable number of arguments that are passed to the program being started as command line params
     :type *args: (Any)
     :return: Popen object
     :rtype: (subprocess.Popen)
@@ -17767,7 +17767,7 @@ class _Debugger():
                            InVar('_VAR2_'), ]
 
         interactive_frame = [[T('>>> '), In(size=(83, 1), key='_REPL_',
-                                            tooltip='Type in any "expression" or "statement"\n and it will be disaplayed below.\nPress RETURN KEY instead of "Go"\nbutton for faster use'),
+                                            tooltip='Type in any "expression" or "statement"\n and it will be displayed below.\nPress RETURN KEY instead of "Go"\nbutton for faster use'),
                               B('Go', bind_return_key=True, visible=True)],
                              [Multiline(size=(93, 26), key='_OUTPUT_', autoscroll=True, do_not_clear=True)], ]
 
@@ -18499,7 +18499,7 @@ def _upgrade_gui():
 
     if popup_yes_no('* WARNING *',
                     'You are about to upgrade your PySimpleGUI package previously installed via pip to the latest version location on the GitHub server.',
-                    'You are running verrsion {}'.format(cur_ver),
+                    'You are running version {}'.format(cur_ver),
                     'Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
                     keep_on_top=True) == 'Yes':
         _upgrade_from_github()
@@ -18549,7 +18549,7 @@ def main_global_pysimplegui_settings():
 
     settings = pysimplegui_user_settings.read()
 
-    layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
+    layout = [[T('Global PySimpleGUI Settings', font='DEFAULT 18')],
               [T('Editor Program', size=(20,1)), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-'), FileBrowse()],
               [T('String to launch your editor to edit at a particular line #.  Use <editor> <file> <line> to specify')],
               [T('the string that will be executed to edit python files using your editor')],
@@ -18719,7 +18719,7 @@ def main_sdk_help():
                     for parm, default in element_arg_default_dict_update[elem_text_name]:
                         ml.print('{:18}'.format(parm), end=' = ')
                         ml.print(default, end = ',\n')
-            ml.set_vscroll_position(0)       # scroll to top of multoline
+            ml.set_vscroll_position(0)       # scroll to top of multiline
         elif event == 'Func Search':
             search_string = popup_get_text('Search for this in function list:', keep_on_top=True)
             if search_string is not None:
@@ -18735,7 +18735,7 @@ def main_sdk_help():
                                 else:
                                     ml.print('=========== ' + f +'===========' , background_color='#FFFF00', text_color='black')
                                     ml.print(help(f_entry[1]))
-            ml.set_vscroll_position(0)       # scroll to top of multoline
+            ml.set_vscroll_position(0)       # scroll to top of multiline
 
     window.close()
 
