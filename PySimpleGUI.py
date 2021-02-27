@@ -504,7 +504,7 @@ CUSTOM_TITLEBAR_FONT = None
 TITLEBAR_METADATA_MARKER = 'This window has a titlebar'
 
 SUPPRESS_ERROR_POPUPS = False
-SUPPRESS_RAISE_KEY_ERRORS = False
+SUPPRESS_RAISE_KEY_ERRORS = True
 SUPPRESS_KEY_GUESSING = False
 
 ENABLE_TREEVIEW_869_PATCH = True
@@ -8471,10 +8471,8 @@ class Window:
                         filename = error_parts[0][error_parts[0].index('File ')+5:]
                         line_num = error_parts[1][error_parts[1].index('line ')+5:]
                         execute_editor(filename, line_num)
-                        print('Coming soon!', filename, line_num)
-                # if not SUPPRESS_RAISE_KEY_ERRORS:
-                #     raise KeyError(key)
-                # else:
+                if not SUPPRESS_RAISE_KEY_ERRORS:
+                    raise KeyError(key)
                 element = ErrorElement(key=key)
                 key_error = True
             else:
@@ -17706,11 +17704,10 @@ def execute_editor(file_to_edit, line_number=None):
             execute_command_subprocess(editor_program, file_to_edit)
         else:
            command = _create_full_editor_command(editor_program, file_to_edit, line_number, format_string)
-           print('final command line = ', command)
+           # print('final command line = ', command)
            execute_command_subprocess(editor_program, command)
-
     else:
-        print('No editor has been configured')
+        print('No editor has been configured in the global settings')
         return
 
 

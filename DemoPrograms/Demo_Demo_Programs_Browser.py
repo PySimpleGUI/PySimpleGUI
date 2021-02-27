@@ -529,27 +529,6 @@ except:
             if err:
                 print(err.decode("utf-8"))
 
-try:
-    execute_editor = sg.execute_editor
-except:
-    def execute_editor(file_to_edit, line_number=None):
-        editor_program = pysimplegui_user_settings.get('-editor program-', None)
-        if editor_program is not None:
-            format_string = pysimplegui_user_settings.get('-editor format string-', None)
-            # if no format string, then just launch the editor with the filename
-            if not format_string or line_number is None:
-                execute_command_subprocess(editor_program, file_to_edit)
-            else:
-                command = _create_full_editor_command(editor_program, file_to_edit, line_number, format_string)
-                print('final command line = ', command)
-                execute_command_subprocess(editor_program, command)
-
-        else:
-            print('No editor has been configured')
-            return
-
-
-
 
 if __name__ == '__main__':
     # https://www.vecteezy.com/free-vector/idea-bulb is where I got the icon
