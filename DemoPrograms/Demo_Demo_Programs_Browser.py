@@ -5,6 +5,9 @@ import mmap, re
 import warnings
 import PySimpleGUI as sg
 
+
+# execute_command_subprocess = sg.execute_command_subprocess
+
 """
     PySimpleGUI Demo Program Browser
 
@@ -91,6 +94,19 @@ def get_demo_path():
     return demo_path
 
 
+def get_global_editor():
+    """
+    Get the path to the editor based on user settings or on PySimpleGUI's global settings
+
+    :return: Path to the editor
+    :rtype: str
+    """
+    try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
+        global_editor = sg.pysimplegui_user_settings.get('-editor program-')
+    except:
+        global_editor = ''
+    return global_editor
+
 
 def get_editor():
     """
@@ -103,8 +119,11 @@ def get_editor():
         global_editor = sg.pysimplegui_user_settings.get('-editor program-')
     except:
         global_editor = ''
+    user_editor = sg.user_settings_get_entry('-editor program-', '')
+    if user_editor == '':
+        user_editor = global_editor
 
-    return sg.user_settings_get_entry('-editor program-', global_editor)
+    return user_editor
 
 
 def get_explorer():
@@ -145,8 +164,10 @@ def get_theme():
     except:
         global_theme = sg.theme()
     # Get theme from user settings for this program.  Use global theme if no entry found
-    return sg.user_settings_get_entry('-theme-', global_theme)
-
+    user_theme = sg.user_settings_get_entry('-theme-', '')
+    if user_theme == '':
+        user_theme = global_theme
+    return user_theme
 
 # We handle our code properly. But in case the user types in a flag, the flags are now in the middle of a regex. Ignore this warning.
 
@@ -237,17 +258,21 @@ def settings_window():
     :rtype: (bool)
     """
 
-    editor_program = get_editor()
+    editor_program = get_global_editor()
     explorer_program = get_explorer()
 
-    layout = [[sg.T('Program Settings', font='DEFAULT 18')],
-              [sg.T('Path to Tree', size=(20,1)),
-               sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
+    layout = [[sg.T('Program Settings', font='DEFAULT 25')],
+              [sg.T('Path to Tree',  font='_ 16')],
+               [sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
-              [sg.T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
-              [sg.T('Editor Program', size=(20,1)), sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
-              [sg.T('File Explorer Program', size=(20,1)), sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
-              [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', None), readonly=True,  k='-THEME-')],
+              [sg.T('Editor Program',  font='_ 16')],
+              [sg.T(r"For PyCharm: Add this to your PyCharm main program's folder + \bin\pycharm.bat added")],
+              [sg.T('Leave blank to use global default: ' + sg.pysimplegui_user_settings.get('-editor program-', ''))],
+                [ sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.T('File Explorer Program',  font='_ 16')],
+              [ sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
+               [sg.T('Theme (leave blank to use global default)', font='_ 16')],
+              [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
               [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
@@ -263,9 +288,8 @@ def settings_window():
         if event == 'Ok':
             sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
             new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
-            sg.user_settings_set_entry('-editor program-', new_editor)
-            new_theme = get_theme() if values['-THEME-'] == '' else values['-THEME-']
-            sg.user_settings_set_entry('-theme-', new_theme)
+            sg.user_settings_set_entry('-editor program-', values['-EDITOR PROGRAM-'])
+            sg.user_settings_set_entry('-theme-', values['-THEME-'])
             sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
             sg.user_settings_set_entry('-explorer program-', values['-EXPLORER PROGRAM-'])
             sg.user_settings_set_entry('-advanced mode-', values['-ADVANCED MODE-'])
@@ -318,12 +342,12 @@ def make_window():
     ]
 
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
-                                           sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
-                                           sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
-                                           sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]], pad=(0,0), k='-OPTIONS BOTTOM-'))
+                         sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
+                         sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
+                         sg.T('<---- NOTE: Only the "Verbose" setting is implemented at this time')]], pad=(0,0), k='-OPTIONS BOTTOM-'))
 
     choose_folder_at_top = sg.pin(sg.Column([[sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
-                                              sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
+                                       sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
     # ----- Full layout -----
 
     layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
@@ -372,19 +396,19 @@ def main():
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
                 sg.cprint(f'{file_list_dict[file]}', text_color='white', background_color='purple')
-                execute_command_subprocess(f'{editor_program}', f'"{file_list_dict[file]}"')
+                sg.execute_command_subprocess(f'{editor_program}', f'"{file_list_dict[file]}"')
+                # sg.execute_editor(f'"{file_list_dict[file]}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
             for file in values['-DEMO LIST-']:
                 file_to_run = str(file_list_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
-                execute_command_subprocess('python' if running_windows() else 'python3', f'{file_to_run}')
-                # run_py(file_to_run)
+                sg.execute_py_file(f'{file_to_run}')
         elif event.startswith('Edit Me'):
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
-            execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
+            sg.execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
             new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
@@ -476,28 +500,9 @@ def main():
                     if running_windows():
                         file_path = file_path.replace('/', '\\')
                     sg.cprint(file_path, text_color='white', background_color='purple')
-                    execute_command_subprocess(explorer_program, file_path)
+                    sg.execute_command_subprocess(explorer_program, file_path)
 
     window.close()
-
-
-
-def execute_command_subprocess(command, *args, wait=False):
-
-    if sys.platform == 'linux':
-        arg_string = ''
-        for arg in args:
-            arg_string += ' ' + str(arg)
-        sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    else:
-        expanded_args = ' '.join(args)
-        sp = subprocess.Popen([command, args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if wait:
-        out, err = sp.communicate()
-        if out:
-            print(out.decode("utf-8"))
-        if err:
-            print(err.decode("utf-8"))
 
 
 if __name__ == '__main__':
