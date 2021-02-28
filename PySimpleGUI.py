@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.36 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups, removed debug info"
+from turtle import color
+
+version = __version__ = "4.34.0.37 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups, removed debug info, button color strings to lower, toolstips for editor strings"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3439,7 +3441,6 @@ class Button(Element):
         :type k: str | int | tuple | object
         :param visible: set visibility state of the element
         :type visible: (bool)
-        :param metadata: User metadata that can be set to ANYTHING
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
@@ -11264,6 +11265,7 @@ def button_color_to_tuple(color_tuple_or_string, default=None):
             elif len(color_tuple_or_string) == 1:
                 background_color = color_tuple_or_string[0] or default[1]
         elif isinstance(color_tuple_or_string, str):
+            color_tuple_or_string = color_tuple_or_string.lower()
             split_colors = color_tuple_or_string.split(' on ')
             if len(split_colors) >= 2:
                 text_color = split_colors[0].strip() or default[0]
@@ -18593,12 +18595,18 @@ def main_global_pysimplegui_settings():
 
     settings = pysimplegui_user_settings.read()
 
+    tooltip = 'Format strings for some popular editors/IDEs:\n' + \
+              'PyCharm - <editor> --line <line> <file>\n' + \
+              'Notepad++ - <editor> -n<line> <file>\n' + \
+              'Sublime - <editor> <file>:<line>\n' + \
+              'vim -  <editor> +<line> <file>\n' + \
+              'wing - <editor> <file>:<line>'
+
     layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
               [T('Editor Program', size=(20,1)), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-'), FileBrowse()],
               [T('String to launch your editor to edit at a particular line #.  Use <editor> <file> <line> to specify')],
               [T('the string that will be executed to edit python files using your editor')],
-              [T('Edit Format String', size=(20,1)), In(settings.get('-editor format string-', ''),k='-EDITOR FORMAT-')],
-              [T(r"For PyCharm, Add this to your PyCharm main program's folder \bin\pycharm.bat")],
+              [T('Edit Format String (hover for tooltip)',tooltip=tooltip), In(settings.get('-editor format string-', '<editor> <file>'),k='-EDITOR FORMAT-', tooltip=tooltip)],
               [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-')],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
