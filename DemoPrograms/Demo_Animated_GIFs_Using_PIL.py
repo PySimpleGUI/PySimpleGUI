@@ -14,19 +14,20 @@ import PySimpleGUI as sg
     Copyright 2020 PySimpleGUI.org
 """
 
-gif_filename = r'my_gif_file.gif'
+gif_filename = r'ExampleGIF.gif'
 
-layout = [[sg.Image(key='-IMAGE-')]]
+layout = [[sg.Text('Happy Thursday!', background_color='#A37A3B', text_color='#FFF000',  justification='c', key='-T-', font=("Bodoni MT", 40))],
+          [sg.Image(key='-IMAGE-')]]
 
 window = sg.Window('Window Title', layout, element_justification='c', margins=(0,0), element_padding=(0,0), finalize=True)
 
-sequence = [ImageTk.PhotoImage(img) for img in ImageSequence.Iterator(Image.open(gif_filename))]    # must has finalized to do this
+window['-T-'].expand(True, True, True)      # Make the Text element expand to take up all available space
 
 interframe_duration = Image.open(gif_filename).info['duration']     # get how long to delay between frames
 
 while True:
-    for frame in sequence:
+    for frame in ImageSequence.Iterator(Image.open(gif_filename)):
         event, values = window.read(timeout=interframe_duration)
         if event == sg.WIN_CLOSED:
-            exit()
-        window['-IMAGE-'].update(data=frame)
+            exit(0)
+        window['-IMAGE-'].update(data=ImageTk.PhotoImage(frame) )

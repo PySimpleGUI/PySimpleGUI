@@ -6,6 +6,8 @@ import PySimpleGUI as sg
     Two versions are present... a simple button that changes text and a graphical one
     A HUGE thank you to the PySimpleGUI community memeber that donated his time and skill in creating the buttons!
     The text of the button toggles between Off and On
+    
+    Copyright 2021 PySimpleGUI
 """
 
 def main():

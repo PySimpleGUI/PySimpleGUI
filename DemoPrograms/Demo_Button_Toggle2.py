@@ -38,6 +38,7 @@ class BtnInfo:
 # Main function that creates the layout, window and has event loop
 def main():
     layout = [[sg.Text('Toggle Button')],
+              [sg.T('Disabled with PySimpleGUI Ignore:', text_color='yellow')],
               [sg.Button(image_data=on_image, k='-TOGGLE1-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
@@ -46,12 +47,23 @@ def main():
                sg.Button(image_data=off_image, k='-DISABLE1-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
-                         metadata=BtnInfo(False)),
+                         metadata=BtnInfo(False)), sg.T('Disabled button color is\nbetter than other disabled button below')
                ],
               [sg.Button(image_data=on_image, k='-TOGGLE2-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          metadata=BtnInfo())],
+              [ sg.T('Disabled with GUI:', text_color='yellow')],
+              [sg.Button(image_data=on_image, k='-TOGGLE3-', border_width=0,
+                         button_color=(sg.theme_background_color(), sg.theme_background_color()),
+                         disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
+                         disabled=True, metadata=BtnInfo()), sg.T('Note color has crosshatching')],
+              [ sg.T('Disabled with PySimpleGUI (ignored):', text_color='yellow')],
+              [sg.Button(image_data=on_image, k='-TOGGLE3-', border_width=0,
+                         button_color=(sg.theme_background_color(), sg.theme_background_color()),
+                         disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
+                         disabled=sg.BUTTON_DISABLED_MEANS_IGNORE, metadata=BtnInfo())],
+              [sg.T(size=(40,1), k='-STATUS-')],
               [sg.Button('Exit')]]
 
     window = sg.Window('Window Title', layout, font='_ 14', finalize=True)
@@ -80,7 +92,7 @@ def main():
                     window['-TOGGLE1-'].update(disabled=False, image_data=on_image)
                 elif window['-TOGGLE1-'].metadata.state is False:
                     window['-TOGGLE1-'].update(disabled=False, image_data=off_image)
-
+        window['-STATUS-'].update(f'event {event} button state = {window[event].metadata.state}')
     window.close()
 
 # Define the button graphic base 64 strings and then call the main function
