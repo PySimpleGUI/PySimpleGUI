@@ -33,7 +33,8 @@ def make_window(theme):
                  sg.Image(data=sg.DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-GIF-IMAGE-'),],
                 [sg.Checkbox('Checkbox', default=True, k='-CB-')],
                 [sg.Radio('Radio1', "RadioDemo", default=True, size=(10,1), k='-R1-'), sg.Radio('Radio2', "RadioDemo", default=True, size=(10,1), k='-R2-')],
-                [sg.Combo(values=['Choice 1', 'Choice 2', 'Choice 3'], size=(30, 6), k='-COMBO-')],
+                [sg.Combo(values=('Combo 1', 'Combo 2', 'Combo 3'), default_value='Combo 1', readonly=True, k='-COMBO-'),
+                 sg.OptionMenu(values=('Option 1', 'Option 2', 'Option 3'),  k='-OPTION MENU-'),],
                 [sg.Spin([i for i in range(1,11)], initial_value=10, k='-SPIN-'), sg.Text('Spin')],
                 [sg.Multiline('Demo of a Multi-Line Text Element!\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6\nLine 7\nYou get the point.', size=(45,5), k='-MLINE-')],
                 [sg.Button('Button'), sg.Button('Popup'), sg.Button(image_data=sg.DEFAULT_BASE64_ICON, key='-LOGO-')]]
@@ -68,8 +69,13 @@ def make_window(theme):
                       enable_events = True)],
                       [sg.Button("Set Theme")]]
     
-    layout = layout = [[sg.Text('Demo Of (Almost) All Elements', size=(38, 1), justification='center', font=("Helvetica", 16), relief=sg.RELIEF_RIDGE, k='-TEXT HEADING-', enable_events=True)],
-                       [sg.TabGroup([[sg.Tab('Input Elements', input_layout), sg.Tab('Asthetic Elements', asthetic_layout), sg.Tab('Graphing', graphing_layout), sg.Tab('Specialty', specalty_layout), sg.Tab('Theming', theme_layout), sg.Tab('Output', logging_layout)]], key='-TAB GROUP-')],]
+    layout = [[sg.Text('Demo Of (Almost) All Elements', size=(38, 1), justification='center', font=("Helvetica", 16), relief=sg.RELIEF_RIDGE, k='-TEXT HEADING-', enable_events=True)]]
+    layout +=[[sg.TabGroup([[  sg.Tab('Input Elements', input_layout),
+                               sg.Tab('Asthetic Elements', asthetic_layout),
+                               sg.Tab('Graphing', graphing_layout),
+                               sg.Tab('Specialty', specalty_layout),
+                               sg.Tab('Theming', theme_layout),
+                               sg.Tab('Output', logging_layout)]], key='-TAB GROUP-')]]
               
     return sg.Window('All Elements Demo', layout, right_click_menu=right_click_menu_def)
 
