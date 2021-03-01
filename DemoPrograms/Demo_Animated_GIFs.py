@@ -30,11 +30,11 @@ gifs = [ring_blue, red_dots_ring, ring_black_dots, ring_gray_segments, ring_line
 
 # first show how to use popup_animated using built-in GIF image
 for i in range(100000):
-    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, no_titlebar=False, background_color='white', time_between_frames=100)
+    sg.popup_animated(sg.DEFAULT_BASE64_LOADING_GIF, message='Right Click To Exit GIF Windows That Follow\nLeft click to move to next one', no_titlebar=False, time_between_frames=100, text_color='black', background_color='white')
 sg.popup_animated(None)      # close all Animated Popups
 
 # Next demo is to show how to create custom windows with animations
-layout = [[sg.Image(data=gifs[0], enable_events=True, background_color='white', key='-IMAGE-', right_click_menu=['UNUSED', 'Exit'])],]
+layout = [[sg.Image(data=gifs[0], enable_events=True, background_color='white', key='-IMAGE-', right_click_menu=['UNUSED', ['Exit']])],]
 
 window = sg.Window('My new window', layout,
         no_titlebar=True,
@@ -53,6 +53,8 @@ while True:                                     # Event Loop
         break
 
     elif event == '-IMAGE-':                    # if clicked on the image
+        if offset == len(gifs)-1:
+            break
         offset += (offset < len(gifs)-1)        # add 1 until the last one
         gif = gifs[offset]                      # get a new gif image
     # update the animation in the window

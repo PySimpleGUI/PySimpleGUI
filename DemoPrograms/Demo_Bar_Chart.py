@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import random
 
 #      Bars drawing in PySimpleGUI
-#                                 
+#
 #                 .--.
 #                 |  |
 #             .--.|  |.--.
