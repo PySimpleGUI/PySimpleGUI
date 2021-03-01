@@ -41,7 +41,7 @@ B = sg.B
 layout = [[M(size=(30, 3))],
           [B('OK')]]
 
-window = sg.Window('Shortcuts', layout).read()
+window = sg.Window('Shortcuts', layout)
 event, values = window.read()
 sg.popup_scrolled(event, values)
 window.close()
