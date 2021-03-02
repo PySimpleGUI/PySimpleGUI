@@ -39,21 +39,28 @@ port = 'PySimpleGUI'
 
 
 """
-Copyright 2018, 2019, 2020 PySimpleGUI.org
+Copyright 2018, 2019, 2020, 2021 PySimpleGUI.org
 
-OK, let's get the BS out of the way
+Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
 
-This software is available for your use under a MODIFIED LGPL3+ license
+From the inception these have been the project principals upon which it is all built
+1. Fun - it's a serious goal of the project. If we're not having FUN while making stuff, then something's not right
+2. Successful - you need to be successful or it's all for naught
+3. You are the important party - It's your success that determines the success of PySimpleGUI
 
-This notice, these first 100 lines of code shall remain unchanged
+If these 3 things are kept at the forefront, then the rest tends to fall into place.
 
- #     #                                        
- ##   ##  ####  #####  # ###### # ###### #####  
- # # # # #    # #    # # #      # #      #    # 
- #  #  # #    # #    # # #####  # #####  #    # 
- #     # #    # #    # # #      # #      #    # 
- #     # #    # #    # # #      # #      #    # 
- #     #  ####  #####  # #      # ###### #####  
+PySimpleGUI is a "system", not just a program.  There are 4 components of the "PySimpleGUI system"
+1. This software - PySimpleGUI.com
+2. The documentation - PySimpleGUI.org
+3. Demo Programs - Demos.PySimpleGUI.org
+4. Support - Issues.PySimpleGUI.org
+
+
+This software is available for your use under a LGPL3+ license
+
+This notice, these first 150 lines of code shall remain unchanged
+
 
 
 888      .d8888b.  8888888b.  888      .d8888b.          
@@ -66,15 +73,9 @@ This notice, these first 100 lines of code shall remain unchanged
 88888888 "Y8888P88 888        88888888 "Y8888P"          
 
 
-And just what is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
-1. These and all comments are to remain in this document
-2. You will not post this software in a repository or a location for others to download from:
-   A. Unless you have made 10 lines of changes
-   B. A notice is posted with the code that it is not the original code but instead derived from an original
-3. Forking is OK and does NOT require any changes as long as it is obvious forked and stated on the page
-   where your software is being hosted.  For example, GitHub does a fantastic job of indicating if a repository
-   is the result of a fork.
-4. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
+In addition to the normal publishing requirements of LGPL3+, these also apply:
+1. These and all comments are to remain in the source code
+2. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
        1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
           https://github.com/PySimpleGUI/PySimpleGUI
        2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
@@ -83,22 +84,23 @@ And just what is that?  Well, it's LPGL3+ and these FOUR simple stipulations.
           Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
           https://pysimplegui.readthedocs.io/en/latest/
    If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
-
+3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file
 -----------------------------------------------------------------------------------------------------------------
 
 How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
 GUI based applications so I'll try to make it up to you.
 
-The first bit of good news for you is that literally 100s of pages of documentation await you.  And nearly 200
-Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
+The first bit of good news for you is that literally 100s of pages of documentation await you. 
+300 Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
 
 Some general bits of advice:
-Upgrade your software!  pip install --upgrade --no-cache-dir PySimpleGUI
+Upgrade your software!  python -m pip install --upgrade --no-cache-dir PySimpleGUI
 If you're thinking of filing an Issue or posting a problem, Upgrade your software first
 There are constantly something new and interesting coming out of this project so stay current if you can 
 
 The FASTEST WAY to learn PySimpleGUI is to begin to play with it, and to read the documentation.
 http://www.PySimpleGUI.org
+http://Calls.PySimpleGUI.org
 http://Cookbook.PySimpleGUI.org
 
 The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
@@ -1270,12 +1272,12 @@ class Element():
         else:
             warnings.warn('You cannot Update element with key = {} until the window.read() is called or finalized=True when creating window'.format(self.Key), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
-                popup_error('Unable to complete operation on element with key {}'.format(self.Key),
+                _error_popup_with_traceback('Unable to complete operation on element with key {}'.format(self.Key),
                             'You cannot perform operations (such as calling update) on an Element until:',
                             ' window.read() is called or finalize=True when Window created.',
                             'Adding a "finalize=True" parameter to your Window creation will likely fix this.',
                             _create_error_message(),
-                            image=_random_error_emoji())
+                            )
             return False
 
 
@@ -7779,32 +7781,32 @@ class Window:
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
             if type(element) == list:
-                PopupError('Error creating Window layout',
+                _error_popup_with_traceback('Error creating Window layout',
                            'Layout has a LIST instead of an ELEMENT',
                            'This means you have a badly placed ]',
                            'The offensive list is:',
                            element,
-                           'This list will be stripped from your layout' , keep_on_top=True, image=_random_error_emoji()
+                           'This list will be stripped from your layout'
                            )
                 continue
             elif callable(element) and not isinstance(element, Element):
-                PopupError('Error creating Window layout',
+                _error_popup_with_traceback('Error creating Window layout',
                            'Layout has a FUNCTION instead of an ELEMENT',
                            'This likely means you are missing () from your layout',
                            'The offensive list is:',
                            element,
-                           'This item will be stripped from your layout', keep_on_top=True, image=_random_error_emoji())
+                           'This item will be stripped from your layout')
                 continue
             if element.ParentContainer is not None:
                 warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
-                PopupError('Error creating Window layout',
+                _error_popup_with_traceback('Error creating Window layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
                            'The offensive Element = ',
                            element,
                            'and has a key = ', element.Key,
                            'This item will be stripped from your layout',
-                           'Hint - try printing your layout and matching the IDs "print(layout)"', keep_on_top=True, image=_random_error_emoji())
+                           'Hint - try printing your layout and matching the IDs "print(layout)"')
                 continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
@@ -8442,23 +8444,7 @@ class Window:
             closest_key = self._find_closest_key(key)
             if not silent_on_error:
                 print('** Error looking up your element using the key: ', key, 'The closest matching key: ', closest_key)
-                trace_details = traceback.format_stack()
-                error_message = ''
-                file_info_pysimplegui = trace_details[-1].split(",")[0]
-                for line in reversed(trace_details):
-                    if line.split(",")[0] != file_info_pysimplegui:
-                        error_message = line
-                        break
-                if error_message != '':
-                    error_parts = error_message.split(', ')
-                    if len(error_parts)  < 4:
-                        error_message = error_parts[0]+'\n'+error_parts[1]+ '\n' + ''.join(error_parts[2:])
-
-                if not SUPPRESS_ERROR_POPUPS:
-                    key_message = 'A close key was found: {}'.format(closest_key) if closest_key is not None else 'No key found that resembles your key'
-                    filename = error_parts[0][error_parts[0].index('File ')+5:]
-                    line_num = error_parts[1][error_parts[1].index('line ')+5:]
-                    _error_popup_with_code('Key Error', filename, line_num, key_message, error_message)
+                _error_popup_with_traceback('Key Error', 'Problem finding your key '+ str(key), 'Closest match = ' + str(closest_key))
                 if not SUPPRESS_RAISE_KEY_ERRORS:
                     raise KeyError(key)
                 element = ErrorElement(key=key)
@@ -16926,6 +16912,34 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
     return SystemTray.notify(title=title, message=message, icon=icon, display_duration_in_ms=display_duration_in_ms, fade_in_duration=fade_in_duration, alpha=alpha, location=location)
 
 
+def _error_popup_with_traceback(title, *args):
+    if SUPPRESS_ERROR_POPUPS:
+        return
+    trace_details = traceback.format_stack()
+    error_message = ''
+    file_info_pysimplegui = None
+    for line in reversed(trace_details):
+        if __file__ not in line:
+            file_info_pysimplegui = line.split(",")[0]
+            error_message = line
+            break
+    if file_info_pysimplegui is None:
+        _error_popup_with_code(title,None, None, 'Did not find your error info')
+        return
+
+    error_parts = None
+    if error_message != '':
+        error_parts = error_message.split(', ')
+        if len(error_parts)  < 4:
+            error_message = error_parts[0]+'\n'+error_parts[1]+ '\n' + ''.join(error_parts[2:])
+    if error_parts is None:
+        print('*** Error popup attempted but unable to parse error details ***')
+        print(trace_details)
+        return
+    filename = error_parts[0][error_parts[0].index('File ')+5:]
+    line_num = error_parts[1][error_parts[1].index('line ')+5:]
+    _error_popup_with_code(title, filename, line_num, error_message, *args)
+
 
 def _error_popup_with_code(title, filename=None, line_num=None,  *args):
     layout = [[Text('ERROR'), Text(title)],
@@ -17644,11 +17658,29 @@ def user_settings():
 
 
 
-#####################################################################################################
-# Subprocess
-# These are the "Exec" API calls.  They will start up new subprocesses and do other execution
-# related operations.  Starting your editor at a specific line number in a specific file needs these
-#####################################################################################################
+'''
+'########:'##::::'##:'########::'######::'##::::'##:'########:'########:
+ ##.....::. ##::'##:: ##.....::'##... ##: ##:::: ##:... ##..:: ##.....::
+ ##::::::::. ##'##::: ##::::::: ##:::..:: ##:::: ##:::: ##:::: ##:::::::
+ ######:::::. ###:::: ######::: ##::::::: ##:::: ##:::: ##:::: ######:::
+ ##...:::::: ## ##::: ##...:::: ##::::::: ##:::: ##:::: ##:::: ##...::::
+ ##:::::::: ##:. ##:: ##::::::: ##::: ##: ##:::: ##:::: ##:::: ##:::::::
+ ########: ##:::. ##: ########:. ######::. #######::::: ##:::: ########:
+........::..:::::..::........:::......::::.......::::::..:::::........::
+:::'###::::'########::'####::'######::                                  
+::'## ##::: ##.... ##:. ##::'##... ##:                                  
+:'##:. ##:: ##:::: ##:: ##:: ##:::..::                                  
+'##:::. ##: ########::: ##::. ######::                                  
+ #########: ##.....:::: ##:::..... ##:                                  
+ ##.... ##: ##::::::::: ##::'##::: ##:                                  
+ ##:::: ##: ##::::::::'####:. ######::                                  
+..:::::..::..:::::::::....:::......:::        
+
+
+
+These are the functions used to implement the subprocess APIs (Exec APIs) of PySimpleGUI
+
+'''
 
 
 def execute_subprocess_nonblocking(command, *args):
@@ -17674,37 +17706,96 @@ def execute_subprocess_nonblocking(command, *args):
 
 
 def execute_command_subprocess(command, *args, wait=False, cwd=None):
-    if _running_linux():
-        arg_string = ''
-        for arg in args:
-            arg_string += ' ' + str(arg)
-        sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-    else:
-        # print('executing subprocess command:',command, 'args:',args)
-        if args is not None:
-            expanded_args = ' '.join(args)
-            sp = subprocess.Popen([command, (expanded_args,)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+    """
+    Runs the specified command as a subprocess.
+    The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
+    Returns a subprocess Popen object.
+
+    :param command: Filename to load settings from (and save to in the future)
+    :type command: (str)
+    :param *args:  Variable number of arguments that are passed to the program being started as command line parms
+    :type *args: (Any)
+    :param wait: If True then wait for the subprocess to finish
+    :type wait: (bool)
+    :param cwd: Working directory to use when executing the subprocess
+    :type cwd: (str))
+    :return: Popen object
+    :rtype: (subprocess.Popen)
+    """
+    try:
+        if _running_linux():
+            arg_string = ''
+            for arg in args:
+                arg_string += ' ' + str(arg)
+            sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         else:
-            sp = subprocess.Popen([command, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-    if wait:
-        out, err = sp.communicate()
-        if out:
-            print(out.decode("utf-8"))
-        if err:
-            print(err.decode("utf-8"))
+            # print('executing subprocess command:',command, 'args:',args)
+            if args is not None:
+                expanded_args = ' '.join(args)
+                sp = subprocess.Popen([command, (expanded_args,)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            else:
+                sp = subprocess.Popen([command, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+        if wait:
+            out, err = sp.communicate()
+            if out:
+                print(out.decode("utf-8"))
+            if err:
+                print(err.decode("utf-8"))
+    except Exception as e:
+        print('** Error executing subprocess - requires Python 3.6+ **', e)
+        sp = None
+    return sp
 
 
+def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None):
+    """
+    Executes a Python file.
+    The interpreter to use is chosen based on this priority order:
+        1. interpreter_command paramter
+        2. global setting "-python command-"
+        3. the interpreter running running PySimpleGUI
+    :param pyfile: the file to run
+    :param parms: parameters to pass on the command line
+    :param cwd: the working directory to use
+    :param interpreter_command: the command used to invoke the Python interpreter
+    :return: Popen object
+    :rtype: (subprocess.Popen) | None
+    """
 
-
-def execute_py_file(pyfile, parms=None, cwd=None):
-    if parms is not None:
-        execute_command_subprocess('python' if _running_windows() else 'python3', pyfile, parms, wait=False, cwd=cwd)
+    if pyfile[0] != '"' and ' ' in pyfile:
+        pyfile = '"'+pyfile+'"'
+    if interpreter_command is not None:
+        python_program = interpreter_command
     else:
-        execute_command_subprocess('python' if _running_windows() else 'python3', pyfile, wait=False, cwd=cwd)
-
+        python_program = pysimplegui_user_settings.get('-python command-', '')
+        if python_program == '':
+            python_program = 'python' if _running_windows() else 'python3'
+    if parms is not None and python_program:
+        sp = execute_command_subprocess(python_program, pyfile, parms, wait=False, cwd=cwd)
+    elif python_program:
+        sp = execute_command_subprocess(python_program, pyfile, wait=False, cwd=cwd)
+    else:
+        print('execute_py_file - No interpreter has been configured')
+        sp = None
+    return sp
 
 
 def execute_editor(file_to_edit, line_number=None):
+    """
+    Runs the editor that was configured in the global settings and opens the file to a specific line number.
+    Two global settings keys are used.
+    '-editor program-' the command line used to startup your editor. It's set
+        in the global settings window or by directly manipulating the PySimpleGUI settings object
+    '-editor format string-' a string containing 3 "tokens" that describes the command that is executed
+            <editor> <file> <line>
+    :param file_to_edit: the full path to the file to edit
+    :type file_to_edit: (str)
+    :param line_number: optional line number to place the cursor
+    :type line_number: (int)
+    :return: Popen object
+    :rtype: (subprocess.Popen) | None
+    """
+
     editor_program = pysimplegui_user_settings.get('-editor program-', None)
     if editor_program is not None:
         format_string = pysimplegui_user_settings.get('-editor format string-', None)
@@ -17714,18 +17805,64 @@ def execute_editor(file_to_edit, line_number=None):
         else:
            command = _create_full_editor_command(editor_program, file_to_edit, line_number, format_string)
            # print('final command line = ', command)
-           execute_command_subprocess(editor_program, command)
+           sp = execute_command_subprocess(editor_program, command)
     else:
         print('No editor has been configured in the global settings')
-        return
+        sp = None
+    return sp
+
+
+def execute_get_results(subprocess_id):
+    """
+    Get the text results of a previously executed execute call
+    Returns a tuple of the strings (stdout, stderr)
+    :param subprocess_id: a Popen subprocess ID returned from a previous execute call
+    :type subprocess_id: (subprocess.Popen)
+    :return: Tuple[str, str]
+    """
+
+    out_decoded = err_decoded = ''
+    if subprocess_id is not None:
+        try:
+            out, err = subprocess_id.communicate()
+            if out:
+                out_decoded = out.decode("utf-8")
+            if err:
+                err_decoded = err.decode("utf-8")
+        except Exception as e:
+            print('Error in execute_get_results', e)
+            out_decoded = err_decoded = ''
+
+    return out_decoded, err_decoded
+
+
+
+def execute_file_explorer(folder_to_open=''):
+    """
+    The global settings has a setting called -   "-explorer program-"
+    It defines the program to run when this function is called.
+    The optional folder paramter specified which path should be opened.
+
+    :param folder_to_open: The path to open in the explorer program
+    :type folder_to_open: str
+    :return: Popen object
+    :rtype: (subprocess.Popen) | None
+    """
+
+    explorer_program = pysimplegui_user_settings.get('-explorer program-', None)
+    if explorer_program is not None:
+        sp = execute_command_subprocess(explorer_program, folder_to_open)
+    else:
+        print('No file explorer has been configured in the global settings')
+        sp = None
+    return sp
 
 
 def _create_full_editor_command(editor, file_to_edit, line_number, edit_format_string):
     """
     The global settings has a setting called -   "-editor format string-"
     It uses 3 "tokens" to describe how to invoke the editor in a way that starts at a specific line #
-    <editor> <file>:<line>
-
+    <editor> <file> <line>
 
     :param editor:
     :param file_to_edit:
@@ -17757,6 +17894,16 @@ def _get_editor():
 
     return user_settings_get_entry('-editor program-', global_editor)
 
+'''
+'########::'########:'########::'##::::'##::'######::::'######:::'########:'########::
+ ##.... ##: ##.....:: ##.... ##: ##:::: ##:'##... ##::'##... ##:: ##.....:: ##.... ##:
+ ##:::: ##: ##::::::: ##:::: ##: ##:::: ##: ##:::..::: ##:::..::: ##::::::: ##:::: ##:
+ ##:::: ##: ######::: ########:: ##:::: ##: ##::'####: ##::'####: ######::: ########::
+ ##:::: ##: ##...:::: ##.... ##: ##:::: ##: ##::: ##:: ##::: ##:: ##...:::: ##.. ##:::
+ ##:::: ##: ##::::::: ##:::: ##: ##:::: ##: ##::: ##:: ##::: ##:: ##::::::: ##::. ##::
+ ########:: ########: ########::. #######::. ######:::. ######::: ########: ##:::. ##:
+........:::........::........::::.......::::......:::::......::::........::..:::::..::                                                                    
+'''
 
 
 #####################################################################################################
@@ -18045,9 +18192,9 @@ class _Debugger():
     #     #   ##   #####  #   ##   #####  #      ######  ####     #  #  # # #    #
     #     #  #  #  #    # #  #  #  #    # #      #      #         #  #  # # ##   #
     #     # #    # #    # # #    # #####  #      #####   ####     #  #  # # # #  #
-    #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
-    # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
-    #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
+     #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
+     # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
+      #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
         ChangeLookAndFeel(COLOR_SCHEME)
@@ -18645,13 +18792,30 @@ def main_global_pysimplegui_settings():
               'PyDev - <editor> <file>:<line>\n' +\
               'IDLE - <editor> <file>\n'
 
+    tooltip_file_explorer = 'This is the program you normally use to "Browse" for files\n' + \
+                            'For Windows this is normally "explorer". On Linux "nemo" is sometimes used.'
+
+    tooltip_theme = 'The normal default theme for PySimpleGUI is "Dark Blue 13\n' + \
+                         'If you do not call theme("theme name") by your program to change the theme, then the default is used.\n' + \
+                         'This setting allows you to set the theme that PySimpleGUI will use for ALL of your programs that\n' + \
+                         'do not set a theme specifically.'
+
+
 
     layout = [[T('Global PySimpleGUI Settings', font='DEFAIULT 18')],
-              [T('Editor Program', size=(20,1)), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
-              [T('String to launch your editor to edit at a particular line #.  Use <editor> <file> <line> to specify')],
-              [T('the string that will be executed to edit python files using your editor')],
-              [T('Edit Format String (hover for tooltip)',tooltip=tooltip), In(settings.get('-editor format string-', '<editor> <file>'),k='-EDITOR FORMAT-', tooltip=tooltip)],
-              [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-')],
+
+              [T('Python Interpreter (normally leave blank)',  font='_ 16')],
+                    [T('Command to run a python program:'), In(settings.get('-python command-', ''),k='-PYTHON COMMAND-', enable_events=True), FileBrowse()],
+              [T('Editor Settings',  font='_ 16')],
+                    [T('Command to invoke your editor:'), In(settings.get('-editor program-', ''),k='-EDITOR PROGRAM-', enable_events=True), FileBrowse()],
+                    [T('String to launch your editor to edit at a particular line #.')],
+                    [T('Use tags <editor> <file> <line> to specify the string')],
+                    [T('that will be executed to edit python files using your editor')],
+                    [T('Edit Format String (hover for tooltip)',tooltip=tooltip), In(settings.get('-editor format string-', '<editor> <file>'),k='-EDITOR FORMAT-', tooltip=tooltip)],
+              [T('File Explorer Program',  font='_ 16', tooltip=tooltip_file_explorer)],
+                    [In(settings.get('-explorer program-', ''),k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)],
+              [T('Theme',  font='_ 16')],
+                  [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-', tooltip=tooltip_theme)],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
 
@@ -18663,7 +18827,9 @@ def main_global_pysimplegui_settings():
         if event == 'Ok':
             new_theme = OFFICIAL_PYSIMPLEGUI_THEME if values['-THEME-'] == '' else values['-THEME-']
             pysimplegui_user_settings.set('-editor program-', values['-EDITOR PROGRAM-'])
+            pysimplegui_user_settings.set('-explorer program-', values['-EXPLORER PROGRAM-'])
             pysimplegui_user_settings.set('-editor format string-', values['-EDITOR FORMAT-'])
+            pysimplegui_user_settings.set('-python command-', values['-PYTHON COMMAND-'])
             pysimplegui_user_settings.set('-theme-', new_theme)
             window.close()
             return True
@@ -18962,8 +19128,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     ]
 
     tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
-    tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t'),
-                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], )
+    tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t', pad=(0,0)),
+                                                  Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], pad=(0,0))
     # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
     tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', )
     tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
