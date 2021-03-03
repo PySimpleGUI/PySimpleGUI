@@ -2656,11 +2656,15 @@ These versions of the popup functions are here only for backwards compatibility.
 
 
 
-## The Test Harness
+## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
 
-Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub
+Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
+
+You can call main() from your code and then access these other features such as the global settings. You can also directly call these functions.
 
 <!-- <+func.main+> -->
+<!-- <+func.main_get_debug_data+> -->
+<!-- <+func.main_global_pysimplegui_settings+> -->
 <!-- <+func.main_sdk_help+> -->
 <!-- <+func.test+> -->
 
@@ -2681,6 +2685,7 @@ Used to get SDK help, test the installation, get information about the versions,
 <!-- <+func.theme_button_color+> -->
 <!-- <+func.theme_element_background_color+> -->
 <!-- <+func.theme_element_text_color+> -->
+<!-- <+func.theme_global+> -->
 <!-- <+func.theme_input_background_color+> -->
 <!-- <+func.theme_input_text_color+> -->
 <!-- <+func.theme_list+> -->
@@ -2696,6 +2701,10 @@ Used to get SDK help, test the installation, get information about the versions,
 
 ## User Settings
 
+In addition to user settings files, there is also a global PySimpleGUI settings file.
+
+You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
+
 <!-- <+func.user_settings+> -->
 <!-- <+func.user_settings_delete_entry+> -->
 <!-- <+func.user_settings_delete_filename+> -->
@@ -2707,6 +2716,18 @@ Used to get SDK help, test the installation, get information about the versions,
 <!-- <+func.user_settings_set_entry+> -->
 <!-- <+func.user_settings_silent_on_error+> -->
 <!-- <+func.user_settings_write_new_dictionary+> -->
+
+## Exec APIs
+
+These API calls are used to launch subprocesses.
+
+<!-- <+func.execute_command_subprocess+> -->
+<!-- <+func.execute_editor+> -->
+<!-- <+func.execute_file_explorer+> -->
+<!-- <+func.execute_get_results+> -->
+<!-- <+func.execute_py_file+> -->
+
+
 
 ## Misc
 
