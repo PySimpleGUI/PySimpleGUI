@@ -15218,7 +15218,7 @@ def _theme_preview_window_swatches():
     layout += [[B('Exit')]]
 
 # create and return Window that uses the layout
-    return Window('Theme Color Swatches', layout, background_color='black', finalize=True)
+    return Window('Theme Color Swatches', layout, background_color='black', finalize=True, keep_on_top=True)
 
 
 
