@@ -338,10 +338,10 @@ def settings_window():
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program',  font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_editor)],
-                [ sg.In(sg.user_settings_get_entry('-editor program-', get_global_editor()),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+                [ sg.In(sg.user_settings_get_entry('-editor program-', ''),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T('File Explorer Program',  font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_explorer)],
-              [ sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
+              [ sg.In(sg.user_settings_get_entry('-explorer program-'), k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
                [sg.T('Theme (leave blank to use global default)', font='_ 16')],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
               [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
@@ -558,7 +558,7 @@ def main():
         elif event == 'Open Folder':
             explorer_program = get_explorer()
             if explorer_program:
-                sg.cprint('Opening Folder....', c='white on green', end='')
+                sg.cprint(f'Opening Folder using {explorer_program}...', c='white on green', end='')
                 sg.cprint('')
                 for file in values['-DEMO LIST-']:
                     file_selected = str(file_list_dict[file])
