@@ -17801,7 +17801,7 @@ def execute_editor(file_to_edit, line_number=None):
         format_string = pysimplegui_user_settings.get('-editor format string-', None)
         # if no format string, then just launch the editor with the filename
         if not format_string or line_number is None:
-            execute_command_subprocess(editor_program, file_to_edit)
+            sp = execute_command_subprocess(editor_program, file_to_edit)
         else:
            command = _create_full_editor_command(editor_program, file_to_edit, line_number, format_string)
            # print('final command line = ', command)
