@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.42 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups, removed debug info, button color strings to lower, toolstips for editor strings, autofill editor strings for 10 IDEs, error box stays open during launch now so the error is on the screen, new happy emojis, added Thonny to editors, fix in the button color function, fix in execute_editor, theme swatch previewer now correctly puts color onto clipboard, theme_global fix"
+version = __version__ = "4.35.0 Released 3-Mar-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1232,19 +1232,32 @@ class Element():
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
 
 
-    def set_cursor(self,cursor):
+    def set_cursor(self,cursor=None, cursor_color=None):
         """
         Sets the cursor for the current Element.
+        "Cursor" is used in 2 different ways in this call.
+        For the parameter "cursor" it's actually the mouse pointer.
+        For the parameter "cursor_color" it's the color of the beam used when typing into an input element
+
         :param cursor: The tkinter cursor name
         :type cursor: (str)
+        :param cursor_color: color to set the "cursor" to
+        :type cursor_color: (str)
         """
         if not self._widget_was_created():
             return
-        try:
-            self.Widget.config(cursor=cursor)
-        except Exception as e:
-            print('Warning bad cursor specified ', cursor)
-            print(e)
+        if cursor is not None:
+            try:
+                self.Widget.config(cursor=cursor)
+            except Exception as e:
+                print('Warning bad cursor specified ', cursor)
+                print(e)
+        if cursor_color is not None:
+            try:
+                self.Widget.config(insertbackground=cursor_color)
+            except Exception as e:
+                print('Warning bad cursor color', cursor_color)
+                print(e)
 
 
     def set_vscroll_position(self, percent_from_top):
@@ -2116,9 +2129,9 @@ class Radio(Element):
                 self.CircleBackgroundColor = rgb(*bg_rbg)
                 self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the checkbox
 
-        if disabled == True:
+        if disabled is True:
             self.TKRadio['state'] = 'disabled'
-        elif disabled == False:
+        elif disabled is False:
             self.TKRadio['state'] = 'normal'
         if visible is False:
             self.TKRadio.pack_forget()
@@ -17687,31 +17700,11 @@ These are the functions used to implement the subprocess APIs (Exec APIs) of PyS
 '''
 
 
-def execute_subprocess_nonblocking(command, *args):
-    """
-    Runs the specified command as a subprocess.
-    The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
-    Returns a subprocess Popen object.
-
-    :param command: Filename to load settings from (and save to in the future)
-    :type command: (str)
-    :param *args:  Variable number of arguments that are passed to the program being started as command line parms
-    :type *args: (Any)
-    :return: Popen object
-    :rtype: (subprocess.Popen)
-    """
-    expanded_args = [str(a) for a in args]
-    try:
-        sp = Popen([command, expanded_args], shell=True, stdout=PIPE, stderr=PIPE)
-    except Exception as e:
-        print('execute_subprocess_nonblocking... Popen reported an error', e)
-        sp = None
-    return sp
-
 
 def execute_command_subprocess(command, *args, wait=False, cwd=None):
     """
     Runs the specified command as a subprocess.
+    By default the call is non-blocking.
     The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
     Returns a subprocess Popen object.
 
@@ -17751,7 +17744,7 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
     return sp
 
 
-def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None):
+def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False):
     """
     Executes a Python file.
     The interpreter to use is chosen based on this priority order:
@@ -17759,9 +17752,15 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None):
         2. global setting "-python command-"
         3. the interpreter running running PySimpleGUI
     :param pyfile: the file to run
+    :type : (str)
     :param parms: parameters to pass on the command line
+    :type :
     :param cwd: the working directory to use
+    :type :
     :param interpreter_command: the command used to invoke the Python interpreter
+    :type :
+    :param wait: the working directory to use
+    :type :
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
@@ -17775,9 +17774,9 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None):
         if python_program == '':
             python_program = 'python' if _running_windows() else 'python3'
     if parms is not None and python_program:
-        sp = execute_command_subprocess(python_program, pyfile, parms, wait=False, cwd=cwd)
+        sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd)
     elif python_program:
-        sp = execute_command_subprocess(python_program, pyfile, wait=False, cwd=cwd)
+        sp = execute_command_subprocess(python_program, pyfile, wait=wait, cwd=cwd)
     else:
         print('execute_py_file - No interpreter has been configured')
         sp = None
@@ -17807,7 +17806,7 @@ def execute_editor(file_to_edit, line_number=None):
         if not format_string or line_number is None:
             sp = execute_command_subprocess(editor_program, file_to_edit)
         else:
-           command = _create_full_editor_command(editor_program, file_to_edit, line_number, format_string)
+           command = _create_full_editor_command(file_to_edit, line_number, format_string)
            # print('final command line = ', command)
            sp = execute_command_subprocess(editor_program, command)
     else:
@@ -17862,13 +17861,12 @@ def execute_file_explorer(folder_to_open=''):
     return sp
 
 
-def _create_full_editor_command(editor, file_to_edit, line_number, edit_format_string):
+def _create_full_editor_command(file_to_edit, line_number, edit_format_string):
     """
     The global settings has a setting called -   "-editor format string-"
     It uses 3 "tokens" to describe how to invoke the editor in a way that starts at a specific line #
     <editor> <file> <line>
 
-    :param editor:
     :param file_to_edit:
     :type file_to_edit: str
     :param edit_format_string:
@@ -17877,7 +17875,6 @@ def _create_full_editor_command(editor, file_to_edit, line_number, edit_format_s
     """
 
     command = edit_format_string
-    # command = command.replace('<editor>', editor)
     command = command.replace('<editor>', '')
     command = command.replace('<file>', file_to_edit)
     command = command.replace('<line>', str(line_number) if line_number is not None else '')

@@ -65,7 +65,7 @@ Parameter Descriptions:
 |                       Tuple[Tuple[str, str], ...]                        |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
 |                                   str                                    |    initial_folder     | starting path for folders and files |
 |                                   str                                    |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|                                   bool                                   |       disabled        | If True button will be created disabled |
+|                              (bool or str)                               |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinger |
 |                                   bool                                   |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                   bool                                   |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
 |                                   str                                    |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
@@ -75,7 +75,7 @@ Parameter Descriptions:
 |                                   int                                    |     border_width      | width of border around button in pixels |
 |                                (int, int)                                |         size          | (width, height) of the button in characters wide, rows high |
 |                                   bool                                   |   auto_size_button    | if True the button size is sized to fit the text |
-|                      Tuple[str, str] or str or None                      |     button_color      | Color of button. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background" |
+|            Tuple[str, str] or str or Tuple[int, int] or None             |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
 |                             Tuple[str, str]                              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
 |                             Tuple[str, str]                              |   highlight_colors    | colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button |
 |                                   bool                                   |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
@@ -173,16 +173,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -284,15 +288,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|           str            |         text          | sets button text |
-| Tuple[str, str] or (str) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|           bool           |       disabled        | disable or enable state of the element |
-|       bytes or str       |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|           str            |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|     Tuple[str, str]      | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|           bool           |        visible        | control visibility of element |
-|           int            |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|        (int, int)        |      image_size       | Size of the image in pixels (width, height) |
+|                      str                       |         text          | sets button text |
+| Tuple[str, str] or str or Tuple[int, int] or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|                 (bool or str)                  |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|                  bytes or str                  |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                      str                       |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                Tuple[str, str]                 | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                      bool                      |        visible        | control visibility of element |
+|                      int                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                   (int, int)                   |      image_size       | Size of the image in pixels (width, height) |
 
 ### visible
 
@@ -377,15 +381,15 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|           str            |         text          | sets button text |
-| Tuple[str, str] or (str) |     button_color      | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|           bool           |       disabled        | disable or enable state of the element |
-|       bytes or str       |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|           str            |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|     Tuple[str, str]      | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|           bool           |        visible        | control visibility of element |
-|           int            |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|        (int, int)        |      image_size       | Size of the image in pixels (width, height) |
+|                      str                       |         text          | sets button text |
+| Tuple[str, str] or str or Tuple[int, int] or None |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|                 (bool or str)                  |       disabled        | True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors) |
+|                  bytes or str                  |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                      str                       |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                Tuple[str, str]                 | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                      bool                      |        visible        | control visibility of element |
+|                      int                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                   (int, int)                   |      image_size       | Size of the image in pixels (width, height) |
 
 ---------
 
@@ -513,16 +517,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -787,16 +795,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -942,6 +954,7 @@ Checkbox(text,
     font = None,
     background_color = None,
     text_color = None,
+    checkbox_color = None,
     change_submits = False,
     enable_events = False,
     disabled = False,
@@ -964,6 +977,7 @@ Parameter Descriptions:
 |                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
+|                                   str                                    |  checkbox_color  | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
 |                                   bool                                   |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                   bool                                   |  enable_events   | Turns on the element specific events. Checkbox events happen when an item changes |
 |                                   bool                                   |     disabled     | set disable state |
@@ -1050,16 +1064,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -1137,6 +1155,7 @@ update(value = None,
     text = None,
     background_color = None,
     text_color = None,
+    checkbox_color = None,
     disabled = None,
     visible = None)
 ```
@@ -1216,6 +1235,7 @@ Update(value = None,
     text = None,
     background_color = None,
     text_color = None,
+    checkbox_color = None,
     disabled = None,
     visible = None)
 ```
@@ -1374,16 +1394,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -1598,7 +1622,7 @@ Parameter Descriptions:
 |--|--|--|
 |                         List[Any] or Tuple[Any]                          |      values      | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
 |                                   Any                                    |  default_value   | Choice to be displayed as initial value. Must match one of values variable contents |
-|                        (int, int) (width, height)                        |       size       | width = characters-wide, height = rows-high |
+|                                (int, int)                                |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
 |                                   bool                                   |  auto_size_text  | True if element should be the same size as the contents |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
@@ -1651,7 +1675,7 @@ Parameter Descriptions:
 ### get
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
-You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+You should be using values from your call to window.read instead.  Know what you're doing if you use it.
 
 `get()`
 
@@ -1691,16 +1715,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -1782,7 +1810,8 @@ update(value = None,
     disabled = None,
     readonly = None,
     font = None,
-    visible = None)
+    visible = None,
+    size = (None, None))
 ```
 
 Parameter Descriptions:
@@ -1796,6 +1825,7 @@ Parameter Descriptions:
 |         bool          |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 | str or Tuple[str, int] |     font     | specifies the font family, size, etc |
 |         bool          |   visible    | control visibility of element |
+|      (int, int)       |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
 
 ### visible
 
@@ -1816,7 +1846,7 @@ The following methods are here for backwards compatibility reference.  You will 
 ### Get
 
 Returns the current (right now) value of the Combo.  DO NOT USE THIS AS THE NORMAL WAY OF READING A COMBO!
-You should be using values from your call to window.Read instead.  Know what you're doing if you use it.
+You should be using values from your call to window.read instead.  Know what you're doing if you use it.
 
 `Get()`
 
@@ -1866,7 +1896,8 @@ Update(value = None,
     disabled = None,
     readonly = None,
     font = None,
-    visible = None)
+    visible = None,
+    size = (None, None))
 ```
 
 Parameter Descriptions:
@@ -1880,6 +1911,7 @@ Parameter Descriptions:
 |         bool          |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
 | str or Tuple[str, int] |     font     | specifies the font family, size, etc |
 |         bool          |   visible    | control visibility of element |
+|      (int, int)       |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
 
 ---------
 
@@ -2026,16 +2058,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -2691,16 +2727,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -3269,16 +3309,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -3494,16 +3538,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -3845,16 +3893,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -3947,7 +3999,8 @@ update(value = None,
     visible = None,
     text_color = None,
     background_color = None,
-    move_cursor_to = "end")
+    move_cursor_to = "end",
+    password_char = None)
 ```
 
 Parameter Descriptions:
@@ -3961,6 +4014,7 @@ Parameter Descriptions:
 |    str    |    text_color    | change color of text being typed |
 |    str    | background_color | change color of the background |
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
+|    str    |  password_char   | Password character if this is a password field |
 
 ### visible
 
@@ -4027,7 +4081,8 @@ Update(value = None,
     visible = None,
     text_color = None,
     background_color = None,
-    move_cursor_to = "end")
+    move_cursor_to = "end",
+    password_char = None)
 ```
 
 Parameter Descriptions:
@@ -4041,13 +4096,14 @@ Parameter Descriptions:
 |    str    |    text_color    | change color of text being typed |
 |    str    | background_color | change color of the background |
 | int or str |  move_cursor_to  | Moves the cursor to a particular offset. Defaults to 'end' |
+|    str    |  password_char   | Password character if this is a password field |
 
 ---------
 
 ## Listbox Element 
 
     A List Box.  Provide a list of values for the user to choose one or more of.   Returns a list of selected rows
-    when a window.Read() is executed.
+    when a window.read() is executed.
 
 ```
 Listbox(values,
@@ -4194,16 +4250,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -4260,7 +4320,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[Any] | values | new values to choose based on previously set values |
+| List[Any] or Tuple[Any] | values | new values to choose based on previously set values |
 
 ### set_vscroll_position
 
@@ -4320,7 +4380,7 @@ Parameter Descriptions:
 |        bool        |    disabled     | disable or enable state of the element |
 | int or list or tuple |  set_to_index   | highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted |
 |        int         | scroll_to_index | scroll the listbox so that this index is the first shown |
-|        str         |      mode       | changes the select mode according to tkinter's listbox widget |
+|        str         |   select_mode   | changes the select mode according to tkinter's listbox widget |
 |        bool        |     visible     | control visibility of element |
 
 ### visible
@@ -4399,7 +4459,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[Any] | values | new values to choose based on previously set values |
+| List[Any] or Tuple[Any] | values | new values to choose based on previously set values |
 
 ### Update
 
@@ -4422,7 +4482,7 @@ Parameter Descriptions:
 |        bool        |    disabled     | disable or enable state of the element |
 | int or list or tuple |  set_to_index   | highlights the item(s) indicated. If parm is an int one entry will be set. If is a list, then each entry in list is highlighted |
 |        int         | scroll_to_index | scroll the listbox so that this index is the first shown |
-|        str         |      mode       | changes the select mode according to tkinter's listbox widget |
+|        str         |   select_mode   | changes the select mode according to tkinter's listbox widget |
 |        bool        |     visible     | control visibility of element |
 
 ---------
@@ -4542,16 +4602,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -4919,16 +4983,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -5163,7 +5231,7 @@ Parameter Descriptions:
 |--|--|--|
 |                         List[Any] or Tuple[Any]                          |      values      | Values to be displayed |
 |                                   Any                                    |  default_value   | the value to choose by default |
-|                        (int, int) (width, height)                        |       size       | size in characters (wide) and rows (high) |
+|                        (int, int) (width, UNUSED)                        |       size       | (width, height) size in characters (wide), height is ignored and present to be consistent with other elements |
 |                                   bool                                   |     disabled     | control enabled / disabled |
 |                                   bool                                   |  auto_size_text  | True if size of Element should match the contents of the items |
 |                                   str                                    | background_color | color of background |
@@ -5241,16 +5309,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -5340,17 +5412,19 @@ Changes some of the settings for the OptionMenu Element. Must call `Window.Read`
 update(value = None,
     values = None,
     disabled = None,
-    visible = None)
+    visible = None,
+    size = (None, None))
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|    Any    |  value   | the value to choose by default |
-| List[Any] |  values  | Values to be displayed |
-|   bool    | disabled | disable or enable state of the element |
-|   bool    | visible  | control visibility of element |
+|            Any             |  value   | the value to choose by default |
+|         List[Any]          |  values  | Values to be displayed |
+|            bool            | disabled | disable or enable state of the element |
+|            bool            | visible  | control visibility of element |
+| (int, int) (width, UNUSED) |   size   | (width, height) size in characters (wide), height is ignored and present to be consistent with other elements |
 
 ### visible
 
@@ -5404,17 +5478,19 @@ Changes some of the settings for the OptionMenu Element. Must call `Window.Read`
 Update(value = None,
     values = None,
     disabled = None,
-    visible = None)
+    visible = None,
+    size = (None, None))
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|    Any    |  value   | the value to choose by default |
-| List[Any] |  values  | Values to be displayed |
-|   bool    | disabled | disable or enable state of the element |
-|   bool    | visible  | control visibility of element |
+|            Any             |  value   | the value to choose by default |
+|         List[Any]          |  values  | Values to be displayed |
+|            bool            | disabled | disable or enable state of the element |
+|            bool            | visible  | control visibility of element |
+| (int, int) (width, UNUSED) |   size   | (width, height) size in characters (wide), height is ignored and present to be consistent with other elements |
 
 ---------
 
@@ -5519,16 +5595,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -5820,16 +5900,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -6075,16 +6159,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -6284,6 +6372,7 @@ Radio(text,
     auto_size_text = None,
     background_color = None,
     text_color = None,
+    circle_color = None,
     font = None,
     key = None,
     k = None,
@@ -6307,6 +6396,7 @@ Parameter Descriptions:
 |                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
+|                                   str                                    |   circle_color   | color of background of the circle that has the dot selection indicator in it |
 |                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc |
 |                      str or int or tuple or object                       |       key        | Used with window.FindElement and with return values to uniquely identify this element |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -6401,16 +6491,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -6480,13 +6574,14 @@ unhide_row()
 
 ### update
 
-Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
 
 ```
 update(value = None,
     text = None,
     background_color = None,
     text_color = None,
+    circle_color = None,
     disabled = None,
     visible = None)
 ```
@@ -6499,6 +6594,7 @@ Parameter Descriptions:
 | str  |       text       | Text to display next to radio button |
 | str  | background_color | color of background |
 | str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
+| str  |   circle_color   | color of background of the circle that has the dot selection indicator in it |
 | bool |     disabled     | disable or enable state of the element |
 | bool |     visible      | control visibility of element |
 
@@ -6566,13 +6662,14 @@ Parameter Descriptions:
 
 ### Update
 
-Changes some of the settings for the Radio Button Element. Must call `Window.Read` or `Window.Finalize` prior
+Changes some of the settings for the Radio Button Element. Must call `Window.read` or `Window.finalize` prior
 
 ```
 Update(value = None,
     text = None,
     background_color = None,
     text_color = None,
+    circle_color = None,
     disabled = None,
     visible = None)
 ```
@@ -6585,6 +6682,7 @@ Parameter Descriptions:
 | str  |       text       | Text to display next to radio button |
 | str  | background_color | color of background |
 | str  |    text_color    | color of the text. Note this also changes the color of the selection dot |
+| str  |   circle_color   | color of background of the circle that has the dot selection indicator in it |
 | bool |     disabled     | disable or enable state of the element |
 | bool |     visible      | control visibility of element |
 
@@ -6610,6 +6708,7 @@ Slider(range = (None, None),
     font = None,
     background_color = None,
     text_color = None,
+    trough_color = None,
     key = None,
     k = None,
     pad = None,
@@ -6629,7 +6728,7 @@ Parameter Descriptions:
 |                                   str                                    |      orientation       | 'horizontal' or 'vertical' ('h' or 'v' also work) |
 |                                   bool                                   | disable_number_display | if True no number will be displayed by the Slider Element |
 |                                   int                                    |      border_width      | width of border around element in pixels |
-|                                   enum                                   |         relief         | relief style. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                               str or None                                |         relief         | relief style. Use constants - RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
 |                                   bool                                   |     change_submits     | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                   bool                                   |     enable_events      | If True then moving the slider will generate an Event |
 |                                   bool                                   |        disabled        | set disable state for element |
@@ -6637,6 +6736,7 @@ Parameter Descriptions:
 |                          str or Tuple[str, int]                          |          font          | specifies the font family, size, etc |
 |                                   str                                    |    background_color    | color of slider's background |
 |                                   str                                    |       text_color       | color of the slider's text |
+|                                   str                                    |      trough_color      | color of the slider's trough |
 |                      str or int or tuple or object                       |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                      str or int or tuple or object                       |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -6710,16 +6810,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -6997,16 +7101,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -7294,16 +7402,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -7606,16 +7718,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -7943,16 +8059,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -8264,16 +8384,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -8573,16 +8697,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -8950,16 +9078,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -9294,16 +9426,20 @@ Metadata is an Element property that you can use at any time to hold any value
 ### set_cursor
 
 Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
-set_cursor(cursor)
+set_cursor(cursor = None, cursor_color = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | cursor | The tkinter cursor name |
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
 
 ### set_focus
 
@@ -10075,6 +10211,8 @@ Parameter Descriptions:
 
 Makes a window into a "Modal Window"
         This means user will not be able to interact with other windows until this one is closed
+
+        NOTE - Sorry Mac users - you can't have modal windows.... lobby your tkinter Mac devs
 
 ```python
 make_modal()
@@ -12162,6 +12300,13 @@ Parameter Descriptions:
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
+In addition to the normal text and background colors, you can use a "colors" tuple/string
+The "colors" or "c" parameter defines both the text and background in a single parm.
+It can be a tuple or a single single. Both text and background colors need to be specified
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
+
 ```
 easy_print(args=*<1 or N object>,
     size = (None, None),
@@ -12175,27 +12320,33 @@ easy_print(args=*<1 or N object>,
     keep_on_top = False,
     do_not_reroute_stdout = True,
     text_color = None,
-    background_color = None)
+    background_color = None,
+    colors = None,
+    c = None,
+    erase_all = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout |
+|           Any           |         *args         | stuff to output |
+|       (int, int)        |         size          | (w,h) w=characters-wide, h=rows-high |
+|           str           |          end          | end character |
+|           str           |          sep          | separator character |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+| str or Tuple[str, int]  |         font          | specifies the font family, size, etc |
+|          bool           |      no_titlebar      | If True no titlebar will be shown |
+|          bool           |       no_button       | don't show button |
+|          bool           |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|           str           |   background_color    | color of background |
+|           str           |      text_color       | color of the text |
+|          bool           |      keep_on_top      | If True the window will remain above all current windows |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+|          bool           | do_not_reroute_stdout | do not reroute stdout |
+| str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
+| str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
+|          bool           |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -12204,6 +12355,13 @@ easy_print_close()
 ```
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
+
+In addition to the normal text and background colors, you can use a "colors" tuple/string
+The "colors" or "c" parameter defines both the text and background in a single parm.
+It can be a tuple or a single single. Both text and background colors need to be specified
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
 
 ```
 eprint(args=*<1 or N object>,
@@ -12218,29 +12376,42 @@ eprint(args=*<1 or N object>,
     keep_on_top = False,
     do_not_reroute_stdout = True,
     text_color = None,
-    background_color = None)
+    background_color = None,
+    colors = None,
+    c = None,
+    erase_all = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout |
+|           Any           |         *args         | stuff to output |
+|       (int, int)        |         size          | (w,h) w=characters-wide, h=rows-high |
+|           str           |          end          | end character |
+|           str           |          sep          | separator character |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+| str or Tuple[str, int]  |         font          | specifies the font family, size, etc |
+|          bool           |      no_titlebar      | If True no titlebar will be shown |
+|          bool           |       no_button       | don't show button |
+|          bool           |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|           str           |   background_color    | color of background |
+|           str           |      text_color       | color of the text |
+|          bool           |      keep_on_top      | If True the window will remain above all current windows |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+|          bool           | do_not_reroute_stdout | do not reroute stdout |
+| str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
+| str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
+|          bool           |       erase_all       | If True when erase the output before printing |
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
+
+In addition to the normal text and background colors, you can use a "colors" tuple/string
+The "colors" or "c" parameter defines both the text and background in a single parm.
+It can be a tuple or a single single. Both text and background colors need to be specified
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
 
 ```
 EasyPrint(args=*<1 or N object>,
@@ -12255,27 +12426,33 @@ EasyPrint(args=*<1 or N object>,
     keep_on_top = False,
     do_not_reroute_stdout = True,
     text_color = None,
-    background_color = None)
+    background_color = None,
+    colors = None,
+    c = None,
+    erase_all = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout |
+|           Any           |         *args         | stuff to output |
+|       (int, int)        |         size          | (w,h) w=characters-wide, h=rows-high |
+|           str           |          end          | end character |
+|           str           |          sep          | separator character |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+| str or Tuple[str, int]  |         font          | specifies the font family, size, etc |
+|          bool           |      no_titlebar      | If True no titlebar will be shown |
+|          bool           |       no_button       | don't show button |
+|          bool           |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|           str           |   background_color    | color of background |
+|           str           |      text_color       | color of the text |
+|          bool           |      keep_on_top      | If True the window will remain above all current windows |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+|          bool           | do_not_reroute_stdout | do not reroute stdout |
+| str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
+| str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
+|          bool           |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -12284,6 +12461,13 @@ EasyPrintClose()
 ```
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
+
+In addition to the normal text and background colors, you can use a "colors" tuple/string
+The "colors" or "c" parameter defines both the text and background in a single parm.
+It can be a tuple or a single single. Both text and background colors need to be specified
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
 
 ```
 Print(args=*<1 or N object>,
@@ -12298,27 +12482,33 @@ Print(args=*<1 or N object>,
     keep_on_top = False,
     do_not_reroute_stdout = True,
     text_color = None,
-    background_color = None)
+    background_color = None,
+    colors = None,
+    c = None,
+    erase_all = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|    Tuple[int, int]    |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout |
+|           Any           |         *args         | stuff to output |
+|       (int, int)        |         size          | (w,h) w=characters-wide, h=rows-high |
+|           str           |          end          | end character |
+|           str           |          sep          | separator character |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+| str or Tuple[str, int]  |         font          | specifies the font family, size, etc |
+|          bool           |      no_titlebar      | If True no titlebar will be shown |
+|          bool           |       no_button       | don't show button |
+|          bool           |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|           str           |   background_color    | color of background |
+|           str           |      text_color       | color of the text |
+|          bool           |      keep_on_top      | If True the window will remain above all current windows |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+|          bool           | do_not_reroute_stdout | do not reroute stdout |
+| str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
+| str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
+|          bool           |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -14485,15 +14675,44 @@ Parameter Descriptions:
 | Any | obj | The object to display |
 | (str) | **RETURN** | Formatted output of the object's values
 
-## The Test Harness
+## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
 
-Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub
+Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
+
+You can call main() from your code and then access these other features such as the global settings. You can also directly call these functions.
 
 The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
 
 ```
 main()
 ```
+
+Collect up and display the data needed to file GitHub issues.
+This function will place the information on the clipboard.
+You MUST paste the information from the clipboard prior to existing your application.
+
+```
+main_get_debug_data(suppress_popup = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | suppress_popup | If True no popup window will be shown. The string will be only returned, not displayed |
+
+Window to set settings that will be used across all PySimpleGUI programs that choose to use them.
+Use set_options to set the path to the folder for all PySimpleGUI settings.
+
+```
+main_global_pysimplegui_settings()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if settings were changed
 
 Display a window that will display the docstrings for each PySimpleGUI Element and the Window object
 
@@ -14589,7 +14808,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | (int) - border width currently in use
+| (int) | **RETURN** | border width currently in use
 
 Sets/Returns the button color currently in use
 
@@ -14601,7 +14820,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
+| Tuple[str, str] | **RETURN** | Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
 
 Sets/Returns the background color currently in use for all elements except containers
 
@@ -14625,7 +14844,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | (str) - color string currently in use
+| (str) | **RETURN** | color string currently in use
+
+Sets / Gets the global PySimpleGUI Theme.  If none is specified then returns the global theme from user settings
+
+```
+theme_global(new_theme = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | new_theme | the new theme name to use |
+| (str) | **RETURN** | the currently selected theme
 
 Sets/Returns the input element background color currently in use
 
@@ -14661,7 +14893,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| List[str] | **RETURN** | List[str] - A sorted list of the currently available color themes
+| List[str] | **RETURN** | A sorted list of the currently available color themes
 
 Displays a "Quick Reference Window" showing all of the different Look and Feel settings that are available.
 They are sorted alphabetically.  The legacy color names are mixed in, but otherwise they are sorted into Dark and Light halves
@@ -14702,7 +14934,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | (int) - border width currently in use
+| (int) | **RETURN** | border width currently in use for progress meters
 
 Sets/Returns the progress bar colors by the current color theme
 
@@ -14714,7 +14946,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
+| Tuple[str, str] | **RETURN** | Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
 
 Sets/Returns the slider border width currently in use
 
@@ -14726,7 +14958,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | (int) - border width currently in use
+| (int) | **RETURN** | border width currently in use for sliders
 
 Sets/Returns the slider color (used for sliders)
 
@@ -14738,7 +14970,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str) | **RETURN** | (str) - color string of the slider color currently in use
+| (str) | **RETURN** | color string of the slider color currently in use
 
 Sets/Returns the text color currently in use
 
@@ -14765,6 +14997,10 @@ Parameter Descriptions:
 | (str) | **RETURN** | (str) - color string of the text background color currently in use
 
 ## User Settings
+
+In addition to user settings files, there is also a global PySimpleGUI settings file.
+
+You can directly access the global settings through the UserSettings object: `pysimplegui_user_settings`
 
 Returns the current settings dictionary.  If you've not setup the filename for the
 settings, a default one will be used and then read.
@@ -14935,6 +15171,104 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | dict | settings_dict | The dictionary to be written to the currently defined settings file |
+
+## Exec APIs
+
+These API calls are used to launch subprocesses.
+
+Runs the specified command as a subprocess.
+By default the call is non-blocking.
+The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
+Returns a subprocess Popen object.
+
+```
+execute_command_subprocess(command,
+    args=*<1 or N object>,
+    wait = False,
+    cwd = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str  | command | Filename to load settings from (and save to in the future) |
+| Any  |  *args  | Variable number of arguments that are passed to the program being started as command line parms |
+| bool |  wait   | If True then wait for the subprocess to finish |
+| str  |   cwd   | Working directory to use when executing the subprocess |
+| (subprocess.Popen) | **RETURN** | Popen object
+
+Runs the editor that was configured in the global settings and opens the file to a specific line number.
+Two global settings keys are used.
+'-editor program-' the command line used to startup your editor. It's set
+in the global settings window or by directly manipulating the PySimpleGUI settings object
+'-editor format string-' a string containing 3 "tokens" that describes the command that is executed
+<editor> <file> <line>
+
+```
+execute_editor(file_to_edit, line_number = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | file_to_edit | the full path to the file to edit |
+| int | line_number  | optional line number to place the cursor |
+| (subprocess.Popen) or None | **RETURN** | Popen object
+
+The global settings has a setting called -   "-explorer program-"
+It defines the program to run when this function is called.
+The optional folder paramter specified which path should be opened.
+
+```
+execute_file_explorer(folder_to_open = "")
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | folder_to_open | The path to open in the explorer program |
+| (subprocess.Popen) or None | **RETURN** | Popen object
+
+Get the text results of a previously executed execute call
+Returns a tuple of the strings (stdout, stderr)
+
+```
+execute_get_results(subprocess_id)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (subprocess.Popen) | subprocess_id | a Popen subprocess ID returned from a previous execute call |
+
+Executes a Python file.
+The interpreter to use is chosen based on this priority order:
+1. interpreter_command paramter
+2. global setting "-python command-"
+3. the interpreter running running PySimpleGUI
+
+```
+execute_py_file(pyfile,
+    parms = None,
+    cwd = None,
+    interpreter_command = None,
+    wait = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str |       pyfile        | the file to run |
+|     |        parms        | parameters to pass on the command line |
+|     |         cwd         | the working directory to use |
+|     | interpreter_command | the command used to invoke the Python interpreter |
+|     |        wait         | the working directory to use |
+| (subprocess.Popen) or None | **RETURN** | Popen object
 
 ## Misc
 
@@ -15109,8 +15443,8 @@ Parameter Descriptions:
 |                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
 |             str or Tuple[str, int]             |              font               | specifies the font family, size, etc |
 |                      int                       |          border_width           | width of border around element |
-|                      ???                       |       slider_border_width       | ??? |
-|                      ???                       |          slider_relief          | ??? |
+|                      int                       |       slider_border_width       | Width of the border around sliders |
+|                      str                       |          slider_relief          | Type of relief to use for sliders |
 |                      ???                       |       slider_orientation        | ??? |
 |                      ???                       |         autoclose_time          | ??? |
 |                      ???                       |     message_box_line_width      | ??? |
@@ -15123,13 +15457,13 @@ Parameter Descriptions:
 |                      str                       |        background_color         | color of background |
 |                      str                       |    element_background_color     | element background color |
 |                      str                       |  text_element_background_color  | text element background color |
-|                 idk_yetReally                  | input_elements_background_color | ??? |
-|                      ???                       |        input_text_color         | ??? |
-|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       | input_elements_background_color | Default color to use for the background of input elements |
+|                      str                       |        input_text_color         | Default color to use for the text for Input elements |
+|                      str                       |         scrollbar_color         | Default color to use for the slider trough |
 |                      str                       |           text_color            | color of the text |
-|                      ???                       |       element_text_color        | ??? |
+|                      str                       |       element_text_color        | Default color to use for Text elements |
 |                Tuple[int, int]                 |         debug_win_size          | window size |
-|                      ???                       |         window_location         | (Default = (None)) |
+|            Tuple[int, int] or None             |         window_location         | Default location to place windows. Not setting will center windows on the display |
 |                      ???                       |       error_button_color        | (Default = (None)) |
 |                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
 | str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |
@@ -15232,8 +15566,8 @@ Parameter Descriptions:
 |                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
 |             str or Tuple[str, int]             |              font               | specifies the font family, size, etc |
 |                      int                       |          border_width           | width of border around element |
-|                      ???                       |       slider_border_width       | ??? |
-|                      ???                       |          slider_relief          | ??? |
+|                      int                       |       slider_border_width       | Width of the border around sliders |
+|                      str                       |          slider_relief          | Type of relief to use for sliders |
 |                      ???                       |       slider_orientation        | ??? |
 |                      ???                       |         autoclose_time          | ??? |
 |                      ???                       |     message_box_line_width      | ??? |
@@ -15246,13 +15580,13 @@ Parameter Descriptions:
 |                      str                       |        background_color         | color of background |
 |                      str                       |    element_background_color     | element background color |
 |                      str                       |  text_element_background_color  | text element background color |
-|                 idk_yetReally                  | input_elements_background_color | ??? |
-|                      ???                       |        input_text_color         | ??? |
-|                      ???                       |         scrollbar_color         | ??? |
+|                      str                       | input_elements_background_color | Default color to use for the background of input elements |
+|                      str                       |        input_text_color         | Default color to use for the text for Input elements |
+|                      str                       |         scrollbar_color         | Default color to use for the slider trough |
 |                      str                       |           text_color            | color of the text |
-|                      ???                       |       element_text_color        | ??? |
+|                      str                       |       element_text_color        | Default color to use for Text elements |
 |                Tuple[int, int]                 |         debug_win_size          | window size |
-|                      ???                       |         window_location         | (Default = (None)) |
+|            Tuple[int, int] or None             |         window_location         | Default location to place windows. Not setting will center windows on the display |
 |                      ???                       |       error_button_color        | (Default = (None)) |
 |                      int                       |          tooltip_time           | time in milliseconds to wait before showing a tooltip. Default is 400ms |
 | str or Tuple[str, int] or Tuple[str, int, str] |          tooltip_font           | font to use for all tooltips |

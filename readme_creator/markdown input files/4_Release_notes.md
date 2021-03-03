@@ -1658,6 +1658,111 @@ Fix popup_scrolled, big swap of PEP8 names from alias to def statements
 * Several new demos including a demo browser
 
 
+
+## 4.35.0 PySimpleGUI 3-Mar-2021
+
+Emojis, Global settings, Exec APIs
+
+* Emojis!  Help has arrived!
+	* Official PySimpleGUI emojis now usable for your applications
+	* Used in the error messages
+	* Has the PSG super-hero logo on his/her chest
+	* #1 PySimpleGUI Goal remains the same.... FUN!
+	* EMOJI_BASE64_LIST is the list of all emojis. These are formed from the EMOJI_BASE64_SAD_LIST and EMOJI_BASE64_HAPPY_LIST
+* "Take me to error"
+	* It's been close to 2 years in the making, but finally it's here.
+	* Suppress error popups are
+* Mac loses Modal windows setting
+	* Another Mac feature turned off. The modal setting is now ignored for the Mac. Will turn back on if fixed in tkinter.
+* Built-in SDK Help
+	* Expanded to include init and update parms summary
+	* Function search capability
+	* Mode to filter out non-PEP8 compliant functions
+	* Function search
+	* Link to external live documentation at bottom
+	* Sorted list now
+	* Summary checkbox immediately updates window when changed
+* Global Settings & Global Settings Window
+	* Can set defaults that all programs using PySimpleGUI package will use
+	* sg.main() has a button "Global Settings"
+		* Directly access the settings window by calling sg.main_global_pysimplegui_settings()
+	* Main settings include:
+		* Default theme
+		* Editor to use
+		* Specification of how to launch your editor to editor a specific file at a specific line #
+		* Python interpreter to use when calling `execute_py_file()`
+	* Theme (see themes section too)
+* User Settings
+	* Option added to set the default user settings path
+		* user_settings_path: default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user
+		* pysimplegui_settings_path: default path for the global PySimpleGUI user_settings
+		* pysimplegui_settings_filename: default filename for the global PySimpleGUI user_settings
+	* The initial values can be found with constants:  DEFAULT_USER_SETTINGS_
+* Buttons
+	* Button color string more robust, less crashes due to bad user formatting
+	* If a single color specified, then only the button background will be set/modified
+	* "Disabled means ignore"
+		* The parameter "disabled" is a tertiary now instead of bool
+		* disabled True/False still works as it always has
+		* If disabled parameter is set to the value BUTTON_DISABLED_MEANS_IGNORE, then the button will stop returning events
+		* Enables you to create your own disabled button colors / behavior. Especially important with buttons with images
+		* There is a new toggle button demo that shows how to use this feature
+	* TRANSPARENT_BUTTON is being updated now when the theme changes. It's not recommended for use, but just in case, it's being updated.
+	* files_delimiter parameter added to BrowseFiles
+* Themes
+	* Spaces can now be used in the theme names
+	* themes_global() - Gets and sets the theme globally
+		* Easy and dangerous all in 1 call
+		* Can also change this setting using the global settings window via sg.main() or main_global_pysimplegui_settings()
+	* Swatch previewer copies colors onto clipboard correctly now
+* Exec APIs - A new set of APIs for executing subprocesses
+	* execute_command_subprocess
+	* execute_py_file
+	* execute_editor
+	* execute_file_explorer
+	* execute_get_results
+* Debug button color fixed		
+* popup_get_file
+	* fixed files_delimiter not being passed correctly to button
+	* files_delimiter parameter added
+* Column - auto expands entire ROW if y-expand is set to True	
+* popups
+	* fixed problem when using custom buttons
+* Print - easy_print or Debug Print
+	* Addition of color / c parameter
+	* erase_all parameter added
+	* 100% use of Multiline element. Output Element no longer used for Print
+	* Auto refreshes the multiline
+	* Window.close needed a tkroot.update() added in order to close these windows
+* Graph
+	* Update coordinate	when user bound event happens
+	* Update coordinate when right click menu item elected
+* Checkbox
+	* Box color parameter added. Normally computed. Now directly accessable to users
+* Radio buttons
+	* Circle color parameter added. Like Checkbox, this is a computed value but is now accessable
+* Slider
+	* Trough color is now settable on a per-element basis
+* Input
+	* update method now includes ability to change the password character
+* Listbox
+	* update values converts items to list
+* OptionMenu
+	* Does not set a default if none was specified
+	* Use correct font and colors for the list
+	* Added size parm to update
+* Combo
+	* Ausizes 1 additional character wide to account for arrow
+	* fixed update bug when default was previously specified
+	* Added size parm to update
+ * Element.set_cursor
+	* now has a color parameter to set the color of the BEAM for input and other elements like them
+
+
+
+
+
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
