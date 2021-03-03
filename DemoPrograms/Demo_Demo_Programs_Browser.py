@@ -130,11 +130,14 @@ def get_explorer():
     :return: Path to the file explorer EXE
     :rtype: str
     """
-    # TODO - need to add a default for Macs
-    default_explorer = 'explorer' if running_windows() else 'nemo'
-    return sg.user_settings_get_entry('-explorer program-', default_explorer)
-
-
+    try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
+        global_explorer = sg.pysimplegui_user_settings.get('-explorer program-', '')
+    except:
+        global_explorer = ''
+    explorer = sg.user_settings_get_entry('-explorer program-', '')
+    if explorer == '':
+        explorer = global_explorer
+    return explorer
 
 
 def advanced_mode():
@@ -170,13 +173,25 @@ def get_theme():
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+# New function
+def get_line_number(file_path, string):
+    lmn = 0
+    with open(file_path) as f:
+        for num, line in enumerate(f, 1):
+            if string.strip() == line.strip():
+                lmn = num
+    return lmn
 
-def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None):
+def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None, ignore_case=True, show_first_match=True):
     """
     Search through the demo files for a string.
     The case of the string and the file contents are ignored
 
     :param string: String to search for
+    :param verbose: if True print the FIRST match
+    :type verbose: bool
+    :param find_all_matches: if True, then return all matches in the dictionary
+    :type find_all_matches: bool
     :return: List of files containing the string
     :rtype: List[str]
     """
@@ -197,11 +212,16 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
     # 2.8 seconds on the highend for both small and large files in memory.
     # We also don't have to iterate over lines this way.
     file_list = []
-    new_demo_files_dict = {}
     num_files = 0
+
+    matched_dict = {}
     for file in demo_files_dict:
         try:
             full_filename = demo_files_dict[file]
+            if not demo_files_dict == get_file_list_dict():
+                full_filename = full_filename[0]
+            matches = None
+
             with open(full_filename, 'rb', 0) as f, mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as s:
                 if (regex):
                     window['-FIND NUMBER-'].update(f'{num_files} files')
@@ -219,26 +239,72 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                 else:
                     window['-FIND NUMBER-'].update(f'{num_files} files')
                     window.refresh()
-                    matches = re.search(br'(?i)^' + bytes(".*("+re.escape(string.lower()) + ").*$", 'utf-8'), s, re.M)
-                    if matches:
-                        file_list.append(file)
-                        num_files += 1
-                        if verbose:
-                            sg.cprint(f"{file}:", c = 'white on green')
-                            sg.cprint(f"{matches.group(0).decode('utf-8')}\n")
-                        # DICT
-                        if file not in new_demo_files_dict.keys():
-                            new_demo_files_dict[file] = full_filename
+                    matches = None
+                    if (ignore_case):
+                        if (show_first_match):
+                            matches = re.search(br'(?i)^' + bytes(".*("+re.escape(string.lower()) + ").*$", 'utf-8'), s, re.MULTILINE)
                         else:
-                            new_demo_files_dict[f'{file}_1'] = full_filename
-                del matches
+                            matches = re.finditer(br'(?i)^' + bytes(".*("+re.escape(string.lower()) + ").*$", 'utf-8'), s, re.MULTILINE)
+                    else:
+                        if (show_first_match):
+                            matches = re.search(br'^' + bytes(".*("+re.escape(string) + ").*$", 'utf-8'), s, re.MULTILINE)
+                        else:
+                            matches = re.finditer(br'^' + bytes(".*("+re.escape(string) + ").*$", 'utf-8'), s, re.MULTILINE)
+                    if matches:
+                        if show_first_match:
+                            file_list.append(file)
+                            num_files += 1
+                            match_array = []
+                            match_array.append(matches.group(0).decode('utf-8'))
+                            matched_dict[full_filename] = match_array
+                        else:
+                            # We need to do this because strings are "falsy" in Python, but empty matches still return True...
+                            append_file = False
+                            match_array = []
+                            for match_ in matches:
+                                match_str = match_.group(0).decode('utf-8')
+                                if match_str:
+                                    match_array.append(match_str)
+                                    if append_file == False:
+                                        append_file = True
+                            if append_file:
+                                file_list.append(file)
+                                num_files += 1
+                                matched_dict[full_filename] = match_array
+
+                # del matches
         except ValueError:
-            pass
+            del matches
         except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
             print(f'{file}', e, file=sys.stderr)
 
+
+    file_lines_dict = {}
     if not regex:
-        find_in_file.old_file_list = new_demo_files_dict
+        for key in matched_dict:
+            head, tail = os.path.split(key)
+            # Tails. Don't wanna put Washington in places he doesn't want to be.
+            file_array_old = [key]
+            file_array_new = []
+
+            if (verbose):
+                sg.cprint(f"{tail}:", c = 'white on green')
+            try:
+                for _match in matched_dict[key]:
+                    line_num_match = get_line_number(key, _match)
+                    file_array_new.append(line_num_match)
+                    if (verbose):
+                        matched_str_line_num = f"{_match} | Line Number: {line_num_match}"
+                        sg.cprint(f"{matched_str_line_num}\n")
+                file_array_old.append(file_array_new)
+                file_lines_dict[tail] = file_array_old
+            except:
+                pass
+
+        find_in_file.old_file_list = file_lines_dict
 
     file_list = list(set(file_list))
     return file_list
@@ -255,18 +321,26 @@ def settings_window():
     :rtype: (bool)
     """
 
-    editor_program = get_global_editor()
     explorer_program = get_explorer()
+    try:
+        global_editor = sg.pysimplegui_user_settings.get('-editor program-')
+    except:
+        global_editor = ''
+    try:
+        global_explorer = sg.pysimplegui_user_settings.get('-explorer program-')
+    except:
+        global_explorer = ''
+
 
     layout = [[sg.T('Program Settings', font='DEFAULT 25')],
               [sg.T('Path to Tree',  font='_ 16')],
                [sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', get_demo_path()), size=(50, 1), key='-FOLDERNAME-'),
                sg.FolderBrowse('Folder Browse', target='-FOLDERNAME-'), sg.B('Clear History')],
               [sg.T('Editor Program',  font='_ 16')],
-              [sg.T(r"For PyCharm: Add this to your PyCharm main program's folder + \bin\pycharm.bat added")],
-              [sg.T('Leave blank to use global default (newer version of PySimpleGUI only: ')],
-                [ sg.In(sg.user_settings_get_entry('-editor program-', editor_program),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
+              [sg.T('Leave blank to use global default'), sg.T(global_editor)],
+                [ sg.In(sg.user_settings_get_entry('-editor program-', get_global_editor()),k='-EDITOR PROGRAM-'), sg.FileBrowse()],
               [sg.T('File Explorer Program',  font='_ 16')],
+              [sg.T('Leave blank to use global default'), sg.T(global_explorer)],
               [ sg.In(explorer_program, k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
                [sg.T('Theme (leave blank to use global default)', font='_ 16')],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
@@ -284,7 +358,6 @@ def settings_window():
             break
         if event == 'Ok':
             sg.user_settings_set_entry('-demos folder-', values['-FOLDERNAME-'])
-            new_editor = editor_program if not values['-EDITOR PROGRAM-'] else values['-EDITOR PROGRAM-']
             sg.user_settings_set_entry('-editor program-', values['-EDITOR PROGRAM-'])
             sg.user_settings_set_entry('-theme-', values['-THEME-'])
             sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
@@ -377,8 +450,6 @@ def main():
 
     old_typed_value = None
 
-    editor_program = get_editor()
-    explorer_program = get_explorer()
     file_list_dict = get_file_list_dict()
     file_list = get_file_list()
     window = make_window()
@@ -389,12 +460,12 @@ def main():
         if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
         if event == 'Edit':
+            editor_program = get_editor()
             for file in values['-DEMO LIST-']:
                 sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                 sg.cprint('')
                 sg.cprint(f'{file_list_dict[file]}', text_color='white', background_color='purple')
                 execute_command_subprocess(f'{editor_program}', f'"{file_list_dict[file]}"')
-                # sg.execute_editor(f'"{file_list_dict[file]}"')
         elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
@@ -403,6 +474,7 @@ def main():
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
                 execute_py_file(f'{file_to_run}')
         elif event.startswith('Edit Me'):
+            editor_program = get_editor()
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
             execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
@@ -413,26 +485,40 @@ def main():
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
             window['-FIND RE-'].update('')
-        elif event == '-FIND-':
+        elif event == '-FIND-' or event == '-FIRST MATCH ONLY-' or event == '-VERBOSE-' or event == '-FIND RE-':
+            is_ignore_case = values['-IGNORE CASE-']
+            old_ignore_case = False
             current_typed_value = str(values['-FIND-'])
+            if len(values['-FIND-']) == 1:
+                window[ML_KEY].update('')
+                window['-VERBOSE-'].update(False)
+                values['-VERBOSE-'] = False
             if values['-VERBOSE-']:
                 window[ML_KEY].update('')
-            if find_in_file.old_file_list is None or old_typed_value is None:
-                # New search.
-                old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
-            elif current_typed_value.startswith(old_typed_value):
-                old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
-            else:
-                old_typed_value = current_typed_value
-                file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
-
-            window['-DEMO LIST-'].update(sorted(file_list))
-            window['-FIND NUMBER-'].update(f'{len(file_list)} files')
-            window['-FILTER NUMBER-'].update('')
-            window['-FIND RE-'].update('')
-            window['-FILTER-'].update('')
+            if values['-FIND-']:
+                if find_in_file.old_file_list is None or old_typed_value is None or old_ignore_case is not is_ignore_case:
+                    # New search.
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'], window=window, ignore_case=is_ignore_case, show_first_match=values['-FIRST MATCH ONLY-'])
+                elif current_typed_value.startswith(old_typed_value) and old_ignore_case is is_ignore_case:
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list, verbose=values['-VERBOSE-'], window=window, ignore_case=is_ignore_case, show_first_match=values['-FIRST MATCH ONLY-'])
+                else:
+                    old_typed_value = current_typed_value
+                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'], window=window, ignore_case=is_ignore_case, show_first_match=values['-FIRST MATCH ONLY-'])
+                window['-DEMO LIST-'].update(sorted(file_list))
+                window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+                window['-FILTER NUMBER-'].update('')
+                window['-FIND RE-'].update('')
+                window['-FILTER-'].update('')
+            elif values['-FIND RE-']:
+                window['-ML-'].update('')
+                file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
+                window['-DEMO LIST-'].update(sorted(file_list))
+                window['-FIND NUMBER-'].update(f'{len(file_list)} files')
+                window['-FILTER NUMBER-'].update('')
+                window['-FIND-'].update('')
+                window['-FILTER-'].update('')
         elif event == 'Find RE':
             window['-ML-'].update('')
             file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
@@ -441,12 +527,11 @@ def main():
             window['-FILTER NUMBER-'].update('')
             window['-FIND-'].update('')
             window['-FILTER-'].update('')
+            sg.cprint('Regular expression find completed')
         elif event == 'Settings':
             if settings_window() is True:
                 window.close()
                 window = make_window()
-                editor_program = get_editor()
-                explorer_program = get_explorer()
                 file_list_dict = get_file_list_dict()
                 file_list = get_file_list()
                 window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
@@ -465,29 +550,13 @@ def main():
             file_list = get_file_list()
             window['-DEMO LIST-'].update(values=file_list)
             window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
-        elif event == '-VERBOSE-':
-            window[ML_KEY].update('')
-            if values['-FIND-']:
-                current_typed_value = str(values['-FIND-'])
-                if find_in_file.old_file_list is None or old_typed_value is None:
-                    # New search.
-                    old_typed_value = current_typed_value
-                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(), verbose=values['-VERBOSE-'],window=window)
-                elif current_typed_value.startswith(old_typed_value):
-                    old_typed_value = current_typed_value
-                    file_list = find_in_file(values['-FIND-'], find_in_file.old_file_list,  verbose=values['-VERBOSE-'],window=window)
-                else:
-                    old_typed_value = current_typed_value
-                    file_list = find_in_file(values['-FIND-'], get_file_list_dict(),  verbose=values['-VERBOSE-'],window=window)
-            elif values['-FIND RE-']:
-                window['-ML-'].update('')
-                file_list = find_in_file(values['-FIND RE-'], get_file_list_dict(), regex=True, verbose=values['-VERBOSE-'],window=window)
-                window['-DEMO LIST-'].update(sorted(file_list))
-                window['-FIND NUMBER-'].update(f'{len(file_list)} files')
-                window['-FILTER NUMBER-'].update('')
-                window['-FIND-'].update('')
-                window['-FILTER-'].update('')
+            window['-ML-'].update('')
+            window['-FIND NUMBER-'].update('')
+            window['-FIND-'].update('')
+            window['-FIND RE-'].update('')
+            window['-FILTER-'].update('')
         elif event == 'Open Folder':
+            explorer_program = get_explorer()
             if explorer_program:
                 sg.cprint('Opening Folder....', c='white on green', end='')
                 sg.cprint('')
