@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.34.0.40 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups, removed debug info, button color strings to lower, toolstips for editor strings, autofill editor strings for 10 IDEs, error box stays open during launch now so the error is on the screen, new happy emojis, added Thonny to editors, fix in the button color function, fix in execute_editor"
+version = __version__ = "4.34.0.41 Unreleased\nSDK Help Expanded to init & update parms, SDK Help function search, files_delimiter added to FilesBrowse & popup_get_file, SDK help sort by case, popup_get_file fixed default_extension not being passed to button correctly, changed themes so that spaces can be used in defined name, addition of subprocess non-blocking launcher, fix for Debug button color, set_option for default user_settings path to override normal default, define a truly global PySimpleGUI settings path, theme_global() gets the theme for all progams, execute_subprocess_nonblocking bug fix, mark when strout/stderr is restored in multiline elem, Listbox element convert values to list when updated, Column will expand row if y expand set to True, Added color/c parm to debug print, update graph coordinates if a user bound event happens, another attempt at graphs with user events, update mouse location when right click menu item selected, links added to SDK help, checkbox checkbox color parm added, radio button circle color added, SDK help enable toggle summary, Slider trough_color parm, new emojis! Input.update password_char added, erase_all option added to Print, removed use of Output Element from Debug Print window (100% Multiline now), moved path_stem so will be private, fixed popup bug when custom buttons used, fixed Spin.update bug when changing disabled, OptionMenu no longer set a default if none specified, Combo update bug fix for when default was previously specified, Combo - make autosize 1 char wider, OptionMenu correct font and colors for list when shown, added size parm to Combo and OptionMenu update, fixed syntax errors happening on Pi with Python 3.4, update TRANSPARENT_BUTTON colors when theme changes, new button behavior - if button is disabled ignore clicks, disable modal windows if on a Mac, added call to tkroot.update() when closing window - fixes problem on Linux with Print window, new disabled value for Buttons when creating and updating - set disabled=BUTTON_DISABLED_MEANS_IGNORE, button colors reworked - better error checking and handling of single colors, debug Print auto refreshes the Multline line, initial set of 'execute' APIs, first of the Take me to Error popups, removed debug info, button color strings to lower, toolstips for editor strings, autofill editor strings for 10 IDEs, error box stays open during launch now so the error is on the screen, new happy emojis, added Thonny to editors, fix in the button color function, fix in execute_editor, theme swatch previewer now correctly puts color onto clipboard"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -11937,7 +11937,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKColFrame.TKFrame.update()
                     if element.Size == (None, None):  # if no size specified, use column width x column height/2
                         element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
-                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() / 2)
+                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // 2)
                     else:
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
@@ -15212,11 +15212,12 @@ def _theme_preview_window_swatches():
             if color != COLOR_SYSTEM_DEFAULT:
                 row.append(T(SYMBOL_SQUARE, text_color=color, background_color='black', pad=(0,0), font='DEFAUlT 20', right_click_menu=['Nothing',[color]], tooltip=color, enable_events=True, key=(i,color)))
         layout += [row]
+    # place layout inside of a Column so that it's scrollable
+    layout = [[Column(layout, size=(500, 900), scrollable=True,vertical_scroll_only=True,  background_color='black')]]
     # finish the layout by adding an exit button
     layout += [[B('Exit')]]
-    # place layout inside of a Column so that it's scrollable
-    layout = [[Column(layout, scrollable=True,vertical_scroll_only=True,  background_color='black')]]
-    # create and return Window that uses the layout
+
+# create and return Window that uses the layout
     return Window('Theme Color Swatches', layout, background_color='black', finalize=True)
 
 
@@ -15231,9 +15232,9 @@ def theme_previewer_swatches():
     popup_quick_message('This is going to take a minute...', text_color='white', background_color='red', font='Default 20', keep_on_top=True)
     window = _theme_preview_window_swatches()
     theme(OFFICIAL_PYSIMPLEGUI_THEME)
-    col_height = window.get_screen_size()[1]-200
-    if window.size[1] > 100:
-        window.size = (window.size[0], col_height)
+    # col_height = window.get_screen_size()[1]-200
+    # if window.size[1] > 100:
+    #     window.size = (window.size[0], col_height)
     window.move(window.get_screen_size()[0]//2-window.size[0]//2, 0)
 
     while True:             # Event Loop
@@ -15247,7 +15248,9 @@ def theme_previewer_swatches():
                 chosen_color = event
             else:
                 chosen_color = ''
-        print('color = ', chosen_color)
+        print('Copied to clipboard color = ', chosen_color)
+        window.TKroot.clipboard_clear()
+        window.TKroot.clipboard_append(chosen_color)
     window.close()
     theme(current_theme)
 
@@ -18815,6 +18818,7 @@ def main_global_pysimplegui_settings():
               [T('File Explorer Program',  font='_ 16', tooltip=tooltip_file_explorer)],
                     [In(settings.get('-explorer program-', ''),k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)],
               [T('Theme',  font='_ 16')],
+                  [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
                   [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-', tooltip=tooltip_theme)],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
