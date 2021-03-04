@@ -431,15 +431,6 @@ To set up the Demo Browser:
     * Custom
         * Assuming your editor is invoked using "editor filename" when you can use any editor you wish by filling in the "Editor Program" field with a path to the editor executable
     
-## The Project Browser - A More Generalized Solution
-
-There is an extended version of the Demo Browser that allows you to search for filenames and inside of files for ***any directory tree*** of your choosing.  The tree is flattened and you are shown a single list of files.
-
-Look for the demo - `Demo_Project_File_Searcher_Launcher.py`
-
-This screenshot shows that the theme used for these demos is entirely under your control.  I've simply set the theme to "Dark Gray 13" in the settings window and this is the result.
-
-![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/Project_Browser_Main_Window.jpg)
 
 
 ### "Open Folder" feature
@@ -706,20 +697,27 @@ Let's say that you need to match a logo's green color and you've come up with ma
 
 ```python
 import PySimpleGUI as sg
+
 # Add your new theme colors and settings
-sg.LOOK_AND_FEEL_TABLE['MyNewTheme'] = {'BACKGROUND': '#709053',
-                                        'TEXT': '#fff4c9',
-                                        'INPUT': '#c7e78b',
-                                        'TEXT_INPUT': '#000000',
-                                        'SCROLL': '#c7e78b',
-                                        'BUTTON': ('white', '#709053'),
-                                        'PROGRESS': ('#01826B', '#D0D0D0'),
-                                        'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
-                                        }
-# Switch to use your newly created theme
-sg.theme('MyNewTheme')
+my_new_theme = {'BACKGROUND': '#709053',
+                'TEXT': '#fff4c9',
+                'INPUT': '#c7e78b',
+                'TEXT_INPUT': '#000000',
+                'SCROLL': '#c7e78b',
+                'BUTTON': ('white', '#709053'),
+                'PROGRESS': ('#01826B', '#D0D0D0'),
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0}
+
+# Add your dictionary to the PySimpleGUI themes
+sg.theme_add_new('MyNewTheme', my_new_theme)
+
+# Switch your theme to use the newly added one. You can add spaces to make it more readable
+sg.theme('My New Theme')
+
 # Call a popup to show what the theme looks like
-sg.popup_get_text('This how the MyNewTheme custom theme looks')      
+sg.popup_get_text('This how the MyNewTheme custom theme looks') 
 ```
 
 
@@ -2710,10 +2708,10 @@ This program also runs on PySimpleGUIWeb really well.  Change the import to PySi
 
 
 
-## Button Graphics (Media Player)      
+# Recipe - Button Graphics (Media Player)      
 Buttons can have PNG of GIF images on them.  This Media Player recipe requires 4 images in order to function correctly.  The background is set to the same color as the button background so that they blend together.      
       
-![media player](https://user-images.githubusercontent.com/13696193/43958418-5dd133f2-9c79-11e8-9432-0a67007e85ac.jpg)      
+![media player](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/media_player.jpg)      
       
 
 ```python
@@ -2727,119 +2725,118 @@ import PySimpleGUI as sg
 # https://user-images.githubusercontent.com/13696193/43159403-45c9726e-8f50-11e8-9da0-0d272e20c579.jpg
 #
 def MediaPlayerGUI():
-    background = '#F0F0F0'
     # Set the backgrounds the same as the background on the buttons
-    sg.SetOptions(background_color=background, element_background_color=background)
     # Images are located in a subfolder in the Demo Media Player.py folder
     image_pause = './ButtonGraphics/Pause.png'
     image_restart = './ButtonGraphics/Restart.png'
     image_next = './ButtonGraphics/Next.png'
     image_exit = './ButtonGraphics/Exit.png'
 
-    # A text element that will be changed to display messages in the GUI
-
+    # Use the theme APIs to set the buttons to blend with background
+    sg.theme_button_color((sg.theme_background_color(), sg.theme_background_color()))
+    sg.theme_border_width(0)        # make all element flat
 
     # define layout of the rows
     layout= [[sg.Text('Media File Player',size=(17,1), font=("Helvetica", 25))],
-             [sg.Text(size=(15, 2), font=("Helvetica", 14), key='output')],
-             [sg.Button('', button_color=(background,background),
-                                image_filename=image_restart, image_size=(50, 50), image_subsample=2, border_width=0, key='Restart Song'),
-                                sg.Text(' ' * 2),
-              sg.Button('', button_color=(background,background),
-                                image_filename=image_pause, image_size=(50, 50), image_subsample=2, border_width=0, key='Pause'),
-                                sg.Text(' ' * 2),
-              sg.Button('', button_color=(background,background), image_filename=image_next, image_size=(50, 50), image_subsample=2, border_width=0, key='Next'),
-                                sg.Text(' ' * 2),
-              sg.Text(' ' * 2), sg.Button('', button_color=(background,background),
-                                image_filename=image_exit, image_size=(50, 50), image_subsample=2, border_width=0, key='Exit')],
+             [sg.Text(size=(15, 2), font=("Helvetica", 14), key='-OUTPUT-')],
+             [sg.Button(image_filename=image_restart, image_size=(50, 50), image_subsample=2,  key='-RESTART SONG-'),
+              sg.Text(' ' * 2),
+              sg.Button(image_filename=image_pause, image_size=(50, 50), image_subsample=2,  key='-PAUSE-'),
+              sg.Text(' ' * 2),
+              sg.Button(image_filename=image_next, image_size=(50, 50), image_subsample=2,  key='-NEXT-'),
+              sg.Text(' ' * 2),
+              sg.Text(' ' * 2), sg.Button(image_filename=image_exit, image_size=(50, 50), image_subsample=2, key='Exit')],
              [sg.Text('_'*20)],
              [sg.Text(' '*30)],
-            [
-             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
-             sg.Text(' ' * 2),
-             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
-             sg.Text(' ' * 2),
-             sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15))],
+             [
+                 sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
+                 sg.Text(' ' * 2),
+                 sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15)),
+                 sg.Text(' ' * 2),
+                 sg.Slider(range=(-10, 10), default_value=0, size=(10, 20), orientation='vertical', font=("Helvetica", 15))],
              [sg.Text('   Bass', font=("Helvetica", 15), size=(9, 1)),
-             sg.Text('Treble', font=("Helvetica", 15), size=(7, 1)),
-             sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
+              sg.Text('Treble', font=("Helvetica", 15), size=(7, 1)),
+              sg.Text('Volume', font=("Helvetica", 15), size=(7, 1))]
              ]
 
     # Open a form, note that context manager can't be used generally speaking for async forms
-    window = sg.Window('Media File Player', layout, default_element_size=(20, 1),
-                       font=("Helvetica", 25))
+    window = sg.Window('Media File Player', layout, default_element_size=(20, 1), font=("Helvetica", 25))
     # Our event loop
-    while(True):
+    while True:
         event, values = window.read(timeout=100)        # Poll every 100 ms
         if event == 'Exit' or event == sg.WIN_CLOSED:
             break
         # If a button was pressed, display it on the GUI by updating the text element
         if event != sg.TIMEOUT_KEY:
-            window['output'].update(event)
+            window['-OUTPUT-'].update(event)
 
 MediaPlayerGUI()
 ```
 
-## Script Launcher - Persistent Window    
-This Window doesn't close after button clicks.  To achieve this the buttons are specified as `sg.Button` instead of `sg.Button`.   The exception to this is the EXIT button.  Clicking it will close the window.  This program will run commands and display the output in the scrollable window.    
-      
-![launcher 2](https://user-images.githubusercontent.com/13696193/43958519-b30af218-9c79-11e8-88da-fadc69da818c.jpg)      
+# Recipe - Script Launcher - Exec APIs
 
-```python      
-    import PySimpleGUI as sg      
-    import subprocess      
+This program will run commands and display the output in an Output Element.  There are numerous Demo Programs that show how to lauch subprocesses manually rather than using the newer Exec APIs.
       
-    # Please check Demo programs for better examples of launchers      
-    def ExecuteCommandSubprocess(command, *args):      
-        try:      
-            sp = subprocess.Popen([command, *args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)      
-            out, err = sp.communicate()      
-            if out:      
-                print(out.decode("utf-8"))      
-            if err:      
-                print(err.decode("utf-8"))      
-        except:      
-            pass      
-      
-      
-    layout = [      
-        [sg.Text('Script output....', size=(40, 1))],      
-        [sg.Output(size=(88, 20))],      
-        [sg.Button('script1'), sg.Button('script2'), sg.Button('EXIT')],      
-        [sg.Text('Manual command', size=(15, 1)), sg.InputText(focus=True), sg.Button('Run', bind_return_key=True)]      
-            ]      
-      
-      
-    window = sg.Window('Script launcher', layout)      
-      
-    # ---===--- Loop taking in user input and using it to call scripts --- #      
-      
-    while True:      
-      (event, value) = window.read()      
-      if event == 'EXIT'  or event == sg.WIN_CLOSED:      
-          break # exit button clicked      
-      if event == 'script1':      
-          ExecuteCommandSubprocess('pip', 'list')      
-      elif event == 'script2':      
-          ExecuteCommandSubprocess('python', '--version')      
-      elif event == 'Run':      
-          ExecuteCommandSubprocess(value[0])      
+![script_launcher](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/script_launcher.jpg)     
+
+
+```python   
+import PySimpleGUI as sg
+
+sg.theme('DarkGrey14')
+
+layout = [
+    [sg.Text('Script output....', size=(40, 1))],
+    [sg.Output(size=(88, 20), font='Courier 10')],
+    [sg.Button('script1'), sg.Button('script2'), sg.Button('EXIT')],
+    [sg.Text('Manual command', size=(15, 1)), sg.Input(focus=True, key='-IN-'), sg.Button('Run', bind_return_key=True), sg.Button('Run No Wait')]
+]
+
+window = sg.Window('Script launcher', layout)
+
+# ---===--- Loop taking in user input and using it to call scripts --- #
+
+while True:
+    event, values = window.read()
+    if event == 'EXIT'  or event == sg.WIN_CLOSED:
+        break # exit button clicked
+    if event == 'script1':
+        sp = sg.execute_command_subprocess('pip', 'list', wait=True)
+        print(sg.execute_get_results(sp)[0])
+    elif event == 'script2':
+        print(f'Running python --version')
+        # For this one we need to wait for the subprocess to complete to get the results
+        sp = sg.execute_command_subprocess('python', '--version', wait=True)
+        print(sg.execute_get_results(sp)[0])
+    elif event == 'Run':
+        args = values['-IN-'].split(' ')
+        print(f'Running {values["-IN-"]} args={args}')
+        sp = sg.execute_command_subprocess(args[0], *args[1:])
+        # This will cause the program to wait for the subprocess to finish
+        print(sg.execute_get_results(sp)[0])
+    elif event == 'Run No Wait':
+        args = values['-IN-'].split(' ')
+        print(f'Running {values["-IN-"]} args={args}', 'Results will not be shown')
+        sp = sg.execute_command_subprocess(args[0], *args[1:])
+
 ```    
      
 
-## Launch a Program With a Button
+# Recipe- Launch a Program With a Button
 
 Very simple script that will launch a program as a subprocess.  Great for making a desktop launcher toolbar.
+In version 4.35.0 of PySimpleGUI the Exec APIs were added.  These enable you to launch subprocesses
+
+
 
 ```python
-import subprocess
 import PySimpleGUI as sg
 
 CHROME = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 
 
-layout = [  [sg.Text('Text area', key='_TEXT_')],
-            [sg.Input(key='_URL_')],
+layout = [  [sg.Text('Text area', key='-TEXT-')],
+            [sg.Input(key='-URL-')],
             [sg.Button('Chrome'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
@@ -2850,12 +2847,13 @@ while True:             # Event Loop
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == 'Chrome':
-        sp = subprocess.Popen([CHROME, values['_URL_']], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        sg.execute_command_subprocess(CHROME)
 
 window.close()
 ```
 
-## Machine Learning GUI      
+
+# Recipe - Machine Learning GUI      
 A standard non-blocking GUI with lots of inputs.      
       
 ![machine learning green](https://user-images.githubusercontent.com/13696193/43979000-408b77ba-9cb7-11e8-9ffd-24c156767532.jpg)      
@@ -2895,18 +2893,24 @@ A standard non-blocking GUI with lots of inputs.
 ```
       
 -------      
-## Custom Progress Meter / Progress Bar      
+# Recipe - Custom Progress Meter / Progress Bar      
 Perhaps you don't want all the statistics that the EasyProgressMeter provides and want to create your own progress bar. Use this recipe to do just that.      
       
-![custom progress meter](https://user-images.githubusercontent.com/13696193/43982958-3393b23e-9cc6-11e8-8b49-e7f4890cbc4b.jpg)      
+      
+![script_launcher](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/prog_bar.jpg)     
+ 
       
       
 ```python
 import PySimpleGUI as sg
 
+sg.theme('Dark Red')
+
+BAR_MAX = 1000
+
 # layout the Window
 layout = [[sg.Text('A custom progress meter')],
-          [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progbar')],
+          [sg.ProgressBar(BAR_MAX, orientation='h', size=(20,20), key='-PROG-')],
           [sg.Cancel()]]
 
 # create the Window
@@ -2914,11 +2918,11 @@ window = sg.Window('Custom Progress Meter', layout)
 # loop that would normally do something useful
 for i in range(1000):
     # check to see if the cancel button was clicked and exit loop if clicked
-    event, values = window.read(timeout=0)
+    event, values = window.read(timeout=10)
     if event == 'Cancel' or event == sg.WIN_CLOSED:
         break
         # update bar with loop value +1 so that bar eventually reaches the maximum
-    window['progbar'].update_bar(i + 1)
+    window['-PROG-'].update(i+1)
 # done with loop... need to destroy the window as it's still open
 window.close()
 ``` 
@@ -2928,7 +2932,7 @@ window.close()
 
 
    
-## Multiple Columns      
+# Recipe - Multiple Columns      
   
 A Column is required when you have a tall element to the left of smaller elements.      
       
@@ -2968,55 +2972,68 @@ To make it easier to see the Column in the window, the Column background has bee
 ----
 
       
-## Persistent Window With Text Element Updates    
+# Recipe - Persistent Window With Text Element Updates    
       
 This simple program keep a window open, taking input values until the user terminates the program using the "X" button.    
+
+This Recipe has a number of concepts.
+* Element name aliases - `Txt` and `In` are used in the layout
+* Bind return key so that rather than clicking "Calculate" button, the user presses return key
+* No exit/close button. The window is closed using the "X"
+* Dark Green 7 theme - there are some nice themes, try some out for yourself
+* try/except for cathing errors with the floating point 
+    * These should be used sparingly
+    * Don't place a try/except around your whole event loop to try and fix your coding errors
+* Displaying results using a Text element - Note: be sure and set the size to a large enough value
       
-![math game](https://user-images.githubusercontent.com/13696193/44537842-c9444080-a6cd-11e8-94bc-6cdf1b765dd8.jpg)      
       
+![math_game](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/math_game.jpg)   
       
 ```python     
-import PySimpleGUI as sg      
-    
-layout = [ [sg.Txt('Enter values to calculate')],      
-            [sg.In(size=(8,1), key='numerator')],      
-            [sg.Txt('_'  * 10)],      
-            [sg.In(size=(8,1), key='denominator')],      
-            [sg.Txt('', size=(8,1), key='output')  ],      
-            [sg.Button('Calculate', bind_return_key=True)]]      
-    
-window = sg.Window('Math', layout)      
-    
-while True:      
-    event, values = window.read()      
-    
-    if event != sg.WIN_CLOSED:      
-        try:      
-            numerator = float(values['numerator'])      
-            denominator = float(values['denominator'])      
-            calc = numerator / denominator      
-        except:      
-            calc = 'Invalid'      
-    
-        window['output'].update(calc)      
-    else:      
-        break      
+import PySimpleGUI as sg
+
+sg.theme('Dark Green 7')
+
+layout = [ [sg.Txt('Enter values to calculate')],
+           [sg.In(size=(8,1), key='-NUMERATOR-')],
+           [sg.Txt('_'  * 10)],
+           [sg.In(size=(8,1), key='-DENOMINATAOR-')],
+           [sg.Txt(size=(8,1), key='-OUTPUT-')  ],
+           [sg.Button('Calculate', bind_return_key=True)]]
+
+window = sg.Window('Math', layout)
+
+while True:
+    event, values = window.read()
+
+    if event != sg.WIN_CLOSED:
+        try:
+            numerator = float(values['-NUMERATOR-'])
+            denominator = float(values['-DENOMINATAOR-'])
+            calc = numerator/denominator
+        except:
+            calc = 'Invalid'
+
+        window['-OUTPUT-'].update(calc)
+    else:
+        break
 ```      
       
-## One Element Updating Another - Compound Elements
+# Recipe - One Element Updating Another - Compound Elements
 
-![image](https://user-images.githubusercontent.com/13696193/49649095-1be40700-f9f6-11e8-981e-f56eb8404ae7.png)
-   
+      
+![compound](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_cookbook/compound_element.jpg)   
+
 You can easily build "compound elements" in a single like of code.  This recipe shows you how to add a numeric value onto a slider.
 
 ```python
 import PySimpleGUI as sg
 
-layout = [[sg.Text('Slider Demonstration'), sg.Text('', key='_OUTPUT_')],
-            [sg.T('0',key='_LEFT_'),
-             sg.Slider((1,100), key='_SLIDER_', orientation='h', enable_events=True, disable_number_display=True),
-             sg.T('0', key='_RIGHT_')],
-            [sg.Button('Show'), sg.Button('Exit')]]
+layout = [[sg.Text('Slider Demonstration'), sg.Text('', key='-OUTPUT-')],
+          [sg.T('0',size=(4,1), key='-LEFT-'),
+           sg.Slider((0,100), key='-SLIDER-', orientation='h', enable_events=True, disable_number_display=True),
+           sg.T('0', size=(4,1), key='-RIGHT-')],
+          [sg.Button('Show'), sg.Button('Exit')]]
 
 window = sg.Window('Window Title', layout)
 
@@ -3025,9 +3042,10 @@ while True:             # Event Loop
     print(event, values)
     if event == sg.WIN_CLOSED or event == 'Exit':
         break
-    window['_LEFT_'].update(values['_SLIDER_'])
-    window['_RIGHT_'].update(values['_SLIDER_'])
-
+    window['-LEFT-'].update(int(values['-SLIDER-']))
+    window['-RIGHT-'].update(int(values['-SLIDER-']))
+    if event == 'Show':
+        sg.popup(f'The slider value = {values["-SLIDER-"]}')
 window.close()
 ```
 
@@ -3035,9 +3053,10 @@ window.close()
 
 --------------------
 
+# Recipe - Multiple Windows
 
+There are ***numerous Demo Programs*** that show a multitude of techniques for running multiple windows in PySimpleGUI.  Over the years these techniques have evolved.  It's best to check with the Demo Propgrams as they are updated more frequently than this Cookbook.
 
-## Multiple Windows
 
 This recipe is a design pattern for multiple windows where the first window is not active while the second window is showing.  The first window is hidden to discourage continued interaction.
 
@@ -3100,8 +3119,7 @@ While it's fun to scribble on a Canvas Widget, try Graph Element makes it a down
         [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue')]      
         ]      
       
-    window = sg.Window('Canvas test', layout)      
-    window.Finalize()      
+    window = sg.Window('Canvas test', layout, finalize=True)      
       
     canvas = window['canvas')      
     cir = canvas.TKCanvas.create_oval(50, 50, 100, 100)      
@@ -3130,8 +3148,7 @@ Just like you can draw on a tkinter widget, you can also draw on a Graph Element
                [sg.T('Change circle color to:'), sg.Button('Red'), sg.Button('Blue'), sg.Button('Move')]      
                ]      
       
-    window = sg.Window('Graph test', layout)      
-    window.Finalize()      
+    window = sg.Window('Graph test', layout, finalize=True)       
       
     graph = window['graph')      
     circle = graph.DrawCircle((75,75), 25, fill_color='black',line_color='white')      
@@ -3284,10 +3301,10 @@ layout = [[sg.Text('Animated Matplotlib', size=(40, 1), justification='center', 
 # create the window and show it without the plot    
 
 
-window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout)
-window.Finalize()  # needed to access the canvas element prior to reading the window
+window = sg.Window('Demo Application - Embedding Matplotlib In PySimpleGUI', layout, finalize=True)
+# needed to access the canvas element prior to reading the window
 
-canvas_elem = window['canvas')
+canvas_elem = window['canvas']
 
 graph = FigureCanvasTkAgg(fig, master=canvas_elem.TKCanvas)
 canvas = canvas_elem.TKCanvas
@@ -3351,9 +3368,8 @@ In other GUI frameworks this program would be most likely "event driven" with ca
                sg.Button('Submit', button_color=('white', 'springgreen4'), key='Submit')]      
               ]      
       
-    window = sg.Window("Time Tracker", layout, default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False,      
-                       default_button_element_size=(12,1))      
-    window.Finalize()      
+    window = sg.Window("Time Tracker", layout, default_element_size=(12,1), text_justification='r', auto_size_text=False, auto_size_buttons=False, default_button_element_size=(12,1), finalize=True)      
+    
     window['Stop'].update(disabled=True)      
     window['Reset'].update(disabled=True)      
     window['Submit'].update(disabled=True)      
@@ -3751,8 +3767,8 @@ import PySimpleGUI as sg
     
 layout = [[sg.Graph(canvas_size=(400, 400), graph_bottom_left=(-105,-105), graph_top_right=(105,105), background_color='white', key='graph', tooltip='This is a cool graph!')],]    
     
-window = sg.Window('Graph of Sine Function', layout, grab_anywhere=True).Finalize()    
-graph = window['graph')    
+window = sg.Window('Graph of Sine Function', layout, grab_anywhere=True, finalize=True)  
+graph = window['graph']
     
 # Draw axis    
 graph.DrawLine((-100,0), (100,0))    
