@@ -30,6 +30,7 @@
 """
 
 import PySimpleGUI as sg
+import random
 
 # Class holding the button graphic info. At this time only the state is kept
 class BtnInfo:
@@ -53,7 +54,9 @@ def main():
               [sg.Button(image_data=on_image, k='-TOGGLE2-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
-                         metadata=BtnInfo())],
+                         metadata=BtnInfo()),
+               sg.Image(data=sg.EMOJI_BASE64_HAPPY_THUMBS_UP,enable_events=True, k='-I-')
+               ],
               [ sg.T('Disabled with GUI:', text_color='yellow')],
               [sg.Button(image_data=on_image, k='-TOGGLE3-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
@@ -82,6 +85,7 @@ def main():
         elif event == '-DISABLE1-':
             window[event].metadata.state = not window[event].metadata.state
             window[event].update(image_data=on_image if window[event].metadata.state else off_image)
+            window['-I-'].update(data=sg.EMOJI_BASE64_HAPPY_GASP if window[event].metadata.state else random.choice(sg.EMOJI_BASE64_HAPPY_LIST))
             # if disabling the button
             if window[event].metadata.state:
                 if window['-TOGGLE1-'].metadata.state is True:
