@@ -297,8 +297,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                     line_num_match = get_line_number(key, _match)
                     file_array_new.append(line_num_match)
                     if (verbose):
-                        matched_str_line_num = f"{_match} | Line Number: {line_num_match}"
-                        sg.cprint(f"{matched_str_line_num}\n")
+                        sg.cprint(f"Line: {line_num_match} | {_match.strip()}\n")
                 file_array_old.append(file_array_new)
                 file_lines_dict[tail] = file_array_old
             except:
@@ -321,7 +320,6 @@ def settings_window():
     :rtype: (bool)
     """
 
-    explorer_program = get_explorer()
     try:
         global_editor = sg.pysimplegui_user_settings.get('-editor program-')
     except:
@@ -330,7 +328,10 @@ def settings_window():
         global_explorer = sg.pysimplegui_user_settings.get('-explorer program-')
     except:
         global_explorer = ''
-
+    try:    # in case running with old version of PySimpleGUI that doesn't have a global PSG settings path
+        global_theme = sg.theme_global()
+    except:
+        global_theme = ''
 
     layout = [[sg.T('Program Settings', font='DEFAULT 25')],
               [sg.T('Path to Tree',  font='_ 16')],
@@ -342,7 +343,8 @@ def settings_window():
               [sg.T('File Explorer Program',  font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_explorer)],
               [ sg.In(sg.user_settings_get_entry('-explorer program-'), k='-EXPLORER PROGRAM-'), sg.FileBrowse()],
-               [sg.T('Theme (leave blank to use global default)', font='_ 16')],
+               [sg.T('Theme', font='_ 16')],
+              [sg.T('Leave blank to use global default'), sg.T(global_theme)],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
               [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
@@ -454,9 +456,10 @@ def main():
     file_list = get_file_list()
     window = make_window()
     window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
-
+    counter = 0
     while True:
         event, values = window.read()
+        counter += 1
         if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
         if event == 'Edit':
