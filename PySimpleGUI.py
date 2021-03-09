@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0 Released 3-Mar-2021"
+version = __version__ = "4.35.0.2 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1446,9 +1446,9 @@ class Input(Element):
             self.TKEntry['state'] = 'readonly' if self.UseReadonlyForDisable else 'disabled'
         elif disabled is False:
             self.TKEntry['state'] = 'normal'
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKEntry.configure(background=background_color)
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKEntry.configure(fg=text_color)
         if value is not None:
             try:
@@ -2106,18 +2106,18 @@ class Radio(Element):
         if text is not None:
             self.Text = str(text)
             self.TKRadio.configure(text=self.Text)
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKRadio.configure(background=background_color)
             self.BackgroundColor = background_color
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKRadio.configure(fg=text_color)
             self.TextColor = text_color
 
-        if circle_color is not None:
+        if circle_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.CircleBackgroundColor = circle_color
             self.TKRadio.configure(selectcolor=self.CircleBackgroundColor)  # The background of the radio button
         elif text_color or background_color:
-            if self.TextColor is not None and self.BackgroundColor is not None and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
+            if self.TextColor not in (None, COLOR_SYSTEM_DEFAULT) and self.BackgroundColor not in (None, COLOR_SYSTEM_DEFAULT) and self.TextColor.startswith('#') and self.BackgroundColor.startswith('#'):
                 # ---- compute color of circle background ---
                 text_hsl = _hex_to_hsl(self.TextColor)
                 background_hsl = _hex_to_hsl(self.BackgroundColor if self.BackgroundColor else theme_background_color())
@@ -2285,14 +2285,14 @@ class Checkbox(Element):
         if text is not None:
             self.Text = str(text)
             self.TKCheckbutton.configure(text=self.Text)
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKCheckbutton.configure(background=background_color)
             self.BackgroundColor = background_color
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKCheckbutton.configure(fg=text_color)
             self.TextColor = text_color
         # Color the checkbox itself
-        if checkbox_color is not None:
+        if checkbox_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.CheckboxBackgroundColor = checkbox_color
             self.TKCheckbutton.configure(selectcolor=self.CheckboxBackgroundColor)  # The background of the checkbox
         elif text_color or background_color:
@@ -2668,9 +2668,9 @@ class Multiline(Element):
         elif disabled is False:
             self.TKText.configure(state='normal')
             self.Disabled = False
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(background=background_color)
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
@@ -2918,9 +2918,9 @@ class Text(Element):
         if value is not None:
             self.DisplayText = str(value)
             self.TKStringVar.set(str(value))
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(background=background_color)
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
@@ -3040,9 +3040,9 @@ class StatusBar(Element):
             self.DisplayText = value
             stringvar = self.TKStringVar
             stringvar.set(value)
-        if background_color is not None:
+        if background_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(background=background_color)
-        if text_color is not None:
+        if text_color not in (None, COLOR_SYSTEM_DEFAULT):
             self.TKText.configure(fg=text_color)
         if font is not None:
             self.TKText.configure(font=font)
@@ -14745,7 +14745,7 @@ LOOK_AND_FEEL_TABLE = {
     "Material2": {"BACKGROUND": "#FAFAFA","TEXT": "#000000","INPUT": "#004EA1","TEXT_INPUT": "#FFFFFF","SCROLL": "#5EA7FF","BUTTON": ("#FFFFFF", "#0079D3"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 0,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#FF0266","ACCENT2": "#FF5C93","ACCENT3": "#C5003C",},
     "Reddit": {"BACKGROUND": "#ffffff","TEXT": "#1a1a1b","INPUT": "#dae0e6","TEXT_INPUT": "#222222","SCROLL": "#a5a4a4","BUTTON": ("#FFFFFF", "#0079d3"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#ff5414","ACCENT2": "#33a8ff","ACCENT3": "#dbf0ff",},
     "Topanga": {"BACKGROUND": "#282923","TEXT": "#E7DB74","INPUT": "#393a32","TEXT_INPUT": "#E7C855","SCROLL": "#E7C855","BUTTON": ("#E7C855", "#284B5A"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#c15226","ACCENT2": "#7a4d5f","ACCENT3": "#889743",},
-    "GreenTan": {"BACKGROUND": "#9FB8AD","TEXT": COLOR_SYSTEM_DEFAULT,"INPUT": "#F7F3EC","TEXT_INPUT": "#000000","SCROLL": "#F7F3EC","BUTTON": ("#FFFFFF", "#475841"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,},
+    "GreenTan": {"BACKGROUND": "#9FB8AD","TEXT": '#000000',"INPUT": "#F7F3EC","TEXT_INPUT": "#000000","SCROLL": "#F7F3EC","BUTTON": ("#FFFFFF", "#475841"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,},
     "Dark": {"BACKGROUND": "#404040","TEXT": "#FFFFFF","INPUT": "#4D4D4D","TEXT_INPUT": "#FFFFFF","SCROLL": "#707070","BUTTON": ("#FFFFFF", "#004F00"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,},
     "LightGreen": {"BACKGROUND": "#B7CECE","TEXT": "#000000","INPUT": "#FDFFF7","TEXT_INPUT": "#000000","SCROLL": "#FDFFF7","BUTTON": ("#FFFFFF", "#658268"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"ACCENT1": "#76506d","ACCENT2": "#5148f1","ACCENT3": "#0a1c84","PROGRESS_DEPTH": 0,},
     "Dark2": {"BACKGROUND": "#404040","TEXT": "#FFFFFF","INPUT": "#FFFFFF","TEXT_INPUT": "#000000","SCROLL": "#707070","BUTTON": ("#FFFFFF", "#004F00"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,},
@@ -17931,6 +17931,7 @@ MAX_LINES_PER_RESULT_FLOATING = 4
 MAX_LINES_PER_RESULT_MAIN = 3
 
 POPOUT_WINDOW_FONT = 'Sans 8'
+DEBUGGER_VARIABLE_DETAILS_FONT = 'Courier 10'
 
 
 class _Debugger():
@@ -17956,7 +17957,7 @@ class _Debugger():
 
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
-        ChangeLookAndFeel(COLOR_SCHEME)
+        theme(COLOR_SCHEME)
 
         def InVar(key1):
             row1 = [T('    '),
@@ -18010,7 +18011,7 @@ class _Debugger():
 
         window.Element('_VAR1_').SetFocus()
         self.watcher_window = window
-        ChangeLookAndFeel('SystemDefault')  # set look and feel to default before exiting
+        # ChangeLookAndFeel('SystemDefault')  # set look and feel to default before exiting
         return window
 
     #     #                    #######                               #
@@ -18058,7 +18059,7 @@ class _Debugger():
                 result = str(eval(str(var), myglobals, mylocals))
             except:
                 result = ''
-            PopupScrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + result, title=var, non_blocking=True)
+            popup_scrolled(str(values['_VAR{}_'.format(event[4])]) + '\n' + result, title=var, non_blocking=True, font=DEBUGGER_VARIABLE_DETAILS_FONT)
         # BUTTON - OBJ
         elif event.endswith('_OBJ_'):  # OBJECT BUTTON
             var = values['_VAR{}_'.format(event[4])]
@@ -18070,7 +18071,7 @@ class _Debugger():
                     result = ObjToStringSingleObj(result)
                 except Exception as e:
                     result = '{}\nError showing object {}'.format(e, var)
-            PopupScrolled(str(var) + '\n' + str(result), title=var, non_blocking=True)
+            popup_scrolled(str(var) + '\n' + str(result), title=var, non_blocking=True, font=DEBUGGER_VARIABLE_DETAILS_FONT)
         # ------------------------------- Process Watch Tab -------------------------------
         # BUTTON - Choose Locals to see
         elif event == '_LOCALS_':  # Show all locals BUTTON
@@ -18083,7 +18084,7 @@ class _Debugger():
             self._display_all_vars(myglobals)
         # BUTTON - clear all
         elif event == 'Clear All Auto Watches':
-            if PopupYesNo('Do you really want to clear all Auto-Watches?', 'Really Clear??') == 'Yes':
+            if popup_yes_no('Do you really want to clear all Auto-Watches?', 'Really Clear??') == 'Yes':
                 self.local_choices = {}
                 self.custom_watch = ''
         # BUTTON - Popout
@@ -18237,7 +18238,7 @@ class _Debugger():
                 self.custom_watch = values['_CUSTOM_WATCH_']
                 break
             elif event == 'Clear All':
-                PopupQuickMessage('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True,
+                popup_quick_message('Cleared Auto Watches', auto_close=True, auto_close_duration=3, non_blocking=True,
                                   text_color='red', font='ANY 18')
                 for key in sorted_dict:
                     window.Element(key).Update(False)
@@ -18251,7 +18252,7 @@ class _Debugger():
 
         # exited event loop
         window.Close()
-        ChangeLookAndFeel('SystemDefault')
+        # ChangeLookAndFeel('SystemDefault')
 
     ######                            #######
     #     # #    # # #      #####     #       #       ####    ##   ##### # #    #  ####
@@ -18357,7 +18358,7 @@ class _Debugger():
             if self.popout_choices[key] is True and key in self.locals:
                 if key is not None and self.popout_window is not None:
                     self.popout_window.Element(key, silent_on_error=True).Update(self.locals.get(key))
-        event, values = self.popout_window.read(timeout=1)
+        event, values = self.popout_window.read(timeout=5)
         if event in (None, '_EXIT_', 'Exit::RightClick'):
             self.popout_window.Close()
             self.popout_window = None
