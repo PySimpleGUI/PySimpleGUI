@@ -16,6 +16,9 @@ def make_window(light_mode):
         sg.theme('light grey')
     else:
         sg.theme('black')
+    BLUE = '#2196f2'
+    DARK_GRAY = '#212021'
+    LIGHT_GRAY = '#e0e0e0'
     BLUE_BUTTON_COLOR = '#FFFFFF on #2196f2'
     GREEN_BUTTON_COLOR ='#FFFFFF on #00c851'
     LIGHT_GRAY_BUTTON_COLOR = f'#212021 on #e0e0e0'
@@ -35,7 +38,12 @@ def make_window(light_mode):
                        [sg.Image(k='-GIF-', metadata=0)],
                        [sg.T('The end of "my App"')]], element_justification='c', k='-TOP COL-')]]
 
-    window = sg.Window('Window Title', layout,  grab_anywhere=True, no_titlebar=True)
+    layout = [[sg.Titlebar('Material Design Custom Titlebar',
+                           background_color=BLUE if light_mode else DARK_GRAY,
+                           text_color='white' if light_mode else LIGHT_GRAY,
+                           k='-TITLEBAR-')]] + layout
+
+    window = sg.Window('Window Title', layout)
 
     return window
 
@@ -56,8 +64,8 @@ def main():
             show_animation = True
             window['-GIF-'].metadata = 0
         elif event == 'Upgrade':
-            sg.popup_no_titlebar('This is where you would do', 'the updagrade window code', background_color='black', text_color='white')
-        if event == 'Light' and not light_mode or event == 'Dark' and light_mode:
+            sg.popup('This is where you would do', 'the upgrade window code')
+        elif event == 'Light' and not light_mode or event == 'Dark' and light_mode:
             light_mode = not light_mode
             window.close()
             window = make_window(light_mode)
