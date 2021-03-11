@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.2 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting"
+version = __version__ = "4.35.0.4 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1077,7 +1077,8 @@ class Element():
             if isinstance(self.Key, str):
                 key = self.Key + str(key_suffix)
             else:
-                key = (self.Key, key_suffix)
+                # key = (self.Key, key_suffix)      # old way (pre 2021) was to make a brand new tuple
+                key = self.Key + (key_suffix,)      # if key is a tuple, add one more item
         else:
             key = bind_string
 
@@ -3858,12 +3859,12 @@ class Button(Element):
             self.Disabled = BUTTON_DISABLED_MEANS_IGNORE
         if image_data is not None:
             image = tk.PhotoImage(data=image_data)
+            if image_subsample:
+                image = image.subsample(image_subsample)
             if image_size is not None:
                 width, height = image_size
             else:
                 width, height = image.width(), image.height()
-            if image_subsample:
-                image = image.subsample(image_subsample)
             if self.UseTtkButtons:
                 button_style.configure(style_name, image=image, width=width, height=height)
             else:
@@ -3871,12 +3872,12 @@ class Button(Element):
             self.TKButton.image = image
         if image_filename is not None:
             image = tk.PhotoImage(file=image_filename)
+            if image_subsample:
+                image = image.subsample(image_subsample)
             if image_size is not None:
                 width, height = image_size
             else:
                 width, height = image.width(), image.height()
-            if image_subsample:
-                image = image.subsample(image_subsample)
             if self.UseTtkButtons:
                 button_style.configure(style_name, image=image, width=width, height=height)
             else:
@@ -4246,7 +4247,7 @@ class Image(Element):
 
         self.Filename = filename
         self.Data = data
-        self.tktext_label = None
+        self.Widget = self.tktext_label = None # type: tk.Label
         self.BackgroundColor = background_color
         if data is None and filename is None:
             self.Filename = ''
@@ -4256,6 +4257,7 @@ class Image(Element):
         self.CurrentFrameNumber = 0
         self.TotalAnimatedFrames = 0
         self.LastFrameTime = 0
+
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
 
@@ -4318,7 +4320,7 @@ class Image(Element):
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
         NOTE - does NOT perform a sleep call to delay
         :param source: Filename or Base64 encoded string containing Animated GIF
-        :type source: str | bytes
+        :type source: str | bytes | None
         :param time_between_frames: Number of milliseconds to wait between showing frames
         :type time_between_frames: (int)
         """
@@ -4330,20 +4332,21 @@ class Image(Element):
         if self.AnimatedFrames is None:
             self.TotalAnimatedFrames = 0
             self.AnimatedFrames = []
+            # Load up to 1000 frames of animation.  stops when a bad frame is returns by tkinter
             for i in range(1000):
                 if type(source) is not bytes:
                     try:
                         self.AnimatedFrames.append(tk.PhotoImage(file=source, format='gif -index %i' % (i)))
-                    except:
+                    except Exception as e:
                         break
                 else:
                     try:
                         self.AnimatedFrames.append(tk.PhotoImage(data=source, format='gif -index %i' % (i)))
-                    except:
+                    except Exception as e:
                         break
-                self.TotalAnimatedFrames += 1
+            self.TotalAnimatedFrames = len(self.AnimatedFrames)
             self.LastFrameTime = time.time()
-            self.CurrentFrameNumber = 0
+            self.CurrentFrameNumber = -1        # start at -1 because it is incremented before every frame is shown
         # show the frame
 
         now = time.time()
@@ -4351,16 +4354,16 @@ class Image(Element):
         if time_between_frames:
             if (now - self.LastFrameTime) * 1000 > time_between_frames:
                 self.LastFrameTime = now
-                self.CurrentFrameNumber = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber + 1 < self.TotalAnimatedFrames else 0
+                self.CurrentFrameNumber = (self.CurrentFrameNumber + 1) % self.TotalAnimatedFrames
             else:  # don't reshow the frame again if not time for new frame
                 return
         else:
-            self.CurrentFrameNumber = self.CurrentFrameNumber + 1 if self.CurrentFrameNumber + 1 < self.TotalAnimatedFrames else 0
+            self.CurrentFrameNumber = (self.CurrentFrameNumber + 1) % self.TotalAnimatedFrames
         image = self.AnimatedFrames[self.CurrentFrameNumber]
         try:  # needed in case the window was closed with an "X"
             self.tktext_label.configure(image=image, width=image.width(), heigh=image.height())
-        except:
-            pass
+        except Exception as e:
+            print('Exception in update_animation', e)
 
 
 
@@ -16842,21 +16845,21 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type title: (str)
     :param icon: Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon: str
-    :return: No return value
-    :rtype: None
+    :return: True if the window updated OK. False if the window was closed
+    :rtype: bool
     """
     if image_source is None:
         for image in Window._animated_popup_dict:
             window = Window._animated_popup_dict[image]
-            window.Close()
+            window.close()
         Window._animated_popup_dict = {}
         return
 
     if image_source not in Window._animated_popup_dict:
         if type(image_source) is bytes or len(image_source) > 300:
-            layout = [[Image(data=image_source, background_color=background_color, key='_IMAGE_', )], ]
+            layout = [[Image(data=image_source, background_color=background_color, key='-IMAGE-')], ]
         else:
-            layout = [[Image(filename=image_source, background_color=background_color, key='_IMAGE_', )], ]
+            layout = [[Image(filename=image_source, background_color=background_color, key='-IMAGE-', )], ]
         if message:
             layout.append([Text(message, background_color=background_color, text_color=text_color, font=font)])
 
@@ -16867,10 +16870,12 @@ def popup_animated(image_source, message=None, background_color=None, text_color
         Window._animated_popup_dict[image_source] = window
     else:
         window = Window._animated_popup_dict[image_source]
-        window.Element('_IMAGE_').UpdateAnimation(image_source, time_between_frames=time_between_frames)
-
-    window.refresh() # call refresh instead of Read to save significant CPU time
-
+        window['-IMAGE-'].update_animation(image_source, time_between_frames=time_between_frames)
+    event, values = window.read(1)
+    if event == WIN_CLOSED:
+        return False
+    # window.refresh() # call refresh instead of Read to save significant CPU time
+    return True
 
 # Popup Notify
 def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, display_duration_in_ms=SYSTEM_TRAY_MESSAGE_DISPLAY_DURATION_IN_MILLISECONDS,
