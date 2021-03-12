@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.6 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist"
+version = __version__ = "4.35.0.8 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist, scrollbar parm for Multiline element to enable turning off scrollbar"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2491,7 +2491,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, scrollbar=True,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2544,6 +2544,8 @@ class Multiline(Element):
         :type tooltip: (str)
         :param justification: text justification. left, right, center. Can use single characters l, r, c.
         :type justification: (str)
+        :param scrollbar: If True then a scrollbar will be shown (the default)
+        :type scrollbar: (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
@@ -2579,7 +2581,7 @@ class Multiline(Element):
             self.reroute_stdout_to_here()
         if reroute_stderr:
             self.reroute_stderr_to_here()
-
+        self.scrollbar = scrollbar
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -12648,7 +12650,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Multiline
                 width, height = element_size
                 bd = element.BorderWidth
-                element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
+                if element.scrollbar:
+                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
+                else:
+                    element.TKText = element.Widget = tk.Text(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
