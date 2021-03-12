@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.4 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...)"
+version = __version__ = "4.35.0.5 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -15304,7 +15304,8 @@ def change_look_and_feel(index, force=False):
     lf_values_lowercase = [item.lower() for item in theme_names_list]
     # option 1
     opt1 = requested_theme_name.replace(' ', '').lower()
-
+    # option 3 is option 1 with gray replaced with grey
+    opt3 = opt1.replace('gray', 'grey')
     # option 2 (reverse lookup)
     optx = requested_theme_name.lower().split(' ')
     optx.reverse()
@@ -15317,6 +15318,8 @@ def change_look_and_feel(index, force=False):
         ix = lf_values_lowercase.index(opt1)
     elif opt2 in lf_values_lowercase:
         ix = lf_values_lowercase.index(opt2)
+    elif opt3 in lf_values_lowercase:
+        ix = lf_values_lowercase.index(opt3)
     else:
         ix = random.randint(0, len(lf_values_lowercase) - 1)
         print('** Warning - {} Theme is not a valid theme. Change your theme call. **'.format(index))
