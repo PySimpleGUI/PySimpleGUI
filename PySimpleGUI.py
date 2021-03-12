@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.5 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed"
+version = __version__ = "4.35.0.6 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17806,6 +17806,8 @@ def execute_editor(file_to_edit, line_number=None):
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
+    if _running_windows() and file_to_edit is not None and len(file_to_edit) != 0 and file_to_edit[0] not in ('\"', "\'") and ' ' in file_to_edit:
+        file_to_edit = '"' + file_to_edit + '"'
 
     editor_program = pysimplegui_user_settings.get('-editor program-', None)
     if editor_program is not None:
