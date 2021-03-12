@@ -11,15 +11,15 @@ import PySimpleGUI as sg
     First parameter is the tkinter event string.  These are things like <FocusIn> <Button-1> <Button-3> <Enter>
     Second parameter for windows is an entire key, for elements is something added onto a key.  This key or modified key is what is returned when you read the window.
     If the key modifier is text and the key is text, then the key returned from the read will be the 2 concatenated together.  Otherwise your event will be a tuple containing the key_modifier value you pass in and the key belonging to the element the event happened to.
+    
+    Copyright 2021 PySimpleGUI
 """
 sg.theme('Dark Blue 3')
 
 def main():
     layout = [  [sg.Text('Move mouse over me', key='-TEXT-')],
                 [sg.In(key='-IN-')],
-                [sg.Button('Right Click Me', key='-BUTTON-'), sg.Button('Right Click Me2', key=(2,3)),sg.Button('Exit'),
-                ]
-                ]
+                [sg.Button('Right Click Me', key='-BUTTON-'), sg.Button('Right Click Me2', key=(2,3)),sg.Button('Exit'),]]
 
     window = sg.Window('Window Title', layout, finalize=True)
 
@@ -30,7 +30,7 @@ def main():
     window['-TEXT-'].bind('<Enter>', '+MOUSE OVER+')
     window['-TEXT-'].bind('<Leave>', '+MOUSE AWAY+')
     window['-IN-'].bind('<FocusIn>', '+INPUT FOCUS+')
-
+    window.bind('<Enter>', '* WINDOW ENTER *')
     while True:             # Event Loop
         event, values = window.read()
         print(event, values)
