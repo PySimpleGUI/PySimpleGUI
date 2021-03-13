@@ -6,7 +6,6 @@ import warnings
 import PySimpleGUI as sg
 
 
-
 """
     PySimpleGUI Demo Program Browser
 
@@ -442,6 +441,7 @@ def make_window():
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
         [sg.Button('Edit Me (this program)'), sg.B('Settings'), sg.Button('Exit')],
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
+        [sg.T('Python ver ' + sys.version, font='Default 8', pad=(0,0))],
     ]
 
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
@@ -504,7 +504,10 @@ def main():
                     sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
                     sg.cprint('')
                     sg.cprint(f'{full_filename}', c='white on purple')
+                    # if line != 1:
                     sg.execute_editor(full_filename, line_number=int(line))
+                    # else:
+                    #     sg.execute_editor(full_filename)
                 else:
                     sg.cprint('Editing canclled')
         elif event == 'Run':
