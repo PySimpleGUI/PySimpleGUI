@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.8 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist, scrollbar parm for Multiline element to enable turning off scrollbar"
+version = __version__ = "4.35.0.9 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist, scrollbar parm for Multiline element to enable turning off scrollbar, fix in execute_command_subprocess that fixed problem in 3.8, 3.9, 3.10."
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17742,7 +17742,7 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
             # print('executing subprocess command:',command, 'args:',args)
             if args is not None:
                 expanded_args = ' '.join(args)
-                sp = subprocess.Popen([command, (expanded_args,)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+                sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
             else:
                 sp = subprocess.Popen([command, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         if wait:
