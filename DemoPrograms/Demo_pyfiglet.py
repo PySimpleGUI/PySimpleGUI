@@ -44,7 +44,6 @@ def main():
                     [sg.Multiline(size=(LINE_LENGTH, 20), key='-OUTPUT-', font=MULTILINE_FONT)],]
 
     layout = [[sg.Column(column_left),  sg.Column(column_right, expand_x=True, expand_y=True)],
-              [sg.Output(visible=False)],
               [sg.Button('Exit'), sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + ' tkinter ver ' + sg.tclversion_detailed + '  Python ver ' + sys.version, font='Default 8', pad=(0,0))],]
 
     window = sg.Window('Figlet-Me', layout, resizable=True, finalize=True, right_click_menu=['_', ['Edit Me']])
@@ -54,7 +53,7 @@ def main():
 
     while True:  # Event Loop
         event, values = window.read()
-        print(event,values)
+        # print(event,values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == '-FONT-SIZE-':
