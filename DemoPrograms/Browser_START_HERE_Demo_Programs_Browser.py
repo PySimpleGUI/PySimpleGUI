@@ -446,7 +446,9 @@ def make_window():
 
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
                          sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
-                         sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-')]],
+                         sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
+                         sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-')
+                                           ]],
                                          pad=(0,0), k='-OPTIONS BOTTOM-'))
 
     choose_folder_at_top = sg.pin(sg.Column([[sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
@@ -505,7 +507,10 @@ def main():
                     sg.cprint('')
                     sg.cprint(f'{full_filename}', c='white on purple')
                     # if line != 1:
-                    sg.execute_editor(full_filename, line_number=int(line))
+                    try:
+                        sg.execute_editor(full_filename, line_number=int(line))
+                    except:
+                        execute_command_subprocess(editor_program, full_filename)
                     # else:
                     #     sg.execute_editor(full_filename)
                 else:
@@ -516,12 +521,29 @@ def main():
             for file in values['-DEMO LIST-']:
                 file_to_run = str(file_list_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
-                execute_py_file(f'{file_to_run}')
+                try:
+                    sp = execute_py_file(f'{file_to_run}', pipe_output=values['-WAIT-'])
+                except TypeError:
+                    sg.cprint('Consider upgrading to a newer PySimpleGUI.... 4.37.0 has better execution controls', c='white on red')
+                    sp = execute_py_file_with_pipe_output(f'{file_to_run}', pipe_output=values['-WAIT-'])
+                try:
+                    if values['-WAIT-']:
+                        sg.cprint(f'Waiting on results..', text_color='white', background_color='red', end='')
+                        while True:
+                            results = sg.execute_get_results(sp)
+                            sg.cprint(f'STDOUT:', text_color='white', background_color='green')
+                            sg.cprint(results[0])
+                            sg.cprint(f'STDERR:', text_color='white', background_color='green')
+                            sg.cprint(results[1])
+                            if not sg.execute_subprocess_still_running(sp):
+                                break
+                except AttributeError:
+                    sg.cprint('Your version of PySimpleGUI needs to be upgraded to fully use the "WAIT" feature.', c='white on red')
         elif event.startswith('Edit Me'):
             editor_program = get_editor()
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
-            execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
+            execute_command_subprocess(f'{editor_program}', f'{__file__}')
         elif event == '-FILTER-':
             new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
@@ -613,34 +635,145 @@ def main():
                     execute_command_subprocess(explorer_program, file_path)
 
     window.close()
+#
+# .########.##.....##.########..######......######.....###....##.......##........######.
+# .##........##...##..##.......##....##....##....##...##.##...##.......##.......##....##
+# .##.........##.##...##.......##..........##........##...##..##.......##.......##......
+# .######......###....######...##..........##.......##.....##.##.......##........######.
+# .##.........##.##...##.......##..........##.......#########.##.......##.............##
+# .##........##...##..##.......##....##....##....##.##.....##.##.......##.......##....##
+# .########.##.....##.########..######......######..##.....##.########.########..######.
+#
+# .##....##..#######..########..##.....##....###....##.......##.......##....##
+# .###...##.##.....##.##.....##.###...###...##.##...##.......##........##..##.
+# .####..##.##.....##.##.....##.####.####..##...##..##.......##.........####..
+# .##.##.##.##.....##.########..##.###.##.##.....##.##.......##..........##...
+# .##..####.##.....##.##...##...##.....##.#########.##.......##..........##...
+# .##...###.##.....##.##....##..##.....##.##.....##.##.......##..........##...
+# .##....##..#######..##.....##.##.....##.##.....##.########.########....##...
+#
+# .########..########...#######..##.....##.####.########..########.########.
+# .##.....##.##.....##.##.....##.##.....##..##..##.....##.##.......##.....##
+# .##.....##.##.....##.##.....##.##.....##..##..##.....##.##.......##.....##
+# .########..########..##.....##.##.....##..##..##.....##.######...##.....##
+# .##........##...##...##.....##..##...##...##..##.....##.##.......##.....##
+# .##........##....##..##.....##...##.##....##..##.....##.##.......##.....##
+# .##........##.....##..#######.....###....####.########..########.########.
+#
+# .########..##....##....########...######...######..
+# .##.....##..##..##.....##.....##.##....##.##....##.
+# .##.....##...####......##.....##.##.......##.......
+# .########.....##.......########...######..##...####
+# .##.....##....##.......##..............##.##....##.
+# .##.....##....##.......##........##....##.##....##.
+# .########.....##.......##.........######...######..
 
-try:
-    execute_py_file = sg.execute_py_file
-except:
-    def execute_py_file(pyfile, parms=None, cwd=None):
-        if parms is not None:
-            execute_command_subprocess('python' if running_windows() else 'python3', pyfile, parms, wait=False, cwd=cwd)
-        else:
-            execute_command_subprocess('python' if running_windows() else 'python3', pyfile, wait=False, cwd=cwd)
 
-try:
-    execute_command_subprocess = sg.execute_command_subprocess
-except:
-    def execute_command_subprocess(command, *args, wait=False, cwd=None):
-        if running_linux():
-            arg_string = ''
-            for arg in args:
-                arg_string += ' ' + str(arg)
-            sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+
+def execute_py_file_with_pipe_output(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False, pipe_output=False):
+    """
+    Executes a Python file.
+    The interpreter to use is chosen based on this priority order:
+        1. interpreter_command paramter
+        2. global setting "-python command-"
+        3. the interpreter running running PySimpleGUI
+    :param pyfile: the file to run
+    :type pyfile: (str)
+    :param parms: parameters to pass on the command line
+    :type parms: (str)
+    :param cwd: the working directory to use
+    :type cwd: (str)
+    :param interpreter_command: the command used to invoke the Python interpreter
+    :type interpreter_command: (str)
+    :param wait: the working directory to use
+    :type wait: (bool)
+    :param pipe_output: If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output: (bool)
+    :return: Popen object
+    :rtype: (subprocess.Popen) | None
+    """
+
+    if pyfile[0] != '"' and ' ' in pyfile:
+        pyfile = '"'+pyfile+'"'
+    try:
+        if interpreter_command is not None:
+            python_program = interpreter_command
         else:
+            python_program = sg.pysimplegui_user_settings.get('-python command-', '')
+    except:
+        python_program = ''
+
+    if python_program == '':
+        python_program = 'python' if sys.platform.startswith('win') else 'python3'
+    if parms is not None and python_program:
+        sp = execute_command_subprocess_with_pipe_output(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output)
+    elif python_program:
+        sp = execute_command_subprocess_with_pipe_output(python_program, pyfile, wait=wait, cwd=cwd, pipe_output=pipe_output)
+    else:
+        print('execute_py_file - No interpreter has been configured')
+        sp = None
+    return sp
+
+
+def execute_command_subprocess_with_pipe_output(command, *args, wait=False, cwd=None, pipe_output=False):
+    """
+    Runs the specified command as a subprocess.
+    By default the call is non-blocking.
+    The function will immediately return without waiting for the process to complete running. You can use the returned Popen object to communicate with the subprocess and get the results.
+    Returns a subprocess Popen object.
+
+    :param command: Filename to load settings from (and save to in the future)
+    :type command: (str)
+    :param *args:  Variable number of arguments that are passed to the program being started as command line parms
+    :type *args: (Any)
+    :param wait: If True then wait for the subprocess to finish
+    :type wait: (bool)
+    :param cwd: Working directory to use when executing the subprocess
+    :type cwd: (str))
+    :param pipe_output: If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output: (bool)
+    :return: Popen object
+    :rtype: (subprocess.Popen)
+    """
+    try:
+        if args is not None:
             expanded_args = ' '.join(args)
-            sp = subprocess.Popen([command, *args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            # print('executing subprocess command:',command, 'args:',expanded_args)
+            if command[0] != '"' and ' ' in command:
+                command = '"'+command+'"'
+            # print('calling popen with:', command +' '+ expanded_args)
+            # sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
+            if pipe_output:
+                sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            else:
+                sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
+        else:
+            sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         if wait:
             out, err = sp.communicate()
             if out:
                 print(out.decode("utf-8"))
             if err:
                 print(err.decode("utf-8"))
+    except Exception as e:
+        print('** Error executing subprocess **', 'Command:', command)
+        print('error:', e)
+        sp = None
+    return sp
+
+
+# Normally you want to use the PySimpleGUI version of these functions
+try:
+    execute_py_file = sg.execute_py_file
+except:
+    execute_py_file = execute_py_file_with_pipe_output
+
+try:
+    execute_command_subprocess = sg.execute_command_subprocess
+except:
+    execute_command_subprocess = execute_command_subprocess_with_pipe_output
+
+
 
 
 if __name__ == '__main__':
@@ -653,7 +786,7 @@ if __name__ == '__main__':
         version = sg.version
         version_parts = version.split('.')
         major_version, minor_version = int(version_parts[0]), int(version_parts[1])
-        if major_version < 4 or minor_version < 35:
+        if major_version < 4 or minor_version < 32:
             sg.popup('Warning - Your PySimpleGUI version is less then 4.35.0',
                      'As a result, you will not be able to use the EDIT features of this program',
                      'Please upgrade to at least 4.35.0',
