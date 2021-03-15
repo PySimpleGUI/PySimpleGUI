@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.35.0.10 Unreleased\nUpdated debugger, Added checks for COLOR_SYSTEM_DEFAULT to several element update methods, changed GreenTan theme to use black instead of the COLOR_SYSTEM_DEFAULT setting, fix in button.update when subsample used, changed image update animation to start & stop at correct frame and added a return value for popup animated, bind event handling will add an item to a tuple rather than making an entirely new tuple (NOTE MAY BREAK SOME EXISTING APPLICATIONS...), theme will change gray to grey if needed, editor launcher - if spaces in the name then will auto add quotes if they don't already exist, scrollbar parm for Multiline element to enable turning off scrollbar, fix in execute_command_subprocess that fixed problem in 3.8, 3.9, 3.10., adding quotes in the exec subprocess func"
+version = __version__ = "4.36.0 Released 14-Mar-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -13,33 +13,16 @@ except:
 
 port = 'PySimpleGUI'
 
-#  888888ba           .d88888b  oo                     dP           .88888.  dP     dP dP
-#  88    `8b          88.    "'                        88          d8'   `88 88     88 88
-# a88aaaa8P' dP    dP `Y88888b. dP 88d8b.d8b. 88d888b. 88 .d8888b. 88        88     88 88
-#  88        88    88       `8b 88 88'`88'`88 88'  `88 88 88ooood8 88   YP88 88     88 88
-#  88        88.  .88 d8'   .8P 88 88  88  88 88.  .88 88 88.  ... Y8.   .88 Y8.   .8P 88
-#  dP        `8888P88  Y88888P  dP dP  dP  dP 88Y888P' dP `88888P'  `88888'  `Y88888P' dP
-#                 .88                         88
-#                 .88                         88
-#             d8888P                          dP
-
-
-#  __                                      __
-# /  |                                    /  |
-# $$ |        ______    ______    ______  $$ |
-# $$ |       /      \  /      \  /      \ $$ |
-# $$ |      /$$$$$$  |/$$$$$$  | $$$$$$  |$$ |
-# $$ |      $$    $$ |$$ |  $$ | /    $$ |$$ |
-# $$ |_____ $$$$$$$$/ $$ \__$$ |/$$$$$$$ |$$ |
-# $$       |$$       |$$    $$ |$$    $$ |$$ |
-# $$$$$$$$/  $$$$$$$/  $$$$$$$ | $$$$$$$/ $$/
-#                     /  \__$$ |
-#                     $$    $$/
-#                      $$$$$$/
+# 8""""8        8""""8                             8""""8 8   8 8
+# 8    8 e    e 8      e  eeeeeee eeeee e     eeee 8    " 8   8 8
+# 8eeee8 8    8 8eeeee 8  8  8  8 8   8 8     8    8e     8e  8 8e
+# 88     8eeee8     88 8e 8e 8  8 8eee8 8e    8eee 88  ee 88  8 88
+# 88       88   e   88 88 88 8  8 88    88    88   88   8 88  8 88
+# 88       88   8eee88 88 88 8  8 88    88eee 88ee 88eee8 88ee8 88
 
 
 """
-Copyright 2018, 2019, 2020, 2021 PySimpleGUI.org
+Copyright 2018, 2019, 2020, 2021 PySimpleGUI
 
 Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
 
@@ -1077,8 +1060,8 @@ class Element():
             if isinstance(self.Key, str):
                 key = self.Key + str(key_suffix)
             else:
-                # key = (self.Key, key_suffix)      # old way (pre 2021) was to make a brand new tuple
-                key = self.Key + (key_suffix,)      # if key is a tuple, add one more item
+                key = (self.Key, key_suffix)       # old way (pre 2021) was to make a brand new tuple
+                # key = self.Key + (key_suffix,)   # in 2021 tried this. It will break existing applications though - if key is a tuple, add one more item
         else:
             key = bind_string
 
@@ -2821,8 +2804,16 @@ class Multiline(Element):
         """
         If this Widget is deleted, be sure and restore the old stdout, stderr
         """
-        self.restore_stdout()
-        self.restore_stderr()
+        # These trys are here because found that if the init fails, then
+        # the variables holding the old stdout won't exist and will get an error
+        try:
+            self.restore_stdout()
+        except Exception as e:
+            pass
+        try:
+            self.restore_stderr()
+        except:
+            pass
 
 
 
@@ -2943,6 +2934,66 @@ class Text(Element):
         """
         return self.DisplayText
 
+    @classmethod
+    def char_width_in_pixels(cls, font, character='W'):
+        """
+        Get the with of the character "W" in pixels for the font being passed in or
+        the character of your choosing if "W" is not a good representative character.
+        Cannot be used until a window has been created.
+        If an error occurs, 0 will be returned
+        :param font: specifies the font family, size, etc, to be measured
+        :type font: (str or Tuple[str, int] or None)
+        :param character: specifies a SINGLE CHARACTER character to measure
+        :type character: (str)
+        :return: Width in pixels of "A"
+        :rtype: (int)
+        """
+        size = 0
+        try:
+            size = tkinter.font.Font(font=font).measure(character)  # single character width
+        except Exception as e:
+            print('Error retrieving font information', e)
+        return size
+
+
+    @classmethod
+    def char_height_in_pixels(cls, font):
+        """
+        Get the height of a string if using the supplied font in pixels.
+        Cannot be used until a window has been created.
+        If an error occurs, 0 will be returned
+        :param font: specifies the font family, size, etc, to be measured
+        :type font: (str or Tuple[str, int] or None)
+        :return: Height in pixels of "A"
+        :rtype: (int)
+        """
+        size = 0
+        try:
+            size = tkinter.font.Font(font=font).metrics('linespace')
+        except Exception as e:
+            print('Error retrieving font information', e)
+        return size
+
+
+    @classmethod
+    def string_width_in_pixels(cls, font, string):
+        """
+        Get the with of the supplied string in pixels for the font being passed in.
+        Cannot be used until a window has been created.
+        If an error occurs, 0 will be returned
+        :param font: specifies the font family, size, etc, to be measured
+        :type font: (str or Tuple[str, int] or None)
+        :param string: the string to measure
+        :type string: str
+        :return: Width in pixels of string
+        :rtype: (int)
+        """
+        size = 0
+        try:
+            size = tkinter.font.Font(font=font).measure(string)  # string's  width
+        except Exception as e:
+            print('Error retrieving font information', e)
+        return size
 
 
     Get = get
@@ -17733,21 +17784,16 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
     :rtype: (subprocess.Popen)
     """
     try:
-        if _running_linux():
-            arg_string = ''
-            for arg in args:
-                arg_string += ' ' + str(arg)
-            sp = subprocess.Popen(str(command) + arg_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+        if args is not None:
+            expanded_args = ' '.join(args)
+            # print('executing subprocess command:',command, 'args:',expanded_args)
+            if command[0] != '"' and ' ' in command:
+                command = '"'+command+'"'
+            # print('calling popen with:', command +' '+ expanded_args)
+            sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            # sp = subprocess.Popen([command,], expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         else:
-            if args is not None:
-                expanded_args = ' '.join(args)
-                # print('executing subprocess command:',command, 'args:',expanded_args)
-                if command[0] != '"' and ' ' in command:
-                    command = '"'+command+'"'
-                sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-                # sp = subprocess.Popen([command,], expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-            else:
-                sp = subprocess.Popen([command, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         if wait:
             out, err = sp.communicate()
             if out:
@@ -17768,15 +17814,15 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
         2. global setting "-python command-"
         3. the interpreter running running PySimpleGUI
     :param pyfile: the file to run
-    :type : (str)
+    :type pyfile: (str)
     :param parms: parameters to pass on the command line
-    :type :
+    :type parms: (str)
     :param cwd: the working directory to use
-    :type :
+    :type cwd: (str)
     :param interpreter_command: the command used to invoke the Python interpreter
-    :type :
+    :type interpreter_command: (str)
     :param wait: the working directory to use
-    :type :
+    :type wait: (bool)
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
@@ -17814,7 +17860,7 @@ def execute_editor(file_to_edit, line_number=None):
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
-    if _running_windows() and file_to_edit is not None and len(file_to_edit) != 0 and file_to_edit[0] not in ('\"', "\'") and ' ' in file_to_edit:
+    if file_to_edit is not None and len(file_to_edit) != 0 and file_to_edit[0] not in ('\"', "\'") and ' ' in file_to_edit:
         file_to_edit = '"' + file_to_edit + '"'
 
     editor_program = pysimplegui_user_settings.get('-editor program-', None)
@@ -17934,8 +17980,8 @@ PSGDebugLogo = b'R0lGODlhMgAtAPcAAAAAADD/2akK/4yz0pSxyZWyy5u3zZ24zpW30pG52J250J+
 
 red_x = b"R0lGODlhEAAQAPeQAIsAAI0AAI4AAI8AAJIAAJUAAJQCApkAAJoAAJ4AAJkJCaAAAKYAAKcAAKcCAKcDA6cGAKgAAKsAAKsCAKwAAK0AAK8AAK4CAK8DAqUJAKULAKwLALAAALEAALIAALMAALMDALQAALUAALYAALcEALoAALsAALsCALwAAL8AALkJAL4NAL8NAKoTAKwbAbEQALMVAL0QAL0RAKsREaodHbkQELMsALg2ALk3ALs+ALE2FbgpKbA1Nbc1Nb44N8AAAMIWAMsvAMUgDMcxAKVABb9NBbVJErFYEq1iMrtoMr5kP8BKAMFLAMxKANBBANFCANJFANFEB9JKAMFcANFZANZcANpfAMJUEMZVEc5hAM5pAMluBdRsANR8AM9YOrdERMpIQs1UVMR5WNt8X8VgYMdlZcxtYtx4YNF/btp9eraNf9qXXNCCZsyLeNSLd8SSecySf82kd9qqc9uBgdyBgd+EhN6JgtSIiNuJieGHhOGLg+GKhOKamty1ste4sNO+ueenp+inp+HHrebGrefKuOPTzejWzera1O7b1vLb2/bl4vTu7fbw7ffx7vnz8f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAJAALAAAAAAQABAAAAjUACEJHEiwYEEABniQKfNFgQCDkATQwAMokEU+PQgUFDAjjR09e/LUmUNnh8aBCcCgUeRmzBkzie6EeQBAoAAMXuA8ciRGCaJHfXzUMCAQgYooWN48anTokR8dQk4sELggBhQrU9Q8evSHiJQgLCIIfMDCSZUjhbYuQkLFCRAMAiOQGGLE0CNBcZYmaRIDLqQFGF60eTRoSxc5jwjhACFWIAgMLtgUocJFy5orL0IQRHAiQgsbRZYswbEhBIiCCH6EiJAhAwQMKU5DjHCi9gnZEHMTDAgAOw=="
 
-COLOR_SCHEME = 'LightGreen'
-
+COLOR_SCHEME = 'dark grey 13'
+DEBUGGER_POPOUT_THEME = 'dark grey 13'
 WIDTH_VARIABLES = 23
 WIDTH_RESULTS = 46
 
@@ -18008,17 +18054,16 @@ class _Debugger():
 
         col1 = [
             # [Frame('Auto Watches', autowatch_frame+variable_values, title_color='blue')]
-            [Frame('Auto Watches', autowatch_frame + var_layout, title_color='blue')]
+            [Frame('Auto Watches', autowatch_frame + var_layout, title_color=theme_button_color()[0])]
         ]
 
         col2 = [
-            [Frame('Variables or Expressions to Watch', variables_frame, title_color='blue'), ],
-            [Frame('REPL-Light - Press Enter To Execute Commands', interactive_frame, title_color='blue'), ]
+            [Frame('Variables or Expressions to Watch', variables_frame, title_color=theme_button_color()[0]), ],
+            [Frame('REPL-Light - Press Enter To Execute Commands', interactive_frame, title_color=theme_button_color()[0]), ]
         ]
 
         # Tab based layout
-        layout = [[TabGroup([[Tab('Variables', col1), Tab('REPL & Watches', col2)]])],
-                  [Button('', image_data=red_x, key='_EXIT_', button_color=None), ]]
+        layout = [[TabGroup([[Tab('Variables', col1), Tab('REPL & Watches', col2)]])]]
 
         # ------------------------------- Create main window -------------------------------
         window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location, keep_on_top=True)
@@ -18044,9 +18089,9 @@ class _Debugger():
         if not self.watcher_window:  # if there is no window setup, nothing to do
             return False
         event, values = self.watcher_window.read(timeout=1)
-        if event in (None, 'Exit', '_EXIT_'):  # EXIT BUTTON / X BUTTON
+        if event in (None, 'Exit', '_EXIT_', '-EXIT-'):  # EXIT BUTTON / X BUTTON
             try:
-                self.watcher_window.Close()
+                self.watcher_window.close()
             except:
                 pass
             self.watcher_window = None
@@ -18217,7 +18262,7 @@ class _Debugger():
       #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
-        ChangeLookAndFeel(COLOR_SCHEME)
+        theme(COLOR_SCHEME)
         num_cols = 3
         output_text = ''
         num_lines = 2
@@ -18245,11 +18290,11 @@ class _Debugger():
         layout += [
             [Ok(), Cancel(), Button('Clear All'), Button('Select [almost] All', key='_AUTO_SELECT_')]]
 
-        window = Window('All Locals', layout, icon=PSGDebugLogo).Finalize()
+        window = Window('All Locals', layout, icon=PSGDebugLogo, finalize=True)
 
         while True:  # event loop
             event, values = window.read()
-            if event in (None, 'Cancel'):
+            if event in (None, 'Cancel', '-EXIT-'):
                 break
             elif event == 'Ok':
                 self.local_choices = values
@@ -18296,7 +18341,7 @@ class _Debugger():
         """
         if self.popout_window:  # if floating window already exists, close it first
             self.popout_window.Close()
-        ChangeLookAndFeel('Topanga')
+        theme(DEBUGGER_POPOUT_THEME)
         num_cols = 2
         width_var = 15
         width_value = 30
@@ -18326,8 +18371,7 @@ class _Debugger():
                 col = 0
         if col != 0:
             layout.append(line)
-        layout = [[Column(layout), Column(
-            [[Button('', key='_EXIT_', image_data=red_x, button_color=('#282923', '#282923'), border_width=0)]])]]
+        layout = [[T(SYMBOL_X, enable_events=True, key='-EXIT-', font='_ 7')],[Column(layout)]]
 
         self.popout_window = Window('Floating', layout, alpha_channel=0, no_titlebar=True, grab_anywhere=True,
                                     element_padding=(0, 0), margins=(0, 0), keep_on_top=True,
@@ -18342,7 +18386,7 @@ class _Debugger():
             self.popout_window.Move(screen_size[0] - self.popout_window.Size[0], 0)
         self.popout_window.SetAlpha(1)
 
-        ChangeLookAndFeel('SystemDefault')
+        # ChangeLookAndFeel('SystemDefault')
         return True
 
     ######
@@ -18377,7 +18421,7 @@ class _Debugger():
                 if key is not None and self.popout_window is not None:
                     self.popout_window.Element(key, silent_on_error=True).Update(self.locals.get(key))
         event, values = self.popout_window.read(timeout=5)
-        if event in (None, '_EXIT_', 'Exit::RightClick'):
+        if event in (None, '_EXIT_', 'Exit::RightClick', '-EXIT-'):
             self.popout_window.Close()
             self.popout_window = None
         elif event == 'Debugger::RightClick':
