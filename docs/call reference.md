@@ -3654,8 +3654,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |       source        | Filename or Base64 encoded string containing Animated GIF |
-|     int     | time_between_frames | Number of milliseconds to wait between showing frames |
+| str or bytes or None |       source        | Filename or Base64 encoded string containing Animated GIF |
+|        int         | time_between_frames | Number of milliseconds to wait between showing frames |
 
 ### update_animation_no_buffering
 
@@ -3752,8 +3752,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str or bytes |       source        | Filename or Base64 encoded string containing Animated GIF |
-|     int     | time_between_frames | Number of milliseconds to wait between showing frames |
+| str or bytes or None |       source        | Filename or Base64 encoded string containing Animated GIF |
+|        int         | time_between_frames | Number of milliseconds to wait between showing frames |
 
 ---------
 
@@ -4791,6 +4791,7 @@ Multiline(default_text = "",
     pad = None,
     tooltip = None,
     justification = None,
+    scrollbar = True,
     right_click_menu = None,
     visible = True,
     metadata = None)
@@ -4825,6 +4826,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
 |                                   str                                    |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
+|                                   bool                                   |     scrollbar      | If True then a scrollbar will be shown (the default) |
 |                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |      visible       | set visibility state of the element |
 |                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
@@ -12779,7 +12781,7 @@ Parameter Descriptions:
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str         |        title        | Title that will be shown on the window |
 |        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-| None | **RETURN** | No return value
+| bool | **RETURN** | True if the window updated OK. False if the window was closed
 
 Popup that closes itself after some time period
 
@@ -13727,7 +13729,7 @@ Parameter Descriptions:
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str         |        title        | Title that will be shown on the window |
 |        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-| None | **RETURN** | No return value
+| bool | **RETURN** | True if the window updated OK. False if the window was closed
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -15185,17 +15187,19 @@ Returns a subprocess Popen object.
 execute_command_subprocess(command,
     args=*<1 or N object>,
     wait = False,
-    cwd = None)
+    cwd = None,
+    pipe_output = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str  | command | Filename to load settings from (and save to in the future) |
-| Any  |  *args  | Variable number of arguments that are passed to the program being started as command line parms |
-| bool |  wait   | If True then wait for the subprocess to finish |
-| str  |   cwd   | Working directory to use when executing the subprocess |
+| str  |   command   | Filename to load settings from (and save to in the future) |
+| Any  |    *args    | Variable number of arguments that are passed to the program being started as command line parms |
+| bool |    wait     | If True then wait for the subprocess to finish |
+| str  |     cwd     | Working directory to use when executing the subprocess |
+| bool | pipe_output | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
 | (subprocess.Popen) | **RETURN** | Popen object
 
 Runs the editor that was configured in the global settings and opens the file to a specific line number.
@@ -15236,7 +15240,7 @@ Get the text results of a previously executed execute call
 Returns a tuple of the strings (stdout, stderr)
 
 ```
-execute_get_results(subprocess_id)
+execute_get_results(subprocess_id, timeout = None)
 ```
 
 Parameter Descriptions:
@@ -15244,6 +15248,7 @@ Parameter Descriptions:
 |Type|Name|Meaning|
 |--|--|--|
 | (subprocess.Popen) | subprocess_id | a Popen subprocess ID returned from a previous execute call |
+|  (None or float)   |    timeout    | Time in fractions of a second to wait. Returns '','' if timeout. Default of None means wait forever |
 
 Executes a Python file.
 The interpreter to use is chosen based on this priority order:
@@ -15256,18 +15261,20 @@ execute_py_file(pyfile,
     parms = None,
     cwd = None,
     interpreter_command = None,
-    wait = False)
+    wait = False,
+    pipe_output = False)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str |       pyfile        | the file to run |
-|     |        parms        | parameters to pass on the command line |
-|     |         cwd         | the working directory to use |
-|     | interpreter_command | the command used to invoke the Python interpreter |
-|     |        wait         | the working directory to use |
+| str  |       pyfile        | the file to run |
+| str  |        parms        | parameters to pass on the command line |
+| str  |         cwd         | the working directory to use |
+| str  | interpreter_command | the command used to invoke the Python interpreter |
+| bool |        wait         | the working directory to use |
+| bool |     pipe_output     | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
 | (subprocess.Popen) or None | **RETURN** | Popen object
 
 ## Misc

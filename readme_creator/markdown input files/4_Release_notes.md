@@ -1759,8 +1759,39 @@ Emojis, Global settings, Exec APIs
 	* now has a color parameter to set the color of the BEAM for input and other elements like them
 
 
+## 4.36.0 PySimpleGUI 14-Mar-2021
+
+Happy Pi Day!  
+Exec APIs 1.1, some others fixes too
+
+* Exec APIs
+    * Fixed the Popen problems found in 3.8+
+	* Add quotes on all platforms now, not just Windows
+* Added checks for COLOR_SYSTEM_DEFAULT to a number of the element .update mehtods
+* Changed GreenTan theme to use black
+* Fix for button update when cubsample used
+* Changed image update anumiation to start & stop at correct frame
+* Added return values for popup_animated
+* Themes - gray or grey can be used to select the gray themes. Spelling doesn't matter now
+* New scrollbar parm for Multiline Element - will use a Text Widget now if scrollbar is False
+* New Text element class methods for measuring size of characters
+* Debugger theme changed and red button removed
 
 
+## 4.37.0 PySimpleGUI 15-Mar-2021
+
+Happy "Pi with significant rounding error day"!
+I'll eventually figure out this subprocess thing... honest...
+
+* Exec APIs
+	* More control needed over routing of STDOUT
+	* Additional parm added pipe_output to execute_command_subprocess
+	* execute_get_results has a timeout parm now
+	* execute_subprocess_still_running added to check if a subprocess is still running
+* Exposed the "running" functions so they can be used by Demos
+	* Used internally to see if running on Windows, Linux, Mac, Trinket
+	* Makes it one less import and the code already existed.  All that needed to happen is the _ removed from the front of function name
+	
 
 
 ## Upcoming

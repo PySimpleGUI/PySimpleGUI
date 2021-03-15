@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.36.0.1 UnReleased\nExec APIS - new function to see if subproceses is still running, more paramters to control the output for subprocesses"
+version = __version__ = "4.37.0 Released 15-Mar-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -226,7 +226,7 @@ def _timeit_summary(func):
     return wrapper
 
 
-def _running_linux():
+def running_linux():
     """
     Determines the OS is Linux by using sys.platform
 
@@ -238,7 +238,7 @@ def _running_linux():
     return sys.platform.startswith('linux')
 
 
-def _running_mac():
+def running_mac():
     """
     Determines the OS is Mac by using sys.platform
 
@@ -250,7 +250,7 @@ def _running_mac():
     return sys.platform.startswith('darwin')
 
 
-def _running_windows():
+def running_windows():
     """
     Determines the OS is Windows by using sys.platform
 
@@ -262,7 +262,7 @@ def _running_windows():
     return sys.platform.startswith('win')
 
 
-def _running_trinket():
+def running_trinket():
     """
     A special case for Trinket.  Checks both the OS and the number of environment variables
     Currently, Trinket only has ONE environment variable.  This fact is used to figure out if Trinket is being used.
@@ -274,7 +274,6 @@ def _running_trinket():
     """
     if len(os.environ) == 1 and sys.platform.startswith('linux'):
         return True
-
     return False
 
 
@@ -900,7 +899,7 @@ class Element():
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
             # if sys.platform == 'linux':
-            if _running_linux():
+            if running_linux():
                 print('* linix minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
                 # self.ParentForm.TKroot.state('icon')
@@ -930,7 +929,7 @@ class Element():
 
     def _titlebar_restore(self, event):
         # if sys.platform == 'linux':
-        if _running_linux():
+        if running_linux():
             print('linux restore')
             # if self._skip_first_restore_callback:
             #     self._skip_first_restore_callback = False
@@ -9309,7 +9308,7 @@ class Window:
         if not self._is_window_created():
             return
 
-        if _running_mac():
+        if running_mac():
             return
 
         try:
@@ -17841,7 +17840,7 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     else:
         python_program = pysimplegui_user_settings.get('-python command-', '')
         if python_program == '':
-            python_program = 'python' if _running_windows() else 'python3'
+            python_program = 'python' if running_windows() else 'python3'
     if parms is not None and python_program:
         sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output)
     elif python_program:
@@ -18705,7 +18704,7 @@ def _copy_files_from_github(files, github_url=None):
         page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
         if version != "unknown":
             page_contents["__init__.py"] += ("from ." + info.package + " import __version__\n").encode()
-    if _running_linux() or _running_mac():
+    if running_linux() or running_mac():
         dir_search = sys.path
     else:
         dir_search = site.getsitepackages()
@@ -18730,7 +18729,7 @@ def _copy_files_from_github(files, github_url=None):
         with open(os.path.join(str(path), str(file)), "wb") as f:
             f.write(contents)
 
-    if _running_mac():
+    if running_mac():
         pypi_packages = str(sitepackages_path) + "/.pypi_packages"
         config = configparser.ConfigParser()
         config.read(pypi_packages)
@@ -19425,7 +19424,7 @@ pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLE
 theme(theme_global())
 
 # See if running on Trinket. If Trinket, then use custom titlebars since Trinket doesn't supply any
-if _running_trinket():
+if running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
 if tclversion_detailed.startswith('8.5'):
