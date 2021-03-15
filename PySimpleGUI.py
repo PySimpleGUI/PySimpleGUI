@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.36.0 Released 14-Mar-2021"
+version = __version__ = "4.36.0.1 UnReleased\nExec APIS - new function to see if subproceses is still running, more paramters to control the output for subprocesses"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17765,7 +17765,7 @@ These are the functions used to implement the subprocess APIs (Exec APIs) of PyS
 
 
 
-def execute_command_subprocess(command, *args, wait=False, cwd=None):
+def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output=False):
     """
     Runs the specified command as a subprocess.
     By default the call is non-blocking.
@@ -17780,6 +17780,8 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
     :type wait: (bool)
     :param cwd: Working directory to use when executing the subprocess
     :type cwd: (str))
+    :param pipe_output: If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output: (bool)
     :return: Popen object
     :rtype: (subprocess.Popen)
     """
@@ -17790,8 +17792,11 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
             if command[0] != '"' and ' ' in command:
                 command = '"'+command+'"'
             # print('calling popen with:', command +' '+ expanded_args)
-            sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
-            # sp = subprocess.Popen([command,], expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            # sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
+            if pipe_output:
+                sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
+            else:
+                sp = subprocess.Popen(command +' '+ expanded_args, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, cwd=cwd)
         else:
             sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         if wait:
@@ -17806,7 +17811,7 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None):
     return sp
 
 
-def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False):
+def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait=False, pipe_output=False):
     """
     Executes a Python file.
     The interpreter to use is chosen based on this priority order:
@@ -17823,6 +17828,8 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     :type interpreter_command: (str)
     :param wait: the working directory to use
     :type wait: (bool)
+    :param pipe_output: If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full
+    :type pipe_output: (bool)
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
@@ -17836,9 +17843,9 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
         if python_program == '':
             python_program = 'python' if _running_windows() else 'python3'
     if parms is not None and python_program:
-        sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd)
+        sp = execute_command_subprocess(python_program, pyfile, parms, wait=wait, cwd=cwd, pipe_output=pipe_output)
     elif python_program:
-        sp = execute_command_subprocess(python_program, pyfile, wait=wait, cwd=cwd)
+        sp = execute_command_subprocess(python_program, pyfile, wait=wait, cwd=cwd, pipe_output=pipe_output)
     else:
         print('execute_py_file - No interpreter has been configured')
         sp = None
@@ -17879,29 +17886,46 @@ def execute_editor(file_to_edit, line_number=None):
     return sp
 
 
-def execute_get_results(subprocess_id):
+def execute_get_results(subprocess_id, timeout=None):
     """
     Get the text results of a previously executed execute call
     Returns a tuple of the strings (stdout, stderr)
     :param subprocess_id: a Popen subprocess ID returned from a previous execute call
     :type subprocess_id: (subprocess.Popen)
-    :return: Tuple[str, str]
+    :param timeout: Time in fractions of a second to wait. Returns '','' if timeout. Default of None means wait forever
+    :type timeout: (None | float)
+    :returns: Tuple with 2 strings (stdout, stderr)
+    :rtype: Tuple[str, str]
     """
 
-    out_decoded = err_decoded = ''
+    out_decoded = err_decoded = None
     if subprocess_id is not None:
         try:
-            out, err = subprocess_id.communicate()
+            out, err = subprocess_id.communicate(timeout=timeout)
             if out:
                 out_decoded = out.decode("utf-8")
             if err:
                 err_decoded = err.decode("utf-8")
         except Exception as e:
             print('Error in execute_get_results', e)
-            out_decoded = err_decoded = ''
+            out_decoded = err_decoded = None
 
     return out_decoded, err_decoded
 
+
+
+def execute_subprocess_still_running(subprocess_id):
+    """
+    Returns True is the subprocess ID provided is for a process that is still running
+
+    :param subprocess_id: ID previously returned from Exec API calls that indicate this value is returned
+    :type subprocess_id: (subprocess.Popen)
+    :return: True if the subproces is running
+    :rtype: bool
+    """
+    if subprocess_id.poll() == 0:
+        return False
+    return True
 
 
 def execute_file_explorer(folder_to_open=''):
