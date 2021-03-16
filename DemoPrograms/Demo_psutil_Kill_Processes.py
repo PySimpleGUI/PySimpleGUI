@@ -12,6 +12,8 @@ CONFIRM_KILLS = False
 """
     Utility to show running processes, CPU usage and provides way to kill processes.
     Based on psutil package that is easily installed using pip
+    
+    Copyright 2021 PySimpleGUI
 """
 
 def kill_proc_tree(pid, sig=signal.SIGTERM, include_parent=True,
@@ -37,12 +39,21 @@ def kill_proc_tree(pid, sig=signal.SIGTERM, include_parent=True,
 def show_list_by_name(window):
     psutil.cpu_percent(interval=.1)
     procs = psutil.process_iter()
-    all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+    all_procs = []
+    for proc in procs:
+        pinfo = [proc.cpu_percent(), proc.name(), proc.pid]
+        try:
+            cmd = proc.cmdline()
+            pinfo.append(' '.join(cmd))
+        except:
+            pinfo.append('')
+        all_procs.append(pinfo)
+    # all_procs = [[proc.cpu_percent(), proc.name(), proc.pid, proc.cmdline()] for proc in procs]
     sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(1), reverse=False)
     display_list = []
     for process in sorted_by_cpu_procs:
-        display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0] / 10, process[1]))
-    window['-processes-'].update(display_list)
+        display_list.append('{:5d} {:5.2f} {} {}\n'.format(process[2], process[0] / 10, process[1], process[3]))
+    window['-PROCESSES-'].update(display_list)
     return display_list
 
 def main():
@@ -52,9 +63,9 @@ def main():
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15), text_color='yellow')],
-              [sg.Listbox(values=[' '], size=(50, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-processes-')],
+              [sg.Listbox(values=[' '], size=(90, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-PROCESSES-')],
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
-              [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-filter-')],
+              [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-FILTER-')],
               [sg.Button('Sort by Name', ),
                sg.Button('Sort by % CPU', button_color=('white', 'DarkOrange2')),
                sg.Button('Kill', button_color=('white','red'), bind_return_key=True),
@@ -90,16 +101,16 @@ def main():
             # display_list = []
             # for process in sorted_by_cpu_procs:
             #     display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
-            # window['-processes-'].update(display_list)
+            # window['-PROCESSES-'].update(display_list)
         elif event == 'Kill':
-            processes_to_kill = values['-processes-']
+            processes_to_kill = values['-PROCESSES-']
             for proc in processes_to_kill:
                 pid = int(proc[0:5])
                 # if sg.popup_yes_no('About to kill {} {}'.format(pid, proc[12:]), keep_on_top=True) == 'Yes':
                 try:
                     kill_proc_tree(pid=pid)
                 except:
-                    sg.popup_no_wait('Error killing process', auto_close_duration=2, auto_close=True, keep_on_top=True)
+                    sg.popup_non_blocking('Error killing process', auto_close_duration=2, auto_close=True, keep_on_top=True)
         elif event == 'Sort by % CPU':
             psutil.cpu_percent(interval=.1)
             procs = psutil.process_iter()
@@ -108,17 +119,16 @@ def main():
             display_list = []
             for process in sorted_by_cpu_procs:
                 display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
-            window['-processes-'].update(display_list)
+            window['-PROCESSES-'].update(display_list)
         else:                   # was a typed character
             if display_list is not None:
                 new_output = []
                 for line in display_list:
-                    if values['-filter-'] in line.lower():
+                    if values['-FILTER-'] in line.lower():
                         new_output.append(line)
-                window['-processes-'].update(new_output)
+                window['-PROCESSES-'].update(new_output)
     window.close()
 
 
 if __name__ == "__main__":
     main()
-    
