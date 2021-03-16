@@ -35,8 +35,8 @@ def main():
                              col_widths=[40], num_rows=30, enable_events=True), sg.VerticalSeparator(pad=((5, 5), 0))]]
 
     try:
-        mline_input = sg.Multiline('PySimpleGUI', size=(40,3), key='-TEXT-TO-SHOW-', scrollbar=False, enable_events=True, focus=True)
-    except:
+        mline_input = sg.Multiline('PySimpleGUI', size=(40,3), key='-TEXT-TO-SHOW-', no_scrollbar=True, enable_events=True, focus=True)
+    except Exception as e:
         mline_input = sg.Multiline('PySimpleGUI', size=(40,3), key='-TEXT-TO-SHOW-', enable_events=True, focus=True)
 
     column_right = [[sg.Text("Font Name:", size=(10,1)), sg.Input(selected_font, size=(12,1), key='-FONT-NAME-')],

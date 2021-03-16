@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.37.0 Released 15-Mar-2021"
+version = __version__ = "4.37.0.1 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2473,7 +2473,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, scrollbar=True,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2526,8 +2526,8 @@ class Multiline(Element):
         :type tooltip: (str)
         :param justification: text justification. left, right, center. Can use single characters l, r, c.
         :type justification: (str)
-        :param scrollbar: If True then a scrollbar will be shown (the default)
-        :type scrollbar: (bool)
+        :param no_scrollbar: If False then a scrollbar will be shown (the default)
+        :type no_scrollbar: (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
@@ -2563,7 +2563,7 @@ class Multiline(Element):
             self.reroute_stdout_to_here()
         if reroute_stderr:
             self.reroute_stderr_to_here()
-        self.scrollbar = scrollbar
+        self.no_scrollbar = no_scrollbar
 
         super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -12700,10 +12700,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element = element  # type: Multiline
                 width, height = element_size
                 bd = element.BorderWidth
-                if element.scrollbar:
-                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
-                else:
+                if element.no_scrollbar:
                     element.TKText = element.Widget = tk.Text(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
+                else:
+                    element.TKText = element.Widget = tk.scrolledtext.ScrolledText(tk_row_frame, width=width, height=height, wrap='word', bd=bd, font=font, relief=RELIEF_SUNKEN)
                 if element.DefaultText:
                     element.TKText.insert(1.0, element.DefaultText)  # set the default text
                 element.TKText.config(highlightthickness=0)
@@ -12741,7 +12741,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKText.focus_set()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKText.configure(fg=text_color)
-                if element.Disabled == True:
+                if element.Disabled is True:
                     element.TKText['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKText, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
@@ -18086,10 +18086,11 @@ class _Debugger():
         ]
 
         # Tab based layout
-        layout = [[TabGroup([[Tab('Variables', col1), Tab('REPL & Watches', col2)]])]]
+        layout = [  [Text('Debugging: ' + self._find_users_code())],
+                    [TabGroup([[Tab('Variables', col1), Tab('REPL & Watches', col2)]])]]
 
         # ------------------------------- Create main window -------------------------------
-        window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location, keep_on_top=True)
+        window = Window("PySimpleGUI Debugger", layout, icon=PSGDebugLogo, margins=(0, 0), location=location, keep_on_top=True, right_click_menu=[[''], ['Exit',]])
 
         Window._read_call_from_debugger = True
         window.finalize()
@@ -18227,6 +18228,31 @@ class _Debugger():
             self.watcher_window.Element('_WATCH{}_RESULT_'.format(i)).Update('')
 
         return True  # return indicating the window stayed open
+
+    def _find_users_code(self):
+        try:    # lots can go wrong so wrapping the entire thing
+            trace_details = traceback.format_stack()
+            file_info_pysimplegui, error_message = None, ''
+            for line in reversed(trace_details):
+                if __file__ not in line:
+                    file_info_pysimplegui = line.split(",")[0]
+                    error_message = line
+                    break
+            if file_info_pysimplegui is None:
+                return ''
+            error_parts = None
+            if error_message != '':
+                error_parts = error_message.split(', ')
+                if len(error_parts)  < 4:
+                    error_message = error_parts[0]+'\n'+error_parts[1]+ '\n' + ''.join(error_parts[2:])
+            if error_parts is None:
+                print('*** Error popup attempted but unable to parse error details ***')
+                print(trace_details)
+                return ''
+            filename = error_parts[0][error_parts[0].index('File ')+5:]
+            return filename
+        except:
+            return ''
 
     ######                                 #     #
     #     #  ####  #####  #    # #####     #  #  # # #    # #####   ####  #    #
