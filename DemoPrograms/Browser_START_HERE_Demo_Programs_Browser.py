@@ -123,6 +123,10 @@ def get_editor():
 
     return user_editor
 
+def using_local_editor():
+    user_editor = sg.user_settings_get_entry('-editor program-', None)
+    return get_editor() ==  user_editor
+
 
 def get_explorer():
     """
@@ -507,10 +511,13 @@ def main():
                     sg.cprint('')
                     sg.cprint(f'{full_filename}', c='white on purple')
                     # if line != 1:
-                    try:
-                        sg.execute_editor(full_filename, line_number=int(line))
-                    except:
+                    if using_local_editor():
                         execute_command_subprocess(editor_program, full_filename)
+                    else:
+                        try:
+                            sg.execute_editor(full_filename, line_number=int(line))
+                        except:
+                            execute_command_subprocess(editor_program, full_filename)
                     # else:
                     #     sg.execute_editor(full_filename)
                 else:
@@ -543,7 +550,7 @@ def main():
             editor_program = get_editor()
             sg.cprint(f'opening using {editor_program}:')
             sg.cprint(f'{__file__}', text_color='white', background_color='red', end='')
-            execute_command_subprocess(f'{editor_program}', f'{__file__}')
+            execute_command_subprocess(f'{editor_program}', f'"{__file__}"')
         elif event == '-FILTER-':
             new_list = [i for i in file_list if values['-FILTER-'].lower() in i.lower()]
             window['-DEMO LIST-'].update(new_list)
