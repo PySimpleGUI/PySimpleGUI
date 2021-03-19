@@ -99,12 +99,12 @@ def main(location):
         if event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Choose Date':
-            new_start = sg.popup_get_date()
+            new_start = sg.popup_get_date(location=window.current_location())
             if new_start is not None:
                 start_date = datetime.datetime(new_start[2], new_start[0], new_start[1])
                 sg.user_settings_set_entry('-start date-', new_start)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your date')
+            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location())
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
