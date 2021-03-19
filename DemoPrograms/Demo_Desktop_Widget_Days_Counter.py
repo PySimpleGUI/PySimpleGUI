@@ -14,16 +14,19 @@ import datetime
     Copyright 2021 PySimpleGUI
 """
 
-ALPHA = 0.9
-THEME = 'Dark green 3'
+ALPHA = 0.9                 # Initial alpha until user changes
+THEME = 'Dark green 3'      # Initial theme until user changes
+refresh_font = sg.user_settings_get_entry('-refresh font-', 'Courier 8')
+title_font = sg.user_settings_get_entry('-title font-', 'Courier 8')
+main_number_font = sg.user_settings_get_entry('-main number font-', 'Courier 70')
+
 # May add ability to change theme from the user interface.  For now forcing to constant
 
 GSIZE = (160, 160)
 UPDATE_FREQUENCY_MILLISECONDS = 1000*60*60      # update every hour
 
 def choose_theme(location):
-    layout = [
-              [sg.Text('Try a theme')],
+    layout = [[sg.Text('Try a theme')],
               [sg.Listbox(values=sg.theme_list(), size=(20, 20), key='-LIST-', enable_events=True)],
               [sg.OK(), sg.Cancel()]]
 
@@ -56,24 +59,20 @@ def make_window(location, test_window=False):
 
     alpha = sg.user_settings_get_entry('-alpha-', ALPHA)
 
-    font = 'Courier 70'
-    refresh_font = title_font = 'Courier 8'
-
-    layout = [
-        [sg.Text(title, size=(20,1), font=title_font, justification='c', k='-TITLE-')],
-        [sg.Text('0', size=(3,1), font=font, k='-T-', justification='c', enable_events=test_window)]]
+    layout = [[sg.Text(title, size=(20,1), font=title_font, justification='c', k='-TITLE-')],
+              [sg.Text('0', size=(3,1), font=main_number_font, k='-T-', justification='c', enable_events=test_window)]]
 
     if test_window:
         layout += [[sg.Text('Click to close', font=title_font)]]
         right_click_menu = [[''], ['Choose Date', 'Exit']]
     else:
         right_click_menu = [[''], ['Choose Date', 'Choose Title', 'Edit Me', 'Theme', 'Save Location', 'Refresh', 'Show Refresh', 'Hide Refresh', 'Alpha', [str(x) for x in range(1,11)],'Exit', ]]
-    layout += [[sg.pin(sg.Text(size=(15,2), font=refresh_font, k='-REFRESHED-', justification='c'))]]
+
+    layout += [[sg.pin(sg.Text(size=(15,2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
 
     window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu)
 
-    window['-REFRESHED-'].update(visible=sg.user_settings_get_entry('-show refresh-', True))
     return window
 
 def main(location):
