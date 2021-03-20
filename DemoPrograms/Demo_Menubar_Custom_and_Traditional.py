@@ -51,7 +51,8 @@ def Menubar(menu_def, text_color, background_color, pad=(0, 0)):
 
 def main():
     sg.theme('dark green 7')
-    # sg.theme('dark gray 14')
+    sg.theme('dark amber')
+    # sg.theme('dark purple 3')
 
     menu_def = [['&File', ['&Open     Ctrl-O', '&Save       Ctrl-S', '&Properties', 'E&xit']],
                 ['&Edit', [['Special', 'Normal',['Normal1', 'Normal2'] ], 'Undo'], ],
@@ -59,17 +60,36 @@ def main():
                 ['&Toolbar', ['---', 'Command &1::Command_Key', 'Command &2', '---', 'Command &3', 'Command &4']],
                 ['&Help', ['&About...']], ]
 
-    layout = [
-        # [sg.Menu(menu_def, tearoff=False, key='-MENU BAR-')],     # This is how a Menu is normally defined
-        [Menubar(menu_def, sg.theme_button_color()[1], sg.theme_button_color()[0], (5, 0))],
-        [sg.Multiline(size=(70, 20),  reroute_stdout=True, reroute_cprint=True, write_only=True)],
-    ]
+    layout = [[Menubar(menu_def, sg.theme_button_color()[1], sg.theme_button_color()[0], (5, 0))],
+                [sg.Text('This is the "Simulated" Titlebar and Menubar Window')],
+                [sg.Checkbox('Checkbox 1', k='-C1W1-'), sg.Checkbox('Checkbox 2', k='-C2W1-')],
+                [sg.Slider((0,100), orientation='h', size=(20,20), k='-S1-')],
+                [sg.HorizontalSeparator()],
+                [sg.Radio('Radio 1', 1, k='-R1W1-'), sg.Radio('Radio 2', 1, k='-R2W1-')],
+                [sg.Ok(k='OK 1'), sg.Cancel(k='Cancel 1')],]
 
-    window = sg.Window("Custom Titlebar with Custom (Simulated) Menubar", layout, use_custom_titlebar=True)
+    layout2 = [[sg.Menu(menu_def, tearoff=False, key='-MENU BAR-')],     # This is how a Menu is normally defined
+                [sg.Text('This is the "Traditional" Titlebar and Menubar Window')],
+                [sg.Checkbox('Checkbox 1', k='-C1W2-'), sg.Checkbox('Checkbox 2', k='-C2W2-')],
+                [sg.Slider((0,100), orientation='h', size=(20,20), k='-S2-')],
+                [sg.HorizontalSeparator()],
+                [sg.Radio('Radio 1', 1, k='-R1W2-'), sg.Radio('Radio 2', 1, k='-R2W2-')],
+                [sg.Ok(k='OK 2'), sg.Cancel(k='Cancel 2')],]
+
+    layout3 = [[sg.Multiline(size=(70, 20), reroute_stdout=True, reroute_cprint=True, write_only=True)],]
+
+    window = sg.Window("Custom Titlebar and Menu", layout, use_custom_titlebar=True, finalize=True)
+
+    win_loc = window.current_location()
+
+    window2 = sg.Window("Traditional Titlebar and Menu", layout2, finalize=True, location=(win_loc[0]-window.size[0]-40, win_loc[1]))
+
+    window3 = sg.Window("Output Window", layout3, finalize=True, location=(win_loc[0]-window.size[0]//1.5, win_loc[1]+window.size[1]+30), use_custom_titlebar=True)
+
 
     # ------ Event Loop ------ #
     while True:
-        event, values = window.read()
+        window, event, values = sg.read_all_windows()
         # convert ButtonMenu event so they look like Menu events
         elem = window.find_element(event, silent_on_error=True)
         if elem and elem.Type == sg.ELEM_TYPE_BUTTONMENU:
