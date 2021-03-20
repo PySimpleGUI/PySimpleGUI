@@ -62,7 +62,7 @@ def main():
     layout = [
         # [sg.Menu(menu_def, tearoff=False, key='-MENU BAR-')],     # This is how a Menu is normally defined
         [Menubar(menu_def, sg.theme_button_color()[1], sg.theme_button_color()[0], (5, 0))],
-        [sg.Multiline(size=(70, 20), no_scrollbar=True, reroute_stdout=True, reroute_cprint=True, write_only=True)],
+        [sg.Multiline(size=(70, 20),  reroute_stdout=True, reroute_cprint=True, write_only=True)],
     ]
 
     window = sg.Window("Custom Titlebar with Custom (Simulated) Menubar", layout, use_custom_titlebar=True)
