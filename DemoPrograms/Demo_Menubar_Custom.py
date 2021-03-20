@@ -38,7 +38,7 @@ def Menubar(menu_def, text_color, background_color, pad=(0, 0)):
     row = []
     for menu in menu_def:
         text = menu[0]
-        if text.__contains__(sg.MENU_SHORTCUT_CHARACTER):
+        if sg.MENU_SHORTCUT_CHARACTER in text:
             text = text.replace(sg.MENU_SHORTCUT_CHARACTER, '')
         if text.startswith(sg.MENU_DISABLED_CHARACTER):
             disabled = True
@@ -50,7 +50,7 @@ def Menubar(menu_def, text_color, background_color, pad=(0, 0)):
     return sg.Column([row], background_color=background_color, pad=(0,0), expand_x=True)
 
 def main():
-    # sg.theme('dark green 7')
+    sg.theme('dark green 7')
     # sg.theme('dark gray 14')
 
     menu_def = [['&File', ['&Open     Ctrl-O', '&Save       Ctrl-S', '&Properties', 'E&xit']],
