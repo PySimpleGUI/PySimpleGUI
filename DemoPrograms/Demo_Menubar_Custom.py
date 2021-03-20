@@ -18,6 +18,7 @@ import PySimpleGUI as sg
     Copyright 2021 PySimpleGUI
 """
 
+sg.MENU_SHORTCUT_CHARACTER = '&'
 
 def Menubar(menu_def, text_color, background_color, pad=(0, 0)):
     """
