@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.37.0.5 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work, addition of constant MENU_SHORTCUT_CHARACTER (&), added execute_find_callers_filename, icon added to popup_scrolled, better error reporting for duplicate keys"
+version = __version__ = "4.38.0 Released 21-Mar-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17968,6 +17968,13 @@ def execute_file_explorer(folder_to_open=''):
 
 
 def execute_find_callers_filename():
+    """
+    Returns the first filename found in a traceback that is not the nsame of this file (__file__)
+    Used internally with the debugger for example.
+
+    :return: filename of the caller, asseumed to be the first non PySimpleGUI file
+    :rtype: str
+    """
     try:    # lots can go wrong so wrapping the entire thing
         trace_details = traceback.format_stack()
         file_info_pysimplegui, error_message = None, ''
