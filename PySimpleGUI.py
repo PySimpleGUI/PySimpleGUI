@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-version = __version__ = "4.37.0.2 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work, addition of constant MENU_SHORTCUT_CHARACTER (&), added execute_find_callers_filename"
+version = __version__ = "4.37.0.3 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work, addition of constant MENU_SHORTCUT_CHARACTER (&), added execute_find_callers_filename, icon added to popup_scrolled"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -851,7 +851,7 @@ class Element():
 
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.MenuItemChosen = item_chosen.replace(MENU_SHORTCUT_CHARACTER, '')
+        self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = self.MenuItemChosen
         self.ParentForm.FormRemainedOpen = True
         _exit_mainloop(self.ParentForm)
@@ -3841,8 +3841,8 @@ class Button(Element):
             #     pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
             if self.ParentForm.DebuggerEnabled:
-                _Debugger.debugger._build_floating_window()
-                # show_debugger_window()
+                # _Debugger.debugger._build_floating_window()
+                show_debugger_popout_window()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
@@ -4087,7 +4087,7 @@ class ButtonMenu(Element):
         :type item_chosen: (str)
         """
         # print('IN MENU ITEM CALLBACK', item_chosen)
-        self.MenuItemChosen = item_chosen.replace(MENU_SHORTCUT_CHARACTER, '')
+        self.MenuItemChosen = item_chosen
         self.ParentForm.LastButtonClicked = self.Key
         self.ParentForm.FormRemainedOpen = True
         # if self.ParentForm.CurrentlyRunningMainloop:
@@ -13029,7 +13029,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     pos = menu_entry[0].find(MENU_SHORTCUT_CHARACTER)
                     # print(pos)
                     if pos != -1:
-                        if pos == 0 or menu_entry[0][pos - 1] != "\\":
+                        if pos == 0 or menu_entry[0][pos - len(MENU_SHORTCUT_CHARACTER)] != "\\":
                             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
                     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
                         menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem,
@@ -15690,7 +15690,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, modal=True):
+                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, icon=None, modal=True):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
@@ -15727,6 +15727,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type font: str | Tuple[str, int]
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: bytes | str
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
@@ -15773,7 +15775,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
 
     window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal)
+                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal, icon=icon)
 
     if non_blocking:
         button, values = window.read(timeout=0)
@@ -18079,6 +18081,7 @@ class _Debugger():
 
     # Includes the DUAL PANE (now 2 tabs)!  Don't forget REPL is there too!
     def _build_main_debugger_window(self, location=(None, None)):
+        old_theme = theme()
         theme(COLOR_SCHEME)
 
         def InVar(key1):
@@ -18133,7 +18136,7 @@ class _Debugger():
 
         window.Element('_VAR1_').SetFocus()
         self.watcher_window = window
-        # ChangeLookAndFeel('SystemDefault')  # set look and feel to default before exiting
+        theme(old_theme)
         return window
 
     #     #                    #######                               #
@@ -18346,6 +18349,7 @@ class _Debugger():
       #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
 
     def _choose_auto_watches(self, my_locals):
+        old_theme  = theme()
         theme(COLOR_SCHEME)
         num_cols = 3
         output_text = ''
@@ -18399,6 +18403,7 @@ class _Debugger():
 
         # exited event loop
         window.Close()
+        theme(old_theme)
         # ChangeLookAndFeel('SystemDefault')
 
     ######                            #######
@@ -18425,6 +18430,7 @@ class _Debugger():
         """
         if self.popout_window:  # if floating window already exists, close it first
             self.popout_window.Close()
+        old_theme  = theme()
         theme(DEBUGGER_POPOUT_THEME)
         num_cols = 2
         width_var = 15
@@ -18469,8 +18475,7 @@ class _Debugger():
             screen_size = self.popout_window.GetScreenDimensions()
             self.popout_window.Move(screen_size[0] - self.popout_window.Size[0], 0)
         self.popout_window.SetAlpha(1)
-
-        # ChangeLookAndFeel('SystemDefault')
+        theme(old_theme)
         return True
 
     ######
