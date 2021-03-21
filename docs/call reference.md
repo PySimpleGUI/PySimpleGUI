@@ -4791,7 +4791,7 @@ Multiline(default_text = "",
     pad = None,
     tooltip = None,
     justification = None,
-    scrollbar = True,
+    no_scrollbar = False,
     right_click_menu = None,
     visible = True,
     metadata = None)
@@ -4826,7 +4826,7 @@ Parameter Descriptions:
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
 |                                   str                                    |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
-|                                   bool                                   |     scrollbar      | If True then a scrollbar will be shown (the default) |
+|                                   bool                                   |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
 |                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |      visible       | set visibility state of the element |
 |                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |

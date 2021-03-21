@@ -688,49 +688,6 @@ For Windows that have specifically enabled these.  Please see the appropriate se
 
 ***Most*** of the time the event will be a button click or the window was closed.  The other Element-specific kinds of events happen when you set `enable_events=True` when you create the Element.
 
-### Window closed event
-
-Another convention to follow is the check for windows being closed with an X.  *This is an critically important event to catch*.  If you don't check for this and you attempt to use the window, your program will crash, or silently consume 100% of your CPU.  Please check for closed window and exit your program gracefully.  Your users will like you for it.
-
-Close your windows when you're done with them even though exiting the program will also close them.  tkinter can generate an error/warning sometimes if you don't close the window.  For other ports, such as PySimpleGUIWeb, not closing the Window will potentially cause your program to continue to run in the background.
-
-To check for a closed window use this line of code:
-
-```python
-if event == sg.WIN_CLOSED:
-```
-
-Prior to release 4.19.0 you'll find code that checks for `None` instead of `WIN_CLOSED`.  These are in fact the same as `WIN_CLOSED` is `None`.
-
-Putting it all together we end up with an "event loop" that looks something like this:
-
-```python
-while True:
-	event, values = window.read()
-	if event == sg.WIN_CLOSED:
-		break
-window.close()
-```
-
-You will very often see the examples and demo programs write this check as:
-
-```python
-	event, values = window.read()
-	if event in (sg.WIN_CLOSED, 'Exit'):
-		break
-```
-
-The keyword `in` means to check the list of things to see if the `event` is in that list (or tuple)
-
-This if statement is the same as:
-```python
-	if event == sg.WIN_CLOSED or event == 'Exit':
-		break
-```
-
-Instead of `'Exit'` use the name/key of the button you want to exit the window (Cancel, Quit, etc.)
-
-
 ### Button Click Events
 
 By default buttons will always return a click event, or in the case of realtime buttons, a button down event.  You don't have to do anything to enable button clicks.  To disable the events, disable the button using its Update method.
@@ -742,29 +699,6 @@ The button value from a Read call will be one of 2 values:
 2. The Button's key      - If a key is specified
 
 If a button has a key set when it was created, then that key will be returned, regardless of what text is shown on the button.  If no key is set, then the button text is returned.  If no button was clicked, but the window returned anyway, the event value is the key that caused the event to be generated.  For example, if `enable_events` is set on an `Input` Element and someone types a character into that `Input` box, then the event will be the key of the input box.
-
-### **WIN_CLOSED (None) is returned when the user clicks the X to close a window.**
-
-If your window has an event loop where it is read over and over, remember to give your user an "out".  You should ***always check for a None value*** and it's a good practice to provide an Exit button of some kind. Thus design patterns often resemble this Event Loop:
-
-```python
-while True:
-	event, values = window.read()
-	if event == sg.WIN_CLOSED or event == 'Quit':
-		break
-```
-
-Actually, the more "Pythonic version" is used in most Demo Programs and examples.   They do  **exactly** the same thing.
-
-```python
-while True:
-	event, values = window.read()
-	if event in (sg.WIN_CLOSED, 'Quit'):
-		break
-```
-
-
-
 
 ### Element Events
 
@@ -812,6 +746,153 @@ Windows are capable of returning keyboard events.  These are returned as either 
 #### Timeouts
 
 If you set a timeout parameter in your read, then the system TIMEOUT_KEY will be returned.  If you specified your own timeout key in the Read call then that value will be what's returned instead.
+
+
+## Window Closed Events
+
+Detecting and correctly handling Windows being closed is an important part of your PySimpleGUI application.  You will find in every event loop in every Demo Program an if statement that checks for the events that signal that a window has closed.
+
+The most obvious way to close a window is to click the "X" in the upper right corner of the window (on Windows, Linux.... Mac doesn't use an "X" but still has a close button).  On Windows systems, the keyboard keys ALT+F4 will force a Window to close.  This is one way to close a window without using a mouse.  Some programs can also send a "close" command to the window.
+
+Regardless of how the close is performed on the window, PySimpleGUI returns an event for this closure.
+
+### WIN_CLOSED Event
+
+**The constant WIN_CLOSED (None) is returned when the user clicks the X to close a window.**
+
+Typically, the check for a closed window happens right after the `window.read()` call returns.  The reason for this is that operating on a closed window can result in errors.  The check for closure is an "if" statement.
+
+**ALWAYS** include a check for a closed window in your event loop.  
+
+### The Window Closed If Statement
+
+There are 2 forms you'll find for this if statement in the documentation and the Demo Programs.  One is "Pythonic" the other is more understandable by beginners.  This is the format you'll see most often in the PySimpleGUI materials if the window has both a button that is used to signal the user wishes to exit.  In this example, I'm using a "Quit" button:
+
+```python
+if event == sg.WIN_CLOSED or event == 'Exit':
+    break
+```
+
+The more "Pythonic" version of this same statement is:
+
+```python
+if event in (sg.WIN_CLOSED, 'Exit'):
+    break
+```
+
+In case you're yelling at the documentation that the second form should always be used, remember that many of the PySimpleGUI users are new to  Python.  If the very first example of a PySimpleGUI program they see has that if statement in it, they will instantly be lost before they can even begin their journey.  So, the decision was made to, you guessed it, go SIMPLE.  The statement with the "or" is simpler to understand.
+
+
+### A Complete Example - Traditional Window Closed Check
+
+Let's put this if statement into context so you can see where it goes and how it works with the event loop
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Very basic Window')],
+          [sg.Text('Click X in titlebar or the Exit button')],
+          [sg.Button('Go'), sg.Button('Exit')]]
+
+window = sg.Window('Window Title', layout)
+
+while True:
+    event, values = window.read()
+    print(event, values)
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+
+window.close()
+```
+
+Notice that the line after the while loop is a call to `window.close()`.  The reason for this is that exiting the loop can be in 2 ways. 
+* The "X" is clicked
+* The Exit button is clicked
+
+If the Exit button is clicked, the window will still be open.  Get in the habit of closing your windows explicitly like this.
+
+If the user clicked "X" and closed the window, then it will have been destroyed by the underlying framework.  You should STILL call `window.close()` because come cleanup work may be needed and there is no harm in closing an already closed window.
+
+tkinter can generate an error/warning sometimes if you don't close the window.  For other ports, such as PySimpleGUIWeb, not closing the Window will potentially cause your program to continue to run in the background.  This can cause your program to not be visible and yet consuming 100% of the CPU time.  Not fun for your users.
+
+### Window Close Confirmation
+
+In 4.33.0 a new parameter, `enable_close_attempted_event`, was added to the `Window` object.  This boolean parameter indicates if you would like to receive an event that a user **wants** to close the window rather than an event that the user **has** closed the window.
+
+To enable this feature, the `Window` is created with something like this:
+
+```python
+window = sg.Window('Window Title', layout, enable_close_attempted_event=True)
+```
+
+When the close attempted feature is enabled, when the user clicks the "X" or types ALT+F4, you will not get a WIN_CLOSED event like previously, you will instead get an event `WINDOW_CLOSE_ATTEMPTED_EVENT` and the window will remain open.  
+
+Usually this feature is used to add a "close confirmation" popup.  The flow goes something like this:
+
+* Window is shown
+* User  clicks X
+* A popup window is shown with message "Do you really want to close the window?"
+* If confirmed a close is desired, the window is closed.  It not, the event loop continues on, basically ignoring the event occurred.
+
+### A Complete Example - Window Closed Confirmation (`enable_close_attempted_event=True`)
+
+Returning to the example used above, there has been only 2 modifications. 
+
+1. Added the parameter `enable_close_attempted_event=True` to the call to `Window`
+2. The if statement in the event loop has changed to add a confirmation
+
+```python
+import PySimpleGUI as sg
+
+layout = [[sg.Text('Very basic Window')],
+          [sg.Text('Click X in titlebar or the Exit button')],
+          [sg.Button('Go'), sg.Button('Exit')]]
+
+window = sg.Window('Window Title', layout, enable_close_attempted_event=True)
+
+while True:
+    event, values = window.read()
+    print(event, values)
+    if (event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT or event == 'Exit') and sg.popup_yes_no('Do you really want to exit?') == 'Yes':
+        break
+
+window.close()
+```
+
+The event loop changed from a check like this:
+```python
+    if event == sg.WIN_CLOSED or event == 'Exit':
+        break
+```
+
+To one like this:
+```python
+    if (event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT or event == 'Exit') and sg.popup_yes_no('Do you really want to exit?') == 'Yes':
+        break
+```
+
+Let's run this last program so you can see what all this looks like to users.
+
+In both cases that a user previously exited the window, there is now an additional confirmation step.
+
+![download](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Window%20Closed%20Confirmation.gif)
+
+
+
+### Demo Programs.... A PySimpleGUI Program's Best Friend
+
+Like all features of PySimpleGUI, one of the best resources available to you to learn about parameters, like this close attempted parameter, are the Demo Programs.  When you run into a parameter or a feature you've not used before, one way to find some examples of its use is to use the Demo Browser to search through the demo programs.  You'll find the Demo Browser described in the Cookbook.
+
+As of this writing, the name of the Demo Program Browser is:
+
+`Browser_START_HERE_Demo_Programs_Browser.py`
+
+If you enter the parameter described in this section - `enable_close_attempted_event` you'll find a Demo Program that uses this parameter.
+
+![DemoBrowser](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Demo%20Browser%20Search%20Close%20Attempted.jpg)
+
+This demo shows you code similar to the code used in this section of the documentation. Use this Browser program!  It will make finding examples ***much easier***!
+
 
 ### The `values` Variable - Return values as a list
 
