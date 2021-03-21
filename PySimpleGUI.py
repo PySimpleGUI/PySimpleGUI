@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
-version = __version__ = "4.37.0.3 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work, addition of constant MENU_SHORTCUT_CHARACTER (&), added execute_find_callers_filename, icon added to popup_scrolled"
+version = __version__ = "4.37.0.5 Unreleased\nMultiline scrollbar parameter renamed to no_scrollbar to match the listbox (sorry! but at least I caught it quickly), more debugger work, addition of constant MENU_SHORTCUT_CHARACTER (&), added execute_find_callers_filename, icon added to popup_scrolled, better error reporting for duplicate keys"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -8597,12 +8597,16 @@ class Window:
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
-                        print('*** Duplicate key found in your layout {} ***'.format(
-                            element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
+                        if element.Type  != ELEM_TYPE_BUTTON:   # for Buttons, let duplicate key errors be silent
+                            warnings.warn('*** Duplicate key found in your layout {} ***'.format(element.Key), UserWarning)
+                            warnings.warn('*** Replaced new key with {} ***'.format(str(element.Key) + str(self.UniqueKeyCounter)))
+                            if not SUPPRESS_ERROR_POPUPS:
+                                _error_popup_with_traceback('Duplicate key found in your layout', 'Dupliate key: {}'.format(element.Key),
+                                                            'Is being replaced with: {}'.format(str(element.Key) + str(self.UniqueKeyCounter)),
+                                                            'The line of code above shows you which layout, but does not tell you exactly where the element was defined',
+                                                            'The element type is {}'.format(element.Type))
                         element.Key = str(element.Key) + str(self.UniqueKeyCounter)
                         self.UniqueKeyCounter += 1
-                        print('*** Replaced new key with {} ***'.format(
-                            element.Key)) if element.Type != ELEM_TYPE_BUTTON else None
                     key_dict[element.Key] = element
         return key_dict
 
@@ -11295,15 +11299,20 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 
 def button_color_to_tuple(color_tuple_or_string, default=None):
     """
-    Convert a color tuple or color string into 2 components
+    Convert a color tuple or color string into 2 components and returns them as a tuple
+    (Text Color, Button Background Color)
+    If None is passed in as the first parameter, then the theme's button color is
+    returned
+
     :param color_tuple_or_string: Button color - tuple or a simplied color string with word "on" between color
     :type  color_tuple_or_string: str | Tuple[str, str]
     :param default: The 2 colors to use if there is a problem. Otherwise defaults to the theme's button color
     :type  default: Tuple[str, str]
     :return: (str | Tuple[str, str]
+    :rtype: str | Tuple[str, str]
     """
     if color_tuple_or_string is None:
-        return theme_button_color()
+        color_tuple_or_string = theme_button_color()
     if color_tuple_or_string == COLOR_SYSTEM_DEFAULT:
         return (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
     default = theme_button_color() if default is None else default
