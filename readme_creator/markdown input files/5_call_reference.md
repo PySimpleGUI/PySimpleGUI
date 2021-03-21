@@ -1,4 +1,5 @@
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
+![LOGO](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png)
+
 
 # ELEMENT AND FUNCTION CALL REFERENCE
 
@@ -2339,6 +2340,8 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### These are non-PEP8 Compliant Methods - do NOT use
 
+***Do not use these***... they are here for your reference should you see them in old code.
+
 The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
 
 
@@ -2621,7 +2624,9 @@ They are shown here in case you run into them in some old code.
 
 ## Popup Not PEP8 Compliant names
 
-These versions of the popup functions are here only for backwards compatibility.  You should not use these function names.  Instead use the popup functions that have snake_case rather than CamelCase.
+*** You should not use these function names! *** 
+
+These versions of the popup functions are here only for backwards compatibility. Instead use the popup functions that have snake_case rather than CamelCase.
 
 <!-- <+func.Popup+> -->
 <!-- <+func.PopupAnimated+> -->
@@ -2636,7 +2641,6 @@ These versions of the popup functions are here only for backwards compatibility.
 <!-- <+func.PopupNoButtons+> -->
 <!-- <+func.PopupNoFrame+> -->
 <!-- <+func.PopupNoTitlebar+> -->
-<!-- <+func.PopupNoWait+> -->
 <!-- <+func.PopupNonBlocking+> -->
 <!-- <+func.PopupOK+> -->
 <!-- <+func.PopupOKCancel+> -->
@@ -2651,12 +2655,17 @@ These versions of the popup functions are here only for backwards compatibility.
 
 ## PEP8 Function Bindings
 
+## Display Objects In a Friendly Way
+
+These functions will return an object as a string that shows each of the object's member variables.  They're nice to use if you want to print any Python object, not just PySimpleGUI ones.
+
 <!-- <+func.obj_to_string+> -->
 <!-- <+func.obj_to_string_single_obj+> -->
 
 
-
 ## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
+
+A convention that PySimpleGUI uses is that standalone entry points start with "main_".  These calls are essentially a mini-program within the PySimpleGUI.py file.
 
 Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
 
@@ -2699,6 +2708,17 @@ You can call main() from your code and then access these other features such as 
 <!-- <+func.theme_text_element_background_color+> -->
 
 
+## Platform Checks
+
+These are simple functions you can use that return a boolean  True if sys.platform matches the platform.  Saves you the trouble of importing sys and then looking up the values for sys.platform.
+
+<!-- <+func.running_linux+> -->
+<!-- <+func.running_mac+> -->
+<!-- <+func.running_trinket+> -->
+<!-- <+func.running_windows+> -->
+
+
+
 ## User Settings
 
 In addition to user settings files, there is also a global PySimpleGUI settings file.
@@ -2724,9 +2744,10 @@ These API calls are used to launch subprocesses.
 <!-- <+func.execute_command_subprocess+> -->
 <!-- <+func.execute_editor+> -->
 <!-- <+func.execute_file_explorer+> -->
+<!-- <+func.execute_find_callers_filename+> -->
 <!-- <+func.execute_get_results+> -->
 <!-- <+func.execute_py_file+> -->
-
+<!-- <+func.execute_subprocess_still_running+> -->
 
 
 ## Misc
@@ -2749,6 +2770,7 @@ These API calls are used to launch subprocesses.
 <!-- <+func.set_global_icon+> -->
 <!-- <+func.set_options+> -->
 
+
 ### Non PEP8 versions
 
 <!-- <+func.SetGlobalIcon+> -->
@@ -2758,9 +2780,18 @@ These API calls are used to launch subprocesses.
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
+You should NOT use these calls.  They are here for your reference should you run into them in existing code.
+
 <!-- <+func.ChangeLookAndFeel+> -->
 <!-- <+func.ListOfLookAndFeelValues+> -->
 <!-- <+func.preview_all_look_and_feel_themes+> -->
 <!-- <+func.list_of_look_and_feel_values+> -->
 <!-- <+func.change_look_and_feel+> -->
 
+-------------
+
+This documentation is copyright 2021 by PySimpleGUI Inc
+
+Republishing the copyrighted PySimpleGUI documentation and selling it are not allowed.
+
+When in doubt, ask.

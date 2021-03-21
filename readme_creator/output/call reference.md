@@ -1,4 +1,4 @@
-![pysimplegui_logo](https://user-images.githubusercontent.com/13696193/43165867-fe02e3b2-8f62-11e8-9fd0-cc7c86b11772.png)  
+![LOGO](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png)
 
 # ELEMENT AND FUNCTION CALL REFERENCE
 
@@ -10481,6 +10481,8 @@ Parameter Descriptions:
 
 ### These are non-PEP8 Compliant Methods - do NOT use
 
+***Do not use these***... they are here for your reference should you see them in old code.
+
 The following methods are here for backwards compatibility reference.  You will find there are PEP8 versions for each of these methods.  The PEP8 versions will be all lower case and have underscores.
 
 ### AddRow
@@ -13468,6 +13470,7 @@ popup_scrolled(args=*<1 or N object>,
     keep_on_top = False,
     font = None,
     image = None,
+    icon = None,
     modal = True)
 ```
 
@@ -13491,6 +13494,7 @@ Parameter Descriptions:
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
@@ -13561,6 +13565,7 @@ sprint(args=*<1 or N object>,
     keep_on_top = False,
     font = None,
     image = None,
+    icon = None,
     modal = True)
 ```
 
@@ -13584,6 +13589,7 @@ Parameter Descriptions:
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
@@ -13607,6 +13613,7 @@ ScrolledTextBox(args=*<1 or N object>,
     keep_on_top = False,
     font = None,
     image = None,
+    icon = None,
     modal = True)
 ```
 
@@ -13630,12 +13637,15 @@ Parameter Descriptions:
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 ## Popup Not PEP8 Compliant names
 
-These versions of the popup functions are here only for backwards compatibility.  You should not use these function names.  Instead use the popup functions that have snake_case rather than CamelCase.
+*** You should not use these function names! *** 
+
+These versions of the popup functions are here only for backwards compatibility. Instead use the popup functions that have snake_case rather than CamelCase.
 
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -14236,52 +14246,6 @@ Parameter Descriptions:
 Show Popup window and immediately return (does not block)
 
 ```
-PopupNoWait(args=*<1 or N object>,
-    title = None,
-    button_type = 0,
-    button_color = None,
-    background_color = None,
-    text_color = None,
-    auto_close = False,
-    auto_close_duration = None,
-    non_blocking = True,
-    icon = None,
-    line_width = None,
-    font = None,
-    no_titlebar = False,
-    grab_anywhere = False,
-    keep_on_top = False,
-    location = (None, None),
-    image = None,
-    modal = False)
-```
-
-Parameter Descriptions:
-
-|Type|Name|Meaning|
-|--|--|--|
-|          Any           |        *args        | Variable number of items to display |
-|          str           |        title        | Title to display in the window. |
-|          int           |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-| Tuple[str, str] or str |    button_color     | button color (foreground, background) |
-|          str           |  background_color   | color of background |
-|          str           |     text_color      | color of the text |
-|          bool          |     auto_close      | if True window will close itself |
-|      int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|          bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int           |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
-|          bool          |     no_titlebar     | If True no titlebar will be shown |
-|          bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|    Tuple[int, int]     |      location       | Location of upper left corner of the window |
-|      str or bytes      |        image        | Image to include at the top of the popup window |
-|          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
-| str or None | **RETURN** | Reason for popup closing
-
-Show Popup window and immediately return (does not block)
-
-```
 PopupNonBlocking(args=*<1 or N object>,
     title = None,
     button_type = 0,
@@ -14529,6 +14493,7 @@ PopupScrolled(args=*<1 or N object>,
     keep_on_top = False,
     font = None,
     image = None,
+    icon = None,
     modal = True)
 ```
 
@@ -14552,6 +14517,7 @@ Parameter Descriptions:
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
@@ -14649,6 +14615,10 @@ Parameter Descriptions:
 
 ## PEP8 Function Bindings
 
+## Display Objects In a Friendly Way
+
+These functions will return an object as a string that shows each of the object's member variables.  They're nice to use if you want to print any Python object, not just PySimpleGUI ones.
+
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
 
 ```
@@ -14678,6 +14648,8 @@ Parameter Descriptions:
 | (str) | **RETURN** | Formatted output of the object's values
 
 ## The Main Program - Test Harness, Global Settings, Debug Information, Upgrade from GitHub
+
+A convention that PySimpleGUI uses is that standalone entry points start with "main_".  These calls are essentially a mini-program within the PySimpleGUI.py file.
 
 Used to get SDK help, test the installation, get information about the versions, upgrade from GitHub.
 
@@ -14998,6 +14970,67 @@ Parameter Descriptions:
 |--|--|--|
 | (str) | **RETURN** | (str) - color string of the text background color currently in use
 
+## Platform Checks
+
+These are simple functions you can use that return a boolean  True if sys.platform matches the platform.  Saves you the trouble of importing sys and then looking up the values for sys.platform.
+
+Determines the OS is Linux by using sys.platform
+
+Returns True if Linux
+
+```
+running_linux()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if sys.platform indicates running Linux
+
+Determines the OS is Mac by using sys.platform
+
+Returns True if Mac
+
+```
+running_mac()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if sys.platform indicates running Mac
+
+A special case for Trinket.  Checks both the OS and the number of environment variables
+Currently, Trinket only has ONE environment variable.  This fact is used to figure out if Trinket is being used.
+
+Returns True if "Trinket" (in theory)
+
+```
+running_trinket()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if sys.platform indicates Linux and the number of environment variables is 1
+
+Determines the OS is Windows by using sys.platform
+
+Returns True if Windows
+
+```
+running_windows()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (bool) | **RETURN** | True if sys.platform indicates running Windows
+
 ## User Settings
 
 In addition to user settings files, there is also a global PySimpleGUI settings file.
@@ -15236,6 +15269,19 @@ Parameter Descriptions:
 | str | folder_to_open | The path to open in the explorer program |
 | (subprocess.Popen) or None | **RETURN** | Popen object
 
+Returns the first filename found in a traceback that is not the nsame of this file (__file__)
+Used internally with the debugger for example.
+
+```
+execute_find_callers_filename()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | **RETURN** | filename of the caller, asseumed to be the first non PySimpleGUI file
+
 Get the text results of a previously executed execute call
 Returns a tuple of the strings (stdout, stderr)
 
@@ -15276,6 +15322,19 @@ Parameter Descriptions:
 | bool |        wait         | the working directory to use |
 | bool |     pipe_output     | If True then output from the subprocess will be piped. You MUST empty the pipe by calling execute_get_results or your subprocess will block until no longer full |
 | (subprocess.Popen) or None | **RETURN** | Popen object
+
+Returns True is the subprocess ID provided is for a process that is still running
+
+```
+execute_subprocess_still_running(subprocess_id)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (subprocess.Popen) | subprocess_id | ID previously returned from Exec API calls that indicate this value is returned |
+| bool | **RETURN** | True if the subproces is running
 
 ## Misc
 
@@ -15616,6 +15675,8 @@ Parameter Descriptions:
 
 ## Old Themes (Look and Feel) - Replaced by theme()
 
+You should NOT use these calls.  They are here for your reference should you run into them in existing code.
+
 Change the "color scheme" of all future PySimpleGUI Windows.
 The scheme are string names that specify a group of colors. Background colors, text colors, button colors.
 There are 13 different color settings that are changed at one time using a single call to ChangeLookAndFeel
@@ -15710,3 +15771,11 @@ Parameter Descriptions:
 | str  | index | the name of the index into the Look and Feel table (does not have to be exact, can be "fuzzy") |
 | bool | force | no longer used |
 | None | **RETURN** | None
+
+-------------
+
+This documentation is copyright 2021 by PySimpleGUI Inc
+
+Republishing the copyrighted PySimpleGUI documentation and selling it are not allowed.
+
+When in doubt, ask.

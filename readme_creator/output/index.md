@@ -1519,6 +1519,7 @@ popup_scrolled(args=*<1 or N object>,
     keep_on_top = False,
     font = None,
     image = None,
+    icon = None,
     modal = True)
 ```
 
@@ -1542,6 +1543,7 @@ Parameter Descriptions:
 |          bool          |     keep_on_top     | If True the window will remain above all current windows |
 | str or Tuple[str, int] |        font         | specifies the font family, size, etc |
 |      str or bytes      |        image        | Image to include at the top of the popup window |
+|      bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
@@ -8541,6 +8543,26 @@ I'll eventually figure out this subprocess thing... honest...
 	* Makes it one less import and the code already existed.  All that needed to happen is the _ removed from the front of function name
 	
 
+	
+## 4.38.0 PySimpleGUI 21-Mar-2021
+
+The "so much for no new releases for a while" release
+
+* Changed name of the NEW parm in Multiline element from scrollbar to no_scrollbar
+	* This matches the other elements that also have this same parameter (Listbox)
+	* Wanted to get this release posted prior to users writing code that uses it (it's only been 1 week)
+	* This is the actual purpose for the release... so that it doesn't linger to the point it breaks being backwards compatible
+* Some additional debugger stuff... nothing to see here... keep moving.... will let you know when there's more
+* Added icon parameter to popup_scrolled
+* New Exec API call - execute_find_callers_filename
+	* It basically looks backwards until PySimpleGUI isn't found
+	* Hopefully will help in error messages to determine who is calling PySimpleGUI
+* Made a constant variable for the & char used by Menus in PySimpleGUI for shortcuts
+	* Also fixed a couple of places where they were being erroneously stripped from the normal menu text
+* Better error reporting for duplicatea keys
+	* Found a problem with using print for errors - rerouted stdout/stderr can cause MORE errors
+	* Interestingly, popups work great for these errors as they do not havea cascading error effect
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
@@ -8590,15 +8612,17 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
 # Author & Owner
 
-Written and owned by The PySimpleGUI Organization
+Written and owned by PySimpleGUI Inc
 
-This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020 by PySimpleGUI.org
+This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020, 2021 by PySimpleGUI
 
-Send correspondence to PySimpleGUI@PySimpleGUI.com
+Send business correspondence to PySimpleGUI@PySimpleGUI.com
 
 ## License
 
 GNU Lesser General Public License (LGPL 3) +
+
+Please note that this license does **not** allow you to break copyright laws.  You are licensing the software.
 
 ## Acknowledgments
 
@@ -8611,3 +8635,9 @@ If you've helped, I sure hope that you feel like you've been properly thanked.  
 In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
 
 To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free, but until then we'll all enjoy the successes we're having.
+
+## Legal
+
+All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Inc.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
+
+The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked
