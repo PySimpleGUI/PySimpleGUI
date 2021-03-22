@@ -5601,7 +5601,7 @@ Here is ***some*** of the code patterns you'll find when looking through the dem
 ```python
 import PySimpleGUI as sg
 
-# Design pattern 2 - First window remains active
+# Design pattern 1 - First window remains active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
@@ -5617,7 +5617,7 @@ while True:
     if ev1 == sg.WIN_CLOSED or ev1 == 'Exit':
         break
 
-     if not win2_active and ev1 == 'Launch 2':
+    if not win2_active and ev1 == 'Launch 2':
         win2_active = True
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
@@ -5636,7 +5636,7 @@ while True:
 ```python
 import PySimpleGUIQt as sg
 
-# Design pattern 1 - First window does not remain active
+# Design pattern 2 - First window does not remain active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
@@ -8641,3 +8641,4 @@ To be clear, this is not a solicitation for your money.  No one is being directl
 All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Inc.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
 
 The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked
+
