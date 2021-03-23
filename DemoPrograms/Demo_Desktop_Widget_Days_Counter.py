@@ -30,7 +30,7 @@ def choose_theme(location):
               [sg.Listbox(values=sg.theme_list(), size=(20, 20), key='-LIST-', enable_events=True)],
               [sg.OK(), sg.Cancel()]]
 
-    window = sg.Window('Look and Feel Browser', layout, location=location)
+    window = sg.Window('Look and Feel Browser', layout, location=location, keep_on_top=True)
     old_theme = sg.theme()
     while True:  # Event Loop
         event, values = window.read()
@@ -39,7 +39,7 @@ def choose_theme(location):
         sg.theme(values['-LIST-'][0])
         test_window=make_window(location=(location[0]-200, location[1]), test_window=True)
         test_window.read(close=True)
-        if sg.popup_yes_no(f'Do you want to keep {values["-LIST-"]}?', location=location) == 'Yes':
+        if sg.popup_yes_no(f'Do you want to keep {values["-LIST-"]}?', location=location, keep_on_top=True) == 'Yes':
             break
     window.close()
 
@@ -71,7 +71,7 @@ def make_window(location, test_window=False):
     layout += [[sg.pin(sg.Text(size=(15,2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
 
-    window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu)
+    window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
 
     return window
 
@@ -98,12 +98,12 @@ def main(location):
         if event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Choose Date':
-            new_start = sg.popup_get_date(location=window.current_location())
+            new_start = sg.popup_get_date(location=window.current_location(), keep_on_top=True)
             if new_start is not None:
                 start_date = datetime.datetime(new_start[2], new_start[0], new_start[1])
                 sg.user_settings_set_entry('-start date-', new_start)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location())
+            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)

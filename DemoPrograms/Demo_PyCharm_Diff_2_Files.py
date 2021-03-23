@@ -33,7 +33,7 @@ def main():
             sg.user_settings_set_entry('-last filename chosen1-',  values['-COMBO1-'])
             sg.user_settings_set_entry('-filenames2-', list(set(sg.user_settings_get_entry('-filenames2-', []) + [values['-COMBO2-'],])))
             sg.user_settings_set_entry('-last filename chosen2-',  values['-COMBO2-'])
-            sg.execute_command_subprocess(sg.pysimplegui_user_settings.get('-editor program-', None),  'diff',values['-COMBO1-'], values['-COMBO2-'])
+            sg.execute_command_subprocess(sg.pysimplegui_user_settings.get('-editor program-', None),  'diff', '"' +values['-COMBO1-']+'"' , '"' +values['-COMBO2-']+'"' )
             # sg.popup(f"You chose {values['-COMBO1-']} and {values['-COMBO2-']}")
         elif event == '-CLEAR1-':
             sg.user_settings_set_entry('-filenames1-', [])
