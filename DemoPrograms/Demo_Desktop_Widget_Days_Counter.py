@@ -19,6 +19,7 @@ THEME = 'Dark green 3'      # Initial theme until user changes
 refresh_font = sg.user_settings_get_entry('-refresh font-', 'Courier 8')
 title_font = sg.user_settings_get_entry('-title font-', 'Courier 8')
 main_number_font = sg.user_settings_get_entry('-main number font-', 'Courier 70')
+main_info_size = (3,1)
 
 # May add ability to change theme from the user interface.  For now forcing to constant
 
@@ -26,7 +27,7 @@ GSIZE = (160, 160)
 UPDATE_FREQUENCY_MILLISECONDS = 1000*60*60      # update every hour
 
 def choose_theme(location):
-    layout = [[sg.Text('Try a theme')],
+    layout = [[sg.Text(f'Current theme {sg.theme()}')],
               [sg.Listbox(values=sg.theme_list(), size=(20, 20), key='-LIST-', enable_events=True)],
               [sg.OK(), sg.Cancel()]]
 
@@ -39,11 +40,9 @@ def choose_theme(location):
         sg.theme(values['-LIST-'][0])
         test_window=make_window(location=(location[0]-200, location[1]), test_window=True)
         test_window.read(close=True)
-        if sg.popup_yes_no(f'Do you want to keep {values["-LIST-"]}?', location=location, keep_on_top=True) == 'Yes':
-            break
     window.close()
 
-    if event not in ('Cancel', sg.WIN_CLOSED) and values['-LIST-']:
+    if event == 'OK' and values['-LIST-']:
         sg.theme(values['-LIST-'][0])
         sg.user_settings_set_entry('-theme-', values['-LIST-'][0])
         return values['-LIST-'][0]
@@ -59,16 +58,23 @@ def make_window(location, test_window=False):
 
     alpha = sg.user_settings_get_entry('-alpha-', ALPHA)
 
-    layout = [[sg.Text(title, size=(20,1), font=title_font, justification='c', k='-TITLE-')],
-              [sg.Text('0', size=(3,1), font=main_number_font, k='-T-', justification='c', enable_events=test_window)]]
-
+    # ------------------- Window Layout -------------------
+    # If this is a test window (for choosing theme), then uses some extra Text Elements to display theme info
+    # and also enables events for the elements to make the window easy to close
     if test_window:
-        layout += [[sg.Text('Click to close', font=title_font)]]
-        right_click_menu = [[''], ['Choose Date', 'Exit']]
+        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-', enable_events=True)],
+                        [sg.Text('Click to close', font=title_font, enable_events=True)],
+                        [sg.Text('This is theme', font=title_font, enable_events=True)],
+                        [sg.Text(sg.theme(), font=title_font, enable_events=True)]]
+        right_click_menu = [[''], ['Exit',]]
     else:
-        right_click_menu = [[''], ['Choose Date', 'Choose Title', 'Edit Me', 'Theme', 'Save Location', 'Refresh', 'Show Refresh', 'Hide Refresh', 'Alpha', [str(x) for x in range(1,11)],'Exit', ]]
+        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-')]]
+        right_click_menu = [[''], ['Choose Title', 'Edit Me', 'Change Theme', 'Save Location', 'Refresh', 'Show Refresh Info', 'Hide Refresh Info', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
-    layout += [[sg.pin(sg.Text(size=(15,2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
+
+    layout = top_elements + \
+              [[sg.Text('0', size=main_info_size, font=main_number_font, k='-MAIN INFO-', justification='c', enable_events=test_window)],
+              [sg.pin(sg.Text(size=(15, 2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
 
     window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
@@ -85,7 +91,7 @@ def main(location):
     while True:             # Event Loop
         # First update the status information
         delta = datetime.datetime.now() - start_date
-        window['-T-'].update(f'{delta.days}')
+        window['-MAIN INFO-'].update(f'{delta.days}')
 
         # for debugging show the last update date time
         window['-REFRESHED-'].update(datetime.datetime.now().strftime("%m/%d/%Y\n%I:%M:%S %p"))
@@ -107,18 +113,18 @@ def main(location):
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
-        elif event == 'Show Refresh':
+        elif event == 'Show Refresh Info':
             window['-REFRESHED-'].update(visible=True)
             sg.user_settings_set_entry('-show refresh-', True)
         elif event == 'Save Location':
             sg.user_settings_set_entry('-location-', window.current_location())
-        elif event == 'Hide Refresh':
+        elif event == 'Hide Refresh Info':
             window['-REFRESHED-'].update(visible=False)
             sg.user_settings_set_entry('-show refresh-', False)
         elif event in [str(x) for x in range(1,11)]:
             window.set_alpha(int(event)/10)
             sg.user_settings_set_entry('-alpha-', int(event)/10)
-        elif event == 'Theme':
+        elif event == 'Change Theme':
             loc = window.current_location()
             if choose_theme(loc) is not None:
                 # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
