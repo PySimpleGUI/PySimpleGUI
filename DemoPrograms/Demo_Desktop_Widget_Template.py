@@ -59,7 +59,7 @@ def choose_theme(location, size):
               [sg.Listbox(values=sg.theme_list(), size=(20, 20), key='-LIST-', enable_events=True)],
               [sg.OK(), sg.Cancel()]]
 
-    window = sg.Window('Look and Feel Browser', layout, location=location)
+    window = sg.Window('Look and Feel Browser', layout, location=location, keep_on_top=True)
     old_theme = sg.theme()
     while True:  # Event Loop
         event, values = window.read()
@@ -70,13 +70,11 @@ def choose_theme(location, size):
         # make at test window to the left of the current one
         test_window = make_window(location=((location[0]-size[0]*1.2, location[1])), test_window=True)
         test_window.read(close=True)
-        if sg.popup_yes_no(f'Do you want to keep {values["-LIST-"]}?', location=location) == 'Yes':
-            break
         window.un_hide()
     window.close()
 
     # after choice made, save theme or restore the old one
-    if event not in ('Cancel', sg.WIN_CLOSED) and values['-LIST-']:
+    if event == 'OK' and values['-LIST-']:
         sg.theme(values['-LIST-'][0])
         sg.user_settings_set_entry('-theme-', values['-LIST-'][0])
         return values['-LIST-'][0]
@@ -102,21 +100,25 @@ def make_window(location, test_window=False):
         sg.theme(theme)
 
     # ------------------- Window Layout -------------------
-
+    # If this is a test window (for choosing theme), then uses some extra Text Elements to display theme info
+    # and also enables events for the elements to make the window easy to close
     if test_window:
-        title_element = sg.Text('Click to close', font=title_font, enable_events=True)
+        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-', enable_events=True)],
+                        [sg.Text('Click to close', font=title_font, enable_events=True)],
+                        [sg.Text('This is theme', font=title_font, enable_events=True)],
+                        [sg.Text(sg.theme(), font=title_font, enable_events=True)]]
         right_click_menu = [[''], ['Exit',]]
     else:
-        title_element = sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-')
+        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-')]]
         right_click_menu = [[''], ['Choose Title', 'Edit Me', 'New Theme', 'Save Location', 'Refresh', 'Set Refresh Rate', 'Show Refresh Info', 'Hide Refresh Info', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
-    layout = [[title_element],
-              [sg.Text('0', size=main_info_size, font=main_info_font, k='-MAIN INFO-', justification='c', enable_events=test_window)],
+    layout = top_elements + \
+              [[sg.Text('0', size=main_info_size, font=main_info_font, k='-MAIN INFO-', justification='c', enable_events=test_window)],
               [sg.pin(sg.Text(size=(15, 2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
     # ------------------- Window Creation -------------------
     return sg.Window('Desktop Widget Template', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c',
-                       element_padding=(0, 0), alpha_channel=sg.user_settings_get_entry('-alpha-', ALPHA), finalize=True, right_click_menu=right_click_menu)
+                       element_padding=(0, 0), alpha_channel=sg.user_settings_get_entry('-alpha-', ALPHA), finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
 
 
 def main(location):
@@ -148,7 +150,7 @@ def main(location):
         if event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your Widget', location=window.current_location())
+            new_title = sg.popup_get_text('Choose a title for your Widget', location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
@@ -164,13 +166,13 @@ def main(location):
             window.set_alpha(int(event) / 10)
             sg.user_settings_set_entry('-alpha-', int(event) / 10)
         elif event == 'Set Refresh Rate':
-            choice = sg.popup_get_text('How frequently to update window in seconds? (can be a float)', default_text=sg.user_settings_get_entry('-fresh frequency-', UPDATE_FREQUENCY_MILLISECONDS)/1000, location=window.current_location())
+            choice = sg.popup_get_text('How frequently to update window in seconds? (can be a float)', default_text=sg.user_settings_get_entry('-fresh frequency-', UPDATE_FREQUENCY_MILLISECONDS)/1000, location=window.current_location(), keep_on_top=True)
             if choice is not None:
                 try:
                     refresh_frequency = float(choice)*1000    # convert to milliseconds
                     sg.user_settings_set_entry('-fresh frequency-', float(refresh_frequency))
                 except Exception as e:
-                    sg.popup_error(f'You entered an incorrect number of seconds: {choice}', f'Error: {e}', location=window.current_location())
+                    sg.popup_error(f'You entered an incorrect number of seconds: {choice}', f'Error: {e}', location=window.current_location(), keep_on_top=True)
         elif event == 'New Theme':
             loc = window.current_location()
             if choose_theme(window.current_location(), window.size) is not None:
