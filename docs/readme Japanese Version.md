@@ -160,7 +160,7 @@ layout = [[sg.Text("お名前は何ですか？")],
           [sg.Button('はい'), sg.Button('終了')]]
 
 # ウィンドウを作成する
-window = sg.Window('ウィンドウタイトル',レイアウト)
+window = sg.Window('ウィンドウタイトル',layout)
 
 # イベントループを使用してウィンドウを表示し、対話する
 while True:
