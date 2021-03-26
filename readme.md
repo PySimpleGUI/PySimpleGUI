@@ -342,7 +342,7 @@ Some features, like a System Tray Icon, are not available on all of the ports.  
 | Python |  Python 3.4+ |
 | Operating Systems | Windows, Linux, Mac |
 | Hardware | Desktop PCs, Laptops, Raspberry Pi, Android devices running PyDroid3 |
-| Online | repli.it, Trinket.com (both run tkinter in a browser) |
+| Online | replit.com, trinket.io (both run tkinter in a browser) |
 | GUI Frameworks | tkinter, pyside2, WxPython, Remi |
 
 
