@@ -9,7 +9,7 @@ import PySimpleGUI as sg
 
     This line binds the F10 keybaord key to the window. It produces a "Go" event:
         window.bind('<F10>', 'Go')
-
+    
     Copyright 2021 PySimpleGUI
 """
 
@@ -20,12 +20,11 @@ layout = [  [sg.Text('Press F10 to get same result as clicking "Go" button')],
 
 window = sg.Window('Window Title', layout, finalize=True)
 
-window.bind('<F10>', 'Go')
+window.bind('<F10>', 'Go')      # Make sure your window is finalized first
 
 while True:             # Event Loop
     event, values = window.read()
     print(event, values)
-    if event in (None, 'Exit'):
+    if event in (sg.WIN_CLOSED, 'Exit'):
         break
-
 window.close()
