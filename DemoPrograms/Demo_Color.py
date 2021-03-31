@@ -1679,9 +1679,9 @@ def main():
         layout = [[sg.Text('Find color')],
                   [sg.Text('Demonstration of colors')],
                   [sg.Text('Enter a color name in text or hex #RRGGBB format')],
-                  [sg.InputText(key='hex')],
-                  [sg.Listbox(list_of_colors, size=(20, 30), bind_return_key=True, key='listbox'), sg.Text('Or choose from list')],
-                  [sg.Submit(), sg.Button('Many buttons', button_color=('white', '#0e6251'), key='Many buttons'), sg.ColorChooserButton( 'Chooser', target=(3,0), key='Chooser'),  sg.Quit(),],
+                  [sg.InputText(key='-HEX-')],
+                  [sg.Listbox(list_of_colors, size=(20, 30), bind_return_key=True, key='-LISTBOX-'), sg.Text('Or choose from list')],
+                  [sg.Submit(), sg.Button('Many buttons', button_color=('white', '#0e6251'), key='-MANY BUTTONS-'), sg.ColorChooserButton( 'Chooser', target=(3,0), key='-CHOOSER-'),  sg.Quit(),],
                   ]
                   # [g.Multiline(DefaultText=str(printable), Size=(30,20))]]
         event, values = sg.Window('Color Demo', layout, auto_size_buttons=False).read()
@@ -1689,11 +1689,11 @@ def main():
         # -------  OUTPUT results portion  ------- #
         if event == 'Quit' or event == sg.WIN_CLOSED:
             exit(0)
-        elif event == 'Many buttons':
+        elif event == '-MANY BUTTONS-':
                 show_all_colors_on_buttons()
 
-        drop_down_value = values['listbox']
-        hex_input = values['hex']
+        drop_down_value = values['-LISTBOX-']
+        hex_input = values['-HEX-']
         if hex_input == '' and len(drop_down_value) == 0:
             continue
 
