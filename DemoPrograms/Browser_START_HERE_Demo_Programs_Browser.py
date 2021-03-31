@@ -431,15 +431,15 @@ def make_window():
 
     left_col = sg.Col([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
-        [sg.Text('Filter:', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
+        [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
-        [sg.Text('Find:', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
+        [sg.Text('Find (F2):', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
          sg.T(size=(15,1), k='-FIND NUMBER-')],
     ], element_justification='l')
 
     lef_col_find_re = sg.pin(sg.Col([
-        [sg.Text('Find:', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
+        [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
         [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
@@ -468,6 +468,9 @@ def make_window():
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon)
 
+    window.bind('<F1>', '-FOCUS FILTER-')
+    window.bind('<F2>', '-FOCUS FIND-')
+    window.bind('<F3>', '-FOCUS RE FIND-')
     if not advanced_mode():
         window['-FOLDER CHOOSE-'].update(visible=False)
         window['-RE COL-'].update(visible=False)
@@ -558,6 +561,12 @@ def main():
             window['-FIND NUMBER-'].update('')
             window['-FIND-'].update('')
             window['-FIND RE-'].update('')
+        elif event == '-FOCUS FIND-':
+            window['-FIND-'].set_focus()
+        elif event == '-FOCUS FILTER-':
+            window['-FILTER-'].set_focus()
+        elif event == '-FOCUS RE FIND-':
+            window['-FIND RE-'].set_focus()
         elif event == '-FIND-' or event == '-FIRST MATCH ONLY-' or event == '-VERBOSE-' or event == '-FIND RE-':
             is_ignore_case = values['-IGNORE CASE-']
             old_ignore_case = False
