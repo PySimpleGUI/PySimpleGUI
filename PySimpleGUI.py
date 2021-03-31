@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.38.0 Released 21-Mar-2021"
+version = __version__ = "4.38.0.3 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -23,71 +23,71 @@ port = 'PySimpleGUI'
 
 
 """
-Copyright 2018, 2019, 2020, 2021 PySimpleGUI
-
-Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
-
-From the inception these have been the project principals upon which it is all built
-1. Fun - it's a serious goal of the project. If we're not having FUN while making stuff, then something's not right
-2. Successful - you need to be successful or it's all for naught
-3. You are the important party - It's your success that determines the success of PySimpleGUI
-
-If these 3 things are kept at the forefront, then the rest tends to fall into place.
-
-PySimpleGUI is a "system", not just a program.  There are 4 components of the "PySimpleGUI system"
-1. This software - PySimpleGUI.com
-2. The documentation - PySimpleGUI.org
-3. Demo Programs - Demos.PySimpleGUI.org
-4. Support - Issues.PySimpleGUI.org
-
-
-This software is available for your use under a LGPL3+ license
-
-This notice, these first 150 lines of code shall remain unchanged
-
-
-
-888      .d8888b.  8888888b.  888      .d8888b.          
-888     d88P  Y88b 888   Y88b 888     d88P  Y88b         
-888     888    888 888    888 888          .d88P         
-888     888        888   d88P 888         8888"    888   
-888     888  88888 8888888P"  888          "Y8b. 8888888 
-888     888    888 888        888     888    888   888   
-888     Y88b  d88P 888        888     Y88b  d88P         
-88888888 "Y8888P88 888        88888888 "Y8888P"          
-
-
-In addition to the normal publishing requirements of LGPL3+, these also apply:
-1. These and all comments are to remain in the source code
-2. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
-       1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
-          https://github.com/PySimpleGUI/PySimpleGUI
-       2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
-
-       THE official documentation location is:
-          Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
-          https://pysimplegui.readthedocs.io/en/latest/
-   If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
-3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file
------------------------------------------------------------------------------------------------------------------
-
-How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
-GUI based applications so I'll try to make it up to you.
-
-The first bit of good news for you is that literally 100s of pages of documentation await you. 
-300 Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
-
-Some general bits of advice:
-Upgrade your software!  python -m pip install --upgrade --no-cache-dir PySimpleGUI
-If you're thinking of filing an Issue or posting a problem, Upgrade your software first
-There are constantly something new and interesting coming out of this project so stay current if you can 
-
-The FASTEST WAY to learn PySimpleGUI is to begin to play with it, and to read the documentation.
-http://www.PySimpleGUI.org
-http://Calls.PySimpleGUI.org
-http://Cookbook.PySimpleGUI.org
-
-The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
+    Copyright 2018, 2019, 2020, 2021 PySimpleGUI
+    
+    Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
+    
+    From the inception these have been the project principals upon which it is all built
+    1. Fun - it's a serious goal of the project. If we're not having FUN while making stuff, then something's not right
+    2. Successful - you need to be successful or it's all for naught
+    3. You are the important party - It's your success that determines the success of PySimpleGUI
+    
+    If these 3 things are kept at the forefront, then the rest tends to fall into place.
+    
+    PySimpleGUI is a "system", not just a program.  There are 4 components of the "PySimpleGUI system"
+    1. This software - PySimpleGUI.com
+    2. The documentation - PySimpleGUI.org
+    3. Demo Programs - Demos.PySimpleGUI.org
+    4. Support - Issues.PySimpleGUI.org
+    
+    
+    This software is available for your use under a LGPL3+ license
+    
+    This notice, these first 150 lines of code shall remain unchanged
+    
+    
+    
+    888      .d8888b.  8888888b.  888      .d8888b.          
+    888     d88P  Y88b 888   Y88b 888     d88P  Y88b         
+    888     888    888 888    888 888          .d88P         
+    888     888        888   d88P 888         8888"    888   
+    888     888  88888 8888888P"  888          "Y8b. 8888888 
+    888     888    888 888        888     888    888   888   
+    888     Y88b  d88P 888        888     Y88b  d88P         
+    88888888 "Y8888P88 888        88888888 "Y8888P"          
+    
+    
+    In addition to the normal publishing requirements of LGPL3+, these also apply:
+    1. These and all comments are to remain in the source code
+    2. The "Official" version of PySimpleGUI and the associated documentation lives on two (and **only** two) places:
+           1. GitHub - (http://www.PySimpleGUI.com) currently pointing at:
+              https://github.com/PySimpleGUI/PySimpleGUI
+           2. PyPI - pip install PySimpleGUI is the customary way of obtaining the latest release
+    
+           THE official documentation location is:
+              Read the Docs (via http://www.PySimpleGUI.org).  Currently is pointed at: 
+              https://pysimplegui.readthedocs.io/en/latest/
+       If you've obtained this software in any other way, then those listed here, then SUPPORT WILL NOT BE PROVIDED.
+    3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file
+    -----------------------------------------------------------------------------------------------------------------
+    
+    How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
+    GUI based applications so I'll try to make it up to you.
+    
+    The first bit of good news for you is that literally 100s of pages of documentation await you. 
+    300 Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
+    
+    Some general bits of advice:
+    Upgrade your software!  python -m pip install --upgrade --no-cache-dir PySimpleGUI
+    If you're thinking of filing an Issue or posting a problem, Upgrade your software first
+    There are constantly something new and interesting coming out of this project so stay current if you can 
+    
+    The FASTEST WAY to learn PySimpleGUI is to begin to play with it, and to read the documentation.
+    http://www.PySimpleGUI.org
+    http://Calls.PySimpleGUI.org
+    http://Cookbook.PySimpleGUI.org
+    
+    The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
 
 """
 
@@ -130,6 +130,7 @@ try:        # Because Raspberry Pi is still on 3.4....
 except: pass
 
 from threading import Thread
+import threading
 import itertools
 import os
 import json
@@ -906,7 +907,7 @@ class Element():
         """
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
-            # if sys.platform == 'linux':
+            # if running_linux():
             if running_linux():
                 print('* linix minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
@@ -936,7 +937,7 @@ class Element():
 
 
     def _titlebar_restore(self, event):
-        # if sys.platform == 'linux':
+        # if running_linux():
         if running_linux():
             print('linux restore')
             # if self._skip_first_restore_callback:
@@ -1137,6 +1138,28 @@ class Element():
             print('Was unable to set focus.  The Widget passed in was perhaps not present in this element?  Check your elements .Widget property')
 
 
+    def block_focus(self, block=True):
+        """
+        Enable or disable the element from getting focus by using the keyboard.
+        If the block parameter is True, then this element will not be given focus by using
+        the keyboard to go from one element to another.
+        You CAN click on the element and utilize it.
+
+        :param block: if True the element will not get focus via the keyboard
+        :type block: bool
+        """
+        if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
+            return
+        try:
+            self.ParentForm.TKroot.focus_force()
+            if block:
+                self.Widget.configure(takefocus=0)
+            else:
+                self.Widget.configure(takefocus=1)
+        except:
+            print('Was unable to block the focus. Check your elements .Widget property')
+
+
     def set_size(self, size=(None, None)):
         """
         Changes the size of an element to a specific size.
@@ -1312,6 +1335,8 @@ class Element():
         that this is not the function that will be called.  Your actual element's update method will be called
         """
         print('* Base Element Class update was called. Your element does not seem to have an update method')
+
+
 
 
     def __call__(self, *args, **kwargs):
@@ -1784,8 +1809,8 @@ class Listbox(Element):
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
-                 background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, right_click_menu=None,
-                 visible=True, metadata=None):
+                 background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
+                 key=None, k=None, pad=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param values: list of values to display. Can be any type including mixed types as long as they have __str__ method
         :type values: List[Any] or Tuple[Any]
@@ -1808,12 +1833,16 @@ class Listbox(Element):
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int]
         :param font: specifies the font family, size, etc
-        :param no_scrollbar: ???
-        :type no_scrollbar: ??? (bool)
+        :param no_scrollbar: Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
+        :type no_scrollbar: (bool)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
+        :param highlight_background_color: color of the background when an item is selected. Defaults to normal text color (a reverse look)
+        :type highlight_background_color: (str)
+        :param highlight_text_color: color of the text when an item is selected. Defaults to the normal background color (a rerverse look)
+        :type highlight_text_color: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -1845,8 +1874,10 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_SINGLE
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
-        fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
+        bg = background_color if background_color is not None else theme_input_background_color()
+        fg = text_color if text_color is not None else theme_input_text_color()
+        self.HighlightBackgroundColor = highlight_background_color if highlight_background_color is not None else fg
+        self.HighlightTextColor = highlight_text_color if highlight_text_color is not None else bg
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None  # type: tk.Listbox
@@ -3574,7 +3605,7 @@ class Button(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.UseTtkButtons = use_ttk_buttons
         self._files_delimiter = BROWSE_FILES_DELIMITER        # used by the file browse button. used when multiple files are selected by user
-        if sys.platform.startswith('darwin'):
+        if use_ttk_buttons is None and running_mac():
             self.UseTtkButtons = True
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
@@ -3709,7 +3740,7 @@ class Button(Element):
         filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
 
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
-            if sys.platform == 'darwin':        # macs don't like seeing the parent window (go firgure)
+            if running_mac():        # macs don't like seeing the parent window (go firgure)
                 folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder)  # show the 'get folder' dialog box
             else:
                 folder_name = tk.filedialog.askdirectory(initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get folder' dialog box
@@ -3720,7 +3751,7 @@ class Button(Element):
                 except:
                     pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
-            if sys.platform == 'darwin':
+            if running_mac():
                 file_name = tk.filedialog.askopenfilename(
                     initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
@@ -3735,7 +3766,7 @@ class Button(Element):
             strvar.set(color)
             self.TKStringVar.set(color)
         elif self.BType == BUTTON_TYPE_BROWSE_FILES:
-            if sys.platform == 'darwin':
+            if running_mac():
                 file_name = tk.filedialog.askopenfilenames(initialdir=self.InitialFolder)
             else:
                 file_name = tk.filedialog.askopenfilenames(filetypes=filetypes, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
@@ -3744,7 +3775,7 @@ class Button(Element):
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
-            if sys.platform == 'darwin':
+            if running_mac():
                 file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension,
                                                             initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
@@ -5375,7 +5406,7 @@ class Frame(Element):
                 continue
             if element.ParentContainer is not None:
                 warnings.warn('*** YOU ARE ATTEMPTING TO RESUSE AN ELEMENT IN YOUR LAYOUT! Once placed in a layout, an element cannot be used in another layout. ***', UserWarning)
-                PopupError('Error creating Frame layout',
+                _error_popup_with_traceback('Error creating Frame layout',
                            'The layout specified has already been used',
                            'You MUST start witha "clean", unused layout every time you create a window',
                            'The offensive Element = ',
@@ -5383,7 +5414,7 @@ class Frame(Element):
                            'and has a key = ', element.Key,
                            'This item will be stripped from your layout',
                            'Hint - try printing your layout and matching the IDs "print(layout)"',
-                           obj_to_string_single_obj(element), keep_on_top=True)
+                           )
                 continue
             element.Position = (CurrentRowNumber, i)
             element.ParentContainer = self
@@ -7738,6 +7769,8 @@ class Window:
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.modal = modal
         self.thread_queue = None        # type: queue.Queue
+        self.thread_lock = None         # type: threading.Lock
+        self.thread_timer = None        # type: tk.Misc
         self.thread_strvar  = None      # type: tk.StringVar
         self.read_closed_window_count = 0
         self.config_last_size = (None, None)
@@ -7939,6 +7972,8 @@ class Window:
                 icon = self.titlebar_icon
             elif self.WindowIcon == DEFAULT_WINDOW_ICON:
                 icon = DEFAULT_BASE64_ICON_16_BY_16
+            else:
+                icon = None
 
             new_rows = [[Titlebar(title=self.Title, icon=icon, text_color=self.titlebar_text_color, background_color=self.titlebar_background_color, font=self.titlebar_font)]] + rows
         else:
@@ -8736,7 +8771,7 @@ class Window:
 
         if not self._is_window_created():
             return
-        if sys.platform != 'linux':
+        if not running_linux():
             self.TKroot.state('zoomed')
         else:
             self.TKroot.attributes('-fullscreen', True)
@@ -8753,7 +8788,7 @@ class Window:
         if self.TKroot.state() == 'iconic':
             self.TKroot.deiconify()
         else:
-            if sys.platform != 'linux':
+            if not running_linux():
                 self.TKroot.state('normal')
             else:
                 self.TKroot.attributes('-fullscreen', False)
@@ -9092,7 +9127,7 @@ class Window:
         """
         if not self._is_window_created():
             return
-        if sys.platform.startswith('win'):
+        if running_windows():
             try:
                 self.TKroot.wm_attributes("-topmost", 0)
                 self.TKroot.wm_attributes("-topmost", 1)
@@ -9368,17 +9403,23 @@ class Window:
             print('Warning bad cursor specified ', cursor)
             print(e)
 
-    def _window_tkvar_changed_callback(self, event, *args):
+    def _window_tkvar_changed_callback(self,  *args):
         """
         Internal callback function for when the thread
 
         :param event: Information from tkinter about the callback
 
         """
-        # print('Thread callback info')
+        # print('Thread callback info', threading.current_thread())
         # print(event)
         # trace_details = traceback.format_stack()
         # print(''.join(trace_details))
+        # self.thread_lock.acquire()
+        # if self.thread_timer:
+            # self.TKroot.after_cancel(id=self.thread_timer)
+            # self.thread_timer = None
+        # self.thread_lock.release()
+
         if self._queued_thread_event_available():
             self.FormRemainedOpen = True
             _exit_mainloop(self)
@@ -9391,6 +9432,9 @@ class Window:
 
         if self.thread_queue is None:
             self.thread_queue = queue.Queue()
+
+        if self.thread_lock is None:
+            self.thread_lock = threading.Lock()
 
         if self.thread_strvar is None:
             self.thread_strvar = tk.StringVar()
@@ -9410,10 +9454,15 @@ class Window:
         if self.thread_queue is None:
             print('*** Warning Window.write_event_value - no thread queue found ***')
             return
-
+        # self.thread_lock.acquire()  # first lock the critical section
         self.thread_queue.put(item=(key, value))
         self.thread_strvar.set('new item')
-
+        # March 28 2021 - finally found a solution!  It needs a little more work and a lock
+        # if no timer is running, then one should be started
+        # if self.thread_timer is None:
+        #     print('Starting a timer')
+        #     self.thread_timer = self.TKroot.after(1, self._window_tkvar_changed_callback)
+        # self.thread_lock.release()
 
     def _queued_thread_event_read(self):
         if self.thread_queue is None:
@@ -9431,8 +9480,11 @@ class Window:
 
         if self.thread_queue is None:
             return False
-
+        # self.thread_lock.acquire()
         qsize = self.thread_queue.qsize()
+        if qsize == 0:
+            self.thread_timer = None
+        # self.thread_lock.release()
         return qsize != 0
 
 
@@ -12246,7 +12298,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         print('Button with text: ', btext, 'key:', element.Key,'has a bad color string', bc)
                 elif bc[1] == COLOR_SYSTEM_DEFAULT and bc[0] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if bd == 0 and not sys.platform.startswith('darwin'):
+                if bd == 0 and not running_mac():
                     tkbutton.config(relief=tk.FLAT)
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
@@ -12343,7 +12395,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     button_style.configure(style_name, foreground=bc[0], background=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     button_style.configure(style_name, foreground=bc[0])
-                if bd == 0 and not sys.platform.startswith('darwin'):
+                if bd == 0 and not running_mac():
                     button_style.configure(style_name, relief=tk.FLAT)
                     button_style.configure(style_name, borderwidth=0)
                 else:
@@ -12434,7 +12486,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
                 elif bc[1] == COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
-                if bd == 0 and not sys.platform.startswith('darwin'):
+                if bd == 0 and not running_mac():
                     tkbutton.config(relief=RELIEF_FLAT)
                 elif bd != 0:
                     tkbutton.config(relief=RELIEF_RAISED)
@@ -12686,8 +12738,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKListbox.selection_set(index)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(background=element.BackgroundColor)
+                if element.HighlightBackgroundColor is not None and element.HighlightBackgroundColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKListbox.config(selectbackground=element.HighlightBackgroundColor)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     element.TKListbox.configure(fg=text_color)
+                if element.HighlightTextColor is not None and element.HighlightTextColor != COLOR_SYSTEM_DEFAULT:
+                    element.TKListbox.config(selectforeground=element.HighlightTextColor)
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
                 if not element.NoScrollbar:
@@ -13626,13 +13682,13 @@ def _convert_window_to_tk(window):
 
     try:
         if window.NoTitleBar:
-            if sys.platform == 'linux':
+            if running_linux():
                 # window.TKroot.wm_attributes("-type", 'splash')
                 window.TKroot.wm_attributes("-type", 'dock')
             else:
                 window.TKroot.wm_overrideredirect(True)
                 # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
-                if sys.platform.startswith('darwin') and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
                     print('* Applying Mac no_titlebar patch *')
                     window.TKroot.wm_overrideredirect(False)
     except:
@@ -13667,7 +13723,7 @@ def StartupTK(window):
         Window._IncrementOpenCount()
         Window.hidden_master_root = tk.Tk()
         Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-        # if not sys.platform.startswith('darwin'):
+        # if not running_mac():
         try:
             Window.hidden_master_root.wm_overrideredirect(True)
         except:
@@ -15366,7 +15422,7 @@ def change_look_and_feel(index, force=False):
     """
     global CURRENT_LOOK_AND_FEEL
 
-    # if sys.platform.startswith('darwin') and not force:
+    # if running_mac() and not force:
     #     print('*** Changing look and feel is not supported on Mac platform ***')
     #     return
 
@@ -15418,7 +15474,7 @@ def change_look_and_feel(index, force=False):
                    element_background_color=colors['BACKGROUND'],
                    text_color=colors['TEXT'],
                    input_elements_background_color=colors['INPUT'],
-                   # button_color=colors['BUTTON'] if not sys.platform.startswith('darwin') else None,
+                   # button_color=colors['BUTTON'] if not running_mac() else None,
                    button_color=colors['BUTTON'],
                    progress_meter_color=colors['PROGRESS'],
                    border_width=colors['BORDER'],
@@ -16441,7 +16497,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
 
-            # if not sys.platform.startswith('darwin'):
+            # if not running_mac():
             try:
                 Window.hidden_master_root.wm_overrideredirect(True)
             except:
@@ -16451,7 +16507,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            # if not sys.platform.startswith('darwin'):
+            # if not running_mac():
             try:
                 root.wm_overrideredirect(True)
             except:
@@ -16564,7 +16620,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
             Window._IncrementOpenCount()
             Window.hidden_master_root = tk.Tk()
             Window.hidden_master_root.attributes('-alpha', 0)  # HIDE this window really really really
-            # if not sys.platform.startswith('darwin'):
+            # if not running_mac():
             try:
                 Window.hidden_master_root.wm_overrideredirect(True)
             except:
@@ -16574,7 +16630,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
         try:
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
-            # if not sys.platform.startswith('darwin'):
+            # if not running_mac():
             try:
                 root.wm_overrideredirect(True)
             except:
@@ -17120,7 +17176,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
         for arg in args:
             real_args.append(arg)
         # real_args.append(args)
-    thread = Thread(target=_process_thread, args=real_args, daemon=True)
+    thread = threading.Thread(target=_process_thread, args=real_args, daemon=True)
     thread.start()
 
     # Poll to see if the thread is still running.  If so, then continue showing the animation
@@ -17275,11 +17331,11 @@ class UserSettings:
                 path = os.path.expanduser(self.path)    # expand user provided path in case it has user ~ in it. Don't think it'll hurt
             elif DEFAULT_USER_SETTINGS_PATH is not None:    # if user set the path manually system-wide using set options
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_PATH)
-            elif sys.platform.startswith('win'):
+            elif running_windows():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_WIN_PATH)
-            elif sys.platform.startswith('linux'):
+            elif running_linux():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_LINUX_PATH)
-            elif sys.platform.startswith('darwin'):
+            elif running_mac():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_MAC_PATH)
             else:
                 path = '.'
@@ -18985,7 +19041,7 @@ def main_global_pysimplegui_settings():
                     [In(settings.get('-explorer program-', ''),k='-EXPLORER PROGRAM-', tooltip=tooltip_file_explorer)],
               [T('Theme',  font='_ 16')],
                   [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
-                  [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), k='-THEME-', tooltip=tooltip_theme)],
+                  [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
 
