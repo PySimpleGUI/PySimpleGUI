@@ -1,10 +1,8 @@
 import PySimpleGUI as sg
-import sys
 import datetime
-import PIL, PIL.Image, PIL.ImageTk
+import PIL.Image, PIL.ImageTk
 import random
 import os
-import io
 
 """
     Another simple Desktop Widget using PySimpleGUI
@@ -16,19 +14,13 @@ import io
     Specific to this Widget are
         * Image size
         * How long to show the image and if you wnt this time to vary semi-randomly
-        * Folder containing your image
+        * Folder containing your images
         
-
     Copyright 2021 PySimpleGUI
 """
 
 ALPHA = 0.9  # Initial alpha until user changes
-THEME = 'Dark green 3'  # Initial theme until user changes
 refresh_font = sg.user_settings_get_entry('-refresh font-', 'Courier 8')
-
-# May add ability to change theme from the user interface.  For now forcing to constant
-
-UPDATE_FREQUENCY_MILLISECONDS = 1000 * 60 * 60  # update every hour
 
 def convert_to_bytes(file_or_bytes, resize=None):
     image = PIL.Image.open(file_or_bytes)
@@ -44,12 +36,12 @@ def choose_theme(location):
 
     event, values = sg.Window('Look and Feel Browser', layout, location=location, keep_on_top=True).read(close=True)
 
-
     if event == 'OK' and values['-LIST-']:
         sg.theme(values['-LIST-'][0])
         sg.user_settings_set_entry('-theme-', values['-LIST-'][0])
         return values['-LIST-'][0]
-    return None
+    else:
+        return None
 
 
 def make_window(location):
@@ -66,10 +58,8 @@ def make_window(location):
                     [sg.T(size=(40,1), justification='c', font=refresh_font, k='-FOLDER-')],
                     [sg.T(size=(40,1), justification='c', font=refresh_font, k='-FILENAME-')]]
 
-    main_layout = [[sg.Image(k='-IMAGE-', enable_events=True)]]
-
-    layout = main_layout + \
-             [[sg.pin(sg.Column(refresh_info, key='-REFRESH INFO-', element_justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
+    layout = [[sg.Image(k='-IMAGE-', enable_events=True)],
+              [sg.pin(sg.Column(refresh_info, key='-REFRESH INFO-', element_justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
     window = sg.Window('Photo Frame', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
 
@@ -111,12 +101,10 @@ def main():
         window['-IMAGE-'].update(data=image_data)
         window['-FOLDER-'].update(image_folder)
         window['-FILENAME-'].update(image_name)
-        print(f'showing {image_name}')
         window['-REFRESHED-'].update(datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p"))
         # -------------- Start of normal event loop --------------
         timeout = time_per_image * 1000 + (random.randint(int(-time_per_image * 500), int(time_per_image * 500)) if vary_randomly else 0)
         event, values = window.read(timeout=timeout)
-        print(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Edit Me':
