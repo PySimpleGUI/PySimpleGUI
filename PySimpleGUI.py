@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.38.0.3 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac"
+version = __version__ = "4.38.0.4 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -842,6 +842,22 @@ class Element():
         self.TKRightClickMenu.grab_release()
         if self.Type == ELEM_TYPE_GRAPH:
             self._update_position_for_returned_values(event)
+
+
+
+    def _tearoff_menu_callback(self, parent, menu):
+        """
+        Callback function that's called when a right click menu is torn off.
+        The reason for this fuction is to relocate the torn-off menu. It will default to 0,0 otherwise
+        This callback moves the right click menu window to the clocation of the current window
+
+        :param parent: information provided by tkinter - the parent of the Meny
+        :param menu: information provided by tkinter - the menu window
+
+        """
+        winx, winy = self.ParentForm.current_location()
+        self.ParentForm.TKroot.tk.call('wm', 'geometry', menu, "+{}+{}".format(winx, winy))
+
 
     def _MenuItemChosenCallback(self, item_chosen):  # TEXT Menu item callback
         """
@@ -1881,6 +1897,7 @@ class Listbox(Element):
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None  # type: tk.Listbox
+        self.listbox_frame = None           # type: tk.Frame
         self.NoScrollbar = no_scrollbar
         key = key if key is not None else k
 
@@ -7591,7 +7608,7 @@ class Window:
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
-                 right_click_menu_font=None,
+                 right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
                  use_custom_titlebar=None, metadata=None):
@@ -7668,6 +7685,8 @@ class Window:
         :type right_click_menu_disabled_text_color: (str)
         :param right_click_menu_font: Font for right click menus
         :type right_click_menu_font: str | Tuple[str, int]
+        :param right_click_menu_tearoff: If True then all right click menus can be torn off
+        :type right_click_menu_tearoff: bool
         :param finalize: If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
         :type finalize: (bool)
         :param element_justification: All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values
@@ -7784,6 +7803,7 @@ class Window:
         self.right_click_menu_text_color = right_click_menu_text_color if right_click_menu_text_color is not None else theme_input_text_color()
         self.right_click_menu_disabled_text_color = right_click_menu_disabled_text_color if right_click_menu_disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
         self.right_click_menu_font = right_click_menu_font if right_click_menu_font is not None else self.Font
+        self.right_click_menu_tearoff = right_click_menu_tearoff
         self.auto_close_timer_needs_starting = False
         self.finalize_in_progress = False
         self.close_destroys_window = not enable_close_attempted_event if enable_close_attempted_event is not None else None
@@ -10109,6 +10129,10 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
     :type vertical_alignment: str | None
     :param shrink: If True, then the space will shrink down to a single pixel when hidden. False leaves the area large and blank
     :type shrink: bool
+    :param expand_x: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x: (bool)
+    :param expand_y: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y: (bool)
     :return: A column element containing the provided element
     :rtype: Column
     """
@@ -10118,28 +10142,36 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
         return Column([[elem]], pad=(0,0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
 
 
-def vtop(elem_or_row):
+def vtop(elem_or_row, expand_x=None, expand_y=None):
     """
     Align an element or a row of elements to the top of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Element | List[Element] | Tuple[Element]
+    :param expand_x: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x: (bool)
+    :param expand_y: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y: (bool)
     :return: A column element containing the provided element aligned to the top or list of elements (a row)
     :rtype: Column | List[Column]
     """
 
     if isinstance(elem_or_row, list) or isinstance(elem_or_row, tuple):
-        return [Column([[e]], pad=(0,0), vertical_alignment='top') for e in elem_or_row]
+        return [Column([[e]], pad=(0,0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y) for e in elem_or_row]
 
-    return Column([[elem_or_row]], pad=(0,0), vertical_alignment='top')
+    return Column([[elem_or_row]], pad=(0,0), vertical_alignment='top', expand_x=expand_x, expand_y=expand_y)
 
 
-def vcenter(elem_or_row):
+def vcenter(elem_or_row, expand_x=None, expand_y=None):
     """
     Align an element or a row of elements to the center of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Element | List[Element] | Tuple[Element]
+    :param expand_x: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x: (bool)
+    :param expand_y: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y: (bool)
     :return: A column element containing the provided element aligned to the center or list of elements (a row)
     :rtype: Column | List[Column]
     """
@@ -10151,12 +10183,16 @@ def vcenter(elem_or_row):
     return Column([[elem_or_row]], pad=(0,0), vertical_alignment='center')
 
 
-def vbottom(elem_or_row):
+def vbottom(elem_or_row, expand_x=None, expand_y=None):
     """
     Align an element or a row of elements to the bottom of the row that contains it
 
     :param elem_or_row: the element or row of elements
     :type elem_or_row: Element | List[Element] | Tuple[Element]
+    :param expand_x: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_x: (bool)
+    :param expand_y: If True/False the value will be passed to the Column Elements used to make this feature
+    :type expand_y: (bool)
     :return: A column element containing the provided element aligned to the bottom or list of elements (a row)
     :rtype: Column | List[Column]
     """
@@ -11990,7 +12026,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _add_right_click_menu(element):
         if element.RightClickMenu or toplevel_form.RightClickMenu:
             menu = element.RightClickMenu or toplevel_form.RightClickMenu
-            top_menu = tk.Menu(toplevel_form.TKroot, tearoff=False)
+            top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
 
             if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
                 top_menu.config(bg=toplevel_form.right_click_menu_background_color)
@@ -12729,8 +12765,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 listbox_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
                 element.TKListbox = element.Widget = tk.Listbox(listbox_frame, height=element_size[1], width=width,
-                                                                selectmode=element.SelectMode, font=font,
-                                                                exportselection=False)
+                                                                selectmode=element.SelectMode, font=font, exportselection=False)
                 element.Widget.config(highlightthickness=0)
                 for index, item in enumerate(element.Values):
                     element.TKListbox.insert(tk.END, item)
@@ -12767,6 +12802,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                element.listbox_frame = listbox_frame
                 _add_right_click_menu(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -12986,13 +13022,20 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # -------------------------  IMAGE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_IMAGE:
                 element = element  # type: Image
-                if element.Filename is not None:
-                    photo = tk.PhotoImage(file=element.Filename)
-                elif element.Data is not None:
-                    photo = tk.PhotoImage(data=element.Data)
-                else:
-                    photo = None
-                    # print('*ERROR laying out form.... Image Element has no image specified*')
+                try:
+                    if element.Filename is not None:
+                        photo = tk.PhotoImage(file=element.Filename)
+                    elif element.Data is not None:
+                        photo = tk.PhotoImage(data=element.Data)
+                    else:
+                        photo = None
+                        # print('*ERROR laying out form.... Image Element has no image specified*')
+                except Exception as e:
+                    photo=None
+                    _error_popup_with_traceback('Your Window has an Image Element with a problem',
+                                                'The traceback will show you the Window with the problem layout',
+                                                'Look in this Window\'s layout for an Image element that has a key of {}'.format(element.Key),
+                                                'The error occuring is:', e)
 
                 if photo is not None:
                     if element_size == (
@@ -13004,23 +13047,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width,
                                                         height=height,
                                                         bd=border_depth)
-                    else:
-                        element.tktext_label = tk.Label(tk_row_frame, width=width, height=height,
+                else:
+                    element.tktext_label = tk.Label(tk_row_frame, width=width, height=height,
                                                         bd=border_depth)
 
-                    if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
-                        element.tktext_label.config(background=element.BackgroundColor)
+                if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
+                    element.tktext_label.config(background=element.BackgroundColor)
 
-                    element.tktext_label.image = photo
-                    # tktext_label.configure(anchor=tk.NW, image=photo)
-                    element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                element.tktext_label.image = photo
+                # tktext_label.configure(anchor=tk.NW, image=photo)
+                element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
 
                 if element.visible is False:
                     element.tktext_label.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.tktext_label, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                if element.EnableEvents:
+                if element.EnableEvents and element.tktext_label is not None:
                     element.tktext_label.bind('<ButtonPress-1>', element._ClickHandler)
                 element.Widget = element.tktext_label
 
@@ -17099,7 +17142,8 @@ def _error_popup_with_traceback(title, *args):
 def _error_popup_with_code(title, filename=None, line_num=None,  *args):
     layout = [[Text('ERROR'), Text(title)],
               [Image(data=_random_error_emoji())]]
-    layout += [[Text(msg)] for msg in args]
+    # make max length of line be 90 chars and allow the hieight to vary based on number of needed lines
+    layout += [[Text(str(msg), size=(min(90, len(str(msg))),None))] for msg in args]
 
     layout += [[Button('Close'), Button('Take me to error')]]
 
