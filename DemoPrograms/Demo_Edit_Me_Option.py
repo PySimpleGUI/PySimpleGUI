@@ -25,7 +25,7 @@ import PySimpleGUI as sg
 layout = [[sg.Text('Edit this program by right clicking and choosing "Edit me"')],
           [sg.Button('Exit')]]
 
-window = sg.Window('PyCharm Launch Demo', layout, right_click_menu=[[''], ['Edit Me', 'Exit',]])
+window = sg.Window('Edit Me Right Click Menu Demo', layout, right_click_menu=[[''], ['Edit Me', 'Exit',]])
 
 while True:  # Event Loop
     event, values = window.read()
