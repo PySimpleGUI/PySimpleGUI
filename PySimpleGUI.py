@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.38.0.4 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop"
+version = __version__ = "4.38.0.5 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1260,7 +1260,8 @@ class Element():
             return
         self.Widget.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
-
+        if self.Type == ELEM_TYPE_INPUT_LISTBOX:
+            self.listbox_frame.pack(expand=True, fill=fill)
 
     def set_cursor(self,cursor=None, cursor_color=None):
         """
