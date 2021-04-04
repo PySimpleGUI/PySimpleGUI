@@ -13039,18 +13039,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 'The error occuring is:', e)
 
                 if photo is not None:
-                    if element_size == (
-                            None, None) or element_size == None or element_size == toplevel_form.DefaultElementSize:
+                    if element_size == (None, None) or element_size is None or element_size == toplevel_form.DefaultElementSize:
                         width, height = photo.width(), photo.height()
                     else:
                         width, height = element_size
-                    if photo is not None:
-                        element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width,
-                                                        height=height,
-                                                        bd=border_depth)
+                    element.tktext_label = tk.Label(tk_row_frame, image=photo, width=width, height=height, bd=border_depth)
                 else:
-                    element.tktext_label = tk.Label(tk_row_frame, width=width, height=height,
-                                                        bd=border_depth)
+                    element.tktext_label = tk.Label(tk_row_frame, bd=border_depth)
 
                 if not element.BackgroundColor in (None, COLOR_SYSTEM_DEFAULT):
                     element.tktext_label.config(background=element.BackgroundColor)
