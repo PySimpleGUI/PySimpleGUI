@@ -429,14 +429,14 @@ def make_window():
     find_re_tooltip = "Find in file using Regular Expression\nEnter a string in box to search for string inside of the files.\nSearch is performed after clicking the FindRE button."
 
 
-    left_col = sg.Col([
-        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50, 20), key='-DEMO LIST-')],
+    left_col = sg.Column([
+        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), key='-DEMO LIST-')],
         [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
         [sg.Text('Find (F2):', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
          sg.T(size=(15,1), k='-FIND NUMBER-')],
-    ], element_justification='l')
+    ], element_justification='l', expand_x=True, expand_y=True)
 
     lef_col_find_re = sg.pin(sg.Col([
         [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
@@ -453,20 +453,21 @@ def make_window():
                          sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
                          sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-')
                                            ]],
-                                         pad=(0,0), k='-OPTIONS BOTTOM-'))
+                                         pad=(0,0), k='-OPTIONS BOTTOM-',  expand_x=True, expand_y=False),  expand_x=True, expand_y=False)
 
     choose_folder_at_top = sg.pin(sg.Column([[sg.T('Click settings to set top of your tree or choose a previously chosen folder'),
-                                       sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 1), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
+                                       sg.Combo(sorted(sg.user_settings_get_entry('-folder names-', [])), default_value=sg.user_settings_get_entry('-demos folder-', ''), size=(50, 30), key='-FOLDERNAME-', enable_events=True, readonly=True)]], pad=(0,0), k='-FOLDER CHOOSE-'))
     # ----- Full layout -----
 
     layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
               [choose_folder_at_top],
-              sg.vtop([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l'), sg.Col(right_col, element_justification='c') ]),
-              [options_at_bottom]
-              ]
+                  [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ],
+              [options_at_bottom]]
 
     # --------------------------------- Create Window ---------------------------------
-    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon)
+    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon, resizable=True)
+    window['-DEMO LIST-'].expand(True, True, True)
+    window[ML_KEY].expand(True, True, True)
 
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
