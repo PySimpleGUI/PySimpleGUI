@@ -380,6 +380,7 @@ def settings_window():
                [sg.T('Theme', font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_theme)],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
+              [sg.T('Double-click a File Will:'), sg.R('Run', 2, sg.user_settings_get_entry('-dclick runs-', False), k='-DCLICK RUNS-'), sg.R('Edit', 2,  sg.user_settings_get_entry('-dclick edits-', False), k='-DCLICK EDITS-'), sg.R('Nohthing', 2,  sg.user_settings_get_entry('-dclick none-', False), k='-DCLICK NONE-')],
               [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
@@ -399,6 +400,9 @@ def settings_window():
             sg.user_settings_set_entry('-folder names-', list(set(sg.user_settings_get_entry('-folder names-', []) + [values['-FOLDERNAME-'], ])))
             sg.user_settings_set_entry('-explorer program-', values['-EXPLORER PROGRAM-'])
             sg.user_settings_set_entry('-advanced mode-', values['-ADVANCED MODE-'])
+            sg.user_settings_set_entry('-dclick runs-', values['-DCLICK RUNS-'])
+            sg.user_settings_set_entry('-dclick edits-', values['-DCLICK EDITS-'])
+            sg.user_settings_set_entry('-dclick nothing-', values['-DCLICK NONE-'])
             settings_changed = True
             break
         elif event == 'Clear History':
@@ -472,6 +476,10 @@ def make_window():
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
     window.bind('<F3>', '-FOCUS RE FIND-')
+    if sg.user_settings_get_entry('-dclick runs-'):
+        window['-DEMO LIST-'].bind('<Double-Button-1>', '+Run+')
+    elif sg.user_settings_get_entry('-dclick edits-'):
+        window['-DEMO LIST-'].bind('<Double-Button-1>', '+Edit+')
     if not advanced_mode():
         window['-FOLDER CHOOSE-'].update(visible=False)
         window['-RE COL-'].update(visible=False)
@@ -500,10 +508,11 @@ def main():
     counter = 0
     while True:
         event, values = window.read()
+        # print(event, values)
         counter += 1
         if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
-        if event == 'Edit':
+        if event == 'Edit' or event.endswith('+Edit+'):
             editor_program = get_editor()
             for file in values['-DEMO LIST-']:
                 if find_in_file.file_list_dict is not None:
@@ -526,7 +535,7 @@ def main():
                     #     sg.execute_editor(full_filename)
                 else:
                     sg.cprint('Editing canclled')
-        elif event == 'Run':
+        elif event == 'Run' or event.endswith('+Run+'):
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
             for file in values['-DEMO LIST-']:
