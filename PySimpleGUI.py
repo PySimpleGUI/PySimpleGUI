@@ -8009,7 +8009,7 @@ class Window:
         return self
 
 
-    def extend_layout(self, container,  rows):
+    def extend_layout(self, container,  rows, force=False):
         """
         Adds new rows to an existing container element inside of this window
 
@@ -8028,7 +8028,7 @@ class Window:
         PackFormIntoFrame(column, frame, self)
         # sg.PackFormIntoFrame(col, window.TKroot, window)
         self.AddRow(column)
-        self.AllKeysDict = self._BuildKeyDictForWindow(self, column, self.AllKeysDict)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self, column, self.AllKeysDict, _force=force)
         return self
 
     def LayoutAndRead(self, rows, non_blocking=False):
@@ -8605,15 +8605,15 @@ class Window:
         element = _FindElementWithFocusInSubForm(self)
         return element
 
-    def _BuildKeyDict(self):
+    def _BuildKeyDict(self, _force=False):
         """
         Used internally only! Not user callable
         Builds a dictionary containing all elements with keys for this window.
         """
         dict = {}
-        self.AllKeysDict = self._BuildKeyDictForWindow(self, self, dict)
+        self.AllKeysDict = self._BuildKeyDictForWindow(self, self, dict, _force=_force)
 
-    def _BuildKeyDictForWindow(self, top_window, window, key_dict):
+    def _BuildKeyDictForWindow(self, top_window, window, key_dict, _force=False):
         """
         Loop through all Rows and all Container Elements for this window and create the keys for all of them.
         Note that the calls are recursive as all pathes must be walked
@@ -8628,15 +8628,15 @@ class Window:
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
                 if element.Type == ELEM_TYPE_COLUMN:
-                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict, _force=_force)
                 if element.Type == ELEM_TYPE_FRAME:
-                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict, _force=_force)
                 if element.Type == ELEM_TYPE_TAB_GROUP:
-                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict, _force=_force)
                 if element.Type == ELEM_TYPE_PANE:
-                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict, _force=_force)
                 if element.Type == ELEM_TYPE_TAB:
-                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict)
+                    key_dict = self._BuildKeyDictForWindow(top_window, element, key_dict, _force=_force)
                 if element.Key is None:  # if no key has been assigned.... create one for input elements
                     if element.Type == ELEM_TYPE_BUTTON:
                         element.Key = element.ButtonText
@@ -8653,7 +8653,7 @@ class Window:
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
-                        if element.Type  != ELEM_TYPE_BUTTON:   # for Buttons, let duplicate key errors be silent
+                        if element.Type  != ELEM_TYPE_BUTTON and (not _force):   # for Buttons, let duplicate key errors be silent
                             warnings.warn('*** Duplicate key found in your layout {} ***'.format(element.Key), UserWarning)
                             warnings.warn('*** Replaced new key with {} ***'.format(str(element.Key) + str(self.UniqueKeyCounter)))
                             if not SUPPRESS_ERROR_POPUPS:
