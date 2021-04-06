@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.38.0.5 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly"
+version = "4.38.0.7 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -102,6 +102,7 @@ import tkinter.font
 # end of tkinter specific imports
 # get the tkinter detailed version
 tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
+framework_version = tclversion_detailed
 
 
 
@@ -486,7 +487,7 @@ WRITE_ONLY_KEY = '__WRITE ONLY__'
 MENU_DISABLED_CHARACTER = '!'
 MENU_SHORTCUT_CHARACTER = '&'
 MENU_KEY_SEPARATOR = '::'
-
+MENU_RIGHT_CLICK_EDITME_EXIT = ['_', ['Edit Me', 'Exit']]
 ENABLE_TK_WINDOWS = False
 
 USE_CUSTOM_TITLEBAR = False
@@ -8343,7 +8344,7 @@ class Window:
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
-                self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
+                # self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
 
                 try:
                     rc = self.TKroot.update()
@@ -9690,7 +9691,7 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
 
     :param timeout: Time in milliseconds to delay before a returning a timeout event
     :type timeout: (int)
-    :param timeout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
+    :param ti```meout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
     :type timeout_key: (Any)
     :return: A tuple with the  (Window, event, values dictionary/list)
     :rtype: Tuple[Window, Any, (Dict or List)]
@@ -18590,29 +18591,29 @@ class _Debugger():
         theme(old_theme)
         return True
 
-    ######
-    #     # ###### ###### #####  ######  ####  #    #
-    #     # #      #      #    # #      #      #    #
-    ######  #####  #####  #    # #####   ####  ######
-    #   #   #      #      #####  #           # #    #
-    #    #  #      #      #   #  #      #    # #    #
-    #     # ###### #      #    # ######  ####  #    #
+######
+#     # ###### ###### #####  ######  ####  #    #
+#     # #      #      #    # #      #      #    #
+######  #####  #####  #    # #####   ####  ######
+#   #   #      #      #####  #           # #    #
+#    #  #      #      #   #  #      #    # #    #
+#     # ###### #      #    # ######  ####  #    #
 
-    #######
-    #       #       ####    ##   ##### # #    #  ####
-    #       #      #    #  #  #    #   # ##   # #    #
-    #####   #      #    # #    #   #   # # #  # #
-    #       #      #    # ######   #   # #  # # #  ###
-    #       #      #    # #    #   #   # #   ## #    #
-    #       ######  ####  #    #   #   # #    #  ####
+#######
+#       #       ####    ##   ##### # #    #  ####
+#       #      #    #  #  #    #   # ##   # #    #
+#####   #      #    # #    #   #   # # #  # #
+#       #      #    # ######   #   # #  # # #  ###
+#       #      #    # #    #   #   # #   ## #    #
+#       ######  ####  #    #   #   # #    #  ####
 
-    #     #
-    #  #  # # #    # #####   ####  #    #
-    #  #  # # ##   # #    # #    # #    #
-    #  #  # # # #  # #    # #    # #    #
-    #  #  # # #  # # #    # #    # # ## #
-    #  #  # # #   ## #    # #    # ##  ##
-    ## ##  # #    # #####   ####  #    #
+#     #
+#  #  # # #    # #####   ####  #    #
+#  #  # # ##   # #    # #    # #    #
+#  #  # # # #  # #    # #    # #    #
+#  #  # # #  # # #    # #    # # ## #
+#  #  # # #   ## #    # #    # ##  ##
+ ## ##  # #    # #####   ####  #    #
 
     def _refresh_floating_window(self):
         if not self.popout_window:
