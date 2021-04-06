@@ -89,9 +89,8 @@ A **short** program that isolates and demonstrates the problem (Do not paste you
 This pre-formatted code block is all set for you to paste in your bit of code:
 
 ```python
-# Paste your code here
-
 {}
+
 
 ```
 
@@ -101,7 +100,7 @@ This pre-formatted code block is all set for you to paste in your bit of code:
 
     """.format(python_exp, prog_exp, used_gui, gui_notes,
                 cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                detailed_desc, code,)
+                detailed_desc, code if len(code) > 10 else '# Paste your code here')
 
     return body + body2
 
