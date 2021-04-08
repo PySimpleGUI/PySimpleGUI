@@ -118,10 +118,6 @@ def make_github_link(title, body):
 
 
 #########################################################################################################
-def open_browser(title, body):
-
-    webbrowser.open_new_tab(make_github_link(title, body))
-
 
 def validate(values, checklist, issue_types):
     issue_type = None
@@ -147,6 +143,7 @@ def validate(values, checklist, issue_types):
     else:
         sg.popup_error('Must choose Operating System')
         return False
+
     if os_ver == '':
         sg.popup_error('Must fill in an OS Version')
         return False
@@ -221,12 +218,12 @@ I can assume you that this form is not here to punish you. It doesn't exist to m
     help_experience = \
 """ Not many Bug-tracking systems ask about you as a user. Your experience in programming, programming in Python and programming a GUI are asked to provide you with the best possible answer.  Here's why it's helpful.  You're a human being, with a past, and a some amount of experience.  Being able to taylor the reply to your issue in a way that fits you and your experience will result in a reply that's efficient and clear.  It's not something normally done but perhaps it should be. It's meant to provide you with a personal response.
 
-If you've been programming for a month, the person answering your question can answer your question in a way that's understandable to you.  Similarly, if you've been programming for 20 years and have used multiple Python GUI frameworks, then youy are unlikely to need as much explanation.  You'll also have a richer GUI vocabularly. It's meant to try and give you a peronally crafted response that's on your wavelength. Fun & success... Remember those are our shared goals"""
+If you've been programming for a month, the person answering your question can answer your question in a way that's understandable to you.  Similarly, if you've been programming for 20 years and have used multiple Python GUI frameworks, then you are unlikely to need as much explanation.  You'll also have a richer GUI vocabularly. It's meant to try and give you a peronally crafted response that's on your wavelength. Fun & success... Remember those are our shared goals"""
 
     help_steps = \
 """ The steps to log an issue are:
 1. Fill in the form
-2. Click Browser """
+2. Click Post Issue """
     layout = [
                 [sg.T('Goals', font=heading_font, pad=(0,0))],
                 [HelpText(help_goals)],
@@ -324,8 +321,10 @@ def main_open_github_issue():
         event, values = window.read()
         # print(event, values)
         if event in (sg.WINDOW_CLOSE_ATTEMPTED_EVENT, 'Quit'):
-            if sg.popup_yes_no('Do you really want to exit?',
-                               'Do no exit until you have PASTED the information from Markdown tab into an issue') == 'Yes':
+            if sg.popup_yes_no( 'Do you really want to exit?',
+                                'If you have not clicked Post Issue button and then clicked "Submit New Issue" button '
+                                'then your issue will not have been submitted to GitHub.'
+                                'Do no exit until you have PASTED the information from Markdown tab into an issue?') == 'Yes':
                 break
         if event == sg.WIN_CLOSED:
             break
