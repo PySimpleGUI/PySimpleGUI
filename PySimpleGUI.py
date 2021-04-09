@@ -1,6 +1,9 @@
 #!/usr/bin/python3
+from collections import defaultdict
 
-version = __version__ = "4.38.0.9 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads"
+from pyfiglet import color_to_ansi
+
+version = __version__ = "4.38.0.11 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7688,7 +7691,7 @@ class Window:
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
                  no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
-                 right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
+                 right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None, right_click_menu_selected_colors=(None, None),
                  right_click_menu_font=None, right_click_menu_tearoff=False,
                  finalize=False, element_justification='left', ttk_theme=None, use_ttk_buttons=None, modal=False, enable_close_attempted_event=False,
                  titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None,
@@ -7763,6 +7766,10 @@ class Window:
         :param right_click_menu_text_color: Text color for right click menus
         :type right_click_menu_text_color: (str)
         :param right_click_menu_disabled_text_color: Text color for disabled right click menu items
+        :type right_click_menu_disabled_text_color: (str)
+        :param right_click_menu_selected_colors: Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
+Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
+        :type right_click_menu_selected_colors: (str, str) | str | Tuple(int, int) | (None, None)
         :type right_click_menu_disabled_text_color: (str)
         :param right_click_menu_font: Font for right click menus
         :type right_click_menu_font: str | Tuple[str, int]
@@ -7894,6 +7901,8 @@ class Window:
         self.titlebar_text_color = titlebar_text_color
         self.titlebar_font = titlebar_font
         self.titlebar_icon= titlebar_icon
+        self.right_click_menu_selected_colors = _simplified_dual_color_to_tuple(right_click_menu_selected_colors, (self.right_click_menu_background_color, self.right_click_menu_text_color))
+
 
 
         if self.use_custom_titlebar:
@@ -11518,7 +11527,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
 
 #####################################  -----  BUTTON Functions   ------ ##################################################
 
-def button_color_to_tuple(color_tuple_or_string, default=None):
+def button_color_to_tuple(color_tuple_or_string, default=(None, None)):
     """
     Convert a color tuple or color string into 2 components and returns them as a tuple
     (Text Color, Button Background Color)
@@ -11532,11 +11541,30 @@ def button_color_to_tuple(color_tuple_or_string, default=None):
     :return: (str | Tuple[str, str]
     :rtype: str | Tuple[str, str]
     """
-    if color_tuple_or_string is None:
-        color_tuple_or_string = theme_button_color()
+    if default == (None, None):
+        color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=theme_button_color())
+    else:
+        color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=default)
+
+    return color_tuple
+
+def _simplified_dual_color_to_tuple(color_tuple_or_string, default=(None, None)):
+    """
+    Convert a color tuple or color string into 2 components and returns them as a tuple
+    (Text Color, Button Background Color)
+    If None is passed in as the first parameter, theme_
+
+    :param color_tuple_or_string: Button color - tuple or a simplied color string with word "on" between color
+    :type  color_tuple_or_string: str | (str, str} | (None, None)
+    :param default: The 2 colors to use if there is a problem. Otherwise defaults to the theme's button color
+    :type  default: Tuple[str, str]
+    :return: (str | Tuple[str, str]
+    :rtype: str | Tuple[str, str]
+    """
+    if color_tuple_or_string is None or color_tuple_or_string == (None, None):
+        color_tuple_or_string = default
     if color_tuple_or_string == COLOR_SYSTEM_DEFAULT:
         return (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
-    default = theme_button_color() if default is None else default
     text_color = background_color = COLOR_SYSTEM_DEFAULT
     try:
         if isinstance(color_tuple_or_string, tuple):
@@ -12170,6 +12198,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if toplevel_form.right_click_menu_font is not None:
                 top_menu.config(font=toplevel_form.right_click_menu_font)
 
+            if toplevel_form.right_click_menu_selected_colors[0]:
+                top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
+            if toplevel_form.right_click_menu_selected_colors[1]:
+                top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
             AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
             element.TKRightClickMenu = top_menu
             element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
@@ -17239,7 +17271,7 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
 
 
 
-def popup_menu(window, element, menu_def, location=(None, None)):
+def popup_menu(window, element, menu_def, title=None, location=(None, None)):
     """
     Makes a "popup menu"
     This type of menu is what you get when a normal menu or a right click menu is torn off
@@ -17252,6 +17284,8 @@ def popup_menu(window, element, menu_def, location=(None, None)):
     :type element: Element
     :param menu_def: A menu definition. This will be the same format as used for Right Click Menus1
     :type  menu_def:  List[List[ List[str] | str ]]
+    :param title: The title that will be shown on the torn off menu window. Defaults to window titlr
+    :type title: str
     :param location: The location on the screen to place the window
     :type location: (int, int) | (None, None)
     :return:
@@ -17267,7 +17301,11 @@ def popup_menu(window, element, menu_def, location=(None, None)):
         top_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
     if window.right_click_menu_font is not None:
         top_menu.config(font=window.right_click_menu_font)
-
+    if window.right_click_menu_selected_colors[0] !=  COLOR_SYSTEM_DEFAULT:
+        top_menu.config(activeforeground=window.right_click_menu_selected_colors[0])
+    if window.right_click_menu_selected_colors[1] !=  COLOR_SYSTEM_DEFAULT:
+        top_menu.config(activebackground=window.right_click_menu_selected_colors[1])
+    top_menu.config(title=window.Title)
     AddMenuItem(top_menu, menu_def[1], element, right_click_menu=True)
     # element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
     top_menu.invoke(0)
