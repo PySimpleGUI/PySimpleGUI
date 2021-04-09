@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.38.0.11 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu"
+version = __version__ = "4.38.0.11 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu, FIX for write_event_value (THANK YOU daemon2021!)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7676,7 +7676,6 @@ class Window:
     _read_call_from_debugger = False
     _timeout_0_counter = 0              # when timeout=0 then go through each window one at a time
 
-    multi_window_return_values_queue = queue.Queue()  # A queue with return values in case multi-window environment (window, event, values)
 
     def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE,
                  default_button_element_size=(None, None),
@@ -9566,7 +9565,11 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
             return
         # self.thread_lock.acquire()  # first lock the critical section
         self.thread_queue.put(item=(key, value))
+        self.TKroot.tk.willdispatch()           # brilliant bit of code provided by Giuliano who I owe a million thank yous!
         self.thread_strvar.set('new item')
+
+        # self.thread_queue.put(item=(key, value))
+        # self.thread_strvar.set('new item')
         # March 28 2021 - finally found a solution!  It needs a little more work and a lock
         # if no timer is running, then one should be started
         # if self.thread_timer is None:
@@ -9596,29 +9599,6 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
             self.thread_timer = None
         # self.thread_lock.release()
         return qsize != 0
-
-
-    def _queued_multi_read_event_avilable(self):
-
-        qsize = self.multi_window_return_values_queue.qsize()
-
-        return qsize != 0
-
-    def write_multi_window_event_value(self, window, event, value):
-        """
-
-        :param window:
-        :param event:
-        :param value:
-        :return:
-        """
-
-        if self.multi_window_return_values_queue is None:
-            print('*** Warning Window.write_multi_window_event_value - no queue found ***')
-            return
-
-        self.multi_window_return_values_queue.put(item=(window, event, value))
-
 
 
 
@@ -18122,7 +18102,8 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
             if err:
                 print(err.decode("utf-8"))
     except Exception as e:
-        print('** Error executing subprocess - requires Python 3.6+ **', e)
+        warnings.warn('Error in execute_command_subprocess {}'.format(e), UserWarning)
+        _error_popup_with_traceback('Error in execute_command_subprocess', e, 'command={}'.format(command), 'args={}'.format(args))
         sp = None
     return sp
 
