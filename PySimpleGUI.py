@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.38.0.8 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__"
+version = __version__ = "4.38.0.9 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -151,6 +151,7 @@ import glob
 import configparser
 import urllib.request
 import urllib.error
+import urllib.parse
 
 
 warnings.simplefilter('always', UserWarning)
@@ -516,6 +517,12 @@ SYMBOL_RIGHT = '►'
 SYMBOL_LEFT =  '◄'
 SYMBOL_DOWN =  '▼'
 SYMBOL_X = '❎'
+SYMBOL_LEFT_DOUBLE = '«'
+SYMBOL_RIGHT_DOUBLE = '»'
+SYMBOL_LEFT_ARROWHEAD = '⮜'
+SYMBOL_RIGHT_ARROWHEAD = '⮞'
+SYMBOL_UP_ARROWHEAD = '⮝'
+SYMBOL_DOWN_ARROWHEAD = '⮟'
 
 if sum([int(i) for i in tclversion_detailed.split('.')]) > 19:
     SYMBOL_TITLEBAR_MINIMIZE = '_'
@@ -796,6 +803,8 @@ class Element():
         self.user_bind_dict = {}  # Used when user defines a tkinter binding using bind method - convert bind string to key modifier
         self.user_bind_event = None  # Used when user defines a tkinter binding using bind method - event data from tkinter
         self.pad_used    = (0,0)        # the amount of pad used when was inserted into the layout
+        self._popup_menu_location = (None, None)
+
         if not hasattr(self, 'DisabledTextColor'):
             self.DisabledTextColor = None
         if not hasattr(self, 'ItemFont'):
@@ -849,14 +858,18 @@ class Element():
     def _tearoff_menu_callback(self, parent, menu):
         """
         Callback function that's called when a right click menu is torn off.
-        The reason for this fuction is to relocate the torn-off menu. It will default to 0,0 otherwise
-        This callback moves the right click menu window to the clocation of the current window
+        The reason for this function is to relocate the torn-off menu. It will default to 0,0 otherwise
+        This callback moves the right click menu window to the location of the current window
 
         :param parent: information provided by tkinter - the parent of the Meny
         :param menu: information provided by tkinter - the menu window
 
         """
-        winx, winy = self.ParentForm.current_location()
+        if self._popup_menu_location == (None, None):
+            winx, winy = self.ParentForm.current_location()
+        else:
+            winx, winy = self._popup_menu_location
+        # self.ParentForm.TKroot.update()
         self.ParentForm.TKroot.tk.call('wm', 'geometry', menu, "+{}+{}".format(winx, winy))
 
 
@@ -1379,7 +1392,7 @@ class Input(Element):
     """
     Display a single text input field.  Based on the tkinter Widget `Entry`
     """
-    def __init__(self, default_text='', size=(None, None), disabled=False, password_char='',
+    def __init__(self, default_text='', size=(None, None), s=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
                  use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, right_click_menu=None, visible=True, metadata=None):
@@ -1387,7 +1400,9 @@ class Input(Element):
         :param default_text: Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
         :type default_text: (Any)
         :param size: w=characters-wide, h=rows-high
-        :type size: (int, int)  (width, height)
+        :type size: (int, int)  | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param disabled: set disable state for element (Default = False)
         :type disabled: (bool)
         :param password_char: Password character if this is a password field (Default value = '')
@@ -1450,7 +1465,9 @@ class Input(Element):
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
         self.TKEntry = self.Widget = None  # type: tk.Entry
         key = key if key is not None else k
-        super().__init__(ELEM_TYPE_INPUT_TEXT, size=size, background_color=bg, text_color=fg, key=key, pad=pad,
+        sz = size if size != (None, None) else s
+
+        super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def update(self, value=None, disabled=None, select=None, visible=None, text_color=None, background_color=None, move_cursor_to='end', password_char=None):
@@ -1541,7 +1558,7 @@ class Combo(Element):
     ComboBox Element - A combination of a single-line input and a drop-down menu. User can type in their own value or choose from list.
     """
 
-    def __init__(self, values, default_value=None, size=(None, None), auto_size_text=None, background_color=None,
+    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None,
                  text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
@@ -1550,7 +1567,9 @@ class Combo(Element):
         :param default_value: Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value: (Any)
         :param size: width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: True if element should be the same size as the contents
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -1589,8 +1608,9 @@ class Combo(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_COMBO, size=size, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
 
     def update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None, font=None, visible=None, size=(None, None)):
@@ -1714,7 +1734,7 @@ class OptionMenu(Element):
     it looks like a Combo Box that you scroll to select a choice.
     """
 
-    def __init__(self, values, default_value=None, size=(None, None), disabled=False, auto_size_text=None,
+    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), disabled=False, auto_size_text=None,
                  background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: Values to be displayed
@@ -1723,6 +1743,8 @@ class OptionMenu(Element):
         :type default_value: (Any)
         :param size: (width, height) size in characters (wide), height is ignored and present to be consistent with other elements
         :type size: (int, int) (width, UNUSED)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param disabled: control enabled / disabled
         :type disabled: (bool)
         :param auto_size_text: True if size of Element should match the contents of the items
@@ -1751,8 +1773,9 @@ class OptionMenu(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def update(self, value=None, values=None, disabled=None, visible=None, size=(None, None)):
@@ -1826,7 +1849,7 @@ class Listbox(Element):
     """
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
-                 bind_return_key=False, size=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
+                 bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
                  key=None, k=None, pad=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
@@ -1843,7 +1866,9 @@ class Listbox(Element):
         :param bind_return_key: If True, then the return key will cause a the Listbox to generate an event
         :type bind_return_key: (bool)
         :param size: width = characters-wide, height = rows-high
-        :type size: Tuple(int, int) (width, height)
+        :type size: (int, int)  | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param disabled: set disable state for element
         :type disabled: (bool)
         :param auto_size_text: True if element should be the same size as the contents
@@ -1902,8 +1927,9 @@ class Listbox(Element):
         self.listbox_frame = None           # type: tk.Frame
         self.NoScrollbar = no_scrollbar
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
+        super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def update(self, values=None, disabled=None, set_to_index=None, scroll_to_index=None, select_mode=None, visible=None):
@@ -2040,7 +2066,7 @@ class Radio(Element):
     1 choice in a list of choices.
     """
 
-    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), auto_size_text=None,
+    def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), s=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
                  change_submits=False, enable_events=False, visible=True, metadata=None):
         """
@@ -2053,7 +2079,9 @@ class Radio(Element):
         :param disabled: set disable state
         :type disabled: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -2107,8 +2135,9 @@ class Radio(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.EncodedRadioValue = None
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_RADIO, size=size, auto_size_text=auto_size_text, font=font,
+        super().__init__(ELEM_TYPE_INPUT_RADIO, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
@@ -2214,7 +2243,7 @@ class Checkbox(Element):
     Checkbox Element - Displays a checkbox and text next to it
     """
 
-    def __init__(self, text, default=False, size=(None, None), auto_size_text=None, font=None, background_color=None,
+    def __init__(self, text, default=False, size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: Text to display next to checkbox
@@ -2222,7 +2251,9 @@ class Checkbox(Element):
         :param default: Set to True if you want this checkbox initially checked
         :type default: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
@@ -2276,8 +2307,9 @@ class Checkbox(Element):
             self.CheckboxBackgroundColor = checkbox_color
         self.ChangeSubmits = change_submits or enable_events
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
+        super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
                          tooltip=tooltip, visible=visible, metadata=metadata)
 
@@ -2376,7 +2408,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
-                 size=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values: List of valid values
         :type values: Tuple[Any] or List[Any]
@@ -2391,7 +2423,9 @@ class Spin(Element):
         :param readonly: Turns on the element specific events. Spin events happen when an item changes
         :type readonly: (bool)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
@@ -2423,6 +2457,7 @@ class Spin(Element):
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2530,7 +2565,7 @@ class Multiline(Element):
     """
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
-                 size=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
+                 size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
@@ -2545,7 +2580,9 @@ class Multiline(Element):
         :param border_width: width of border around element in pixels
         :type border_width: (int)
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param background_color: color of background
@@ -2622,8 +2659,9 @@ class Multiline(Element):
         if reroute_stderr:
             self.reroute_stderr_to_here()
         self.no_scrollbar = no_scrollbar
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=size, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_INPUT_MULTILINE, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
@@ -2890,12 +2928,14 @@ class Text(Element):
     Text - Display some text in the window.  Usually this means a single line of text.  However, the text can also be multiple lines.  If multi-lined there are no scroll bars.
     """
 
-    def __init__(self, text='', size=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, grab=None, tooltip=None, visible=True, metadata=None):
+    def __init__(self, text='', size=(None, None), s=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None, text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, grab=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text: Any
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int or  None)
+        :type size: Tuple[int, int] |  Tuple[int, None] | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) |  (int, None) | (None, None)
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :type auto_size_text: (bool)
         :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -2946,8 +2986,9 @@ class Text(Element):
         self.BorderWidth = border_width
         self.Grab = grab
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_TEXT, auto_size_text=auto_size_text, size=sz, background_color=bg, font=font if font else DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
 
     def update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
         """
@@ -3071,14 +3112,16 @@ class StatusBar(Element):
     A StatusBar Element creates the sunken text-filled strip at the bottom. Many Windows programs have this line
     """
 
-    def __init__(self, text, size=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
+    def __init__(self, text, size=(None, None), s=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
                  key=None, k=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
         """
         :param text: Text that is to be displayed in the widget
         :type text: (str)
         :param size: (w,h) w=characters-wide, h=rows-high
-        :type size: Tuple[(int), (int)]
+        :type size: (int, int)  | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: True if size should fit the text length
         :type auto_size_text: (bool)
         :param click_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -3123,8 +3166,9 @@ class StatusBar(Element):
         self.TKText = self.Widget = None  # type: tk.Label
         key = key if key is not None else k
         self.RightClickMenu = right_click_menu
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_STATUSBAR, size=size, auto_size_text=auto_size_text, background_color=bg,
+        super().__init__(ELEM_TYPE_STATUSBAR, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip,
                          visible=visible, metadata=metadata)
         return
@@ -3379,10 +3423,12 @@ class Output(Element):
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
     """
 
-    def __init__(self, size=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
+    def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param size: (width, height) w=characters-wide, h=rows-high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text
@@ -3413,8 +3459,9 @@ class Output(Element):
         self.RightClickMenu = right_click_menu
         key = key if key is not None else k
         self.echo_stdout_stderr = echo_stdout_stderr
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_OUTPUT, size=size, background_color=bg, text_color=fg, pad=pad, font=font,
+        super().__init__(ELEM_TYPE_OUTPUT, size=sz, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, metadata=metadata)
 
     @property
@@ -3506,7 +3553,7 @@ class Button(Element):
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
-                 image_subsample=None, border_width=None, size=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
+                 image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
                  highlight_colors=None, use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
@@ -3540,7 +3587,9 @@ class Button(Element):
         :param border_width: width of border around button in pixels
         :type border_width: (int)
         :param size: (width, height) of the button in characters wide, rows high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
@@ -3633,7 +3682,9 @@ class Button(Element):
             self.HighlightColors = highlight_colors
         else:
             self.HighlightColors = self._compute_highlight_colors()
-        super().__init__(ELEM_TYPE_BUTTON, size=size, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        sz = size if size != (None, None) else s
+
+        super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
 
@@ -4051,7 +4102,7 @@ class ButtonMenu(Element):
 
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
-                 size=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None, font=None, item_font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
+                 size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None, font=None, item_font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -4072,7 +4123,9 @@ class ButtonMenu(Element):
         :param border_width: width of border around button in pixels
         :type border_width: (int)
         :param size:(width, height) of the button in characters wide, rows high
-        :type size: (int, int)
+        :type size: (int, int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
@@ -4123,8 +4176,9 @@ class ButtonMenu(Element):
         self.TKMenu = None  # type: tk.Menu
         # self.temp_size = size if size != (NONE, NONE) else
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_BUTTONMENU, size=size, font=font, pad=pad, key=key, tooltip=tooltip,
+        super().__init__(ELEM_TYPE_BUTTONMENU, size=sz, font=font, pad=pad, key=key, tooltip=tooltip,
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
         self.Tearoff = tearoff
 
@@ -4193,14 +4247,16 @@ class ProgressBar(Element):
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
     """
 
-    def __init__(self, max_value, orientation=None, size=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None, relief=None, key=None, k=None, pad=None, visible=True, metadata=None):
+    def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None, relief=None, key=None, k=None, pad=None, visible=True, metadata=None):
         """
         :param max_value: max value of progressbar
         :type max_value: (int)
         :param orientation: 'horizontal' or 'vertical'
         :type orientation: (str)
         :param size: Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
-        :type size: (int, int)
+        :type size: (int, int)  | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param auto_size_text: Not sure why this is here
         :type auto_size_text: (bool)
         :param bar_color: The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
@@ -4245,8 +4301,9 @@ class ProgressBar(Element):
         self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=size, auto_size_text=auto_size_text, key=key, pad=pad,
+        super().__init__(ELEM_TYPE_PROGRESS_BAR, size=sz, auto_size_text=auto_size_text, key=key, pad=pad,
                          visible=visible, metadata=metadata)
 
     # returns False if update failed
@@ -4327,7 +4384,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
+    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, enable_events=False, metadata=None):
         """
         :param filename: image filename if there is a button image. GIFs and PNGs only.
         :type filename: str | None
@@ -4337,6 +4394,8 @@ class Image(Element):
         :type background_color:
         :param size: (width, height) size of image in pixels
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
@@ -4370,8 +4429,9 @@ class Image(Element):
 
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_IMAGE, size=size, background_color=background_color, pad=pad, key=key,
+        super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -4536,7 +4596,7 @@ Im = Image
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
 
-    def __init__(self, canvas=None, background_color=None, size=(None, None), pad=None, key=None, k=None, tooltip=None,
+    def __init__(self, canvas=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, visible=True, border_width=0, metadata=None):
         """
         :param canvas: Your own tk.Canvas if you already created it. Leave blank to create a Canvas
@@ -4544,7 +4604,9 @@ class Canvas(Element):
         :param background_color: color of background
         :type background_color: (str)
         :param size: (width in char, height in rows) size in pixels to make canvas
-        :type size: Tuple[int,int]
+        :type size: (int,int) | (None, None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param pad:  Amount of padding to put around element
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
@@ -4568,8 +4630,9 @@ class Canvas(Element):
         self.RightClickMenu = right_click_menu
         self.BorderWidth = border_width
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=size, pad=pad, key=key,
+        super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=sz, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -4657,6 +4720,7 @@ class Graph(Element):
         self.FloatValues = float_values
         self.BorderWidth = border_width
         key = key if key is not None else k
+
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -5325,7 +5389,7 @@ class Frame(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
                  tooltip=None, right_click_menu=None, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
         """
         :param title: text that is displayed as the Frame's "label" or title
@@ -5342,6 +5406,8 @@ class Frame(Element):
         :type relief: (enum)
         :param size: (width, height) (note this parameter may not always work)
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -5387,8 +5453,9 @@ class Frame(Element):
         self.Widget = None              # type: tk.LabelFrame
         self.Layout(layout)
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=size,
+        super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=sz,
                          font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -6001,7 +6068,7 @@ class Slider(Element):
 
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
-                 enable_events=False, disabled=False, size=(None, None), font=None, background_color=None,
+                 enable_events=False, disabled=False, size=(None, None), s=(None, None), font=None, background_color=None,
                  text_color=None, trough_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param range: slider's range (min value, max value)
@@ -6028,6 +6095,8 @@ class Slider(Element):
         :type disabled: (bool)
         :param size: (w=characters-wide, h=rows-high)
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int]
         :param background_color: color of slider's background
@@ -6062,7 +6131,8 @@ class Slider(Element):
         self.TickInterval = tick_interval
         self.DisableNumericDisplay = disable_number_display
         self.TroughColor = trough_color or DEFAULT_SCROLLBAR_COLOR
-        temp_size = size
+        sz = size if size != (None, None) else s
+        temp_size = sz
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
         key = key if key is not None else k
@@ -6272,7 +6342,7 @@ class Column(Element):
     A container element that is used to create a layout within your window's layout
     """
 
-    def __init__(self, layout, background_color=None, size=(None, None), pad=None, scrollable=False,
+    def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), pad=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None, vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None):
         """
         :param layout: Layout that will be shown in the Column container
@@ -6281,6 +6351,8 @@ class Column(Element):
         :type background_color: (str)
         :param size: (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param scrollable: if True then scrollbars will be added to the column
@@ -6335,8 +6407,9 @@ class Column(Element):
         self.ExpandX = expand_x
         self.ExpandY = expand_y
         self.Layout(layout)
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
     def add_row(self, *args):
@@ -6485,7 +6558,7 @@ class Pane(Element):
     A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
     """
 
-    def __init__(self, pane_list, background_color=None, size=(None, None), pad=None, orientation='vertical',
+    def __init__(self, pane_list, background_color=None, size=(None, None), s=(None, None), pad=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None, visible=True, metadata=None):
         """
         :param pane_list: Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
@@ -6494,6 +6567,8 @@ class Pane(Element):
         :type background_color: (str)
         :param size: (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param orientation: 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
@@ -6535,8 +6610,9 @@ class Pane(Element):
 
         self.Rows = [pane_list]
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=size, pad=pad, key=key, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_PANE, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata)
         return
 
     def update(self, visible=None):
@@ -6803,7 +6879,7 @@ class Menu(Element):
     menu is shown.  The key portion is returned as part of the event.
     """
 
-    def __init__(self, menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), tearoff=False, font=None, pad=None, key=None, k=None, visible=True, metadata=None):
+    def __init__(self, menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), s=(None, None), tearoff=False, font=None, pad=None, key=None, k=None, visible=True, metadata=None):
         """
         :param menu_definition: The Menu definition specified using lists (docs explain the format)
         :type menu_definition: List[List[Tuple[str, List[str]]]
@@ -6815,6 +6891,8 @@ class Menu(Element):
         :type disabled_text_color: (str)
         :param size: Not used in the tkinter port
         :type size: (int, int)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int, int) | (None, None)
         :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
         :type tearoff: (bool)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -6838,10 +6916,10 @@ class Menu(Element):
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
-
-        super().__init__(ELEM_TYPE_MENUBAR, background_color=self.BackgroundColor, text_color=self.TextColor, size=size, pad=pad, key=key, visible=visible, font=font, metadata=metadata)
-        # super().__init__(ELEM_TYPE_MENUBAR, background_color=COLOR_SYSTEM_DEFAULT, text_color=COLOR_SYSTEM_DEFAULT, size=size, pad=pad, key=key, visible=visible, font=None, metadata=metadata)
+        super().__init__(ELEM_TYPE_MENUBAR, background_color=self.BackgroundColor, text_color=self.TextColor, size=sz, pad=pad, key=key, visible=visible, font=font, metadata=metadata)
+        # super().__init__(ELEM_TYPE_MENUBAR, background_color=COLOR_SYSTEM_DEFAULT, text_color=COLOR_SYSTEM_DEFAULT, size=sz, pad=pad, key=key, visible=visible, font=None, metadata=metadata)
 
         self.Tearoff = tearoff
 
@@ -6921,7 +6999,7 @@ class Table(Element):
                  auto_size_columns=True, max_col_width=20, select_mode=None, display_row_numbers=False, num_rows=None,
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
-                 size=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
+                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param values: ???
@@ -7037,9 +7115,10 @@ class Table(Element):
         self.RowColors = row_colors
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
-                         size=size, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+                         size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
     def update(self, values=None, num_rows=None, visible=None, select_rows=None, alternating_row_color=None, row_colors=None):
@@ -7911,7 +7990,10 @@ class Window:
         CurrentRow = []  # start with a blank row and build up
         # -------------------------  Add the elements to a row  ------------------------- #
         for i, element in enumerate(args):  # Loop through list of elements and add them to the row
-            if type(element) == list:
+
+            if isinstance(element, tuple) or isinstance(element, list):
+                self.add_row(*element)
+                continue
                 _error_popup_with_traceback('Error creating Window layout',
                            'Layout has a LIST instead of an ELEMENT',
                            'This means you have a badly placed ]',
@@ -8031,6 +8113,7 @@ class Window:
         self.AddRow(column)
         self.AllKeysDict = self._BuildKeyDictForWindow(self, column, self.AllKeysDict)
         return self
+
 
     def LayoutAndRead(self, rows, non_blocking=False):
         """
@@ -10274,7 +10357,7 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
-def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None),
+def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None), s=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
                  font=None, pad=None, key=None, k=None, metadata=None):
     """
@@ -10288,6 +10371,8 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10312,14 +10397,14 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     """
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
                   enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               tooltip=None, size=(None, None), auto_size_button=None, button_color=None, change_submits=False,
+               tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
                pad=None, key=None, k=None, metadata=None):
     """
@@ -10334,6 +10419,8 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10358,14 +10445,14 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
                   button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
-                initial_folder=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                initial_folder=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
                 font=None, pad=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
     """
@@ -10384,6 +10471,8 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10409,7 +10498,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                   initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
-                  tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
     button._files_delimiter = files_delimiter
     return button
@@ -10417,7 +10506,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
-               default_extension='', disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+               default_extension='', disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
                pad=None, key=None, k=None, metadata=None):
     """
@@ -10437,6 +10526,8 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10459,14 +10550,14 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, disabled=disabled,
+                  initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
                   enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,default_extension='',
-           disabled=False, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+           disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
            pad=None, key=None, k=None, metadata=None):
     """
@@ -10486,6 +10577,8 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10508,13 +10601,13 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :rtype: (Button)
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
-                  initial_folder=initial_folder, default_extension=default_extension,  tooltip=tooltip, size=size, disabled=disabled,
+                  initial_folder=initial_folder, default_extension=default_extension,  tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
                   enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
-def Save(button_text='Save', size=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
+def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
          disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10522,6 +10615,8 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10547,13 +10642,13 @@ def Save(button_text='Save', size=(None, None), auto_size_button=None, button_co
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
-def Submit(button_text='Submit', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
            bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10561,6 +10656,8 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10586,14 +10683,14 @@ def Submit(button_text='Submit', size=(None, None), auto_size_button=None, butto
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
-def Open(button_text='Open', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
          bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10601,6 +10698,8 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10626,13 +10725,13 @@ def Open(button_text='Open', size=(None, None), auto_size_button=None, button_co
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
-def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10640,6 +10739,8 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10665,13 +10766,13 @@ def OK(button_text='OK', size=(None, None), auto_size_button=None, button_color=
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
        bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10679,6 +10780,8 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10704,13 +10807,13 @@ def Ok(button_text='Ok', size=(None, None), auto_size_button=None, button_color=
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
-def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, button_color=None, disabled=False,
+def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
            tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10718,6 +10821,8 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10742,13 +10847,13 @@ def Cancel(button_text='Cancel', size=(None, None), auto_size_button=None, butto
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
-def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10756,6 +10861,8 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10780,13 +10887,13 @@ def Quit(button_text='Quit', size=(None, None), auto_size_button=None, button_co
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
-def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
          font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10794,6 +10901,8 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10818,13 +10927,13 @@ def Exit(button_text='Exit', size=(None, None), auto_size_button=None, button_co
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
-def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
         font=None, bind_return_key=True, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10832,6 +10941,8 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10856,13 +10967,13 @@ def Yes(button_text='Yes', size=(None, None), auto_size_button=None, button_colo
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def No(button_text='No', size=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
+def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
        font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10870,6 +10981,8 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10894,13 +11007,13 @@ def No(button_text='No', size=(None, None), auto_size_button=None, button_color=
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def Help(button_text='Help', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
+def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10908,6 +11021,8 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10932,13 +11047,13 @@ def Help(button_text='Help', size=(None, None), auto_size_button=None, button_co
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
-def Debug(button_text='', size=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
+def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
           tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10946,6 +11061,8 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :type button_text: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -10970,7 +11087,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
     :return: returns a button
     :rtype: (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size,
+    return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
                   image_subsample=4, border_width=0, metadata=metadata)
@@ -10978,7 +11095,7 @@ def Debug(button_text='', size=(None, None), auto_size_button=None, button_color
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
-                 border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -10996,6 +11113,8 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11021,14 +11140,14 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
-                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
+                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
-                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+                border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
                 bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -11046,6 +11165,8 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11071,7 +11192,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
-                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
+                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
@@ -11081,7 +11202,7 @@ CButton = CloseButton
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
-               border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+               border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
     :param button_text: text in the button
@@ -11098,6 +11219,8 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11126,7 +11249,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
 
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
-                  border_width=border_width, tooltip=tooltip, size=size, disabled=disabled,
+                  border_width=border_width, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
@@ -11137,7 +11260,7 @@ RButton = ReadFormButton
 
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
-                   border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None,
+                   border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                    font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -11155,6 +11278,8 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11182,14 +11307,14 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_REALTIME, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
-                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size,
+                  border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
-                border_width=None, tooltip=None, size=(None, None), auto_size_button=None, button_color=None, font=None,
+                border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
                 disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
     """
 
@@ -11209,6 +11334,8 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type tooltip: (str)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11234,7 +11361,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_CLOSES_WIN_ONLY, image_filename=image_filename,
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
-                  border_width=border_width, tooltip=tooltip, size=size, auto_size_button=auto_size_button,
+                  border_width=border_width, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
                   pad=pad, key=key, k=k, metadata=metadata)
 
@@ -11242,7 +11369,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
-                   image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                   image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                    button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, enable_events=None,
                    key=None, k=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None, title='Choose Date',
                    no_titlebar=True, location=(None, None), metadata=None):
@@ -11271,6 +11398,8 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type border_width: width of border around element
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11310,7 +11439,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     """
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_CALENDAR_CHOOSER, target=target,
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
-                    image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                    image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, enable_events=enable_events,
                     bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
     button.calendar_close_when_chosen = close_when_date_chosen
@@ -11329,7 +11458,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def ColorChooserButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
-                       image_subsample=None, tooltip=None, border_width=None, size=(None, None), auto_size_button=None,
+                       image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                        key=None, k=None, metadata=None):
     """
@@ -11353,6 +11482,8 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     :type border_width: (int)
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
@@ -11378,7 +11509,7 @@ def ColorChooserButton(button_text, target=(None, None), image_filename=None, im
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_COLOR_CHOOSER, target=target,
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
-                  image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size,
+                  image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
                   bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
 
@@ -15627,15 +15758,14 @@ def obj_to_string(obj, extra='    '):
          for item in sorted(obj.__dict__)))
 
 
-######
-#     #   ####   #####   #    #  #####    ####
-#     #  #    #  #    #  #    #  #    #  #
-######   #    #  #    #  #    #  #    #   ####
-#        #    #  #####   #    #  #####        #
-#        #    #  #       #    #  #       #    #
-#         ####   #        ####   #        ####
-
-
+# MM"""""""`YM
+# MM  mmmmm  M
+# M'        .M .d8888b. 88d888b. dP    dP 88d888b. .d8888b.
+# MM  MMMMMMMM 88'  `88 88'  `88 88    88 88'  `88 Y8ooooo.
+# MM  MMMMMMMM 88.  .88 88.  .88 88.  .88 88.  .88       88
+# MM  MMMMMMMM `88888P' 88Y888P' `88888P' 88Y888P' `88888P'
+# MMMMMMMMMMMM          88                88
+#                       dP                dP
 # ------------------------------------------------------------------------------------------------------------------ #
 # =====================================   Upper PySimpleGUI ======================================================== #
 # ------------------------------------------------------------------------------------------------------------------ #
@@ -17105,6 +17235,43 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
 
     # def __init__(self, menu=None, filename=None, data=None, data_base64=None, tooltip=None, metadata=None):
     return SystemTray.notify(title=title, message=message, icon=icon, display_duration_in_ms=display_duration_in_ms, fade_in_duration=fade_in_duration, alpha=alpha, location=location)
+
+
+
+
+def popup_menu(window, element, menu_def, location=(None, None)):
+    """
+    Makes a "popup menu"
+    This type of menu is what you get when a normal menu or a right click menu is torn off
+    The settings for the menu are obtained from the window parameter's Window
+
+
+    :param window: The window associated with the popup menu. The theme and right click menu settings for this window will be used
+    :type window: Window
+    :param element: An element in your window to associate the menu to. It can be any element
+    :type element: Element
+    :param menu_def: A menu definition. This will be the same format as used for Right Click Menus1
+    :type  menu_def:  List[List[ List[str] | str ]]
+    :param location: The location on the screen to place the window
+    :type location: (int, int) | (None, None)
+    :return:
+    :rtype
+    """
+    element._popup_menu_location = location
+    top_menu = tk.Menu(window.TKroot, tearoff=True, tearoffcommand=element._tearoff_menu_callback)
+    if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+        top_menu.config(bg=window.right_click_menu_background_color)
+    if window.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+        top_menu.config(fg=window.right_click_menu_text_color)
+    if window.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+        top_menu.config(disabledforeground=window.right_click_menu_disabled_text_color)
+    if window.right_click_menu_font is not None:
+        top_menu.config(font=window.right_click_menu_font)
+
+    AddMenuItem(top_menu, menu_def[1], element, right_click_menu=True)
+    # element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
+    top_menu.invoke(0)
+
 
 
 def _error_popup_with_traceback(title, *args):
@@ -18783,15 +18950,42 @@ def _random_happy_emoji():
     return c
 
 
-#                        d8b
-#                        Y8P
-#
-# 88888b.d88b.   8888b.  888 88888b.
-# 888 "888 "88b     "88b 888 888 "88b
-# 888  888  888 .d888888 888 888  888
-# 888  888  888 888  888 888 888  888
-# 888  888  888 "Y888888 888 888  888
 
+#==========================================================================#
+
+# MP""""""`MM   dP                       dP               .8888b
+# M  mmmmm..M   88                       88               88   "
+# M.      `YM d8888P .d8888b. 88d888b. d8888P    .d8888b. 88aaa
+# MMMMMMM.  M   88   88'  `88 88'  `88   88      88'  `88 88
+# M. .MMM'  M   88   88.  .88 88         88      88.  .88 88
+# Mb.     .dM   dP   `88888P8 dP         dP      `88888P' dP
+# MMMMMMMMMMM
+#
+# dP dP                     oo          dP dP
+# dP dP                                 dP dP
+#       88d8b.d8b. .d8888b. dP 88d888b.
+#       88'`88'`88 88'  `88 88 88'  `88
+#       88  88  88 88.  .88 88 88    88
+#       dP  dP  dP `88888P8 dP dP    dP
+#
+#
+# MM""""""""`M            dP
+# MM  mmmmmmmM            88
+# M`      MMMM 88d888b. d8888P 88d888b. dP    dP
+# MM  MMMMMMMM 88'  `88   88   88'  `88 88    88
+# MM  MMMMMMMM 88    88   88   88       88.  .88
+# MM        .M dP    dP   dP   dP       `8888P88
+# MMMMMMMMMMMM                               .88
+#                                        d8888P
+# MM"""""""`YM          oo            dP
+# MM  mmmmm  M                        88
+# M'        .M .d8888b. dP 88d888b. d8888P .d8888b.
+# MM  MMMMMMMM 88'  `88 88 88'  `88   88   Y8ooooo.
+# MM  MMMMMMMM 88.  .88 88 88    88   88         88
+# MM  MMMMMMMM `88888P' dP dP    dP   dP   `88888P'
+# MMMMMMMMMMMM
+
+#==========================================================================#
 
 
 
@@ -18990,6 +19184,42 @@ def _upgrade_gui():
         popup_quick_message('Cancelled upgrade\nNothing overwritten', background_color='red', text_color='white', keep_on_top=True, non_blocking=False)
 
 
+####################################################################################################
+
+# M"""""`'"""`YM          oo
+# M  mm.  mm.  M
+# M  MMM  MMM  M .d8888b. dP 88d888b.
+# M  MMM  MMM  M 88'  `88 88 88'  `88
+# M  MMM  MMM  M 88.  .88 88 88    88
+# M  MMM  MMM  M `88888P8 dP dP    dP
+# MMMMMMMMMMMMMM
+#
+# MM'"""""`MM            dP
+# M' .mmm. `M            88
+# M  MMMMMMMM .d8888b. d8888P
+# M  MMM   `M 88ooood8   88
+# M. `MMM' .M 88.  ...   88
+# MM.     .MM `88888P'   dP
+# MMMMMMMMMMM
+#
+# M""""""'YMM          dP
+# M  mmmm. `M          88
+# M  MMMMM  M .d8888b. 88d888b. dP    dP .d8888b.
+# M  MMMMM  M 88ooood8 88'  `88 88    88 88'  `88
+# M  MMMM' .M 88.  ... 88.  .88 88.  .88 88.  .88
+# M       .MM `88888P' 88Y8888' `88888P' `8888P88
+# MMMMMMMMMMM                                 .88
+#                                         d8888P
+# M""""""'YMM            dP
+# M  mmmm. `M            88
+# M  MMMMM  M .d8888b. d8888P .d8888b.
+# M  MMMMM  M 88'  `88   88   88'  `88
+# M  MMMM' .M 88.  .88   88   88.  .88
+# M       .MM `88888P8   dP   `88888P8
+# MMMMMMMMMMM
+
+
+
 def main_get_debug_data(suppress_popup=False):
     """
     Collect up and display the data needed to file GitHub issues.
@@ -19020,6 +19250,23 @@ def main_get_debug_data(suppress_popup=False):
                        message, title='Select and copy this info to your GitHub Issue', keep_on_top=True, size=(100,10))
 
     return message
+
+# ..######...##........#######..########.....###....##.........
+# .##....##..##.......##.....##.##.....##...##.##...##.........
+# .##........##.......##.....##.##.....##..##...##..##.........
+# .##...####.##.......##.....##.########..##.....##.##.........
+# .##....##..##.......##.....##.##.....##.#########.##.........
+# .##....##..##.......##.....##.##.....##.##.....##.##.........
+# ..######...########..#######..########..##.....##.########...
+# ..######..########.########.########.########.####.##....##..######....######.
+# .##....##.##..........##.......##.......##.....##..###...##.##....##..##....##
+# .##.......##..........##.......##.......##.....##..####..##.##........##......
+# ..######..######......##.......##.......##.....##..##.##.##.##...####..######.
+# .......##.##..........##.......##.......##.....##..##..####.##....##........##
+# .##....##.##..........##.......##.......##.....##..##...###.##....##..##....##
+# ..######..########....##.......##.......##....####.##....##..######....######.
+
+
 
 def main_global_pysimplegui_settings():
     """
@@ -19107,6 +19354,14 @@ def main_global_pysimplegui_settings():
                     window['-EDITOR FORMAT-'].update(value=editor_format_dict[key])
     window.close()
     return False
+
+# ..######..########..##....##....##.....##.########.##.......########.
+# .##....##.##.....##.##...##.....##.....##.##.......##.......##.....##
+# .##.......##.....##.##..##......##.....##.##.......##.......##.....##
+# ..######..##.....##.#####.......#########.######...##.......########.
+# .......##.##.....##.##..##......##.....##.##.......##.......##.......
+# .##....##.##.....##.##...##.....##.....##.##.......##.......##.......
+# ..######..########..##....##....##.....##.########.########.##.......
 
 
 
@@ -19277,6 +19532,34 @@ def main_sdk_help():
             ml.set_vscroll_position(0)       # scroll to top of multoline
 
     window.close()
+
+
+
+#                     oo
+#
+# 88d8b.d8b. .d8888b. dP 88d888b.
+# 88'`88'`88 88'  `88 88 88'  `88
+# 88  88  88 88.  .88 88 88    88
+# dP  dP  dP `88888P8 dP dP    dP
+#
+#
+# M""MMM""MMM""M oo                dP
+# M  MMM  MMM  M                   88
+# M  MMP  MMP  M dP 88d888b. .d888b88 .d8888b. dP  dP  dP
+# M  MM'  MM' .M 88 88'  `88 88'  `88 88'  `88 88  88  88
+# M  `' . '' .MM 88 88    88 88.  .88 88.  .88 88.88b.88'
+# M    .d  .dMMM dP dP    dP `88888P8 `88888P' 8888P Y8P
+# MMMMMMMMMMMMMM
+#
+# MP""""""`MM   dP                       dP               dP
+# M  mmmmm..M   88                       88               88
+# M.      `YM d8888P .d8888b. 88d888b. d8888P .d8888b.    88d888b. .d8888b. 88d888b. .d8888b.
+# MMMMMMM.  M   88   88'  `88 88'  `88   88   Y8ooooo.    88'  `88 88ooood8 88'  `88 88ooood8
+# M. .MMM'  M   88   88.  .88 88         88         88    88    88 88.  ... 88       88.  ...
+# Mb.     .dM   dP   `88888P8 dP         dP   `88888P'    dP    dP `88888P' dP       `88888P'
+# MMMMMMMMMMM
+
+
 
 
 def _main_switch_theme():
@@ -19453,6 +19736,16 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     window['-SPONSOR-'].set_cursor(cursor='hand2')
 
     return window
+
+# M"""""`'"""`YM          oo
+# M  mm.  mm.  M
+# M  MMM  MMM  M .d8888b. dP 88d888b.
+# M  MMM  MMM  M 88'  `88 88 88'  `88
+# M  MMM  MMM  M 88.  .88 88 88    88
+# M  MMM  MMM  M `88888P8 dP dP    dP
+# MMMMMMMMMMMMMM
+
+
 
 def main():
     """
