@@ -1,8 +1,4 @@
 #!/usr/bin/python3
-from collections import defaultdict
-
-from pyfiglet import color_to_ansi
-
 version = __version__ = "4.38.0.11 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
