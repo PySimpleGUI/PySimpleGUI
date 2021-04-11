@@ -5601,7 +5601,7 @@ Here is ***some*** of the code patterns you'll find when looking through the dem
 ```python
 import PySimpleGUI as sg
 
-# Design pattern 1 - First window remains active
+# Design pattern 2 - First window remains active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
@@ -5617,7 +5617,7 @@ while True:
     if ev1 == sg.WIN_CLOSED or ev1 == 'Exit':
         break
 
-    if not win2_active and ev1 == 'Launch 2':
+     if not win2_active and ev1 == 'Launch 2':
         win2_active = True
         layout2 = [[sg.Text('Window 2')],
                    [sg.Button('Exit')]]
@@ -5636,7 +5636,7 @@ while True:
 ```python
 import PySimpleGUIQt as sg
 
-# Design pattern 2 - First window does not remain active
+# Design pattern 1 - First window does not remain active
 
 layout = [[ sg.Text('Window 1'),],
           [sg.Input(do_not_clear=True)],
@@ -8561,7 +8561,42 @@ The "so much for no new releases for a while" release
 	* Also fixed a couple of places where they were being erroneously stripped from the normal menu text
 * Better error reporting for duplicatea keys
 	* Found a problem with using print for errors - rerouted stdout/stderr can cause MORE errors
-	* Interestingly, popups work great for these errors as they do not havea cascading error effect
+	* Interestingly, popups work great for these errors as they do not have a cascading error effect
+
+## 4.39.0 PySimpleGUI 11-Apr-2021
+
+Window.write_event_value is solid release!
+The s parm debut (alias for size... works like k does for key)
+GitHub Issues GUI
+
+* write_event_value fixed(THANK YOU daemon2021!)
+* GitHub issue GUI added - access via sg.main() or sg.main_open_github_issue()
+* s parm added to all elements
+* Element.block_focus - blocks an element from getting focus when using keyboard
+* Listbox 
+	* Set the selected colors to be opposite of normal text/background colors
+	* Added highlight parms to Listbox so that they can be directly set
+	* The expand method now works for Listbox element
+* Button on Mac can be tk Buttons
+	* In the past the Mac could only use ttk buttons
+	* Now setting use_ttk=False will cause the tk buttons to be used
+* Right Click Menu
+	* Window get new parameter right_click_menu_tearoff to enable tearoff feature for right click menus
+	* Buttons and ButtonMenus can now use right click menus. Will automatically use the Window's right click menu
+	* New constants
+		* MENU_RIGHT_CLICK_EDITME_EXIT = ['_', ['Edit Me', 'Exit']] - a common menu for simple programs
+		* MENU_RIGHT_CLICK_DISABLED = [[]]   to block an element from getting a window's right click menu
+	* parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu
+* Error windows - better line wrapping
+* Show an error window if a bad Image specified in the Image element
+* expand_x & expand_y parms for vtop vbottom vcenter, 
+* Added framework_version
+* RealtimeButton works again!
+* New popup - popup_menu will show a torn off right click menu at the indicated location
+* new comment figlets
+* More permissive layouts - embedded layouts for PSG+ features
+* Added more symbols for buttons - double L/R & arrowheads, 
+* Moved theme tests into a tab" in sg.main
 
 ## Upcoming
 
@@ -8641,4 +8676,3 @@ To be clear, this is not a solicitation for your money.  No one is being directl
 All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Inc.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
 
 The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked
-

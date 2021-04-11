@@ -26,6 +26,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### bind
 <!-- <+Button.bind+> -->
 
+### block_focus
+<!-- <+Button.block_focus+> -->
+
 ### click
 <!-- <+Button.click+> -->
 
@@ -102,6 +105,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+ButtonMenu.bind+> -->
 
+### block_focus
+<!-- <+ButtonMenu.block_focus+> -->
+
 ### expand
 <!-- <+ButtonMenu.expand+> -->
 
@@ -170,6 +176,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Canvas.bind+> -->
 
+### block_focus
+<!-- <+Canvas.block_focus+> -->
+
 ### expand
 <!-- <+Canvas.expand+> -->
 
@@ -230,6 +239,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Checkbox.bind+> -->
+
+### block_focus
+<!-- <+Checkbox.block_focus+> -->
 
 ### expand
 <!-- <+Checkbox.expand+> -->
@@ -301,6 +313,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Column.bind+> -->
+
+### block_focus
+<!-- <+Column.block_focus+> -->
 
 ### expand
 <!-- <+Column.expand+> -->
@@ -378,6 +393,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Combo.bind+> -->
 
+### block_focus
+<!-- <+Combo.block_focus+> -->
+
 ### expand
 <!-- <+Combo.expand+> -->
 
@@ -450,6 +468,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Frame.bind+> -->
 
+### block_focus
+<!-- <+Frame.block_focus+> -->
+
 ### expand
 <!-- <+Frame.expand+> -->
 
@@ -518,13 +539,14 @@ The following methods are here for backwards compatibility reference.  You will 
 <!-- <+Graph.doc+> -->
 <!-- <+Graph.__init__+> -->
 
-
-
 ### Update
 <!-- <+Graph.Update+> -->
 
 ### bind
 <!-- <+Graph.bind+> -->
+
+### block_focus
+<!-- <+Graph.block_focus+> -->
 
 ### bring_figure_to_front
 <!-- <+Graph.bring_figure_to_front+> -->
@@ -703,6 +725,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+HorizontalSeparator.bind+> -->
 
+### block_focus
+<!-- <+HorizontalSeparator.block_focus+> -->
+
 ### expand
 <!-- <+HorizontalSeparator.expand+> -->
 
@@ -759,6 +784,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Image.bind+> -->
+
+### block_focus
+<!-- <+Image.block_focus+> -->
 
 ### expand
 <!-- <+Image.expand+> -->
@@ -832,6 +860,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Input.bind+> -->
 
+### block_focus
+<!-- <+Input.block_focus+> -->
+
 ### expand
 <!-- <+Input.expand+> -->
 
@@ -903,6 +934,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Listbox.bind+> -->
+
+### block_focus
+<!-- <+Listbox.block_focus+> -->
 
 ### expand
 <!-- <+Listbox.expand+> -->
@@ -990,6 +1024,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Menu.bind+> -->
 
+### block_focus
+<!-- <+Menu.block_focus+> -->
+
 ### expand
 <!-- <+Menu.expand+> -->
 
@@ -1052,6 +1089,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Multiline.bind+> -->
+
+### block_focus
+<!-- <+Multiline.block_focus+> -->
 
 ### expand
 <!-- <+Multiline.expand+> -->
@@ -1141,6 +1181,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+OptionMenu.bind+> -->
 
+### block_focus
+<!-- <+OptionMenu.block_focus+> -->
+
 ### expand
 <!-- <+OptionMenu.expand+> -->
 
@@ -1207,6 +1250,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Output.bind+> -->
+
+### block_focus
+<!-- <+Output.block_focus+> -->
 
 ### expand
 <!-- <+Output.expand+> -->
@@ -1282,6 +1328,10 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Pane.bind+> -->
+
+
+### block_focus
+<!-- <+Pane.block_focus+> -->
 
 ### expand
 <!-- <+Pane.expand+> -->
@@ -1418,6 +1468,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Radio.bind+> -->
 
+### block_focus
+<!-- <+Radio.block_focus+> -->
+
 ### expand
 <!-- <+Radio.expand+> -->
 
@@ -1494,6 +1547,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Slider.bind+> -->
 
+### block_focus
+<!-- <+Slider.block_focus+> -->
+
 ### expand
 <!-- <+Slider.expand+> -->
 
@@ -1556,6 +1612,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Spin.bind+> -->
+
+### block_focus
+<!-- <+Spin.block_focus+> -->
 
 ### expand
 <!-- <+Spin.expand+> -->
@@ -1625,6 +1684,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+StatusBar.bind+> -->
 
+### block_focus
+<!-- <+StatusBar.block_focus+> -->
+
 ### expand
 <!-- <+StatusBar.expand+> -->
 
@@ -1690,6 +1752,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### bind
 <!-- <+Tab.bind+> -->
+
+### block_focus
+<!-- <+Tab.block_focus+> -->
 
 ### expand
 <!-- <+Tab.expand+> -->
@@ -1770,6 +1835,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+TabGroup.bind+> -->
 
+### block_focus
+<!-- <+TabGroup.block_focus+> -->
+
 ### expand
 <!-- <+TabGroup.expand+> -->
 
@@ -1843,6 +1911,8 @@ The following methods are here for backwards compatibility reference.  You will 
 ### bind
 <!-- <+Table.bind+> -->
 
+### block_focus
+<!-- <+Table.block_focus+> -->
 
 ### expand
 <!-- <+Table.expand+> -->
@@ -1992,6 +2062,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### bind
 <!-- <+Tree.bind+> -->
+
+### block_focus
+<!-- <+Tree.block_focus+> -->
 
 ### expand
 <!-- <+Tree.expand+> -->
@@ -2604,6 +2677,7 @@ They are shown here in case you run into them in some old code.
 <!-- <+func.popup_get_file+> -->
 <!-- <+func.popup_get_folder+> -->
 <!-- <+func.popup_get_text+> -->
+<!-- <+func.popup_menu+> -->
 <!-- <+func.popup_no_buttons+> -->
 <!-- <+func.popup_no_titlebar+> -->
 <!-- <+func.popup_non_blocking+> -->
