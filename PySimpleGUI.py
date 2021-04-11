@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.38.0.13 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu, FIX for write_event_value (THANK YOU daemon2021!), right click menu added to button and buttonmenu elements, constant MENU_RIGHT_CLICK_DISABLED [[]]to block element from using the window's right click menu, GitHub issue GUI added, moved theme tests into a tab"
+version = __version__ = "4.39.0  Released 11-Apr-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -937,7 +937,6 @@ class Element():
         """
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
-            # if running_linux():
             if running_linux():
                 print('* linix minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
@@ -967,7 +966,6 @@ class Element():
 
 
     def _titlebar_restore(self, event):
-        # if running_linux():
         if running_linux():
             print('linux restore')
             # if self._skip_first_restore_callback:
@@ -17272,8 +17270,6 @@ def popup_menu(window, element, menu_def, title=None, location=(None, None)):
     :type title: str
     :param location: The location on the screen to place the window
     :type location: (int, int) | (None, None)
-    :return:
-    :rtype
     """
     element._popup_menu_location = location
     top_menu = tk.Menu(window.TKroot, tearoff=True, tearoffcommand=element._tearoff_menu_callback)
