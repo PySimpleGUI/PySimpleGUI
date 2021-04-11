@@ -44,10 +44,14 @@ Or you can print each version shown in ()
 
 #### Your Experience In Months or Years (optional)
 
-    Years Python programming experience
-    Years Programming experience overall
-    Have used another Python GUI Framework? (tkinter, Qt, etc) (yes/no is fine)
-	Anything else you think would be helpful?
+Years Python programming experience
+
+Years Programming experience overall
+
+Have used another Python GUI Framework? (tkinter, Qt, etc) (yes/no is fine)
+
+Anything else you think would be helpful?
+
 
 ---------------------
 
