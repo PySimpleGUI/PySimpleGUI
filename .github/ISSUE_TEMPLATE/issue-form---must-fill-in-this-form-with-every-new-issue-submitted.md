@@ -1,7 +1,7 @@
 ---
 name: Issue Form - **Must fill in this form** with every new issue submitted. 
 about: This form contains the information needed to help you solve your problem
-title: "[ Enhancement/Bug/Question] My problem is..."
+title: "[ Enhancement/Bug/Question]  NOTE - you can also call sg.main() or sg.main_open_github_issue() to post an issue"
 labels: ''
 assignees: ''
 
