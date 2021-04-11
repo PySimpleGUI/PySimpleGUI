@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.38.0.12 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu, FIX for write_event_value (THANK YOU daemon2021!), right click menu added to button and buttonmenu elements, constant MENU_RIGHT_CLICK_DISABLED [[]]to block element from using the window's right click menu"
+version = __version__ = "4.38.0.13 Unreleased\nAdded Element.block_focus to allow blocking an element from getting focus, Listbox now sets the selected colors to be opposite of normal text/background colors, added highlight parms to Listbox so that they can be directly set, gave Mac users the abliity to override the TTK-Buttons-Only rule for Macs so that if forced, a Button CAN use tk buttons on a Mac, exposed listbox_frame for Listbox so can expand a listbox, new parameter right_click_menu_tearoff parm added to Window, better line wrapping for error windows, show an error window if a bad Image specified in the Image element, expand_x & expand_y parms for vtop vbottom vcenter, added code to element.expand to handle the Listbox correctly, MENU_RIGHT_CLICK_EDITME_EXIT menu defintiion, added framework_version, fix for RealtimeButton, put back __version__, popup_menu added, s parm added to all elements, new figlets, experimental - more permissive layouts - embedded layouts for PSG+ features, symbols - double L/R & arrowheads, parameter right_click_entry_selected_colors added to Window - a simple dual color string or a tuple - used for right click menus and pop_menu, FIX for write_event_value (THANK YOU daemon2021!), right click menu added to button and buttonmenu elements, constant MENU_RIGHT_CLICK_DISABLED [[]]to block element from using the window's right click menu, GitHub issue GUI added, moved theme tests into a tab"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -19013,6 +19013,403 @@ def _random_happy_emoji():
 
 
 
+# M"""""`'"""`YM          oo
+# M  mm.  mm.  M
+# M  MMM  MMM  M .d8888b. dP 88d888b.
+# M  MMM  MMM  M 88'  `88 88 88'  `88
+# M  MMM  MMM  M 88.  .88 88 88    88
+# M  MMM  MMM  M `88888P8 dP dP    dP
+# MMMMMMMMMMMMMM
+#
+# MM"""""""`YM                     dP      MM'"""""`MM oo   dP   M""MMMMM""MM          dP
+# MM  mmmmm  M                     88      M' .mmm. `M      88   M  MMMMM  MM          88
+# M'        .M .d8888b. .d8888b. d8888P    M  MMMMMMMM dP d8888P M         `M dP    dP 88d888b.
+# MM  MMMMMMMM 88'  `88 Y8ooooo.   88      M  MMM   `M 88   88   M  MMMMM  MM 88    88 88'  `88
+# MM  MMMMMMMM 88.  .88       88   88      M. `MMM' .M 88   88   M  MMMMM  MM 88.  .88 88.  .88
+# MM  MMMMMMMM `88888P' `88888P'   dP      MM.     .MM dP   dP   M  MMMMM  MM `88888P' 88Y8888'
+# MMMMMMMMMMMM                             MMMMMMMMMMM           MMMMMMMMMMMM
+#
+# M""M
+# M  M
+# M  M .d8888b. .d8888b. dP    dP .d8888b.
+# M  M Y8ooooo. Y8ooooo. 88    88 88ooood8
+# M  M       88       88 88.  .88 88.  ...
+# M  M `88888P' `88888P' `88888P' `88888P'
+# MMMM
+
+
+def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
+                                     python_exp, prog_exp, used_gui, gui_notes,
+                                     cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
+                                     detailed_desc, code, ):
+    body = \
+"""
+### Type of Issue (Enhancement, Error, Bug, Question)
+
+{}
+----------------------------------------
+
+#### Operating System
+
+{}  version {}
+
+#### PySimpleGUI Port (tkinter, Qt, Wx, Web)
+
+{}
+
+----------------------------------------
+
+## Versions
+
+Version information can be obtained by calling `sg.main_get_debug_data()`
+Or you can print each version shown in ()
+
+#### Python version (`sg.sys.version`)
+
+{}
+
+#### PySimpleGUI Version (`sg.__version__`)
+
+{}
+
+#### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
+
+{}
+""".format(issue_type, operating_system,os_ver, psg_port,python_ver, psg_ver, gui_ver)
+
+    body2 = \
+"""
+
+
+---------------------
+
+#### Your Experience In Months or Years (optional)
+
+{} Years Python programming experience
+{} Years Programming experience overall
+{} Have used another Python GUI Framework? (tkinter, Qt, etc) (yes/no is fine)
+{}
+
+---------------------
+
+#### Troubleshooting
+
+These items may solve your problem. Please check those you've done by changing - [ ] to - [X]
+
+- [{}] Searched main docs for your problem  www.PySimpleGUI.org
+- [{}] Looked for Demo Programs that are similar to your goal Demos.PySimpleGUI.org
+- [{}] If not tkinter - looked for Demo Programs for specific port
+- [{}] For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)
+- [{}] Run your program outside of your debugger (from a command line)
+- [{}] Searched through Issues (open and closed) to see if already reported Issues.PySimpleGUI.org
+- [{}] Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released
+
+#### Detailed Description
+
+{}
+
+#### Code To Duplicate
+
+A **short** program that isolates and demonstrates the problem (Do not paste your massive program, but instead 10-20 lines that clearly show the problem)
+
+This pre-formatted code block is all set for you to paste in your bit of code:
+
+```python
+{}
+
+
+```
+
+#### Screenshot, Sketch, or Drawing
+
+
+
+    """.format(python_exp, prog_exp, used_gui, gui_notes,
+                cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
+                detailed_desc, code if len(code) > 10 else '# Paste your code here')
+
+    return body + body2
+
+
+
+
+
+def _github_issue_post_make_github_link(title, body):
+    pysimplegui_url = "https://github.com/PySimpleGUI/PySimpleGUI"
+    pysimplegui_issues = f"{pysimplegui_url}/issues/new?"
+
+    # Fix body cuz urllib can't do it smfh
+    getVars = {'title': str(title), 'body': str(body)}
+    return (pysimplegui_issues + urllib.parse.urlencode(getVars).replace("%5Cn", "%0D"))
+
+
+#########################################################################################################
+
+def _github_issue_post_validate(values, checklist, issue_types):
+    issue_type = None
+    for itype in issue_types:
+        if values[itype]:
+            issue_type = itype
+            break
+    if issue_type is None:
+        popup_error('Must choose issue type')
+        return False
+    if values['-OS WIN-']:
+        operating_system = 'Windows'
+        os_ver = values['-OS WIN VER-']
+    elif values['-OS LINUX-']:
+        operating_system = 'Linux'
+        os_ver = values['-OS LINUX VER-']
+    elif values['-OS MAC-']:
+        operating_system = 'Mac'
+        os_ver = values['-OS MAC VER-']
+    elif values['-OS OTHER-']:
+        operating_system = 'Other'
+        os_ver = values['-OS OTHER VER-']
+    else:
+        popup_error('Must choose Operating System')
+        return False
+
+    if os_ver == '':
+        popup_error('Must fill in an OS Version')
+        return False
+
+    checkboxes = any([ values[('-CB-', i)] for i in range(len(checklist))])
+    if not checkboxes:
+        popup_error('None of the checkboxes were checked.... you need to have tried something...anything...')
+        return False
+
+    title = values['-TITLE-'].strip()
+    if len(title) == 0:
+        popup_error("Title can't be blank")
+        return False
+    elif title[1:len(title)-1] == issue_type:
+        popup_error("Title can't be blank (only the type of issue isn't enough)")
+        return False
+
+    if len(values['-ML DETAILS-']) < 4:
+        popup_error("A little more details would be awesome")
+        return False
+
+    return True
+
+
+
+
+def _github_issue_help():
+    heading_font = '_ 12 bold underline'
+    text_font = '_ 10'
+
+    def HelpText(text):
+        return Text(text, size=(80, None), font=text_font)
+
+    help_why = \
+""" Let's start with a review of the Goals of the PySimpleGUI project
+1. To have fun
+2. For you to be successful
+
+This form is as important as the documentation and the demo programs to meeting those goals.
+
+The GitHub Issue GUI is here to help you more easily log issues on the PySimpleGUI GitHub Repo. """
+
+    help_goals = \
+""" The goals of using GitHub Issues for PySimpleGUI question, problems and suggestions are:
+* Give you direct access to engineers with the most knowledge of PySimpleGUI
+* Answer your questions in the most precise and correct way possible
+* Provide the highest quality solutions possible
+* Give you a checklist of things to try that may solve the problem
+* A single, searchable database of known problems and their workarounds
+* Provide a place for the PySimpleGUI project to directly provide support to users
+* A list of requested enhancements
+* An easy to use interface to post code and images
+* A way to track the status and have converstaions about issues
+* Enable multiple people to help users """
+
+    help_explain = \
+""" GitHub does not provide a "form" that normal bug-tracking-databases provide. As a result, a form was created specifically for the PySimpleGUI project.
+
+The most obvious questions about this form are
+* Why is there a form? Other projects don't have one?
+* My question is an easy one, why does it still need a form?
+
+The answer is:
+I want you to get your question answered with the highest quality answer possible as quickly as possible.
+
+The longer answer - For quite a while there was no form. It resulted the same back and forth, multiple questions comversation.  "What version are you running?"  "What OS are you using?"  These waste precious time.
+
+If asking nicely helps... PLEASE ... please fill out the form.
+
+I can assure you that this form is not here to punish you. It doesn't exist to make you angry and frustrated.  It's not here for any purpose than to try and get you support and make PySimpleGUI better. """
+
+    help_experience = \
+""" Not many Bug-tracking systems ask about you as a user. Your experience in programming, programming in Python and programming a GUI are asked to provide you with the best possible answer.  Here's why it's helpful.  You're a human being, with a past, and a some amount of experience.  Being able to taylor the reply to your issue in a way that fits you and your experience will result in a reply that's efficient and clear.  It's not something normally done but perhaps it should be. It's meant to provide you with a personal response.
+
+If you've been programming for a month, the person answering your question can answer your question in a way that's understandable to you.  Similarly, if you've been programming for 20 years and have used multiple Python GUI frameworks, then you are unlikely to need as much explanation.  You'll also have a richer GUI vocabularly. It's meant to try and give you a peronally crafted response that's on your wavelength. Fun & success... Remember those are our shared goals"""
+
+    help_steps = \
+""" The steps to log an issue are:
+1. Fill in the form
+2. Click Post Issue """
+    layout = [
+                [T('Goals', font=heading_font, pad=(0,0))],
+                [HelpText(help_goals)],
+                [T('Why?', font=heading_font, pad=(0,0))],
+                [HelpText(help_why)],
+                [T('FAQ', font=heading_font, pad=(0,0))],
+                [HelpText(help_explain)],
+                [T('Experience (optional)', font=heading_font)],
+                [HelpText(help_experience)],
+                [T('Steps', font=heading_font, pad=(0,0))],
+                [HelpText(help_steps)],
+                [B('Close')]
+              ]
+    Window('GitHub Issue GUI Help', layout, keep_on_top=True).read(close=True)
+
+    return
+
+def main_open_github_issue():
+    font_frame = '_ 14'
+    issue_types = ('Question', 'Bug', 'Enhancement', 'Error Message')
+    frame_type = [[Radio(t, 1, size=(10,1), enable_events=True, k=t)] for t in issue_types]
+
+    v_size = (15,1)
+    frame_versions = [[T('Python', size=v_size), In(sys.version, size=(20,1), k='-VER PYTHON-')],
+                      [T('PySimpleGUI', size=v_size), In(ver, size=(20,1), k='-VER PSG-')],
+                      [T('tkinter', size=v_size), In(tclversion_detailed, size=(20,1), k='-VER TK-')],]
+
+    frame_platforms = [ [T('OS                 '), T('Details')],
+                        [Radio('Windows', 2, running_windows(), size=(8,1), k='-OS WIN-'), In(size=(8,1),k='-OS WIN VER-')],
+                        [Radio('Linux', 2,running_linux(), size=(8,1), k='-OS LINUX-'), In(size=(8,1),k='-OS LINUX VER-')],
+                        [Radio('Mac', 2, running_mac(), size=(8,1), k='-OS MAC-'), In(size=(8,1),k='-OS MAC VER-')],
+                        [Radio('Other', 2, size=(8,1), k='-OS OTHER-'), In(size=(8,1),k='-OS OTHER VER-')],
+                        ]
+
+
+    frame_experience = [[T('Optional Experience Info')],
+                        [In(size=(4,1), k='-EXP PROG-'), T('Years Programming')],
+                        [In(size=(4,1), k='-EXP PYTHON-'), T('Years Writing Python')],
+                        [CB('Previously programmed a GUI', k='-CB PRIOR GUI-')],
+                        [T('Share more if you want....')],
+                        [In(size=(25,1), k='-EXP NOTES-')]]
+
+    checklist = (
+                  ('Searched main docs for your problem', 'www.PySimpleGUI.org'),
+                  ('Looked for Demo Programs that are similar to your goal ', 'http://Demos.PySimpleGUI.org'),
+                  ('If not tkinter - looked for Demo Programs for specific port', ''),
+                  ('For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)', ''),
+                  ('Run your program outside of your debugger (from a command line)', ''),
+                  ('Searched through Issues (open and closed) to see if already reported', 'http://Issues.PySimpleGUI.org'),
+                  ('Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed vut not released.', ''))
+
+    frame_checklist = [[CB(c, k=('-CB-', i)), T(t, k='-T{}-'.format(i), enable_events=True)] for i, (c, t) in enumerate(checklist)]
+
+    frame_details = [[Multiline(size=(65,10), font='Courier 10', k='-ML DETAILS-')]]
+    frame_code = [[Multiline(size=(80,10), font='Courier 8',  k='-ML CODE-')]]
+    frame_markdown = [[Multiline(size=(80,10), font='Courier 8',  k='-ML MARKDOWN-')]]
+
+    top_layout = [  [Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
+                     Col([[B('Help')]])],
+                [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame),
+                 Image(data=EMOJI_BASE64_WEARY)],
+                vtop([
+                            Frame('Platform *',frame_platforms, font=font_frame),
+                            Frame('Type of Issue *',frame_type, font=font_frame),
+                            Frame('Versions *',frame_versions, font=font_frame),
+                            Frame('Experience',frame_experience, font=font_frame),
+                    ]),
+                [Frame('Checklist * (note that you can click the links)',frame_checklist, font=font_frame)],
+                [HorizontalSeparator()],
+                [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
+
+    bottom_layout = [
+                [TabGroup([[Tab('Details', frame_details), Tab('Code', frame_code), Tab('Markdown', frame_markdown)]], k='-TABGROUP-')],
+                [Text(size=(12,1), key='-OUT-')],
+                ]
+
+    layout_pane = Pane([Col(top_layout), Col(bottom_layout)], key='-PANE-')
+
+    layout = [[layout_pane],
+              [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]], expand_x=False, expand_y=False)]]
+
+    window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True)
+    for i in range(len(checklist)):
+        window['-T{}-'.format(i)].set_cursor('hand1')
+    window['-TABGROUP-'].expand(True, True, True)
+    window['-ML CODE-'].expand(True, True, True)
+    window['-ML DETAILS-'].expand(True, True, True)
+    window['-ML MARKDOWN-'].expand(True, True, True)
+    window['-PANE-'].expand(True, True, True)
+    window.bring_to_front()
+    while True:             # Event Loop
+        event, values = window.read()
+        # print(event, values)
+        if event in (WINDOW_CLOSE_ATTEMPTED_EVENT, 'Quit'):
+            if popup_yes_no( 'Do you really want to exit?',
+                                'If you have not clicked Post Issue button and then clicked "Submit New Issue" button '
+                                'then your issue will not have been submitted to GitHub.\n'
+                                'If you are having trouble with PySimpleGUI opening your browser, consider generating '
+                                'the markdown, copying it to a text file, and then using it later to manually paste into a new issue '
+                                '\n'
+                                'Are you sure you want to quit?',
+                                image=EMOJI_BASE64_PONDER,
+                                ) == 'Yes':
+                break
+        if event == WIN_CLOSED:
+            break
+        if event in ['-T{}-'.format(i) for i in range(len(checklist))]:
+            webbrowser.open_new_tab(window[event].get())
+        if event in issue_types:
+            title = str(values['-TITLE-'])
+            if len(title) != 0:
+                if title[0] == '[' and title.find(']'):
+                    title = title[title.find(']')+1:]
+                    title = title.strip()
+            window['-TITLE-'].update('[{}] {}'.format(event, title))
+        if event == 'Help':
+            _github_issue_help()
+        elif event in ('Post Issue', 'Create Markdown Only'):
+            issue_type = None
+            for itype in issue_types:
+                if values[itype]:
+                    issue_type = itype
+                    break
+            if issue_type is None:
+                popup_error('Must choose issue type')
+                continue
+            if values['-OS WIN-']:
+                operating_system = 'Windows'
+                os_ver = values['-OS WIN VER-']
+            elif values['-OS LINUX-']:
+                operating_system = 'Linux'
+                os_ver = values['-OS LINUX VER-']
+            elif values['-OS MAC-']:
+                operating_system = 'Mac'
+                os_ver = values['-OS MAC VER-']
+            elif values['-OS OTHER-']:
+                operating_system = 'Other'
+                os_ver = values['-OS OTHER VER-']
+            else:
+                popup_error('Must choose Operating System')
+                continue
+            checkboxes = ['X' if values[('-CB-', i)] else ' ' for i in range(len(checklist))]
+
+            if not _github_issue_post_validate(values, checklist, issue_types):
+                continue
+
+            markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'], values['-VER PYTHON-'],
+                                                        values['-EXP PROG-'], values['-EXP PYTHON-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No', values['-EXP NOTES-'], *checkboxes, values['-ML DETAILS-'], values['-ML CODE-'])
+            window['-ML MARKDOWN-'].update(markdown)
+            link = _github_issue_post_make_github_link(values['-TITLE-'], window['-ML MARKDOWN-'].get())
+            if event == 'Post Issue':
+                webbrowser.open_new_tab(link)
+            else:
+                popup('Your markdown code is in the Markdown tab', keep_on_top=True)
+
+    window.close()
+
+
+
+
 def _copy_files_from_github(files, github_url=None):
     """
     install one file package from GitHub or current directory
@@ -19697,19 +20094,22 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
 
     graph_elem = Graph((600, 250), (0, 0), (800, 300), key='+GRAPH+')
 
-    frame6 = [
-        [graph_elem],
-    ]
+    frame6 = [[graph_elem]]
+
+    themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
+                         [T('If you want to change the default theme for PySimpleGUI, use the Global Settings')],
+                         [B('Themes'), B('Theme Swatches'), B('Switch Themes')]]
 
     tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
     tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t', pad=(0,0)),
                                                   Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], pad=(0,0))
     # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
-    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', )
-    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', )
-    tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', )
-    tab6 = Tab('Do NOT click', frame7)
-    tab7 = Tab('Popup Tests', pop_test_tab_layout)
+    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', k='-TAB TABLE-')
+    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', k='-TAB VAR-')
+    tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', k='-TAB TEXT-')
+    tab6 = Tab('Do NOT click', frame7, k='-TAB NO CLICK-')
+    tab7 = Tab('Popup Tests', pop_test_tab_layout, k='-TAB POPUP-')
+    tab8 = Tab('Themes', themes_tab_layout, k='-TAB THEMES-')
 
 
     def VerLine(version, description, justification='r', size=(40,1)):
@@ -19726,7 +20126,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40,2)),
         VerLine(sys.version, 'Python Version',  size=(40, 2)),
 
-        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
+        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
         [Button('Button', highlight_colors=('yellow','red')), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
@@ -19734,7 +20134,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Global Settings', tooltip='Settings across all PySimpleGUI programs'),
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
-          B('Themes'), B('Theme Swatches'), B('Switch Themes'),B('SDK Reference'), B('Info for GitHub'),
+          B('SDK Reference'), B('Open GitHub Issue'), B('Versions for GitHub'),
           ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')
           ]
 
@@ -19855,10 +20255,12 @@ def main():
                 popup_non_blocking('Non-blocking', 'The background window should still be running', keep_on_top=True)
             elif event == 'P AutoClose':
                 popup_auto_close('Will autoclose in 3 seconds', auto_close_duration=3 ,keep_on_top=True)
-        elif event == 'Info for GitHub':
+        elif event == 'Versions for GitHub':
             main_get_debug_data()
-
-
+        elif event == 'Open GitHub Issue':
+            window.minimize()
+            main_open_github_issue()
+            window.normal()
         i += 1
         # _refresh_debugger()
     window.close()
