@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1  Released 11-Apr-2021"
+version = __version__ = "4.39.1.1  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -6280,6 +6280,7 @@ class TkScrollableFrame(tk.Frame):
 
         # Chr0nic
 
+        self.unhookMouseWheel(None)
         self.TKFrame.bind("<Enter>", self.hookMouseWheel)
         self.TKFrame.bind("<Leave>", self.unhookMouseWheel)
 
@@ -19246,8 +19247,8 @@ If you've been programming for a month, the person answering your question can a
 """ The steps to log an issue are:
 1. Fill in the form
 2. Click Post Issue """
-    layout = [
-                [T('Goals', font=heading_font, pad=(0,0))],
+
+    layout = [  [T('Goals', font=heading_font, pad=(0,0))],
                 [HelpText(help_goals)],
                 [T('Why?', font=heading_font, pad=(0,0))],
                 [HelpText(help_why)],
@@ -19257,8 +19258,8 @@ If you've been programming for a month, the person answering your question can a
                 [HelpText(help_experience)],
                 [T('Steps', font=heading_font, pad=(0,0))],
                 [HelpText(help_steps)],
-                [B('Close')]
-              ]
+                [B('Close')]]
+
     Window('GitHub Issue GUI Help', layout, keep_on_top=True).read(close=True)
 
     return
@@ -19271,14 +19272,13 @@ def main_open_github_issue():
     v_size = (15,1)
     frame_versions = [[T('Python', size=v_size), In(sys.version, size=(20,1), k='-VER PYTHON-')],
                       [T('PySimpleGUI', size=v_size), In(ver, size=(20,1), k='-VER PSG-')],
-                      [T('tkinter', size=v_size), In(tclversion_detailed, size=(20,1), k='-VER TK-')],]
+                      [T('tkinter', size=v_size), In(tclversion_detailed, size=(20,1), k='-VER TK-')]]
 
     frame_platforms = [ [T('OS                 '), T('Details')],
                         [Radio('Windows', 2, running_windows(), size=(8,1), k='-OS WIN-'), In(size=(8,1),k='-OS WIN VER-')],
                         [Radio('Linux', 2,running_linux(), size=(8,1), k='-OS LINUX-'), In(size=(8,1),k='-OS LINUX VER-')],
                         [Radio('Mac', 2, running_mac(), size=(8,1), k='-OS MAC-'), In(size=(8,1),k='-OS MAC VER-')],
-                        [Radio('Other', 2, size=(8,1), k='-OS OTHER-'), In(size=(8,1),k='-OS OTHER VER-')],
-                        ]
+                        [Radio('Other', 2, size=(8,1), k='-OS OTHER-'), In(size=(8,1),k='-OS OTHER VER-')]]
 
 
     frame_experience = [[T('Optional Experience Info')],
@@ -19288,8 +19288,7 @@ def main_open_github_issue():
                         [T('Share more if you want....')],
                         [In(size=(25,1), k='-EXP NOTES-')]]
 
-    checklist = (
-                  ('Searched main docs for your problem', 'www.PySimpleGUI.org'),
+    checklist = ( ('Searched main docs for your problem', 'www.PySimpleGUI.org'),
                   ('Looked for Demo Programs that are similar to your goal ', 'http://Demos.PySimpleGUI.org'),
                   ('If not tkinter - looked for Demo Programs for specific port', ''),
                   ('For non tkinter - Looked at readme for your specific port if not PySimpleGUI (Qt, WX, Remi)', ''),
@@ -19305,22 +19304,20 @@ def main_open_github_issue():
 
     top_layout = [  [Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
                      Col([[B('Help')]])],
-                [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame),
-                 Image(data=EMOJI_BASE64_WEARY)],
-                vtop([
+                    [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame),
+                        Image(data=EMOJI_BASE64_WEARY)],
+                        vtop([
                             Frame('Platform *',frame_platforms, font=font_frame),
                             Frame('Type of Issue *',frame_type, font=font_frame),
                             Frame('Versions *',frame_versions, font=font_frame),
                             Frame('Experience',frame_experience, font=font_frame),
-                    ]),
+                            ]),
                 [Frame('Checklist * (note that you can click the links)',frame_checklist, font=font_frame)],
                 [HorizontalSeparator()],
                 [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
-    bottom_layout = [
-                [TabGroup([[Tab('Details', frame_details), Tab('Code', frame_code), Tab('Markdown', frame_markdown)]], k='-TABGROUP-')],
-                [Text(size=(12,1), key='-OUT-')],
-                ]
+    bottom_layout = [[TabGroup([[Tab('Details', frame_details), Tab('Code', frame_code), Tab('Markdown', frame_markdown)]], k='-TABGROUP-')],
+                     [Text(size=(12,1), key='-OUT-')]]
 
     layout_pane = Pane([Col(top_layout), Col(bottom_layout)], key='-PANE-')
 
@@ -19328,6 +19325,7 @@ def main_open_github_issue():
               [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]], expand_x=False, expand_y=False)]]
 
     window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True)
+
     for i in range(len(checklist)):
         window['-T{}-'.format(i)].set_cursor('hand1')
     window['-TABGROUP-'].expand(True, True, True)
