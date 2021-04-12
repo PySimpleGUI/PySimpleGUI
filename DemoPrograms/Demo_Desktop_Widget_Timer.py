@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import PySimpleGUI as sg
 import time
 
@@ -12,6 +13,7 @@ import time
   this design were not used, then the time value displayed would slowly drift by the amount of time
   it takes to execute the PySimpleGUI read and update calls (not good!)
 
+    Copyright 2021 PySimpleGUI
 """
 
 
@@ -34,7 +36,8 @@ window = sg.Window('Running Timer', layout,
                    auto_size_buttons=False,
                    keep_on_top=True,
                    grab_anywhere=True,
-                   element_padding=(0, 0))
+                   element_padding=(0, 0), finalize=True,
+                   right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
 
 current_time, paused_time, paused = 0, 0, False
 start_time = time_as_int()
@@ -60,7 +63,8 @@ while True:
             start_time = start_time + time_as_int() - paused_time
         # Change button's text
         window['-RUN-PAUSE-'].update('Run' if paused else 'Pause')
-
+    elif event == 'Edit Me':
+        sg.execute_editor(__file__)
     # --------- Display timer in window --------
     window['text'].update('{:02d}:{:02d}.{:02d}'.format((current_time // 100) // 60,
                                                         (current_time // 100) % 60,
