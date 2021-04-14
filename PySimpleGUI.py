@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.1  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!)"
+version = __version__ = "4.39.1.4  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3678,14 +3678,17 @@ class Button(Element):
             self.UseTtkButtons = True
         # if image_filename or image_data:
         #     self.UseTtkButtons = False              # if an image is to be displayed, then force the button to not be a TTK Button
-        key = key if key is not None else k
+        if key is None and k is None:
+            _key = self.ButtonText
+        else:
+            _key = key if key is not None else k
         if highlight_colors is not None:
             self.HighlightColors = highlight_colors
         else:
             self.HighlightColors = self._compute_highlight_colors()
         sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
+        super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=_key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
 
@@ -5859,10 +5862,7 @@ class TabGroup(Element):
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
     """
 
-    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
-                 background_color=None,
-                 font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None,
-                 key=None, k=None, tooltip=None, visible=True, metadata=None):
+    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None, size=(None, None), tooltip=None, visible=True, metadata=None):
         """
         :param layout: Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :type layout: List[List[Tab]]
@@ -5894,6 +5894,8 @@ class TabGroup(Element):
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
+        :param size: (width, height) w=pixels-wide, h=pixels-high. Either item in tuple can be None to indicate use the computed value and set only 1 direction
+        :type size: (int|None, int|None)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -5926,7 +5928,7 @@ class TabGroup(Element):
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB_GROUP, background_color=background_color, text_color=title_color, font=font,
+        super().__init__(ELEM_TYPE_TAB_GROUP, size=size, background_color=background_color, text_color=title_color, font=font,
                          pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -11732,7 +11734,7 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     # this_rowcol = element.EncodedRadioValue       # could use the saved one
                     value = RadVar == this_rowcol
                 elif element.Type == ELEM_TYPE_BUTTON:
-                    if top_level_form.LastButtonClicked == element.ButtonText:
+                    if top_level_form.LastButtonClicked == element.Key:
                         event = top_level_form.LastButtonClicked
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
@@ -12487,26 +12489,37 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
-                    photo = tk.PhotoImage(file=element.ImageFilename)
-                    if element.ImageSubsample:
-                        photo = photo.subsample(element.ImageSubsample)
-                    if element.ImageSize != (None, None):
-                        width, height = element.ImageSize
-                    else:
-                        width, height = photo.width(), photo.height()
+                    try:
+                        photo = tk.PhotoImage(file=element.ImageFilename)
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                        if element.ImageSize != (None, None):
+                            width, height = element.ImageSize
+                        else:
+                            width, height = photo.width(), photo.height()
+                    except Exception as e:
+                        _error_popup_with_traceback('Button Element error {}'.format(e), 'Image filename: {}'.format(element.ImageFilename),
+                                                    'Button element key: {}'.format(element.Key),
+                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
                     tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
                     tkbutton.image = photo
                 if element.ImageData:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
-                    photo = tk.PhotoImage(data=element.ImageData)
-                    if element.ImageSubsample:
-                        photo = photo.subsample(element.ImageSubsample)
-                    if element.ImageSize != (None, None):
-                        width, height = element.ImageSize
-                    else:
-                        width, height = photo.width(), photo.height()
-                    tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
-                    tkbutton.image = photo
+                    try:
+                        photo = tk.PhotoImage(data=element.ImageData)
+                        if element.ImageSubsample:
+                            photo = photo.subsample(element.ImageSubsample)
+                        if element.ImageSize != (None, None):
+                            width, height = element.ImageSize
+                        else:
+                            width, height = photo.width(), photo.height()
+                        tkbutton.config(image=photo, compound=tk.CENTER, width=width, height=height)
+                        tkbutton.image = photo
+                    except Exception as e:
+                        _error_popup_with_traceback('Button Element error {}'.format(e),
+                                                    'Problem using BASE64 Image data Image Susample',
+                                                    'Buton element key: {}'.format(element.Key),
+                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
@@ -12533,7 +12546,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     if element.HighlightColors[0] != COLOR_SYSTEM_DEFAULT:
                         tkbutton.config(highlightcolor=element.HighlightColors[0])
                 except Exception as e:
-                    print('Button with text: ', btext, 'has a bad highlight color', element.HighlightColors)
+                    _error_popup_with_traceback('Button Element error {}'.format(e),
+                                                'Button element key: {}'.format(element.Key),
+                                                'Button text: {}'.format(btext),
+                                                'Has a bad highlight color {}'.format(element.HighlightColors),
+                                                "Parent Window's Title: {}".format(toplevel_form.Title))
+                    # print('Button with text: ', btext, 'has a bad highlight color', element.HighlightColors)
                 _add_right_click_menu(element)
 
             # -------------------------  BUTTON placement element ttk version ------------------------- #
@@ -13361,7 +13379,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu(element)
-
                 # row_should_expand = True
             # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
@@ -13406,6 +13423,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                if element.Size != (None, None):
+                    element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
                 # row_should_expand = True
                 # -------------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
