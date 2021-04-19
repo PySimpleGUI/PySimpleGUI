@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.4  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly"
+version = __version__ = "4.39.1.5  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -23,32 +23,32 @@ port = 'PySimpleGUI'
 
 """
     Copyright 2018, 2019, 2020, 2021 PySimpleGUI
-    
+
     Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
-    
+
     From the inception these have been the project principals upon which it is all built
     1. Fun - it's a serious goal of the project. If we're not having FUN while making stuff, then something's not right
     2. Successful - you need to be successful or it's all for naught
     3. You are the important party - It's your success that determines the success of PySimpleGUI
-    
+
     If these 3 things are kept at the forefront, then the rest tends to fall into place.
-    
+
     PySimpleGUI is a "system", not just a program.  There are 4 components of the "PySimpleGUI system"
     1. This software - PySimpleGUI.com
     2. The documentation - PySimpleGUI.org
     3. Demo Programs - Demos.PySimpleGUI.org
     4. Support - Issues.PySimpleGUI.org
-    
-    
+
+
     This software is available for your use under a LGPL3+ license
-    
+
     This notice, these first 150 lines of code shall remain unchanged
     
     
     
     888      .d8888b.  8888888b.  888      .d8888b.          
     888     d88P  Y88b 888   Y88b 888     d88P  Y88b         
-    888     888    888 888    888 888          .d88P         
+    888     888    888 888    888 888          .d88P
     888     888        888   d88P 888         8888"    888   
     888     888  88888 8888888P"  888          "Y8b. 8888888 
     888     888    888 888        888     888    888   888   
@@ -2457,7 +2457,7 @@ class Spin(Element):
         key = key if key is not None else k
         sz = size if size != (None, None) else s
 
-        super().__init__(ELEM_TYPE_INPUT_SPIN, size, auto_size_text, font=font, background_color=bg, text_color=fg,
+        super().__init__(ELEM_TYPE_INPUT_SPIN, size=sz, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -5031,7 +5031,7 @@ class Graph(Element):
         Draw some text on your graph.  This is how you label graph number lines for example
 
         :param text: text to display
-        :type text: (str)
+        :type text: (Any)
         :param location: location to place first letter
         :type location: Tuple[int, int] | Tuple[float, float]
         :param color: text color
@@ -8436,7 +8436,10 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
             # if the last button clicked was realtime, emulate a read non-blocking
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
-                # self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
+                # clear the realtime flag if the element is not a button element (for example a graph element that is dragging)
+                if self.AllKeysDict and self.AllKeysDict.get(self.LastButtonClicked, None):
+                    if self.AllKeysDict.get(self.LastButtonClicked).Type != ELEM_TYPE_BUTTON:
+                        self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
 
                 try:
                     rc = self.TKroot.update()
@@ -9764,7 +9767,7 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
 
     :param timeout: Time in milliseconds to delay before a returning a timeout event
     :type timeout: (int)
-    :param ti```meout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
+    :param timeout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
     :type timeout_key: (Any)
     :return: A tuple with the  (Window, event, values dictionary/list)
     :rtype: Tuple[Window, Any, (Dict or List)]
@@ -17291,6 +17294,7 @@ def popup_menu(window, element, menu_def, title=None, location=(None, None)):
     :param location: The location on the screen to place the window
     :type location: (int, int) | (None, None)
     """
+
     element._popup_menu_location = location
     top_menu = tk.Menu(window.TKroot, tearoff=True, tearoffcommand=element._tearoff_menu_callback)
     if window.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
@@ -17305,7 +17309,7 @@ def popup_menu(window, element, menu_def, title=None, location=(None, None)):
         top_menu.config(activeforeground=window.right_click_menu_selected_colors[0])
     if window.right_click_menu_selected_colors[1] !=  COLOR_SYSTEM_DEFAULT:
         top_menu.config(activebackground=window.right_click_menu_selected_colors[1])
-    top_menu.config(title=window.Title)
+    top_menu.config(title=window.Title if title is None else title)
     AddMenuItem(top_menu, menu_def[1], element, right_click_menu=True)
     # element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
     top_menu.invoke(0)
