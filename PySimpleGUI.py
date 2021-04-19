@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.5  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix"
+version = __version__ = "4.39.1.6  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -8437,9 +8437,11 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
             # the idea is to quickly return realtime buttons without any blocks until released
             if self.LastButtonClickedWasRealtime:
                 # clear the realtime flag if the element is not a button element (for example a graph element that is dragging)
-                if self.AllKeysDict and self.AllKeysDict.get(self.LastButtonClicked, None):
+                if self.AllKeysDict.get(self.LastButtonClicked, None):
                     if self.AllKeysDict.get(self.LastButtonClicked).Type != ELEM_TYPE_BUTTON:
                         self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
+                else:   # it is possible for the key to not be in the dicitonary because it has a modifier. If so, then clear the realtime button flag
+                    self.LastButtonClickedWasRealtime = False  # stops from generating events until something changes
 
                 try:
                     rc = self.TKroot.update()
