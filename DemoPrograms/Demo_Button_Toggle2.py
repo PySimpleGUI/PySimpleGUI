@@ -63,10 +63,11 @@ def main():
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled=True, metadata=BtnInfo()), sg.T('Note color has crosshatching')],
               [ sg.T('Disabled with PySimpleGUI (ignored):', text_color='yellow')],
-              [sg.Button(image_data=on_image, k='-TOGGLE3-', border_width=0,
+              [sg.Button(image_data=on_image, k='-TOGGLE4-', border_width=0,
                          button_color=(sg.theme_background_color(), sg.theme_background_color()),
                          disabled_button_color=(sg.theme_background_color(), sg.theme_background_color()),
-                         disabled=sg.BUTTON_DISABLED_MEANS_IGNORE, metadata=BtnInfo())],
+                         disabled=sg.BUTTON_DISABLED_MEANS_IGNORE,
+                         metadata=BtnInfo())],
               [sg.T(size=(40,1), k='-STATUS-')],
               [sg.Button('Exit')]]
 
@@ -97,7 +98,7 @@ def main():
                     window['-TOGGLE1-'].update(disabled=False, image_data=on_image)
                 elif window['-TOGGLE1-'].metadata.state is False:
                     window['-TOGGLE1-'].update(disabled=False, image_data=off_image)
-        window['-STATUS-'].update(f'event {event} button state = {window[event].metadata.state}')
+        window['-STATUS-'].update(f'event {event} button state = {window[event].metadata.state if window[event].metadata is not None else "Not applicable"}')
     window.close()
 
 # Define the button graphic base 64 strings and then call the main function
