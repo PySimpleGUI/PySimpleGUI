@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.6  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem"
+version = __version__ = "4.39.1.7  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2234,7 +2234,7 @@ Rad = Radio
 
 
 # ---------------------------------------------------------------------- #
-#                           Checkbox                                     #
+#                          Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     """
@@ -2319,7 +2319,7 @@ class Checkbox(Element):
         :return: Current state of checkbox
         :rtype: (bool)
         """
-        return self.TKIntVar.get()
+        return self.TKIntVar.get() != 0
 
     def update(self, value=None, text=None, background_color=None, text_color=None, checkbox_color=None, disabled=None, visible=None):
         """
@@ -3552,7 +3552,7 @@ class Button(Element):
                  file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled_button_color=None,
-                 highlight_colors=None, use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
+                 highlight_colors=None, mouseover_colors=(None,None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param button_text: Text to be displayed on the button
         :type button_text: (str)
@@ -3593,9 +3593,11 @@ class Button(Element):
         :param button_color: Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
         :type button_color: Tuple[str, str] | str | Tuple[int, int] | None
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
-        :type disabled_button_color: Tuple[str, str]
-        :param highlight_colors: colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button
+        :type disabled_button_color: Tuple[str, str] | str
+        :param highlight_colors: colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button
         :type highlight_colors: Tuple[str, str]
+        :param mouseover_colors: Important difference between Linux & Windows! Linux - Colors when mouse moved over button.  Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect)
+        :type mouseover_colors: (str, str) | str
         :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :type use_ttk_buttons: (bool)
         :param font: specifies the font family, size, etc
@@ -3686,8 +3688,8 @@ class Button(Element):
             self.HighlightColors = highlight_colors
         else:
             self.HighlightColors = self._compute_highlight_colors()
+        self.MouseOverColors = button_color_to_tuple(mouseover_colors) if mouseover_colors != (None, None) else (theme_button_color()[1], theme_button_color()[0])
         sz = size if size != (None, None) else s
-
         super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=_key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -3866,9 +3868,6 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = False
             self.ParentForm._Close()
-            # if self.ParentForm.CurrentlyRunningMainloop:
-            #     Window._window_that_exited = self.ParentForm
-            #     self.ParentForm.TKroot.quit()
             _exit_mainloop(self.ParentForm)
 
             if self.ParentForm.NonBlocking:
@@ -3884,66 +3883,16 @@ class Button(Element):
                 self.ParentForm.LastButtonClicked = self.ButtonText
             self.ParentForm.FormRemainedOpen = True
             _exit_mainloop(self.ParentForm)
-
-            # if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
-            #     Window._window_that_exited = self.ParentForm
-            #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
-
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
-            self.ParentForm._Close()
-            if self.ParentForm.NonBlocking:
-                self.ParentForm.TKroot.destroy()
-                Window._DecrementOpenCount()
+            self.ParentForm._Close(without_event=True)
+            self.ParentForm.TKroot.destroy()            # close the window with tkinter
+            Window._DecrementOpenCount()
         elif self.BType == BUTTON_TYPE_CALENDAR_CHOOSER:  # this is a return type button so GET RESULTS and destroy window
             # ------------ new chooser code -------------
             self.ParentForm.LastButtonClicked = self.Key    # key should have been generated already if not set by user
             self.ParentForm.FormRemainedOpen = True
             should_submit_window = False
             _exit_mainloop(self.ParentForm)
-            #
-            # if self.calendar_default_date_M_D_Y == (None, None, None):
-            #     now = datetime.datetime.now()
-            #     cur_month, cur_day, cur_year = now.month, now.day, now.year
-            # else:
-            #     cur_month, cur_day, cur_year = self.calendar_default_date_M_D_Y
-            #
-            # date_chosen = popup_get_date(start_mon=cur_month, start_day=cur_day, start_year=cur_year, close_when_chosen=self.calendar_close_when_chosen, no_titlebar=self.calendar_no_titlebar, begin_at_sunday_plus=self.calendar_begin_at_sunday_plus, locale=self.calendar_locale, location=self.calendar_location, month_names=self.calendar_month_names, day_abbreviations=self.calendar_day_abbreviations, title=self.calendar_title)
-            # if date_chosen is not None:
-            #     month, day, year = date_chosen
-            #     now = datetime.datetime.now()
-            #     hour, minute, second = now.hour, now.minute, now.second
-            #     try:
-            #         date_string = calendar.datetime.datetime(year, month, day, hour, minute, second).strftime(self.calendar_format)
-            #     except Exception as e:
-            #         print('Bad format string', e)
-            #         date_string = 'Bad format string'
-            #
-            #     if target_element is not None:
-            #         target_element.update(date_string)
-            #     self.calendar_selection = date_string
-            #
-            #     strvar.set(date_string)
-            #     self.TKStringVar.set(date_string)
-
-            # ------------ old chooser code -------------
-            # should_submit_window = False
-            # root = tk.Toplevel()
-            # root.title('Calendar Chooser')
-            # root.wm_attributes("-topmost", 1)
-            # self.TKCal = TKCalendar(master=root, firstweekday=calendar.SUNDAY, target_element=target_element,
-            #                         close_when_chosen=self.CalendarCloseWhenChosen, default_date=self.CalendarDefaultDate_M_D_Y,
-            #                         locale=self.CalendarLocale, format=self.CalendarFormat)
-            # self.TKCal.pack(expand=1, fill='both')
-            # root.update()
-            #
-            # if type(Window._user_defined_icon) is bytes:
-            #     calendar_icon = tkinter.PhotoImage(data=Window._user_defined_icon)
-            # else:
-            #     calendar_icon = tkinter.PhotoImage(data=DEFAULT_BASE64_ICON)
-            # try:
-            #     root.tk.call('wm', 'iconphoto', root._w, calendar_icon)
-            # except:
-            #     pass
         elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
             if self.ParentForm.DebuggerEnabled:
                 # _Debugger.debugger._build_floating_window()
@@ -3952,8 +3901,6 @@ class Button(Element):
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
             self.ParentForm.FormRemainedOpen = True
-            # if self.ParentForm.CurrentlyRunningMainloop:
-            #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
             _exit_mainloop(self.ParentForm)
 
 
@@ -9069,16 +9016,20 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         _exit_mainloop(self)
 
 
-    def _Close(self):
+    def _Close(self, without_event=False):
         """
         The internal close call that does the real work of building. This method basically sets up for closing
         but doesn't destroy the window like the User's version of Close does
+
+        :parm without_event: if True, then do not cause an event to be generated, "silently" close the window
+        :type without_event: (bool)
         """
         try:
             self.TKroot.update()
         except:
             pass
-        if not self.NonBlocking:
+
+        if not self.NonBlocking or not without_event:
             _BuildResults(self, False, self)
         if self.TKrootDestroyed:
             return
@@ -12542,6 +12493,12 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisabledButtonColor != (None, None) and element.DisabledButtonColor != (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT):
                     if element.DisabledButtonColor[0] not in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKButton['disabledforeground'] = element.DisabledButtonColor[0]
+
+                if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None) :
+                    tkbutton.config(activebackground=element.MouseOverColors[1])
+                if element.MouseOverColors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+                    tkbutton.config(activeforeground=element.MouseOverColors[0])
+
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -12607,11 +12564,21 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     button_style.configure(style_name, borderwidth=bd)
                 button_style.configure(style_name, justify=tk.CENTER)
-                if element.DisabledButtonColor != (None, None):
-                    if element.DisabledButtonColor[0] is not None:
-                        button_style.map(style_name, foreground=[('disabled', element.DisabledButtonColor[0])])
-                    if element.DisabledButtonColor[1] is not None:
-                        button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
+
+
+
+
+                if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None) :
+                    button_style.map(style_name, background=[('active', element.MouseOverColors[1])])
+                if element.MouseOverColors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+                    button_style.map(style_name, foreground=[('active', element.MouseOverColors[0])])
+
+                if element.DisabledButtonColor[0] not in (COLOR_SYSTEM_DEFAULT, None):
+                    button_style.map(style_name, foreground=[('disabled', element.DisabledButtonColor[0])])
+                if element.DisabledButtonColor[1] not in (COLOR_SYSTEM_DEFAULT, None):
+                    button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
+
+
                 if height > 1:
                     button_style.configure(style_name, padding=height * _char_width_in_pixels(font))    # should this be height instead?
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
@@ -12656,7 +12623,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton.bind('<Return>', element._ReturnKeyHandler)
                     element.TKButton.focus_set()
                     toplevel_form.TKroot.focus_force()
-                if element.Disabled == True:
+                if element.Disabled is True:
                     element.TKButton['state'] = 'disabled'
 
                 tkbutton.configure(style=style_name)  # IMPORTANT!  Apply the style to the button!
@@ -14408,8 +14375,7 @@ class _DebugWin():
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
-        if erase_all:
-            self.window['-MULTILINE-'].update('')
+
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
@@ -14417,6 +14383,8 @@ class _DebugWin():
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
             event, values = self.window.read(timeout=0)
+        if erase_all:
+            self.window['-MULTILINE-'].update('')
         if self.do_not_reroute_stdout:
             end_str = str(end) if end is not None else '\n'
             sep_str = str(sep) if sep is not None else ' '
