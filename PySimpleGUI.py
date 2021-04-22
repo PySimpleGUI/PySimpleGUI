@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.7  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window"
+version = __version__ = "4.39.1.8  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3688,7 +3688,14 @@ class Button(Element):
             self.HighlightColors = highlight_colors
         else:
             self.HighlightColors = self._compute_highlight_colors()
-        self.MouseOverColors = button_color_to_tuple(mouseover_colors) if mouseover_colors != (None, None) else (theme_button_color()[1], theme_button_color()[0])
+
+        if mouseover_colors != (None, None):
+            self.MouseOverColors =  button_color_to_tuple(mouseover_colors)
+        elif button_color != None:
+            self.MouseOverColors = (self.ButtonColor[1], self.ButtonColor[0])
+        else:
+            self.MouseOverColors =(theme_button_color()[1], theme_button_color()[0])
+
         sz = size if size != (None, None) else s
         super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=_key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
@@ -7868,8 +7875,8 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
                 self.Finalize()
 
         if CURRENT_LOOK_AND_FEEL == 'Default':
-            print("Window will be a boring gray. Try adding call to change_look_and_feel('Dark Blue 3') before your layout definition\n",
-                  "If you seriously want this gray window and no more nagging, add  change_look_and_feel('DefaultNoMoreNagging') ")
+            print("Window will be a boring gray. Try adding call to theme('Dark Blue 3') before your layout definition\n",
+                  "If you seriously want this gray window and no more nagging, add  theme('DefaultNoMoreNagging') ")
 
     @classmethod
     def _GetAContainerNumber(cls):
