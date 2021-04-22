@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.8  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme"
+version = __version__ = "4.39.1.9  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -11410,7 +11410,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
-def ColorChooserButton(button_text, target=(None, None), image_filename=None, image_data=None, image_size=(None, None),
+def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
                        button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
                        key=None, k=None, metadata=None):
