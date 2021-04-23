@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.11  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit smaller screens"
+version = __version__ = "4.39.1.12  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -11604,7 +11604,7 @@ def _BuildResults(form, initialize_only, top_level_form):
     #   Button - Button Text and position as a Tuple
 
     # Get the initialized results so we don't have to rebuild
-    form.DictionaryKeyCounter = 0
+    # form.DictionaryKeyCounter = 0
     form.ReturnValuesDictionary = {}
     form.ReturnValuesList = []
     _BuildResultsForSubform(form, initialize_only, top_level_form)
