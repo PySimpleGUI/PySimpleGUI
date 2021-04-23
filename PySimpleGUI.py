@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.10  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu"
+version = __version__ = "4.39.1.11  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit smaller screens"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -19107,9 +19107,6 @@ These items may solve your problem. Please check those you've done by changing -
 
 #### Code To Duplicate
 
-A **short** program that isolates and demonstrates the problem (Do not paste your massive program, but instead 10-20 lines that clearly show the problem)
-
-This pre-formatted code block is all set for you to paste in your bit of code:
 
 ```python
 {}
@@ -19281,7 +19278,7 @@ def main_open_github_issue():
                         [Radio('Other', 2, size=(8,1), k='-OS OTHER-'), In(size=(8,1),k='-OS OTHER VER-')]]
 
 
-    frame_experience = [[T('Optional Experience Info')],
+    col_experience = [[T('Optional Experience Info')],
                         [In(size=(4,1), k='-EXP PROG-'), T('Years Programming')],
                         [In(size=(4,1), k='-EXP PYTHON-'), T('Years Writing Python')],
                         [CB('Previously programmed a GUI', k='-CB PRIOR GUI-')],
@@ -19296,35 +19293,37 @@ def main_open_github_issue():
                   ('Searched through Issues (open and closed) to see if already reported', 'http://Issues.PySimpleGUI.org'),
                   ('Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed vut not released.', ''))
 
-    frame_checklist = [[CB(c, k=('-CB-', i)), T(t, k='-T{}-'.format(i), enable_events=True)] for i, (c, t) in enumerate(checklist)]
+    checklist_col1 = Col([[CB(c, k=('-CB-', i)), T(t, k='-T{}-'.format(i), enable_events=True)] for i, (c, t) in enumerate(checklist[:4])],k='-C FRAME CBs1-')
+    checklist_col2 = Col([[CB(c, k=('-CB-', i+4)), T(t, k='-T{}-'.format(i+4), enable_events=True)] for i, (c, t) in enumerate(checklist[4:])], pad=(0,0),k='-C FRAME CBs2-')
+    checklist_tabgropup = TabGroup([[Tab('Checklist 1 *', [[checklist_col1]]), Tab('Checklist 2  *', [[checklist_col2]]),Tab('Experience', col_experience,k='-Tab Exp-', pad=(0,0))]])
 
     frame_details = [[Multiline(size=(65,10), font='Courier 10', k='-ML DETAILS-')]]
     frame_code = [[Multiline(size=(80,10), font='Courier 8',  k='-ML CODE-')]]
     frame_markdown = [[Multiline(size=(80,10), font='Courier 8',  k='-ML MARKDOWN-')]]
 
     top_layout = [  [Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
-                     Col([[B('Help')]])],
-                    [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame),
-                        Image(data=EMOJI_BASE64_WEARY)],
+                     # Col([[B('Help')]])
+                     ],
+                    [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame)],
+                        # Image(data=EMOJI_BASE64_WEARY)],
                         vtop([
                             Frame('Platform *',frame_platforms, font=font_frame),
                             Frame('Type of Issue *',frame_type, font=font_frame),
                             Frame('Versions *',frame_versions, font=font_frame),
-                            Frame('Experience',frame_experience, font=font_frame),
                             ]),
-                [Frame('Checklist * (note that you can click the links)',frame_checklist, font=font_frame)],
+                [Frame('Checklist * (note that you can click the links)',[[checklist_tabgropup]], font=font_frame)],
                 [HorizontalSeparator()],
                 [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
-    bottom_layout = [[TabGroup([[Tab('Details', frame_details), Tab('Code', frame_code), Tab('Markdown', frame_markdown)]], k='-TABGROUP-')],
-                     [Text(size=(12,1), key='-OUT-')]]
+    bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0,0)), Tab('SHORT Code to duplicate Program *', frame_code, pad=(0,0)), Tab('Markdown Output', frame_markdown, pad=(0,0))]], k='-TABGROUP-'),
+                      ]]
 
     layout_pane = Pane([Col(top_layout), Col(bottom_layout)], key='-PANE-')
 
     layout = [[layout_pane],
               [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]], expand_x=False, expand_y=False)]]
 
-    window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True)
+    window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True, margins=(0,0))
 
     for i in range(len(checklist)):
         window['-T{}-'.format(i)].set_cursor('hand1')
