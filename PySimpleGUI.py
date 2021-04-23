@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.12  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted"
+version = __version__ = "4.39.1.13  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -175,7 +175,7 @@ def timer_stop():
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    print((g_time_delta * 1000))
+    return(g_time_delta*1000)
 
 
 def _timeit(func):
@@ -938,7 +938,7 @@ class Element():
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
             if running_linux():
-                print('* linix minimize *')
+                # print('* linux minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
                 # self.ParentForm.TKroot.state('icon')
                 # return
@@ -967,7 +967,7 @@ class Element():
 
     def _titlebar_restore(self, event):
         if running_linux():
-            print('linux restore')
+            # print('linux restore')
             # if self._skip_first_restore_callback:
             #     self._skip_first_restore_callback = False
             #     return
@@ -7875,8 +7875,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
                 self.Finalize()
 
         if CURRENT_LOOK_AND_FEEL == 'Default':
-            print("Window will be a boring gray. Try adding call to theme('Dark Blue 3') before your layout definition\n",
-                  "If you seriously want this gray window and no more nagging, add  theme('DefaultNoMoreNagging') ")
+            print("Window will be a boring gray. Try removing the theme call entirely\n",
+                  "You will get the default theme or the one set in global settings\n"
+                  "If you seriously want this gray window and no more nagging, add  theme('DefaultNoMoreNagging')  or theme('GrayGrayGray') for completely gray/System Defaults")
 
     @classmethod
     def _GetAContainerNumber(cls):
@@ -11487,6 +11488,8 @@ def button_color_to_tuple(color_tuple_or_string, default=(None, None)):
     """
     if default == (None, None):
         color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=theme_button_color())
+    elif color_tuple_or_string == COLOR_SYSTEM_DEFAULT:
+        color_type = (COLOR_SYSTEM_DEFAULT,COLOR_SYSTEM_DEFAULT)
     else:
         color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=default)
 
@@ -12500,7 +12503,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisabledButtonColor != (None, None) and element.DisabledButtonColor != (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT):
                     if element.DisabledButtonColor[0] not in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKButton['disabledforeground'] = element.DisabledButtonColor[0]
-
                 if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None) :
                     tkbutton.config(activebackground=element.MouseOverColors[1])
                 if element.MouseOverColors[0] not in (COLOR_SYSTEM_DEFAULT, None):
@@ -12665,7 +12667,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
-                elif bc[1] == COLOR_SYSTEM_DEFAULT:
+                elif bc[1] == COLOR_SYSTEM_DEFAULT and bc[0] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=RELIEF_FLAT)
@@ -14884,7 +14886,10 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
         # _my_windows._user_defined_icon = icon
 
     if button_color != None:
-        DEFAULT_BUTTON_COLOR = button_color
+        if button_color == COLOR_SYSTEM_DEFAULT:
+            DEFAULT_BUTTON_COLOR = (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
+        else:
+            DEFAULT_BUTTON_COLOR = button_color
 
     if element_size != (None, None):
         DEFAULT_ELEMENT_SIZE = element_size
@@ -15086,6 +15091,7 @@ LOOK_AND_FEEL_TABLE = {
     "Default": {"BACKGROUND": COLOR_SYSTEM_DEFAULT,"TEXT": COLOR_SYSTEM_DEFAULT,"INPUT": COLOR_SYSTEM_DEFAULT,"TEXT_INPUT": COLOR_SYSTEM_DEFAULT,"SCROLL": COLOR_SYSTEM_DEFAULT,"BUTTON": OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,"PROGRESS": COLOR_SYSTEM_DEFAULT,"BORDER": 1,"SLIDER_DEPTH": 1,"PROGRESS_DEPTH": 0,},
     "Default1": {"BACKGROUND": COLOR_SYSTEM_DEFAULT,"TEXT": COLOR_SYSTEM_DEFAULT,"INPUT": COLOR_SYSTEM_DEFAULT,"TEXT_INPUT": COLOR_SYSTEM_DEFAULT,"SCROLL": COLOR_SYSTEM_DEFAULT,"BUTTON": COLOR_SYSTEM_DEFAULT,"PROGRESS": COLOR_SYSTEM_DEFAULT,"BORDER": 1,"SLIDER_DEPTH": 1,"PROGRESS_DEPTH": 0,},
     "DefaultNoMoreNagging": {"BACKGROUND": COLOR_SYSTEM_DEFAULT,"TEXT": COLOR_SYSTEM_DEFAULT,"INPUT": COLOR_SYSTEM_DEFAULT,"TEXT_INPUT": COLOR_SYSTEM_DEFAULT,"SCROLL": COLOR_SYSTEM_DEFAULT,"BUTTON": OFFICIAL_PYSIMPLEGUI_BUTTON_COLOR,"PROGRESS": COLOR_SYSTEM_DEFAULT,"BORDER": 1,"SLIDER_DEPTH": 1,"PROGRESS_DEPTH": 0,},
+    "GrayGrayGray": {"BACKGROUND": COLOR_SYSTEM_DEFAULT,"TEXT": COLOR_SYSTEM_DEFAULT,"INPUT": COLOR_SYSTEM_DEFAULT,"TEXT_INPUT": COLOR_SYSTEM_DEFAULT,"SCROLL": COLOR_SYSTEM_DEFAULT,"BUTTON": COLOR_SYSTEM_DEFAULT,"PROGRESS": COLOR_SYSTEM_DEFAULT,"BORDER": 1,"SLIDER_DEPTH": 1,"PROGRESS_DEPTH": 0,},
     "LightBlue": {"BACKGROUND": "#E3F2FD","TEXT": "#000000","INPUT": "#86A8FF","TEXT_INPUT": "#000000","SCROLL": "#86A8FF","BUTTON": ("#FFFFFF", "#5079D3"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 0,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#FF0266","ACCENT2": "#FF5C93","ACCENT3": "#C5003C",},
     "LightGrey": {"BACKGROUND": "#FAFAFA","TEXT": "#000000","INPUT": "#004EA1","TEXT_INPUT": "#FFFFFF","SCROLL": "#5EA7FF","BUTTON": ("#FFFFFF", "#0079D3"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 0,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#FF0266","ACCENT2": "#FF5C93","ACCENT3": "#C5003C",},
     "LightGrey1": {"BACKGROUND": "#ffffff","TEXT": "#1a1a1b","INPUT": "#dae0e6","TEXT_INPUT": "#222222","SCROLL": "#a5a4a4","BUTTON": ("#FFFFFF", "#0079d3"),"PROGRESS": DEFAULT_PROGRESS_BAR_COMPUTE,"BORDER": 1,"SLIDER_DEPTH": 0,"PROGRESS_DEPTH": 0,"ACCENT1": "#ff5414","ACCENT2": "#33a8ff","ACCENT3": "#dbf0ff",},
@@ -15328,7 +15334,10 @@ def theme_button_color(color=None):
     :rtype: Tuple[str, str]
     """
     if color is not None:
-        color_tuple = button_color_to_tuple(color, (None, None))
+        if color == COLOR_SYSTEM_DEFAULT:
+            color_typle = (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
+        else:
+            color_tuple = button_color_to_tuple(color, (None, None))
         if color_tuple == (None, None):
             if not SUPPRESS_ERROR_POPUPS:
                 popup_error('theme_button_color - bad color string passed in', color)
