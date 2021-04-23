@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.9  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons"
+version = __version__ = "4.39.1.10  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3963,7 +3963,7 @@ class Button(Element):
                     button_style.configure(style_name, background=bc[1])
             else:
                 if bc[0] is not None and bc[0] != COLOR_SYSTEM_DEFAULT:
-                    self.TKButton.config(foreground=bc[0])
+                    self.TKButton.config(foreground=bc[0], activeforeground=bc[0])
                 if bc[1] is not None and bc[1] != COLOR_SYSTEM_DEFAULT:
                     self.TKButton.config(background=bc[1], activebackground=bc[1])
             self.ButtonColor = bc
@@ -12144,9 +12144,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if toplevel_form.right_click_menu_font is not None:
                 top_menu.config(font=toplevel_form.right_click_menu_font)
 
-            if toplevel_form.right_click_menu_selected_colors[0]:
+            if toplevel_form.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
                 top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
-            if toplevel_form.right_click_menu_selected_colors[1]:
+            if toplevel_form.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
                 top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
             AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
             element.TKRightClickMenu = top_menu
