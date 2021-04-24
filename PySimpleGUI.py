@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.14  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close"
+version = __version__ = "4.39.1.15  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close, MENU_RIGHT_CLICK_EXIT constant to get an Exit only right click menu, fix for Window.extend_layout when a scrollable column is used"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -487,7 +487,8 @@ WRITE_ONLY_KEY = '__WRITE ONLY__'
 MENU_DISABLED_CHARACTER = '!'
 MENU_SHORTCUT_CHARACTER = '&'
 MENU_KEY_SEPARATOR = '::'
-MENU_RIGHT_CLICK_EDITME_EXIT = ['_', ['Edit Me', 'Exit']]
+MENU_RIGHT_CLICK_EDITME_EXIT = ['', ['Edit Me', 'Exit']]
+MENU_RIGHT_CLICK_EXIT = ['', ['Exit']]
 MENU_RIGHT_CLICK_DISABLED = [[]]
 ENABLE_TK_WINDOWS = False
 
@@ -8070,6 +8071,8 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         column = Column(rows, pad=(0,0))
         if self == container:
             frame = self.TKroot
+        elif isinstance(container.Widget, TkScrollableFrame):
+            frame = container.Widget.TKFrame
         else:
             frame = container.Widget
         PackFormIntoFrame(column, frame, self)
