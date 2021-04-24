@@ -3,6 +3,7 @@ import subprocess
 import sys
 import mmap, re
 import warnings
+
 import PySimpleGUI as sg
 
 
@@ -434,7 +435,7 @@ def make_window():
 
 
     left_col = sg.Column([
-        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), key='-DEMO LIST-')],
+        [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-')],
         [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
@@ -476,10 +477,6 @@ def make_window():
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
     window.bind('<F3>', '-FOCUS RE FIND-')
-    if sg.user_settings_get_entry('-dclick runs-'):
-        window['-DEMO LIST-'].bind('<Double-Button-1>', '+Run+')
-    elif sg.user_settings_get_entry('-dclick edits-'):
-        window['-DEMO LIST-'].bind('<Double-Button-1>', '+Edit+')
     if not advanced_mode():
         window['-FOLDER CHOOSE-'].update(visible=False)
         window['-RE COL-'].update(visible=False)
@@ -512,7 +509,12 @@ def main():
         counter += 1
         if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
-        if event == 'Edit' or event.endswith('+Edit+'):
+        if event == '-DEMO LIST-':           # if double clicked (used the bind return key parm)
+            if sg.user_settings_get_entry('-dclick runs-'):
+                event = 'Run'
+            elif sg.user_settings_get_entry('-dclick edits-'):
+                event = 'Edit'
+        if event == 'Edit':
             editor_program = get_editor()
             for file in values['-DEMO LIST-']:
                 if find_in_file.file_list_dict is not None:
@@ -534,15 +536,15 @@ def main():
                     # else:
                     #     sg.execute_editor(full_filename)
                 else:
-                    sg.cprint('Editing canclled')
-        elif event == 'Run' or event.endswith('+Run+'):
+                    sg.cprint('Editing canceled')
+        elif event == 'Run':
             sg.cprint('Running....', c='white on green', end='')
             sg.cprint('')
             for file in values['-DEMO LIST-']:
                 file_to_run = str(file_list_dict[file])
                 sg.cprint(file_to_run,text_color='white', background_color='purple')
                 try:
-                    sp = execute_py_file(f'{file_to_run}', pipe_output=values['-WAIT-'])
+                    sp = execute_py_file(file_to_run, pipe_output=values['-WAIT-'])
                 except TypeError:
                     sg.cprint('Consider upgrading to a newer PySimpleGUI.... 4.37.0 has better execution controls', c='white on red')
                     sp = execute_py_file_with_pipe_output(f'{file_to_run}', pipe_output=values['-WAIT-'])
