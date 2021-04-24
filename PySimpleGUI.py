@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.13  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist"
+version = __version__ = "4.39.1.14  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14417,12 +14417,6 @@ class _DebugWin():
         self.window = None
 
 
-def PrintClose():
-    """
-    Close a previously opened EasyPrint window
-    """
-    EasyPrintClose()
-
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None, erase_all=False):
@@ -20275,6 +20269,9 @@ ConvertArgsToSingleString = convert_args_to_single_string
 EasyPrint = easy_print
 Print = easy_print
 eprint = easy_print
+sgprint = easy_print
+PrintClose = easy_print_close
+sgprint_close = easy_print_close
 EasyPrintClose = easy_print_close
 FillFormWithValues = fill_form_with_values
 GetComplimentaryHex = get_complimentary_hex
@@ -20285,8 +20282,11 @@ OneLineProgressMeter = one_line_progress_meter
 OneLineProgressMeterCancel = one_line_progress_meter_cancel
 Popup = popup
 PopupNoFrame = popup_no_titlebar
+popup_no_frame = popup_no_titlebar
 PopupNoBorder = popup_no_titlebar
+popup_no_border = popup_no_titlebar
 PopupAnnoying = popup_no_titlebar
+popup_annoying = popup_no_titlebar
 PopupAnimated = popup_animated
 PopupAutoClose = popup_auto_close
 PopupCancel = popup_cancel
@@ -20297,6 +20297,7 @@ PopupGetText = popup_get_text
 PopupNoButtons = popup_no_buttons
 PopupNoTitlebar = popup_no_titlebar
 PopupNoWait = popup_non_blocking
+popup_no_wait = popup_non_blocking
 PopupNonBlocking = popup_non_blocking
 PopupOK = popup_ok
 PopupOKCancel = popup_ok_cancel
@@ -20304,9 +20305,9 @@ PopupQuick = popup_quick
 PopupQuickMessage = popup_quick_message
 PopupScrolled = popup_scrolled
 PopupTimed = popup_auto_close
+popup_timed = popup_auto_close
 PopupYesNo = popup_yes_no
-Print = easy_print
-PrintClose = easy_print_close
+
 RGB = rgb
 SetGlobalIcon = set_global_icon
 SetOptions = set_options
@@ -20314,7 +20315,6 @@ sprint = popup_scrolled
 ScrolledTextBox = popup_scrolled
 TimerStart = timer_start
 TimerStop = timer_stop
-
 test = main
 sdk_help = main_sdk_help
 
