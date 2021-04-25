@@ -748,12 +748,12 @@ If there is a feature missing that you need or you have an enhancement to sugges
 
 # Special Thanks :pray:
 
-This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  The unique minesweeper that uses an image for the board was created by Israel.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35).
+This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  The unique minesweeper that uses an image for the board was created by Israel.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35). [@nngogol](https://github.com/nngogol) has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of initial release.  He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of doc strings as well as tools that generate the online documenation using the PySimpleGUI code itself.  PySimpleGUI would not be where it is today were it not for the help of these individuals.
 
-The more than 1,200 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is *you* that has been the inspiration that fuels this project's engine.  
+The more than 2,200 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is *you* that has been the inspiration that fuels this project's engine.  
 
 The overseas users that post on Twitter overnight are the spark that starts the day's work on PySimpleGUI. They've been a source of positive energy that gets the development engine started and ready to run every day. As a token of appreciation, this readme file has been translated into [Japanese](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
 
 You've all been the best user community an Open Source developer could hope for.
 
-&copy; Copyright 2020 PySimpleGUI.org
+&copy; Copyright 2021 PySimpleGUI
