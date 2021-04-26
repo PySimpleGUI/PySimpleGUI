@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.15  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close, MENU_RIGHT_CLICK_EXIT constant to get an Exit only right click menu, fix for Window.extend_layout when a scrollable column is used"
+version = __version__ = "4.39.1.17  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close, MENU_RIGHT_CLICK_EXIT constant to get an Exit only right click menu, fix for Window.extend_layout when a scrollable column is used, ttk buttons with graygraygray theme fixes, GitHub Issue GUI - completely reworked help page since it's very large"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -160,22 +160,33 @@ g_time_end = 0
 g_time_delta = 0
 
 
-# These timer routines are to help you quickly time portions of code.  Please this TimerStart call at the point
-# you want to start timing and the TimerStop at the end point. As you can see, TimerStop prints the time delta in ms.
+# These timer routines are to help you quickly time portions of code.  Place the timer_start call at the point
+# you want to start timing and the timer_stop at the end point. The delta between the start and stop calls
+# is returned from calling timer_stop
+
 def timer_start():
-    """ Time your code easily.... start the timer. """
+    """
+    Time your code easily.... starts the timer.
+    Uses the time.time value, a technique known to not be terribly accurage, but tis' gclose enough for our purposes
+
+    """
     global g_time_start
 
     g_time_start = time.time()
 
 
 def timer_stop():
-    """ Time your code easily.... stop the timer and print the number of ms since the timer start """
+    """
+    Time your code easily.... stop the timer and print the number of milliseconds since the timer start
+
+    :return: delta in milliseconds from timer_start was called
+    :rtype: int
+    """
     global g_time_delta, g_time_end
 
     g_time_end = time.time()
     g_time_delta = g_time_end - g_time_start
-    return(g_time_delta*1000)
+    return int(g_time_delta*1000)
 
 
 def _timeit(func):
@@ -939,7 +950,6 @@ class Element():
         # If this is a minimize button for a custom titlebar, then minimize the window
         if self.Key == TITLEBAR_MINIMIZE_KEY:
             if running_linux():
-                # print('* linux minimize *')
                 self.ParentForm.TKroot.wm_attributes("-type", "normal")
                 # self.ParentForm.TKroot.state('icon')
                 # return
@@ -968,7 +978,6 @@ class Element():
 
     def _titlebar_restore(self, event):
         if running_linux():
-            # print('linux restore')
             # if self._skip_first_restore_callback:
             #     self._skip_first_restore_callback = False
             #     return
@@ -2235,7 +2244,7 @@ Rad = Radio
 
 
 # ---------------------------------------------------------------------- #
-#                          Checkbox                                     #
+#                           Checkbox                                     #
 # ---------------------------------------------------------------------- #
 class Checkbox(Element):
     """
@@ -3958,14 +3967,14 @@ class Button(Element):
             #     except Exception as e:
             #         print('** Error in formatting your button color **', button_color, e)
             if self.UseTtkButtons:
-                if bc[0] is not None and bc[0] != COLOR_SYSTEM_DEFAULT:
+                if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
                     button_style.configure(style_name, foreground=bc[0])
-                if bc[1] is not None and bc[1] != COLOR_SYSTEM_DEFAULT:
+                if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
                     button_style.configure(style_name, background=bc[1])
             else:
-                if bc[0] is not None and bc[0] != COLOR_SYSTEM_DEFAULT:
+                if bc[0] not in (None, COLOR_SYSTEM_DEFAULT):
                     self.TKButton.config(foreground=bc[0], activeforeground=bc[0])
-                if bc[1] is not None and bc[1] != COLOR_SYSTEM_DEFAULT:
+                if bc[1] not in (None, COLOR_SYSTEM_DEFAULT):
                     self.TKButton.config(background=bc[1], activebackground=bc[1])
             self.ButtonColor = bc
         if disabled is True:
@@ -5817,7 +5826,7 @@ class TabGroup(Element):
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
     """
 
-    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None, size=(None, None), tooltip=None, visible=True, metadata=None):
+    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None, size=(None, None), s=(None, None), tooltip=None, visible=True, metadata=None):
         """
         :param layout: Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :type layout: List[List[Tab]]
@@ -5851,6 +5860,8 @@ class TabGroup(Element):
         :type k: str | int | tuple | object
         :param size: (width, height) w=pixels-wide, h=pixels-high. Either item in tuple can be None to indicate use the computed value and set only 1 direction
         :type size: (int|None, int|None)
+        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s: (int|None, int|None)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param visible: set visibility state of the element
@@ -5880,10 +5891,11 @@ class TabGroup(Element):
         self.TabLocation = tab_location
         self.ElementJustification = 'left'
         key = key if key is not None else k
+        sz = size if size != (None, None) else s
 
         self.Layout(layout)
 
-        super().__init__(ELEM_TYPE_TAB_GROUP, size=size, background_color=background_color, text_color=title_color, font=font,
+        super().__init__(ELEM_TYPE_TAB_GROUP, size=sz, background_color=background_color, text_color=title_color, font=font,
                          pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
@@ -7878,7 +7890,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         if CURRENT_LOOK_AND_FEEL == 'Default':
             print("Window will be a boring gray. Try removing the theme call entirely\n",
                   "You will get the default theme or the one set in global settings\n"
-                  "If you seriously want this gray window and no more nagging, add  theme('DefaultNoMoreNagging')  or theme('GrayGrayGray') for completely gray/System Defaults")
+                  "If you seriously want this gray window and no more nagging, add  theme('DefaultNoMoreNagging')  or theme('Gray Gray Gray') for completely gray/System Defaults")
 
     @classmethod
     def _GetAContainerNumber(cls):
@@ -11492,7 +11504,7 @@ def button_color_to_tuple(color_tuple_or_string, default=(None, None)):
     if default == (None, None):
         color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=theme_button_color())
     elif color_tuple_or_string == COLOR_SYSTEM_DEFAULT:
-        color_type = (COLOR_SYSTEM_DEFAULT,COLOR_SYSTEM_DEFAULT)
+        color_tuple = (COLOR_SYSTEM_DEFAULT,COLOR_SYSTEM_DEFAULT)
     else:
         color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=default)
 
@@ -12434,6 +12446,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     bc = toplevel_form.ButtonColor
                 else:
                     bc = DEFAULT_BUTTON_COLOR
+
                 bd = element.BorderWidth
 
                 if btype != BUTTON_TYPE_REALTIME:
@@ -12444,18 +12457,29 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                           justify=tk.CENTER, bd=bd, font=font)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
+                if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
                     try:
                         tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
-                    except:
-                        print('Button with text: ', btext, 'key:', element.Key,'has a bad color string', bc)
-                elif bc[1] == COLOR_SYSTEM_DEFAULT and bc[0] != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0])
+                    except Exception as e:
+                        _error_popup_with_traceback('Button has bad color string',
+                                                    'Error {}'.format(e),
+                                                    'Button Text: {}'.format(btext),
+                                                    'Button key: {}'.format(element.Key),
+                                                    'Color string: {}'.format(bc),
+                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
+                else:
+                    if bc[0] != COLOR_SYSTEM_DEFAULT:
+                        tkbutton.config(foreground=bc[0])
+                    if bc[1] != COLOR_SYSTEM_DEFAULT:
+                        tkbutton.config(background=bc[1])
+
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=tk.FLAT)
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
+
+                ## -------------- TK Button With Image -------------- ##
                 if element.ImageFilename:  # if button has an image on it
                     tkbutton.config(highlightthickness=0)
                     try:
@@ -12489,6 +12513,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     'Problem using BASE64 Image data Image Susample',
                                                     'Buton element key: {}'.format(element.Key),
                                                     "Parent Window's Title: {}".format(toplevel_form.Title))
+
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
                 tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
@@ -12560,24 +12585,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
 
+
                 style_name = str(element.Key) + 'custombutton.TButton'
                 button_style = ttk.Style()
                 if _valid_theme(button_style,toplevel_form.TtkTheme):
                     button_style.theme_use(toplevel_form.TtkTheme)
                 button_style.configure(style_name, font=font)
 
-                if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
+                if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
                     button_style.configure(style_name, foreground=bc[0], background=bc[1])
-                elif bc[1] == COLOR_SYSTEM_DEFAULT:
+                elif bc[0] != COLOR_SYSTEM_DEFAULT:
                     button_style.configure(style_name, foreground=bc[0])
+                elif bc[1] != COLOR_SYSTEM_DEFAULT:
+                    button_style.configure(style_name, background=bc[1])
+
                 if bd == 0 and not running_mac():
                     button_style.configure(style_name, relief=tk.FLAT)
                     button_style.configure(style_name, borderwidth=0)
                 else:
                     button_style.configure(style_name, borderwidth=bd)
                 button_style.configure(style_name, justify=tk.CENTER)
-
-
 
 
                 if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None) :
@@ -12590,13 +12617,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisabledButtonColor[1] not in (COLOR_SYSTEM_DEFAULT, None):
                     button_style.map(style_name, background=[('disabled', element.DisabledButtonColor[1])])
 
-
                 if height > 1:
                     button_style.configure(style_name, padding=height * _char_width_in_pixels(font))    # should this be height instead?
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
                 if width != 0:
                     button_style.configure(style_name, wraplength=wraplen)  # set wrap to width of widget
 
+                ## -------------- TTK Button With Image -------------- ##
                 if element.ImageFilename:  # if button has an image on it
                     button_style.configure(style_name, borderwidth=0)
                     # tkbutton.configure(highlightthickness=0)
@@ -12670,7 +12697,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
-                elif bc[1] == COLOR_SYSTEM_DEFAULT and bc[0] != COLOR_SYSTEM_DEFAULT:
+                elif bc[0] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=RELIEF_FLAT)
@@ -14376,14 +14403,14 @@ class _DebugWin():
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False)
-        # self.window.NonBlocking = True        # if finalizing this window, then need to uncommment this line
         return
+
 
     def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
-        if self.window is None:  # if window was destroyed alread re-open it
+        if self.window is None:  # if window was destroyed already re-open it
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
                           do_not_reroute_stdout=self.do_not_reroute_stdout)
@@ -15332,7 +15359,7 @@ def theme_button_color(color=None):
     """
     if color is not None:
         if color == COLOR_SYSTEM_DEFAULT:
-            color_typle = (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
+            color_tuple = (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT)
         else:
             color_tuple = button_color_to_tuple(color, (None, None))
         if color_tuple == (None, None):
@@ -19136,7 +19163,7 @@ These items may solve your problem. Please check those you've done by changing -
 
 def _github_issue_post_make_github_link(title, body):
     pysimplegui_url = "https://github.com/PySimpleGUI/PySimpleGUI"
-    pysimplegui_issues = f"{pysimplegui_url}/issues/new?"
+    pysimplegui_issues = "{}/issues/new?".format(pysimplegui_url)
 
     # Fix body cuz urllib can't do it smfh
     getVars = {'title': str(title), 'body': str(body)}
@@ -19251,16 +19278,26 @@ If you've been programming for a month, the person answering your question can a
 1. Fill in the form
 2. Click Post Issue """
 
-    layout = [  [T('Goals', font=heading_font, pad=(0,0))],
-                [HelpText(help_goals)],
-                [T('Why?', font=heading_font, pad=(0,0))],
-                [HelpText(help_why)],
-                [T('FAQ', font=heading_font, pad=(0,0))],
-                [HelpText(help_explain)],
-                [T('Experience (optional)', font=heading_font)],
-                [HelpText(help_experience)],
-                [T('Steps', font=heading_font, pad=(0,0))],
-                [HelpText(help_steps)],
+    # layout = [  [T('Goals', font=heading_font, pad=(0,0))],
+    #             [HelpText(help_goals)],
+    #             [T('Why?', font=heading_font, pad=(0,0))],
+    #             [HelpText(help_why)],
+    #             [T('FAQ', font=heading_font, pad=(0,0))],
+    #             [HelpText(help_explain)],
+    #             [T('Experience (optional)', font=heading_font)],
+    #             [HelpText(help_experience)],
+    #             [T('Steps', font=heading_font, pad=(0,0))],
+    #             [HelpText(help_steps)],
+    #             [B('Close')]]
+
+
+    t_goals = Tab('Goals', [[HelpText(help_goals)]])
+    t_why = Tab('Why', [[HelpText(help_why)]])
+    t_faq = Tab('FAQ', [[HelpText(help_explain)]])
+    t_exp = Tab('Experience', [[HelpText(help_experience)]])
+    t_steps = Tab('Steps', [[HelpText(help_steps)]])
+
+    layout = [[TabGroup([[t_goals, t_why, t_faq, t_exp, t_steps]])],
                 [B('Close')]]
 
     Window('GitHub Issue GUI Help', layout, keep_on_top=True).read(close=True)
@@ -19308,7 +19345,7 @@ def main_open_github_issue():
     frame_markdown = [[Multiline(size=(80,10), font='Courier 8',  k='-ML MARKDOWN-')]]
 
     top_layout = [  [Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
-                     # Col([[B('Help')]])
+                     Col([[B('Help')]])
                      ],
                     [Frame('Title *', [[Input(k='-TITLE-', size=(50,1), font='_ 14', focus=True)]], font=font_frame)],
                         # Image(data=EMOJI_BASE64_WEARY)],
@@ -19395,8 +19432,11 @@ def main_open_github_issue():
             if not _github_issue_post_validate(values, checklist, issue_types):
                 continue
 
+            cb_dict = {'cb_docs':checkboxes[0], 'cb_demos':checkboxes[1], 'cb_demo_port':checkboxes[2], 'cb_readme_other':checkboxes[3], 'cb_command_line':checkboxes[4], 'cb_issues':checkboxes[5], 'cb_github':checkboxes[6],  'detailed_desc':values['-ML DETAILS-'], 'code': values['-ML CODE-']}
+
             markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'], values['-VER PYTHON-'],
-                                                        values['-EXP PROG-'], values['-EXP PYTHON-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No', values['-EXP NOTES-'], *checkboxes, values['-ML DETAILS-'], values['-ML CODE-'])
+                                                        values['-EXP PROG-'], values['-EXP PYTHON-'], 'Yes' if values['-CB PRIOR GUI-'] else 'No', values['-EXP NOTES-'],
+                                                        **cb_dict)
             window['-ML MARKDOWN-'].update(markdown)
             link = _github_issue_post_make_github_link(values['-TITLE-'], window['-ML MARKDOWN-'].get())
             if event == 'Post Issue':
@@ -19684,6 +19724,17 @@ def main_get_debug_data(suppress_popup=False):
 # .......##.##..........##.......##.......##.....##..##..####.##....##........##
 # .##....##.##..........##.......##.......##.....##..##...###.##....##..##....##
 # ..######..########....##.......##.......##....####.##....##..######....######.
+
+
+def main_global_pysimplegui_settings_erase():
+    """
+    *** WARNING ***
+    Deletes the PySimpleGUI settings file without asking for verification
+
+
+    """
+    print('********** WARNING - you are deleting your PySimpleGUI settings file **********')
+    print('The file being deleted is:', pysimplegui_user_settings.full_filename)
 
 
 
@@ -20095,26 +20146,36 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
 
     frame6 = [[graph_elem]]
 
+    global_settings_tab_layout = [[T('Global Settings:', font='_ 15')],
+                                  [T('Settings Filename:'), T(pysimplegui_user_settings.full_filename)],
+                                  [T('Settings Dictionary:'), T(pysimplegui_user_settings.get_dict(), size=(60,5))],
+                                  [],
+                                  [],
+                                  ]
+
+
+
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
                          [T('If you want to change the default theme for PySimpleGUI, use the Global Settings')],
                          [B('Themes'), B('Theme Swatches'), B('Switch Themes')]]
 
-    tab1 = Tab('Graph', frame6, tooltip='Graph is in here', title_color='red')
-    tab2 = Tab('Multiple/Binary Choice Groups', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t', pad=(0,0)),
+    tab1 = Tab('Graph\n', frame6, tooltip='Graph is in here', title_color='red')
+    tab2 = Tab('CB, Radio\nList, Combo', [[Frame('Multiple Choice Group', frame2, title_color='green', tooltip='Checkboxes, radio buttons, etc', vertical_alignment='t', pad=(0,0)),
                                                   Frame('Binary Choice Group', frame3, title_color='#FFFFFF', tooltip='Binary Choice', vertical_alignment='t'), ]], pad=(0,0))
     # tab3 = Tab('Table and Tree', [[Frame('Structured Data Group', frame5, title_color='red', element_justification='l')]], tooltip='tab 3', title_color='red', )
-    tab3 = Tab('Table and Tree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', k='-TAB TABLE-')
-    tab4 = Tab('Variable Choice', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', k='-TAB VAR-')
-    tab5 = Tab('Text Input', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', k='-TAB TEXT-')
-    tab6 = Tab('Do NOT click', frame7, k='-TAB NO CLICK-')
-    tab7 = Tab('Popup Tests', pop_test_tab_layout, k='-TAB POPUP-')
-    tab8 = Tab('Themes', themes_tab_layout, k='-TAB THEMES-')
+    tab3 = Tab('Table &\nTree', [[Column(frame5, element_justification='l', vertical_alignment='t')]], tooltip='tab 3', title_color='red', k='-TAB TABLE-')
+    tab4 = Tab('Sliders\n', [[Frame('Variable Choice Group', frame4, title_color='blue')]], tooltip='tab 4', title_color='red', k='-TAB VAR-')
+    tab5 = Tab('Input\nMultiline', [[Frame('TextInput', frame1, title_color='blue')]], tooltip='tab 5', title_color='red', k='-TAB TEXT-')
+    tab6 = Tab('Do NOT\nclick', frame7, k='-TAB NO CLICK-')
+    tab7 = Tab('Popups\n', pop_test_tab_layout, k='-TAB POPUP-')
+    tab8 = Tab('Themes\n', themes_tab_layout, k='-TAB THEMES-')
+    tab9 = Tab('Global\nSettings', global_settings_tab_layout, k='-TAB GlOBAL SETTINGS-')
 
 
     def VerLine(version, description, justification='r', size=(40,1)):
         return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), vtop(T(description, font='Any 12'))]
 
-    layout1 = [
+    layout_top = Column([
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
          Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
@@ -20123,9 +20184,11 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         VerLine('{}/{}'.format(tkversion,tclversion),'TK/TCL Versions'),
         VerLine(tclversion_detailed, 'detailed tkinter version'),
         VerLine(os.path.dirname(os.path.abspath(__file__)), 'PySimpleGUI Location', size=(40,2)),
-        VerLine(sys.version, 'Python Version',  size=(40, 2)),
+        VerLine(sys.version, 'Python Version',  size=(40, 2))], pad=(0,0))
 
-        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
+
+    layout_bottom = [
+        [B(SYMBOL_DOWN, pad=(0,0), k='-HIDE TABS-'),pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='_TAB_GROUP_')]],k='-TAB GROUP-'))],
         [Button('Button', highlight_colors=('yellow','red')), B('Hide Stuff', metadata='my metadata'),
          Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
          Button('See-through Mode', tooltip='Make the background transparent'),
@@ -20135,11 +20198,12 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
           B('SDK Reference'), B('Open GitHub Issue'), B('Versions for GitHub'),
           ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')
-          ]
+          ]]
 
-    ]
+    layout = [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]]
+    layout += [[layout_top] + [ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]]
+    layout += layout_bottom
 
-    layout = [[Column([[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]] + layout1), Column([[ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]])]]
     window = Window('PySimpleGUI Main Test Harness', layout,
                     # font=('Helvetica', 18),
                     # background_color='black',
