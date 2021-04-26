@@ -1850,6 +1850,43 @@ GitHub Issues GUI
 * Moved theme tests into a tab" in sg.main
 
 
+## 4.40.0 PySimpleGUI 25-Apr-2021
+
+The "A4 Release" (440 Hz)
+Buttons get a boost
+Fix for Graph Dragging caused by last release
+Gray Gray Gray should you wish to go colorless
+
+* Right-click Menu constant - MENU_RIGHT_CLICK_EXIT - Has only "Exit"
+    * Constant = ['', ['Exit']]
+* Checkbox.get() now returns a bool instead of int
+* Button colors
+    * mouseover_colors - new parm to Button. Sets the color when mouse moves over the button
+	    * When a TK Button this is Only visible on Linux systems when mouse is over button
+		* On Windows, these colors appear when the button is clicked
+		* Default is to swap the button's normal colors (text = background, background = text)
+	* Close Window Only button type changed to work on all windows, not just non-blocking ones
+	* ColorChooserButton - target now matches other choosers (target=(ThisRow, -1))
+* TabGroup - new size parm that will set size in either or both directions
+* Fix for TCL error when scrolling a column
+* Themes
+	* Fix for COLOR_SYSTEM_DEFAULT error when choosing "default1" Theme
+	* New Theme - "Gray Gray Gray" - sets no colors. The window will likely be some shades of gray
+	* Changed error messages to use "theme" instead of the old "change_look_and_feel"
+	* 
+* Debug window - problems was if set the erase_all parm and Debug window is then closed
+* timer_start, timer_stop - stop now returns the milliseconds elapsed instead of printing them
+* popup_menu - now uses the passed in title if provided
+* GitHub Issues GUI
+	* Made necessary changes to be 3.4 compatible. You can post Issues directly from your Pi running 3.4
+	* Changed layout so that the window is smaller
+	* New Help window uses tabs to make smaller
+* Fix for extend_layout when adding to a scrollable column
+* Added back functions accidently lost during a PEP8 rework
+    * added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close
+
+
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  

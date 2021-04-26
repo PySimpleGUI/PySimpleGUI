@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.39.1.17  Unreleased\nfix for TCL error when scrolling col element (Jason99020 scores again!), Button error popups with trace when bad images found, addition of size parameter to TabGroup, changed where key gets set for buttons - was causing problems with buttons that set a key explicitly, fix for grraph drag events that was caused by the realtime button fix, one more fix for realtimebutton problem, Checkbox.get now returns bool, Button gets mouseover_colors parm, fix for Debug window, changed the console message when using the word default in the theme, set ColorChooser target default to match other chooser buttons, fix for SystemDefaultForReal theme right click menu, reworked the Issues GUI to fit on smaller screens, fixed extend_layout so key counter not restarted, hopefully last fix for COLOR_SYSTEM_DEFAULTS problem. New theme GrayGrayGray for those that insist, added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close, MENU_RIGHT_CLICK_EXIT constant to get an Exit only right click menu, fix for Window.extend_layout when a scrollable column is used, ttk buttons with graygraygray theme fixes, GitHub Issue GUI - completely reworked help page since it's very large"
+version = __version__ = "4.40.0  Released 26-Apr-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -129,7 +129,6 @@ try:        # Because Raspberry Pi is still on 3.4....
     import subprocess
 except: pass
 
-from threading import Thread
 import threading
 import itertools
 import os
@@ -1285,11 +1284,13 @@ class Element():
         if self.Type == ELEM_TYPE_INPUT_LISTBOX:
             self.listbox_frame.pack(expand=True, fill=fill)
 
+
     def set_cursor(self,cursor=None, cursor_color=None):
         """
         Sets the cursor for the current Element.
         "Cursor" is used in 2 different ways in this call.
         For the parameter "cursor" it's actually the mouse pointer.
+        If you do not want any mouse pointer, then use the string "none"
         For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
         :param cursor: The tkinter cursor name
@@ -9484,6 +9485,8 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
     def set_cursor(self, cursor):
         """
         Sets the cursor for the window.
+        If you do not want any mouse pointer, then use the string "none"
+
         :param cursor: The tkinter cursor name
         :type cursor: (str)
         """
