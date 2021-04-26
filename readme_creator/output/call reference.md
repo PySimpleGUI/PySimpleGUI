@@ -44,6 +44,7 @@ Button(button_text = "",
     button_color = None,
     disabled_button_color = None,
     highlight_colors = None,
+    mouseover_colors = (None, None),
     use_ttk_buttons = None,
     font = None,
     bind_return_key = False,
@@ -79,8 +80,9 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   |   auto_size_button    | if True the button size is sized to fit the text |
 |            Tuple[str, str] or str or Tuple[int, int] or None             |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
-|                             Tuple[str, str]                              | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|                             Tuple[str, str]                              |   highlight_colors    | colors to use when button has focus (highlight, background). None will use computed colors. Only used by Linux and only for non-TTK button |
+|                          Tuple[str, str] or str                          | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                             Tuple[str, str]                              |   highlight_colors    | colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button |
+|                            (str, str) or str                             |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
 |                                   bool                                   |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
 |                          str or Tuple[str, int]                          |         font          | specifies the font family, size, etc |
 |                                   bool                                   |    bind_return_key    | If True the return key will cause this button to be pressed |
@@ -196,6 +198,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -559,6 +562,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -856,6 +860,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -1144,6 +1149,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -1493,6 +1499,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -1833,6 +1840,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -2195,6 +2203,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -2717,7 +2726,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                  str                  |     text      | text to display |
+|                  Any                  |     text      | text to display |
 | Tuple[int, int] or Tuple[float, float] |   location    | location to place first letter |
 |                  str                  |     color     | text color |
 |        str or Tuple[str, int]         |     font      | specifies the font family, size, etc |
@@ -2881,6 +2890,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -3223,7 +3233,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                  str                  |     text      | text to display |
+|                  Any                  |     text      | text to display |
 | Tuple[int, int] or Tuple[float, float] |   location    | location to place first letter |
 |                  str                  |     color     | text color |
 |        str or Tuple[str, int]         |     font      | specifies the font family, size, etc |
@@ -3480,6 +3490,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -3728,6 +3739,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -4102,6 +4114,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -4482,6 +4495,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -4853,6 +4867,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -5255,6 +5270,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -5600,6 +5616,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -5905,6 +5922,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -6229,6 +6247,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -6490,6 +6509,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -6841,6 +6861,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -7179,6 +7200,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -7489,6 +7511,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -7809,6 +7832,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -8142,6 +8166,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -8359,6 +8384,8 @@ TabGroup(layout,
     theme = None,
     key = None,
     k = None,
+    size = (None, None),
+    s = (None, None),
     tooltip = None,
     visible = True,
     metadata = None)
@@ -8383,6 +8410,8 @@ Parameter Descriptions:
 |                                   enum                                   |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
 |                      str or int or tuple or object                       |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                      str or int or tuple or object                       |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                          (intorNone, intorNone)                          |           size            | (width, height) w=pixels-wide, h=pixels-high. Either item in tuple can be None to indicate use the computed value and set only 1 direction |
+|                          (intorNone, intorNone)                          |             s             | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   str                                    |          tooltip          | text, that will appear when mouse hovers over the element |
 |                                   bool                                   |          visible          | set visibility state of the element |
 |                                   Any                                    |         metadata          | User metadata that can be set to ANYTHING |
@@ -8500,6 +8529,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -8843,6 +8873,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -9158,6 +9189,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -9556,6 +9588,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -9904,6 +9937,7 @@ Metadata is an Element property that you can use at any time to hold any value
 Sets the cursor for the current Element.
 "Cursor" is used in 2 different ways in this call.
 For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
 For the parameter "cursor_color" it's the color of the beam used when typing into an input element
 
 ```
@@ -10831,6 +10865,7 @@ Parameter Descriptions:
 ### set_cursor
 
 Sets the cursor for the window.
+If you do not want any mouse pointer, then use the string "none"
 
 ```
 set_cursor(cursor)
@@ -11738,8 +11773,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| int |    timeout     | Time in milliseconds to delay before a returning a timeout event |
-| Any | ti```meout_key | Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY |
+| int |   timeout   | Time in milliseconds to delay before a returning a timeout event |
+| Any | timeout_key | Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY |
 | Tuple[Window, Any, (Dict or List)] | **RETURN** | A tuple with the  (Window, event, values dictionary/list)
 
 ## Button Related
@@ -11853,7 +11888,7 @@ Parameter Descriptions:
 
 ```
 ColorChooserButton(button_text,
-    target = (None, None),
+    target = (555666777, -1),
     image_filename = None,
     image_data = None,
     image_size = (None, None),
@@ -12936,6 +12971,62 @@ Parameter Descriptions:
 | str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
 | str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
 |          bool           |       erase_all       | If True when erase the output before printing |
+
+Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
+
+In addition to the normal text and background colors, you can use a "colors" tuple/string
+The "colors" or "c" parameter defines both the text and background in a single parm.
+It can be a tuple or a single single. Both text and background colors need to be specified
+colors -(str, str) or str.  A combined text/background color definition in a single parameter
+c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+c - str - can also be a string of the format "foreground on background"  ("white on red")
+
+```
+sgprint(args=*<1 or N object>,
+    size = (None, None),
+    end = None,
+    sep = None,
+    location = (None, None),
+    font = None,
+    no_titlebar = False,
+    no_button = False,
+    grab_anywhere = False,
+    keep_on_top = False,
+    do_not_reroute_stdout = True,
+    text_color = None,
+    background_color = None,
+    colors = None,
+    c = None,
+    erase_all = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|           Any           |         *args         | stuff to output |
+|       (int, int)        |         size          | (w,h) w=characters-wide, h=rows-high |
+|           str           |          end          | end character |
+|           str           |          sep          | separator character |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+| str or Tuple[str, int]  |         font          | specifies the font family, size, etc |
+|          bool           |      no_titlebar      | If True no titlebar will be shown |
+|          bool           |       no_button       | don't show button |
+|          bool           |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|           str           |   background_color    | color of background |
+|           str           |      text_color       | color of the text |
+|          bool           |      keep_on_top      | If True the window will remain above all current windows |
+|     Tuple[int, int]     |       location        | Location of upper left corner of the window |
+|          bool           | do_not_reroute_stdout | do not reroute stdout |
+| str) or Tuple[str, str] |        colors         | Either a tuple or a string that has both the text and background colors |
+| str) or Tuple[str, str] |           c           | Either a tuple or a string that has both the text and background colors |
+|          bool           |       erase_all       | If True when erase the output before printing |
+
+Close a previously opened EasyPrint window
+
+```
+sgprint_close()
+```
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
