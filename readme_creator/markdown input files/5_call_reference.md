@@ -2336,6 +2336,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### hide
 <!-- <+Window.hide+> -->
 
+### key_dict
+<!-- <+Window.key_dict+> -->
+
 ### layout
 <!-- <+Window.layout+> -->
 
