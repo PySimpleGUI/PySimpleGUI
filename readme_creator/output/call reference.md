@@ -10690,6 +10690,17 @@ Hides the window from the screen and the task bar
 hide()
 ```
 
+### key_dict
+
+#### property: key_dict
+
+Returns a dictionary with all keys and their corresponding elements
+{ key : Element }
+
+|Type|Name|Meaning|
+|---|---|---|
+|Dict[Any, Element]| **return** | Dictionary of keys and elements |
+
 ### layout
 
 Second of two preferred ways of telling a Window what its layout is. The other way is to pass the layout as
