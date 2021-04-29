@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.40.0  Released 26-Apr-2021"
+version = __version__ = "4.40.0.1  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -6283,6 +6283,8 @@ class TkScrollableFrame(tk.Frame):
         self.canvas.itemconfig(self.frame_id, height=e.height, width=e.width)
 
     def yscroll(self, event):
+        if self.canvas.yview() == (0.0, 1.0):
+            return
         if event.num == 5 or event.delta < 0:
             self.canvas.yview_scroll(1, "unit")
         elif event.num == 4 or event.delta > 0:
