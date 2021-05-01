@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.40.0.1  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller"
+version = __version__ = "4.40.0.3  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller, don't add menubar to main when custom titlebar in use, START of custom menubar being pulled into PySimpleGUI (it is not ready!), updated read_all_windows docstring"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -508,6 +508,9 @@ CUSTOM_TITLEBAR_TEXT_COLOR = None
 CUSTOM_TITLEBAR_ICON = None
 CUSTOM_TITLEBAR_FONT = None
 TITLEBAR_METADATA_MARKER = 'This window has a titlebar'
+
+
+CUSTOM_MENUBAR_METADATA_MARKER = 'This is a custom menubar'
 
 SUPPRESS_ERROR_POPUPS = False
 SUPPRESS_RAISE_KEY_ERRORS = True
@@ -9743,8 +9746,14 @@ def _timeout_alarm_callback_hidden():
 
 def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
     """
-    Reads a list of windows.  If any of the list returns a value then the window and its event and values
+    Reads all windows that are "active" when the call is made. "Active" means that it's been finalized or read.
+    If a window has not been finalized then it will not be considered an "active window"
+
+    If any of the active windows returns a value then the window and its event and values
     are returned.
+
+    If no windows are open, then the value (None, WIN_CLOSED, None) will be returned
+        Since WIN_CLOSED is None, it means (None, None, None) is what's returned when no windows remain opened
 
     :param timeout: Time in milliseconds to delay before a returning a timeout event
     :type timeout: (int)
@@ -10294,12 +10303,12 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
     :type background_color: str | None
     :param font: Font to be used for the text and the symbols
     :type font: str | None
-    :return: A list of elements (i.e. a "row" for a layout)
     :param key: Identifies an Element. Should be UNIQUE to this window.
     :type key: str | int | tuple | object | None
     :param k: Exactly the same as key.  Choose one of them to use
     :type k: str | int | tuple | object | None
-    :rtype: List[Element]
+    :return: A single Column element that has eveything in 1 element
+    :rtype: Column
     """
     bc = background_color or CUSTOM_TITLEBAR_BACKGROUND_COLOR or theme_button_color()[1]
     tc = text_color or CUSTOM_TITLEBAR_TEXT_COLOR or theme_button_color()[0]
@@ -10328,6 +10337,62 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
                              Text(SYMBOL_TITLEBAR_MAXIMIZE, text_color=tc, background_color=bc, enable_events=True, font=font,key=TITLEBAR_MAXIMIZE_KEY),
                              Text(SYMBOL_TITLEBAR_CLOSE, text_color=tc, background_color=bc, font=font, enable_events=True, key=TITLEBAR_CLOSE_KEY),]],
                            element_justification='r', expand_x=True, grab=True, pad=(0, 0), background_color=bc)]],expand_x=True, grab=True,  background_color=bc, pad=(0,0),metadata=TITLEBAR_METADATA_MARKER, key=key)
+
+
+
+def MenubarCustom(menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), s=(None, None), tearoff=False, font=None, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None, visible=True, metadata=None):
+    """
+    A custom Menubar that replaces the OS provided Menubar
+    THIS FEATURE IS NOT YET COMPLETE!
+
+    Why?
+    Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
+
+    NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
+    should have no problem and it should function as a normal window would.
+
+    :param menu_definition: The Menu definition specified using lists (docs explain the format)
+    :type menu_definition: List[List[Tuple[str, List[str]]]
+    :param background_color: color of the background
+    :type background_color: (str)
+    :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
+    :type text_color: (str)
+    :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+    :type disabled_text_color: (str)
+    :param size: Not used in the tkinter port
+    :type size: (int, int)
+    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+    :type s: (int, int) | (None, None)
+    :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+    :type tearoff: (bool)
+    :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+    :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :param font: specifies the font family, size, etc
+    :type font: str | Tuple[str, int]
+    :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+    :type key: str | int | tuple | object
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: str | int | tuple | object
+    :param visible: set visibility state of the element
+    :type visible: (bool)
+    :param metadata: User metadata that can be set to ANYTHING
+    :type metadata: (Any)
+    """
+
+    row = []
+    for menu in menu_definition:
+        text = menu[0]
+        if MENU_SHORTCUT_CHARACTER in text:
+            text = text.replace(MENU_SHORTCUT_CHARACTER, '')
+        if text.startswith(MENU_DISABLED_CHARACTER):
+            disabled = True
+            text = text[len(MENU_DISABLED_CHARACTER):]
+        else:
+            disabled = False
+        row += [ButtonMenu(text, menu, border_width=0, button_color=(bar_text_color, bar_background_color),  key=text, pad=pad, disabled=disabled, item_font=font, disabled_text_color=disabled_text_color, text_color=text_color, background_color=background_color)]
+
+    return Column([row], pad=(0,0), background_color=bar_background_color, expand_x=True, metadata=CUSTOM_MENUBAR_METADATA_MARKER, key=key)
+
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
@@ -19805,6 +19870,8 @@ def main_global_pysimplegui_settings():
               [T('Theme',  font='_ 16')],
                   [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
                   [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
+              [T('Buttons (Leave Unchecked To Use Default)',  font='_ 16')],
+                   [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
 
@@ -20205,7 +20272,13 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
           ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')
           ]]
 
-    layout = [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]]
+    layout = [[]]
+
+    if not USE_CUSTOM_TITLEBAR:
+        layout += [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]]
+    else:
+        layout += [[MenubarCustom(menu_def, key='_MENU_', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),  background_color='red', text_color='white', disabled_text_color='yellow')]]
+
     layout += [[layout_top] + [ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]]
     layout += layout_bottom
 
@@ -20399,6 +20472,7 @@ theme(theme_global())
 if running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
+# USE_CUSTOM_TITLEBAR = True
 if tclversion_detailed.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}'.format(tclversion_detailed), UserWarning)
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
