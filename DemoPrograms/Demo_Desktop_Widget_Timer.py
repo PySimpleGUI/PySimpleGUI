@@ -36,7 +36,9 @@ window = sg.Window('Running Timer', layout,
                    auto_size_buttons=False,
                    keep_on_top=True,
                    grab_anywhere=True,
-                   element_padding=(0, 0), finalize=True,
+                   element_padding=(0, 0),
+                   finalize=True,
+                   element_justification='c',
                    right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
 
 current_time, paused_time, paused = 0, 0, False
