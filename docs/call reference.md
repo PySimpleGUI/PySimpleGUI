@@ -1432,6 +1432,16 @@ Parameter Descriptions:
 |--|--|--|
 | bool | block | if True the element will not get focus via the keyboard |
 
+### contents_changed
+
+When a scrollable column has part of its layout changed by making elements visible or invisible or the
+        layout is extended for the Column, then this method needs to be called so that the new scroll area
+        is computed to match the new contents.
+
+```python
+contents_changed()
+```
+
 ### expand
 
 Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
@@ -9412,11 +9422,7 @@ Parameter Descriptions:
 |            str or None            |       font       | Font to be used for the text and the symbols |
 | str or int or tuple or object or None |       key        | Identifies an Element. Should be UNIQUE to this window. |
 | str or int or tuple or object or None |        k         | Exactly the same as key. Choose one of them to use |
-| List[Element] | **RETURN** | A list of elements (i.e. a "row" for a layout)
-    :param key: Identifies an Element. Should be UNIQUE to this window.
-    :type key: str | int | tuple | object | None
-    :param k: Exactly the same as key.  Choose one of them to use
-    :type k: str | int | tuple | object | None
+| Column | **RETURN** | A single Column element that has eveything in 1 element
 
 ## Tree Element 
 
@@ -10546,6 +10552,7 @@ enable_debugger()
 ### extend_layout
 
 Adds new rows to an existing container element inside of this window
+If the container is a scrollable Column, you need to also call the contents_changed() method
 
 ```
 extend_layout(container, rows)
@@ -11773,8 +11780,14 @@ These are the functions available for you to call
 
 ## Multi-window Interface
 
-Reads a list of windows.  If any of the list returns a value then the window and its event and values
+Reads all windows that are "active" when the call is made. "Active" means that it's been finalized or read.
+If a window has not been finalized then it will not be considered an "active window"
+
+If any of the active windows returns a value then the window and its event and values
 are returned.
+
+If no windows are open, then the value (None, WIN_CLOSED, None) will be returned
+Since WIN_CLOSED is None, it means (None, None, None) is what's returned when no windows remain opened
 
 ```
 read_all_windows(timeout = None, timeout_key = "__TIMEOUT__")

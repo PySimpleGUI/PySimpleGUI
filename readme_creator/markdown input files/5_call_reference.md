@@ -317,6 +317,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### block_focus
 <!-- <+Column.block_focus+> -->
 
+### contents_changed
+<!-- <+Column.contents_changed+> -->
+
 ### expand
 <!-- <+Column.expand+> -->
 
