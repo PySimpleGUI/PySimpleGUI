@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.40.0.3  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller, don't add menubar to main when custom titlebar in use, START of custom menubar being pulled into PySimpleGUI (it is not ready!), updated read_all_windows docstring"
+version = __version__ = "4.40.0.4  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller, don't add menubar to main when custom titlebar in use, START of custom menubar being pulled into PySimpleGUI (it is not ready!), updated read_all_windows docstring, docstring updates to explain expand layout and contents_changed call, new symbols, global settings text that button settings isn't implented yet"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -531,6 +531,9 @@ SYMBOL_RIGHT = '►'
 SYMBOL_LEFT =  '◄'
 SYMBOL_DOWN =  '▼'
 SYMBOL_X = '❎'
+SYMBOL_CHECK = '✅'
+SYMBOL_BALLOT_X ='☒'
+SYMBOL_BALLOT_CHECK = '☑'
 SYMBOL_LEFT_DOUBLE = '«'
 SYMBOL_RIGHT_DOUBLE = '»'
 SYMBOL_LEFT_ARROWHEAD = '⮜'
@@ -6510,10 +6513,12 @@ class Column(Element):
         if visible is not None:
             self._visible = visible
 
+
     def contents_changed(self):
         """
-        When a scrollable column has part of its layout changed by making elements visibile or invisible, then this function
-        should be called so that the new scroll area is computed to match the new contents.
+        When a scrollable column has part of its layout changed by making elements visible or invisible or the
+        layout is extended for the Column, then this method needs to be called so that the new scroll area
+        is computed to match the new contents.
         """
         self.TKColFrame.canvas.config(scrollregion=self.TKColFrame.canvas.bbox('all'))
 
@@ -8078,6 +8083,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
     def extend_layout(self, container,  rows):
         """
         Adds new rows to an existing container element inside of this window
+        If the container is a scrollable Column, you need to also call the contents_changed() method
 
         :param container: The container Element the layout will be placed inside of
         :type container: Frame | Column | Tab
@@ -19870,7 +19876,7 @@ def main_global_pysimplegui_settings():
               [T('Theme',  font='_ 16')],
                   [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
                   [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
-              [T('Buttons (Leave Unchecked To Use Default)',  font='_ 16')],
+              [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
                    [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
