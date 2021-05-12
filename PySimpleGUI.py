@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.41.0  Released 12-May-2021"
+version = __version__ = "4.41.2  Released 12-May-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
