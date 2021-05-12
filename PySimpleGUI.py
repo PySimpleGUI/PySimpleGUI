@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.40.0.4  Unreleased\nFix for scrollable Column showing can be scrolled when the contents are actually smaller, don't add menubar to main when custom titlebar in use, START of custom menubar being pulled into PySimpleGUI (it is not ready!), updated read_all_windows docstring, docstring updates to explain expand layout and contents_changed call, new symbols, global settings text that button settings isn't implented yet"
+version = __version__ = "4.41.0  Released 12-May-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -498,6 +498,8 @@ MENU_DISABLED_CHARACTER = '!'
 MENU_SHORTCUT_CHARACTER = '&'
 MENU_KEY_SEPARATOR = '::'
 MENU_RIGHT_CLICK_EDITME_EXIT = ['', ['Edit Me', 'Exit']]
+MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
+MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EXIT = ['', ['Exit']]
 MENU_RIGHT_CLICK_DISABLED = [[]]
 ENABLE_TK_WINDOWS = False
@@ -587,7 +589,6 @@ def rgb(red, green, blue):
 # Enums for types                                                        #
 # ====================================================================== #
 # -------------------------  Button types  ------------------------- #
-# todo Consider removing the Submit, Cancel types... they are just 'RETURN' type in reality
 # uncomment this line and indent to go back to using Enums
 BUTTON_TYPE_BROWSE_FOLDER = 1
 BUTTON_TYPE_BROWSE_FILE = 2
@@ -5757,7 +5758,7 @@ class Tab(Element):
         return self
 
 
-    def update(self, title=None, disabled=None, visible=None):  # TODO Disable / enable of tabs is not complete
+    def update(self, title=None, disabled=None, visible=None):
         """
         Changes some of the settings for the Tab Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -10345,60 +10346,60 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
                            element_justification='r', expand_x=True, grab=True, pad=(0, 0), background_color=bc)]],expand_x=True, grab=True,  background_color=bc, pad=(0,0),metadata=TITLEBAR_METADATA_MARKER, key=key)
 
 
-
-def MenubarCustom(menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), s=(None, None), tearoff=False, font=None, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None, visible=True, metadata=None):
-    """
-    A custom Menubar that replaces the OS provided Menubar
-    THIS FEATURE IS NOT YET COMPLETE!
-
-    Why?
-    Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
-
-    NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
-    should have no problem and it should function as a normal window would.
-
-    :param menu_definition: The Menu definition specified using lists (docs explain the format)
-    :type menu_definition: List[List[Tuple[str, List[str]]]
-    :param background_color: color of the background
-    :type background_color: (str)
-    :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
-    :type text_color: (str)
-    :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
-    :type disabled_text_color: (str)
-    :param size: Not used in the tkinter port
-    :type size: (int, int)
-    :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s: (int, int) | (None, None)
-    :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
-    :type tearoff: (bool)
-    :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-    :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param font: specifies the font family, size, etc
-    :type font: str | Tuple[str, int]
-    :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-    :type key: str | int | tuple | object
-    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-    :type k: str | int | tuple | object
-    :param visible: set visibility state of the element
-    :type visible: (bool)
-    :param metadata: User metadata that can be set to ANYTHING
-    :type metadata: (Any)
-    """
-
-    row = []
-    for menu in menu_definition:
-        text = menu[0]
-        if MENU_SHORTCUT_CHARACTER in text:
-            text = text.replace(MENU_SHORTCUT_CHARACTER, '')
-        if text.startswith(MENU_DISABLED_CHARACTER):
-            disabled = True
-            text = text[len(MENU_DISABLED_CHARACTER):]
-        else:
-            disabled = False
-        row += [ButtonMenu(text, menu, border_width=0, button_color=(bar_text_color, bar_background_color),  key=text, pad=pad, disabled=disabled, item_font=font, disabled_text_color=disabled_text_color, text_color=text_color, background_color=background_color)]
-
-    return Column([row], pad=(0,0), background_color=bar_background_color, expand_x=True, metadata=CUSTOM_MENUBAR_METADATA_MARKER, key=key)
-
+# Not ready for prime time
+# def MenubarCustom(menu_definition, background_color=None, text_color=None, disabled_text_color=None, font=None, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None,):
+#     """
+#     A custom Menubar that replaces the OS provided Menubar
+#     THIS FEATURE IS NOT YET COMPLETE!
+#
+#     Why?
+#     Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
+#
+#     NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
+#     should have no problem and it should function as a normal window would.
+#
+#     :param menu_definition: The Menu definition specified using lists (docs explain the format)
+#     :type menu_definition: List[List[Tuple[str, List[str]]]
+#     :param background_color: color of the background
+#     :type background_color: (str)
+#     :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
+#     :type text_color: (str)
+#     :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+#     :type disabled_text_color: (str)
+#     :param size: Not used in the tkinter port
+#     :type size: (int, int)
+#     :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+#     :type s: (int, int) | (None, None)
+#     :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+#     :type tearoff: (bool)
+#     :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+#     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+#     :param font: specifies the font family, size, etc
+#     :type font: str | Tuple[str, int]
+#     :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+#     :type key: str | int | tuple | object
+#     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+#     :type k: str | int | tuple | object
+#     :param visible: set visibility state of the element
+#     :type visible: (bool)
+#     :param metadata: User metadata that can be set to ANYTHING
+#     :type metadata: (Any)
+#     """
+#
+#     row = []
+#     for menu in menu_definition:
+#         text = menu[0]
+#         if MENU_SHORTCUT_CHARACTER in text:
+#             text = text.replace(MENU_SHORTCUT_CHARACTER, '')
+#         if text.startswith(MENU_DISABLED_CHARACTER):
+#             disabled = True
+#             text = text[len(MENU_DISABLED_CHARACTER):]
+#         else:
+#             disabled = False
+#         row += [ButtonMenu(text, menu, border_width=0, button_color=(bar_text_color, bar_background_color),  key=text, pad=pad, disabled=disabled, item_font=font, disabled_text_color=disabled_text_color, text_color=text_color, background_color=background_color)]
+#
+#     return Column([row], pad=(0,0), background_color=bar_background_color, expand_x=True, metadata=CUSTOM_MENUBAR_METADATA_MARKER, key=key if key is not None else k)
+#
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
@@ -18263,6 +18264,22 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     return sp
 
 
+
+def execute_py_get_interpreter():
+    """
+    Returns the command that was specified in the global options that will be used to execute Python files
+    when the execute_py_file function is called.
+
+
+    :return: Full path to python interpreter or '' if nothing entered
+    :rtype: (str)
+    """
+    interpreter = pysimplegui_user_settings.get('-python command-', '')
+    return interpreter
+
+
+
+
 def execute_editor(file_to_edit, line_number=None):
     """
     Runs the editor that was configured in the global settings and opens the file to a specific line number.
@@ -19022,7 +19039,46 @@ def _refresh_debugger():
     return rc
 
 
-# --------------------------------------- a few icons in base64 ---------------------------------------
+def get_versions():
+    """
+    Returns a human-readable string of version numbers for:
+
+    Python version
+    PySimpleGUI Port (tkinter in this case)
+    tkinter version
+    PySimpleGUI version
+    The location of the PySimpleGUI.py file
+
+    The format is a newline between each value and descriptive text for each line
+
+    :return:
+    :rtype: str
+    """
+    versions = "Python version: {}.{}.{}\nPort: tkinter\n{} version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro, port, tclversion_detailed, ver, __file__)
+    return versions
+
+#==================================================#
+#
+# MM""""""""`M                     oo oo
+# MM  mmmmmmmM
+# M`      MMMM 88d8b.d8b. .d8888b. dP dP
+# MM  MMMMMMMM 88'`88'`88 88'  `88 88 88
+# MM  MMMMMMMM 88  88  88 88.  .88 88 88
+# MM        .M dP  dP  dP `88888P' 88 dP
+# MMMMMMMMMMMM                     88
+#                                  dP
+# M""MMM""MMM""M                   dP       dP
+# M  MMM  MMM  M                   88       88
+# M  MMP  MMP  M .d8888b. 88d888b. 88 .d888b88
+# M  MM'  MM' .M 88'  `88 88'  `88 88 88'  `88
+# M  `' . '' .MM 88.  .88 88       88 88.  .88
+# M    .d  .dMMM `88888P' dP       dP `88888P8
+# MMMMMMMMMMMMMM
+#
+# When things look bleak, show your user an emoji
+# and a little hope
+#==================================================#
+
 
 EMOJI_BASE64_FACEPALM = b'iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6REQ2OTE2M0Q2RENEMTFFQkEwODdCNUZBQjI1NEUxQTAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6REQ2OTE2M0U2RENEMTFFQkEwODdCNUZBQjI1NEUxQTAiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpERDY5MTYzQjZEQ0QxMUVCQTA4N0I1RkFCMjU0RTFBMCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpERDY5MTYzQzZEQ0QxMUVCQTA4N0I1RkFCMjU0RTFBMCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrG3klYAABf+SURBVHjaxFoJcFzV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'
 EMOJI_BASE64_FRUSTRATED = b'iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAYAAACohjseAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0YzMDVFRjE2Q0U4MTFFQkFGM0JBRTY5MjFEM0EyRkMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0YzMDVFRjI2Q0U4MTFFQkFGM0JBRTY5MjFEM0EyRkMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDRjMwNUVFRjZDRTgxMUVCQUYzQkFFNjkyMUQzQTJGQyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDRjMwNUVGMDZDRTgxMUVCQUYzQkFFNjkyMUQzQTJGQyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PrCGivkAABgCSURBVHja3FpneFTXmX7vvdNnNDMqoy4hid6NMMhgSrAJchYCCeZJcOwkttc4LmsHHCdOnuwmm002zeuyxsRx7OAQxymOCxjnoYNtwGB6l0ACJFRGbXrRlFv2O/eO+giD7d0fq+e5mn7uec/3fu/3fudeTlEU/H/+0+3du/dTDyLTGg1eJlkGeHrTLtBnCgzsXPSSp0eODoX+SfQsyXMQgxK9oDd4buAY7OXg9673j/sMF2tUHlBmBsay504TSnIykVVgg0Wnh5njoOd5db4cAZZpUSRZQjIpItoaRLTdi46IiEZagQvNQF0SuEzjtH7aSX1igATEUChgtt2ApVPKMbc0H6MmTTE5y0e6YLVnweEwwmH1w8B1QM/5wanh6IkfC7EW5QQhiXUD/gAQCmtHzQVCeRHuhlacP3cFW90JbOnmcSoq/x8AzBJgL+Tx9fIc3Pe5Wbjh1kVFGDttAkyFkwlyLiDSDGONQPAEEL0CJAND+Tv47Hy/o+ePfuPtAE6fAbbvQeLwSexpCGJdq4TNEfl/ASDj1jgzFo924hdfXmyaXH37dORPuhmwjCEQlESBk3TsByJnCaTYN/qnSQIdHXo6KMrnaNg/vQEcPYl3zoTwRFsCtbLyGQAU6BsuAaUFHFaPLcK3f/brmfzIxSvok3KKkh8J3yEkfe9BjLVApBBInAkiZyAFEYiFfO9JJPYZvdc3d/ZtpTe4gvqpREokao/0uY4e9UhAr6OQ2XiE2pMqyHffhrcxhH9vkLCBohn8VADHmTB3SlnuG8VVt+Q2nvwIhS4j8qdWga+8BVsrbkYXl4AUEwmUSZ0Wm6bIadNT+g0vpwHI9eNuH0B1BO25oEAwCrC0X0Du4U0oPLcLwdOXIeRNhyu/ADXvbTlwpCuxzCOi82okGPbPysFQbDc8s/jxn+bGYzHwOh1GT52BUFcnzv/tLwhGXsfl6ocRnfcFVTQgfgZa3LMmrLB0K8h+ax0mHXsXY4pyUH7jQxCqFNQeO4D5K+5EbnHpLO+6tT8ISHhMVD5BBMfo8PnPV8/bXv3Q97Hx1fWw5xXBZLXBYDQgOysL8dZG7N38JuonLUR81behN5vAS0lSTS06nEpxsfckQoqoIhGPfcq+Iyu8Gm2oz6kwss8MBsQbW+B8/seYJHlQtWwlYjoT/D6fWlu87lY4bBbcfMsivPr9+zt3nG+fElTQdl0RZLnnMGBVxY0349yZM1DMGQhHoyTjYTD309zYCIPJDPu0uXAd2oO5z7+O763hoVeSqsgoslbseJqQ5pa4FECkyMlrFCX1knkdBLWEEGiTHm1tevzbkwpalQoYKm/C6YsNEJNJ+lhbKp4Ka1cogvauLoyYOtOVW795WVDEi9cFMFeHEYV59oV6pwv1dfXQ6/Up5H15pEgijHrKtaJyHD7pw4++7YGg10RVTtU5SRpYJTSoiio7PerM85IKkIwADPoYQiQbjfx4mEryYWALQAPpdAOnKgg6XKyvh2vUeJRYNn/DHcZLJDjyNQPMF7Aoq7gs0xuOIhGP04DC0NJBM/L6/FT3QpAlGYc788iDCeBUv8IOXivwDBI3NBs4RZuPGuHUoRAYQUrAZAugOxJGMBSCPSNDBTn43H6vF/aiAjiyHdPt0cAkAnjqmgAyeuo5fNGYXQi/39dLjcEnCBNdu+gkxkAbknYX+OxiCpt03ck++DMGWGo6B13Yi7Z2Ayxms7rAgxsDmc7lj3QjI6/QmN8WmO8WhwLk09JTj7wcGz9DysiiVYyqYAZMiABLxL3Wtjbw3WHVa0kO5mISGsBPebD1TDryoPO1Id4dRUdHR9pFZu91d3dDoEAYOCxLB2YI7zIE6CodwvPZ0+febMotIcpIaaPX1dlF/jEAk68VSWsmFJNNo9ln8cfGMdN4IR90nIKwooOVFNpoMg2IIgMokw7w5H1NUmSELtDV1iXiqHy1CJJpGGMvLvmafdRkNR/SrZpIKukLBKFLdENhUTNZIcTC4Iah5/UDJFtAY8tWBwR/O0VVpFz3DW8jeTLIk2cJI3IyHs7gB6bdEIA0xUyd1a7TopE+IoyeTLCMYQ98Y2ehfvkT6Ki8DZLRQkAjnxgoEx0hHlXFSR33jn+Hr6ISumAXRFm+SsBpQfTkDIxmGz21XVVkrDzRWdBfU5crxbth7WpCVu1+XFnwDVxe/BDyP3oHBR++BUPIQ4DN1+y2hUQMksEE96zlaJl3h2oEivf9Deb2Rgi6j3HtFAyOygbH80atk4N/WIBFRhj5NCVhKFV74ssh++wHyKw9gFaaXMOSf4F79nJUbHwWrhM7oFBRVnjhqpMTiI6Bimm4uHwNQqUTUbzrNZTuWg99NACF5sLJSTX3rra9wlKH44We/uOqKqpa/HSq1V/GWVvOxlPokPSU/ESrkvdfQ+VTd8HsbUbNAz9H3e1PaHVRSm9SOaIdL8bR/Lm7cGLNS6pYTV37AEZtfIqoSspstEIhgyGzjvhjF5zrWQD5qgCbEvDEacC4KKm85gTdkIGYBVOIUuqgvK43pCIpqbnzCia98CgKd7wB98IVqPn6zyCzcQaBZPnGInN5yaO4uHINss4ewA3P3gdn3WEax6pFXVF9GZRkXBW8wcVetXY0P2bdIlQuFEmKSgo8acsEK+4TrFjuAH4pBUOFgdZWiFREefrAYLVq0SJgDFSUOouAuxkcgZSpVvaUByYuzHsKyW5k1XyIuK0AnfOqEbOV0Ov94KkV0ritqNFr+vx9uLL0HthrTmHCK9+Dyd9KjEgxjAFMpYGeOSWbExkOh2bZaAxeZ6ASkUTY7UZnbS3aTx1FzOMx2nl5eoYBJz1JrYXq5eF4C2aMsmHvnV+FMTsbaGmhLroWqG0QEBUK4Zo4CfbSMrUGNl5pQvflGshESykzX5V0FqGEw4VA2VR4x8+mXJqEuDMXYmaG2vZUPvNN2FpqKZpGdSFEMu/HH30FsdJC8L44TOSGrC31qmA5Lh6D2dOsEkyk6BhaLkDKKUIe+U5XrgtJipa3rhb++hrkmDyYOAYYO4oac/IaJ8nLvL0Vp8/FMa8rAb8K0CLAOMOAfQ+sxI0rH+z1wepj8xVg527gnW1kWKyjYBkzDp2BEPQtNUhmFqkUCo6YhLablsE7YQ5Eox3GYLuqfgyQte0STDRZS3sD0VLqW1OKYiynGN2uUkRzyxAuGotI/kjE2IIRdR31R1FAipxJTMCV8zDYHZBLxsFFAfadOoYieydWLAVmz6K65uqXcJSuP/4hsOUYnj0axxr1bOMMuHfM1NLff+M/p2CW6TgKxZY+Ehu0o/4c8OIrwKHTeggOoqXZgjDVqOYFX0e4ZDTMbY1EwwME6gK5G7da+FNOWxUgFrlel9LT9pBJ6K2ZzH9SmUg48xHJK4dvXBUt3GRaHDcK/v5fyKl5nz63wdTdjupbgVV3ketiwOIDG+0LpnHYWjca7/5wT/x0W3g65xCQUWXB7safvnrj+bl3oSDixkzlEL6ivI7b5K3Igre3oFwk1uzaA2x+BwjmjIG/chHi9hwCtk+te6xAM3FgyspAsUmrIFjXwJoF+kwmyrGmmGN9FMsxJlo6Y29u8uRaVEFigEm0vKOmI0kdTf7uP2JEdjeWrwDmzCQ6ZvUBu8yVYxO3DG/yt+MEdwPCNhtmr/tncH9c/xturgn38xPH/+bAs0eFBG8eILIVyiV8U96AVcpLKIAbLR00mBt47jnAbR4HzpkNPklCQwk/uNYxYAxkuHg8AqOmIVQ0Xs1JJiIMgCHkhc19nvLtODIaTkOgcsHKzRD5D/qQ8HpURlSND+Pue4ARTmrGCeAZZRLW8o/gDX4FhSFrAOsyL51C1WNVzTqLgsftlSMEq5lEYlC5ucRV4MfCT/A77lt4JPYUqmO/w85tYbSGHeCKXFpbYzAP9YYk61HKp4bFD8IzbjYUsw5I47S6uPnqlqDj0nGUbXkRzotHB4JkpYdFnqLOfOmx092YekhC94JCvMZ9H+uFexGBdejAZI8Lyq2wVuQVC0VmPPeT5fVYXfR3GKjRbODKEELGgO+z1zst1TjRUYzQho0Im7LAUQ5yzP8NBkf0i1IOnb7/OYRGTyCh4jUqSalD6fc8lX7xfConkxfC3nCW1LNJpbja3jPPG/CpWwPqe2Ty3cEMPP+l3dhmXIKkMvT8E5Rz+IH8CzwrrIZ0uRV82QiguJToKNbjSem7OCzOwFPSd3CDcmJgR0oMjO3ZizBvgWI0QezqhBwOaXsS6OngOVU02mYuQzwvV1U0FRBjr0kzUTzbq+dTr3Wpz2OEwWZCy/yv0e9FdUwlHoPo66JuRUyNS4Xe6YK/NQj52HEy1n2CbCSlWaRsx1+llTgkzsQa+RlkKx2YOJFOUUHgXNl9CVuotOIx5Wk8Iq/F+0Shv/B3YLtwK+KNQeTvfBWxvDLKIRKScBCSt4vyj2bJjC7zrywPqcgj7NfUV9uAoZYnhJyP/oGc49uhD5IJJ6fio5LSMed2JPLztO+xCYf8ENvcKu2VlND0KC5roTi7k4D7UPb2r9E1+4soFpvwZe5dfFX+K6YqJ4e0RYX5BHDcaPqnG9oZ6Sk5FnI7sTC0E/t8Lmx4y4rznXHoLQHwOWWQImHNtrIVZrto/Taicre8TPUsjyS/gFzKfmQf/AcsDWc0oVTVVUbGoW3I3boe3puWwDdlAVE7jqI3n4bE6CgmexnRey3OYIBAB5htO30a391YhdsrGzExN5ambdcAZpMYcYeegjJj2vCbJQ2kmo1U7F9+iRK3GDh8kqI3aiKSvAly0K9SCermEdfnD5llIxvXa84pwr11sP/wBISpbW8HxtSYBKV3Z4A9sm6C8l1wZKpbGKaOSygpIXNCQbl3Fc2JamFudj9zMriBZ6mSvk0GIhFiGxXS02TZOJrf1+4AvH4JtTVnoSdqKY5sSFRzZDLmSiLeF01OUZvfIdsQg7sS1okMMPOcJi4EkiNacQYj4eOphMSgkJuRfR7c9Dmgqgr4LS14Ey0+yQGy7andzDTdlM6RMXwL0hHQrt8dJ72ZQAnL5nzvvcC+fRI+PNiKyKVWJPVWSGYbOAsNZKJVECxUEbSdT2bO1VyS5fSbA4yCBID6ONXEa1dz6ddsoYgZiq8D+kSEohxDHuXTgsXA9OlaSpElBTEVpRRNbzBV+NMBNJnSU7ObaQUdbW3kWgho5VQ6J0XTTGVv2ReBdurTzpznMMUWQSIYQZenHWRBEVfIyjGqMTdDjywaakTYth+v7ZWqlFZ3hQlIUlR34zjV3dBqJhOw6CXYKSr5NPkwdfMtSQNmz5Ew9waJ2iJtipWUVvv2AwsXUj0lgNmO9Je7dUZjGuT0xa7UdUsWPRblKeOpw+jSvhuLa6IrOHlUV/Moy5HRQZ8FqWp4upLqwfaIAgFtURIJDYecEkY+xURWRslewkLMcJIgZGYCOS7tkToj5FBUdp3h0XKER0KS1XHU39Nvy8qATWQZGxqok6BugtYYTjuGGApdWuowELSYTeQ9DxxEgPrfC5s2Y8YcMh6UbmoZsxpS+zKiogZDnRwle0X5wKEY29jE2KMka2NzPQApuGyBBWFgirLnrLwyMVUXhZ7bTNrFHPb9AEVs21YopBF7t27D3MJCcCFbCuA1bd1z7BoBRcPDIoLmsB5LN7yBx+sv4zu3fQEooS5pbLGMo5cEdAR5VORJKtskKX2aMXVnR/9dkJ7d+pQuDbMTRSni5ym1FVTky+p1D9ajvvsOQofqcT+7UcHZhvcJqNGgH1Yr0/8xZWLRqJqBicTEjd0S3tzxEZY+tRbHN22iiAkSSvMIJDXECUmLRrocYCD6X4jpOVTdUYbb59T0yh3gUNfBY+oIGRGPgg1/BNa9iLdPXMICjpkUG96aOw9GVtCzMtKLDKfsHmbzk0YIRLS8O3QY2LpVtXYvhBX8SaegLD8Td7tyuXlihmCpHKOgaoLEWkQw0eK54e87+LhrnywFmMCFKJ93HhPQ2MTBEBHdLW5s80bxGhvbzONx0oRqxqYpZHdpLjCbkNbQc8p+mos4TKHkNfqEqWY3tgI7dlLSv4dAsx8bQgpe1vGI2nWYRj+tLsvGJIp6HoHMdjpgt1m1fGGAGbUEri//VHpyWk6yOs+EqJvOEQxCocNHADtI5Fpb/TgSk7EjJOFirg7legWPlhZg2ZJ/op6QOvm8bE0LmDCnXVG2fbN+FZSvLKMvOrU2I+2ypqjHauKZC8Du3STRBxB3e/C6j8OzzQkcU90UMYXAkqbCXqinsinATjpkdgp4nMstniVTIWWmWSEO6tjGsN/zMvmGdykq0eYYgoQxTmkXoNedCYV8PU28UIcvuXisHlWK+fPmc7h1LtGnpF86yMPfyNNYRwvbdRbLLzUibybVFZNjmOvsqV18ZjoKCoHZ8zMxd26JzmrC1Ki7e5VDxCiqCHv8Mny0Bh4Lj9aIBKNfpG5HQiDbgAWmnKxyqC2WAJ4UwSBGEItEd16K42BARoyG9xEjzhEz/LTOiTFWTBupw1s3VuDxu+8pKHv44XzcPLsbmTbq+JW+OaUNCLHnLJW3n/yKiFJiQkaWjH+dPhrfW/MIMIn50ig+PoksxI+smXA3ynj+F7vx3oHk9oQeTwsylriclgV6R9ZYnSVDxzip3svGLosNkle2p5pgrRGLajQkct3hWk8guIsofMgq45crVzpL7njwFtgs5CA81C3Ew1e/EqDTjm1bgBdeQui8Dw9zvTf5GHDPSCeeue9uOJYuSelr/GpXgFJJWnwbIrESfPfe36Puih6FVTdDn5UPndV+1d3xniEipPFer5cMTIJGo1JA7VT4zAl8eWk2Vv/qm+QXt5MXO3kVvU9FjXI9SvXxpd8Db23B2Y4k7rtA7BB6TuSRcYKXsO34YUxrbUIR47nDlQIqDZeb9Et/HQxFszBx6mh8sPU4hILxsOQWUIFOapFhl6SpWrMNYXVHnDWupC5iUqsdJqMeVotZjXAsSUfLFVSWR/HD/14NIXwE6PwwfTvUDxj7O0xfffIZEsF9eLUmiZVNCdQp/Xe22YsuEW3Ezr+5GyHs+wDTPZ3QsVbE6Up9c7irYnEvnFMW4crR3ai5KMBRWqYCYZab/ewyMtEGG7JYiy9rt4sUFGi1MBJRyATwsFqt0JOL9p8+iIe+VY6KWbOBS+vZHsjwwOj3x44RHV8GXv0z3KdaseaChB8FRHQPe4U3SpavXcJOyqWtp87CcmAfRra2UJCo8XbmpgaXB51MCMPX4scf1jeDL5pM6elSL0WTvcYRFOEDlKMB2QgoBozW+3HnSgVfvYPDzJlazWN+kiM2mAlkzONFousK5s/sBBdrGgou1VYeptr83G+BP/0VrVT4115O4v6GBN6Pyx9zCbsnmp1JuDtkvO2PY9MlYuGH+zHB79W2OCxZ/TaQ1PtbJDz58xbUeEpReGOVCo69fQAlOEYAe+6f9MrUO9qNeGyFHw67ApuNU9ufKNHmwgXmSQlkdg5OfFADh9yI8ZXajXi9AkLg6moI2AvAhj+j7WwjniRgD1xMYFNQREi5lmv0g4GGZXQS0M2ciO1155D/4UGMJaXH6JGEy6oBfJko8s4HdpTdsggCdaDsfrMjKMR5uNTeUO6RPl6BO2zDR7V6LK/0kxHQ3p9AbqSWPGZnpwIjOYQ4J+DA9iaMprUpGadtVgWpO/kDWbW1L6L7yHmsu5TEPQRsMwELX03whWuxUKn8bKVz/CURRe2Zo7ih7iKy7GTNNr4J/H2bBSXzq2HKzFEbXEbNowRwDDyUDDqwew8lVSM51dI0dhhw5wwPcrO0HTlW0FlrdeYMYaFIsb3RUEzCwV1doEKDZupqnn6OrNte7HDHcdfZOF4hdxNUrtH+XdcfKyn5BuQUCHjCrOAeS35hduFNcwicS1VObdUUdFC13YMyFVycQPqQ2iAmOt43/QrWPdgOQyqCzKqx3fKaGmbvePKhIfJqHsjURMcb6sFHQx2k8v/RmMRvwxKu6wYA4XoBslWj1Yt6JOwosWF+2fzq0cacfMjJRL/vcKpiWiiB6pCDYA84EpRV0xux7lsEzqQVthj5s/UklkePar5V20STESaQvM0JU1YmRJ9718mQ/Fi3fP0env+kd3pYiVk2syFX3ZoY1NCxCLKysB+lCKuyR7WQGuPVsy7jNw+1wWDWTstoyeg3Zw5QVNTXT7K7mtQ7mySqpXojrGZjgZX/ZPcO/48AAwDjybhRwYVFGAAAAABJRU5ErkJggg=='
@@ -19876,8 +19932,8 @@ def main_global_pysimplegui_settings():
               [T('Theme',  font='_ 16')],
                   [T('Leave blank for "official" PySimpleGUI default theme: {}'.format(OFFICIAL_PYSIMPLEGUI_THEME))],
                   [T('Default Theme For All Programs:'), Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
-              [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
-                   [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
+              # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
+              #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
               [B('Ok', bind_return_key=True), B('Cancel')],
               ]
 

@@ -2604,6 +2604,12 @@ The following methods are here for backwards compatibility reference.  You will 
 
 These are the functions available for you to call
 
+
+## Version Info
+
+<!-- <+func.get_versions+> -->
+
+
 ## Multi-window Interface
 
 <!-- <+func.read_all_windows+> -->

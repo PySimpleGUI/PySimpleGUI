@@ -1,24 +1,29 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="Python GUIs for Humans">
-  <h2 align="center">Python GUIs for Humans</h2>
+  <h1 align="center">Python GUIs for Humans</h1>
 </p>
 
-[![tkinter](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) tkinter
-[![tkinter27](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) tk 2.7
-[![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) Qt
-[![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) WxPython
-[![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) Web (Remi)
+------------------------------
 
-![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest)
-![Python Version](https://img.shields.io/badge/Python-2.7_3.4+-yellow.svg)
+## PyPI Statistics & Versions
 
-[![PyPI Version](https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge)](https://pypi.org/project/pysimplegui/) tkinter
-[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiqt/) Qt
-[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiweb/) Web
-[![PyPI Version](https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge)](https://pypi.org/project/pysimpleguiwx/) Wx
-![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue)
-[![Commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
-[![Last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?style=for-the-badge)](../../commits/master)
+| TK | TK 2.7 | Qt| WxPython | Web (Remi) |
+| -- | -- | -- | -- | -- |
+| ![tkinter](https://img.shields.io/pypi/dm/pysimplegui?label=tkinter) | ![tkinter 2.7 downloads](https://img.shields.io/pypi/dm/pysimplegui27?label=tkinter%202.7) | ![qt](https://img.shields.io/pypi/dm/pysimpleguiqt?label=qt) | ![wx](https://img.shields.io/pypi/dm/pysimpleguiwx?label=wx) | ![web](https://img.shields.io/pypi/dm/pysimpleguiweb?label=web) |
+| [![tkinter](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) | [![tkinter27](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) | [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) | [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) | [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) |
+| ![tkinter](https://img.shields.io/pypi/v/pysimplegui.svg?label=tkinter%20PyPI%20Ver&color=red) | ![tkinter 2.7](https://img.shields.io/pypi/v/pysimplegui27.svg?label=tkinter%202.7%20PyPI%20Ver&color=red) | ![qt](https://img.shields.io/pypi/v/pysimpleguiqt.svg?label=qt%20PyPI%20Ver&color=red) | ![wx](https://img.shields.io/pypi/v/pysimpleguiwx.svg?label=wx%20PyPI%20Ver&color=red) | ![web](https://img.shields.io/pypi/v/pysimpleguiweb.svg?label=web%20PyPI%20Ver&color=red) | 
+|  [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUI)](https://pypi.python.org/pypi/PySimpleGUI/)  |  [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUI27)](https://pypi.python.org/pypi/PySimpleGUI27/)  | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIQt)](https://pypi.python.org/pypi/PySimpleGUIQt/) | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIWx)](https://pypi.python.org/pypi/PySimpleGUIWx/) | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIWeb)](https://pypi.python.org/pypi/PySimpleGUIWeb/) |
+
+--------------------------
+
+## GitHub Statistics
+
+|  Issues | Commit Activity | Stars | Docs | 
+| -- | -- | -- | -- | -- |
+| ![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  | ![commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue) | ![stars](https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?label=stars&maxAge=2592000) | ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest) |
+|  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue) | ![last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue)  |  |  |
+
+--------------------------
 
 # PySimpleGUI User's Manual
 
@@ -8678,6 +8683,33 @@ Gray Gray Gray should you wish to go colorless
 * Fix for extend_layout when adding to a scrollable column
 * Added back functions accidently lost during a PEP8 rework
     * added back popup_annoying, popup_no_border, popup_no_frame, popup_no_wait, popup_timed, sgprint, sgprint_close
+
+## 4.41.0 PySimpleGUI 12-May-2021
+
+New Readme & Other PyPI info
+Fixed Syntax error in Text.update
+
+* 2 more menu definition constants (simply a shortcut way to add right click menu)
+	* MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
+	* MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
+* 3 new SYMBOL constants. Use code completion with SYMBOL_ to find some handy symbols
+	* SYMBOL_CHECK = '✅'
+	* SYMBOL_BALLOT_X ='☒'
+	* SYMBOL_BALLOT_CHECK = '☑'
+* Syntax error, and thus crash, if the check for widget was created is false
+* Fix for scrollable Column (was able to scroll further than should have been possible)
+* More docstrings to explain Column.contents_changed is needed when layout is extended
+* Docstring addition for read_all_windows to explain which windows will be read and what's returned when a window is closed
+* Titlebar docstring fix - return was misplaced.  rtype changed to Column
+* Added execute_py_get_interpreter to return the current global setting
+* get_versions() function added to aid in dubugging.  print(sg.get_versions())
+	* Returns a human readable string with labels next to each version.
+	* Python version x.x.x
+	* Port (tkinter)
+	* tkinter version
+	* PySimpleGUI version
+	* PySimpleGUI filename with full path
+	
 
 ## Upcoming
 

@@ -11778,6 +11778,22 @@ Parameter Descriptions:
 
 These are the functions available for you to call
 
+## Version Info
+
+Returns a human-readable string of version numbers for:
+
+Python version
+PySimpleGUI Port (tkinter in this case)
+tkinter version
+PySimpleGUI version
+The location of the PySimpleGUI.py file
+
+The format is a newline between each value and descriptive text for each line
+
+```
+get_versions()
+```
+
 ## Multi-window Interface
 
 Reads all windows that are "active" when the call is made. "Active" means that it's been finalized or read.
