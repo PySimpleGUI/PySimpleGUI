@@ -1887,6 +1887,33 @@ Gray Gray Gray should you wish to go colorless
 
 
 
+## 4.41.0 PySimpleGUI 12-May-2021
+
+New Readme & Other PyPI info
+Fixed Syntax error in Text.update
+
+* 2 more menu definition constants (simply a shortcut way to add right click menu)
+	* MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
+	* MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
+* 3 new SYMBOL constants. Use code completion with SYMBOL_ to find some handy symbols
+	* SYMBOL_CHECK = '✅'
+	* SYMBOL_BALLOT_X ='☒'
+	* SYMBOL_BALLOT_CHECK = '☑'
+* Syntax error, and thus crash, if the check for widget was created is false
+* Fix for scrollable Column (was able to scroll further than should have been possible)
+* More docstrings to explain Column.contents_changed is needed when layout is extended
+* Docstring addition for read_all_windows to explain which windows will be read and what's returned when a window is closed
+* Titlebar docstring fix - return was misplaced.  rtype changed to Column
+* Added execute_py_get_interpreter to return the current global setting
+* get_versions() function added to aid in dubugging.  print(sg.get_versions())
+	* Returns a human readable string with labels next to each version.
+	* Python version x.x.x
+	* Port (tkinter)
+	* tkinter version
+	* PySimpleGUI version
+	* PySimpleGUI filename with full path
+	
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
