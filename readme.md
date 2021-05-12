@@ -14,7 +14,7 @@ Some programs are not well-suited for PySimpleGUI however.  By definition, PySim
 
 <a href="https://www.buymeacoffee.com/PySimpleGUI" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee" width="217px" ></a>
 
-I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project.
+I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project.  Every donation helps!  Nothing is too small.  Cost continue to be significantly greater than donations.  It's just how it is.
 
 
 <hr>
@@ -76,7 +76,7 @@ While the goal is to encapsulate/hide the specific objects and code used by the 
 
 ## Bridging the "GUI Gap"
 
-Python has brought a large number of people into the programming community. The number of programs and the range of areas it touches is mindboggling.  But more often than not, these and technologies are out of reach of all but a handful of people.  The majority of Python programs are "command line" based. This isn't a problem for programmer-types as we're all used to interacting with computers through a text interface.  While programmers don't have a problem with command-line interfaces, most "normal people" do.  This creates a digital divide, a "GUI Gap".
+Python has brought a large number of people into the programming community. The number of programs and the range of areas it touches is mindboggling.  But more often than not, these technologies are out of reach of all but a handful of people.  The majority of Python programs are "command line" based. This isn't a problem for programmer-types as we're all used to interacting with computers through a text interface.  While programmers don't have a problem with command-line interfaces, most "normal people" do.  This creates a digital divide, a "GUI Gap".
 
 Adding a GUI to a program opens that program up to a wider audience. It becomes more approachable. GUIs can also make interacting with some programs easier, even for those that are comfortable with a command-line interface.  And finally, some problems require a GUI.  
 
@@ -92,12 +92,12 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
 
 Hi there!  I'm Mike.  You'll find me right here, on the PySimpleGUI GitHub, solving problems and continuously pushing PySimpleGUI forward.  I've dedicated my days, nights, and weekends to the project and PySimpleGUI users.  Our successes are ultimately shared.  I'm successful when you're successful.  
 
-While a relative newcomer to Python, I've been writing software since the 70s.  The majority of my career was spent creating products in Silicon Valley. I bring to PySimpleGUI the same professionalism and dedication as I did to the corporate products I developed. You are my customers now.
+While I'm a relative newcomer to Python, I've been writing software since the 70s.  The majority of my career was spent creating products in Silicon Valley. I bring to PySimpleGUI the same professionalism and dedication as I did to the corporate products I developed. You are my customers now.
 
 
 ## Project Goals :goal_net:
 
-Two of the more important goals of the PySimpleGUI project:
+Two of the most important goals of the PySimpleGUI project:
 
 * Having fun
 * Your success 
@@ -235,7 +235,7 @@ If we wanted the text to be yellow, then that can be accomplished by adding a `t
                               text_color='yellow')
 ```
 
-After adding the `text_color` parameter this is our new resulting window:
+After adding the `text_color` parameter, this is our new resulting window:
 
 
 <p align="center">
@@ -331,7 +331,7 @@ PySimpleGUI is currently capable of running on 4 Python GUI Frameworks.  The fra
 
 
 
-Porting GUI code from one framework to another (e.g. moving your code from tkinter to Qt) usually requires a rewrite of your code.  PySimpleGUI is designed to enable you to enable easy movement between the frameworks.  Sometimes some changes are required of you, but the goal is to have highly portable code with minimal changes.  
+Porting GUI code from one framework to another (e.g. moving your code from tkinter to Qt) usually requires a rewrite of your code.  PySimpleGUI is designed to enable you to have easy movement between the frameworks.  Sometimes some changes are required of you, but the goal is to have highly portable code with minimal changes.  
 
 Some features, like a System Tray Icon, are not available on all of the ports.  The System Tray Icon feature is available on the Qt and WxPython ports.  A simulated version is available on tkinter.  There is no support for a System Tray icon in the PySimpleGUIWeb port.
 
@@ -348,7 +348,7 @@ Some features, like a System Tray Icon, are not available on all of the ports.  
 
 ## Integrations
 
-Among the more than 200 "Demo Programs" you'll find examples of how to integrate many popular Python packages into your GUI.
+Among the more than 200 "Demo Programs", you'll find examples of how to integrate many popular Python packages into your GUI.
 
 Want to embed a Matplotlib drawing into your window?  No problem, copy the demo code and instantly have a Matplotlib drawing of your dreams into your GUI.  
 
@@ -388,7 +388,7 @@ Initial install for Linux and MacOS:
 
 `python3 -m pip install PySimpleGUI`
 
-To upgrade using `pip` you simply 2 parameters to the line `--upgrade --no-cache-dir`.  
+To upgrade using `pip`, you simply add 2 parameters to the line `--upgrade --no-cache-dir`.  
 
 Upgrade installation on Windows:
 
@@ -420,7 +420,7 @@ Now some of you are thinking, "yea, but, wait, having a single huge source file 
 
 ## Galleries :art:
 
-Work on a more formal gallery of user-submitted GUIs as well as those found on GitHub is underway but as of this writing is not complete.  There are currently 2 places you can go to see some screenshots in a centralized way.  Hopefully, a Wiki or other mechanism can be released soon to do justice to the awesome creations people are making.
+Work on a more formal gallery of user-submitted GUIs as well as those found on GitHub is underway but as of this writing it's not complete.  There are currently 2 places you can go to see some screenshots in a centralized way.  Hopefully, a Wiki or other mechanism can be released soon to do justice to the awesome creations people are making.
 
 ### User Submitted Gallery
 
@@ -434,13 +434,13 @@ The second is a [massive gallery of over 3,000 images](https://www.dropbox.com/s
 
 # Uses for PySimpleGUI :hammer:
 
-The following sections showcase a fraction of the uses for PySimpleGUI.  There are over 1,000 projects on GitHub alone that use PySimpleGUI.  It's truly amazing the possibilities that have opened up for so many people.  Many users have spoken about previously attempting to create a GUI in Python and failing, but finally achieving their dreams when they tried PySimpleGUI.
+The following sections showcase a fraction of the uses for PySimpleGUI.  There are over 1,000 projects on GitHub alone that use PySimpleGUI.  It's truly amazing how possibilities have opened up for so many people.  Many users have spoken about previously attempting to create a GUI in Python and failing, but finally achieving their dreams when they tried PySimpleGUI.
 
 ## Your First GUI
 
 Of course one of the best uses of PySimpleGUI is getting you into making GUIs for your Python projects.  You can start as small as requesting a filename.  For this, you only need to make a single call to one of the "high-level functions" called `popup`.  There are all kinds of popups, some collect information.
 
-`popup` but itself makes a window to display information.  You can pass multiple parameters just like a print.  If you want to get information, then you will call functions that start with `popup_get_` such as `popup_get_filename`.
+`popup` itself makes a window to display information.  You can pass multiple parameters just like a print.  If you want to get information, then you will call functions that start with `popup_get_` such as `popup_get_filename`.
 
 Adding a single line to get a filename instead of specifying a filename on the command line can transform your program into one that "normal people" will feel comfortable using.
 
@@ -480,12 +480,12 @@ The default settings for GUI frameworks don't tend to produce the nicest looking
 Here is an example of how you can create windows that don't look like your typical tkinter in windows.  In this example, the windows have their titlebars removed.  The result is windows that look much like those found when using Rainmeter, a desktop widget program.
 
 <br><br>
-You can easily set the transparency of a window as well.  Here are more examples of desktop widgets in the same Rainmeter style.  Some are dimmed appearing because they are semi-transparent.
+You can easily set the transparency of a window as well.  Here are more examples of desktop widgets in the same Rainmeter style.  Some are dim appearing because they are semi-transparent.
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/semi-transparent.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/semi-transparent.jpg"  alt="img" align="right" width="500px"></a>
 
 
 
-Both of these effects, removing the titlebar and making a window semi-transparent, are achieved by setting 2 parameters when creating the window.  This is an example of how PySimpleGUI enables easy access to features.  And because PySimpleGUI code is portable across the GUI frameworks, these same parameters work for the other ports such as Qt.
+Both of these effects; removing the titlebar and making a window semi-transparent, are achieved by setting 2 parameters when creating the window.  This is an example of how PySimpleGUI enables easy access to features.  And because PySimpleGUI code is portable across the GUI frameworks, these same parameters work for the other ports such as Qt.
 
 
 Changing the Window creation call in Example 1 to this line of code produces a similar semi-transparent window:
@@ -591,7 +591,7 @@ Matplotlib is a popular choice with Python users.  PySimpleGUI can enable you to
 <br><br>
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Matplotlib2.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Matplotlib2.jpg"  alt="img" align="right" width="500px"></a>
-Using PySimpleGUI's color themes, you can produce graphs that are a notch above default graphs most people create in Matplotlib.
+Using PySimpleGUI's color themes, you can produce graphs that are a notch above default graphs that most people create in Matplotlib.
 
 
 <br><br>
@@ -622,7 +622,7 @@ This example is a front-end for a program called "Jump Cutter".  The parameters 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"  alt="img" align="right" width="500px"></a>
 
 
-Because PySimpleGUI is compatible back to Python 3.4 it is capable of creating a GUI for your Raspberry Pi projects.  It works particularly well when paired with a touchscreen.  You can also use PySimpleGUIWeb to control your Pi if it doesn't have a monitor attached.
+Because PySimpleGUI is compatible back to Python 3.4, it is capable of creating a GUI for your Raspberry Pi projects.  It works particularly well when paired with a touchscreen.  You can also use PySimpleGUIWeb to control your Pi if it doesn't have a monitor attached.
 
 <br><br>
 <br><br>
@@ -677,13 +677,15 @@ This single line of code changes the window's appearance entirely:
 </p>
 
 
-The theme changed colors of the background, text, input background, input text, and button colors.  In other GUI packages to change color schemes like this, you would need to specify the colors of each widget individually, requiring numerous changes to your code.
+The theme changed colors of the background, text, input background, input text, and button colors.  In other GUI packages, to change color schemes like this, you would need to specify the colors of each widget individually, requiring numerous changes to your code.
 
 <hr>
 
 # Support :muscle:
 
 Your first stop should be the [documentation](http://www.PySimpleGUI.org) and [demo programs](http://Demos.PySimpleGUI.org).  If you still have a question or need help...  no problem... help is available to you, at no cost. Simply [file an Issue](http://Issues.PySimpleGUI.org) on the PySimpleGUI GitHub repo and you'll get help.  
+
+There is now also a built-in GUI in PySimpleGUI itself to make this an ever easier process!  Call `sg.main()` and click on the "Open GitHub Issue" button.
 
 Nearly all software companies have a form that accompanies bug reports.  It's not a bad trade... fill in the form, get free software support.  This information helps get you an answer efficiently.
 
@@ -692,11 +694,12 @@ In addition to requesting information such as the version numbers of PySimpleGUI
 ***Please fill in the form.***  It may feel pointless to you.  It may feel painful, despite it taking just a moment.  It helps get you a solution faster.  If it wasn't useful and necessary information to help you get a speedy reply and fix, you wouldn't be asked to fill it out.  "Help me help you".
 
 
+
 # Supporting 	<a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"  alt="img"  width="90px"></a>
 
 Financial support for the project is greatly appreciated.  To be honest, financial help is needed.  It's expensive just keeping the lights on.  The domain name registrations, a long list of subscriptions for things like Trinket, consulting help, etc., quickly add up to a sizable recurring cost.  
 
-PySimpleGUI wasn't inexpensive to create. While a labor of love, it was very laborious. It's required over 2 years of working 7-days a week to get the software and documentation to the level you see today.
+PySimpleGUI wasn't inexpensive to create. While a labor of love, it was very laborious over several years, and quite a bit was invested, and continues to be invested, in creating what you see today.
 
 PySimpleGUI has an open-source license and it would be great if it could remain that way.  If you or your company (especially if you're using PySimpleGUI in a company) are benefiting financially by using PySimpleGUI, you have the capability of extending the life of the project for you and other users.
 
@@ -711,7 +714,6 @@ Buy Me a Coffee is a great way to publicly support developers.  It's quick, easy
 ### GitHub Sponsoring
 
 
-
 <a href="https://github.com/sponsors/PySimpleGUI" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=%3Curl%3E&color=f88379"></a>
 
 The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is how you can sponsor the project at varying levels of support on an ongoing basis.  It's how many Open Source developers are able to receive corporate level sponsorship.
@@ -719,29 +721,18 @@ The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is h
 Your help in financially contributing to the project would be greatly appreciated. Being an Open Source developer is financially challenging.  YouTube video creators are able to make a living creating videos.  It's not so easy yet for Open Source developers.
 
 
-# Funding - Your help is needed
+# Thank you for the Thank You's
 
-A frank discussion is needed here.  Subtle hasn't worked.
+To everyone that's helped, in whatever fashion, I'm very very grateful.
 
-The financial part of Open Source development is not openly discussed often.  As an Open Source developer, there is no automatic form of incoming happening, especially with Python where the source code essentially has to be provided.  Creating and administrating a Commercial License is expensive.  It's a big hurdle to take a project from an Open Source License to a Commercial License.  The attorneys I've spoken with haven't heard of it happening successfully.  So, licensing is not a practical option.
-
-It's expensive to operate an active Open Source project.  The labor involved is massive.  How does it get paid for?  Well, it comes from the developer is how.  Just like YouTube creators have expenses for camera equipment and time making their content and need supporters in order to operate, so do Open Source developers.
-
-PySimpleGUI needs your help.  Without some kind of funding, this project will end, likely sooner than later.  The individuals with the most ability to make a financial contribution are Corporate Users.  It's not tremendously difficult nor does it pose a financial hardship on someone working for a company to make a donation to PySimpleGUI.  You're spending someone else's money.  If you get a paycheck from a corporation and you're using PySimpleGUI, you're a "corporate user".  It doesn't matter if PySimpleGUI is shipping in a product you sell.  Your company is benefitting by running PySimpleGUI.  If it wasn't, you wouldn't be using it.  The person at your company that can help the PySimpleGUI effort is you, the user.  Your CFO isn't going to automatically make a payment.  Your legal team isn't on the lookout for Open Source projects to help.  I've not struck licensing deals with your company, or any company.  It's you, the end user that is the person at your company that will need to take action and has the ability to help the project continue.
-
-This PySimpleGUI software isn't the output from an AI bot.  Nor is the support for users that are using it.  There's a software developer (with a help from some very kind, friendly, generous people) that's doing all this work.  I do it because I love creating and enabling people to do cool things. But that love doesn't pay bills.  The energy put into the project doesn't create electricity.  I make stuff, electricity isn't one of them.
-
-Patreon works well for YouTubers.  It typically fails miserably for developers.  But there are multiple mechanisms available including PayPal, GitHub sponsorship, and BuyMeACoffee.  They all work pretty well and take 2 minutes, if that. One thing it requires is action on the part of the PySimpleGUI user.  If you can't afford to help, it's OK.  Use the software for free.  Make cool stuff.  Make the world a better, easier to use place.  If you can afford to help, please consider donating to the project.  It's for a good cause. 
-
-To everyone that's helped, in whatever fashion, I'm very very grateful. And thanks to everyone that takes a moment to say "thank you", it's a small price to pay and adds to the project's momentum.
-
+Even taking a moment to say "thank you" helps, and a HUGE number of you have done that.  It's been an amazing number actually.  I value these thanks and find inspiration in the words alone.  Every message is a little push forward.  It adds a little bit of energy and keeps the whole project's momentum.  I'm so very grateful to everyone that's helped in whatever form it's been.
 
 
 # Contributing  :construction_worker:
 
 While PySimpleGUI is currently licensed under an open-source license, the project itself is structured like a proprietary product.  Pull Requests are not accepted.
 
-One of the best ways for you to contribute code is to write and publish applications.  Users are inspired by seeing what other users build.  Create a GitHub repo from, post the code, and include a screenshot in your repo's readme file.  
+One of the best ways for you to contribute code is to write and publish applications.  Users are inspired by seeing what other users build.  Here's a simple set of steps you can take - Create a GitHub repo, post the code, and include a screenshot in your repo's readme file.  Then come back to the PySimpleGUI repo and post a screenshot in Issue #10 or in the project's WIKI.
 
 If there is a feature missing that you need or you have an enhancement to suggest, then [open an Issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&template=issue-form---must-fill-in-this-form-with-every-new-issue-submitted.md&title=%5B+Enhancement%2FBug%2FQuestion%5D+My+problem+is...)
 
