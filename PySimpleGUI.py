@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.41.2  Released 12-May-2021"
+version = __version__ = "4.41.2.0 Unreleased\nFix for getting wrong tab number in Tab.update"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -5786,7 +5786,8 @@ class Tab(Element):
 
         if title is not None:
             self.Title = str(title)
-            self.ParentNotebook.tab(self.ContainerElemementNumber-1, text=self.Title)
+            self.ParentNotebook.tab(self.TabID, text=self.Title)
+            # self.ParentNotebook.tab(self.ContainerElemementNumber-1, text=self.Title)
 
         # if visible is False:
         #     self.ParentNotebook.pack_forget()
