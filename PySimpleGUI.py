@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-version = __version__ = "4.41.2.0 Unreleased\nFix for getting wrong tab number in Tab.update"
+version = __version__ = "4.41.2.1 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1575,7 +1575,7 @@ class Combo(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None,
+                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values: values to choose. While displayed as text, the items returned are what the caller supplied, not text
@@ -1592,6 +1592,8 @@ class Combo(Element):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
+        :param bind_return_key: If True, then the return key will cause a the Combo to generate an event
+        :type bind_return_key: (bool)
         :param change_submits: DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits: (bool)
         :param enable_events: Turns on the element specific events. Combo event is when a choice is made
@@ -1621,6 +1623,7 @@ class Combo(Element):
         self.Widget = self.TKCombo = None  # type: ttk.Combobox
         self.Disabled = disabled
         self.Readonly = readonly
+        self.BindReturnKey = bind_return_key
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
@@ -12974,6 +12977,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element.TKCombo.current(0)
                 if element.ChangeSubmits:
                     element.TKCombo.bind('<<ComboboxSelected>>', element._ComboboxSelectHandler)
+                if element.BindReturnKey:
+                    element.TKCombo.bind('<Return>', element._ComboboxSelectHandler)
                 if element.Readonly:
                     element.TKCombo['state'] = 'readonly'
                 if element.Disabled is True:  # note overrides readonly if disabled
