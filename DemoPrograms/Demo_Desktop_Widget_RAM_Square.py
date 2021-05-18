@@ -30,7 +30,7 @@ def main(location):
     graph = sg.Graph(GSIZE, (0, 0), GSIZE, key='-GRAPH-', enable_events=True)
     layout = [[graph]]
 
-    window = sg.Window('RAM Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=[[''], 'Exit'])
+    window = sg.Window('RAM Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
 
 
     while True:  # Event Loop
@@ -41,18 +41,16 @@ def main(location):
         text_id1 = graph.draw_text(f'{int(ram.percent)}%', (GSIZE[0] // 2, GSIZE[1] // 2), font='Any 40', text_location=sg.TEXT_LOCATION_CENTER,
                                    color=sg.theme_button_color()[0])
         text_id2 = graph.draw_text(f'{human_size(ram.used)} used', (GSIZE[0] // 2, GSIZE[1] // 4), font='Any 20', text_location=sg.TEXT_LOCATION_CENTER, color=sg.theme_button_color()[0])
-        # text_id3 = graph.draw_text('❎', (0, 0), font='Any 8', text_location=sg.TEXT_LOCATION_BOTTOM_LEFT, color=sg.theme_button_color()[0])
 
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-        if event == '-GRAPH-':  # exit if clicked in the bottom left 20 x 20 pixel area
-            if values['-GRAPH-'][0] < 20 and values['-GRAPH-'][1] < 20:
-                break
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
+
         graph.delete_figure(rect_id)
         graph.delete_figure(text_id1)
         graph.delete_figure(text_id2)
-        # graph.delete_figure(text_id3)
     window.close()
 
 if __name__ == '__main__':

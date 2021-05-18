@@ -17,7 +17,7 @@ import math
     Copyright 2020 PySimpleGUI.org
 """
 
-ALPHA = 0.8
+ALPHA = 0.5
 THEME = 'Dark Green 5'
 UPDATE_FREQUENCY_MILLISECONDS = 2 * 1000
 
@@ -90,11 +90,9 @@ class Gauge():
             x, y, r, start, stop, fill, line, width = self.all
             start, stop = (180 - start, 180 - stop) if stop < start else (180 - stop, 180 - start)
             if start == stop % 360:
-                self.figure.append(self.graph_elem.DrawCircle((x, y), r, fill_color=fill,
-                                                              line_color=line, line_width=width))
+                self.figure.append(self.graph_elem.DrawCircle((x, y), r, fill_color=fill, line_color=line, line_width=width))
             else:
-                self.figure.append(self.graph_elem.DrawArc((x - r, y + r), (x + r, y - r), stop - start,
-                                                           start, style='arc', arc_color=fill))
+                self.figure.append(self.graph_elem.DrawArc((x - r, y + r), (x + r, y - r), stop - start, start, style='arc', arc_color=fill))
 
         def move(self, delta_x, delta_y):
             """
@@ -147,11 +145,8 @@ class Gauge():
             dy1 = int(2 * inner_radius * math.cos(d / 180 * math.pi))
             dx2 = int(outer_radius * math.sin(d / 180 * math.pi))
             dy2 = int(outer_radius * math.cos(d / 180 * math.pi))
-            self.figure.append(self.graph_elem.DrawLine((center_x - dx1, center_y - dy1),
-                                                        (center_x + dx2, center_y + dy2),
-                                                        color=pointer_color, width=line_width))
-            self.figure.append(self.graph_elem.DrawCircle((center_x, center_y), inner_radius,
-                                                          fill_color=origin_color, line_color=outer_color, line_width=line_width))
+            self.figure.append(self.graph_elem.DrawLine((center_x - dx1, center_y - dy1), (center_x + dx2, center_y + dy2), color=pointer_color, width=line_width))
+            self.figure.append(self.graph_elem.DrawCircle((center_x, center_y), inner_radius, fill_color=origin_color, line_color=outer_color, line_width=line_width))
 
         def move(self, delta_x, delta_y):
             """
@@ -198,8 +193,7 @@ class Gauge():
                 start_y = y + start_radius * math.sin(i / 180 * math.pi)
                 stop_x = x + stop_radius * math.cos(i / 180 * math.pi)
                 stop_y = y + stop_radius * math.sin(i / 180 * math.pi)
-                self.figure.append(self.graph_elem.DrawLine((start_x, start_y),
-                                                            (stop_x, stop_y), color=line_color, width=line_width))
+                self.figure.append(self.graph_elem.DrawLine((start_x, start_y), (stop_x, stop_y), color=line_color, width=line_width))
 
         def move(self, delta_x, delta_y):
             """
@@ -281,7 +275,7 @@ def main(location):
         [sg.T(size=(8, 1), font='Any 14', justification='c', background_color='black', k='-RAM USED-')],
          ]
 
-    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=[[''], 'Exit'])
+    window = sg.Window('CPU Usage Widget Square', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=ALPHA, background_color='black', element_justification='c', finalize=True, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT)
 
     gauge = Gauge(pointer_color=sg.theme_text_color(), clock_color=sg.theme_text_color(), major_tick_color=sg.theme_text_color(),
                   minor_tick_color=sg.theme_input_background_color(), pointer_outer_color=sg.theme_text_color(), major_tick_start_radius=45,
@@ -306,7 +300,8 @@ def main(location):
         event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
-
+        if event == 'Edit Me':
+            sg.execute_editor(__file__)
     window.close()
 
 
