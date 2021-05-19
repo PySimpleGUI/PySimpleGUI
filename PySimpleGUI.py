@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-version = __version__ = "4.41.2.1 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element"
+
+version = __version__ = "4.41.2.2 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -337,6 +338,8 @@ DEFAULT_BASE64_LOADING_GIF = b'R0lGODlhQABAAKUAAAQCBJyenERCRNTS1CQiJGRmZLS2tPTy9
 PSG_DEBUGGER_LOGO = b'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'
 
 
+SIZE_GRIP_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAI0lEQVR4nGNgGHbgPxTDAdMAOQQ7QHbeIHQqLucNQqfSHgAAGFsL+26GGtQAAAAASUVORK5CYII='
+
 
 
 DEFAULT_WINDOW_ICON = DEFAULT_BASE64_ICON
@@ -472,6 +475,10 @@ TEXT_LOCATION_TOP_RIGHT = tk.NE
 TEXT_LOCATION_BOTTOM_LEFT = tk.SW
 TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
+
+
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text)
+
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
 ThisRow = 555666777  # magic number
@@ -638,6 +645,7 @@ ELEM_TYPE_STATUSBAR = 'statusbar'
 ELEM_TYPE_PANE = 'pane'
 ELEM_TYPE_BUTTONMENU = 'buttonmenu'
 ELEM_TYPE_TITLEBAR = 'titlebar'
+ELEM_TYPE_SIZEGRIP = 'sizegrip'
 
 # STRETCH == ERROR ELEMENT as a filler
 
@@ -5619,6 +5627,28 @@ HSep = HorizontalSeparator
 
 
 
+# ---------------------------------------------------------------------- #
+#                           Sizegrip                                     #
+# ---------------------------------------------------------------------- #
+class Sizegrip(Element):
+    """
+        Sizegrip
+    """
+
+    def __init__(self, background_color=None,):
+        """
+
+        """
+        bg = background_color if background_color is not None else theme_background_color()
+
+        super().__init__(ELEM_TYPE_SIZEGRIP, background_color=bg)
+
+
+SGrip = Sizegrip
+
+
+
+
 
 # ---------------------------------------------------------------------- #
 #                           Tab                                          #
@@ -7887,7 +7917,6 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         self.right_click_menu_selected_colors = _simplified_dual_color_to_tuple(right_click_menu_selected_colors, (self.right_click_menu_background_color, self.right_click_menu_text_color))
 
 
-
         if self.use_custom_titlebar:
             self.Margins = (0,0)
             self.NoTitleBar = True
@@ -8907,12 +8936,16 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
+        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS):
+            # print('Found widget to ignore in grab anywhere...')
+            return
+
         try:
             self.TKroot.x = event.x
             self.TKroot.y = event.y
         except:
             pass
-        # print('Start move {},{}'.format(event.x,event.y))
+        # print('Start move {},{} widget {}'.format(event.x,event.y, event.widget))
 
     def _StopMove(self, event):
         """
@@ -8921,6 +8954,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
+        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS):
+            # print('Found widget to ignore in grab anywhere...')
+            return
 
         try:
             self.TKroot.x = event.x
@@ -8935,6 +8971,10 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
+        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS):
+            # print('Found widget to ignore in grab anywhere...')
+            return
+
         try:
             deltax = event.x - self.TKroot.x
             deltay = event.y - self.TKroot.y
@@ -12253,6 +12293,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
+    size_grip = None
+
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
     # Building is done row by row.                                                #
@@ -13261,8 +13303,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled is True:  # note overrides readonly if disabled
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 element = element                   # type: Output
@@ -13836,6 +13877,27 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=True)
                 element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
+            # -------------------------  SizeGrip placement element  ------------------------- #
+            elif element_type == ELEM_TYPE_SIZEGRIP:
+                element = element  # type: Sizegrip
+                style_name = "Sizegrip"
+                style = ttk.Style()
+                style.theme_use(toplevel_form.TtkTheme)
+                image = tk.PhotoImage(data=SIZE_GRIP_BASE64)
+                settings = dict()
+
+                settings.update({
+                    'Sizegrip.sizegrip': {
+                        'element create': ('image', image)},
+                    'TSizegrip': {
+                        'configure': {'background': element.BackgroundColor if element.BackgroundColor != COLOR_SYSTEM_DEFAULT else None},
+                        'layout': [('Sizegrip.sizegrip', {'side': 'bottom', 'sticky': 'se'})]}})
+
+                style.theme_settings(toplevel_form.TtkTheme, settings=settings)
+
+                size_grip = element.Widget = ttk.Sizegrip(containing_frame)
+                size_grip.image = image
+                toplevel_form.sizegrip_widget = size_grip
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
@@ -13931,6 +13993,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                           expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
+    if size_grip:
+        size_grip.pack(side=tk.BOTTOM, anchor='se', padx=0, pady=0)
+
     return
 
 
@@ -14052,12 +14117,6 @@ def StartupTK(window):
 
     window._create_thread_queue()
 
-    # Make moveable window
-    if (window.GrabAnywhere is not False and not (
-            window.NonBlocking and window.GrabAnywhere is not True)):
-        root.bind("<ButtonPress-1>", window._StartMove)
-        root.bind("<ButtonRelease-1>", window._StopMove)
-        root.bind("<B1-Motion>", window._OnMotion)
 
     if not window.Resizable:
         root.resizable(False, False)
@@ -14074,6 +14133,14 @@ def StartupTK(window):
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     _convert_window_to_tk(window)
+
+
+    # Make moveable window
+    if (window.GrabAnywhere is not False and not (
+            window.NonBlocking and window.GrabAnywhere is not True)):
+        root.bind("<ButtonPress-1>", window._StartMove)
+        root.bind("<ButtonRelease-1>", window._StopMove)
+        root.bind("<B1-Motion>", window._OnMotion)
 
     window.SetIcon(window.WindowIcon)
 
