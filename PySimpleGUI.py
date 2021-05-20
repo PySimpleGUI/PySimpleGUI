@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.41.2.3 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black, improved tearoff menu placement, completed the MenubarCustom code (to Alpha quality perhaps)"
+version = __version__ = "4.41.2.4 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black, improved tearoff menu placement, completed the MenubarCustom code including color settings for the bar and the menus"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -10402,16 +10402,12 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
 
 
 # Not ready for prime time
-def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None):
+def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, background_color=None, text_color=None, bar_background_color=None, bar_text_color=None, key=None, k=None):
     """
     A custom Menubar that replaces the OS provided Menubar
-    THIS FEATURE IS NOT YET COMPLETE!
 
     Why?
     Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
-
-    NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
-    should have no problem and it should function as a normal window would.
 
     :param menu_definition: The Menu definition specified using lists (docs explain the format)
     :type menu_definition: List[List[Tuple[str, List[str]]]
@@ -10425,33 +10421,27 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :type tearoff: (bool)
     :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :param background_color: color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text
+    :type background_color: (str)
+    :param text_color: color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background
+    :type text_color: (str)
+    :param bar_background_color: color to use for the menubar. Can be in #RRGGBB format or a color name "black". Defaults to theme's button text color
+    :type bar_background_color: (str)
+    :param bar_text_color: color to use for the menu items text when item is disabled. Can be in #RRGGBB format or a color name "black". Defaults to theme's button background color
+    :type bar_text_color: (str)
     :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
-    :param visible: set visibility state of the element
-    :type visible: (bool)
-    :param metadata: User metadata that can be set to ANYTHING
-    :type metadata: (Any)
+    :returns: A Column element that has a series of ButtonMenu elements
+    :rtype: Column
     """
-    #
-    # row = []
-    # for menu in menu_def:
-    #     text = menu[0]
-    #     if sg.MENU_SHORTCUT_CHARACTER in text:
-    #         text = text.replace(sg.MENU_SHORTCUT_CHARACTER, '')
-    #     if text.startswith(sg.MENU_DISABLED_CHARACTER):
-    #         disabled = True
-    #         text = text[len(sg.MENU_DISABLED_CHARACTER):]
-    #     else:
-    #         disabled = False
-    #     row += [sg.ButtonMenu(text, menu, border_width=0, button_color=f'{text_color} on {background_color}',key=text, pad=pad, disabled=disabled)]
-    #
-    # return sg.Column([row], background_color=background_color, pad=(0,0), expand_x=True)
-    #
 
     bar_bg = bar_background_color if bar_background_color is not None else theme_button_color()[0]
     bar_text = bar_text_color if bar_text_color is not None else theme_button_color()[1]
+    menu_bg = background_color if background_color is not None else bar_text
+    menu_text = text_color if text_color is not None else bar_bg
+
     row = []
     for menu in menu_definition:
         text = menu[0]
@@ -10463,7 +10453,8 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
         else:
             disabled = False
 
-        button_menu = ButtonMenu(text, menu, border_width=0, button_color=(bar_text, bar_bg), key=text, pad=(0,0), disabled=disabled, font=bar_font, item_font=font, disabled_text_color=disabled_text_color, text_color=bar_bg, background_color=bar_text, tearoff=tearoff)
+
+        button_menu = ButtonMenu(text, menu, border_width=0, button_color=(bar_text, bar_bg), key=text, pad=(0,0), disabled=disabled, font=bar_font, item_font=font, disabled_text_color=disabled_text_color, text_color=menu_text, background_color=menu_bg, tearoff=tearoff)
         button_menu.part_of_custom_menubar = True
         button_menu.custom_menubar_key = key if key is not None else k
         row += [button_menu]
