@@ -51,7 +51,10 @@ def choose_theme(location):
     return  None
 
 def make_window(location, test_window=False):
+    title_font = sg.user_settings_get_entry('-title font-', 'Courier 8')
     title = sg.user_settings_get_entry('-title-', '')
+    main_number_font = sg.user_settings_get_entry('-main number font-', 'Courier 70')
+
     if not test_window:
         theme = sg.user_settings_get_entry('-theme-', THEME)
         sg.theme(theme)
@@ -69,15 +72,21 @@ def make_window(location, test_window=False):
         right_click_menu = [[''], ['Exit',]]
     else:
         top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-')]]
-        right_click_menu = [[''], ['Choose Title', 'Edit Me', 'Change Theme', 'Save Location', 'Refresh', 'Show Refresh Info', 'Hide Refresh Info', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
+        right_click_menu = [[''], ['Choose Date','Choose Title', 'Edit Me', 'Change Theme', 'Save Location', 'Refresh', 'Show Refresh Info', 'Hide Refresh Info', 'Set Title Font', 'Set Main Font','Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
 
     layout = top_elements + \
               [[sg.Text('0', size=main_info_size, font=main_number_font, k='-MAIN INFO-', justification='c', enable_events=test_window)],
               [sg.pin(sg.Text(size=(15, 2), font=refresh_font, k='-REFRESHED-', justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
-
-    window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
+    try:
+        window = sg.Window('Day Number', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, right_click_menu_tearoff=False, keep_on_top=True)
+    except Exception as e:
+        if sg.popup_yes_no('Error creating your window', e, 'These are your current settings:', sg.user_settings(), 'Do you want to delete your settings file?') == 'Yes':
+            sg.user_settings_delete_filename()
+            sg.popup('Settings deleted.','Please restart your program')
+            exit()
+        window = None
 
     return window
 
@@ -129,6 +138,18 @@ def main(location):
             if choose_theme(loc) is not None:
                 # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
                 _, window = window.close(), make_window(loc)
+        elif event == 'Set Main Font':
+            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=True)
+            if font:
+                sg.user_settings_set_entry('-main number font-', font)
+                _, window = window.close(), make_window(loc)
+        elif event == 'Set Title Font':
+            font = sg.popup_get_text('Title Font and Size (e.g. courier 8)', default_text=sg.user_settings_get_entry('-title font-'), keep_on_top=True)
+            if font:
+                sg.user_settings_set_entry('-title font-', font)
+                _, window = window.close(), make_window(loc)
+
+
 
     window.close()
 
