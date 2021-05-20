@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.41.2.2 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements"
+version = __version__ = "4.41.2.3 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -339,6 +339,8 @@ PSG_DEBUGGER_LOGO = b'iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs
 
 
 SIZE_GRIP_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAI0lEQVR4nGNgGHbgPxTDAdMAOQQ7QHbeIHQqLucNQqfSHgAAGFsL+26GGtQAAAAASUVORK5CYII='
+SIZE_GRIP_WHITE_BASE64 = b'iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAI0lEQVR4nGNgGF7gPxQgizENlGMwAbLzBqFTcTlvEDqVLgAAg7wv10ZMmzoAAAAASUVORK5CYII='
+
 
 
 
@@ -5632,14 +5634,21 @@ HSep = HorizontalSeparator
 # ---------------------------------------------------------------------- #
 class Sizegrip(Element):
     """
-        Sizegrip
+        Sizegrip element will be added to the bottom right corner of your window.
+        It should be placed on the last row of your window along with any other elements on that row.
+        The color will match the theme's background color.
     """
 
-    def __init__(self, background_color=None,):
+    def __init__(self, background_color=None, grip_image=None):
         """
 
+        :param background_color: color to use for the background of the grip
+        :type background_color: str
+        :param grip_image: Image to use for the grip. Can be a filename or a base64 byte string. SIZE_GRIP_BASE64 and SIZE_GRIP_SIZE_GRIP_WHITE_BASE64 are predefined grips
+        :type grip_image: bytes | str
         """
         bg = background_color if background_color is not None else theme_background_color()
+        self.grip_image = grip_image if grip_image is not None else SIZE_GRIP_BASE64
 
         super().__init__(ELEM_TYPE_SIZEGRIP, background_color=bg)
 
@@ -13883,7 +13892,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 style_name = "Sizegrip"
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
-                image = tk.PhotoImage(data=SIZE_GRIP_BASE64)
+                if isinstance(element.grip_image, bytes):
+                    image = tk.PhotoImage(data=element.grip_image)
+                elif isinstance(element.grip_image, str):
+                    image = tk.PhotoImage(file=element.grip_image)
+                else:
+                    _error_popup_with_traceback('Your Window has a sizegrip',
+                                                'The traceback will show you the Window with the problem layout',
+                                                'Look in this Window\'s layout for a Sizegrip element.',
+                                                'The bad parameter is the parameter grip_image = {}'.format(element.grip_image))
+                    image = tk.PhotoImage(data=SIZE_GRIP_BASE64)
+
                 settings = dict()
 
                 settings.update({
