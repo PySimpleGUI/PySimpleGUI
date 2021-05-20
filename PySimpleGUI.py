@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.41.2.3 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black"
+version = __version__ = "4.41.2.3 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black, improved tearoff menu placement, completed the MenubarCustom code (to Alpha quality perhaps)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -4163,6 +4163,8 @@ class ButtonMenu(Element):
         self.MenuItemChosen = None
         self.TKButtonMenu = None  # type: tk.Menubutton
         self.TKMenu = None  # type: tk.Menu
+        self.part_of_custom_menubar = False
+        self.custom_menubar_key = None
         # self.temp_size = size if size != (NONE, NONE) else
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -10400,59 +10402,73 @@ def Titlebar(title='',icon=None, text_color=None, background_color=None, font=No
 
 
 # Not ready for prime time
-# def MenubarCustom(menu_definition, background_color=None, text_color=None, disabled_text_color=None, font=None, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None,):
-#     """
-#     A custom Menubar that replaces the OS provided Menubar
-#     THIS FEATURE IS NOT YET COMPLETE!
-#
-#     Why?
-#     Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
-#
-#     NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
-#     should have no problem and it should function as a normal window would.
-#
-#     :param menu_definition: The Menu definition specified using lists (docs explain the format)
-#     :type menu_definition: List[List[Tuple[str, List[str]]]
-#     :param background_color: color of the background
-#     :type background_color: (str)
-#     :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
-#     :type text_color: (str)
-#     :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
-#     :type disabled_text_color: (str)
-#     :param size: Not used in the tkinter port
-#     :type size: (int, int)
-#     :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-#     :type s: (int, int) | (None, None)
-#     :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
-#     :type tearoff: (bool)
-#     :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-#     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-#     :param font: specifies the font family, size, etc
-#     :type font: str | Tuple[str, int]
-#     :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
-#     :type key: str | int | tuple | object
-#     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-#     :type k: str | int | tuple | object
-#     :param visible: set visibility state of the element
-#     :type visible: (bool)
-#     :param metadata: User metadata that can be set to ANYTHING
-#     :type metadata: (Any)
-#     """
-#
-#     row = []
-#     for menu in menu_definition:
-#         text = menu[0]
-#         if MENU_SHORTCUT_CHARACTER in text:
-#             text = text.replace(MENU_SHORTCUT_CHARACTER, '')
-#         if text.startswith(MENU_DISABLED_CHARACTER):
-#             disabled = True
-#             text = text[len(MENU_DISABLED_CHARACTER):]
-#         else:
-#             disabled = False
-#         row += [ButtonMenu(text, menu, border_width=0, button_color=(bar_text_color, bar_background_color),  key=text, pad=pad, disabled=disabled, item_font=font, disabled_text_color=disabled_text_color, text_color=text_color, background_color=background_color)]
-#
-#     return Column([row], pad=(0,0), background_color=bar_background_color, expand_x=True, metadata=CUSTOM_MENUBAR_METADATA_MARKER, key=key if key is not None else k)
-#
+def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, bar_background_color=None, bar_text_color=None, key=None, k=None):
+    """
+    A custom Menubar that replaces the OS provided Menubar
+    THIS FEATURE IS NOT YET COMPLETE!
+
+    Why?
+    Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
+
+    NOTE LINUX USERS - at the moment the minimize function is not yet working.  Windows users
+    should have no problem and it should function as a normal window would.
+
+    :param menu_definition: The Menu definition specified using lists (docs explain the format)
+    :type menu_definition: List[List[Tuple[str, List[str]]]
+    :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
+    :type disabled_text_color: (str)
+    :param bar_font: specifies the font family, size to be used for the chars in the bar itself
+    :type bar_font: str | Tuple[str, int]
+    :param font: specifies the font family, size to be used for the menu items
+    :type font: str | Tuple[str, int]
+    :param tearoff: if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
+    :type tearoff: (bool)
+    :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+    :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :param key: Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
+    :type key: str | int | tuple | object
+    :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
+    :type k: str | int | tuple | object
+    :param visible: set visibility state of the element
+    :type visible: (bool)
+    :param metadata: User metadata that can be set to ANYTHING
+    :type metadata: (Any)
+    """
+    #
+    # row = []
+    # for menu in menu_def:
+    #     text = menu[0]
+    #     if sg.MENU_SHORTCUT_CHARACTER in text:
+    #         text = text.replace(sg.MENU_SHORTCUT_CHARACTER, '')
+    #     if text.startswith(sg.MENU_DISABLED_CHARACTER):
+    #         disabled = True
+    #         text = text[len(sg.MENU_DISABLED_CHARACTER):]
+    #     else:
+    #         disabled = False
+    #     row += [sg.ButtonMenu(text, menu, border_width=0, button_color=f'{text_color} on {background_color}',key=text, pad=pad, disabled=disabled)]
+    #
+    # return sg.Column([row], background_color=background_color, pad=(0,0), expand_x=True)
+    #
+
+    bar_bg = bar_background_color if bar_background_color is not None else theme_button_color()[0]
+    bar_text = bar_text_color if bar_text_color is not None else theme_button_color()[1]
+    row = []
+    for menu in menu_definition:
+        text = menu[0]
+        if MENU_SHORTCUT_CHARACTER in text:
+            text = text.replace(MENU_SHORTCUT_CHARACTER, '')
+        if text.startswith(MENU_DISABLED_CHARACTER):
+            disabled = True
+            text = text[len(MENU_DISABLED_CHARACTER):]
+        else:
+            disabled = False
+
+        button_menu = ButtonMenu(text, menu, border_width=0, button_color=(bar_text, bar_bg), key=text, pad=(0,0), disabled=disabled, font=bar_font, item_font=font, disabled_text_color=disabled_text_color, text_color=bar_bg, background_color=bar_text, tearoff=tearoff)
+        button_menu.part_of_custom_menubar = True
+        button_menu.custom_menubar_key = key if key is not None else k
+        row += [button_menu]
+    return Column([row], pad=pad, background_color=bar_bg, expand_x=True, key=key if key is not None else k)
+
 
 
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
@@ -11918,8 +11934,19 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                     value = element.MenuItemChosen
                     element.MenuItemChosen = None
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
+                    element = element       # type: ButtonMenu
                     value = element.MenuItemChosen
-                    element.MenuItemChosen = None
+                    if element.part_of_custom_menubar:
+                        if element.MenuItemChosen is not None:
+                            value = event = element.MenuItemChosen
+                            top_level_form.LastButtonClicked = element.MenuItemChosen
+                            if element.custom_menubar_key is not None:
+                                top_level_form.ReturnValuesDictionary[element.custom_menubar_key] = value
+                            element.MenuItemChosen = None
+                        else:
+                            if element.custom_menubar_key not in top_level_form.ReturnValuesDictionary:
+                                top_level_form.ReturnValuesDictionary[element.custom_menubar_key] = None
+                            value = None
 
                     # if element.MenuItemChosen is not None:
                     #     button_pressed_text = top_level_form.LastButtonClicked = element.MenuItemChosen
@@ -11929,17 +11956,10 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and \
-                    element.Type != ELEM_TYPE_TEXT and \
-                    element.Type != ELEM_TYPE_IMAGE and \
-                    element.Type != ELEM_TYPE_OUTPUT and \
-                    element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type != ELEM_TYPE_COLUMN and \
-                    element.Type != ELEM_TYPE_FRAME and \
-                    element.Type != ELEM_TYPE_SEPARATOR and \
-                    element.Type != ELEM_TYPE_TAB:
-                AddToReturnList(form, value)
-                AddToReturnDictionary(top_level_form, element, value)
+            if element.Type not in (ELEM_TYPE_BUTTON, ELEM_TYPE_TEXT, ELEM_TYPE_IMAGE, ELEM_TYPE_OUTPUT, ELEM_TYPE_PROGRESS_BAR, ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME, ELEM_TYPE_SEPARATOR, ELEM_TYPE_TAB):
+                if not (element.Type == ELEM_TYPE_BUTTONMENU and element.part_of_custom_menubar):
+                    AddToReturnList(form, value)
+                    AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and
                   element.BType == BUTTON_TYPE_COLOR_CHOOSER and
                   element.Target == (None, None)) or \
@@ -12864,7 +12884,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 menu_def = element.MenuDefinition
 
-                top_menu = tk.Menu(tkbutton, tearoff=False, font=font)
+                top_menu = tk.Menu(tkbutton, tearoff=element.Tearoff, font=font, tearoffcommand=element._tearoff_menu_callback)
 
                 if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                     top_menu.config(bg=element.BackgroundColor)
@@ -12884,9 +12904,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Disabled == True:
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
-
+                    element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
@@ -13426,11 +13444,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_MENUBAR:
                 element = element  # type: MenuBar
                 menu_def = element.MenuDefinition
-                element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot,
-                                                          tearoff=element.Tearoff)  # create the menubar
+                element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff, tearoffcommand=element._tearoff_menu_callback)  # create the menubar
                 menubar = element.TKMenu
                 for menu_entry in menu_def:
-                    baritem = tk.Menu(menubar, tearoff=element.Tearoff)
+                    baritem = tk.Menu(menubar, tearoff=element.Tearoff, tearoffcommand=element._tearoff_menu_callback)
                     if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                         baritem.config(bg=element.BackgroundColor)
                     if element.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
@@ -20423,13 +20440,13 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
          Button('Exit', tooltip='Exit button')],
         [ B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
           B('SDK Reference'), B('Open GitHub Issue'), B('Versions for GitHub'),
-          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-')
+          ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-', tearoff=True)
           ]]
 
     layout = [[]]
 
     if not USE_CUSTOM_TITLEBAR:
-        layout += [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow')]]
+        layout += [[Menu(menu_def, key='_MENU_', font='Courier 15', background_color='red', text_color='white', disabled_text_color='yellow', tearoff=True)]]
     else:
         layout += [[MenubarCustom(menu_def, key='_MENU_', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),  background_color='red', text_color='white', disabled_text_color='yellow')]]
 
