@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.41.2.5 Unreleased\nFix for getting wrong tab number in Tab.update, added bind_return_key to Combo Element, new Sizegrip element, fixed grab_anywhere so that it doesn't grab multiline slider scrollbars input and a few other elements, changed Sizegrip parm to be grip_image which can be a filename or a bytestring, added a white sizegrip image in addition to the default black, improved tearoff menu placement, completed the MenubarCustom code including color settings for the bar and the menus, removed the image from Sizegrip element (now uses the standard Sizegrip built into tkinter), new element method grab_anywhere_exclude to exclude an element from being grabbed"
+version = __version__ = "4.42.0 Released 23-May-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -473,7 +473,7 @@ TEXT_LOCATION_BOTTOM_RIGHT = tk.SE
 TEXT_LOCATION_CENTER = tk.CENTER
 
 
-GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text)
+GRAB_ANYWHERE_IGNORE_THESE_WIDGETS = (ttk.Sizegrip, tk.Scale, ttk.Scrollbar, tk.scrolledtext.ScrolledText, tk.Scrollbar, tk.Entry, tk.Text, tk.PanedWindow)
 
 
 # ----====----====----==== Constants the user should NOT f-with ====----====----====----#
@@ -1382,8 +1382,7 @@ class Element():
     def grab_anywhere_exclude(self):
         """
         Excludes this element from being used by the grab_anywhere feature
-        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events
-        instead of the window dragging.
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
         """
         self.ParentForm._grab_anywhere_ignore_these_list.append(self.Widget)
 
@@ -20069,6 +20068,7 @@ def main_sdk_help():
                         'Input': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#input-element',
                         'Listbox': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#listbox-element',
                         'Menu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#menu-element',
+                        'MenubarCustom': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#menubarcustom-element',
                         'Multiline': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#multiline-element',
                         'OptionMenu': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#optionmenu-element',
                         'Output': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#output-element',
@@ -20082,6 +20082,7 @@ def main_sdk_help():
                         'TabGroup': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tabgroup-element',
                         'Table': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#table-element',
                         'Text': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#text-element',
+                        'Titlebar' : r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#titlebar-element',
                         'Tree': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#tree-element',
                         'VerticalSeparator': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#verticalseparator-element',
                         'Window': r'https://pysimplegui.readthedocs.io/en/latest/call%20reference/#window',
@@ -20131,6 +20132,9 @@ def main_sdk_help():
         except Exception as e:
             pass
 
+    # Add on the pseudo-elements
+    element_names['MenubarCustom'] = MenubarCustom
+    element_names['Titlebar'] = Titlebar
 
     buttons = [[B(e, pad=(0, 0), size=(22, 1), font='Courier 10')] for e in sorted(element_names.keys())]
     buttons += [[B('Func Search', pad=(0, 0), size=(22, 1), font='Courier 10')]]

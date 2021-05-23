@@ -1,5 +1,3 @@
-C:\Python\Anaconda3\python.exe C:/Users/mike/AppData/Roaming/JetBrains/PyCharmCE2020.3/scratches/scratch_1152.py
-Go {'-IN-': 'C:\\Python\\PycharmProjects\\PSG\\DemoPrograms\\screenshots', 'Browse': ''}
 ![https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_All_Widgets.py](https://raw.githubusercontent.com/Chr0nicT/PySimpleGUI/master/DemoPrograms/Markdown_Project/Demo_All_Widgets.png)
 ![https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Animated_GIFs.py](https://raw.githubusercontent.com/Chr0nicT/PySimpleGUI/master/DemoPrograms/Markdown_Project/Demo_Animated_GIFs.png)
 ![https://github.com/PySimpleGUI/PySimpleGUI/blob/master/DemoPrograms/Demo_Bar_Chart.py](https://raw.githubusercontent.com/Chr0nicT/PySimpleGUI/master/DemoPrograms/Markdown_Project/Demo_Bar_Chart.png)

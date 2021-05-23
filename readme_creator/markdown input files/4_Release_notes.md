@@ -1912,7 +1912,34 @@ Fixed Syntax error in Text.update
 	* tkinter version
 	* PySimpleGUI version
 	* PySimpleGUI filename with full path
-	
+
+
+## 4.42.0 PySimpleGUI 23-May-2021
+
+New Sizegrip Element
+New MenubarCustom pseudo-Element
+Grab Anywhere feature improved
+
+* New Sizegrip element
+	* Needed in order to resize windows that doesn't have a titlebar
+	* Place as the last element on the last row of your layout
+* New MenubarCustom Element
+	* Needed when using a custom Titlebar
+	* Provides the ability to have a window that is entirely themed
+	* Without it, was not possible to have a custom Titlebar with a menubar
+	* Works like the traditional Menu Element (the item chosen is returned as the event)
+* Added new elements to the SDK Reference built into PySimpleGUI and in the call reference documentation online	
+* Grab Anywhere
+	* Finally got the appropriate elements and widgets excluded!  Yeah!
+	* Now Multiline, Input, Slider, Pane, Sizegrip, active scrollbars will not move the window
+	* Additionally, a new method Element.grab_anywhere_exclude() will exclude your element from being grabbed
+		* Useful for Graph elements
+		* Sometimes you'll have a window with graphs that you can to be able to move using Graph element
+		* Other times, you are using your Graph element with drag option set. In this case, you will want to exclude it.
+* Improved torn-off menu placement. Now places them at the window's location
+* Combo element new bind_return_key parameter - if set, when return key is pressed and element is focused, then event will be generated. Works like the Listbox's bind_return_key
+* Fix for changing the title of a Tab using 
+
 
 ## Upcoming
 
