@@ -174,6 +174,15 @@ Returns the current text shown on a button
 |---|---|---|
 |(str)| **return** | The text currently displayed on the button |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -538,6 +547,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -836,6 +854,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -1124,6 +1151,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -1470,6 +1506,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -1718,6 +1763,7 @@ Combo(values,
     auto_size_text = None,
     background_color = None,
     text_color = None,
+    bind_return_key = False,
     change_submits = False,
     enable_events = False,
     disabled = False,
@@ -1742,6 +1788,7 @@ Parameter Descriptions:
 |                                   bool                                   |  auto_size_text  | True if element should be the same size as the contents |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
+|                                   bool                                   | bind_return_key  | If True, then the return key will cause a the Combo to generate an event |
 |                                   bool                                   |  change_submits  | DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                   bool                                   |  enable_events   | Turns on the element specific events. Combo event is when a choice is made |
 |                                   bool                                   |     disabled     | set disable state for element |
@@ -1825,6 +1872,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -2173,6 +2229,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -2809,6 +2874,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -3476,6 +3550,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -3724,6 +3807,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -4099,6 +4191,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -4481,6 +4582,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -4853,6 +4963,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -5033,6 +5152,51 @@ Parameter Descriptions:
 
 ---------
 
+## MenubarCustom Element
+
+Note that while the MenubarCustom is an element, it is implemented using a function.
+It is actually a "compound element" that consists of several elements combined into a single Column element.
+See the Column element to get a list of method calls available.  The function returns a Column element.
+
+A custom Menubar that replaces the OS provided Menubar
+
+Why?
+Two reasons - 1. they look great (see custom titlebar) 2. if you have a custom titlebar, then you have to use a custom menubar if you want a menubar
+
+```
+MenubarCustom(menu_definition,
+    disabled_text_color = None,
+    bar_font = None,
+    font = None,
+    tearoff = False,
+    pad = None,
+    background_color = None,
+    text_color = None,
+    bar_background_color = None,
+    bar_text_color = None,
+    key = None,
+    k = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+|                     List[List[Tuple[str, List[str]]]                     |   menu_definition    | The Menu definition specified using lists (docs explain the format) |
+|                                   str                                    | disabled_text_color  | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                          str or Tuple[str, int]                          |       bar_font       | specifies the font family, size to be used for the chars in the bar itself |
+|                          str or Tuple[str, int]                          |         font         | specifies the font family, size to be used for the menu items |
+|                                   bool                                   |       tearoff        | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|                                   str                                    |   background_color   | color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text |
+|                                   str                                    |      text_color      | color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background |
+|                                   str                                    | bar_background_color | color to use for the menubar. Can be in #RRGGBB format or a color name "black". Defaults to theme's button text color |
+|                                   str                                    |    bar_text_color    | color to use for the menu items text when item is disabled. Can be in #RRGGBB format or a color name "black". Defaults to theme's button background color |
+|                      str or int or tuple or object                       |         key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                      str or int or tuple or object                       |          k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+
+---------
+
 ## Multiline Element 
 
     Multiline Element - Display and/or read multiple lines of text.  This is both an input and output element.
@@ -5177,6 +5341,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -5602,6 +5775,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -5907,6 +6089,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -6233,6 +6424,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -6494,6 +6694,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -6839,6 +7048,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -7067,6 +7285,215 @@ Parameter Descriptions:
 
 ---------
 
+## Sizegrip Element 
+
+        Sizegrip element will be added to the bottom right corner of your window.
+        It should be placed on the last row of your window along with any other elements on that row.
+        The color will match the theme's background color.
+
+```
+Sizegrip(background_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | background_color | color to use for the background of the grip |
+
+### bind
+
+Used to add tkinter events to an Element.
+The tkinter specific data is in the Element's member variable user_bind_event
+
+```
+bind(bind_string, key_modifier)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string  | The string tkinter expected in its bind function |
+| str | key_modifier | Additional data to be added to the element's key when event is returned |
+
+### expand
+
+Causes the Element to expand to fill available space in the X and Y directions.  Can specify which or both directions
+
+```
+expand(expand_x = False,
+    expand_y = False,
+    expand_row = True)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool |  expand_x  | If True Element will expand in the Horizontal directions |
+| bool |  expand_y  | If True Element will expand in the Vertical directions |
+| bool | expand_row | If True the row containing the element will also expand. Without this your element is "trapped" within the row |
+
+### get_size
+
+Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
+
+`get_size()`
+
+|Type|Name|Meaning|
+|---|---|---|
+|Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
+### hide_row
+
+Hide the entire row an Element is located on.
+        Use this if you must have all space removed when you are hiding an element, including the row container
+
+```python
+hide_row()
+```
+
+### metadata
+
+#### property: metadata
+
+Metadata is an Element property that you can use at any time to hold any value
+
+|Type|Name|Meaning|
+|---|---|---|
+|(Any)| **return** | the current metadata value |
+
+### set_cursor
+
+Sets the cursor for the current Element.
+"Cursor" is used in 2 different ways in this call.
+For the parameter "cursor" it's actually the mouse pointer.
+If you do not want any mouse pointer, then use the string "none"
+For the parameter "cursor_color" it's the color of the beam used when typing into an input element
+
+```
+set_cursor(cursor = None, cursor_color = None)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str |    cursor    | The tkinter cursor name |
+| str | cursor_color | color to set the "cursor" to |
+
+### set_focus
+
+Sets the current focus to be on this element
+
+```
+set_focus(force = False)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| bool | force | if True will call focus_force otherwise calls focus_set |
+
+### set_size
+
+Changes the size of an element to a specific size.
+It's possible to specify None for one of sizes so that only 1 of the element's dimensions are changed.
+
+```
+set_size(size = (None, None))
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (int, int) | size | The size in characters, rows typically. In some cases they are pixels |
+
+### set_tooltip
+
+Called by application to change the tooltip text for an Element.  Normally invoked using the Element Object such as: window.Element('key').SetToolTip('New tip').
+
+```
+set_tooltip(tooltip_text)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | tooltip_text | the text to show in tooltip. |
+
+### set_vscroll_position
+
+Attempts to set the vertical scroll postition for an element's Widget
+
+```
+set_vscroll_position(percent_from_top)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| float | percent_from_top | From 0 to 1.0, the percentage from the top to move scrollbar to |
+
+### unbind
+
+Removes a previously bound tkinter event from an Element.
+
+```
+unbind(bind_string)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | bind_string | The string tkinter expected in its bind function |
+
+### unhide_row
+
+Unhides (makes visible again) the row container that the Element is located on.
+        Note that it will re-appear at the bottom of the window / container, most likely.
+
+```python
+unhide_row()
+```
+
+### update
+
+A dummy update call.  This will only be called if an element hasn't implemented an update method
+It is provided here for docstring purposes.  If you got here by browing code via PyCharm, know
+that this is not the function that will be called.  Your actual element's update method will be called
+
+```
+update(args=*<1 or N object>, kwargs)
+```
+
+### visible
+
+#### property: visible
+
+Returns visibility state for the element.  This is a READONLY property
+
+|Type|Name|Meaning|
+|---|---|---|
+|(bool)| **return** | Visibility state for element |
+
+---------
+
 ## Slider Element 
 
     A slider, horizontal or vertical
@@ -7185,6 +7612,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -7496,6 +7932,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -7818,6 +8263,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -8129,6 +8583,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -8515,6 +8978,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -8859,6 +9331,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -9175,6 +9656,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
 
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
+
 ### hide_row
 
 Hide the entire row an Element is located on.
@@ -9424,6 +9914,8 @@ Parameter Descriptions:
 | str or int or tuple or object or None |        k         | Exactly the same as key. Choose one of them to use |
 | Column | **RETURN** | A single Column element that has eveything in 1 element
 
+---------
+
 ## Tree Element 
 
     Tree Element - Presents data in a tree-like manner, much like a file/folder browser.  Uses the TreeData class
@@ -9569,6 +10061,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 
@@ -9918,6 +10419,15 @@ Return the size of an element in Pixels.  Care must be taken as some elements us
 |Type|Name|Meaning|
 |---|---|---|
 |Tuple[int, int]| **return** | width and height of the element |
+
+### grab_anywhere_exclude
+
+Excludes this element from being used by the grab_anywhere feature
+        Handy for elements like a Graph element when dragging is enabled. You want the Graph element to get the drag events instead of the window dragging.
+
+```python
+grab_anywhere_exclude()
+```
 
 ### hide_row
 

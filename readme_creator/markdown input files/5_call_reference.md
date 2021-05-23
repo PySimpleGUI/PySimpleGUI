@@ -41,6 +41,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### get_text
 <!-- <+Button.get_text+> -->
 
+### grab_anywhere_exclude
+<!-- <+Button.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Button.hide_row+> -->
 
@@ -114,6 +117,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+ButtonMenu.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+ButtonMenu.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+ButtonMenu.hide_row+> -->
 
@@ -185,6 +191,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Canvas.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Canvas.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Canvas.hide_row+> -->
 
@@ -251,6 +260,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Checkbox.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Checkbox.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Checkbox.hide_row+> -->
@@ -325,6 +337,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Column.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Column.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Column.hide_row+> -->
@@ -408,6 +423,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Combo.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Combo.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Combo.hide_row+> -->
 
@@ -479,6 +497,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Frame.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Frame.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Frame.hide_row+> -->
@@ -601,6 +622,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Graph.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Graph.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Graph.hide_row+> -->
@@ -737,6 +761,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+HorizontalSeparator.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+HorizontalSeparator.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+HorizontalSeparator.hide_row+> -->
 
@@ -796,6 +823,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Image.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Image.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Image.hide_row+> -->
@@ -874,6 +904,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Input.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Input.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Input.hide_row+> -->
@@ -956,6 +989,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Listbox.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Listbox.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Listbox.hide_row+> -->
 
@@ -1036,6 +1072,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Menu.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Menu.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Menu.hide_row+> -->
 
@@ -1086,6 +1125,17 @@ The following methods are here for backwards compatibility reference.  You will 
 ---------
 
 
+## MenubarCustom Element
+
+Note that while the MenubarCustom is an element, it is implemented using a function.
+It is actually a "compound element" that consists of several elements combined into a single Column element.
+See the Column element to get a list of method calls available.  The function returns a Column element.
+
+<!-- <+func.MenubarCustom+> -->
+
+
+---------
+
 ## Multiline Element 
 <!-- <+Multiline.doc+> -->
 <!-- <+Multiline.__init__+> -->
@@ -1104,6 +1154,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Multiline.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Multiline.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Multiline.hide_row+> -->
@@ -1193,6 +1246,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+OptionMenu.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+OptionMenu.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+OptionMenu.hide_row+> -->
 
@@ -1262,6 +1318,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Output.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Output.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Output.hide_row+> -->
@@ -1342,6 +1401,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Pane.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Pane.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Pane.hide_row+> -->
 
@@ -1406,6 +1468,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+ProgressBar.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+ProgressBar.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+ProgressBar.hide_row+> -->
@@ -1483,6 +1548,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Radio.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Radio.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Radio.hide_row+> -->
 
@@ -1543,6 +1611,59 @@ The following methods are here for backwards compatibility reference.  You will 
 ---------
 
 
+## Sizegrip Element 
+<!-- <+Sizegrip.doc+> -->
+<!-- <+Sizegrip.__init__+> -->
+
+### bind
+<!-- <+Sizegrip.bind+> -->
+
+### expand
+<!-- <+Sizegrip.expand+> -->
+
+### get_size
+<!-- <+Sizegrip.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Sizegrip.grab_anywhere_exclude+> -->
+
+### hide_row
+<!-- <+Sizegrip.hide_row+> -->
+
+### metadata
+<!-- <+Sizegrip.metadata+> -->
+
+### set_cursor
+<!-- <+Sizegrip.set_cursor+> -->
+
+### set_focus
+<!-- <+Sizegrip.set_focus+> -->
+
+### set_size
+<!-- <+Sizegrip.set_size+> -->
+
+### set_tooltip
+<!-- <+Sizegrip.set_tooltip+> -->
+
+### set_vscroll_position
+<!-- <+Sizegrip.set_vscroll_position+> -->
+
+### unbind
+<!-- <+Sizegrip.unbind+> -->
+
+### unhide_row
+<!-- <+Sizegrip.unhide_row+> -->
+
+### update
+<!-- <+Sizegrip.update+> -->
+
+### visible
+<!-- <+Sizegrip.visible+> -->
+
+
+---------
+
+
 ## Slider Element 
 <!-- <+Slider.doc+> -->
 <!-- <+Slider.__init__+> -->
@@ -1558,6 +1679,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Slider.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Slider.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Slider.hide_row+> -->
@@ -1628,6 +1752,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Spin.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Spin.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Spin.hide_row+> -->
 
@@ -1695,6 +1822,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+StatusBar.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+StatusBar.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+StatusBar.hide_row+> -->
@@ -1764,6 +1894,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+Tab.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Tab.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Tab.hide_row+> -->
@@ -1853,6 +1986,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+TabGroup.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+TabGroup.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+TabGroup.hide_row+> -->
 
@@ -1926,6 +2062,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Table.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Table.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Table.hide_row+> -->
 
@@ -1994,6 +2133,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### get_size
 <!-- <+Text.get_size+> -->
 
+### grab_anywhere_exclude
+<!-- <+Text.grab_anywhere_exclude+> -->
+
 ### hide_row
 <!-- <+Text.hide_row+> -->
 
@@ -2055,6 +2197,7 @@ See the Column element to get a list of method calls available.  The function re
 
 <!-- <+func.Titlebar+> -->
 
+---------
 
 ## Tree Element 
 <!-- <+Tree.doc+> -->
@@ -2074,6 +2217,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### get_size
 <!-- <+Tree.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+Tree.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+Tree.hide_row+> -->
@@ -2158,6 +2304,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### get_size
 <!-- <+VerticalSeparator.get_size+> -->
+
+### grab_anywhere_exclude
+<!-- <+VerticalSeparator.grab_anywhere_exclude+> -->
 
 ### hide_row
 <!-- <+VerticalSeparator.hide_row+> -->
