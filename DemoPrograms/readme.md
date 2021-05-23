@@ -6,13 +6,17 @@ This folder of over 170 programs is your jump-start, spring board, boost, shove 
 
 Programs in this folder have a range of uses and reasons for existing
 
-* Demonstrate a particualar PySimpleGUI Element / Feature (Tables, Trees, Buttons)
+* Demonstrate a particular PySimpleGUI Element / Feature (Tables, Trees, Buttons)
 * Design patterns are "official" ways to get something done (Multiple windows)
-* Integrate PySimpleGUI with another package / technology (OpenCv, Matplotlib)
+* Integrate PySimpleGUI with another package / technology (OpenCV, Matplotlib)
 * Assemble PySimpleGUI elements in a useful way (Bar graphs, games)
 * Additional user code that enable new functionality (ANSI color strings)
 * How to deal with common GUI problems (work requiring lots of time)
 
+
+## Demo Program Browser
+
+The best way to work with these demos is to use the Demo Program Browser.  You'll find installation instructions in the Cookbook.  This browser will enable you to search by filename and also enable you to search inside the demos, a particularly powerful capability.
 
 ## Coding Conventions
 
@@ -34,7 +38,7 @@ There was a recent sweep through all of the Demo Programs where all code was cha
 
 PySimpleGUI is on a swift development path.  In a short amount of time a lot can change.  To help ensure that users are using the latest, preferred, methods of using the PySimpleGUI package, these Demo Programs are the vehicle in which to communicate the latest design patterns.
 
-
+Take a look at the Cookbook for more information about coding conventions used.
 
 ## Ports
 
@@ -48,10 +52,12 @@ import PySimpleGUIQt as sg; use('qt5agg')
 
 This indicates that the code can be run on either the tkinter or the Qt port.  To switch ports, uncomment the one you want to run on and comment out the others.
 
+There are Demo Programs folders under each of the ports folders in the GitHub.
+
 
 ## Running Demos Online
 
-Recently two online Pyuthon services have been used to demonstrate using PySimpleGUI- Trinket & repl.it.  You will find not only some of the Demo Programs from this folder on these sites, but other demo programs as well.  They make good "scratch pads" for posting PySimpleGUI code.  They are superior to Pastebin because not only can you share your code, but people can run the code without having to install or do anything locally.
+Recently two online Python services have been used to demonstrate using PySimpleGUI- Trinket & repl.it.  You will find not only some of the Demo Programs from this folder on these sites, but other demo programs as well.  They make good "scratch pads" for posting PySimpleGUI code.  They are superior to GithubGists because not only can you share your code, but people can run the code without having to install or do anything locally.
 
 
 ### Trinket
@@ -83,6 +89,9 @@ https://repl.it/@PySimpleGUI
 
 These programs may not be the most up to date and in fact are likely to contain old coding constructs and examples.  As a result, use them more of a demonstration of "what's possible" rather than "exactly how to do it".
 
+## Other Sample Code in this GitHub Account
+
+The PySimpleGUI GitHub account has a number of repos that contain larger applications that use PySimpleGUI. A few linger in the PySimpleGUI project folder like the HowDoI, chess, exemaker, and some user created programs.  They'll get moved out at some point.  Until then, browse around the repo.  Explore a little.  Some are older, some newer, but none are as important as the Demo Programs folder which is kept up to date.
 
 ## Support
 
@@ -92,14 +101,14 @@ They are demonstrations, examples, and as a result may not be fully built-out, c
 
 If you encounter a problem where a demo no longer functions, you are of course encouraged to open an Issue on the GitHub.  
 
-If you encounter more subtle problems, you should take into account that these programs are demonstrations, not end-user products.  For example, if an image viewer application doesn't display all types of image files ilke JPGs, then that's more than likely a limitiation that the underlying GUI Framework has rather than a bug.  In this example, it's your repsonibility to figure out how to convert your images into a format that's understod by the framework rather than an improvement needed in the demo program that will show you how to do that.
+If you encounter more subtle problems, you should take into account that these programs are demonstrations, not end-user products.  For example, if an image viewer application doesn't display all types of image files like JPGs, then that's more than likely a limitation that the underlying GUI Framework has rather than a bug.  In this example, it's your responsibility to figure out how to convert your images into a format that's understood by the framework rather than an improvement needed in the demo program that will show you how to do that.
 
 
 # Author 
 
 The PySimpleGUI Organization and PySimpleGUI users
 
-If the code has been provide by a PySimpleGUI user, then the comments at the top of the progrm will indicate the author.
+If the code has been provide by a PySimpleGUI user, then the comments at the top of the program will indicate the author.
 
 
    
