@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.42.0 Released 23-May-2021"
+version = __version__ = "4.42.0.1 Unreleased\nAdded Window.ding() - fun is a particularly important feature, better error reporting when finalize required"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -8901,7 +8901,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Minimize this window to the task bar
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.minimize'):
             return
         self.TKroot.iconify()
         self.maximized = False
@@ -8914,7 +8914,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         The reason for the difference is the title bar is removed in some cases when using fullscreen option
         """
 
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.maximize'):
             return
         if not running_linux():
             self.TKroot.state('zoomed')
@@ -8928,7 +8928,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Restore a window to a non-maximized state.  Does different things depending on platform.  See Maximize for more.
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.normal'):
             return
         if self.TKroot.state() == 'iconic':
             self.TKroot.deiconify()
@@ -9192,7 +9192,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Disables window from taking any input from the user
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.disable'):
             return
         self.TKroot.attributes('-disabled', 1)
         # self.TKroot.grab_set_global()
@@ -9201,7 +9201,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Re-enables window to take user input after having it be Disabled previously
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.enable'):
             return
         self.TKroot.attributes('-disabled', 0)
         # self.TKroot.grab_release()
@@ -9210,7 +9210,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Hides the window from the screen and the task bar
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.hide'):
             return
         self._Hidden = True
         self.TKroot.withdraw()
@@ -9219,7 +9219,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Used to bring back a window that was previously hidden using the Hide method
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.un_hide'):
             return
         if self._Hidden:
             self.TKroot.deiconify()
@@ -9231,7 +9231,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         channel to 0.  NOTE that on some platforms alpha is not supported. The window will remain showing on these
         platforms.  The Raspberry Pi for example does not have an alpha setting
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.disappear'):
             return
         self.TKroot.attributes('-alpha', 0)
 
@@ -9239,7 +9239,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Causes a window previously made to "Disappear" (using that method). Does this by restoring the alpha channel
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.reappear'):
             return
         self.TKroot.attributes('-alpha', 255)
 
@@ -9250,7 +9250,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         :type alpha: (float)
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.set_alpha'):
             return
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
@@ -9272,7 +9272,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param alpha: 0 to 1. 0 is completely transparent.  1 is completely visible and solid (can't see through)
         :type alpha: (float)
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.alpha_channel'):
             return
         self._AlphaChannel = alpha
         self.TKroot.attributes('-alpha', alpha)
@@ -9282,7 +9282,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Brings this window to the top of all other windows (perhaps may not be brought before a window made to "stay
         on top")
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.bring_to_front'):
             return
         if running_windows():
             try:
@@ -9303,7 +9303,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Pushes this window to the bottom of the stack of windows. It is the opposite of BringToFront
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.send_to_back'):
             return
         try:
             self.TKroot.lower()
@@ -9318,7 +9318,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :return: The x and y location in tuple form (x,y)
         :rtype: Tuple[(int), (int)]
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.current_location'):
             return
         return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
 
@@ -9331,7 +9331,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :return: (width, height) of the window
         :rtype: Tuple[(int), (int)] or Tuple[None, None]
         """
-        if not self._is_window_created():
+        if not self._is_window_created('Tried to use Window.size property'):
             return (None, None)
         win_width = self.TKroot.winfo_width()
         win_height = self.TKroot.winfo_height()
@@ -9360,7 +9360,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param size: (width, height) tuple (int, int) of the desired window size in pixels
         :type size: Tuple[int, int]
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.set_min_size'):
             return
         self.TKroot.minsize(size[0], size[1])
         self.TKroot.update_idletasks()
@@ -9381,7 +9381,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param color: Color string that defines the transparent color
         :type color: (str)
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.set_transparent_color'):
             return
         try:
             self.TKroot.attributes('-transparentcolor', color)
@@ -9395,7 +9395,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.grab_any_where_on'):
             return
         self.TKroot.bind("<ButtonPress-1>", self._StartMove)
         self.TKroot.bind("<ButtonRelease-1>", self._StopMove)
@@ -9407,7 +9407,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Turns off Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
         been Finalized or Read.
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.grab_any_where_off'):
             return
         self.TKroot.unbind("<ButtonPress-1>")
         self.TKroot.unbind("<ButtonRelease-1>")
@@ -9444,7 +9444,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param key: The event that will be generated when the tkinter event occurs
         :type key: str | int | tuple | object
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.bind'):
             return
         self.TKroot.bind(bind_string, lambda evt: self._user_bind_callback(bind_string, evt))
         self.user_bind_dict[bind_string] = key
@@ -9472,7 +9472,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Enables the internal debugger. By default, the debugger IS enabled
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.enable_debugger'):
             return
         self.TKroot.bind('<Cancel>', self._callback_main_debugger_window_create_keystroke)
         self.TKroot.bind('<Pause>', self._callback_popout_window_create_keystroke)
@@ -9483,7 +9483,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Disable the internal debugger. By default the debugger is ENABLED
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.disable_debugger'):
             return
         self.TKroot.unbind("<Cancel>")
         self.TKroot.unbind("<Pause>")
@@ -9497,7 +9497,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param title: The string to set the title to
         :type title: (str)
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.set_title'):
             return
         self.TKroot.wm_title(str(title))
 
@@ -9509,7 +9509,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
 
         NOTE - Sorry Mac users - you can't have modal windows.... lobby your tkinter Mac devs
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.make_modal'):
             return
 
         if running_mac():
@@ -9527,7 +9527,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Forces this window to take focus
         """
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.force_focus'):
             return
         self.TKroot.focus_force()
 
@@ -9554,13 +9554,30 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :type cursor: (str)
         """
 
-        if not self._is_window_created():
+        if not self._is_window_created('tried Window.set_cursor'):
             return
         try:
             self.TKroot.config(cursor=cursor)
         except Exception as e:
             print('Warning bad cursor specified ', cursor)
             print(e)
+
+
+    def ding(self, display_number=0):
+        """
+        Make a "bell" sound. A capability provided by tkinter.  Your window needs to be finalized prior to calling
+        Ring a display's bell is the tkinter description of the call
+        :param display_number: Passed to tkinter's bell method as parameter "displayof".
+        :type display_number: int
+        """
+        if not self._is_window_created('tried Window.ding'):
+            return
+        try:
+            self.TKroot.bell(display_number)
+        except Exception as e:
+            if not SUPPRESS_ERROR_POPUPS:
+                _error_popup_with_traceback('Window.ding() - tkinter reported error from bell() call', e)
+
 
     def _window_tkvar_changed_callback(self,  *args):
         """
@@ -9697,13 +9714,13 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         return self.Read(*args, **kwargs)
 
-    def _is_window_created(self):
+    def _is_window_created(self, additional_message=''):
+        msg = str(additional_message)
         if self.TKroot is None:
-            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a "finalize=True" parameter to your Window creation will fix this', UserWarning)
+            warnings.warn('You cannot perform operations on a Window until it is read or finalized. Adding a "finalize=True" parameter to your Window creation will fix this. ' + msg, UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
-                popup_error('You cannot perform operations on a Window until it is read or finalized.',
-                            'Yea, I know, it\'s a weird thing, but just fix it and keep going.... ',
-                            'Adding a "finalize=True" parameter to your Window creation will likely fix this', image=_random_error_emoji())
+                _error_popup_with_traceback('You cannot perform operations on a Window until it is read or finalized.',
+                            'Adding a "finalize=True" parameter to your Window creation will likely fix this', msg)
             return False
         return True
 
