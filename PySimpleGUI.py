@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.42.0.1 Unreleased\nAdded Window.ding() - fun is a particularly important feature, better error reporting when finalize required"
+version = __version__ = "4.43.0 Released 23-May-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -777,7 +777,7 @@ class Element():
         :param auto_size_text: True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text: bool
         :param font: specifies the font family, size, etc (see docs for exact formats)
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param background_color: color of background. Can be in #RRGGBB format or a color name "black"
         :type background_color: (str)
         :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
@@ -1235,7 +1235,7 @@ class Element():
         """
         Return the size of an element in Pixels.  Care must be taken as some elements use characters to specify their size but will return pixels when calling this get_size method.
         :return: width and height of the element
-        :rtype: Tuple[int, int]
+        :rtype: (int, int)
         """
         try:
             w = self.Widget.winfo_width()
@@ -1387,6 +1387,15 @@ class Element():
         self.ParentForm._grab_anywhere_ignore_these_list.append(self.Widget)
 
 
+
+    def grab_anywhere_include(self):
+        """
+        Includes this element in the grab_anywhere feature
+        This will allow you to make a Multline element drag a window for example
+        """
+        self.ParentForm._grab_anywhere_include_these_list.append(self.Widget)
+
+
     def update(self, *args, **kwargs):
         """
         A dummy update call.  This will only be called if an element hasn't implemented an update method
@@ -1442,7 +1451,7 @@ class Input(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param border_width: width of border around element in pixels
@@ -1623,7 +1632,7 @@ class Combo(Element):
         :param readonly: make element readonly (user can't change). True means user cannot change
         :type readonly: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -1661,7 +1670,7 @@ class Combo(Element):
         :param readonly: if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
         :type readonly: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param visible: control visibility of element
         :type visible: (bool)
         :param size: width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
@@ -1905,7 +1914,7 @@ class Listbox(Element):
         :param auto_size_text: True if element should be the same size as the contents
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param font: specifies the font family, size, etc
         :param no_scrollbar: Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
         :type no_scrollbar: (bool)
@@ -2122,7 +2131,7 @@ class Radio(Element):
         :param circle_color: color of background of the circle that has the dot selection indicator in it
         :type circle_color: (str)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param key: Used with window.FindElement and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -2288,7 +2297,7 @@ class Checkbox(Element):
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text
@@ -2460,7 +2469,7 @@ class Spin(Element):
         :param auto_size_text: if True will size the element to match the length of the text
         :type auto_size_text: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param background_color: color of background
         :type background_color: (str)
         :param text_color: color of the text
@@ -2597,7 +2606,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False,
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text: Initial text to show
@@ -2645,7 +2654,7 @@ class Multiline(Element):
         :param focus: if True initial focus will go to this element
         :type focus: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
@@ -2654,6 +2663,10 @@ class Multiline(Element):
         :type justification: (str)
         :param no_scrollbar: If False then a scrollbar will be shown (the default)
         :type no_scrollbar: (bool)
+        :param expand_x: If True the Multiline will automatically expand in the X direction to fill available space
+        :type expand_x: (bool)
+        :param expand_y: If True the Multiline will automatically expand in the Y direction to fill available space
+        :type expand_y: (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
@@ -2685,6 +2698,8 @@ class Multiline(Element):
         self.echo_stdout_stderr = echo_stdout_stderr
         self.Justification = 'left' if justification is None else justification
         self.justification_tag = self.just_center_tag = self.just_left_tag = self.just_right_tag = None
+        self.expand_x = expand_x
+        self.expand_y = expand_y
         if reroute_stdout:
             self.reroute_stdout_to_here()
         if reroute_stderr:
@@ -2706,7 +2721,7 @@ class Multiline(Element):
         :param append: if True then new value will be added onto the end of the current value. if False then contents will be replaced.
         :type append: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param text_color: color of the text
         :type text_color: (str)
         :param background_color: color of background
@@ -2820,7 +2835,7 @@ class Multiline(Element):
         There are also "aliases" for text_color, background_color and colors (t, b, c)
         t - An alias for color of the text (makes for shorter calls)
         b - An alias for the background_color parameter
-        c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+        c - (str, str) - "shorthand" way of specifying color. (foreground, backgrouned)
         c - str - can also be a string of the format "foreground on background"  ("white on red")
 
         With the aliases it's possible to write the same print but in more compact ways:
@@ -2842,13 +2857,13 @@ class Multiline(Element):
         :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification: (str)
         :param colors: Either a tuple or a string that has both the text and background colors
-        :type colors: (str) or Tuple[str, str]
+        :type colors: (str) or (str, str)
         :param t: Color of the text
         :type t: (str)
         :param b: The background color of the line
         :type b: (str)
         :param c: Either a tuple or a string that has both the text and background colors
-        :type c: (str) or Tuple[str, str]
+        :type c: (str) or (str, str)
         """
 
         kw_text_color = text_color or t
@@ -2964,7 +2979,7 @@ class Text(Element):
         :param text: The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text: Any
         :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: Tuple[int, int] |  Tuple[int, None] | (None, None)
+        :type size: (int, int) |  (int, None) | (None, None)
         :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s: (int, int) |  (int, None) | (None, None)
         :param auto_size_text: if True size of the Text Element will be sized to fit the string provided in 'text' parm
@@ -2976,7 +2991,7 @@ class Text(Element):
         :param relief: relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
         :type relief: (str/enum)
         :param font: specifies the font family, size, etc
-        :type font: (str or Tuple[str, int] or None)
+        :type font: (str or (str, int) or None)
         :param text_color: color of the text
         :type text_color: (str)
         :param background_color: color of background
@@ -3031,7 +3046,7 @@ class Text(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param visible: set visibility state of the element
         :type visible: (bool)
         """
@@ -3071,7 +3086,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font: specifies the font family, size, etc, to be measured
-        :type font: (str or Tuple[str, int] or None)
+        :type font: (str or (str, int) or None)
         :param character: specifies a SINGLE CHARACTER character to measure
         :type character: (str)
         :return: Width in pixels of "A"
@@ -3092,7 +3107,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font: specifies the font family, size, etc, to be measured
-        :type font: (str or Tuple[str, int] or None)
+        :type font: (str or (str, int) or None)
         :return: Height in pixels of "A"
         :rtype: (int)
         """
@@ -3111,7 +3126,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font: specifies the font family, size, etc, to be measured
-        :type font: (str or Tuple[str, int] or None)
+        :type font: (str or (str, int) or None)
         :param string: the string to measure
         :type string: str
         :return: Width in pixels of string
@@ -3162,7 +3177,7 @@ class StatusBar(Element):
         :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
         :type relief: (enum)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param text_color: color of the text
         :type text_color: (str)
         :param background_color: color of background
@@ -3214,7 +3229,7 @@ class StatusBar(Element):
         :param text_color: color of the text
         :type text_color: (str)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param visible: set visibility state of the element
         :type visible: (bool)
         """
@@ -3273,7 +3288,7 @@ class TKProgressBar():
         :param orientation: 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical')
         :type orientation: (str)
         :param BarColor: The 2 colors that make up a progress bar. One is the background, the other is the bar
-        :type BarColor: Tuple[str, str]
+        :type BarColor: (str, str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         """
@@ -3370,7 +3385,7 @@ class TKOutput(tk.Frame):
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         """
@@ -3469,7 +3484,7 @@ class Output(Element):
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
@@ -3592,11 +3607,11 @@ class Button(Element):
         :param button_type: You  should NOT be setting this directly. ONLY the shortcut functions set this
         :type button_type: (int)
         :param target: key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
-        :type target: str | Tuple[int, int]
+        :type target: str | (int, int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
         :param file_types: the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),).  Note - NOT SUPPORTED ON MAC
-        :type file_types: Tuple[Tuple[str, str], ...]
+        :type file_types: Tuple[(str, str), ...]
         :param initial_folder: starting path for folders and files
         :type initial_folder: (str)
         :param default_extension:  If no extension entered by user, add this to filename (only used in saveas dialogs)
@@ -3624,17 +3639,17 @@ class Button(Element):
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type button_color: Tuple[str, str] | str | Tuple[int, int] | None
+        :type button_color: (str, str) | str | (int, int) | None
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
-        :type disabled_button_color: Tuple[str, str] | str
+        :type disabled_button_color: (str, str) | str
         :param highlight_colors: colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button
-        :type highlight_colors: Tuple[str, str]
+        :type highlight_colors: (str, str)
         :param mouseover_colors: Important difference between Linux & Windows! Linux - Colors when mouse moved over button.  Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect)
         :type mouseover_colors: (str, str) | str
         :param use_ttk_buttons: True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :type use_ttk_buttons: (bool)
         :param font: specifies the font family, size, etc
-        :type font: str | Tuple[str, int]
+        :type font: str | (str, int)
         :param bind_return_key: If True the return key will cause this button to be pressed
         :type bind_return_key: (bool)
         :param focus: if True, initial focus will be put on this button
@@ -3738,7 +3753,7 @@ class Button(Element):
         """
         Determines the color to use to indicate the button has focus. This setting is only used by Linux.
         :return: Pair of colors. (Highlight, Highlight Background)
-        :rtype: Tuple[str, str]
+        :rtype: (str, str)
         """
         highlight_color = highlight_background = COLOR_SYSTEM_DEFAULT
         if self.ButtonColor != COLOR_SYSTEM_DEFAULT and theme_background_color() != COLOR_SYSTEM_DEFAULT:
@@ -3956,7 +3971,7 @@ class Button(Element):
         :param text: sets button text
         :type text: (str)
         :param button_color: Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type button_color: Tuple[str, str] | str | Tuple[int, int] | None
+        :type button_color: (str, str) | str | (int, int) | None
         :param disabled: True/False to enable/disable at the GUI level. Use BUTTON_DISABLED_MEANS_IGNORE to ignore clicks (won't change colors)
         :type disabled: (bool | str)
         :param image_data: Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -3964,7 +3979,7 @@ class Button(Element):
         :param image_filename: image filename if there is a button image. GIFs and PNGs only.
         :type image_filename: (str)
         :param disabled_button_color: colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color
-        :type disabled_button_color: Tuple[str, str]
+        :type disabled_button_color: (str, str)
         :param visible: control visibility of element
         :type visible: (bool)
         :param image_subsample: amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc
@@ -4120,7 +4135,7 @@ class ButtonMenu(Element):
         :param auto_size_button: if True the button size is sized to fit the text
         :type auto_size_button: (bool)
         :param button_color: of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
-        :type button_color: Tuple[str, str] or str
+        :type button_color: (str, str) or str
         :param background_color: color of the background
         :type background_color: (str)
         :param text_color: element's text color. Can be in #RRGGBB format or a color name "black"
@@ -4253,7 +4268,7 @@ class ProgressBar(Element):
         :param auto_size_text: Not sure why this is here
         :type auto_size_text: (bool)
         :param bar_color: The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
-        :type bar_color: Tuple[str, str] or str
+        :type bar_color: (str, str) or str
         :param style: Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative'
         :type style: (str)
         :param border_width: The amount of pixels that go around the outside of the bar
@@ -4666,11 +4681,11 @@ class Graph(Element):
                  right_click_menu=None, visible=True, float_values=False, border_width=0, metadata=None):
         """
         :param canvas_size: size of the canvas area in pixels
-        :type canvas_size: Tuple[int, int]
+        :type canvas_size: (int, int)
         :param graph_bottom_left: (x,y) The bottoms left corner of your coordinate system
-        :type graph_bottom_left: Tuple[int, int]
+        :type graph_bottom_left: (int, int)
         :param graph_top_right: (x,y) The top right corner of  your coordinate system
-        :type graph_top_right: Tuple[int, int]
+        :type graph_top_right: (int, int)
         :param background_color: background color of the drawing area
         :type background_color: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -4726,8 +4741,8 @@ class Graph(Element):
         :type x_in: int | float
         :param y_in: The y coordinate to convert
         :type y_in: int | float
-        :return: Tuple[int, int] The converted canvas coordinates
-        :rtype: Tuple[int, int]
+        :return: (int, int) The converted canvas coordinates
+        :rtype: (int, int)
         """
         if None in (x_in, y_in):
             return None, None
@@ -4750,7 +4765,7 @@ class Graph(Element):
         :param y_in: (int) The y coordinate in canvas coordinates
         :type y_in:
         :return: The converted USER coordinates
-        :rtype: Tuple[int, int] | Tuple[float, float]
+        :rtype: (int, int) | Tuple[float, float]
         """
         if None in (x_in, y_in):
             return None, None
@@ -4768,9 +4783,9 @@ class Graph(Element):
         """
         Draws a line from one point to another point using USER'S coordinates. Can set the color and width of line
         :param point_from: Starting point for line
-        :type point_from: Tuple[int, int] | Tuple[float, float]
+        :type point_from: (int, int) | Tuple[float, float]
         :param point_to: Ending point for line
-        :type point_to: Tuple[int, int] | Tuple[float, float]
+        :type point_to: (int, int) | Tuple[float, float]
         :param color: Color of the line
         :type color: (str)
         :param width: width of line in pixels
@@ -4797,7 +4812,7 @@ class Graph(Element):
         Draw a series of lines given list of points
 
         :param points: list of points that define the polygon
-        :type points: List[Tuple[int, int] | Tuple[float, float]]
+        :type points: List[(int, int) | Tuple[float, float]]
         :param color: Color of the line
         :type color: (str)
         :param width: width of line in pixels
@@ -4820,7 +4835,7 @@ class Graph(Element):
         """
         Draws a "dot" at the point you specify using the USER'S coordinate system
         :param point: Center location using USER'S coordinate system
-        :type point: Tuple[int, int] | Tuple[float, float]
+        :type point: (int, int) | Tuple[float, float]
         :param size: Radius? (Or is it the diameter?) in user's coordinate values.
         :type size: int | float
         :param color: color of the point to draw
@@ -4853,7 +4868,7 @@ class Graph(Element):
         """
         Draws a circle, cenetered at the location provided.  Can set the fill and outline colors
         :param center_location: Center location using USER'S coordinate system
-        :type center_location: Tuple[int, int] | Tuple[float, float]
+        :type center_location: (int, int) | Tuple[float, float]
         :param radius: Radius in user's coordinate values.
         :type radius: int | float
         :param fill_color: color of the point to draw
@@ -4889,9 +4904,9 @@ class Graph(Element):
         """
         Draws an oval based on coordinates in user coordinate system. Provide the location of a "bounding rectangle"
         :param top_left: the top left point of bounding rectangle
-        :type top_left: Tuple[int, int] | Tuple[float, float]
+        :type top_left: (int, int) | Tuple[float, float]
         :param bottom_right: the bottom right point of bounding rectangle
-        :type bottom_right: Tuple[int, int] | Tuple[float, float]
+        :type bottom_right: (int, int) | Tuple[float, float]
         :param fill_color: color of the interrior
         :type fill_color: (str)
         :param line_color: color of outline of oval
@@ -4919,9 +4934,9 @@ class Graph(Element):
         """
         Draws different types of arcs.  Uses a "bounding box" to define location
         :param top_left: the top left point of bounding rectangle
-        :type top_left: Tuple[int, int] | Tuple[float, float]
+        :type top_left: (int, int) | Tuple[float, float]
         :param bottom_right: the bottom right point of bounding rectangle
-        :type bottom_right: Tuple[int, int] | Tuple[float, float]
+        :type bottom_right: (int, int) | Tuple[float, float]
         :param extent: Andle to end drawing. Used in conjunction with start_angle
         :type extent: (float)
         :param start_angle: Angle to begin drawing. Used in conjunction with extent
@@ -4956,9 +4971,9 @@ class Graph(Element):
         Draw a rectangle given 2 points. Can control the line and fill colors
 
         :param top_left: the top left point of rectangle
-        :type top_left: Tuple[int, int] | Tuple[float, float]
+        :type top_left: (int, int) | Tuple[float, float]
         :param bottom_right: the bottom right point of rectangle
-        :type bottom_right: Tuple[int, int] | Tuple[float, float]
+        :type bottom_right: (int, int) | Tuple[float, float]
         :param fill_color: color of the interior
         :type fill_color: (str)
         :param line_color: color of outline
@@ -4991,7 +5006,7 @@ class Graph(Element):
         Draw a polygon given list of points
 
         :param points: list of points that define the polygon
-        :type points: List[Tuple[int, int] | Tuple[float, float]]
+        :type points: List[(int, int) | Tuple[float, float]]
         :param fill_color: color of the interior
         :type fill_color: (str)
         :param line_color: color of outline
@@ -5022,7 +5037,7 @@ class Graph(Element):
         :param text: text to display
         :type text: (Any)
         :param location: location to place first letter
-        :type location: Tuple[int, int] | Tuple[float, float]
+        :type location: (int, int) | Tuple[float, float]
         :param color: text color
         :type color: (str)
         :param font: specifies the font family, size, etc
@@ -5057,7 +5072,7 @@ class Graph(Element):
         :param data: if image is in Base64 format or raw? format then use instead of filename
         :type data: str | bytes
         :param location: the (x,y) location to place image's top left corner
-        :type location: Tuple[int, int] | Tuple[float, float]
+        :type location: (int, int) | Tuple[float, float]
         :return: id returned from tkinter that you'll need if you want to manipulate the image
         :rtype: int | None
         """
@@ -5218,7 +5233,7 @@ class Graph(Element):
         Returns a list of figures located at a particular x,y location within the Graph
 
         :param location: point to check
-        :type location: Tuple[int, int] | Tuple[float, float]
+        :type location: (int, int) | Tuple[float, float]
         :return: a list of previously drawn "Figures" (returned from the drawing primitives)
         :rtype: List[int]
         """
@@ -5247,9 +5262,9 @@ class Graph(Element):
         system - the bottom left and the top right values of your graph.
 
         :param graph_bottom_left: The bottoms left corner of your coordinate system
-        :type graph_bottom_left: Tuple[int, int] (x,y)
+        :type graph_bottom_left: (int, int) (x,y)
         :param graph_top_right: The top right corner of  your coordinate system
-        :type graph_top_right: Tuple[int, int]  (x,y)
+        :type graph_top_right: (int, int)  (x,y)
         """
         self.BottomLeft = graph_bottom_left
         self.TopRight = graph_top_right
@@ -5532,7 +5547,7 @@ class Frame(Element):
         Not user callable. Used to find the Element at a row, col position within the layout
 
         :param location: (row, column) position of the element to find in layout
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :return: (Element) The element found at the location
         :rtype: (Element)
         """
@@ -5843,7 +5858,7 @@ class Tab(Element):
         Not user callable. Used to find the Element at a row, col position within the layout
 
         :param location: (row, column) position of the element to find in layout
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :return:  The element found at the location
         :rtype: (Element)
         """
@@ -6029,7 +6044,7 @@ class TabGroup(Element):
         Not user callable. Used to find the Element at a row, col position within the layout
 
         :param location: (row, column) position of the element to find in layout
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :return: The element found at the location
         :rtype: (Element)
         """
@@ -6094,7 +6109,7 @@ class Slider(Element):
                  text_color=None, trough_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param range: slider's range (min value, max value)
-        :type range: Tuple[int, int] | Tuple[float, float]
+        :type range: (int, int) | Tuple[float, float]
         :param default_value: starting value for the slider
         :type default_value: int | float
         :param resolution: the smallest amount the slider can be moved
@@ -6170,7 +6185,7 @@ class Slider(Element):
         :param value: sets current slider value
         :type value: int | float
         :param range: Sets a new range for slider
-        :type range: Tuple[int, int] | Tuple[float, float
+        :type range: (int, int) | Tuple[float, float
         :param disabled: disable or enable state of the element
         :type disabled: (bool)
         :param visible: control visibility of element
@@ -6516,7 +6531,7 @@ class Column(Element):
         Not user callable. Used to find the Element at a row, col position within the layout
 
         :param location: (row, column) position of the element to find in layout
-        :typeparam location: Tuple[int, int]
+        :typeparam location: (int, int)
         :return: The element found at the location
         :rtype: (Element)
         """
@@ -7062,7 +7077,7 @@ class Table(Element):
         :param alternating_row_color: if set then every other row will have this color in the background.
         :type alternating_row_color: (str)
         :param selected_row_colors: Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color
-        :type selected_row_colors: str or Tuple[str, str]
+        :type selected_row_colors: str or (str, str)
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -7328,7 +7343,7 @@ class Tree(Element):
         :param background_color: color of background
         :type background_color: (str)
         :param selected_row_colors: Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color
-        :type selected_row_colors: str or Tuple[str, str]
+        :type selected_row_colors: str or (str, str)
         :param header_text_color: sets the text color for the header
         :type header_text_color: (str)
         :param header_background_color: sets the background color for the header
@@ -7733,19 +7748,19 @@ class Window:
         :param auto_size_buttons: True if Buttons in this Window should be sized to exactly fit the text on this.
         :type auto_size_buttons: (bool)
         :param location: (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :param size: (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user
         :type size: (int, int)
         :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type element_padding: Tuple[int, int] or ((int, int),(int,int))
+        :type element_padding: (int, int) or ((int, int),(int,int))
         :param margins: (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
-        :type margins: Tuple[int, int]
+        :type margins: (int, int)
         :param button_color: Default button colors for all buttons in the window
-        :type button_color: Tuple[str, str] or str
+        :type button_color: (str, str) or str
         :param font: specifies the font family, size, etc
         :type font: str | Tuple[str, int] | None
         :param progress_bar_color: (bar color, background color) Sets the default colors for all progress bars in the window
-        :type progress_bar_color: Tuple[str, str]
+        :type progress_bar_color: (str, str)
         :param background_color: color of background
         :type background_color: (str)
         :param border_depth: Default border depth (width) for all elements in the window
@@ -7926,6 +7941,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         self.titlebar_icon= titlebar_icon
         self.right_click_menu_selected_colors = _simplified_dual_color_to_tuple(right_click_menu_selected_colors, (self.right_click_menu_background_color, self.right_click_menu_text_color))
         self._grab_anywhere_ignore_these_list = []
+        self._grab_anywhere_include_these_list = []
 
         if self.use_custom_titlebar:
             self.Margins = (0,0)
@@ -8263,7 +8279,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Given a (row, col) location in a layout, return the element located at that position
 
-        :param location: Tuple[int, int] Return the element located at (row, col) in layout
+        :param location: (int, int) Return the element located at (row, col) in layout
         :return:  (Element) The Element located at that position in this window
         """
 
@@ -8277,7 +8293,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Returns the default elementSize
 
         :return:  (width, height) of the default element size
-        :rtype: Tuple[int, int]
+        :rtype: (int, int)
         """
 
         return self.DefaultElementSize
@@ -8946,7 +8962,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
-        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list:
+        if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
@@ -8963,7 +8979,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
-        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list:
+        if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
@@ -8979,7 +8995,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event: (event)
         """
-        if isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list:
+        if (isinstance(event.widget, GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
@@ -9358,7 +9374,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Changes the minimum size of the window. Note Window must be read or finalized first.
 
         :param size: (width, height) tuple (int, int) of the desired window size in pixels
-        :type size: Tuple[int, int]
+        :type size: (int, int)
         """
         if not self._is_window_created('tried Window.set_min_size'):
             return
@@ -9565,8 +9581,8 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
 
     def ding(self, display_number=0):
         """
-        Make a "bell" sound. A capability provided by tkinter.  Your window needs to be finalized prior to calling
-        Ring a display's bell is the tkinter description of the call
+        Make a "bell" sound. A capability provided by tkinter.  Your window needs to be finalized prior to calling.
+        Ring a display's bell is the tkinter description of the call.
         :param display_number: Passed to tkinter's bell method as parameter "displayof".
         :type display_number: int
         """
@@ -10084,7 +10100,7 @@ class SystemTray:
         :param data_base64: Optional base64 icon
         :type data_base64: b''
         :param time: Amount of time to display message in milliseconds. If tuple, first item is fade in/out duration
-        :type time: int | Tuple[int, int]
+        :type time: int | (int, int)
         :return: The event that happened during the display such as user clicked on message
         :rtype: Any
         """
@@ -10158,7 +10174,7 @@ class SystemTray:
         :param alpha: Alpha channel. 0 - invisible 1 - fully visible
         :type alpha: (float)
         :param location: Location on the screen to display the window
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :return: (int) reason for returning
         :rtype: (int)
         """
@@ -10532,7 +10548,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type button_text: (str)
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types: filter file types (Default value = (("ALL Files", "*.*")))
-    :type file_types: Tuple[Tuple[str, str], ...]
+    :type file_types: Tuple[(str, str), ...]
     :param initial_folder: starting path for folders and files
     :param tooltip: text, that will appear when mouse hovers over the element
     :type tooltip: (str)
@@ -10543,7 +10559,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -10581,7 +10597,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type button_text: (str)
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types: (Default value = (("ALL Files", "*.*")))
-    :type file_types: Tuple[Tuple[str, str], ...]
+    :type file_types: Tuple[(str, str), ...]
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param initial_folder: starting path for folders and files
@@ -10595,7 +10611,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -10634,7 +10650,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type button_text: (str)
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types: (Default value = (("ALL Files", "*.*")))
-    :type file_types: Tuple[Tuple[str, str], ...]
+    :type file_types: Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension: (str)
     :param initial_folder: starting path for folders and files
@@ -10650,7 +10666,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -10685,7 +10701,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type button_text: (str)
     :param target: key or (row,col) target for the button (Default value = (ThisRow, -1))
     :param file_types: (Default value = (("ALL Files", "*.*")))
-    :type file_types: Tuple[Tuple[str, str], ...]
+    :type file_types: Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension: (str)
     :param initial_folder: starting path for folders and files
@@ -10701,7 +10717,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param change_submits: If True, pressing Enter key submits window (Default = False)
     :type change_submits: (bool)
     :param enable_events: Turns on the element specific events.(Default = False)
@@ -10739,7 +10755,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key: (bool)
     :param disabled: set disable state for element (Default = False)
@@ -10780,7 +10796,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -10822,7 +10838,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -10863,7 +10879,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -10904,7 +10920,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param bind_return_key: (Default = True) If True, then the return key will cause a the Listbox to generate an event
@@ -10945,7 +10961,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -10985,7 +11001,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -11025,7 +11041,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -11065,7 +11081,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -11105,7 +11121,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param tooltip: text, that will appear when mouse hovers over the element
@@ -11145,7 +11161,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
@@ -11185,7 +11201,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
@@ -11237,7 +11253,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11289,7 +11305,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11343,7 +11359,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param bind_return_key: (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11402,7 +11418,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param disabled: set disable state for element (Default = False)
@@ -11458,7 +11474,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param disabled: set disable state for element (Default = False)
@@ -11522,7 +11538,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
@@ -11585,7 +11601,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param button_text: text in the button
     :type button_text: (str)
     :param target: key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button
-    :type target: str | Tuple[int, int]
+    :type target: str | (int, int)
     :type image_filename: (str)
     :param image_filename: image filename if there is a button image. GIFs and PNGs only.
     :type image_filename: (str)
@@ -11606,7 +11622,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button: (bool)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param disabled: set disable state for element (Default = False)
     :type disabled: (bool)
     :param font: specifies the font family, size, etc
@@ -11645,11 +11661,11 @@ def button_color_to_tuple(color_tuple_or_string, default=(None, None)):
     returned
 
     :param color_tuple_or_string: Button color - tuple or a simplied color string with word "on" between color
-    :type  color_tuple_or_string: str | Tuple[str, str]
+    :type  color_tuple_or_string: str | (str, str)
     :param default: The 2 colors to use if there is a problem. Otherwise defaults to the theme's button color
-    :type  default: Tuple[str, str]
-    :return: (str | Tuple[str, str]
-    :rtype: str | Tuple[str, str]
+    :type  default: (str, str)
+    :return: (str | (str, str)
+    :rtype: str | (str, str)
     """
     if default == (None, None):
         color_tuple = _simplified_dual_color_to_tuple(color_tuple_or_string, default=theme_button_color())
@@ -11669,9 +11685,9 @@ def _simplified_dual_color_to_tuple(color_tuple_or_string, default=(None, None))
     :param color_tuple_or_string: Button color - tuple or a simplied color string with word "on" between color
     :type  color_tuple_or_string: str | (str, str} | (None, None)
     :param default: The 2 colors to use if there is a problem. Otherwise defaults to the theme's button color
-    :type  default: Tuple[str, str]
-    :return: (str | Tuple[str, str]
-    :rtype: str | Tuple[str, str]
+    :type  default: (str, str)
+    :return: (str | (str, str)
+    :rtype: str | (str, str)
     """
     if color_tuple_or_string is None or color_tuple_or_string == (None, None):
         color_tuple_or_string = default
@@ -13166,7 +13182,23 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.justification_tag = 'center'
                 # if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):               # only works on Linux so not including it
                 #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand = True
+                if element.expand_x and element.expand_y:
+                    fill = tk.BOTH
+                    row_fill_direction = tk.BOTH
+                    row_should_expand = True
+                elif element.expand_x:
+                    fill = tk.X
+                    row_fill_direction = tk.X
+                elif element.expand_y:
+                    fill = tk.Y
+                    row_fill_direction = tk.Y
+                    row_should_expand = True
+                else:
+                    fill = tk.NONE
+                    expand=False
+
+                element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
                 if element.visible is False:
                     element.TKText.pack_forget()
                 else:
@@ -14351,9 +14383,9 @@ class QuickMeter(object):
         :param orientation:  'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
         :type orientation: (str)
         :param bar_color:  color of a bar line
-        :type bar_color: Tuple[str, str]
+        :type bar_color: (str, str)
         :param button_color: button color (foreground, background)
-        :type button_color: Tuple[str, str] or str
+        :type button_color: (str, str) or str
         :param size:  (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
         :type size: (int, int)
         :param border_width:  width of border around element
@@ -14466,7 +14498,7 @@ def one_line_progress_meter(title, current_value, max_value, key='OK for 1 meter
     :param bar_color: color of a bar line
     :type bar_color: Tuple(str, str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param size: (w,h) w=characters-wide, h=rows-high (Default value = DEFAULT_PROGRESS_BAR_SIZE)
     :type size: (int, int)
     :param border_width: width of border around element
@@ -14533,13 +14565,13 @@ class _DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True):
+                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, resizable=True):
         """
 
         :param size:  (w,h) w=characters-wide, h=rows-high
         :type size: (int, int)
         :param location:  Location of upper left corner of the window
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :param font:  specifies the font family, size, etc
         :type font: str | Tuple[str, int]
         :param no_titlebar: If True no titlebar will be shown
@@ -14552,9 +14584,11 @@ class _DebugWin():
         :type grab_anywhere: (bool)
 
         :param location:  Location of upper left corner of the window
-        :type location: Tuple[int, int]
+        :type location: (int, int)
         :param do_not_reroute_stdout: bool value
         :type do_not_reroute_stdout: (bool)
+        :param resizable: if True, makes the window resizble
+        :type resizable: (bool)
         :rtype: (None)
         """
         # Show a form that's a running counter
@@ -14566,17 +14600,20 @@ class _DebugWin():
         self.grab_anywhere = grab_anywhere
         self.keep_on_top = keep_on_top
         self.do_not_reroute_stdout = do_not_reroute_stdout
+        self.resizable = resizable
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, key='-MULTILINE-')
+        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, expand_x=True, expand_y=True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
         else:
             self.layout = [ [self.output_element],
                             [DummyButton('Quit'), Stretch()]]
+        if no_titlebar and resizable:
+            self.layout[-1] += [Sizegrip()]
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
-                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False)
+                             font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False,  resizable=resizable)
         return
 
 
@@ -14587,14 +14624,14 @@ class _DebugWin():
         if self.window is None:  # if window was destroyed already re-open it
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable)
 
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout,  resizable=self.resizable)
             event, values = self.window.read(timeout=0)
         if erase_all:
             self.window['-MULTILINE-'].update('')
@@ -14623,7 +14660,7 @@ class _DebugWin():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None, erase_all=False):
+              no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None,  colors=None, c=None, erase_all=False, resizable=True):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -14631,7 +14668,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     The "colors" or "c" parameter defines both the text and background in a single parm.
     It can be a tuple or a single single. Both text and background colors need to be specified
     colors -(str, str) or str.  A combined text/background color definition in a single parameter
-    c - Tuple[str, str] - Colors tuple has format (foreground, backgrouned)
+    c - (str, str) - Colors tuple has format (foreground, backgrouned)
     c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     :param *args: stuff to output
@@ -14643,7 +14680,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :param sep: separator character
     :type sep: (str)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param font: specifies the font family, size, etc
     :type font: str | Tuple[str, int]
     :param no_titlebar: If True no titlebar will be shown
@@ -14659,13 +14696,15 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param do_not_reroute_stdout: do not reroute stdout
     :type do_not_reroute_stdout: (bool)
     :param colors: Either a tuple or a string that has both the text and background colors
-    :type colors: (str) or Tuple[str, str]
+    :type colors: (str) or (str, str)
     :param c: Either a tuple or a string that has both the text and background colors
-    :type c: (str) or Tuple[str, str]
+    :type c: (str) or (str, str)
+    :param resizable: if True, the user can resize the debug window. Default is True
+    :type resizable: (bool)
     :param erase_all: If True when erase the output before printing
     :type erase_all: (bool)
     :return:
@@ -14674,7 +14713,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                           do_not_reroute_stdout=do_not_reroute_stdout)
+                                           do_not_reroute_stdout=do_not_reroute_stdout, resizable=resizable)
     txt_color, bg_color = _parse_colors_parm(c or colors)
     _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color, erase_all=erase_all)
 
@@ -14750,7 +14789,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     There are also "aliases" for text_color, background_color and colors (t, b, c)
     t - An alias for color of the text (makes for shorter calls)
     b - An alias for the background_color parameter
-    c - Tuple[str, str] - "shorthand" way of specifying color. (foreground, backgrouned)
+    c - (str, str) - "shorthand" way of specifying color. (foreground, backgrouned)
     c - str - can also be a string of the format "foreground on background"  ("white on red")
 
     With the aliases it's possible to write the same print but in more compact ways:
@@ -14766,13 +14805,13 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     :param background_color: The background color of the line
     :type background_color: (str)
     :param colors: Either a tuple or a string that has both the text and background colors
-    :type colors: (str) or Tuple[str, str]
+    :type colors: (str) or (str, str)
     :param t: Color of the text
     :type t: (str)
     :param b: The background color of the line
     :type b: (str)
     :param c: Either a tuple or a string that has both the text and background colors
-    :type c: (str) or Tuple[str, str]
+    :type c: (str) or (str, str)
     :param end: end character
     :type end: (str)
     :param sep: separator character
@@ -14873,9 +14912,9 @@ def _parse_colors_parm(colors):
     This function parses the parameter into the component colors
 
     :param colors: Either a tuple or a string that has both the text and background colors
-    :type colors: (str) or Tuple[str, str]
+    :type colors: (str) or (str, str)
     :return: tuple with the individual text and background colors
-    :rtype: Tuple[str, str]
+    :rtype: (str, str)
     """
     if colors is None:
         return None, None
@@ -14929,15 +14968,15 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param icon: filename or base64 string to be used for the window's icon
     :type icon: bytes | str
     :param button_color: Color of the button (text, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param element_size: element size (width, height) in characters
     :type element_size: (int, int)
     :param button_element_size: Size of button
     :type button_element_size: (int, int)
     :param margins: (left/right, top/bottom) tkinter margins around outsize. Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
-    :type margins: Tuple[int, int]
+    :type margins: (int, int)
     :param element_padding: Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
-    :type element_padding: Tuple[int, int] or ((int, int),(int,int))
+    :type element_padding: (int, int) or ((int, int),(int,int))
     :param auto_size_text: True if the Widget should be shrunk to exactly fit the number of chars to show
     :type auto_size_text: bool
     :param auto_size_buttons: True if Buttons in this Window should be sized to exactly fit the text on this.
@@ -14985,9 +15024,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param element_text_color: Default color to use for Text elements
     :type element_text_color: (str)
     :param debug_win_size: window size
-    :type debug_win_size: Tuple[int, int]
+    :type debug_win_size: (int, int)
     :param window_location: Default location to place windows. Not setting will center windows on the display
-    :type window_location: Tuple[int, int] | None
+    :type window_location: (int, int) | None
     :param error_button_color: (Default = (None))
     :type error_button_color: ???
     :param tooltip_time: time in milliseconds to wait before showing a tooltip. Default is 400ms
@@ -15528,8 +15567,8 @@ def theme_button_color(color=None):
     """
     Sets/Returns the button color currently in use
 
-    :return: Tuple[str, str] - TUPLE with color strings of the button color currently in use (button text color, button background color)
-    :rtype: Tuple[str, str]
+    :return: (str, str) - TUPLE with color strings of the button color currently in use (button text color, button background color)
+    :rtype: (str, str)
     """
     if color is not None:
         if color == COLOR_SYSTEM_DEFAULT:
@@ -15551,8 +15590,8 @@ def theme_progress_bar_color(color=None):
     """
     Sets/Returns the progress bar colors by the current color theme
 
-    :return: Tuple[str, str] - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
-    :rtype: Tuple[str, str]
+    :return: (str, str) - TUPLE with color strings of the ProgressBar color currently in use(button text color, button background color)
+    :rtype: (str, str)
     """
     if color is not None:
         set_options(progress_meter_color=color)
@@ -16002,7 +16041,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param title: Optional title for the window. If none provided, the first arg will be used instead.
     :type title: (str)
     :param button_color: Color of the buttons shown (text color, button color)
-    :type button_color: Tuple[str, str] | None
+    :type button_color: (str, str) | None
     :param background_color: Window's background color
     :type background_color: (str)
     :param text_color: text color
@@ -16014,7 +16053,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param auto_close_duration: time in seconds to keep window open before closing it automatically
     :type auto_close_duration: (int)
     :param custom_text: A string or pair of strings that contain the text to display on the buttons
-    :type custom_text: Tuple[str, str] | str
+    :type custom_text: (str, str) | str
     :param non_blocking: If True then will immediately return from the function without waiting for the user's input.
     :type non_blocking: (bool)
     :param icon: icon to display on the window. Same format as a Window call
@@ -16028,7 +16067,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :param grab_anywhere: If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too
     :type grab_anywhere: (bool)
     :param location: Location on screen to display the top left corner of window. Defaults to window centered on screen
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param any_key_closes: If True then will turn on return_keyboard_events for the window which will cause window to close as soon as any key is pressed.  Normally the return key only will close the window.  Default is false.
@@ -16146,7 +16185,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, icon=None, modal=True):
+                  size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None, image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
     want, just like a print statement.
@@ -16156,7 +16195,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param yes_no: If True, displays Yes and No buttons instead of Ok
     :type yes_no: (bool)
     :param auto_close: if True window will close itself
@@ -16166,7 +16205,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :param size: (w,h) w=characters-wide, h=rows-high
     :type size: (int, int)
     :param location: Location on the screen to place the upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param non_blocking: if True the call will immediately return rather than waiting on user input
     :type non_blocking: (bool)
     :param background_color: color of background
@@ -16187,6 +16226,8 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type icon: bytes | str
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
+    :param no_sizegrip: If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar
+    :type no_sizegrip: (bool)
     :return: Returns text of the button that was pressed.  None will be returned if user closed window with X
     :rtype: str | None | TIMEOUT_KEY
     """
@@ -16218,7 +16259,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
     if height:
         height_computed = height
-    layout += [[Multiline(complete_output, size=(max_line_width, height_computed), background_color=background_color, text_color=text_color)]]
+    layout += [[Multiline(complete_output, size=(max_line_width, height_computed), background_color=background_color, text_color=text_color, expand_x=True, expand_y=True, k='-MLINE-')]]
     pad = max_line_total - 15 if max_line_total > 15 else 1
     # show either an OK or Yes/No depending on paramater
     button = DummyButton if non_blocking else Button
@@ -16227,12 +16268,12 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     else:
         layout += [[Text('', size=(pad, 1), auto_size_text=False, background_color=background_color),
                     button('OK', size=(5, 1), button_color=button_color)]]
-
+    if no_titlebar and no_sizegrip is not True:
+        layout += [[Sizegrip()]]
 
     window = Window(title or args[0], layout, auto_size_text=True, button_color=button_color, auto_close=auto_close,
                     auto_close_duration=auto_close_duration, location=location, resizable=True, font=font, background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, modal=modal, icon=icon)
-
     if non_blocking:
         button, values = window.read(timeout=0)
     else:
@@ -16284,7 +16325,7 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :param grab_anywhere: If True, than can grab anywhere to move the window (Default = False)
     :type grab_anywhere: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16313,7 +16354,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16335,7 +16376,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -16368,7 +16409,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16392,7 +16433,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -16422,7 +16463,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param background_color: color of background
@@ -16446,7 +16487,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False
@@ -16475,7 +16516,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16497,7 +16538,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16529,7 +16570,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param button_type: Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK).
     :type button_type: (int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16553,7 +16594,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16584,7 +16625,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16608,7 +16649,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16636,7 +16677,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16660,7 +16701,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16687,7 +16728,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16711,7 +16752,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16737,7 +16778,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16761,7 +16802,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16788,7 +16829,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :param title: Title to display in the window.
     :type title: (str)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16812,7 +16853,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -16851,7 +16892,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color: button color (foreground, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: color of background
     :type background_color: (str)
     :param text_color: color of the text
@@ -16867,7 +16908,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param initial_folder: location in filesystem to begin browsing
     :type initial_folder: (str)
     :param image: Image to include at the top of the popup window
@@ -16972,7 +17013,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color: Color of the button (text, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: background color of the entire window
     :type background_color: (str)
     :param text_color: color of the text
@@ -16988,7 +17029,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: Location of upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param initial_folder: location in filesystem to begin browsing
     :type initial_folder: (str)
     :param image: Image to include at the top of the popup window
@@ -17114,7 +17155,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param size: (width, height) of the InputText Element
     :type size: (int, int)
     :param button_color: Color of the button (text, background)
-    :type button_color: Tuple[str, str] or str
+    :type button_color: (str, str) or str
     :param background_color: background color of the entire window
     :type background_color: (str)
     :param text_color: color of the message text
@@ -17130,7 +17171,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param keep_on_top: If True the window will remain above all current windows
     :type keep_on_top: (bool)
     :param location: (x,y) Location on screen to display the upper left corner of window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :param image: Image to include at the top of the popup window
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
@@ -17424,7 +17465,7 @@ def popup_notify(*args, title='', icon=SYSTEM_TRAY_MESSAGE_ICON_INFORMATION, dis
     :param alpha: Alpha channel. 0 - invisible 1 - fully visible
     :type alpha: (float)
     :param location: Location on the screen to display the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :return: reason for returning
     :rtype: (int)
     """
@@ -18420,7 +18461,7 @@ def execute_get_results(subprocess_id, timeout=None):
     :param timeout: Time in fractions of a second to wait. Returns '','' if timeout. Default of None means wait forever
     :type timeout: (None | float)
     :returns: Tuple with 2 strings (stdout, stderr)
-    :rtype: Tuple[str, str]
+    :rtype: (str, str)
     """
 
     out_decoded = err_decoded = None
@@ -19063,7 +19104,7 @@ def show_debugger_window(location=(None, None), *args):
     """
     Shows the large main debugger window
     :param location: Locations (x,y) on the screen to place upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :return: None
     :rtype: None
     """
@@ -19089,7 +19130,7 @@ def show_debugger_popout_window(location=(None, None), *args):
     Shows the smaller "popout" window.  Default location is the upper right corner of your screen
 
     :param location: Locations (x,y) on the screen to place upper left corner of the window
-    :type location: Tuple[int, int]
+    :type location: (int, int)
     :return: None
     :rtype: None
     """
