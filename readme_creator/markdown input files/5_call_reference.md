@@ -44,6 +44,9 @@ Here are all of the Elements, the Window & SystemTray classes, and all functions
 ### grab_anywhere_exclude
 <!-- <+Button.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Button.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Button.hide_row+> -->
 
@@ -120,6 +123,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+ButtonMenu.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+ButtonMenu.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+ButtonMenu.hide_row+> -->
 
@@ -194,6 +200,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Canvas.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Canvas.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Canvas.hide_row+> -->
 
@@ -263,6 +272,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Checkbox.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Checkbox.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Checkbox.hide_row+> -->
@@ -340,6 +352,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Column.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Column.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Column.hide_row+> -->
@@ -426,6 +441,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Combo.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Combo.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Combo.hide_row+> -->
 
@@ -500,6 +518,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Frame.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Frame.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Frame.hide_row+> -->
@@ -625,6 +646,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Graph.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Graph.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Graph.hide_row+> -->
@@ -764,6 +788,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+HorizontalSeparator.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+HorizontalSeparator.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+HorizontalSeparator.hide_row+> -->
 
@@ -826,6 +853,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Image.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Image.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Image.hide_row+> -->
@@ -907,6 +937,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Input.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Input.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Input.hide_row+> -->
@@ -992,6 +1025,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Listbox.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Listbox.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Listbox.hide_row+> -->
 
@@ -1075,6 +1111,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Menu.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Menu.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Menu.hide_row+> -->
 
@@ -1157,6 +1196,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### grab_anywhere_exclude
 <!-- <+Multiline.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Multiline.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Multiline.hide_row+> -->
@@ -1249,6 +1291,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+OptionMenu.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+OptionMenu.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+OptionMenu.hide_row+> -->
 
@@ -1321,6 +1366,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Output.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Output.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Output.hide_row+> -->
@@ -1404,6 +1452,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Pane.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Pane.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Pane.hide_row+> -->
 
@@ -1471,6 +1522,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+ProgressBar.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+ProgressBar.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+ProgressBar.hide_row+> -->
@@ -1551,6 +1605,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Radio.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Radio.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Radio.hide_row+> -->
 
@@ -1627,6 +1684,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Sizegrip.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Sizegrip.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Sizegrip.hide_row+> -->
 
@@ -1682,6 +1742,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Slider.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Slider.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Slider.hide_row+> -->
@@ -1755,6 +1818,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Spin.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Spin.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Spin.hide_row+> -->
 
@@ -1825,6 +1891,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+StatusBar.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+StatusBar.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+StatusBar.hide_row+> -->
@@ -1897,6 +1966,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Tab.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Tab.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Tab.hide_row+> -->
@@ -1989,6 +2061,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+TabGroup.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+TabGroup.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+TabGroup.hide_row+> -->
 
@@ -2065,6 +2140,9 @@ The following methods are here for backwards compatibility reference.  You will 
 ### grab_anywhere_exclude
 <!-- <+Table.grab_anywhere_exclude+> -->
 
+### grab_anywhere_include
+<!-- <+Table.grab_anywhere_include+> -->
+
 ### hide_row
 <!-- <+Table.hide_row+> -->
 
@@ -2135,6 +2213,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+Text.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Text.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Text.hide_row+> -->
@@ -2220,6 +2301,9 @@ See the Column element to get a list of method calls available.  The function re
 
 ### grab_anywhere_exclude
 <!-- <+Tree.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+Tree.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+Tree.hide_row+> -->
@@ -2307,6 +2391,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### grab_anywhere_exclude
 <!-- <+VerticalSeparator.grab_anywhere_exclude+> -->
+
+### grab_anywhere_include
+<!-- <+VerticalSeparator.grab_anywhere_include+> -->
 
 ### hide_row
 <!-- <+VerticalSeparator.hide_row+> -->
@@ -2426,6 +2513,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### current_location
 <!-- <+Window.current_location+> -->
+
+### ding
+<!-- <+Window.ding+> -->
 
 ### disable
 <!-- <+Window.disable+> -->

@@ -23,7 +23,7 @@ port = 'PySimpleGUI'
 
 
 """
-    Copyright 2018, 2019, 2020, 2021 PySimpleGUI
+    Copyright 2018, 2019, 2020, 2021 PySimpleGUI(tm)
 
     Before getting into the details, let's talk about the high level goals of the PySimpleGUI project.
 

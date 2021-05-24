@@ -1941,6 +1941,29 @@ Grab Anywhere feature improved
 * Fix for changing the title of a Tab using 
 
 
+## 4.43.0 PySimpleGUI 23-May-2021
+
+Happy User Appreciate Day!
+Multiline expand_x, expand_y parms
+Window.ding() - because FUN is the #1 goal
+
+* Added 2 new parms to Multiline Element
+	* expand_x - if True, then the element will expand in the X direction
+	* expand_y - if True, then the element will expand in the Y direction
+	* replaces the need to perform:   window['-MULTILINE KEY-'].expand(True, True, True)
+	* Defaults to FALSE to be backward compatible
+* popup_scrolled
+	* changed to be resizable by default and expands the multline too
+	* if no_titlebar is set, then a Sizegrip will be added, unless no_sizerip parm = True
+* easy_print(sg.Print)
+	* changed to be resizable by default and exands the multiline too
+	* if no_titlebar is set, then a Sizegrip will be added
+* Window.ding() added - get your user's attention when errors happen or just for FUN
+* Added Element.grab_anywhere_include - includes an element in grab_anywhere in case you have something like a Multiline element that you can to move the window using that element
+
+
+
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
