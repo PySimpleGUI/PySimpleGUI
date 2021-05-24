@@ -60,7 +60,7 @@ def convert_to_bytes(file_or_bytes, resize=None, fill=False):
         return bio.getvalue()
 
 def random_image():
-    return random.choice(sg.ICON_BASE64_LIST)
+    return random.choice(sg.EMOJI_BASE64_LIST)
 
 def make_toolbar():
     layout = [[sg.T('❎', enable_events=True, key='Exit')]]
@@ -92,7 +92,7 @@ def main():
             if size[0] > 20:
                 size = (size[0]-20, size[1]-20)
         elif event in ('Next', '-BUTTON IMAGE-'):
-            image = random.choice(sg.ICON_BASE64_LIST)
+            image = random.choice(sg.EMOJI_BASE64_LIST)
         elif event_window == toolbar:
             image = event_window[event].ImageData
 
