@@ -17,9 +17,8 @@ import PySimpleGUI as sg
 
 # ----- Make the window -----
 window = sg.Window('Postit', [[sg.T('Postit Note', text_color='black', background_color='#FFFF88')],
-                              [sg.ML(size=(30, 5), background_color='#FFFF88', no_scrollbar=True, k='-ML-', border_width=0, expand_y=True, expand_x=True),
-                               sg.Sizegrip(background_color='#FFFF88')]],
-                                no_titlebar=True, grab_anywhere=True, margins=(0, 0), background_color='#FFFF88', element_padding=(0, 0),
+                              [sg.ML(size=(30,5), background_color='#FFFF88', no_scrollbar=True, k='-ML-', border_width=0, expand_y=True, expand_x=True), sg.Sizegrip(background_color='#FFFF88')]],
+                                no_titlebar=True, grab_anywhere=True, margins=(0,0), background_color='#FFFF88', element_padding=(0,0),
                                 right_click_menu=sg.MENU_RIGHT_CLICK_EXIT, keep_on_top=True, font='_ 20', resizable=True, finalize=True)
 
 # ----- Make sure it doesn't get any smaller than it is initially -----
