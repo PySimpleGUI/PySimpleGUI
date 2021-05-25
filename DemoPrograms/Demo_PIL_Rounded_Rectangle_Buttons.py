@@ -60,17 +60,16 @@ def rounded_rectangle(text,  font=('arial.ttf', 14), button_color=None,):
     return im_to_data(im)
 
 
-sg.theme("dark red")
-# sg.theme("dark green 7")
+# sg.theme("dark red")
+sg.theme("dark green 7")
 # sg.set_options(font=("Arial", 16))
 layout = [[sg.Button('Normal Button')],
            [sg.Button('', image_data=sg.EMOJI_BASE64_HAPPY_THUMBS_UP, border_width=0, button_color=(sg.theme_background_color(), sg.theme_background_color()))],
-          [sg.Button(image_data=rounded_rectangle('Button text\nwith 2 lines', font=('cour.ttf', 15)), button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0)]]
-          # [sg.Button(image_data=rounded_rectangle('Button text\nwith 2 lines', font=('cour.ttf', 15)), button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0)]]
-          
+          [sg.Button(image_data=rounded_rectangle('Button text\nwith 2 lines', font=('arial.ttf', 25)), button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0)]]
+
 layout += [
       [sg.Button(
-        image_data=rounded_rectangle(text, font=('cour.ttf', 15)),
+        image_data=rounded_rectangle(text, font=('cour.ttf', 25)),
         button_color=(sg.theme_button_color()[0], sg.theme_background_color()),
         border_width=0)]
      for text in (
@@ -80,7 +79,7 @@ layout += [
         "123\n2\n3")
     ]
 
-window = sg.Window('Image and Rounded Button', layout, finalize=True)
+window = sg.Window('Image and Rounded Button', layout, finalize=True, keep_on_top=True, use_custom_titlebar=True)
 
 while True:
 

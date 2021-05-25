@@ -65,7 +65,7 @@ layout = [[sg.T('PIL Made Toggle Buttons')],
           [sg.Button(image_data=button_off, button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,  k='-B2-', metadata=False)]]
 
 
-window = sg.Window('PIL Buttons', layout, finalize=True, element_justification='c', use_custom_titlebar=True, font='_ 18')
+window = sg.Window('PIL Buttons', layout, finalize=True, element_justification='c', use_custom_titlebar=True, font='_ 18', keep_on_top=True)
 
 while True:
 
@@ -73,9 +73,6 @@ while True:
     if event in (sg.WINDOW_CLOSED, "Exit"):
         break
     window[event].metadata = not window[event].metadata
-    if window[event].metadata:
-        window[event].update(image_data=button_on)
-    else:
-        window[event].update(image_data=button_off)
+    window[event].update(image_data=button_on if window[event].metadata else button_off)
 
 window.close()
