@@ -80,8 +80,8 @@ def shipping_status(tracking_num):
 def package_row(item_num, tracking_num=''):
     carrier_list = ('FedEx', 'USPS')
 
-    row =  [sg.pin(sg.Col([[sg.B(sg.SYMBOL_X, border_width=0, button_color=sg.theme_background_color(), k=('-DEL-', item_num)),
-                 sg.Input(default_text=tracking_num, s=(20,1), key=('-ID-', item_num)), sg.Combo(carrier_list, default_value=carrier_list[0], s=(10,10), k=('-CARRIER-', item_num)), sg.T(size=(15,1), k=('-STATUS-', item_num))]], k=('-ROW-', item_num)))]
+    row =  [sg.pin(sg.Col([[sg.B(sg.SYMBOL_X, border_width=0, button_color=sg.theme_background_color(), k=('-DEL-', item_num), tooltip='Delete this item'),
+                 sg.Input(default_text=tracking_num, s=(20,1), key=('-ID-', item_num), tooltip='Enter your package ID'), sg.Combo(carrier_list, default_value=carrier_list[0], s=(10,10), k=('-CARRIER-', item_num), tooltip='Not implemented'), sg.T(size=(15,1), k=('-STATUS-', item_num))]], k=('-ROW-', item_num)))]
     return row
 
 
@@ -122,7 +122,7 @@ def make_window(location):
     layout = [  [sg.Text('FedEx Package Tracking', font='_ 15')],
                 [sg.Col([package_row(0)], k='-TRACKING SECTION-')],
                 [sg.pin(sg.Text(size=(35,1), font='_ 8', k='-REFRESHED-',))],
-                [sg.T(sg.SYMBOL_X, enable_events=True, k='Exit')]]
+                [sg.T(sg.SYMBOL_X, enable_events=True, k='Exit', tooltip='Exit Application'), sg.T('↻', enable_events=True, k='Refresh',  tooltip='Save Changes & Refresh'), sg.T('+', enable_events=True, k='Add Package', tooltip='Add Another Package')]]
 
     right_click_menu = [[''], ['Add Package',  'Edit Me', 'Change Theme', 'Save Location', 'Refresh', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
