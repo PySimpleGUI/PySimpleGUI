@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0 Released 23-May-2021"
+version = __version__ = "4.43.0.1 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -8782,7 +8782,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
                         element.Key = element.ButtonText
                     elif element.Type == ELEM_TYPE_TAB:
                         element.Key = element.Title
-                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU, ELEM_TYPE_CANVAS,
+                    if element.Type in (ELEM_TYPE_MENUBAR, ELEM_TYPE_BUTTONMENU,
                                         ELEM_TYPE_INPUT_SLIDER, ELEM_TYPE_GRAPH, ELEM_TYPE_IMAGE,
                                         ELEM_TYPE_INPUT_CHECKBOX, ELEM_TYPE_INPUT_LISTBOX, ELEM_TYPE_INPUT_COMBO,
                                         ELEM_TYPE_INPUT_MULTILINE, ELEM_TYPE_INPUT_OPTION_MENU, ELEM_TYPE_INPUT_SPIN,
@@ -18473,9 +18473,8 @@ def execute_get_results(subprocess_id, timeout=None):
             if err:
                 err_decoded = err.decode("utf-8")
         except Exception as e:
-            print('Error in execute_get_results', e)
+            popup_error('Error in execute_get_results', e)
             out_decoded = err_decoded = None
-
     return out_decoded, err_decoded
 
 
@@ -19192,7 +19191,7 @@ def get_versions():
     :return:
     :rtype: str
     """
-    versions = "Python version: {}.{}.{}\nPort: tkinter\n{} version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro, port, tclversion_detailed, ver, __file__)
+    versions = "Python version: {}.{}.{}\nPort: {}\ntkinter version: {}\nPySimpleGUI version: {}\nPySimpleGUI filename: {}".format(sys.version_info.major, sys.version_info.minor, sys.version_info.micro, port, tclversion_detailed, ver, __file__)
     return versions
 
 #==================================================#
