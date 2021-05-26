@@ -80,13 +80,13 @@ def shipping_status(tracking_num):
 def package_row(item_num, tracking_num=''):
     carrier_list = ('FedEx', 'USPS')
 
-    row =  [sg.pin(sg.Col([[sg.B(sg.SYMBOL_X, border_width=0, button_color=sg.theme_background_color(), k=('-DEL-', item_num), tooltip='Delete this item'),
+    row =  [sg.pin(sg.Col([[sg.B(sg.SYMBOL_X, border_width=0, button_color=(sg.theme_text_color(), sg.theme_background_color()), k=('-DEL-', item_num), tooltip='Delete this item'),
                  sg.Input(default_text=tracking_num, s=(20,1), key=('-ID-', item_num), tooltip='Enter your package ID'), sg.Combo(carrier_list, default_value=carrier_list[0], s=(10,10), k=('-CARRIER-', item_num), tooltip='Not implemented'), sg.T(size=(15,1), k=('-STATUS-', item_num))]], k=('-ROW-', item_num)))]
     return row
 
 
 def refresh(window: sg.Window):
-    row_count = window.row_counter+1
+    row_count = window.metadata+1
     package_list = []
     for row in range(row_count):
         if not window[('-ROW-', row)].visible:    # skip deleted rows
@@ -107,9 +107,9 @@ def add_packages_to_window(window: sg.Window):
     for i, package in enumerate(packages):
         in_elem = window.find_element(('-ID-', i), silent_on_error=True)
         if isinstance(in_elem, sg.ErrorElement):
-            window.row_counter += 1
-            window.extend_layout(window['-TRACKING SECTION-'], [package_row(window.row_counter)])
-            in_elem = window.find_element(('-ID-', window.row_counter), silent_on_error=True)
+            window.metadata += 1
+            window.extend_layout(window['-TRACKING SECTION-'], [package_row(window.metadata)])
+            in_elem = window.find_element(('-ID-', window.metadata), silent_on_error=True)
             in_elem.update(package)
         else:
             in_elem.update(package)
@@ -127,7 +127,9 @@ def make_window(location):
     right_click_menu = [[''], ['Add Package',  'Edit Me', 'Change Theme', 'Save Location', 'Refresh', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
     window = sg.Window('Window Title', layout, finalize=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True,
-                       right_click_menu=right_click_menu, alpha_channel=alpha, location=location, use_default_focus=False)
+                       right_click_menu=right_click_menu, alpha_channel=alpha, location=location, use_default_focus=False, font='_ 15', metadata=0)
+    add_packages_to_window(window)
+
     return window
 
 
@@ -137,16 +139,14 @@ def main():
     location =  sg.user_settings_get_entry('-location-', (None, None))
 
     window = make_window(location)
-    window.row_counter = 0
-    add_packages_to_window(window)
     refresh(window)
     while True:
         event, values = window.read(timeout=1000*60*60)     # wake every hour
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Add Package':
-            window.row_counter += 1
-            window.extend_layout(window['-TRACKING SECTION-'], [package_row(window.row_counter)])
+            window.metadata += 1
+            window.extend_layout(window['-TRACKING SECTION-'], [package_row(window.metadata)])
         elif event == 'Edit Me':
             sg.execute_editor(__file__)
         elif event == 'Save Location':
@@ -154,7 +154,6 @@ def main():
         elif event == 'Change Theme':
             loc = window.current_location()
             if choose_theme(loc) is not None:
-                # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
                 _, window = window.close(), make_window(loc)
         elif event in ('Refresh', sg.TIMEOUT_KEY):
             refresh(window)
@@ -170,7 +169,6 @@ def main():
                 except:
                     pass
                 sg.user_settings_set_entry('-packages-', packages)
-
     window.close()
 
 
