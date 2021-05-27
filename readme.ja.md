@@ -1,75 +1,76 @@
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png" alt="人間のためのPythonGUI ">
-  <h2 align="center">人間のためのPythonのGUI</h2>
+  <h2 align="center">人間のためのPythonGUI</h2>
 </p>
 
-tkinter、Qt、WxPython、およびRemi(ブラウザベース)のGUIフレームワークを、よりシンプルなインタフェースに変換します。ウィンドウ定義は初心者が理解するPythonコアデータ型 (リストと辞書) を使用して簡略化されます。コールバックベースのモデルからメッセージを渡すモデルにイベント処理を変更することでさらに単純化が行われます。 
+tkinter、Qt、WxPython、およびRemi（ブラウザベース）のGUIフレームワークを、よりシンプルなインタフェースに変換します。ウィンドウ定義は初心者が理解するPythonコアデータ型（リストと辞書）を使用して簡略化されます。コールバックベースのモデルからメッセージを渡すモデルにイベント処理を変更することでさらに単純化が行われます。 
 
 コードはより多くのユーザーがパッケージを使用するのにオブジェクト指向アーキテクチャを持つ*必要はありません*。アーキテクチャは理解しやすいものですが、必ずしも*単純*な問題だけに制限されるわけではありません。
 
-ただし、一部のプログラムはPySimpleGUIには適していません。 定義上、PySimpleGUI は基盤となるGUIフレームワークの機能のサブセットを実装します。どのプログラムがPySimpleGUIに適していてどのプログラムが適していないかを正確に定義することは難しいです。 プログラムの詳細によって異なります。エクセルを詳細に複製することはPySimpleGUIに適していないものの例です。
+ただし一部のプログラムはPySimpleGUIには適していません。 定義上、PySimpleGUIは基盤となるGUIフレームワークの機能のサブセットを実装します。どのプログラムがPySimpleGUIに適していてどのプログラムが適していないかを正確に定義することは難しいです。 プログラムの詳細によって異なります。エクセルを詳細に複製することはPySimpleGUIに適していないものの例です。
+
+[Japanese version of this readme](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
+
+<a href="https://www.buymeacoffee.com/PySimpleGUI" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee" width="217px" ></a>
+
+<!-- I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project. -->
+コーヒーが飲みたいです!  コンサルタント、エディター、ドメイン登録など、PySimpleGUIプロジェクトが繁栄するために必要な多くのものをまかなえます。
 
 <hr>
 
 # 統計 :chart_with_upwards_trend:
 
-## PyPI インストール
 
-<p align="center">
-tkinter <img src="http://pepy.tech/badge/pysimplegui?color=blue&style=for-the-badge" width="100px"  align="center">
-tkinter 2.7 <img src="https://pepy.tech/badge/pysimplegui27?color=blue&style=for-the-badge"  align="center"><br>
-Qt <img src="https://pepy.tech/badge/pysimpleguiqt?color=blue&style=for-the-badge"  align="center">
-WxPython<img src="https://pepy.tech/badge/pysimpleguiwx?color=blue&style=for-the-badge"  align="center">
-Web (Remi) <img src="https://pepy.tech/badge/pysimpleguiweb?color=blue&style=for-the-badge"  align="center">
-</p>
+## PyPIの統計とバージョン
+
+| TK | TK 2.7 | Qt| WxPython | Web (Remi) |
+| -- | -- | -- | -- | -- |
+| ![tkinter](https://img.shields.io/pypi/dm/pysimplegui?label=tkinter) | ![tkinter 2.7 downloads](https://img.shields.io/pypi/dm/pysimplegui27?label=tkinter%202.7) | ![qt](https://img.shields.io/pypi/dm/pysimpleguiqt?label=qt) | ![wx](https://img.shields.io/pypi/dm/pysimpleguiwx?label=wx) | ![web](https://img.shields.io/pypi/dm/pysimpleguiweb?label=web) |
+| [![tkinter](http://pepy.tech/badge/pysimplegui)](http://pepy.tech/project/pysimplegui) | [![tkinter27](https://pepy.tech/badge/pysimplegui27)](https://pepy.tech/project/pysimplegui27) | [![Downloads](https://pepy.tech/badge/pysimpleguiqt)](https://pepy.tech/project/pysimpleguiqt) | [![Downloads](https://pepy.tech/badge/pysimpleguiwx)](https://pepy.tech/project/pysimpleguiWx) | [![Downloads](https://pepy.tech/badge/pysimpleguiweb)](https://pepy.tech/project/pysimpleguiWeb) |
+| ![tkinter](https://img.shields.io/pypi/v/pysimplegui.svg?label=tkinter%20PyPI%20Ver&color=red) | ![tkinter 2.7](https://img.shields.io/pypi/v/pysimplegui27.svg?label=tkinter%202.7%20PyPI%20Ver&color=red) | ![qt](https://img.shields.io/pypi/v/pysimpleguiqt.svg?label=qt%20PyPI%20Ver&color=red) | ![wx](https://img.shields.io/pypi/v/pysimpleguiwx.svg?label=wx%20PyPI%20Ver&color=red) | ![web](https://img.shields.io/pypi/v/pysimpleguiweb.svg?label=web%20PyPI%20Ver&color=red) | 
+|  [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUI)](https://pypi.python.org/pypi/PySimpleGUI/)  |  [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUI27)](https://pypi.python.org/pypi/PySimpleGUI27/)  | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIQt)](https://pypi.python.org/pypi/PySimpleGUIQt/) | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIWx)](https://pypi.python.org/pypi/PySimpleGUIWx/) | [![PyPI pyversions](https://img.shields.io/pypi/pyversions/PySimpleGUIWeb)](https://pypi.python.org/pypi/PySimpleGUIWeb/) |
 
 
-## GitHub
+--------------------------
 
-<p align="center">
-<a href=""><img src="https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge" alt="img" width="180px"></a>
-<a href=""><img src="https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue&style=for-the-badge" alt="img"  width="200px"></a>
-<a href=""><img src="https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"  width="260px"></a>
-<a href=""><img src="https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue&style=for-the-badge" alt="img"width="200px"></a>
-<a href=""><img src="http://ForTheBadge.com/images/badges/makes-people-smile.svg" alt="img"width="190px"></a>
-<a href=""><img src="https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?style=social&label=Star&maxAge=2592000" alt="img"width="140x"></a>
-</p>
+## GitHubの統計
+
+
+
+
+|  Issues | Commit Activity | Stars | Docs | 
+| -- | -- | -- | -- |
+| ![GitHub issues](https://img.shields.io/github/issues-raw/PySimpleGUI/PySimpleGUI?color=blue)  | ![commit activity](https://img.shields.io/github/commit-activity/m/PySimpleGUI/PySimpleGUI.svg?color=blue) | ![stars](https://img.shields.io/github/stars/PySimpleGUI/PySimpleGUI.svg?label=stars&maxAge=2592000) | ![Documentation Status](https://readthedocs.org/projects/pysimplegui/badge/?version=latest) |
+|  ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/PySimpleGUI/PySimpleGUI?color=blue) | ![last commit](https://img.shields.io/github/last-commit/PySimpleGUI/PySimpleGUI.svg?color=blue)  |  |
+
+
+
 
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api/?username=PySimpleGUI&bg_color=3e7bac&title_color=ffdd55&icon_color=ffdd55&text_color=ffdd55&show_icons=true&count_private=true">
 </p>
 
-## 最新の PyPI バージョン
 
-
-<p align="center">
-tkinter
-<a href="pypi tkinter"><img src="https://img.shields.io/pypi/v/pysimplegui.svg?style=for-the-badge&color=red" alt="img" align="center" width="150px"></a>
-Qt
-<a href="https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiqt.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-Web
-<a href="https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiweb.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-WxPython
-<a href="https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge"><img src="https://img.shields.io/pypi/v/pysimpleguiwx.svg?style=for-the-badge"  alt="img" align="center" width="150px"></a>
-</p>
 
 <hr>
 
 # PySimpleGUIとは何ですか:question:
 
-PySimpleGUIはあらゆるレベルのPythonプログラマがGUIを作成できるようにするPythonパッケージです。ウィジェットを含む 「レイアウト」を使用して GUI ウィンドウを指定します (PySimpleGUI では「エレメント」と呼びます)。 レイアウトはサポートされている4つのフレームワークのいずれかを使用してウィンドウを作成して、ウィンドウの表示や操作するのに使用されます。 ササポートされるフレームワークは、tkinter、Qt、WxPython、WxPythonまたはRemiが含まれます。このようなパッケージには「ラッパー」という用語が使われることがあります。
+PySimpleGUIはあらゆるレベルのPythonプログラマがGUIを作成できるようにするPythonパッケージです。ウィジェットを含む「レイアウト」を使用して、GUIウィンドウを指定します（PySimpleGUIでは「エレメント」と呼びます）。 レイアウトはサポートされている4つのフレームワークのいずれかを使用してウィンドウを作成して、ウィンドウ表示や操作するのに使用されます。 サポートされるフレームワークは、tkinter、Qt、WxPython、WxPythonまたはRemiが含まれます。このようなパッケージを「ラッパー」と呼ぶ場合があります。
 
 PySimpleGUIは「ボイラープレートコード」の多くを実装しているため、基となるフレームワークで直接記述するよりも単純で短かいコードになります。
-さらにインターフェイスは、望んだ結果を得るために必要なコードをできるだけ少なくするように単純化されています。使用するプログラムやフレームワークにもよりますが、PySimpleGUIでのプログラムはフレームワークのいずれかを直接使用して同じウィンドウを作成するよりも、コードの量は1/2から1/10程度になる場合があります。
+さらにインターフェイスは、望んだ結果を得るために、必要なコードをできるだけ少なくするように単純化されています。使用するプログラムやフレームワークにもよりますがPySimpleGUIでのプログラムはフレームワークのいずれかを直接使用して同じウィンドウを作成するよりも、コードの量は1/2から1/10程度になる場合があります。
 
 目標は使用しているGUIフレームワーク上の特定のオブジェクトやコードをカプセル化/非表示にすることですが、必要に応じてフレームワークに依存しているウィジェットやウィンドウに直接アクセスできます。
-設定や機能がまだ公開されておらず、PySimpleGUI APIを使用してアクセスできない場合でも、フレームワークから遮断されてません。PySimpleGUIのパッケージ自体を直接変更せずに機能を拡張できます。
+設定や機能がまだ公開されておらずPySimpleGUI APIを使用してアクセスできない場合でも、フレームワークから遮断されてません。PySimpleGUIのパッケージ自体を直接変更せずに機能を拡張できます。
+
+
 ## 「GUIのギャップ」を埋める
 
-Python はプログラミング コミュニティに多くの人々を招いています。プログラムの数と扱う領域の範囲は気が遠くなります しかし多くの場合、プログラムとテクノロジーは一握りの人々以外の手の届かないところにあります。Python プログラムの大半は"コマンドライン"ベースです。プログラマー系の人はテキストインターフェイスを介してコンピュータとやり取りすることに慣れていて、この問題はありません。 プログラマーはコマンドラインインターフェイスに問題はありませんがほとんどの「普通の人」は問題を抱えています。 これにより、デジタル・ディバイド、「GUIのギャップ 」が生み出されます。
-プログラムにGUIを追加することで、そのプログラムはより多くの人に知ってもらえるようになります。プログラムはより親しみやすくなります。GUIはコマンドラインインターフェースに慣れているプログラマーであっても、いくつかのプログラムの操作を簡単にすることができます。 そして最後にGUIを必要とする問題もあります。   
+Pythonはプログラミング コミュニティに多くの人々を招いています。プログラムの数と扱う領域の範囲は気が遠くなります しかし多くの場合、プログラムとテクノロジーは一握りの人々以外の手の届かないところにあります。Pythonプログラムの大半は"コマンドライン"ベースです。プログラマー系の人はテキストインターフェイスを介してコンピューターとやり取りすることに慣れているため、この問題はありません。 プログラマーはコマンドラインインターフェイスに問題はありませんがほとんどの「普通の人」は問題を抱えています。 これにより、デジタル・ディバイド、「GUIのギャップ」が生み出されます。
+プログラムにGUIを追加することで、そのプログラムはより多くの人に知ってもらえるようになります。プログラムはより親しみやすくなります。GUIはコマンドラインインターフェイースに慣れているプログラマーであっても、いくつかのプログラムの操作を簡単にできます。 そして最後にGUIを必要とする問題もあります。   
 
 
 <p align="center">
@@ -80,9 +81,9 @@ Python はプログラミング コミュニティに多くの人々を招いて
 <hr>
 
 # 私について :wave:
-こんにちは！ 私はマイクです。 GitHubのPySimpleGUIで問題を解決してPySimpleGUIを継続的に前進させ続けています。私は昼と夜と週末もプロジェクトとPySimpleGUIユーザーに捧げてきました。私たちの成功は最終的に共有されます。 あなたが成功したときに私は成功しています。
+こんにちは！ 私はマイクです。 GitHubのPySimpleGUIで問題を解決してPySimpleGUIを継続的に前進させ続けています。私は昼と夜、そして週末もプロジェクトとPySimpleGUIユーザーに捧げてきました。私たちの成功は最終的に共有されます。 あなたが成功したときに私は成功しています。
 
-Pythonでは相対的な新人ですが、70年代からソフトウェアを書いてきました。 私のキャリアの大半はシリコンバレーでの製品開発に費やされました。PySimpleGUIには自分が開発した企業製品と同じようなプロフェッショナリズムと献身をもたらします。今、あなたは私の顧客です。
+Pythonでは相対的な新人ですが、70年代からソフトウェアを書いてきました。 私のキャリアの大半はシリコンバレーでの製品開発に費やされました。自分が開発してきた企業製品と同じような、プロフェッショナリズムと献身をPySimpleGUIにもたらします。今、あなたは私の顧客です。
 
 
 ## プロジェクトの目標 :goal_net:
@@ -96,21 +97,23 @@ PySimpleGUIプロジェクトの重要な目標は以下の2つです。
 
 膨大な量のドキュメント、クックブック、すぐに使える100種類以上のデモプログラム、詳細なコールリファレンス、YouTubeのビデオ、オンラインのTrinketのデモなど、すべてが楽しい体験を生み出すために作用しています。
 
-**あなたの成功**は共通の目標です。 PySimpleGUI は開発者向けに構築されました。あなたは私の仲間です。ユーザーとPySimpleGUIの共同作業の結果を見るのは予想外の報酬でした。ドキュメントやその他の資料を使用してアプリケーションの構築に役立ててください。トラブルに遭遇した場合は、[PySimpleGUI GitHub の問題](http://Issues.PySimpleGUI.org)でIssue を開いてヘルプを利用できます。 以下のサポートのセクションを見てください。
+**あなたの成功**は共通の目標です。 PySimpleGUIは開発者向けに構築されました。あなたは私の仲間です。ユーザーとPySimpleGUIの共同作業の結果を見るのは予想外の報酬でした。ドキュメントやその他の資料を使用してアプリケーションの構築に役立ててください。トラブルに遭遇した場合は、[PySimpleGUI GitHub の問題](http://Issues.PySimpleGUI.org)でIssueを開いてヘルプを利用できます。 以下のサポートのセクションを見てください。
 
 <hr>
 
 # 教育リソース :books:
 
-www.PySimpleGUI.org は覚えやすく、ドキュメントが配置されている場所です。上部にはいくつかの異なるドキュメントを表すタブがあります。ドキュメントは「Read The Docs」に記載されており、各ドキュメントの目次があり検索が簡単です。
+www.PySimpleGUI.orgは覚えやすく、ドキュメントが配置されている場所です。上部にはいくつかの異なるドキュメントを表すタブがあります。ドキュメントは「Read The Docs」に記載されており、各ドキュメントの目次があり、検索も簡単です。
 
 数百ページの文書化されたドキュメントと数百のサンプルプログラムがあり、あなたが非常に速く効果を発揮するのに役立ちます。
-単一の GUI パッケージを学ぶのに数日または数週間投資するよりも、PySimpleGUIを使用すると午後一回でプロジェクトを完成させられるかもしれません。
+単一のGUIパッケージを学ぶのに数日または数週間投資するよりも、PySimpleGUIを使用すると午後の時間だけでプロジェクトを完成させられるかもしれません。
 
 
-## 例 1 - ワンショットウィンドウ
+## 例1 - ワンショットウィンドウ
 
 このタイプのプログラムは、ウィンドウが1回表示されて収集された値が閉じられるため、「ワンショット」ウィンドウと呼ばれます。 ワードプロセッサのように長い間開いたままになっていません。
+
+
 ### 単純なPySimpleGUIプログラムの解剖学
 
 PySimpleGUIプログラムには5つのセクションがあります
@@ -131,7 +134,7 @@ window = sg.Window('ウィンドウタイトル', layout)      # パート 3- �
 event, values = window.read()                   # パート 4- イベントループまたは Window.read 呼び出し
 
 # 収集された情報で何かをする
-print('ハロー ', values[0], "! PySimpleGUIを試してくれてありがとう")
+print('ハロー ', values[0], "PySimpleGUIを試してくれてありがとう!")
 
 # 画面から削除して終了
 window.close()                                  #パート 5 - ウィンドウを閉じる
@@ -146,9 +149,9 @@ window.close()                                  #パート 5 - ウィンドウ�
 
 <hr>
 
-## 例 2 - インタラクティブウィンドウ
+## 例2 - インタラクティブウィンドウ
 
-この例では、ユーザーがウィンドウを閉じるか、または [終了] ボタンをクリックするまで、ウィンドウは画面上に残ります。 先ほど見たワンショットウィンドウとインタラクティブウィンドウの主な違いは、「イベントループ」の追加です。イベントループはウィンドウからイベントと入力を読み込みます。 アプリケーションの中心はイベントループになります。
+この例では、ユーザーがウィンドウを閉じるか、または [終了] ボタンをクリックするまで、ウィンドウは画面上に残ります。先ほど見たワンショットウィンドウとインタラクティブウィンドウの主な違いは、「イベントループ」の追加です。イベントループはウィンドウからイベントと入力を読み込みます。アプリケーションの中心はイベントループになります。
 
 ```python
 import PySimpleGUI as sg
@@ -176,7 +179,7 @@ while True:
 window.close()
 ```
 
-以下はは、例2が作成するウィンドウです。
+以下は、例2が作成するウィンドウです。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/WhatsYourNameBlank.jpg">
@@ -192,7 +195,7 @@ window.close()
 
 
 この例とワンショット ウィンドウの違いについて簡単に見てみましょう。
-まず、レイアウトの違いに気づくでしょう。 特に2つの変更が重要です。 1つは`Input`エレメントと`Text`エレメントの1つに`key`パラメータを追加することです。 「key」はエレメントの名前のようなものです。 または、Pythonの言葉では、辞書キーのようなものです。 `Input`エレメントのキーは、コードの後半で辞書キーとして使用されます。
+まず、レイアウトの違いに気づくでしょう。とくに2つの変更が重要です。1つは`Input`エレメントと`Text`エレメントの1つに`key`パラメーターを追加することです。「key」はエレメントの名前のようなものです。 またはPythonの辞書キーのようなものです。 `Input`エレメントのキーは、コードの後半で辞書キーとして使用されます。
 
 
 もう1つの違いは、この `Text`エレメントの追加です:
@@ -200,11 +203,11 @@ window.close()
           [sg.Text(size=(40,1), key='-OUTPUT-')],
 ```
 
-すでにカバーしている「キー」という2つのパラメータがあります。 `Size`パラメーターはエレメントの文字数のサイズを定義します。 この場合、`Text`エレメントは幅40文字、高さ1文字であることを示しています。テキストの文字列が指定されていないので空白になることに注意してください。 作成されたウィンドウでは空白行が簡単に見れます。
+すでにカバーしている「キー」という2つのパラメーターがあります。 `Size`パラメーターはエレメントの文字数のサイズを定義します。 この場合、`Text`エレメントは幅40文字、高さ1文字であることを示しています。テキストの文字列が指定されていないので空白で表示されていことに注意してください。 作成されたウィンドウでは空白行になっているのがわかります。
 
 また 、[終了]ボタンを追加しました。
 
-イベントループには、おなじみの`window.read()`呼び出ししがあります。
+イベントループには、おなじみの`window.read()`呼び出しがあります。
 
 読み込んだ後に続くのは、このif文です。
 ```python
@@ -212,9 +215,9 @@ window.close()
         break
 ```
 
-このコードは、ユーザーが 「X（閉じる）」 をクリックしてウィンドウを閉じたか、または「終了」ボタンをクリックしたかどうかを確認します。 これらのいずれかが発生した場合、コードはイベント ループから抜け出します。
+このコードは、ユーザーが「X（閉じる）」をクリックしてウィンドウを閉じたか、または「終了」ボタンをクリックしたかどうかを確認します。 これらのいずれかが発生した場合、コードはイベント ループから抜け出します。
 
-ウィンドウが閉じられず、「終了」ボタンがクリックされていない場合は、動作が継続されます。 起こりうる唯一の事は、ユーザーが「OK」ボタンをクリックしたことです。 イベントループの最後のステートメントは次のとおりです。
+ウィンドウが閉じられず、「終了」ボタンがクリックされていない場合は動作が継続されます。 起こりうる唯一の事は、ユーザーが「OK」ボタンをクリックしたことです。 イベントループの最後のステートメントは次のとおりです。
 
 
 
@@ -225,19 +228,19 @@ window.close()
 
 このステートメントは、`-OUTPUT-`キー を持つ`Text`エレメントを文字列で更新します。`window['-OUTPUT-']`は`-OUTPUT-`キーを持つエレメントを検索します。 キーは、空白の`Text`エレメントに属します。 エレメントが検索から返されると、そのエレメントの`update`メソッドが呼び出されます。 ほとんどすべてのエレメントは`update`メソッドを持っています。 このメソッドはエレメントの値や構成を変更したりするのに使用します。
 
-テキストを黄色にしたい場合は、`update`メソッドに`text_color`パラメータを追加して以下のように処理します。
+テキストを黄色にしたい場合は、`update`メソッドに`text_color`パラメーターを追加して以下のように処理します。
 ```python
     window['-出力-'].update('ハロー ' + values['-入力-'] + "! PySimpleGUI をお試しいただきありがとうございます", text_color='yellow')
 ```
 
-`text_color`パラメータを追加した後、これが新しい結果ウィンドウとなります。
+`text_color`パラメーターを追加した後、これが新しい結果ウィンドウとなります。
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/HelloWorldYellow.jpg">
 </p>
 
 
-各エレメントで使用できるパラメータは[call referenceドキュメント](http://calls.PySimpleGUI.org)とdocstrings と両方に記載されています。PySimpleGUIには、利用可能なすべてのオプションを理解するのに役立つ豊富なドキュメントが用意されています。 `Text`エレメントの`update'`メソッドを検索すると、以下のような定義が見つかります:
+各エレメントで使用できるパラメーターは[call referenceドキュメント](http://calls.PySimpleGUI.org)とdocstringsの両方に記載されています。PySimpleGUIには利用可能なすべてのオプションを理解するのに役立つ豊富なドキュメントが用意されています。`Text`エレメントの`update'`メソッドを検索すると、以下のような定義が見つかります:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/TextUpdate.jpg">
@@ -248,11 +251,11 @@ window.close()
 
 <hr>
 
-##レイアウトは面白いです LOL! :laughing:
+## レイアウトはおもしろいです（笑）! :laughing:
 
-ウィンドウのレイアウトは「リストのリスト」(LOL)です。 ウィンドウは「行」に分割されます。 ウィンドウの各行はレイアウトのリストになります。 すべてのリストを連結すると、レイアウトができあがります。...リストのリストです。
+ウィンドウのレイアウトは「リストのリスト」(LOL)です。 ウィンドウは「行」に分割されます。 ウィンドウの各行はレイアウトのリストになります。 すべてのリストを連結すると、レイアウトができあがります。リストのリストです。
 
-行の定義方法を簡単に確認できるように、各行に追加の 'Text' エレメントを追加したレイアウトは、以前と同じです:
+行の定義を簡単に確認にするため、各行に追加で 'Text' エレメントを追加しました。レイアウトは自体は以前と同じです:
 
 ```python
 layout = [  [sg.Text('ライン 1'), sg.Text("お名前は何ですか")],
@@ -269,8 +272,7 @@ layout = [  [sg.Text('ライン 1'), sg.Text("お名前は何ですか")],
 
 
 
-リストを使用してGUIを定義する場合、他のフレームワークを使用してGUIプログラミングを行う方法にくらべていくつか大きな利点があります。 たとえば、Python のリスト内包表記を利用して、1 行のコードでボタンのグリッドを作成できます。
-
+リストを使用してGUIを定義する場合、他のフレームワークを使用してGUIプログラミングを行う方法にくらべていくつかの大きな利点があります。 たとえば、Pythonのリスト内包表記を利用して、1行のコードでボタンのグリッドを作成できます。
 
 
 次の3行のコードです。
@@ -289,11 +291,12 @@ event, values = sg.Window('List Comprehensions', layout).read(close=True)
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/4x4grid.jpg">
 </p>
 
-「楽しむ」がプロジェクトの目的の１つであることを思い出してください。 Pythonの強力な基本機能をGUIの問題に直接適用するのは楽しいです。GUIを作成するコードのページの代わりに、数行 (または多くの場合1行) のコードを作成します。
+「楽しむ」がプロジェクトの目的の1つであることを思い出してください。 Pythonの強力な基本機能をGUIの問題に直接適用するのは楽しいです。GUIを作成するコードのページの代わりに、数行（または多くの場合は1行）のコードを作成します。
 
 ## コードの折りたたみ
 
 ウィンドウのコードを1行のコードに凝縮できます。 レイアウトの定義、ウィンドウ作成、表示、およびデータ収集はすべて、次の1行のコードで書けます。
+
 ```python
 event, values = sg.Window('Window Title', [[sg.Text("お名前は何ですか？")],[sg.Input()],[sg.Button('はい')]]).read(close=True)
 ```
@@ -305,7 +308,7 @@ event, values = sg.Window('Window Title', [[sg.Text("お名前は何ですか？
 
 同じウィンドウが表示され、PySimpleGUIプログラムのセクションを示す例と同じ値が返されます。 非常に少ない量で多くのことを行うことができるため、Pythonコードにすばやく簡単にGUIを追加できます。 データを表示してユーザーからの選択を得たい場合は、1ページのコードではなく1行のコードで行うことができます。
 
-短縮エイリアスを使用してより少ない文字数でコードのスペースをさらに短くできます。  すべてのエレメントには、使用できる短い名前が１つ以上含まれています。 たとえば、`Text`エレメントは単に`T`として書けます。`Input`エレメントは `I`、`Button`は`B`と書けます。 したがって、ウィンドウの1行のコードは以下にになります:
+短縮エイリアスを使用してより少ない文字数でコードのスペースをさらに短くできます。すべてのエレメントには、使用できる短い名前が1つ以上含まれています。 たとえば、`Text`エレメントは単に`T`として書けます。`Input`エレメントは `I`、`Button`は`B`と書けます。 したがって、ウィンドウの1行のコードは以下になります:
 
 ```python
 event, values = sg.Window('Window Title', [[sg.T("あなたの名前は何ですか?")],[sg.I()],[sg.B('はい')]]).read(close=True)
@@ -314,7 +317,7 @@ event, values = sg.Window('Window Title', [[sg.T("あなたの名前は何です
 
 ### コードの移植性
 
-PySimpleGUIは現在、4つのPythonのGUIフレームワークで実行できます。 使用するフレームワークは、importステートメントを使用して指定します。 インポートを変更すると、基本のGUIフレームワークが変更されます。プログラムによっては、別のGUIフレームワークで実行するためにはimport ステートメント以外の変更は必要ありません。 上記の例では、インポートを`PySimpleGUI`から`PySimpleGUIQt`、`PySimpleGUIWx`、`PySimpleGUIWeb`、`PySimpleGUIWeb`に変更すると、フレームワークが変更されます。
+PySimpleGUIは現在、4つのPythonのGUIフレームワークで実行できます。 使用するフレームワークは、importステートメントを使用して指定します。 インポートを変更すると、基本のGUIフレームワークが変更されます。プログラムによっては、別のGUIフレームワークで実行するためにはimport文以外の変更は必要ありません。 上記の例では、インポートを`PySimpleGUI`から`PySimpleGUIQt`、`PySimpleGUIWx`、`PySimpleGUIWeb`、`PySimpleGUIWeb`に変更すると、フレームワークが変更されます。
 
 | ステートメントをインポート | 結果ウィンドウ |
 |--|--|
@@ -325,40 +328,40 @@ PySimpleGUIは現在、4つのPythonのGUIフレームワークで実行でき�
 
 
 
-GUIのコードをあるフレームワークから別のフレームワークに移植する (例えば、コードをtkinterからQtに移動する) には、通常はコードの書き換えが必要です。  PySimpleGUI は、フレームワーク間の簡単な移動を可能にするように設計されています。 場合によってはいくつかの変更が必要ですが、目的は最小限の変更で移植性の高いコードを作ることです。 
+GUIのコードをあるフレームワークから別のフレームワークに移植する（たとえば、コードをtkinterからQtに変更する）には、通常はコードの書き換えが必要です。PySimpleGUIは、フレームワーク間の簡単な移動を可能にするように設計されています。 場合によってはいくつかの変更が必要ですが目的は最小限の変更で移植性の高いコードを作ることです。 
 
-システム トレイ アイコンなどの一部の機能は、すべてのポートで使用できないです。 システムトレイアイコン機能はQtおよびWxPythonポートで使用できます。 シミュレートされたバージョンはtkinterで使用できます。 システムトレイアイコンは、PySimpleGUIWebポートではサポートされません。
+システムトレイアイコンなどの一部の機能は、すべてのポートで使用できないです。 システムトレイアイコン機能はQtおよびWxPythonポートで使用できます。シミュレートされたバージョンはtkinterで使用できます。システムトレイアイコンは、PySimpleGUIWebポートではサポートされません。
 
 ##  ランタイム環境
 
 |環境 |サポートされる |
 |--|--|
 |パイソン| Python  3.4+ |
-|オペレーティング システム |ウィンドウズ, Linux, マック |
-|ハードウェア |デスクトップ PC, ノートパソコン, ラズベリーパイ, PyDroid3 を実行しているアンドロイドデバイス |
-|オンライン |repli.it、Trinket.com (どちらもブラウザ上でtkinterを実行する) |
-|GUI フレームワーク |tkinter, pyside2, WxPython, Remi |
+|オペレーティング システム |ウィンドウズ,Linux,マック |
+|ハードウェア |デスクトップPC,ノートパソコン,ラズベリーパイ,PyDroid3 を実行しているアンドロイドデバイス |
+|オンライン |repli.it,Trinket.com（どちらもブラウザ上でtkinterを実行する）|
+|GUIフレームワーク |tkinter, pyside2, WxPython, Remi |
 
 
 ## 統合
-200 以上の「デモプログラム」の中には、多くの人気のPythonパッケージをGUIに統合する方法の例が見つかります。
+200以上の「デモプログラム」の中には、多くの人気のPythonパッケージをGUIに統合する方法の例が見つかります。
 
-あなたのウィンドウにMatplotlibの描画を埋め込みたいですか?  問題ありません、 デモコードをコピーすると即座にあなたの夢のMatplotlibの描画をあなたのGUIに組み込めます。  
+ウィンドウにMatplotlibの描画を埋め込みたいですか？、問題ありません、 デモコードをコピーすると即座にあなたの夢のMatplotlibの描画をあなたのGUIに組み込めます。  
 
 これらのパッケージやその他のパッケージは、デモプログラムやデモレポが用意されているので、GUIに入れる準備ができています。
 
 |パッケージ |説明 |
 |--|--|
  Matplotlib |グラフやプロットの多くの種類 |
- OpenCV |コンピュータビジョン (AIでよく使用) |
+ OpenCV |コンピュータビジョン（AIでよく使用さる） |
  VLC |ビデオ再生 |
  pymunk |物理エンジン|
  psutil |システム環境の統計 |
  prawn |Reddit  API |
-json |PySimpleGUI は、「ユーザー設定」を格納する特別なAPIをラップします。 |
+json |PySimpleGUIは、「ユーザー設定」を格納する特別なAPIをラップします。 |
  weather |お天気アプリを作るためにいくつかの天気APIと統合 |
- mido |MIDI 再生 |
- beautiful soup |ウェブスクレイピング (GitHub issueウォッチャーでの例) |
+ mido |MIDIの再生 |
+ beautiful soup |ウェブスクレイピング（GitHub issueウォッチャーでの例） |
 
 <hr>
 
@@ -368,7 +371,7 @@ json |PySimpleGUI は、「ユーザー設定」を格納する特別なAPIを�
 PySimpleGUIをインストールする一般的に2つの方法があります。
 
 1. PyPIからpipでインストールする
-2. PySimpleGUI.pyファイルをダウンロードしてアプリケーションのフォルダに配置します
+2. PySimpleGUI.pyファイルをダウンロードしてアプリケーションのフォルダーに配置します
 
 
 ### Pipインストールとアップグレード
@@ -376,47 +379,47 @@ PySimpleGUIをインストールする一般的に2つの方法があります�
 現在提案されている`pip`コマンドを呼び出す方法は、Pythonを使ってモジュールとして実行することです。 以前は、`pip`または`pip3`コマンドはコマンドライン/シェル上で
 直接実行されました。 提案された方法は以下となります。
 
-Windows の初期インストール
+Windowsの初期インストール
 
 `python -m pip install PySimpleGUI`
 
-Linux および MacOS の初期インストール
+LinuxおよびmacOSの初期インストール
 
 `python3 -m pip install PySimpleGUI`
 
-`pip`を使用してアップグレードするには、単に2つのパラメータ`--upgrade --no-cache-dir`を指定するだけです。
+`pip`を使用してアップグレードするには、単に2つのパラメーター`--upgrade --no-cache-dir`を指定するだけです。
 
-Windows のアップグレード
+Windowsのアップグレード
 
 `python -m pip install --upgrade --no-cache-dir PySimpleGUI`
 
-Linux および MacOS のアップグレード
+LinuxおよびmacOSのアップグレード
 
 `python3 -m pip install --upgrade --no-cache-dir PySimpleGUI`
 
 
 ### 単一ファイルのインストール
 
-PySimpleGUIはRaspberry Pi のようなインターネットに接続されていないシステムにも簡単にインストールできるように、単一の .py ファイルとして作成されました。 PySimpleGUI.pyファイルをインポートするアプリケーションと同じフォルダに置くだけです。Python はインポート時にローカルのコピーを使用します。
+PySimpleGUIはRaspberry Piのようなインターネットに接続されていないシステムでも、簡単にインストールできるように単一の.py ファイルとして作成されました。 PySimpleGUI.pyファイルをインポートするアプリケーションと同じフォルダーに置くだけです。Pythonはインポート時にローカルのコピーを使用します。
 
 .pyファイルを使用してインストールする場合は、PyPIから入手するか、最新の未リリースバージョンを実行したい場合はGitHubからダウンロードします。
 
-PyPIからインストールするには、wheelまたは .gz ファイルをダウンロードして解凍します。 .whlファイルを.zipにリネームすると、通常のzipファイルと同じように開くことができます。 フォルダの中にPySimpleGUI.pyファイルがあります。 このファイルをアプリケーションのフォルダーにコピーすると完了です。
+PyPIからインストールするには、wheelまたは.gzファイルをダウンロードして解凍します。.whlファイルをzipにリネームすると、通常のzipファイルと同じように開くことができます。 フォルダーの中にはPySimpleGUI.pyファイルがあります。 このファイルをアプリケーションのフォルダーにコピーすると完了です。
 
-tkinter バージョンの PySimpleGUI の PyPI リンクです
+tkinterバージョンのPySimpleGUIのPyPIリンクです
 https://pypi.org/project/PySimpleGUI/#files
 
 GitHubリポジトリの最新バージョンは、こちらで確認できます
 https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/PySimpleGUI.py
 
 
-「そうだけど、巨大なソースファイルを一つだけ持つのはなんてひどい考えです」と今、考えている人もいるでしょう。 これは*時には*ひどい考えかもしれません。 今回は、メリットはデメリットを大幅に上回りました。 コンピュータサイエンスの概念の多くはトレードオフまたは主観的なものです。 一部の人が望むのと同じくらい、すべてが白黒ではありません。 多くの場合、質問に対する答えは「次第」です。
+「そうだけど、巨大なソースファイルを1つだけ持つのはなんてひどい考えだ」と今、考えている人もいるでしょう。 これは*時には*ひどい考えかもしれません。 今回は、メリットはデメリットを大幅に上回りました。 コンピュータサイエンスの概念の多くはトレードオフまたは主観的なものです。 一部の人が望むのと同じくらいすべてが白黒ではありません。 多くの場合、この質問に対する答えは「次第」です。
 
 
 
 ## ギャラリー :art:
 
-ユーザーが投稿したGUIとGitHubにあるGUIのより正式なギャラリーの作成は進行中ですが、readmeを作成時点ではまだ完成していません。現在まとまってスクリーンショットを見れる場所は2か所あります。願わくば人々が作っている素晴らしい作品を正当化するためのWikiやその他の仕組みがすぐにリリースされることを願っています。
+ユーザーが投稿したGUIとGitHubにあるGUIのより正式なギャラリーの作成は進行中ですが、readmeを作成時点ではまだ完成していません。現在まとまってスクリーンショットを見れる場所は2か所あります。願わくは人々が作っている素晴らしい作品を正当化するためのWikiやその他の仕組みがすぐにリリースされることを願っています。
 
 ### ユーザーが提出したギャラリー
 
@@ -428,15 +431,15 @@ https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/PySimpleGUI.py
 
 <hr>
 
-# PySimpleGUI の用途です :hammer:
+# PySimpleGUIの用途について :hammer:
 
-次のセクションでは、PySimpleGUIの用途の一部を紹介します。 GitHub だけでも1,000 以上のプロジェクトでPySimpleGUI を使用しています。本当にこれだけの多くの人々の可能性が広がったことはは本当に驚くべきことです。 多くのユーザーは以前にPythonでGUIを作成しようとして失敗ししたと話していましたが、彼らがPySimpleGUIを試してみたときに最終的に自分の夢を達成したと話をしました。
+次のセクションでは、PySimpleGUIの用途の一部を紹介します。 GitHubだけでも1,000以上のプロジェクトでPySimpleGUIを使用しています。これだけの多くの人々の可能性が広がったことは本当に驚くべきことです。 多くのユーザーは以前にPythonでGUIを作成しようとして失敗したと話していましたが、彼らがPySimpleGUIを試してみて最終的に自分の夢を達成できたと話しています。
 
 ## 最初のGUI
 
-もちろん、PySimpleGUIの最も優れた使い方の一つはPythonプロジェクト用のGUIを作ることです。 ファイル名をリクエストするだけの小さなプロジェクトから開始できます。 このためには、`popup`と呼ばれる「ハイレベル関数」の1つを1回呼び出すだけで済みます。 ポップアップにはあらゆる種類があり、一部は情報を収集します
+もちろん、PySimpleGUIのもっとも優れた使い方の1つはPythonプロジェクト用のGUIを作ることです。 ファイル名をリクエストするだけの小さなプロジェクトから開始できます。 このためには、`popup`と呼ばれる「ハイレベル関数」の1つを1回呼び出すだけで済みます。 ポップアップにはあらゆる種類があり、一部は情報を収集します
 
-`popup`自体で情報を表示するためのウィンドウを作成します。printと同じように複数のパラメータを渡せます。情報を取得したい場合は、`popup_get_filename`のように`popup_get_で`始まる関数を呼び出すします。
+`popup`自体で情報を表示するためのウィンドウを作成します。printと同じように複数のパラメーターを渡せます。情報を取得したい場合は、`popup_get_filename`のように`popup_get_`で始まる関数を呼び出すします。
 
 コマンドラインでファイル名を指定する代わりに、ファイル名を取得するための1行を追加することで、プログラムは「普通の人」が快適に使用できるプログラムに変身します。
 
@@ -488,7 +491,7 @@ window = sg.Window('My window', layout, no_titlebar=True, alpha_channel=0.5)
 
 ## ゲーム
 
-ゲーム開発用の SDK としては特に記述されていませんが、PySimpleGUIはゲームの開発を非常に簡単にします。
+ゲーム開発用のSDKとしては特に記述されていませんが、PySimpleGUIはゲームの開発を非常に簡単にします。
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Chess.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Chess.png"  alt="img" align="right" width="500px"></a>
 このチェスプログラムはチェスをするだけでなく、チェスAI「Stockfish」を統合します。
@@ -518,7 +521,7 @@ PySimpleGUIの`Graph`エレメントを使用すると画像の操作が簡単�
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/OpenCV.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/OpenCV.jpg"  alt="img" align="right" width="400px"></a>
 
 
-WEBカメラからビデオをキャプチャしてGUIで表示するのには、PySimpleGUIのコードでは4行でできます。 さらに印象的なのはこらの4行のコードが tkinter、Qt、および Web ポートで動作します。  tkinterを使用して画像を表示するのと同じコードを使用して、ブラウザでWebカメラをリアルタイムが表示できます。
+WEBカメラからビデオをキャプチャしてGUIで表示するのには、PySimpleGUIのコードでは4行でできます。 さらに印象的なのはこらの4行のコードがtkinter、Qt、および Webポートで動作します。  tkinterを使用して画像を表示するのと同じコードを使用して、ブラウザでWebカメラをリアルタイムが表示できます。
 
 また、VLCプレーヤーを使って、オーディオやビデオなどのメディア再生も可能です。デモアプリケーションが提供されているので実際の作業例が用意されています。このreadmeに記載されている内容は全て、あなた自身の創作の出発点として利用できます。
 <br><br><br><br><br>
@@ -532,14 +535,14 @@ WEBカメラからビデオをキャプチャしてGUIで表示するのには�
 
 AIとPythonは長い間、この2つが組み合わされたときのスーパーパワーとして認識されてきました。しかし、多くの場合、ユーザーがGUIを使用してこれらのAIアルゴリズムを身近に操作する方法が欠けています。
 
-これらのYOLOのデモは、GUIがAIアルゴリズムとの対話においていかに大きな違いをもたらすかの素晴らしい例です。 これらのウィンドウの下部にある2つのスライダーに注目してください。 この2つのスライダーは、YOLOアルゴリズムが使用するパラメータを変更します。 
+これらのYOLOのデモは、GUIがAIアルゴリズムとの対話においていかに大きな違いをもたらすかの素晴らしい例です。 これらのウィンドウの下部にある2つのスライダーに注目してください。 この2つのスライダーは、YOLOアルゴリズムが使用するパラメーターを変更します。 
 
-コマンドラインのみを使用してYOLOデモをチューニングする場合は、アプリケーションを起動するときに、パラメーターを設定し、その実行方法を確認し、アプリケーションを停止し、パラメーターを変更し、最後に新しいパラメーターでアプリケーションを再起動する必要があります。
+コマンドラインのみを使用してYOLOデモをチューニングする場合は、アプリケーションを起動するときに、パラメーターを設定し、その実行方法を確認して、アプリケーションを停止し、パラメーターを変更して最後に新しいパラメーターでアプリケーションを再起動する必要があります。
 <br><br><br><br>
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/YOLO%20Object%20Detection.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/YOLO%20Object%20Detection.jpg"  alt="img" align="right" width="500px"></a>
 
-これらのステップと、GUIを使用して実行できる操作と比較してみます。 GUIを使用すると、これらのパラメータをリアルタイムで変更できます。 アルゴリズムにどのような影響を与えているかについて、すぐにフィードバックを得られます。
+これらのステップと、GUIを使用して実行できる操作と比較してみます。 GUIを使用すると、これらのパラメーターをリアルタイムで変更できます。 アルゴリズムにどのような影響を与えているかについて、すぐにフィードバックを得られます。
 
 
 
@@ -548,10 +551,10 @@ AIとPythonは長い間、この2つが組み合わされたときのスーパ�
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Colorizer.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Colorizer.jpg"  alt="img" align="right" width="500px"></a>
 
 
-公開されているAIプログラムには、コマンドラインで動かすプログラムが非常に多く存在します。 これ自体は大きなハードルではありませんが、コマンドラインでカラーリングしたいファイル名を入力/貼り付け、プログラムを実行して、出力ファイルの結果をファイルビューアで開くには十分「面倒くさい」です。
+公開されているAIプログラムには、コマンドラインで動かすプログラムが非常に多く存在します。 これ自体は大きなハードルではありませんが、コマンドラインでカラーリングしたいファイル名を入力/貼り付け、プログラムを実行して、出力ファイルの結果をファイルビューアーで開くのは十分「面倒くさい」です。
 
 
-GUI には、**ユーザーエクスペリエンスを変更する**を「GUIギャップ」に変化させる力があります。 このカラーライズの例では、ユーザーは画像が格納されてたフォルダを指定して、画像をクリックするだけでカラーリングと結果表示の両方を行えます。  
+GUIには、**ユーザーエクスペリエンスを変更する**を「GUIギャップ」に変化させる力があります。 このカラーライズの例では、ユーザーは画像が格納されてたフォルダーを指定して、画像をクリックするだけでカラーリングと結果表示の両方を行えます。  
 カラーライズを行うプログラム/アルゴリズムは自由に利用可能で、使用可能でした。 不足していたのはGUIがもたらす使いやすさです。
 
 
@@ -595,9 +598,9 @@ PySimpleGUIのカラーテーマを使用すると、ほとんどの人がMatplo
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/JumpCutter.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/JumpCutter.png"  alt="img" align="right" width="500px"></a>
 
-前述の「GUI ギャップ」は、PySimpleGUIを使用して簡単に解決できます。 GUIを追加するプログラムにソースコードを用意する必要もありません。 「フロントエンド」GUI は、コマンドラインアプリケーションに渡す情報を収集するGUIです。
-フロントエンドGUI は、プログラマにとってユーザーがコマンドライン・インターフェースを使い心地よく感じなかったために、以前は使いたがらなかったアプリケーションを配布するための素晴らしい方法です。これらのGUIは、ソースコードにアクセスできないコマンドラインプログラムのための唯一の選択肢です。
-この例は、「Jump Cutter」というプログラムのフロントエンドです。 パラメーターはGUIをとおして収集されて、それらのパラメータを使用してコマンドラインが構築されて、コマンドラインプログラムの出力がGUIインターフェイスにルーティングされてコマンドが実行されます。この例では、実行されたコマンドが黄色で表示されています。
+前述の「GUIギャップ」は、PySimpleGUIを使用して簡単に解決できます。 GUIを追加するプログラムにソースコードを用意する必要もありません。「フロントエンド」GUI は、コマンドラインアプリケーションに渡す情報を収集するGUIです。
+フロントエンドGUIは、プログラマにとってユーザーがコマンドライン・インターフェーイスを使い心地よく感じなかったために、以前は使いたがらなかったアプリケーションを配布するための素晴らしい方法です。これらのGUIは、ソースコードにアクセスできないコマンドラインプログラムのための唯一の選択肢です。
+この例は、「Jump Cutter」というプログラムのフロントエンドです。 パラメーターはGUIをとおして収集されて、パラメーターを使用してコマンドラインが構築され、コマンドラインプログラムの出力がGUIインターフェイスにルーティングされてコマンドが実行されます。この例では、実行されたコマンドが黄色で表示されています。
 <br><br>
 <hr>
 
@@ -606,7 +609,7 @@ PySimpleGUIのカラーテーマを使用すると、ほとんどの人がMatplo
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"  alt="img" align="right" width="500px"></a>
 
 
-PySimpleGUIはPython 3.4に対応しているため、Raspberry Piのプロジェクト用のGUIを作成できます。 タッチスクリーンと組み合わせると特にうまく機能します。 モニターが接続されていない場合は、PySimpleGUIWebを使用してPiを制御することもできます。
+PySimpleGUIはPython 3.4に対応しているため、Raspberry Piのプロジェクト用のGUIを作成できます。 タッチスクリーンと組み合わせるととくにうまく機能します。 モニターが接続されていない場合は、PySimpleGUIWebを使用してPiを制御することもできます。
 
 <br><br>
 <br><br>
@@ -619,9 +622,9 @@ PySimpleGUIはPython 3.4に対応しているため、Raspberry Piのプロジ�
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Customized%20Titlebar.gif"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Customized%20Titlebar.gif"  alt="img" align="right" width="500px"></a>
 
 
-基礎となる GUIフレームワークの機能の多くに非常に簡単にアクセスできるため、GUIフレームワークを直接使っているようには見えないアプリケーションを作るための機能を組み合わせられます。
+基礎となるGUIフレームワークの多くの機能に非常に簡単にアクセスできるため、GUIフレームワークを直接使っているようには見えないアプリケーションを作るための機能を組み合わせられます。
 
-たとえば、tkinterやその他のGUIパッケージを使用してタイトルバーの色や外見を変更することはできませんが、PySimpleGUI を使用すると、カスタムタイトルバーを持っているかのように表示されるウィンドウを簡単に作成できます。
+たとえば、tkinterやその他のGUIパッケージを使用してタイトルバーの色や外見を変更することはできませんが、PySimpleGUIを使用すると、カスタムタイトルバーを持っているかのように表示されるウィンドウを簡単に作成できます。
 <br><br><br>
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Desktop%20Bouncing%20Balls.gif"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Desktop%20Bouncing%20Balls.gif"  alt="img" align="right" width="500px"></a>
@@ -671,19 +674,20 @@ PySimpleGUIのバージョン番号や基になるGUIフレームワークなど
 ***フォームに記入してください 。*** 　あなたには無意味に感じるかもしれません。ほんの一瞬ですが苦痛に感じるかもしれません。記入はあなたがより早く解決策を得るのに役立ちます。もしあなたがスピーディーな回答と解決を得るために役立つ必要な情報でなければ、記入は必要ではありません。「私はあなたを助けるために私を助ける」。
 
 
-# サポート	<a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"  alt="img"  width="90px"></a>
+# 支援する	<a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"  alt="img"  width="90px"></a>
 
-プロジェクトの財政的支援は非常に高く評価されています。 正直に言うと、経済的な援助が必要です。 ライトをつけ続けるだけで高価です。 ドメイン名登録、トリンケット、コンサルティングヘルプなどのサブスクリプションの長いリストは、すぐにかなりの繰り返しコストに加算されます。
+プロジェクトの財政的支援は非常に高く評価されています。 正直に言うと、経済的な援助が必要です。 ライトをつけ続けるだけで高価です。 ドメイン名登録、トリンケット、コンサルティングヘルプなどのサブスクリプションの長いリストは、すぐにかなりの経常コストに加算されます。
 
-PySimpleGUI は作成するのに安価ではありませんでした。愛の労働は、非常に面倒でした。ソフトウェアとドキュメントを現在のレベルに到達するには、週7日の作業に2年以上必要です。
+PySimpleGUIの開発は安くありませんでした。愛情をこめて開発したとはいえ何年にもわたって非常に手間のかかる開発でした。こんにちの姿になるのにかなりの時間をついやしました。現在も続けています。
 
-PySimpleGUIにはオープンソースライセンスがあり、そのまま残ることができれば素晴らしいことです。 お客様またはお客様の会社 (特に企業でPySimpleGUIを使用している場合) が、PySimpleGUIを使用して経済的に利益を得ている場合は、プロジェクトの寿命を延長する機能を持ちます。
+PySimpleGUIにはオープンソースライセンスがあり、そのまま残ることができれば素晴らしいことです。 お客様またはお客様の会社 (特に企業でPySimpleGUIを使用している場合) が、PySimpleGUIを使用して経済的に利益を得ている場合は、プロジェクトの寿命を延長する機会を持っています。
 
 ###　Buy Me a Coffee
 
-「Buy Me a Coffee」は、開発者を公的にサポートするための素晴らしい方法です。 素早く、簡単に、貢献は記録されるので、あなたがPySimpleGUI のサポーターであることを他の人に見せられます。寄付を非公開にもできます。
+「Buy Me a Coffee」は、開発者を公的にサポートするための素晴らしい方法です。 素早く、簡単に、貢献は記録されるので、あなたがPySimpleGUIのサポーターであることを他の人に見せられます。寄付を非公開にもできます。
 
 <a href="https://www.buymeacoffee.com/PySimpleGUI" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" alt="Buy Me A Coffee" width="217px" ></a>
+
 
 
 
@@ -694,27 +698,51 @@ PySimpleGUIにはオープンソースライセンスがあり、そのまま残
 [GitHub定期的なスポンサーシップ](https://github.com/sponsorsー/PySimpleGUI)は、継続的にさまざまなレベルのサポートでプロジェクトをスポンサーする方法です。これにより、多くのオープンソース開発者が企業レベルのスポンサーシップを受けられます。
 
 プロジェクトに金銭的に貢献していただけると、非常にありがたいです。オープンソースの開発者であることは、経済的に困難です。YouTube動画のクリエイターは、動画作成で生計を立てています。オープンソース開発者にとってはまだそれほど簡単ではありません。
+
+
+# 感謝の気持ちをこめて
+
+<!--
+To everyone that's helped, in whatever fashion, I'm very very grateful.
+
+Even taking a moment to say "thank you" helps, and a HUGE number of you have done that.  It's been an amazing number actually.  I value these thanks and find inspiration in the words alone.  Every message is a little push forward.  It adds a little bit of energy and keeps the whole project's momentum.  I'm so very grateful to everyone that's helped in whatever form it's been.
+-->
+どんな形でも協力してくれた皆さんにはとても感謝しています。
+
+一瞬でも "ありがとう "と言ってくれるだけでも助かるし、とても多くの人たちががそうしてくれましたた。 実際、驚くべき人数です。 私はこの感謝の気持ちを大切にしてその言葉だけでインスピレーションを得ています。 すべてのメッセージは少しずつ前進しています。 メッセージはちょっとしたエネルギーとなってプロジェクト全体の勢いを保っています。 どのような形であれ協力してくれた皆さんには本当に感謝しています。
+
+# Contributing  👷
+
 # 貢献:construction_worker:
 
-PySimpleGUI は現在、オープンソースライセンスでライセンスされていますが、プロジェクト自体は製品のように構成されています。プルリクエストは受け付けられません。
+現在、PySimpleGUIはオープンソースライセンスでライセンスされていますが、プロジェクト自体は製品のように構成されています。プルリクエストは受け付けていません。
 
-貢献する最も良い方法の1つは、アプリケーションの作成と公開です。 ユーザーは、他のユーザーが構築するものを見てインスピレーションを得ています。 GitHubリポジトリを作成し、コードを投稿して、リポジトリのReadmeファイルにスクリーンショットを含めてください。  
+コードに貢献する最良の方法の1つは、アプリケーションを書いて公開することです。ユーザーは他のユーザーが作ったものを見て刺激を受けます。GitHubリポジトリを作成してコードを投稿しte
+、スクリーンショットをreadmeファイルに入れましょう。
 
-不足している機能があったり、機能強化を提案したい場合は、[issueを開いてください](https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&template=issue-form---must-fill-in-this-form-with-every-new-issue-submitted.md&title=%5B+Enhancement%2FBug%2FQuestion%5D+My+problem+is.)) 。
+不足している機能があったり、機能強化を提案したい場合は、[issueを開いてください](https://github.com/PySimpleGUI/PySimpleGUI/issues/new?assignees=&labels=&template=issue-form---must-fill-in-this-form-with-every-new-issue-submitted.md&title=%5B+Enhancement%2FBug%2FQuestion%5D+My+problem+is.) 。
 
 
 # 特別な感謝 :pray:
 
+<!--
+This version of the PySimpleGUI readme wouldn't have come together without the help from @M4cs. He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch. @israel-dryer is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities. The unique minesweeper that uses an image for the board was created by Israel. @jason990420 surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI. @Chr0nicT is the youngest developer I've worked with, ever, on projects. This kid shocks me on a regular basis. Ask for a capability, such as the PySimpleGUI GitHub Issues form error checking bot, and it simply happens regardless of the technologies involved. I'm fortunate that we were introduced. Someday he's going to be whisked away, but until then we're all benefiting from his talent. The Japanese version of the readme was greatly improved with help from @okajun35. @nngogol has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of initial release. He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of doc strings as well as tools that generate the online documenation using the PySimpleGUI code itself. PySimpleGUI would not be where it is today were it not for the help of these individuals.
 
-PySimpleGUIのこのバージョンのreadmeは[@M4cs](https://github.com/M4cs)の助けなしでは実現しませんでした。彼は素晴らしい開発者で、プロジェクトの立ち上げからずっとPySimpleGUIのサポーターです。 [@Israel Dryer](https://github.com/israel-dryer)もまた長期的なサポーターであり、パッケージの機能の限界を押し広げたいくつかのPySimpleGUIプログラムを書いています。 ボードの画像を使用したユニークなマインスイーパーはIsraelにが作成しました。 [@jason990420](https://github.com/jason990420)は上の写真のような、PySimpleGUI を使った最初のカードゲームと、PySimpleGUI で作られた最初のマインスイーパゲームを公開して、多くの人を驚かせました。
-日本語版の readme は[@okajun35](https://github.com/okajun35) さんの協力で大幅に改善されました。
+The more than 2,200 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is you that has been the inspiration that fuels this project's engine.
 
-PySimpleGUI を使用している 1,200 以上の GitHub リポジトリにも「ありがとう」の言葉があります。このプロジェクトのエンジンを動かしているのは、あなたのインスピレーションのおかげです。
+The overseas users that post on Twitter overnight are the spark that starts the day's work on PySimpleGUI. They've been a source of positive energy that gets the development engine started and ready to run every day. As a token of appreciation, this readme file has been translated into Japanese.
 
-一晩中Twitter に投稿してくれる海外のユーザーは、PySimpleGUIの一日の作業を始めるきっかけとなります。彼らはポジティブなエネルギーの源であり、開発エンジンを始動させ、毎日稼働させる準備をしてくれています。感謝の意を込めて、このreadmeファイルを(日本語)[https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md]に翻訳しました。
+You've all been the best user community an Open Source developer could hope for.
+-->
+
+このバージョンのPySimpleGUIreadmeは、[@M4cs](https://github.com/M4cs)の助けがなければ完成しませんでした。彼は素晴らしい開発者であり、プロジェクトの立ち上げ以来、PySimpleGUIのサポーターです。 [@israel-dryer](https://github.com/israel-dryer)は、もう1つの長期的なサポーターであり、パッケージの機能の限界を押し上げるいくつかのPySimpleGUIプログラムを作成しています。ボードの画像を使用するユニークな掃海艇は、israelによって作成されました。 [@jason990420](https://github.com/jason990420)は、上の写真にあるPySimpleGUIを使用した最初のカードゲームと、PySimpleGUIで作成された最初のマインスイーパゲームを公開したときに多くの人を驚かせました[@Chr0nicT](https://github.com/Chr0nicT)はこれまで一緒にプロジェクトを進めてきた中で最年少の開発者です。この子は定期的に私を驚かせてくれます。例えばPySimpleGUIのGitHub Issuesフォームのエラーチェックボットのような機能を求めると、関係する技術に関わらず簡単に実現してしまうのです。縁があって出会いました。いつの日か彼は去ってしまうかもしれませんが、それまでは私たちは彼の才能から恩恵を受けています。日本語版のreadmeは[@okajun35](https://github.com/okajun35)の助けを借りて大幅に改善されました。 [@nngogol](https://github.com/nngogol)はプロジェクトに非常に大きな影響を与え、初期リリースの最初の年には PySimpleGUIに関わってくれました。彼はデザイナーを書き、おなじみのwindow[key] ルックアップシンタックスを考案しました。またドキュメントを作成するツールを書きいて最初のdoc stringsを設定して、、PySimpleGUIコード自体を使ってオンライン・ドキュメントを生成するツールを作成しました。これらの人々の助けがなければPySimpleGUIは今日のようにはなりませんでした。
+
+PySimpleGUIを使用する1,200を超えるGitHubリポジトリにも「ありがとう」があります。これは、。このプロジェクトのエンジンを動かしているのは、あなたのインスピレーションです。
+
+一晩中Twitterに投稿してくれる海外のユーザーは、PySimpleGUIの一日の作業を始めるきっかけとなります。彼らはポジティブなエネルギーの源であり、開発エンジンを始動させ、毎日稼働させる準備をしてくれています。感謝の意を込めて、このreadmeファイルを[日本語](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md)に翻訳しました。
 
 皆さんはオープンソース開発者が望む最高のユーザーコミュニティです。
 
 
 
-&copy; Copyright 2020 PySimpleGUI.org 
+&copy; Copyright 2021 PySimpleGUI 
