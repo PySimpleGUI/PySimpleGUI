@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.1 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values"
+version = __version__ = "4.43.0.2 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -18383,7 +18383,8 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     :return: Popen object
     :rtype: (subprocess.Popen) | None
     """
-
+    if cwd is None:
+        cwd = os.path.dirname(pyfile)
     if pyfile[0] != '"' and ' ' in pyfile:
         pyfile = '"'+pyfile+'"'
     if interpreter_command is not None:
