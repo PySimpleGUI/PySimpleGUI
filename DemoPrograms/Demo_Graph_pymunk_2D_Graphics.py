@@ -80,7 +80,7 @@ def main():
 
     # ------------------- GUI Event Loop -------------------
     while True:  # Event Loop
-        event, values = window.read(timeout=1)
+        event, values = window.read(timeout=0)
         # print(event, values)
         if event in (sg.WIN_CLOSED, 'Exit'):
             break
