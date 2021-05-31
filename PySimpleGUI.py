@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.2 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None"
+version = __version__ = "4.43.0.3 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3883,8 +3883,7 @@ class Button(Element):
                     pass
         elif self.BType == BUTTON_TYPE_BROWSE_FILE:
             if running_mac():
-                file_name = tk.filedialog.askopenfilename(
-                    initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                file_name = tk.filedialog.askopenfilename(initialdir=self.InitialFolder)  # show the 'get file' dialog box
             else:
                 file_name = tk.filedialog.askopenfilename(filetypes=filetypes,
                                                           initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
@@ -3906,11 +3905,11 @@ class Button(Element):
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
         elif self.BType == BUTTON_TYPE_SAVEAS_FILE:
+            # show the 'get file' dialog box
             if running_mac():
-                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension,
-                                                            initialdir=self.InitialFolder)  # show the 'get file' dialog box
+                file_name = tk.filedialog.asksaveasfilename(defaultextension=self.DefaultExtension, initialdir=self.InitialFolder)
             else:
-                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)  # show the 'get file' dialog box
+                file_name = tk.filedialog.asksaveasfilename(filetypes=filetypes,defaultextension=self.DefaultExtension, initialdir=self.InitialFolder, parent=self.ParentForm.TKroot)
             if file_name:
                 strvar.set(file_name)
                 self.TKStringVar.set(file_name)
@@ -17074,23 +17073,24 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         if root and icon is not None:
             _set_icon_for_tkinter_window(root, icon=icon)
         # TODO - Macs will not like this code because of the filetypes being used.  Need another Darwin check.
+        # for Macs, setting parent=None fixes a warning problem.
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
                                                        initialdir=initial_folder,
                                                        initialfile=default_path,
-                                                       parent=root,
+                                                       parent=root if not running_mac() else None,
                                                        defaultextension=default_extension)  # show the 'get file' dialog box
         elif multiple_files:
             filename = tk.filedialog.askopenfilenames(filetypes=file_types,
                                                       initialdir=initial_folder,
                                                       initialfile=default_path,
-                                                      parent=root,
+                                                      parent=root if not running_mac() else None,
                                                       defaultextension=default_extension)  # show the 'get file' dialog box
         else:
             filename = tk.filedialog.askopenfilename(filetypes=file_types,
                                                      initialdir=initial_folder,
                                                      initialfile=default_path,
-                                                     parent=root,
+                                                     parent=root if not running_mac() else None,
                                                      defaultextension=default_extension)  # show the 'get files' dialog box
         root.destroy()
         if Window.NumOpenWindows == 1:
