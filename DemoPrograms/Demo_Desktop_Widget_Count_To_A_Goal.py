@@ -360,10 +360,10 @@ def main():
     window['-GOAL-'].update(current_goal)
 
     while True:             # Event Loop
-        if window.gauge.change():
-            new_angle = current_count / current_goal * 180
-            window.gauge.change(degree=new_angle, step=180)
-            window.gauge.change()
+        window.gauge.change()
+        new_angle = current_count / current_goal * 180
+        window.gauge.change(degree=new_angle, step=180)
+        window.gauge.change()
         window['-GOAL-'].update(current_goal)
         window['-MAIN INFO-'].update(current_count)
 
