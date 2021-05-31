@@ -394,7 +394,7 @@ def main():
                 current_goal = current_goal if current_goal != 0 else 100
                 sg.user_settings_set_entry('-goal-', current_goal)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location(), keep_on_top=True)
+            new_title = sg.popup_get_text('Choose a title for your date', default_text=sg.user_settings_get_entry('-title-', '') , location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
