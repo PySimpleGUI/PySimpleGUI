@@ -10,4 +10,9 @@ import PySimpleGUI as sg
     Copyright 2021 PySimpleGUI
 """
 
-sg.Window('Sudoku', [[sg.Frame('', [[sg.Input(justification='r', size=(3,1)) for col in range(3)] for row in range(3)]) for frame_col in range(3)] for frame_row in range(3)], use_custom_titlebar=True).read()
+sg.Window('Sudoku', [[sg.Frame('', [[sg.Input(justification='r', size=(3,1))
+                                    for col in range(3)]
+                                    for row in range(3)])
+                                    for frame_col in range(3)]
+                                    for frame_row in range(3)],
+                                    use_custom_titlebar=True).read()
