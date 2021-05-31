@@ -394,7 +394,7 @@ def main():
                 current_goal = current_goal if current_goal != 0 else 100
                 sg.user_settings_set_entry('-goal-', current_goal)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location(), keep_on_top=True)
+            new_title = sg.popup_get_text('Choose a title for your date', default_text=sg.user_settings_get_entry('-title-', '') , location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
@@ -409,13 +409,15 @@ def main():
                 # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Main Font':
-            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=True)
+            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-', main_number_font),location=window.current_location(), keep_on_top=True)
             if font:
+                loc = window.current_location()
                 sg.user_settings_set_entry('-main number font-', font)
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Title Font':
-            font = sg.popup_get_text('Title Font and Size (e.g. courier 8)', default_text=sg.user_settings_get_entry('-title font-'), keep_on_top=True)
+            font = sg.popup_get_text('Title Font and Size (e.g. courier 8)', default_text=sg.user_settings_get_entry('-title font-', title_font), location=window.current_location(), keep_on_top=True)
             if font:
+                loc = window.current_location()
                 sg.user_settings_set_entry('-title font-', font)
                 _, window = window.close(), make_window(loc)
 
