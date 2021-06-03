@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.3 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac"
+version = __version__ = "4.43.0.4 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -12620,29 +12620,31 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 bd = element.BorderWidth
 
-                if btype != BUTTON_TYPE_REALTIME:
-                    tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
-                                                          command=element.ButtonCallBack, justify=tk.CENTER, bd=bd, font=font)
-                else:
-                    tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
-                                                          justify=tk.CENTER, bd=bd, font=font)
-                    tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
-                    tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-                if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
-                    try:
-                        tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
-                    except Exception as e:
-                        _error_popup_with_traceback('Button has bad color string',
-                                                    'Error {}'.format(e),
-                                                    'Button Text: {}'.format(btext),
-                                                    'Button key: {}'.format(element.Key),
-                                                    'Color string: {}'.format(bc),
-                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
-                else:
-                    if bc[0] != COLOR_SYSTEM_DEFAULT:
-                        tkbutton.config(foreground=bc[0])
-                    if bc[1] != COLOR_SYSTEM_DEFAULT:
-                        tkbutton.config(background=bc[1])
+                try:
+                    if btype != BUTTON_TYPE_REALTIME:
+                        tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
+                                                              command=element.ButtonCallBack, justify=tk.CENTER, bd=bd, font=font)
+                    else:
+                        tkbutton = element.Widget = tk.Button(tk_row_frame, text=btext, width=width, height=height,
+                                                              justify=tk.CENTER, bd=bd, font=font)
+                        tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
+                        tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
+                    if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
+                                tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                    else:
+                        if bc[0] != COLOR_SYSTEM_DEFAULT:
+                            tkbutton.config(foreground=bc[0])
+                        if bc[1] != COLOR_SYSTEM_DEFAULT:
+                            tkbutton.config(background=bc[1])
+                except Exception as e:
+                    _error_popup_with_traceback('Button has a problem....',
+                                                'The traceback information will not show the line in your layout with the problem, but it does tell you which window.',
+                                                'Error {}'.format(e),
+                                                # 'Button Text: {}'.format(btext),
+                                                # 'Button key: {}'.format(element.Key),
+                                                # 'Color string: {}'.format(bc),
+                                                "Parent Window's Title: {}".format(toplevel_form.Title))
+
 
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=tk.FLAT)
