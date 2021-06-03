@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.4 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors"
+version = __version__ = "4.43.0.5 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -19625,17 +19625,21 @@ def main_open_github_issue():
                             Frame('Platform *',frame_platforms, font=font_frame),
                             Frame('Type of Issue *',frame_type, font=font_frame),
                             Frame('Versions *',frame_versions, font=font_frame),
-                            ]),
-                [Frame('Checklist * (note that you can click the links)',[[checklist_tabgropup]], font=font_frame)],
+                            ])]
+
+    middle_layout = [
+                [Frame('Checklist * (note that you can click the links)',[[checklist_tabgropup]], font=font_frame, k='-CLIST FRAME-')],
                 [HorizontalSeparator()],
                 [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
     bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0,0)), Tab('SHORT Code to duplicate Program *', frame_code, pad=(0,0)), Tab('Markdown Output', frame_markdown, pad=(0,0))]], k='-TABGROUP-'),
                       ]]
 
-    layout_pane = Pane([Col(top_layout), Col(bottom_layout)], key='-PANE-')
+    layout_pane = Pane([Col(middle_layout), Col(bottom_layout)], key='-PANE-')
 
-    layout = [[layout_pane],
+    layout = [
+        [pin(B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE CLIST-', tooltip='Hide/show upper sections of window')), pin(Col(top_layout, k='-TOP COL-'))],
+        [layout_pane],
               [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]], expand_x=False, expand_y=False)]]
 
     window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True, margins=(0,0))
@@ -19673,6 +19677,9 @@ def main_open_github_issue():
                     title = title[title.find(']')+1:]
                     title = title.strip()
             window['-TITLE-'].update('[{}] {}'.format(event, title))
+        if event == '-HIDE CLIST-':
+            window['-TOP COL-'].update(visible=not window['-TOP COL-'].visible)
+            window['-HIDE CLIST-'].update(text=SYMBOL_UP if window['-HIDE CLIST-'].get_text() == SYMBOL_DOWN else SYMBOL_DOWN)
         if event == 'Help':
             _github_issue_help()
         elif event in ('Post Issue', 'Create Markdown Only'):
