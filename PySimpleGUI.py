@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.5 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section"
+version = __version__ = "4.43.0.6 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -20512,7 +20512,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
                     # icon=PSGDebugLogo,
                     )
     window['-SPONSOR-'].set_cursor(cursor='hand2')
-
+    window._see_through = False
     return window
 
 # M"""""`'"""`YM          oo
@@ -20535,6 +20535,7 @@ def main():
     # Don't use the debug window
     # Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     # print(window.element_list())
+    see_through=False
     while True:  # Event Loop
         event, values = window.read(timeout=5)
         if event != TIMEOUT_KEY:
@@ -20564,7 +20565,8 @@ def main():
         elif event == 'About...':
             popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', version,keep_on_top=True, image=DEFAULT_BASE64_ICON)
         elif event.startswith('See'):
-            window.set_transparent_color(theme_background_color())
+            window._see_through = not window._see_through
+            window.set_transparent_color(theme_background_color() if window._see_through else '')
         elif event == '-INSTALL-':
             _upgrade_gui()
         elif event == 'Popup':
