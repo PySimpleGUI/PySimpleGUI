@@ -3,6 +3,8 @@ import PySimpleGUI as sg
 import datetime
 
 """
+505845872747
+514768885040
     Demo - FedEx Package Tracking
     
     A simple Desktop Widget that checks your FedEx tracking number and
@@ -79,20 +81,25 @@ def shipping_status(tracking_num):
 
 def package_row(item_num, tracking_num=''):
     carrier_list = ('FedEx', 'USPS')
-
+    tracking_numbers = sg.user_settings_get_entry('-packages-', [])
     row =  [sg.pin(sg.Col([[sg.B(sg.SYMBOL_X, border_width=0, button_color=(sg.theme_text_color(), sg.theme_background_color()), k=('-DEL-', item_num), tooltip='Delete this item'),
-                 sg.Input(default_text=tracking_num, s=(20,1), key=('-ID-', item_num), tooltip='Enter your package ID'), sg.Combo(carrier_list, default_value=carrier_list[0], s=(10,10), k=('-CARRIER-', item_num), tooltip='Not implemented'), sg.T(size=(15,1), k=('-STATUS-', item_num))]], k=('-ROW-', item_num)))]
+                            sg.Combo(tracking_numbers, default_value=tracking_num, size=(20, 1), key=('-ID-', item_num)),
+                            sg.In(size=(20,1), k=('-DESC-', item_num)),
+                 # sg.Input(default_text=tracking_num, s=(20,1), key=('-ID-', item_num), tooltip='Enter your package ID'),
+                            sg.Combo(carrier_list, default_value=carrier_list[0], readonly=True, s=(10,10), k=('-CARRIER-', item_num), tooltip='Not implemented'), sg.T(size=(15,1), k=('-STATUS-', item_num))]], k=('-ROW-', item_num)))]
     return row
 
 
 def refresh(window: sg.Window):
     row_count = window.metadata+1
+    # make and save package list. ID, Description,
     package_list = []
     for row in range(row_count):
         if not window[('-ROW-', row)].visible:    # skip deleted rows
             continue
         status = shipping_status(window[('-ID-', row)].get())
-        package_list.append(window[('-ID-', row)].get())
+        single_package = (window[('-ID-', row)].get(), window[('-DESC-', row)].get())
+        package_list.append(single_package)
         if isinstance(status, tuple):           # an error occured
             delivery_datetime = 'Error'
         else:
@@ -110,10 +117,12 @@ def add_packages_to_window(window: sg.Window):
             window.metadata += 1
             window.extend_layout(window['-TRACKING SECTION-'], [package_row(window.metadata)])
             in_elem = window.find_element(('-ID-', window.metadata), silent_on_error=True)
-            in_elem.update(package)
+            in_elem.update(package[0])
         else:
-            in_elem.update(package)
-
+            in_elem.update(package[0])
+        desc_elem = window.find_element(('-DESC-', i), silent_on_error=True)
+        if not isinstance(desc_elem, sg.ErrorElement):
+            desc_elem.update(package[1])
 
 def make_window(location):
     location =  sg.user_settings_get_entry('-location-',location)
