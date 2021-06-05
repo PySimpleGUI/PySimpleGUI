@@ -3,8 +3,6 @@ import PySimpleGUI as sg
 import datetime
 
 """
-505845872747
-514768885040
     Demo - FedEx Package Tracking
     
     A simple Desktop Widget that checks your FedEx tracking number and
