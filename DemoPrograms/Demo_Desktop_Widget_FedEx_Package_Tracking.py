@@ -111,7 +111,6 @@ def refresh(window: sg.Window):
 
 def add_packages_to_window(window: sg.Window):
     packages = sg.user_settings_get_entry('-packages-', [])
-    print(packages)
     for i, package in enumerate(packages):
         in_elem = window.find_element(('-ID-', i), silent_on_error=True)
         if isinstance(in_elem, sg.ErrorElement):
