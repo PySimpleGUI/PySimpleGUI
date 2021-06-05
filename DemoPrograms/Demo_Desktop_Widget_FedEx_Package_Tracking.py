@@ -163,7 +163,11 @@ def main():
             if choose_theme(loc) is not None:
                 _, window = window.close(), make_window(loc)
         elif event in ('Refresh', sg.TIMEOUT_KEY):
+            # Invert colors of simulated "button" (Text Element) while the refresh is happening
+            window['Refresh'].update(text_color=sg.theme_text_element_background_color(), background_color=sg.theme_text_color())
+            window.refresh()
             refresh(window)
+            window['Refresh'].update(text_color=sg.theme_text_color(), background_color=sg.theme_text_element_background_color())
         elif event in [str(x) for x in range(1,11)]:
             window.set_alpha(int(event)/10)
             sg.user_settings_set_entry('-alpha-', int(event)/10)
