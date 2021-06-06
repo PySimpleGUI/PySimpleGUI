@@ -25,38 +25,47 @@ import PySimpleGUI as sg
 right_click_menu = ['', ['Copy', 'Paste', 'Select All', 'Cut']]
 MLINE_KEY = '-MLINE-'
 
-layout = [  [sg.Text('Using a custom right click menu with Multiline Element')],
-            [sg.Multiline(size=(60,20), key=MLINE_KEY, right_click_menu=right_click_menu)],
-            [sg.B('Go'), sg.B('Exit')]]
-
-window = sg.Window('Right Click Menu Multiline', layout)
-
-mline:sg.Multiline = window[MLINE_KEY]
-
-while True:
-    event, values = window.read()       # type: (str, dict)
-    print(event, values)
-    if event in (sg.WIN_CLOSED, 'Exit'):
-        break
+def do_clipboard_operation(event, window, element):
     if event == 'Select All':
-        mline.Widget.selection_clear()
-        mline.Widget.tag_add('sel', '1.0', 'end')
+        element.Widget.selection_clear()
+        element.Widget.tag_add('sel', '1.0', 'end')
     elif event == 'Copy':
         try:
-            text = mline.Widget.selection_get()
+            text = element.Widget.selection_get()
             window.TKroot.clipboard_clear()
             window.TKroot.clipboard_append(text)
         except:
             print('Nothing selected')
     elif event == 'Paste':
-        mline.Widget.insert(sg.tk.INSERT, window.TKroot.clipboard_get())
+        element.Widget.insert(sg.tk.INSERT, window.TKroot.clipboard_get())
     elif event == 'Cut':
         try:
-            text = mline.Widget.selection_get()
+            text = element.Widget.selection_get()
             window.TKroot.clipboard_clear()
             window.TKroot.clipboard_append(text)
-            mline.update('')
+            element.update('')
         except:
             print('Nothing selected')
 
-window.close()
+def main():
+    layout = [  [sg.Text('Using a custom right click menu with Multiline Element')],
+                [sg.Multiline(size=(60,20), key=MLINE_KEY, right_click_menu=right_click_menu)],
+                [sg.B('Go'), sg.B('Exit')]]
+
+    window = sg.Window('Right Click Menu Multiline', layout)
+
+    mline:sg.Multiline = window[MLINE_KEY]
+
+    while True:
+        event, values = window.read()       # type: (str, dict)
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            break
+
+        # if event is a right click menu for the multiline, then handle the event in func
+        if event in right_click_menu[1]:
+            do_clipboard_operation(event, window, mline)
+
+    window.close()
+
+if __name__ == '__main__':
+    main()
