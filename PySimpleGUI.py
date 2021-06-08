@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.6 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle"
+version = __version__ = "4.43.0.6.1 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, Listbox visibility fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2016,11 +2016,11 @@ class Listbox(Element):
                 except:
                     warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
-            self.TKListbox.pack_forget()
+            self.listbox_frame.pack_forget()
             if not self.NoScrollbar:
                 self.vsb.pack_forget()
         elif visible is True:
-            self.TKListbox.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self.listbox_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             if not self.NoScrollbar:
                 self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
