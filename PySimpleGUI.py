@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.6.1 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, Listbox visibility fix"
+version = __version__ = "4.43.0.8 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -500,6 +500,7 @@ WRITE_ONLY_KEY = '__WRITE ONLY__'
 MENU_DISABLED_CHARACTER = '!'
 MENU_SHORTCUT_CHARACTER = '&'
 MENU_KEY_SEPARATOR = '::'
+MENU_SEPARATOR_LINE = '---'
 MENU_RIGHT_CLICK_EDITME_EXIT = ['', ['Edit Me', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
@@ -2711,7 +2712,7 @@ class Multiline(Element):
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
         return
 
-    def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None, justification=None):
+    def update(self, value=None, disabled=None, append=False, font=None, text_color=None, background_color=None, text_color_for_value=None, background_color_for_value=None, visible=None, autoscroll=None, justification=None, font_for_value=None):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value: new text to display
@@ -2720,7 +2721,7 @@ class Multiline(Element):
         :type disabled: (bool)
         :param append: if True then new value will be added onto the end of the current value. if False then contents will be replaced.
         :type append: (bool)
-        :param font: specifies the font family, size, etc
+        :param font: specifies the font family, size, etc for the entire element
         :type font: str | (str, int)
         :param text_color: color of the text
         :type text_color: (str)
@@ -2736,6 +2737,8 @@ class Multiline(Element):
         :type autoscroll: (bool)
         :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification: (str)
+        :param font_for_value: specifies the font family, size, etc for the value being updated
+        :type font_for_value: str | (str, int)
         """
 
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
@@ -2758,15 +2761,17 @@ class Multiline(Element):
         tag = None
         if value is not None:
             value = str(value)
-            if background_color_for_value is not None or text_color_for_value is not None:
+            if background_color_for_value is not None or text_color_for_value is not None or font_for_value is not None:
                 try:
-                    tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+')'
+                    tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+  str(font_for_value) + ')'
                     if  tag not in self.tags:
                         self.tags.add(tag)
                     if background_color_for_value is not None:
                         self.TKText.tag_configure(tag, background=background_color_for_value)
                     if text_color_for_value is not None:
                         self.TKText.tag_configure(tag, foreground=text_color_for_value)
+                    if font_for_value is not None:
+                        self.TKText.tag_configure(tag, font=font_for_value)
                 except Exception as e:
                     print('* Multiline.update - bad color likely specified:', e)
             if self.Disabled:
@@ -2826,7 +2831,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None,colors=None, t=None, b=None,  c=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None,  c=None):
         """
         Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -2856,6 +2861,8 @@ class Multiline(Element):
         :type background_color: (str)
         :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification: (str)
+        :param font: specifies the font family, size, etc for the args being printed
+        :type font: str | (str, int) | (str, int, str)
         :param colors: Either a tuple or a string that has both the text and background colors
         :type colors: (str) or (str, str)
         :param t: Color of the text
@@ -2880,7 +2887,7 @@ class Multiline(Element):
             print('* cprint warning * you messed up with color formatting', e)
 
 
-        _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=True )
+        _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=True, font=font )
 
 
     def reroute_stdout_to_here(self):
@@ -13946,7 +13953,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 style_name = "Sizegrip.TSizegrip"
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
-                size_grip = element.Widget = ttk.Sizegrip(containing_frame)
+                size_grip = element.Widget = ttk.Sizegrip(tk_row_frame)
                 toplevel_form.sizegrip_widget = size_grip
                 # if no size is specified, then use the background color for the window
                 if element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -13954,6 +13961,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
+                size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X)
+                size_grip = None
                 # normally the widget would be packed here, but for the sizegrip, the pack happens after the window is created
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
@@ -14618,7 +14627,7 @@ class _DebugWin():
         return
 
 
-    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False):
+    def Print(self, *args, end=None, sep=None, text_color=None, background_color=None, erase_all=False, font=None):
         sepchar = sep if sep is not None else ' '
         endchar = end if end is not None else '\n'
 
@@ -14648,7 +14657,7 @@ class _DebugWin():
                     outstring += sep_str
             outstring += end_str
 
-            self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color)
+            self.output_element.Update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, font_for_value=font)
         else:
             print(*args, sep=sepchar, end=endchar)
 
@@ -14770,7 +14779,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 
-def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None):
+def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -14803,6 +14812,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     :type *args: (Any)
     :param text_color: Color of the text
     :type text_color: (str)
+    :param font: specifies the font family, size, etc for the value being updated
+    :type font: str | (str, int) | (str, int, str)
     :param background_color: The background color of the line
     :type background_color: (str)
     :param colors: Either a tuple or a string that has both the text and background colors
@@ -14854,10 +14865,10 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
     try:
         # mline = destination_window[destination_key]     # type: Multiline
         if end is None:
-            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification)
+            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font)
             mline.print('', justification=justification)
         else:
-            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification)
+            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification, font=font)
     except Exception as e:
         print('** cprint error trying to print to the multiline. Printing to console instead **', e)
         print(*args, end=end, sep=sep)
@@ -14867,7 +14878,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, t=None, background_color=N
 # A print-like call that can be used to output to a multiline element as if it's an Output element #
 # ------------------------------------------------------------------------------------------------ #
 
-def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None):
+def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=None, background_color=None, autoscroll=None, justification=None, font=None):
     """
     Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -14885,6 +14896,8 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :type background_color: (str)
     :param autoscroll: If True (the default), the element will scroll to bottom after updating
     :type autoscroll: (bool)
+    :param font: specifies the font family, size, etc for the value being updated
+    :type font: str | (str, int)
     """
     end_str = str(end) if end is not None else '\n'
     sep_str = str(sep) if sep is not None else ' '
@@ -14897,7 +14910,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
             outstring += sep_str
     outstring += end_str
 
-    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll, justification=justification)
+    multiline_element.update(outstring, append=True, text_color_for_value=text_color, background_color_for_value=background_color, autoscroll=autoscroll, justification=justification, font_for_value=font)
 
     try:        # if the element is set to autorefresh, then refresh the parent window
         if multiline_element.AutoRefresh:
@@ -16017,6 +16030,63 @@ def obj_to_string(obj, extra='    '):
                   (ObjToString(obj.__dict__[item], extra + '    ') if hasattr(obj.__dict__[item], '__dict__') else str(
                       obj.__dict__[item])))
          for item in sorted(obj.__dict__)))
+
+
+#...######..##.......####.########..########...#######.....###....########..########.
+#..##....##.##........##..##.....##.##.....##.##.....##...##.##...##.....##.##.....##
+#..##.......##........##..##.....##.##.....##.##.....##..##...##..##.....##.##.....##
+#..##.......##........##..########..########..##.....##.##.....##.########..##.....##
+#..##.......##........##..##........##.....##.##.....##.#########.##...##...##.....##
+#..##....##.##........##..##........##.....##.##.....##.##.....##.##....##..##.....##
+#...######..########.####.##........########...#######..##.....##.##.....##.########.
+#................................................................................
+#..########.##.....##.##....##..######..########.####..#######..##....##..######.
+#..##.......##.....##.###...##.##....##....##.....##..##.....##.###...##.##....##
+#..##.......##.....##.####..##.##..........##.....##..##.....##.####..##.##......
+#..######...##.....##.##.##.##.##..........##.....##..##.....##.##.##.##..######.
+#..##.......##.....##.##..####.##..........##.....##..##.....##.##..####.......##
+#..##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
+#..##........#######..##....##..######.....##....####..#######..##....##..######.
+
+def clipboard_set(new_value):
+    """
+    Sets the clipboard to a specific value
+    :param new_value:
+    :type new_value: (str)
+    """
+    # Create and use a temp window
+    root = tk.Tk()
+    root.withdraw()
+    root.clipboard_clear()
+    root.clipboard_append(new_value)
+    root.update()
+    root.destroy()
+
+
+def clipboard_get():
+    """
+    Gets the clipboard current value
+    :return: The current value of the clipboard
+    :rtype: (str)
+    """
+    # Create and use a temp window
+    root = tk.Tk()
+    root.withdraw()
+    try:
+        value = root.clipboard_get()
+    except:
+        value = ''
+    root.update()
+    root.destroy()
+    return value
+
+
+
+
+
+
+
+
 
 
 # MM"""""""`YM
@@ -19980,11 +20050,12 @@ def main_get_debug_data(suppress_popup=False):
     root.withdraw()
     root.clipboard_clear()
     root.clipboard_append(message)
-    root.update_idletasks()
+    # root.update_idletasks()
+    root.update()
     root.destroy()
 
     if not suppress_popup:
-        popup_scrolled('*** With this window still open, paste clipboard into your GitHub Issue***\n',
+        popup_scrolled('*** Version information copied to your clipboard. Paste into your GitHub Issue. ***\n',
                        message, title='Select and copy this info to your GitHub Issue', keep_on_top=True, size=(100,10))
 
     return message
