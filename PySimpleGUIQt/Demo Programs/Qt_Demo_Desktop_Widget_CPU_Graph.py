@@ -52,7 +52,7 @@ def main():
 
     last_cpu = i = 0
     prev_x, prev_y = 0, 0
-    while True:                                 # the Event Loop
+    while True:                             # the Event Loop
         event, values = window.Read(timeout=500)
         if event == 'Quit' or event is None:  # always give ths user a way out
             break
@@ -61,12 +61,11 @@ def main():
         if current_cpu == last_cpu:
             continue
         output.Update(current_cpu/10)           # show current cpu usage at top
-        if current_cpu > SAMPLE_MAX:
-            current_cpu = SAMPLE_MAX
+        current_cpu = min(current_cpu, SAMPLE_MAX)
         new_x, new_y = i, current_cpu
         if i >= SAMPLES:
             graph.Move(-STEP_SIZE,0)            # shift graph over if full of data
-            prev_x = prev_x - STEP_SIZE
+            prev_x -= STEP_SIZE
         graph.DrawLine((prev_x, prev_y), (new_x, new_y), color='white')
         prev_x, prev_y = new_x, new_y
         i += STEP_SIZE if i < SAMPLES else 0

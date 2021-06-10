@@ -369,9 +369,8 @@ class Element():
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
             for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BindReturnKey:
-                        return element
+                if element.Type == ELEM_TYPE_BUTTON and element.BindReturnKey:
+                    return element
                 if element.Type == ELEM_TYPE_COLUMN:
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
@@ -408,10 +407,7 @@ class Element():
     def ListboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -419,46 +415,31 @@ class Element():
     def ComboboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def RadioHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
     def CheckboxHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
     def KeyboardHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
@@ -630,7 +611,7 @@ class Combo(Element):
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
         self.Readonly = readonly
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.VisibleItems = visible_items
         self.AutoComplete = auto_complete
@@ -652,7 +633,7 @@ class Combo(Element):
     def Update(self, value=None, values=None, set_to_index=None, disabled=None, readonly=None,  background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
             self.Values = values
-            for i in range(self.QT_ComboBox.count()):
+            for _ in range(self.QT_ComboBox.count()):
                 self.QT_ComboBox.removeItem(0)
             self.QT_ComboBox.addItems(values)
         if value is not None:
@@ -710,7 +691,7 @@ class OptionMenu(Element):
         self.DefaultValue = default_value
         self.TKOptionMenu = None
         self.Disabled = disabled
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
@@ -786,7 +767,7 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_CONTIGUOUS
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.QT_ListWidget = None
         tsize = size                # convert tkinter size to pixels
@@ -804,7 +785,7 @@ class Listbox(Element):
     def Update(self, values=None, disabled=None, set_to_index=None,background_color=None, text_color=None, font=None, visible=None):
         if values is not None:
             self.Values = values
-            for i in range(self.QT_ListWidget.count()):
+            for _ in range(self.QT_ListWidget.count()):
                 self.QT_ListWidget.takeItem(0)
             self.QT_ListWidget.addItems(values)
         if disabled == True:
@@ -914,7 +895,7 @@ class Checkbox(Element):
         self.Value = None
         self.TKCheckbutton = None
         self.Disabled = disabled
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
         self.QT_Checkbox = None
 
@@ -977,7 +958,7 @@ class Spin(Element):
         self.DefaultValue = initial_value
         self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.QT_Spinner = None
 
@@ -1061,7 +1042,7 @@ class Multiline(Element, QWidget):
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1101,12 +1082,13 @@ class Multiline(Element, QWidget):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-        if value is not None and not append:
-            self.DefaultText = value
-            self.QT_TextEdit.setText(str(value))
-        elif value is not None and append:
-            self.DefaultText = value
-            self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
+        if value is not None:
+            if not append:
+                self.DefaultText = value
+                self.QT_TextEdit.setText(str(value))
+            else:
+                self.DefaultText = value
+                self.QT_TextEdit.setText(self.QT_TextEdit.toPlainText() + str(value))
         if disabled == True:
             self.QT_TextEdit.setDisabled(True)
         elif disabled == False:
@@ -1149,7 +1131,7 @@ class MultilineOutput(Element):
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1164,11 +1146,12 @@ class MultilineOutput(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-        if value is not None and not append:
-            self.QT_TextBrowser.setText(str(value))
-        elif value is not None and append:
-            self.QT_TextBrowser.insertPlainText(str(value))
-            self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
+        if value is not None:
+            if not append:
+                self.QT_TextBrowser.setText(str(value))
+            else:
+                self.QT_TextBrowser.insertPlainText(str(value))
+                self.QT_TextBrowser.moveCursor(QtGui.QTextCursor.End)
         if disabled == True:
             self.QT_TextBrowser.setDisabled(True)
         elif disabled == False:
@@ -1207,7 +1190,7 @@ class Text(Element):
         :param tooltip:
         '''
         self.DisplayText = str(text)
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.Justification = justification or 'left'
         self.Relief = relief
         self.ClickSubmits = click_submits or enable_events
@@ -1219,8 +1202,19 @@ class Text(Element):
         self.QT_Label = None
         self.Visible = visible
 
-        super().__init__(ELEM_TYPE_TEXT, size, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px)
+        super().__init__(
+            ELEM_TYPE_TEXT,
+            size,
+            auto_size_text,
+            background_color=bg,
+            font=font or DEFAULT_FONT,
+            text_color=self.TextColor,
+            pad=pad,
+            key=key,
+            tooltip=tooltip,
+            size_px=size_px,
+        )
+
         return
 
     def QtCallbackTextClicked(self, event):
@@ -1262,7 +1256,7 @@ class Output(Element):
         :param key:
         '''
         self._TKOut = None
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.QT_TextBrowser = None
 
@@ -1336,7 +1330,7 @@ class Button(Element):
         self.TKButton = None
         self.Target = target
         self.ButtonText = str(button_text)
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.ButtonColor = button_color or DEFAULT_BUTTON_COLOR
         self.TextColor = self.ButtonColor[0]
         self.BackgroundColor = self.ButtonColor[1]
         self.ImageFilename = image_filename
@@ -1571,7 +1565,7 @@ class ButtonMenu(Element):
         self.MenuDefinition = menu_def
         self.AutoSizeButton = auto_size_button
         self.ButtonText = button_text
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.ButtonColor = button_color or DEFAULT_BUTTON_COLOR
         self.TextColor = self.ButtonColor[0]
         self.BackgroundColor = self.ButtonColor[1]
         self.BorderWidth = border_width
@@ -1635,11 +1629,11 @@ class ProgressBar(Element):
         self.TKProgressBar = None
         self.Cancelled = False
         self.NotRunning = True
-        self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
+        self.Orientation = orientation or DEFAULT_METER_ORIENTATION
         self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
-        self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
+        self.BarStyle = style or DEFAULT_PROGRESS_BAR_STYLE
         self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
-        self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
+        self.Relief = relief or DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         self.StartValue = start_value
         tsize = size
@@ -1999,8 +1993,7 @@ class Frame(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def Update(self, visible=None):
         super().Update(self.QT_QGroupBox, visible=visible)
@@ -2130,8 +2123,7 @@ class Tab(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def __del__(self):
         for row in self.Rows:
@@ -2205,8 +2197,7 @@ class TabGroup(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def FindKeyFromTabName(self, tab_name):
         for row in self.Rows:
@@ -2260,9 +2251,9 @@ class Slider(Element):
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
-        self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
-        self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
-        self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
+        self.Orientation = orientation or DEFAULT_SLIDER_ORIENTATION
+        self.BorderWidth = border_width or DEFAULT_SLIDER_BORDER_WIDTH
+        self.Relief = relief or DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
@@ -2337,9 +2328,9 @@ class Dial(Element):
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
-        self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
-        self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
-        self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
+        self.Orientation = orientation or DEFAULT_SLIDER_ORIENTATION
+        self.BorderWidth = border_width or DEFAULT_SLIDER_BORDER_WIDTH
+        self.Relief = relief or DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
@@ -2355,13 +2346,8 @@ class Dial(Element):
 
 
     def Update(self, value=None, range=(None, None), disabled=None, visible=None):
-        if value is not None:           # TODO clearly not done!
-            pass
+        if value is not None:       # TODO clearly not done!
             self.DefaultValue = value
-        if disabled == True:
-            pass
-        elif disabled == False:
-            pass
         super().Update(self.QT_Dial, visible=visible)
 
 
@@ -2456,8 +2442,7 @@ class Column(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
 
     def Update(self, visible=None):
@@ -2732,10 +2717,7 @@ class Tree(Element):
         self.SelectedRows = [x for x in selections]
         if self.ChangeSubmits:
             MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
@@ -3126,10 +3108,10 @@ class Window:
         self.DefaultButtonElementSize = convert_tkinter_size_to_Qt(default_button_element_size) if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
-        self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
+        self.ButtonColor = button_color or DEFAULT_BUTTON_COLOR
+        self.BackgroundColor = background_color or DEFAULT_BACKGROUND_COLOR
         self.ParentWindow = None
-        self.Font = font if font else DEFAULT_FONT
+        self.Font = font or DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
         self.WindowIcon = icon if icon is not None else Window.user_defined_icon
@@ -3262,8 +3244,7 @@ class Window:
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def _GetDefaultElementSize(self):
         return self.DefaultElementSize
@@ -3314,9 +3295,7 @@ class Window:
         self.Timeout = timeout
         self.TimeoutKey = timeout_key
         self.NonBlocking = False
-        if not self.Shown:
-            self.Show()
-        else:
+        if self.Shown:
             # if already have a button waiting, the return previously built results
             if self.LastButtonClicked is not None and not self.LastButtonClickedWasRealtime:
                 # print(f'*** Found previous clicked saved {self.LastButtonClicked}')
@@ -3334,20 +3313,17 @@ class Window:
                     self.TKrootDestroyed = True
                     Window.DecrementOpenCount()
                 results = BuildResults(self, False, self)
-                if results[0] != None and results[0] != timeout_key:
+                if results[0] not in [None, timeout_key]:
                     return results
-                else:
-                    pass
-
-                # else:
-                #     print("** REALTIME PROBLEM FOUND **", results)
+                        # else:
+                        #     print("** REALTIME PROBLEM FOUND **", results)
 
             # normal read blocking code....
-            if timeout != None:
+            if timeout is None:
+                timer = None
+            else:
                 self.TimerCancelled = False
                 timer = start_window_read_timer(self, timeout)
-            else:
-                timer = None
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
             ################################# CALL GUI MAINLOOP ############################
@@ -3365,19 +3341,27 @@ class Window:
             # if form was closed with X
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 Window.DecrementOpenCount()
+        else:
+            self.Show()
         # Determine return values
-        if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
+        if self.LastKeyboardEvent is None and self.LastButtonClicked is None:
+            if not self.XFound:
+                if (
+                    self.Timeout != 0
+                    and self.Timeout is not None
+                    and self.ReturnValues[0] is None
+                ):       # Special Qt case because returning for no reason so fake timeout
+                    self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
+                elif self.ReturnValues[0] is None:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+                    # print("*** Faking timeout ***")
+                    self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
+            return self.ReturnValues
+
+        else:
             results = BuildResults(self, False, self)
             if not self.LastButtonClickedWasRealtime:
                 self.LastButtonClicked = None
             return results
-        else:
-            if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[0] is None:       # Special Qt case because returning for no reason so fake timeout
-                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
-            elif not self.XFound and self.ReturnValues[0] is None:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
-                # print("*** Faking timeout ***")
-                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
-            return self.ReturnValues
 
     def _ReadNonBlocking(self):
         if self.TKrootDestroyed:
@@ -3440,8 +3424,6 @@ class Window:
 
     def FindElementWithFocus(self):
         return self.FocusElement
-        element = _FindElementWithFocusInSubForm(self)
-        return element
 
     def SaveToDisk(self, filename):
         try:
@@ -3763,11 +3745,7 @@ def create_style_from_font(font):
     if font is None:
         return ''
 
-    if type(font) is str:
-        _font = font.split(' ')
-    else:
-        _font = font
-
+    _font = font.split(' ') if type(font) is str else font
     style = ''
     style += 'font-family: %s;\n' % _font[0]
     style += 'font-size: %spt;\n' % _font[1]
@@ -4064,8 +4042,7 @@ def DecodeRadioRowCol(RadValue):
 
 
 def EncodeRadioRowCol(row, col):
-    RadValue = row * 1000 + col
-    return RadValue
+    return row * 1000 + col
 
 
 # -------  FUNCTION BuildResults.  Form exiting so build the results to pass back  ------- #
@@ -4158,16 +4135,13 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         button_pressed_text = top_level_form.LastButtonClicked
                         if element.BType != BUTTON_TYPE_REALTIME:  # Do not clear realtime buttons
                             top_level_form.LastButtonClicked = None
-                    if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
-                        try:
+                    try:
+                        if element.BType == BUTTON_TYPE_CALENDAR_CHOOSER:
                             value = element.TKCal.selection
-                        except:
-                            value = None
-                    else:
-                        try:
+                        else:
                             value = element.FileOrFolderName
-                        except:
-                            value = None
+                    except:
+                        value = None
                 elif element.Type == ELEM_TYPE_INPUT_COMBO:
                     value = element.QT_ComboBox.currentText()
                 elif element.Type == ELEM_TYPE_INPUT_OPTION_MENU:
@@ -4198,10 +4172,8 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                         value = None
                     value = 0
                 elif element.Type == ELEM_TYPE_TABLE:
-                    value = []
                     indexes = element.QT_TableWidget.selectionModel().selectedRows()
-                    for index in sorted(indexes):
-                        value.append(index.row())
+                    value = [index.row() for index in sorted(indexes)]
                 elif element.Type == ELEM_TYPE_TREE:
                     value = 0
                 elif element.Type == ELEM_TYPE_BUTTONMENU:
@@ -4217,14 +4189,16 @@ def BuildResultsForSubform(form, initialize_only, top_level_form):
                 value = None
 
             # if an input type element, update the results
-            if element.Type != ELEM_TYPE_BUTTON and \
-                    element.Type != ELEM_TYPE_TEXT and \
-                    element.Type != ELEM_TYPE_IMAGE and \
-                    element.Type != ELEM_TYPE_OUTPUT and \
-                    element.Type != ELEM_TYPE_PROGRESS_BAR and \
-                    element.Type != ELEM_TYPE_COLUMN and \
-                    element.Type != ELEM_TYPE_FRAME \
-                    and element.Type != ELEM_TYPE_TAB:
+            if element.Type not in [
+                ELEM_TYPE_BUTTON,
+                ELEM_TYPE_TEXT,
+                ELEM_TYPE_IMAGE,
+                ELEM_TYPE_OUTPUT,
+                ELEM_TYPE_PROGRESS_BAR,
+                ELEM_TYPE_COLUMN,
+                ELEM_TYPE_FRAME,
+                ELEM_TYPE_TAB,
+            ]:
                 AddToReturnList(form, value)
                 AddToReturnDictionary(top_level_form, element, value)
             elif (element.Type == ELEM_TYPE_BUTTON and

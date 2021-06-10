@@ -41,10 +41,7 @@ def Launcher2():
     window = sg.Window('Script launcher')
 
     filelist = glob.glob(LOCATION_OF_YOUR_SCRIPTS+'*.py')
-    namesonly = []
-    for file in filelist:
-        namesonly.append(ntpath.basename(file))
-
+    namesonly = [ntpath.basename(file) for file in filelist]
     layout =  [
                 [sg.Listbox(values=namesonly, size=(30, 19), select_mode=sg.SELECT_MODE_EXTENDED, key='demolist'), sg.Output(size=(88, 20), font='Courier 10')],
                 [sg.Checkbox('Wait for program to complete', default=False, key='wait')],

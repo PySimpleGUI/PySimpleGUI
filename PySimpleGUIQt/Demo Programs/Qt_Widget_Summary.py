@@ -86,7 +86,7 @@ def main():
     graph_elem.DrawCircle((200,200), 50, 'blue')
     i=0
     graph_paused = False
-    while True:             # Event Loop
+    while True:         # Event Loop
         # sg.TimerStart()
         event, values = window.Read(timeout=0)
         if event is None or event == 'Exit' :
@@ -98,15 +98,12 @@ def main():
         if not graph_paused:
             i += 1
 
-            if i < 600:
-                graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
-            else:
+            if i >= 600:
                 graph_elem.Move(-1,0)
-                graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
-
+            graph_elem.DrawLine((i,0),(i,randint(0,300)), width=1, color='#{:06x}'.format(randint(0,0xffffff)))
         window.FindElement('+PROGRESS+').UpdateBar(i%600)
 
-        # sg.TimerStop()
+            # sg.TimerStop()
     window.Close()
 
 

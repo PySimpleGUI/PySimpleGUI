@@ -46,7 +46,7 @@ def set_image_to_blank(key):
 png_files = [os.path.join(folder, f) for f in os.listdir(folder) if '.png' in f]
 filenames_only = [f for f in os.listdir(folder) if '.png' in f]
 
-if len(png_files) == 0:
+if not png_files:
     sg.Popup('No PNG images in folder')
     exit(0)
 
@@ -55,9 +55,16 @@ menu = [['&File', ['&Open Folder', 'E&xit']], ['&Help', ['&About',]]]
 
 buttons = []
 for display_index in range(ROWS):
-    row = []
-    for j in range(COLUMNS):
-        row.append(sg.Button('',border_width=0,button_color=sg.COLOR_SYSTEM_DEFAULT, key=(display_index, j)))
+    row = [
+        sg.Button(
+            '',
+            border_width=0,
+            button_color=sg.COLOR_SYSTEM_DEFAULT,
+            key=(display_index, j),
+        )
+        for j in range(COLUMNS)
+    ]
+
     buttons.append(row)
 
 col_buttons = [[]]

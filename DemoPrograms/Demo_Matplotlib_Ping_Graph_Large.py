@@ -30,10 +30,7 @@ def run_a_ping_and_graph():
 
     #===================== Do the ping =====================#
     response = ping.quiet_ping('google.com',timeout=1000)
-    if response[0] == 0:
-        ping_time = 1000
-    else:
-        ping_time = response[0]
+    ping_time = 1000 if response[0] == 0 else response[0]
     #===================== Store current ping in historical array =====================#
     g_my_globals.ping_x_array.append(len(g_my_globals.ping_x_array))
     g_my_globals.ping_y_array.append(ping_time)

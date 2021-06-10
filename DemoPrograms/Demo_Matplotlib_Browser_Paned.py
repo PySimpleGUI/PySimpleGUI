@@ -197,8 +197,8 @@ def PyplotScatterWithLegend():
     from numpy.random import rand
 
     fig, ax = plt.subplots()
+    n = 750
     for color in ['red', 'green', 'blue']:
-        n = 750
         x, y = rand(2, n)
         scale = 200.0 * rand(n)
         ax.scatter(x, y, c=color, s=scale, label=color,
@@ -348,7 +348,7 @@ def PyplotLinePolyCollection():
     ym = np.max(yy)
     xx = (0.2 + (ym - yy) / ym) ** 2 * np.cos(yy - 0.4) * 0.5
     segs = []
-    for i in range(ncurves):
+    for _ in range(ncurves):
         xxx = xx + 0.02 * rs.randn(nverts)
         curve = np.column_stack([xxx, yy * 100])
         segs.append(curve)
@@ -528,8 +528,7 @@ def PyplotRadarChart():
         This polygon is circumscribed by a unit circle centered at (0.5, 0.5)
         """
         x0, y0, r = [0.5] * 3
-        verts = [(r * np.cos(t) + x0, r * np.sin(t) + y0) for t in theta]
-        return verts
+        return [(r * np.cos(t) + x0, r * np.sin(t) + y0) for t in theta]
 
     def example_data():
         # The following data is from the Denver Aerosol Sources and Health study.
@@ -870,7 +869,7 @@ fig_dict = {'Pyplot Simple':PyplotSimple, 'Pyplot Formatstr':PyplotFormatstr,'Py
 sg.ChangeLookAndFeel('LightGreen')
 figure_w, figure_h = 650, 650
 # define the form layout
-listbox_values = [key for key in fig_dict.keys()]
+listbox_values = [key for key in fig_dict]
 col_listbox = [[sg.Listbox(values=listbox_values, change_submits=True, size=(28, len(listbox_values)), key='func')],
                [sg.T(' ' * 12), sg.Exit(size=(5, 2))]]
 

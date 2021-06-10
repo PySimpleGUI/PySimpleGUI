@@ -35,7 +35,6 @@ def main():
         event, values = window.Read(timeout=0, timeout_key='timeout')
         if event == 'Exit' or event is None:
             sys.exit(0)
-            pass
         elif event == 'Record':
             recording = True
         elif event == 'Stop':

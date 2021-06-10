@@ -83,16 +83,16 @@ def binary_search():
         window.FindElement('_display2_').Update(value['_binary_'] + ' was \nNot found')
 
 while True:
-    button, value = window.Read() 
-    if button is not None:
-        #show names - unordered and sorted
-        if button == 'Show Names':  
-            display_list(names,'_display1_')
-            display_list(sorted_names, '_display2_')
-        if button == '_ls_':   
-            linear_search()
-        if button == '_bs_':
-            binary_search()
-    else:
+    button, value = window.Read()
+    if button is None:
         break  
+
+    #show names - unordered and sorted
+    if button == 'Show Names':  
+        display_list(names,'_display1_')
+        display_list(sorted_names, '_display2_')
+    if button == '_ls_':   
+        linear_search()
+    if button == '_bs_':
+        binary_search()  
 

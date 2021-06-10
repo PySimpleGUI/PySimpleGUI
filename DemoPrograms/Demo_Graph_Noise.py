@@ -49,16 +49,14 @@ def main():
         if event == 'Quit' or event is None:
             break
         graph_offset = random.randint(-10, 10)
-        graph_value = graph_value + graph_offset
-        if graph_value > SAMPLE_MAX:
-            graph_value = SAMPLE_MAX
-        if graph_value < 0:
-            graph_value = 0
+        graph_value += graph_offset
+        graph_value = min(graph_value, SAMPLE_MAX)
+        graph_value = max(graph_value, 0)
         new_x, new_y = i, graph_value
         prev_value = graph_value
         if i >= SAMPLES:
             graph.Move(-STEP_SIZE,0)
-            prev_x = prev_x - STEP_SIZE
+            prev_x -= STEP_SIZE
         graph.DrawLine((prev_x, prev_y), (new_x, new_y), color='white')
         # window.FindElement('graph').DrawPoint((new_x, new_y), color='red')
         prev_x, prev_y = new_x, new_y

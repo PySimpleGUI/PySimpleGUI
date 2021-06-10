@@ -38,7 +38,7 @@ class Playfield():
 
     def add_balls(self):
         self.arena_balls = []
-        for i in range(1, 200):
+        for _ in range(1, 200):
             x = random.randint(0, 600)
             y = random.randint(0, 400)
             r = random.randint(1, 10)

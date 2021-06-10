@@ -49,7 +49,6 @@ def set_plot(a,b,c, function):
         if a == -1:
             a = '-'
         title = str('y = ') + str(a) + 'x + ' + str(b)
-        ax.set_title(title)
     else:
         y = a*x**2 + b*x + c
         #avoiding getting -1x or -1x**2 instead of -x for title
@@ -61,11 +60,11 @@ def set_plot(a,b,c, function):
             b = ''
         if b == -1:
             b = '-'
-        title = str('y = ') + str(a) + 'x**2 + ' + str(b) + 'x + ' + str(c) 
-        ax.set_title(title)
+        title = str('y = ') + str(a) + 'x**2 + ' + str(b) + 'x + ' + str(c)
+    ax.set_title(title)
     plt.plot(x,y)
 
-    
+
     #centre bottom and left axes to zero
 
     ax.spines['left'].set_position('zero')

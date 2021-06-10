@@ -50,7 +50,7 @@ def main():
         prev_response_time = g_response_time
         if i >= SAMPLES:
             graph.Move(-STEP_SIZE,0)
-            prev_x = prev_x - STEP_SIZE
+            prev_x -= STEP_SIZE
         graph.DrawLine((prev_x, prev_y), (new_x, new_y), color='white')
         # form.FindElement('graph').DrawPoint((new_x, new_y), color='red')
         prev_x, prev_y = new_x, new_y

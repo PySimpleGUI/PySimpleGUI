@@ -75,7 +75,6 @@ def read_mail(window):
     (retcode, capabilities) = mail.login(LOGIN_EMAIL, LOGIN_PASSWORD)
     mail.list()
     typ, data = mail.select('Inbox')
-    n = 0
     now = datetime.now()
     # get messages from today
     search_string = '(SENTON {}-{}-{})'.format(now.day, calendar.month_abbr[now.month], now.year)
@@ -83,6 +82,7 @@ def read_mail(window):
     if retcode == 'OK':
         msg_list = messages[0].split()  # message numbers are separated by spaces, turn into list
         msg_list.sort(reverse=True)  # sort messages descending
+        n = 0
         for n, message in enumerate(msg_list):
             if n >= MAX_EMAILS:
                 break

@@ -49,7 +49,7 @@ while True:     # Event Loop
         canvas.config(bg='light green')
         t.color("blue")
         def sqrfunc(size):
-            for i in range(4):
+            for _ in range(4):
                 t.fd(size)
                 t.left(90)
                 size = size - 5
@@ -64,7 +64,7 @@ while True:     # Event Loop
         canvas.config(bg = "light green")
         t.color("blue")
         def sqrfunc(size):
-            for i in range(4):
+            for _ in range(4):
                 t.fd(size)
                 t.left(90)
                 size = size + 5

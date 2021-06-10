@@ -13,8 +13,7 @@ def image_file_to_bytes(image64, size):
     img.thumbnail(size, Image.ANTIALIAS)
     bio = io.BytesIO()
     img.save(bio, format='PNG')
-    imgbytes = bio.getvalue()
-    return imgbytes
+    return bio.getvalue()
 
 
 
