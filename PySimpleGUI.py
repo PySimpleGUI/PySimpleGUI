@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.8 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix"
+version = __version__ = "4.43.0.9 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1294,7 +1294,9 @@ class Element():
         self.Widget.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
         if self.Type == ELEM_TYPE_INPUT_LISTBOX:
-            self.listbox_frame.pack(expand=True, fill=fill)
+            self.element_frame.pack(expand=True, fill=fill)
+        elif self.Type == ELEM_TYPE_TREE:
+            self.element_frame.pack(expand=True, fill=fill)
 
 
     def set_cursor(self,cursor=None, cursor_color=None):
@@ -1965,7 +1967,7 @@ class Listbox(Element):
         self.RightClickMenu = right_click_menu
         self.vsb = None  # type: tk.Scrollbar
         self.TKListbox = self.Widget = None  # type: tk.Listbox
-        self.listbox_frame = None           # type: tk.Frame
+        self.element_frame = None           # type: tk.Frame
         self.NoScrollbar = no_scrollbar
         key = key if key is not None else k
         sz = size if size != (None, None) else s
@@ -2017,11 +2019,11 @@ class Listbox(Element):
                 except:
                     warnings.warn('* Listbox Update selection_set failed with index {}*'.format(set_to_index))
         if visible is False:
-            self.listbox_frame.pack_forget()
+            self.element_frame.pack_forget()
             if not self.NoScrollbar:
                 self.vsb.pack_forget()
         elif visible is True:
-            self.listbox_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
+            self.element_frame.pack(padx=self.pad_used[0], pady=self.pad_used[1])
             if not self.NoScrollbar:
                 self.vsb.pack()
         if scroll_to_index is not None and len(self.Values):
@@ -7408,7 +7410,8 @@ class Tree(Element):
         self.ShowExpanded = show_expanded
         self.NumRows = num_rows
         self.Col0Width = col0_width
-        self.TKTreeview = None
+        self.TKTreeview = None              # type: ttk.Treeview
+        self.element_frame = None           # type: tk.Frame
         self.SelectedRows = []
         self.ChangeSubmits = change_submits or enable_events
         self.RightClickMenu = right_click_menu
@@ -13118,9 +13121,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     width = element_size[0]
                 else:
                     width = max_line_len
-                listbox_frame = tk.Frame(tk_row_frame)
+                element_frame = tk.Frame(tk_row_frame)
                 element.TKStringVar = tk.StringVar()
-                element.TKListbox = element.Widget = tk.Listbox(listbox_frame, height=element_size[1], width=width,
+                element.TKListbox = element.Widget = tk.Listbox(element_frame, height=element_size[1], width=width,
                                                                 selectmode=element.SelectMode, font=font, exportselection=False)
                 element.Widget.config(highlightthickness=0)
                 for index, item in enumerate(element.Values):
@@ -13138,17 +13141,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
                 if not element.NoScrollbar:
-                    element.vsb = tk.Scrollbar(listbox_frame, orient="vertical", command=element.TKListbox.yview)
+                    element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKListbox.yview)
                     element.TKListbox.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
 
                     # Chr0nic
                     element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
                     element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
-                listbox_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
                 element.TKListbox.pack(side=tk.LEFT)
                 if element.visible is False:
-                    listbox_frame.pack_forget()
+                    element_frame.pack_forget()
                     element.vsb.pack_forget()
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element._ListboxSelectHandler)
@@ -13158,7 +13161,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
-                element.listbox_frame = listbox_frame
+                element.element_frame = element_frame
                 _add_right_click_menu(element)
             # -------------------------  MULTILINE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_MULTILINE:
@@ -13817,7 +13820,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Tree placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TREE:
                 element = element  # type: Tree
-                frame = tk.Frame(tk_row_frame)
+                element.element_frame = element_frame = tk.Frame(tk_row_frame)
 
                 height = element.NumRows
                 if element.Justification.startswith('l'):  # justification
@@ -13836,7 +13839,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             displaycolumns.append(element.ColumnHeadings[i])
                 column_headings = element.ColumnHeadings
                 # ------------- GET THE TREEVIEW WIDGET -------------
-                element.TKTreeview = element.Widget = ttk.Treeview(frame, columns=column_headings,
+                element.TKTreeview = element.Widget = ttk.Treeview(element_frame, columns=column_headings,
                                                                    displaycolumns=displaycolumns, show='tree headings',
                                                                    height=height,
                                                                    selectmode=element.SelectMode)
@@ -13911,14 +13914,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.RowHeight:
                     tree_style.configure(style_name, rowheight=element.RowHeight)
                 treeview.configure(style=style_name)  # IMPORTANT! Be sure and set the style name for this widget
-                scrollbar = tk.Scrollbar(frame)
+                element.scrollbar = scrollbar = tk.Scrollbar(element_frame)
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
                 treeview.configure(yscrollcommand=scrollbar.set)
                 element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
                 if element.visible is False:
                     element.TKTreeview.pack_forget()
-                frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
+                element_frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
