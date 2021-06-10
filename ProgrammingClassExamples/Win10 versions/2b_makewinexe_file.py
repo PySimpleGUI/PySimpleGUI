@@ -20,17 +20,16 @@ layout = [[sg.Text('Membership Calculator', font = ('Calibri', 16, 'bold'))],
 form.Layout(layout)
 while True:
     button, value = form.Read()
-    if button is not None:
-        if value[1]:
-            cost = 50
-        elif value[2]:
-            cost = 100
-        else:
-            cost = 300
-        if value[0]:
-            cost = cost*0.9
-        result = str(' Cost: ' + '${:.2f}'.format(cost))    #format as currency - make a string
-        form.FindElement('result').Update(result)           #put the result in Textbox
-
-    else:
+    if button is None:
         break
+
+    if value[1]:
+        cost = 50
+    elif value[2]:
+        cost = 100
+    else:
+        cost = 300
+    if value[0]:
+        cost = cost*0.9
+    result = str(' Cost: ' + '${:.2f}'.format(cost))    #format as currency - make a string
+    form.FindElement('result').Update(result)           #put the result in Textbox

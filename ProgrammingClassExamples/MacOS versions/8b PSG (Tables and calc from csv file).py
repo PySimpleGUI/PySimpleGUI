@@ -27,23 +27,23 @@ def calc_ladder():
     data = []
     header_list = []
     #read csv
-    with open(filename, "r") as infile:     
+    with open(filename, "r") as infile: 
         reader = csv.reader(infile)
-        for i in range (1):                 
+        for _ in range (1):                 
             #get headings
             header = next(reader)
             #read everything else into a list of rows
-            data = list(reader)             
+            data = list(reader)
     #add headings
-    header = header + ['%', 'Pts']          
+    header = header + ['%', 'Pts']
     for i in range (len(data)):
     #calculate % and format to 2 decimal places
         percent = str('{:.2f}'.format(int(data[i][5])/int(data[i][6])*100))
         data[i] = data[i] + [percent]       #add to data
         pts = int(data[i][2])*4 + int(data[i][4])*2
         data[i] = data[i] + [pts]           #add to data
-  
-    
+
+
     #use Table (explore settings) and add to column layout
     #
     #------ With MacOs -- manually adjust col_widths, auto to False ------------

@@ -65,10 +65,23 @@ def main():
     sg.SetOptions(element_padding=(0,0), margins=(1,1), border_width=0)
 
     def GraphColumn(name, key):
-        col = sg.Column([[Txt(name, key=key+'TXT_'), ],
-                    [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black',
-                              key=key+'GRAPH_')]], pad=(2, 2))
-        return col
+        return sg.Column(
+            [
+                [
+                    Txt(name, key=key + 'TXT_'),
+                ],
+                [
+                    sg.Graph(
+                        (GRAPH_WIDTH, GRAPH_HEIGHT),
+                        (0, 0),
+                        (GRAPH_WIDTH, 100),
+                        background_color='black',
+                        key=key + 'GRAPH_',
+                    )
+                ],
+            ],
+            pad=(2, 2),
+        )
 
     layout = [[sg.Text('System Status Dashboard'+' '*18), sg.Button('', image_data=red_x, button_color=('black', 'black'), key='Exit', tooltip='Closes window')],
               [GraphColumn('Net Out', '_NET_OUT_'),

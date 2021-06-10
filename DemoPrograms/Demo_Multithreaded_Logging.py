@@ -73,7 +73,7 @@ def main():
         event, values = window.Read(timeout=100)
 
         if event == '_START_':
-            if appStarted is False:
+            if not appStarted:
                 threadedApp.start()
                 logger.debug('App started')
                 window.FindElement('_START_').Update(disabled=True)

@@ -24,15 +24,13 @@ def main():
         sg.PopupCancel('Cancelled - No valid folder entered')
         return
 
-    outfile = open(os.path.join(folder, OUTPUT_FILENAME), 'w')
+    with open(os.path.join(folder, OUTPUT_FILENAME), 'w') as outfile:
+        for i, file in enumerate(namesonly):
+            contents = open(os.path.join(folder, file), 'rb').read()
+            encoded = base64.b64encode(contents)
+            outfile.write('\n{} = {}\n\n'.format(file[:file.index(".")], encoded))
+            sg.OneLineProgressMeter('Base64 Encoding', i+1, len(namesonly),key='_METER_')
 
-    for i, file in enumerate(namesonly):
-        contents = open(os.path.join(folder, file), 'rb').read()
-        encoded = base64.b64encode(contents)
-        outfile.write('\n{} = {}\n\n'.format(file[:file.index(".")], encoded))
-        sg.OneLineProgressMeter('Base64 Encoding', i+1, len(namesonly),key='_METER_')
-
-    outfile.close()
     sg.Popup('Completed!', 'Encoded %s files'%(i+1))
 
 

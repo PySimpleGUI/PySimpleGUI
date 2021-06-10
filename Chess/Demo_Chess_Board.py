@@ -52,14 +52,10 @@ images = {BISHOPB: bishopB, BISHOPW: bishopW, PAWNB: pawnB, PAWNW: pawnW, KNIGHT
 def open_pgn_file(filename):
     pgn = open(filename)
     first_game = chess.pgn.read_game(pgn)
-    moves = [move for move in first_game.main_line()]
-    return moves
+    return [move for move in first_game.main_line()]
 
 def render_square(image, key, location):
-    if (location[0] + location[1]) % 2:
-        color =  '#B58863'
-    else:
-        color = '#F0D9B5'
+    color = '#B58863' if (location[0] + location[1]) % 2 else '#F0D9B5'
     return sg.RButton('', image_filename=image, size=(1, 1), button_color=('white', color), pad=(0, 0), key=key)
 
 def redraw_board(window, board):

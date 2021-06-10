@@ -38,13 +38,48 @@ class GUI():
              sg.Image(data=ledblank[22:], key='_min2_')], ]
 
         # Create the weather columns layout
-        weather_cols = []
-        for i in range(NUM_COLS):
-            weather_cols.append(
-                [[sg.T('', size=(4, 1), font='Any 20', justification='center', key='_DAY_' + str(i)), ],
-                 [sg.Image(data=w1[22:], background_color='black', key='_icon_'+str(i), pad=((4, 0), 3)), ],
-                 [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_high_' + str(i), pad=((10, 0), 3))],
-                 [sg.T('--', size=(3, 1), justification='center', font='Any 20', key='_low_' + str(i), pad=((10, 0), 3))]])
+        weather_cols = [
+            [
+                [
+                    sg.T(
+                        '',
+                        size=(4, 1),
+                        font='Any 20',
+                        justification='center',
+                        key='_DAY_' + str(i),
+                    ),
+                ],
+                [
+                    sg.Image(
+                        data=w1[22:],
+                        background_color='black',
+                        key='_icon_' + str(i),
+                        pad=((4, 0), 3),
+                    ),
+                ],
+                [
+                    sg.T(
+                        '--',
+                        size=(3, 1),
+                        justification='center',
+                        font='Any 20',
+                        key='_high_' + str(i),
+                        pad=((10, 0), 3),
+                    )
+                ],
+                [
+                    sg.T(
+                        '--',
+                        size=(3, 1),
+                        justification='center',
+                        font='Any 20',
+                        key='_low_' + str(i),
+                        pad=((10, 0), 3),
+                    )
+                ],
+            ]
+            for i in range(NUM_COLS)
+        ]
 
         # Create the overall layout
         layout = [[sg.Column(clock, background_color='black')],

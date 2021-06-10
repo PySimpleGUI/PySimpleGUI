@@ -47,10 +47,23 @@ def main():
         return(sg.Text(text, font=('Helvetica 8'), **kwargs))
 
     def GraphColumn(name, key):
-        col = sg.Column([[Txt(name, key=key+'_TXT_'), ],
-                    [sg.Graph((GRAPH_WIDTH, GRAPH_HEIGHT), (0, 0), (GRAPH_WIDTH, 100), background_color='black',
-                              key=key+'_GRAPH_')]], pad=(2, 2))
-        return col
+        return sg.Column(
+            [
+                [
+                    Txt(name, key=key + '_TXT_'),
+                ],
+                [
+                    sg.Graph(
+                        (GRAPH_WIDTH, GRAPH_HEIGHT),
+                        (0, 0),
+                        (GRAPH_WIDTH, 100),
+                        background_color='black',
+                        key=key + '_GRAPH_',
+                    )
+                ],
+            ],
+            pad=(2, 2),
+        )
 
 
     num_cores = len(psutil.cpu_percent(percpu=True))        # get the number of cores in the CPU

@@ -403,9 +403,8 @@ class Element():
     def FindReturnKeyBoundButton(self, form):
         for row in form.Rows:
             for element in row:
-                if element.Type == ELEM_TYPE_BUTTON:
-                    if element.BindReturnKey:
-                        return element
+                if element.Type == ELEM_TYPE_BUTTON and element.BindReturnKey:
+                    return element
                 if element.Type == ELEM_TYPE_COLUMN:
                     rc = self.FindReturnKeyBoundButton(element)
                     if rc is not None:
@@ -442,10 +441,7 @@ class Element():
     def ListboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -453,47 +449,32 @@ class Element():
     def ComboboxSelectHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
 
     def RadioHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
     def CheckboxHandler(self):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
     def TabGroupSelectHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
 
 
     def KeyboardHandler(self, event):
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()
@@ -634,7 +615,7 @@ class Combo(Element):
         # self.InitializeAsDisabled = disabled
         self.Disabled = disabled
         self.Readonly = readonly
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.VisibleItems = visible_items
         self.AutoComplete = auto_complete
@@ -702,7 +683,7 @@ class OptionMenu(Element):
         self.DefaultValue = default_value
         self.TKOptionMenu = None
         self.Disabled = disabled
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=size, auto_size_text=auto_size_text, background_color=bg,
@@ -777,7 +758,7 @@ class Listbox(Element):
             self.SelectMode = SELECT_MODE_SINGLE
         else:
             self.SelectMode = DEFAULT_LISTBOX_SELECT_MODE
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=size, auto_size_text=auto_size_text, font=font,
@@ -895,7 +876,7 @@ class Checkbox(Element):
         self.InitialState = default
         self.WxCheckbox = None      # type:wx.CheckBox
         self.Disabled = disabled
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.ChangeSubmits = change_submits or enable_events
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=size, auto_size_text=auto_size_text, font=font,
@@ -955,7 +936,7 @@ class Spin(Element):
         self.DefaultValue = initial_value or values[0]
         self.ChangeSubmits = change_submits or enable_events
         self.Disabled = disabled
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.WxSpinCtrl : wx.SpinCtrl = None
         self.WxTextCtrl = None  # type : wx.TextCtrl
@@ -1026,7 +1007,7 @@ class Multiline(Element):
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1044,25 +1025,26 @@ class Multiline(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-            try:        # added in case the widget has already been deleted for some readon.
-                if value is not None and not append:
+        try:    # added in case the widget has already been deleted for some readon.
+            if value is not None:
+                if not append:
                     self.WxTextCtrl.SetLabel(value)
-                elif value is not None and append:
+                else:
                     self.WxTextCtrl.AppendText(value)
-                if background_color is not None:
-                    self.WxTextCtrl.SetBackgroundColour(background_color)
-                if text_color is not None:
-                    self.WxTextCtrl.SetForegroundColour(text_color)
-                if font is not None:
-                    self.WxTextCtrl.SetFont(font)
-                if disabled:
-                    self.WxTextCtrl.Enable(True)
-                elif disabled is False:
-                    self.WxTextCtrl.Enable(False)
-            except:
-                pass
+            if background_color is not None:
+                self.WxTextCtrl.SetBackgroundColour(background_color)
+            if text_color is not None:
+                self.WxTextCtrl.SetForegroundColour(text_color)
+            if font is not None:
+                self.WxTextCtrl.SetFont(font)
+            if disabled:
+                self.WxTextCtrl.Enable(True)
+            elif disabled is False:
+                self.WxTextCtrl.Enable(False)
+        except:
+            pass
 
-            super().Update(self.WxTextCtrl, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        super().Update(self.WxTextCtrl, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
     #
     # def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
@@ -1114,7 +1096,7 @@ class MultilineOutput(Element):
         '''
         self.DefaultText = default_text
         self.EnterSubmits = enter_submits
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
         self.do_not_clear = do_not_clear
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
@@ -1132,21 +1114,22 @@ class MultilineOutput(Element):
 
 
     def Update(self, value=None, disabled=None, append=False, background_color=None, text_color=None, font=None, visible=None):
-            if value is not None and not append:
+        if value is not None:
+            if not append:
                 self.WxTextCtrl.SetLabel(value)
-            elif value is not None and append:
+            else:
                 self.WxTextCtrl.AppendText(value)
-            if background_color is not None:
-                self.WxTextCtrl.SetBackgroundColour(background_color)
-            if text_color is not None:
-                self.WxTextCtrl.SetForegroundColour(text_color)
-            if font is not None:
-                self.WxTextCtrl.SetFont(font)
-            if disabled:
-                self.WxTextCtrl.Enable(True)
-            elif disabled is False:
-                self.WxTextCtrl.Enable(False)
-            super().Update(self.WxTextCtrl, background_color=background_color, text_color=text_color, font=font, visible=visible)
+        if background_color is not None:
+            self.WxTextCtrl.SetBackgroundColour(background_color)
+        if text_color is not None:
+            self.WxTextCtrl.SetForegroundColour(text_color)
+        if font is not None:
+            self.WxTextCtrl.SetFont(font)
+        if disabled:
+            self.WxTextCtrl.Enable(True)
+        elif disabled is False:
+            self.WxTextCtrl.Enable(False)
+        super().Update(self.WxTextCtrl, background_color=background_color, text_color=text_color, font=font, visible=visible)
 
 
     def Get(self):
@@ -1184,7 +1167,7 @@ class Text(Element):
         :param size_px:
         """
         self.DisplayText = str(text)
-        self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
+        self.TextColor = text_color or DEFAULT_TEXT_COLOR
         self.Justification = justification
         self.Relief = relief
         self.ClickSubmits = click_submits or enable_events
@@ -1200,8 +1183,20 @@ class Text(Element):
         self.WxStaticText = None   # type: wx.StaticText  # wx.StaticText(form.MasterPanel, -1, element.DisplayText)
         self.BorderWidth = border_width if border_width is not None else DEFAULT_BORDER_WIDTH
 
-        super().__init__(ELEM_TYPE_TEXT, pixelsize, auto_size_text, background_color=bg, font=font if font else DEFAULT_FONT,
-                         text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, size_px=size_px, visible=visible)
+        super().__init__(
+            ELEM_TYPE_TEXT,
+            pixelsize,
+            auto_size_text,
+            background_color=bg,
+            font=font or DEFAULT_FONT,
+            text_color=self.TextColor,
+            pad=pad,
+            key=key,
+            tooltip=tooltip,
+            size_px=size_px,
+            visible=visible,
+        )
+
         return
 
     def Update(self, value=None, background_color=None, text_color=None, font=None, visible=None):
@@ -1320,7 +1315,7 @@ class Output(Element):
         :param key:
         '''
         self._TKOut = None
-        bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
+        bg = background_color or DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         self.WxTextCtrl = None # type: wx.TextCtrl
         self.redir = None
@@ -1397,7 +1392,7 @@ class Button(Element):
         self.TKButton = None
         self.Target = target
         self.ButtonText = str(button_text)
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
+        self.ButtonColor = button_color or DEFAULT_BUTTON_COLOR
         self.TextColor = self.ButtonColor[0]
         self.BackgroundColor = self.ButtonColor[1]
         self.ImageFilename = image_filename
@@ -1457,12 +1452,12 @@ class Button(Element):
         if target == (None, None):
             strvar = self.TKStringVar
         else:
-            if not isinstance(target, str):
+            if isinstance(target, str):
+                target_element = self.ParentForm.FindElement(target)
+            else:
                 if target[0] < 0:
                     target = [self.Position[0] + target[0], target[1]]
                 target_element = self.ParentContainer._GetElementAtLocation(target)
-            else:
-                target_element = self.ParentForm.FindElement(target)
             try:
                 strvar = target_element.TKStringVar
             except:
@@ -1487,50 +1482,41 @@ class Button(Element):
                     target_element.FileOrFolderName = folder_name
                 else:
                     target_element.Update(folder_name)
-        elif self.BType == BUTTON_TYPE_BROWSE_FILE:                     # Browse File
+        elif self.BType == BUTTON_TYPE_BROWSE_FILE:                 # Browse File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_OPEN)
             else:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_OPEN)
             file_name = ''
-            if dialog.ShowModal() == wx.ID_OK:
-                file_name = dialog.GetPath()
-            else:
-                file_name = ''
+            file_name = dialog.GetPath() if dialog.ShowModal() == wx.ID_OK else ''
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
                 else:
                     target_element.Update(file_name)
-        elif self.BType == BUTTON_TYPE_BROWSE_FILES:                    # Browse Files
+        elif self.BType == BUTTON_TYPE_BROWSE_FILES:                # Browse Files
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_MULTIPLE)
             else:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_MULTIPLE)
             file_names = ''
-            if dialog.ShowModal() == wx.ID_OK:
-                file_names = dialog.GetPaths()
-            else:
-                file_names = ''
+            file_names = dialog.GetPaths() if dialog.ShowModal() == wx.ID_OK else ''
             if file_names != '':
                 file_names = ';'.join(file_names)
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_names
                 else:
                     target_element.Update(file_names)
-        elif self.BType == BUTTON_TYPE_SAVEAS_FILE:                     # Save As File
+        elif self.BType == BUTTON_TYPE_SAVEAS_FILE:                 # Save As File
             qt_types = convert_tkinter_filetypes_to_wx(self.FileTypes)
             if self.InitialFolder:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame,defaultDir=self.InitialFolder, wildcard=qt_types, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
             else:
                 dialog = wx.FileDialog(self.ParentForm.MasterFrame, wildcard=qt_types, style=wx.FD_SAVE|wx.FD_OVERWRITE_PROMPT)
             file_name = ''
-            if dialog.ShowModal() == wx.ID_OK:
-                file_name = dialog.GetPath()
-            else:
-                file_name = ''
+            file_name = dialog.GetPath() if dialog.ShowModal() == wx.ID_OK else ''
             if file_name != '':
                 if target_element.Type == ELEM_TYPE_BUTTON:
                     target_element.FileOrFolderName = file_name
@@ -1544,13 +1530,13 @@ class Button(Element):
                 self.FileOrFolderName = color
             else:
                 target_element.Update(color)
-        elif self.BType == BUTTON_TYPE_CLOSES_WIN:                      # Closes Window
+        elif self.BType == BUTTON_TYPE_CLOSES_WIN:                  # Closes Window
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
+            if self.Key is None:
                 self.ParentForm.LastButtonClicked = self.ButtonText
+            else:
+                self.ParentForm.LastButtonClicked = self.Key
             self.ParentForm.FormRemainedOpen = False
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.App.ExitMainLoop()
@@ -1558,22 +1544,22 @@ class Button(Element):
             self.ParentForm.MasterFrame.Close()
             if self.ParentForm.NonBlocking:
                 Window.DecrementOpenCount()
-            # self.ParentForm._Close()
-        elif self.BType == BUTTON_TYPE_READ_FORM:                       # Read Button
+                # self.ParentForm._Close()
+        elif self.BType == BUTTON_TYPE_READ_FORM:                   # Read Button
             # first, get the results table built
             # modify the Results table in the parent FlexForm object
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
+            if self.Key is None:
                 self.ParentForm.LastButtonClicked = self.ButtonText
+            else:
+                self.ParentForm.LastButtonClicked = self.Key
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.App.ExitMainLoop()
         elif self.BType == BUTTON_TYPE_CLOSES_WIN_ONLY:  # special kind of button that does not exit main loop
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
+            if self.Key is None:
                 self.ParentForm.LastButtonClicked = self.ButtonText
+            else:
+                self.ParentForm.LastButtonClicked = self.Key
             if self.ParentForm.CurrentlyRunningMainloop:  # if this window is running the mainloop, kick out
                 self.ParentForm.App.ExitMainLoop()
             self.ParentForm.IgnoreClose = True
@@ -1649,11 +1635,11 @@ class ProgressBar(Element):
         self.TKProgressBar = None
         self.Cancelled = False
         self.NotRunning = True
-        self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
+        self.Orientation = orientation or DEFAULT_METER_ORIENTATION
         self.BarColor = bar_color if bar_color != (None, None) else DEFAULT_PROGRESS_BAR_COLOR
-        self.BarStyle = style if style else DEFAULT_PROGRESS_BAR_STYLE
+        self.BarStyle = style or DEFAULT_PROGRESS_BAR_STYLE
         self.BorderWidth = border_width if border_width is not None else DEFAULT_PROGRESS_BAR_BORDER_WIDTH
-        self.Relief = relief if relief else DEFAULT_PROGRESS_BAR_RELIEF
+        self.Relief = relief or DEFAULT_PROGRESS_BAR_RELIEF
         self.BarExpired = False
         self.StartValue = start_value
         self.Disabled = disabled
@@ -1886,9 +1872,14 @@ class Graph(Element):
             print('*** WARNING - The Graph element has not been finalized and cannot be drawn upon ***')
             print('Call Window.Finalize() prior to this operation')
             return None
-        text_id = self._TKCanvas2.create_text(converted_point[0], converted_point[1], text=text, font=font, fill=color,
-                                              angle=angle)
-        return text_id
+        return self._TKCanvas2.create_text(
+            converted_point[0],
+            converted_point[1],
+            text=text,
+            font=font,
+            fill=color,
+            angle=angle,
+        )
 
     def Erase(self):
         if self._TKCanvas2 is None:
@@ -2039,8 +2030,7 @@ class Frame(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def __del__(self):
         for row in self.Rows:
@@ -2169,8 +2159,7 @@ class Tab(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def __del__(self):
         for row in self.Rows:
@@ -2244,8 +2233,7 @@ class TabGroup(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def FindKeyFromTabName(self, tab_name):
         for row in self.Rows:
@@ -2289,9 +2277,9 @@ class Slider(Element):
         self.TKScale = None
         self.Range = (1, 10) if range == (None, None) else range
         self.DefaultValue = self.Range[0] if default_value is None else default_value
-        self.Orientation = orientation if orientation else DEFAULT_SLIDER_ORIENTATION
-        self.BorderWidth = border_width if border_width else DEFAULT_SLIDER_BORDER_WIDTH
-        self.Relief = relief if relief else DEFAULT_SLIDER_RELIEF
+        self.Orientation = orientation or DEFAULT_SLIDER_ORIENTATION
+        self.BorderWidth = border_width or DEFAULT_SLIDER_BORDER_WIDTH
+        self.Relief = relief or DEFAULT_SLIDER_RELIEF
         self.Resolution = 1 if resolution is None else resolution
         self.ChangeSubmits = change_submits
         self.Disabled = disabled
@@ -2321,10 +2309,7 @@ class Slider(Element):
     def SliderChangedHandler(self, event):
         # first, get the results table built
         # modify the Results table in the parent FlexForm object
-        if self.Key is not None:
-            self.ParentForm.LastButtonClicked = self.Key
-        else:
-            self.ParentForm.LastButtonClicked = ''
+        self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
         self.ParentForm.FormRemainedOpen = True
         if self.ParentForm.CurrentlyRunningMainloop:
             self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
@@ -2388,8 +2373,7 @@ class Column(Element):
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
 
     def Update(self, visible=None):
@@ -2498,31 +2482,30 @@ class Table(Element):
         return
 
     def Update(self, values=None):
-        if values is not None:
-            children = self.TKTreeview.get_children()
-            for i in children:
-                self.TKTreeview.detach(i)
-                self.TKTreeview.delete(i)
-            children = self.TKTreeview.get_children()
-            # self.TKTreeview.delete(*self.TKTreeview.get_children())
-            for i, value in enumerate(values):
-                if self.DisplayRowNumbers:
-                    value = [i + self.StartingRowNumber] + value
-                id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
-            if self.AlternatingRowColor is not None:
-                self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
-            self.Values = values
-            self.SelectedRows = []
+        if values is None:
+            return
+
+        children = self.TKTreeview.get_children()
+        for i in children:
+            self.TKTreeview.detach(i)
+            self.TKTreeview.delete(i)
+        children = self.TKTreeview.get_children()
+        # self.TKTreeview.delete(*self.TKTreeview.get_children())
+        for i, value in enumerate(values):
+            if self.DisplayRowNumbers:
+                value = [i + self.StartingRowNumber] + value
+            id = self.TKTreeview.insert('', 'end', text=i, iid=i + 1, values=value, tag=i % 2)
+        if self.AlternatingRowColor is not None:
+            self.TKTreeview.tag_configure(1, background=self.AlternatingRowColor)
+        self.Values = values
+        self.SelectedRows = []
 
     def treeview_selected(self, event):
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
             MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
@@ -2532,10 +2515,7 @@ class Table(Element):
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.BindReturnKey:
             MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
@@ -2599,10 +2579,7 @@ class Tree(Element):
         self.SelectedRows = [x for x in selections]
         if self.ChangeSubmits:
             MyForm = self.ParentForm
-            if self.Key is not None:
-                self.ParentForm.LastButtonClicked = self.Key
-            else:
-                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.LastButtonClicked = self.Key if self.Key is not None else ''
             self.ParentForm.FormRemainedOpen = True
             if self.ParentForm.CurrentlyRunningMainloop:
                 self.ParentForm.TKroot.quit()
@@ -3019,10 +2996,10 @@ class Window:
         self.DefaultButtonElementSize = convert_tkinter_size_to_Wx(default_button_element_size) if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
-        self.ButtonColor = button_color if button_color else DEFAULT_BUTTON_COLOR
-        self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
+        self.ButtonColor = button_color or DEFAULT_BUTTON_COLOR
+        self.BackgroundColor = background_color or DEFAULT_BACKGROUND_COLOR
         self.ParentWindow = None
-        self.Font = font if font else DEFAULT_FONT
+        self.Font = font or DEFAULT_FONT
         self.RadioDict = {}
         self.BorderDepth = border_depth
         self.WindowIcon = Window.user_defined_icon if Window.user_defined_icon is not None else icon if icon is not None else DEFAULT_WINDOW_ICON
@@ -3160,8 +3137,7 @@ class Window:
     def _GetElementAtLocation(self, location):
         (row_num, col_num) = location
         row = self.Rows[row_num]
-        element = row[col_num]
-        return element
+        return row[col_num]
 
     def _GetDefaultElementSize(self):
         return self.DefaultElementSize
@@ -3259,22 +3235,19 @@ class Window:
                     self.TKrootDestroyed = True
                     Window.DecrementOpenCount()
                 results = BuildResults(self, False, self)
-                if results[0] != None and results[0] != timeout_key:
+                if results[0] not in [None, timeout_key]:
                     return results
-                else:
-                    pass
-
-                # else:
-                #     print("** REALTIME PROBLEM FOUND **", results)
+                        # else:
+                        #     print("** REALTIME PROBLEM FOUND **", results)
 
             # normal read blocking code....
-            if timeout != None:
+            if timeout == None:
+                timer = None
+            else:
                 self.TimerCancelled = False
                 timer = wx.Timer(self.App)
                 self.App.Bind(wx.EVT_TIMER, self.timer_timeout)
                 timer.Start(milliseconds=timeout, oneShot=wx.TIMER_ONE_SHOT)
-            else:
-                timer = None
             self.CurrentlyRunningMainloop = True
             # print(f'In main {self.Title}')
             ################################# CALL GUWxTextCtrlI MAINLOOP ############################
@@ -3296,18 +3269,24 @@ class Window:
             if self.LastButtonClicked is None and self.LastKeyboardEvent is None and self.ReturnValues[0] is None:
                 Window.DecrementOpenCount()
         # Determine return values
-        if self.LastKeyboardEvent is not None or self.LastButtonClicked is not None:
+        if self.LastKeyboardEvent is None and self.LastButtonClicked is None:
+            if not self.XFound:
+                if (
+                    self.Timeout != 0
+                    and self.Timeout is not None
+                    and self.ReturnValues[0] is None
+                ):       # Special Qt case because returning for no reason so fake timeout
+                    self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
+                elif self.ReturnValues[0] is None:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
+                    # print("*** Faking timeout ***")
+                    self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
+            return self.ReturnValues
+
+        else:
             results = BuildResults(self, False, self)
             if not self.LastButtonClickedWasRealtime:
                 self.LastButtonClicked = None
             return results
-        else:
-            if not self.XFound and self.Timeout != 0 and self.Timeout is not None and self.ReturnValues[0] is None:       # Special Qt case because returning for no reason so fake timeout
-                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
-            elif not self.XFound and self.ReturnValues[0] is None:                   # TODO HIGHLY EXPERIMENTAL... added due to tray icon interaction
-                # print("*** Faking timeout ***")
-                self.ReturnValues = self.TimeoutKey, self.ReturnValues[1]   # fake a timeout
-            return self.ReturnValues
 
     def _ReadNonBlocking(self):
         if self.TKrootDestroyed:
@@ -3396,8 +3375,7 @@ class Window:
             print('*** Error loading form to disk ***')
 
     def GetScreenDimensions(self):
-        size = wx.GetDisplaySize()
-        return size
+        return wx.GetDisplaySize()
 
     def Move(self, x, y):
         self.MasterFrame.SetPosition((x,y))
@@ -3480,8 +3458,7 @@ class Window:
 
 
     def CurrentLocation(self):
-        location = self.MasterFrame.GetPosition()
-        return location
+        return self.MasterFrame.GetPosition()
 
     def OnClose(self, event):
         # print(f'CLOSE EVENT! event = {event}')
@@ -3517,8 +3494,7 @@ class Window:
 
     @property
     def Size(self):
-        size = self.MasterFrame.GetSize()
-        return size
+        return self.MasterFrame.GetSize()
 
     @Size.setter
     def Size(self, size):
@@ -3589,10 +3565,7 @@ def font_to_wx_font(font):
     if font is None:
         return ''
 
-    if type(font) is str:
-        _font = font.split(' ')
-    else:
-        _font = font
+    _font = font.split(' ') if type(font) is str else font
     name = _font[0]
     family = _font[0]
     point_size = int(_font[1])
@@ -3602,24 +3575,24 @@ def font_to_wx_font(font):
     underline =  'underline' in _font[2:]
     bold =  'bold' in _font
 
-    wxfont = wx.Font(point_size,
+    return wx.Font(point_size,
                      wx.FONTFAMILY_DEFAULT,
                      wx.FONTSTYLE_NORMAL,
                      wx.FONTWEIGHT_BOLD if bold else wx.FONTWEIGHT_NORMAL,
                      underline,
                      faceName=family)
 
-    return wxfont
-
 
 
 def preprocess_radio_elements(top_window, window):
     for row in window.Rows:
         for element in row:
-            if element.Type == ELEM_TYPE_INPUT_RADIO:
-                if element.WxRadioButton is None:
-                    element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text, style=wx.RB_GROUP)
-                    create_wx_radio_buttons(top_window, top_window, element.GroupID)
+            if (
+                element.Type == ELEM_TYPE_INPUT_RADIO
+                and element.WxRadioButton is None
+            ):
+                element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text, style=wx.RB_GROUP)
+                create_wx_radio_buttons(top_window, top_window, element.GroupID)
             if element.Type in (ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME,ELEM_TYPE_TAB_GROUP, ELEM_TYPE_TAB) :
                 preprocess_radio_elements(top_window, element)
 
@@ -3627,9 +3600,12 @@ def preprocess_radio_elements(top_window, window):
 def create_wx_radio_buttons(top_window, window, group_id):
     for row in window.Rows:
         for element in row:
-            if element.Type == ELEM_TYPE_INPUT_RADIO:
-                if element.GroupID == group_id and element.WxRadioButton is None:
-                    element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text )
+            if (
+                element.Type == ELEM_TYPE_INPUT_RADIO
+                and element.GroupID == group_id
+                and element.WxRadioButton is None
+            ):
+                element.WxRadioButton = wx.RadioButton(top_window.MasterPanel, id=wx.ID_ANY, label=element.Text )
             if element.Type in (ELEM_TYPE_COLUMN, ELEM_TYPE_FRAME,ELEM_TYPE_TAB_GROUP, ELEM_TYPE_TAB) :
                 create_wx_radio_buttons(top_window, element, group_id)
 

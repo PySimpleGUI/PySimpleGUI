@@ -74,9 +74,9 @@ allspriteslist = pygame.sprite.Group()
 
 # Create an initial snake
 snake_segments = []
+y = 30
 for i in range(15):
     x = 250 - (segment_width + segment_margin) * i
-    y = 30
     segment = Segment(x, y)
     snake_segments.append(segment)
     allspriteslist.add(segment)

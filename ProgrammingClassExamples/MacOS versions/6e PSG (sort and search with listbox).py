@@ -120,18 +120,18 @@ def binary_search():
      
 while True:
     button, value = window.Read()
-    if button is not None:  
-        if button == 'Original list':
-            display_list(names)
-        if button == 'Default sort':
-            default(names)
-        if button == 'Sort: selection':
-            sel_sort(names)
-        if button == 'Sort: quick':
-            qsort_holder(names)
-        if button == 'Linear Search':
-            linear_search()
-        if button == 'Binary Search':
-            binary_search()
-    else:
+    if button is None:
         break  
+
+    if button == 'Original list':
+        display_list(names)
+    if button == 'Default sort':
+        default(names)
+    if button == 'Sort: selection':
+        sel_sort(names)
+    if button == 'Sort: quick':
+        qsort_holder(names)
+    if button == 'Linear Search':
+        linear_search()
+    if button == 'Binary Search':
+        binary_search()  

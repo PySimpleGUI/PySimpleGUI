@@ -22,15 +22,13 @@ close64 = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEQ0lEQVR42r2XW2wbRRSG/
 def ExecuteCommandSubprocess(command, *args, wait=False):
     # try:
         if sys.platform == 'linux':
-            arg_string = ''
-            for arg in args:
-                arg_string += ' ' + str(arg)
-            sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                arg_string = ''.join(' ' + str(arg) for arg in args)
+                sp = subprocess.Popen(['python3' + arg_string, ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            expanded_args = []
-            for a in args:
-                expanded_args += a
-            sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                expanded_args = []
+                for a in args:
+                    expanded_args += a
+                sp = subprocess.Popen([command, expanded_args], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if wait:
             out, err = sp.communicate()
             if out:
@@ -41,12 +39,11 @@ def ExecuteCommandSubprocess(command, *args, wait=False):
 
 
 def get_image_bytes(image64):
-    image_file = io.BytesIO(base64.b64decode(image64))
-    img = Image.open(image_file)
-    bio = io.BytesIO()
-    img.save(bio, format='PNG')
-    imgbytes = bio.getvalue()
-    return imgbytes
+        image_file = io.BytesIO(base64.b64decode(image64))
+        img = Image.open(image_file)
+        bio = io.BytesIO()
+        img.save(bio, format='PNG')
+        return bio.getvalue()
 
 def ShowMeTheButtons():
 

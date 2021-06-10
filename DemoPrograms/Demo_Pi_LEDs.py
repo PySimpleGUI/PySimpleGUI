@@ -26,7 +26,7 @@ def SwitchLED():
 
 
 def FlashLED():
-    for i in range(5):
+    for _ in range(5):
         GPIO.output(14, GPIO.HIGH)
         time.sleep(0.5)
         GPIO.output(14, GPIO.LOW)

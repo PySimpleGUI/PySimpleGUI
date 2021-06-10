@@ -41,8 +41,8 @@ class GameOfLife:
         self.T = T  # The maximum number of generations
 
         # Set up a random initial configuration for the grid.
-        for i in range(0, self.N):
-            for j in range(0, self.N):
+        for i in range(self.N):
+            for j in range(self.N):
                 self.old_grid[i][j] = 0
         self.init_graphics()
         self.manual_board_setup()
@@ -82,7 +82,7 @@ class GameOfLife:
                     live = self.live_neighbours(i, j)
                     if (self.old_grid[i][j] == 1 and live < 2):
                         self.new_grid[i][j] = 0  # Dead from starvation.
-                    elif (self.old_grid[i][j] == 1 and (live == 2 or live == 3)):
+                    elif self.old_grid[i][j] == 1 and live in [2, 3]:
                         self.new_grid[i][j] = 1  # Continue living.
                     elif (self.old_grid[i][j] == 1 and live > 3):
                         self.new_grid[i][j] = 0  # Dead from overcrowding.
@@ -137,7 +137,7 @@ class GameOfLife:
         ids = []
         for i in range(self.N):
             ids.append([])
-            for j in range(self.N):
+            for _ in range(self.N):
                 ids[i].append(0)
         while True:  # Event Loop
             event, values = self.window.Read()

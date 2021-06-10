@@ -29,7 +29,7 @@ def Launcher():
 
     namesonly = [f for f in os.listdir(ROOT_PATH) if f.endswith('.py') ]
 
-    if len(namesonly) == 0:
+    if not namesonly:
         namesonly = ['test 1', 'test 2', 'test 3']
 
     sg.SetOptions(element_padding=(0,0), button_element_size=(12,1), auto_size_buttons=False)
@@ -71,9 +71,9 @@ def ExecuteCommandSubprocess(command, *args, wait=False):
             print('python3 ' + arg_string)
             sp = subprocess.Popen(['python3 ', arg_string ], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         else:
-            arg_string = ' '.join([str(arg) for arg in args])
+            arg_string = ' '.join(str(arg) for arg in args)
             sp = subprocess.Popen([command, arg_string], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # sp = subprocess.Popen([command, list(args)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # sp = subprocess.Popen([command, list(args)], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if wait:
             out, err = sp.communicate()

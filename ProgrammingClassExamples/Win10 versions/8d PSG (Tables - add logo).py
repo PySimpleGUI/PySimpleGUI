@@ -26,24 +26,24 @@ def table_example():
     data = []
     header_list = []
 
-    with open(filename, "r") as infile:    
+    with open(filename, "r") as infile:
         reader = csv.reader(infile)
-        for i in range (1):                
+        for _ in range (1):                
             header = next(reader)
-            data = list(reader)          
-    header = header + ['%', 'Pts']         
+            data = list(reader)
+    header = header + ['%', 'Pts']
     for i in range (len(data)):
- 
+
         percent = int(data[i][5])/int(data[i][6])*100
         data[i] = data[i] + [percent]     
         pts = int(data[i][2])*4 + int(data[i][4])*2
         data[i] = data[i] + [pts]        
 
-    data.sort(key = operator.itemgetter(7), reverse = True)    
+    data.sort(key = operator.itemgetter(7), reverse = True)
     data.sort(key = operator.itemgetter(8), reverse = True)     
 
-    for i in range(len(data)):
-        data[i][7] = str('{:.2f}'.format(data[i][7]))
+    for datum in data:
+        datum[7] = str('{:.2f}'.format(datum[7]))
 
     col_layout = [[sg.Table(values=data, headings=header, auto_size_columns=True,
                     max_col_width = 12,justification='right', text_color = 'White',

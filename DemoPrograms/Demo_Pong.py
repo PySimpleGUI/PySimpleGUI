@@ -50,16 +50,12 @@ class Ball:
     def hit_bat(self, pos):
         bat_pos = self.canvas.coords(self.bat.id)
         if pos[2] >= bat_pos[0] and pos[0] <= bat_pos[2]:
-            if pos[3] >= bat_pos[1] and pos[3] <= bat_pos[3]:
-                return True
-            return False
+            return pos[3] >= bat_pos[1] and pos[3] <= bat_pos[3]
 
     def hit_bat2(self, pos):
         bat_pos = self.canvas.coords(self.bat2.id)
         if pos[2] >= bat_pos[0] and pos[0] <= bat_pos[2]:
-            if pos[3] >= bat_pos[1] and pos[3] <= bat_pos[3]:
-                return True
-            return False
+            return pos[3] >= bat_pos[1] and pos[3] <= bat_pos[3]
 
     def draw(self):
         self.canvas.move(self.id, self.x, self.y)

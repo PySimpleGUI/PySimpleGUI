@@ -305,7 +305,7 @@ def do_one(myStats, destIP, hostname, timeout, mySeqNumber, packet_size, quiet =
     my_ID = os.getpid() & 0xFFFF
 
     sentTime = send_one_ping(mySocket, destIP, my_ID, mySeqNumber, packet_size)
-    if sentTime == None:
+    if sentTime is None:
         mySocket.close()
         return delay
 
@@ -323,10 +323,8 @@ def do_one(myStats, destIP, hostname, timeout, mySeqNumber, packet_size, quiet =
             )
         myStats.pktsRcvd += 1
         myStats.totTime += delay
-        if myStats.minTime > delay:
-            myStats.minTime = delay
-        if myStats.maxTime < delay:
-            myStats.maxTime = delay
+        myStats.minTime = min(myStats.minTime, delay)
+        myStats.maxTime = max(myStats.maxTime, delay)
     else:
         delay = None
         print("Request timed out.")
@@ -350,7 +348,6 @@ def send_one_ping(mySocket, destIP, myID, mySeqNumber, packet_size):
     )
 
     padBytes = []
-    startVal = 0x42
     # 'cose of the string/byte changes in python 2/3 we have
     # to build the data differnely for different version
     # or it will make packets with unexpected size.
@@ -359,6 +356,7 @@ def send_one_ping(mySocket, destIP, myID, mySeqNumber, packet_size):
         data = ((packet_size - 8) - bytes) * "Q"
         data = struct.pack("d", default_timer()) + data
     else:
+        startVal = 0x42
         for i in range(startVal, startVal + (packet_size-8)):
             padBytes += [(i & 0xff)]  # Keep chars in the 0-255 range
         #data = bytes(padBytes)
@@ -522,11 +520,11 @@ def quiet_ping(hostname, timeout=WAIT_TIMEOUT, count=NUM_PACKETS,
                         mySeqNumber, packet_size, quiet=True)
         time.sleep(0.5)
 
-    for i in range(count):
+    for _ in range(count):
         delay = do_one(myStats, destIP, hostname, timeout,
                         mySeqNumber, packet_size, quiet=True)
 
-        if delay == None:
+        if delay is None:
             delay = 0
 
         mySeqNumber += 1

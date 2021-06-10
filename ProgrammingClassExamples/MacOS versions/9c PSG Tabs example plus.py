@@ -80,10 +80,10 @@ def binary_search():
 
 while True:
     button, value = window.Read()
-    if button is not None:
-        if button == 'Linear Search':
-            linear_search()
-        if button == 'Binary Search':
-            binary_search()
-    else:
+    if button is None:
         break
+
+    if button == 'Linear Search':
+        linear_search()
+    if button == 'Binary Search':
+        binary_search()

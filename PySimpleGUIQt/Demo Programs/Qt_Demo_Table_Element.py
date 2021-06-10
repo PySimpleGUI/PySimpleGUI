@@ -44,8 +44,8 @@ while True:
         break
     # sg.Print( event, values, location=(200,200))
     if event == 'Double':
-        for i in range(len(data)):
-            data.append(data[i])
+        for datum in data:
+            data.append(datum)
         window.FindElement('_table_').Update(values = data)
     # sg.Popup(event, values)
     # print(event, values)

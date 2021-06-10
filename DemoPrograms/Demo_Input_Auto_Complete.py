@@ -26,8 +26,7 @@ def autocomplete_popup_show(text_list ):
                                    location=(1320,622),
                                    default_button_element_size=(12, 1))
 
-    window = autocomplete_popup.Layout(autocomplete_popup_layout).Finalize()
-    return window
+    return autocomplete_popup.Layout(autocomplete_popup_layout).Finalize()
 
 
 def predict_text(input, lista):
@@ -61,16 +60,16 @@ while True:             # Event Loop
         if event == '_COMBO_':
             sg.Popup('Chose', values['_COMBO_'])
         if event.startswith('Down') or event.startswith('special 16777237'):
-            sel_item = sel_item + (sel_item<len(prediction_list))
+            sel_item += sel_item<len(prediction_list)
             list_elem.Update(set_to_index=sel_item)
             skip_event = True
         elif event.startswith('Up') or event.startswith('special 16777235'):
-            sel_item = sel_item - (sel_item>0)
+            sel_item -= sel_item>0
             list_elem.Update(set_to_index=sel_item)
             skip_event = True
         if event == '\r' or event.startswith('special 16777220'):
             chosen = vals2['_FLOATING_LISTBOX_']
-            window.Element('_INPUT_').Update(vals2['_FLOATING_LISTBOX_'][0], select=True)
+            window.Element('_INPUT_').Update(chosen[0], select=True)
             fwindow.Close()
             sel_item = -1
         if event.startswith('Escape') or event.startswith('special 16777216'):

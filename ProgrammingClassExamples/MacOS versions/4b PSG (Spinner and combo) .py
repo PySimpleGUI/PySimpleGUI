@@ -23,21 +23,21 @@ window = sg.Window('Enter & Display Data', grab_anywhere= False).Layout(layout)
 while True:
     button, value = window.Read()
 
-    if button is not None:
-        #convert returned values to integers
-        val = [int(value[0]), int(value[1])]
-        if value[2] == 'Add':
-            result = val[0] + val[1]
-        elif value[2] == 'Multiply':
-            result = val[0] * val[1]
-        elif value[2] == 'Subtract':
-            result = val[0] - val[1]
-        elif value[2] == 'Divide':
-            if val[1] ==0:
-                sg.Popup('Second value can\'t be zero')
-                result = 'NA'
-            else:
-                result = round( val[0] / val[1], 3)
-        window.FindElement('_result_').Update(result)              
-    else:
+    if button is None:
         break  
+
+    #convert returned values to integers
+    val = [int(value[0]), int(value[1])]
+    if value[2] == 'Add':
+        result = val[0] + val[1]
+    elif value[2] == 'Multiply':
+        result = val[0] * val[1]
+    elif value[2] == 'Subtract':
+        result = val[0] - val[1]
+    elif value[2] == 'Divide':
+        if val[1] ==0:
+            sg.Popup('Second value can\'t be zero')
+            result = 'NA'
+        else:
+            result = round( val[0] / val[1], 3)
+    window.FindElement('_result_').Update(result)  

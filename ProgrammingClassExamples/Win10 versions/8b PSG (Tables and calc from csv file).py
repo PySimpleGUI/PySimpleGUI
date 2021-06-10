@@ -28,7 +28,7 @@ def calc_ladder():
     # read csv
     with open(filename, "r") as infile:
         reader = csv.reader(infile)
-        for i in range(1):
+        for _ in range(1):
             # get headings
             header = next(reader)
             # read everything else into a list of rows

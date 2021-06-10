@@ -63,7 +63,7 @@ def main():
     timeout_value = 1             # make first read really quick
     g_interval = 1
     # ----------------  main loop  ----------------
-    while (True):
+    while True:
         # --------- Read and update window --------
         event, values = window.Read(timeout=timeout_value, timeout_key='Timeout')
         # --------- Do Button Operations --------
@@ -84,9 +84,10 @@ def main():
             top_sorted = sorted(top.items(), key=operator.itemgetter(1), reverse=True)
             if top_sorted:
                 top_sorted.pop(0)
-            display_string = ''
-            for proc, cpu in top_sorted:
-                display_string += '{:2.2f} {}\n'.format(cpu/10, proc)
+            display_string = ''.join(
+                '{:2.2f} {}\n'.format(cpu / 10, proc)
+                for proc, cpu in top_sorted
+            )
 
         # --------- Display timer and proceses in window --------
         window.FindElement('text').Update('CPU {}'.format(cpu_percent))

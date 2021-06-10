@@ -229,9 +229,7 @@ while True:
 
     # update page number field
     if event in my_keys:
-        goto.Update(str(cur_page + 1))
-
-
+        goto.Update(str(old_page + 1))
 # print some response time statistics
 if img_count > 0:
     print("response times for '%s'" % doc.name)

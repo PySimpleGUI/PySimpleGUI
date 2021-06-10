@@ -72,15 +72,15 @@ def binary_search():
 while True:
     button, value = window.Read() 
 
-    if button is not None:
-        #show names - unordered and sorted
-        if button == 'Show Names':  
-            display_list(names,'_display1_')
-            display_list(sorted_names, '_display2_')
-        if button == 'Linear Search':
-            linear_search()
-        if button == 'Binary Search':
-            binary_search()
-    else:
+    if button is None:
         break  
+
+    #show names - unordered and sorted
+    if button == 'Show Names':  
+        display_list(names,'_display1_')
+        display_list(sorted_names, '_display2_')
+    if button == 'Linear Search':
+        linear_search()
+    if button == 'Binary Search':
+        binary_search()  
 

@@ -48,7 +48,7 @@ def HowDoI():
     history_offset = 0
     while True:
         event, values = window.Read()
-        if event == 'SEND' or event == 'query':
+        if event in ['SEND', 'query']:
             # window.FindElement('+OUTPUT+').Update('test of output')                       # manually clear input because keyboard events blocks clear
 
             query = values['query'].rstrip()
@@ -58,7 +58,7 @@ def HowDoI():
             history_offset = len(command_history)-1
             window.FindElement('query').Update('')                       # manually clear input because keyboard events blocks clear
             window.FindElement('history').Update('\n'.join(command_history[-3:]))
-        elif event == None or event == 'EXIT':            # if exit button or closed using X
+        elif event is None or event == 'EXIT':            # if exit button or closed using X
             break
         elif 'Up' in event and len(command_history):                                # scroll back in history
             command = command_history[history_offset]

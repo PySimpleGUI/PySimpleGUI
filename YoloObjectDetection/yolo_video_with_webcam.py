@@ -88,11 +88,7 @@ if use_webcam:
 	cap = cv2.VideoCapture(0)
 while True:
 	# read the next frame from the file or webcam
-	if use_webcam:
-		grabbed, frame = cap.read()
-	else:
-		grabbed, frame = vs.read()
-
+	grabbed, frame = cap.read() if use_webcam else vs.read()
 	# if the frame was not grabbed, then we have reached the end
 	# of the stream
 	if not grabbed:
