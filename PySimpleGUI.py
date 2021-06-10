@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.10 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along"
+version = __version__ = "4.43.0.11 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2765,9 +2765,10 @@ class Multiline(Element):
             value = str(value)
             if background_color_for_value is not None or text_color_for_value is not None or font_for_value is not None:
                 try:
-                    tag = 'Multiline(' + str(text_color_for_value) + ','+ str(background_color_for_value)+  str(font_for_value) + ')'
+                    tag = 'Multiline(' +  str(text_color_for_value) + ','+ str(background_color_for_value)+  ',' + str(font_for_value) + ')'
                     if  tag not in self.tags:
                         self.tags.add(tag)
+                        # print('adding tag', tag)
                     if background_color_for_value is not None:
                         self.TKText.tag_configure(tag, background=background_color_for_value)
                     if text_color_for_value is not None:
