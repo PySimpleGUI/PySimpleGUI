@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.14 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too"
+version = __version__ = "4.43.0.15 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too, fix for get folder and get file without history, support for expand for other elements with frames like Tables (using element_frame member variable)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1293,10 +1293,12 @@ class Element():
             return
         self.Widget.pack(expand=True, fill=fill)
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
-        if self.Type == ELEM_TYPE_INPUT_LISTBOX:
+        if self.element_frame is not None:
             self.element_frame.pack(expand=True, fill=fill)
-        elif self.Type == ELEM_TYPE_TREE:
-            self.element_frame.pack(expand=True, fill=fill)
+        # if self.Type == ELEM_TYPE_INPUT_LISTBOX:
+        #     self.element_frame.pack(expand=True, fill=fill)
+        # elif self.Type == ELEM_TYPE_TREE:
+        #     self.element_frame.pack(expand=True, fill=fill)
 
 
     def set_cursor(self,cursor=None, cursor_color=None):
@@ -12383,6 +12385,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
         for col_num, element in enumerate(flex_row):
             element.ParentRowFrame = tk_row_frame
+            element.element_frame = None  # for elements that have a scrollbar too
             element.ParentForm = toplevel_form  # save the button's parent form object
             if toplevel_form.Font and (element.Font == DEFAULT_FONT or not element.Font):
                 font = toplevel_form.Font
@@ -13703,7 +13706,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TABLE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element = element  # type: Table
-                frame = tk.Frame(tk_row_frame)
+                element.element_frame = frame = tk.Frame(tk_row_frame)
                 element.table_frame = frame
                 height = element.NumRows
                 if element.Justification.startswith('l'):
@@ -17028,7 +17031,8 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
         history_settings_filename = os.path.basename(inspect.stack()[1].filename)
         history_settings_filename = os.path.splitext(history_settings_filename)[0] + '.json'
         history_settings = UserSettings(history_settings_filename)
-
+    else:
+        history_settings = None
 
     # global _my_windows
     if no_window:
@@ -17105,11 +17109,12 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             popup_quick_message('History of Previous Choices Cleared', background_color='red', text_color='white', font='_ 20', keep_on_top=True)
         elif event in ('Ok', '-INPUT-'):
             if values['-INPUT-'] != '':
-                list_of_entries = history_settings.get('-PSG folder list-', [])
-                if values['-INPUT-'] in list_of_entries:
-                    list_of_entries.remove(values['-INPUT-'])
-                list_of_entries.insert(0, values['-INPUT-'])
-                history_settings.set('-PSG folder list-', list_of_entries)
+                if history_settings is not None:
+                    list_of_entries = history_settings.get('-PSG folder list-', [])
+                    if values['-INPUT-'] in list_of_entries:
+                        list_of_entries.remove(values['-INPUT-'])
+                    list_of_entries.insert(0, values['-INPUT-'])
+                    history_settings.set('-PSG folder list-', list_of_entries)
             break
 
     window.close(); del window
@@ -17195,6 +17200,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         history_settings_filename = os.path.basename(inspect.stack()[1].filename)
         history_settings_filename = os.path.splitext(history_settings_filename)[0] + '.json'
         history_settings = UserSettings(history_settings_filename)
+    else:
+        history_settings = None
 
     if icon is None:
         icon = Window._user_defined_icon or DEFAULT_BASE64_ICON
@@ -17299,11 +17306,12 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
             popup_quick_message('History of Previous Choices Cleared', background_color='red', text_color='white', font='_ 20', keep_on_top=True)
         elif event in ('Ok', '-INPUT-'):
             if values['-INPUT-'] != '':
-                list_of_entries = history_settings.get('-PSG file list-', [])
-                if values['-INPUT-'] in list_of_entries:
-                    list_of_entries.remove(values['-INPUT-'])
-                list_of_entries.insert(0, values['-INPUT-'])
-                history_settings.set('-PSG file list-', list_of_entries)
+                if history_settings is not None:
+                    list_of_entries = history_settings.get('-PSG file list-', [])
+                    if values['-INPUT-'] in list_of_entries:
+                        list_of_entries.remove(values['-INPUT-'])
+                    list_of_entries.insert(0, values['-INPUT-'])
+                    history_settings.set('-PSG file list-', list_of_entries)
             break
 
     window.close(); del window
