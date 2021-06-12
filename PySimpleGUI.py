@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.11 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print"
+version = __version__ = "4.43.0.12 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1696,8 +1696,7 @@ class Combo(Element):
                     width = self.Size[0]
                 else:
                     width = max_line_len + 1
-                self.TKCombo.configure(height=self.Size[1])
-                self.TKCombo.configure(width=width)
+                # self.TKCombo.configure(width=width)
             else:
                 self.TKCombo.configure(height=size[1])
                 self.TKCombo.configure(width=size[0])
@@ -12321,8 +12320,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     def _valid_theme(style, theme_name):
         if theme_name in style.theme_names():
             return True
-        print('** Invalid ttk theme specified {} **'.format(theme_name),
-              '\nValid choices include: {}'.format(style.theme_names()))
+        _error_popup_with_traceback('Your Window has an invalid ttk theme specified',
+                                    'The traceback will show you the Window with the problem layout',
+                                    '** Invalid ttk theme specified {} **'.format(theme_name),
+                                    '\nValid choices include: {}'.format(style.theme_names()))
+
+        # print('** Invalid ttk theme specified {} **'.format(theme_name),
+        #       '\nValid choices include: {}'.format(style.theme_names()))
         return False
 
 
@@ -12357,6 +12361,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
     # Building is done row by row.                                                #
+    # WARNING - You can't use print in this function. If the user has rerouted   #
+    # stdout then there will be an error saying the window isn't finalized        #
     # --------------------------------------------------------------------------- #
     ######################### LOOP THROUGH ROWS #########################
     # *********** -------  Loop through ROWS  ------- ***********#
@@ -12662,6 +12668,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
                 wraplen = tkbutton.winfo_reqwidth()  # width of widget in Pixels
+                if elementpad[0] == 0 or elementpad[1] == 0:
+                    tkbutton.config(highlightthickness=0)
 
                 ## -------------- TK Button With Image -------------- ##
                 if element.ImageFilename:  # if button has an image on it
@@ -13000,6 +13008,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if _valid_theme(s,toplevel_form.TtkTheme):
                     s.theme_use(toplevel_form.TtkTheme)
                 # s.theme_use('default')
+
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
                     style_name = str(element.Key) + '.TCombobox'
@@ -13047,7 +13056,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         combostyle.configure(style_name, arrowcolor=theme_button_color()[0])
                         combostyle.configure(style_name, background=theme_button_color()[1])
                     except Exception as e:
-                        print('* Problem setting combobox button color *', e)
+                        _error_popup_with_traceback('Combo Element error {}'.format(e),
+                                                    'Combo element key: {}'.format(element.Key),
+                                                    'The theme button color is used to make the arrows. theme_button_color= {}'.format(theme_button_color()),
+                                                    "Parent Window's Title: {}".format(toplevel_form.Title))
+                        # print('* Problem setting combobox button color *', e)
 
                 # Strange code that is needed to set the font for the drop-down list
                 element._newfont = tkinter.font.Font(font=font)
@@ -13060,6 +13073,10 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # Chr0nic
                 element.TKCombo.bind("<Enter>", lambda event, em=element: testMouseHook2(em))
                 element.TKCombo.bind("<Leave>", lambda event, em=element: testMouseUnhook2(em))
+
+                if toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet:
+                    toplevel_form.FocusSet = True
+                    element.TKCombo.focus_set()
 
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
@@ -17065,7 +17082,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                  file_types=(("ALL Files", "*.*"),),
                  no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                  icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
-                 location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True):
+                 location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, history_setting_filename=None):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
 
@@ -17085,7 +17102,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type file_types: Tuple[Tuple[str,str]]
     :param no_window: if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window: (bool)
-    :param size: (width, height) of the InputText Element
+    :param size: (width, height) of the InputText Element or Combo element if using history feature
     :type size: (int, int)
     :param button_color: Color of the button (text, background)
     :type button_color: (str, str) or str
@@ -17113,9 +17130,27 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type files_delimiter: str
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
+    :param history: If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided
+    :type history: bool
+    :param history_setting_filename: Filename to use for the User Settings. Will store list of previous entries in this settings file
+    :type history_setting_filename: (str)
     :return: string representing the file(s) chosen, None if cancelled or window closed with X
     :rtype: str | None
     """
+
+
+    # First setup the history settings file if history feature is enabled
+    if history and history_setting_filename is not None:
+        try:
+            history_settings = UserSettings(history_setting_filename)
+        except Exception as e:
+            _error_popup_with_traceback('popup_get_file - Something is wrong with your supplied history settings filename',
+                                        'Exception: {}'.format(e))
+            return None
+    elif history:
+        history_settings_filename = os.path.basename(inspect.stack()[1].filename)
+        history_settings_filename = os.path.splitext(history_settings_filename)[0] + '.json'
+        history_settings = UserSettings(history_settings_filename)
 
     if icon is None:
         icon = Window._user_defined_icon or DEFAULT_BASE64_ICON
@@ -17148,7 +17183,6 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
         if root and icon is not None:
             _set_icon_for_tkinter_window(root, icon=icon)
-        # TODO - Macs will not like this code because of the filetypes being used.  Need another Darwin check.
         # for Macs, setting parent=None fixes a warning problem.
         if save_as:
             filename = tk.filedialog.asksaveasfilename(filetypes=file_types,
@@ -17194,22 +17228,44 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     else:
         layout = [[]]
 
-    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-               [InputText(default_text=default_path, size=size, key='_INPUT_'), browse_button],
-               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)]]
+
+    if not history:
+        layout += [[InputText(default_text=default_path, size=size, key='-INPUT-'), browse_button]]
+    else:
+        file_list = history_settings.get("-PSG file list-", [])
+        last_entry = file_list[0] if file_list else ''
+        layout += [[Combo(file_list, default_value=last_entry, key='-INPUT-', size=size if size != (None, None) else (80,1), bind_return_key=True), browse_button,Button('Clear History')]]
+
+    layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font,
                     background_color=background_color,
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal)
 
-    button, values = window.read()
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', WIN_CLOSED):
+            break
+        elif event == 'Clear History':
+            history_settings.set('-PSG file list-', [])
+            window['-INPUT-'].update('', [])
+        elif event in ('Ok', '-INPUT-'):
+            if values['-INPUT-'] != '':
+                list_of_entries = history_settings.get('-PSG file list-', [])
+                if values['-INPUT-'] in list_of_entries:
+                    list_of_entries.remove(values['-INPUT-'])
+                list_of_entries.insert(0, values['-INPUT-'])
+                history_settings.set('-PSG file list-', list_of_entries)
+            break
+
     window.close(); del window
-    if button != 'Ok':
+    if event in ('Cancel', WIN_CLOSED):
         return None
-    else:
-        path = values['_INPUT_']
-        return path
+
+    return values['-INPUT-']
+
 
 
 # --------------------------- popup_get_text ---------------------------
@@ -20756,6 +20812,7 @@ sdk_help = main_sdk_help
 
 pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME, path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
 #------------------------ Set the "Official PySimpleGUI Theme Colors" ------------------------
+
 
 theme(theme_global())
 
