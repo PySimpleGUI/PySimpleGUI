@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.15 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too, fix for get folder and get file without history, support for expand for other elements with frames like Tables (using element_frame member variable)"
+version = __version__ = "4.43.0.16 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too, fix for get folder and get file without history, support for expand for other elements with frames like Tables (using element_frame member variable), Sizegrip automatically expands row now."
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -13985,7 +13985,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
-                size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X)
+                size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X, expand=True)
+                row_should_expand = True
+                row_fill_direction = tk.BOTH
                 size_grip = None
                 # normally the widget would be packed here, but for the sizegrip, the pack happens after the window is created
             # -------------------------  StatusBar placement element  ------------------------- #
