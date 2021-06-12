@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.12 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!)"
+version = __version__ = "4.43.0.13 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17235,7 +17235,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     else:
         file_list = history_settings.get("-PSG file list-", [])
         last_entry = file_list[0] if file_list else ''
-        layout += [[Combo(file_list, default_value=last_entry, key='-INPUT-', size=size if size != (None, None) else (80,1), bind_return_key=True), browse_button,Button('Clear History')]]
+        layout += [[Combo(file_list, default_value=last_entry, key='-INPUT-', size=size if size != (None, None) else (80,1), bind_return_key=True),
+                    browse_button, Button('Clear History', tooltip='Clears the list of files shown in the combobox')]]
 
     layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
@@ -17251,6 +17252,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         elif event == 'Clear History':
             history_settings.set('-PSG file list-', [])
             window['-INPUT-'].update('', [])
+            popup_quick_message('History of Previous Choices Cleared', background_color='red', text_color='white', font='_ 20', keep_on_top=True)
         elif event in ('Ok', '-INPUT-'):
             if values['-INPUT-'] != '':
                 list_of_entries = history_settings.get('-PSG file list-', [])
