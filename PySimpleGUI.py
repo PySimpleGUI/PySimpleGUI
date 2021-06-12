@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.13 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button"
+version = __version__ = "4.43.0.14 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -16969,7 +16969,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
 
 def popup_get_folder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None, modal=True):
+                   grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None, modal=True, history=False, history_setting_filename=None):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
 
@@ -17007,9 +17007,28 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :type image: (str) or (bytes)
     :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
     :type modal: bool
+    :param history: If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided
+    :type history: bool
+    :param history_setting_filename: Filename to use for the User Settings. Will store list of previous entries in this settings file
+    :type history_setting_filename: (str)
     :return: string representing the path chosen, None if cancelled or window closed with X
     :rtype: str | None
     """
+
+
+    # First setup the history settings file if history feature is enabled
+    if history and history_setting_filename is not None:
+        try:
+            history_settings = UserSettings(history_setting_filename)
+        except Exception as e:
+            _error_popup_with_traceback('popup_get_folder - Something is wrong with your supplied history settings filename',
+                                        'Exception: {}'.format(e))
+            return None
+    elif history:
+        history_settings_filename = os.path.basename(inspect.stack()[1].filename)
+        history_settings_filename = os.path.splitext(history_settings_filename)[0] + '.json'
+        history_settings = UserSettings(history_settings_filename)
+
 
     # global _my_windows
     if no_window:
@@ -17051,6 +17070,8 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 
         return folder_name
 
+    browse_button = FolderBrowse(initial_folder=initial_folder)
+
     if image is not None:
         if isinstance(image, str):
             layout = [[Image(filename=image)]]
@@ -17058,22 +17079,45 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             layout = [[Image(data=image)]]
     else:
         layout = [[]]
-    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)],
-               [InputText(default_text=default_path, size=size, key='_INPUT_'),
-                FolderBrowse(initial_folder=initial_folder)],
-               [Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
+
+    layout += [[Text(message, auto_size_text=True, text_color=text_color, background_color=background_color)]]
+
+    if not history:
+        layout += [[InputText(default_text=default_path, size=size, key='-INPUT-'), browse_button]]
+    else:
+        file_list = history_settings.get('-PSG folder list-', [])
+        last_entry = file_list[0] if file_list else ''
+        layout += [[Combo(file_list, default_value=last_entry, key='-INPUT-', size=size if size != (None, None) else (80,1), bind_return_key=True),
+                    browse_button, Button('Clear History', tooltip='Clears the list of folders shown in the combobox')]]
+
+    layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
-                    background_color=background_color,
-                    font=font, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                    location=location, modal=modal)
+                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal)
 
-    button, values = window.read()
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', WIN_CLOSED):
+            break
+        elif event == 'Clear History':
+            history_settings.set('-PSG folder list-', [])
+            window['-INPUT-'].update('', [])
+            popup_quick_message('History of Previous Choices Cleared', background_color='red', text_color='white', font='_ 20', keep_on_top=True)
+        elif event in ('Ok', '-INPUT-'):
+            if values['-INPUT-'] != '':
+                list_of_entries = history_settings.get('-PSG folder list-', [])
+                if values['-INPUT-'] in list_of_entries:
+                    list_of_entries.remove(values['-INPUT-'])
+                list_of_entries.insert(0, values['-INPUT-'])
+                history_settings.set('-PSG folder list-', list_of_entries)
+            break
+
     window.close(); del window
-    if button != 'Ok':
+    if event in ('Cancel', WIN_CLOSED):
         return None
-    else:
-        return values['_INPUT_']
+
+    return values['-INPUT-']
+
 
 
 # --------------------------- popup_get_file ---------------------------
