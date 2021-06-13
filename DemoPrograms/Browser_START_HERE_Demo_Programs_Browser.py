@@ -381,7 +381,7 @@ def settings_window():
                [sg.T('Theme', font='_ 16')],
               [sg.T('Leave blank to use global default'), sg.T(global_theme)],
               [sg.Combo(['']+sg.theme_list(),sg.user_settings_get_entry('-theme-', ''), readonly=True,  k='-THEME-')],
-              [sg.T('Double-click a File Will:'), sg.R('Run', 2, sg.user_settings_get_entry('-dclick runs-', False), k='-DCLICK RUNS-'), sg.R('Edit', 2,  sg.user_settings_get_entry('-dclick edits-', False), k='-DCLICK EDITS-'), sg.R('Nohthing', 2,  sg.user_settings_get_entry('-dclick none-', False), k='-DCLICK NONE-')],
+              [sg.T('Double-click a File Will:'), sg.R('Run', 2, sg.user_settings_get_entry('-dclick runs-', False), k='-DCLICK RUNS-'), sg.R('Edit', 2,  sg.user_settings_get_entry('-dclick edits-', False), k='-DCLICK EDITS-'), sg.R('Nothing', 2,  sg.user_settings_get_entry('-dclick none-', False), k='-DCLICK NONE-')],
               [sg.CB('Use Advanced Interface', default=advanced_mode() ,k='-ADVANCED MODE-')],
               [sg.B('Ok', bind_return_key=True), sg.B('Cancel')],
               ]
@@ -436,7 +436,7 @@ def make_window():
 
     left_col = sg.Column([
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-')],
-        [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
+        [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), focus=True, enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
         [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder')],
         [sg.Text('Find (F2):', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
@@ -447,10 +447,11 @@ def make_window():
         [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
-        [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True)],
+        [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)],
         [sg.Button('Edit Me (this program)'), sg.B('Settings'), sg.Button('Exit')],
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
         [sg.T('Python ver ' + sys.version, font='Default 8', pad=(0,0))],
+        [sg.T('Interpreter ' + execute_py_get_interpreter(), font='Default 8', pad=(0,0))],
     ]
 
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
@@ -466,13 +467,17 @@ def make_window():
 
     layout = [[sg.Text('PySimpleGUI Demo Program & Project Browser', font='Any 20')],
               [choose_folder_at_top],
-                  [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ],
+              # [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True)],
+              [sg.Pane([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ], orientation='h', relief=sg.RELIEF_SUNKEN, k='-PANE-')],
               [options_at_bottom]]
 
     # --------------------------------- Create Window ---------------------------------
-    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon, resizable=True)
+    window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon, resizable=True, use_default_focus=False)
+    window.set_min_size(window.size)
+
     window['-DEMO LIST-'].expand(True, True, True)
     window[ML_KEY].expand(True, True, True)
+    window['-PANE-'].expand(True, True, True)
 
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
@@ -482,7 +487,7 @@ def make_window():
         window['-RE COL-'].update(visible=False)
         window['-OPTIONS BOTTOM-'].update(visible=False)
 
-    sg.cprint_set_output_destination(window, ML_KEY)
+    # sg.cprint_set_output_destination(window, ML_KEY)
     return window
 
 
@@ -502,6 +507,7 @@ def main():
     file_list = get_file_list()
     window = make_window()
     window['-FILTER NUMBER-'].update(f'{len(file_list)} files')
+
     counter = 0
     while True:
         event, values = window.read()
@@ -522,7 +528,7 @@ def main():
                 else:
                     full_filename, line = get_file_list_dict()[file], 1
                 if line is not None:
-                    sg.cprint(f'Editing using {editor_program}', text_color='white', background_color='red', end='')
+                    sg.cprint(f'Editing using {editor_program}', c='white on red', end='')
                     sg.cprint('')
                     sg.cprint(f'{full_filename}', c='white on purple')
                     # if line != 1:
@@ -790,11 +796,30 @@ def execute_command_subprocess_with_pipe_output(command, *args, wait=False, cwd=
     return sp
 
 
+def execute_py_get_interpreter():
+    """
+    Returns the command that was specified in the global options that will be used to execute Python files
+    when the execute_py_file function is called.
+
+
+    :return: Full path to python interpreter or '' if nothing entered
+    :rtype: (str)
+    """
+
+    return sg.pysimplegui_user_settings.get('-python command-', '')
+
+
 # Normally you want to use the PySimpleGUI version of these functions
 try:
     execute_py_file = sg.execute_py_file
 except:
     execute_py_file = execute_py_file_with_pipe_output
+
+try:
+    execute_py_get_interpreter = sg.execute_py_get_interpreter
+except:
+    execute_py_get_interpreter = execute_py_get_interpreter
+
 
 try:
     execute_command_subprocess = sg.execute_command_subprocess
