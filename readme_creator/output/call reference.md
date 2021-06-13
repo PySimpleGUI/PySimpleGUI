@@ -5515,6 +5515,7 @@ print(args=*<1 or N object>,
     text_color = None,
     background_color = None,
     justification = None,
+    font = None,
     colors = None,
     t = None,
     b = None,
@@ -5525,16 +5526,17 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       Any       |       args       | The arguments to print |
-|       str       |       end        | The end char to use just like print uses |
-|       str       |       sep        | The separation character like print uses |
-|       str       |    text_color    | The color of the text |
-|       str       | background_color | The background color of the line |
-|       str       |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
-| str or str, str |      colors      | Either a tuple or a string that has both the text and background colors |
-|       str       |        t         | Color of the text |
-|       str       |        b         | The background color of the line |
-| str or str, str |        c         | Either a tuple or a string that has both the text and background colors |
+|                Any                 |       args       | The arguments to print |
+|                str                 |       end        | The end char to use just like print uses |
+|                str                 |       sep        | The separation character like print uses |
+|                str                 |    text_color    | The color of the text |
+|                str                 | background_color | The background color of the line |
+|                str                 |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+| str or (str, int) or (str, int, str) |       font       | specifies the font family, size, etc for the args being printed |
+|          str or str, str           |      colors      | Either a tuple or a string that has both the text and background colors |
+|                str                 |        t         | Color of the text |
+|                str                 |        b         | The background color of the line |
+|          str or str, str           |        c         | Either a tuple or a string that has both the text and background colors |
 
 ### reroute_stderr_to_here
 
@@ -5692,7 +5694,8 @@ update(value = None,
     background_color_for_value = None,
     visible = None,
     autoscroll = None,
-    justification = None)
+    justification = None,
+    font_for_value = None)
 ```
 
 Parameter Descriptions:
@@ -5702,7 +5705,7 @@ Parameter Descriptions:
 |       str        |           value            | new text to display |
 |       bool       |          disabled          | disable or enable state of the element |
 |       bool       |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| str or (str, int) |            font            | specifies the font family, size, etc |
+| str or (str, int) |            font            | specifies the font family, size, etc for the entire element |
 |       str        |         text_color         | color of the text |
 |       str        |      background_color      | color of background |
 |       str        |    text_color_for_value    | color of the new text being added (the value paramter) |
@@ -5710,6 +5713,7 @@ Parameter Descriptions:
 |       bool       |          visible           | set visibility state of the element |
 |       bool       |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
 |       str        |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+| str or (str, int) |       font_for_value       | specifies the font family, size, etc for the value being updated |
 
 ### visible
 
@@ -5780,7 +5784,8 @@ Update(value = None,
     background_color_for_value = None,
     visible = None,
     autoscroll = None,
-    justification = None)
+    justification = None,
+    font_for_value = None)
 ```
 
 Parameter Descriptions:
@@ -5790,7 +5795,7 @@ Parameter Descriptions:
 |       str        |           value            | new text to display |
 |       bool       |          disabled          | disable or enable state of the element |
 |       bool       |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| str or (str, int) |            font            | specifies the font family, size, etc |
+| str or (str, int) |            font            | specifies the font family, size, etc for the entire element |
 |       str        |         text_color         | color of the text |
 |       str        |      background_color      | color of background |
 |       str        |    text_color_for_value    | color of the new text being added (the value paramter) |
@@ -5798,6 +5803,7 @@ Parameter Descriptions:
 |       bool       |          visible           | set visibility state of the element |
 |       bool       |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
 |       str        |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+| str or (str, int) |       font_for_value       | specifies the font family, size, etc for the value being updated |
 
 ---------
 
@@ -14014,6 +14020,7 @@ cprint(args=*<1 or N object>,
     end = None,
     sep = " ",
     text_color = None,
+    font = None,
     t = None,
     background_color = None,
     b = None,
@@ -14028,17 +14035,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       Any       |      *args       | stuff to output |
-|       str       |    text_color    | Color of the text |
-|       str       | background_color | The background color of the line |
-| str or str, str |      colors      | Either a tuple or a string that has both the text and background colors |
-|       str       |        t         | Color of the text |
-|       str       |        b         | The background color of the line |
-| str or str, str |        c         | Either a tuple or a string that has both the text and background colors |
-|       str       |       end        | end character |
-|       str       |       sep        | separator character |
-|       Any       |       key        | key of multiline to output to (if you want to override the one previously set) |
-|       str       |      window      | Window containing the multiline to output to (if you want to override the one previously set) :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|                Any                 |      *args       | stuff to output |
+|                str                 |    text_color    | Color of the text |
+| str or (str, int) or (str, int, str) |       font       | specifies the font family, size, etc for the value being updated |
+|                str                 | background_color | The background color of the line |
+|          str or str, str           |      colors      | Either a tuple or a string that has both the text and background colors |
+|                str                 |        t         | Color of the text |
+|                str                 |        b         | The background color of the line |
+|          str or str, str           |        c         | Either a tuple or a string that has both the text and background colors |
+|                str                 |       end        | end character |
+|                str                 |       sep        | separator character |
+|                Any                 |       key        | key of multiline to output to (if you want to override the one previously set) |
+|                str                 |      window      | Window containing the multiline to output to (if you want to override the one previously set) :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
 | None | **RETURN** | None
 
 Sets up the color print (cprint) output destination
@@ -14445,35 +14453,39 @@ popup_get_file(message,
     initial_folder = None,
     image = None,
     files_delimiter = ";",
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |      message      | message displayed to user |
-|          str          |       title       | Window title |
-|          str          |   default_path    | path to display to user as starting point (filled into the input field) |
-|          str          | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|         bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
-|         bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]] |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|         bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size        | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color    | Color of the button (text, background) |
-|          str          | background_color  | background color of the entire window |
-|          str          |    text_color     | color of the text |
-|     bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
-|         bool          |    no_titlebar    | If True no titlebar will be shown |
-|         bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |    keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location      | Location of upper left corner of the window |
-|          str          |  initial_folder   | location in filesystem to begin browsing |
-|     str or bytes      |       image       | Image to include at the top of the popup window |
-|          str          |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
-|         bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|          str          |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|         bool          |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
+|         bool          |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+| Tuple[Tuple[str,str]] |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element or Combo element if using history feature |
+|   (str, str) or str   |       button_color       | Color of the button (text, background) |
+|          str          |     background_color     | background color of the entire window |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|          str          |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -14495,30 +14507,34 @@ popup_get_folder(message,
     location = (None, None),
     initial_folder = None,
     image = None,
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |     message      | message displayed to user |
-|          str          |      title       | Window title |
-|          str          |   default_path   | path to display to user as starting point (filled into the input field) |
-|         bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size       | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color   | button color (foreground, background) |
-|          str          | background_color | color of background |
-|          str          |    text_color    | color of the text |
-|     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|         bool          |   no_titlebar    | If True no titlebar will be shown |
-|         bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |   keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location     | Location of upper left corner of the window |
-|          str          |  initial_folder  | location in filesystem to begin browsing |
-|     str or bytes      |      image       | Image to include at the top of the popup window |
-|         bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element |
+|   (str, str) or str   |       button_color       | button color (foreground, background) |
+|          str          |     background_color     | color of background |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -15435,35 +15451,39 @@ PopupGetFile(message,
     initial_folder = None,
     image = None,
     files_delimiter = ";",
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |      message      | message displayed to user |
-|          str          |       title       | Window title |
-|          str          |   default_path    | path to display to user as starting point (filled into the input field) |
-|          str          | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|         bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
-|         bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]] |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|         bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size        | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color    | Color of the button (text, background) |
-|          str          | background_color  | background color of the entire window |
-|          str          |    text_color     | color of the text |
-|     bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
-|         bool          |    no_titlebar    | If True no titlebar will be shown |
-|         bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |    keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location      | Location of upper left corner of the window |
-|          str          |  initial_folder   | location in filesystem to begin browsing |
-|     str or bytes      |       image       | Image to include at the top of the popup window |
-|          str          |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
-|         bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|          str          |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|         bool          |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
+|         bool          |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+| Tuple[Tuple[str,str]] |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element or Combo element if using history feature |
+|   (str, str) or str   |       button_color       | Color of the button (text, background) |
+|          str          |     background_color     | background color of the entire window |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|          str          |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -15485,30 +15505,34 @@ PopupGetFolder(message,
     location = (None, None),
     initial_folder = None,
     image = None,
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |     message      | message displayed to user |
-|          str          |      title       | Window title |
-|          str          |   default_path   | path to display to user as starting point (filled into the input field) |
-|         bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size       | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color   | button color (foreground, background) |
-|          str          | background_color | color of background |
-|          str          |    text_color    | color of the text |
-|     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|         bool          |   no_titlebar    | If True no titlebar will be shown |
-|         bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |   keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location     | Location of upper left corner of the window |
-|          str          |  initial_folder  | location in filesystem to begin browsing |
-|     str or bytes      |      image       | Image to include at the top of the popup window |
-|         bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element |
+|   (str, str) or str   |       button_color       | button color (foreground, background) |
+|          str          |     background_color     | color of background |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -16153,7 +16177,7 @@ main()
 
 Collect up and display the data needed to file GitHub issues.
 This function will place the information on the clipboard.
-You MUST paste the information from the clipboard prior to existing your application.
+You MUST paste the information from the clipboard prior to existing your application (except on Windows).
 
 ```
 main_get_debug_data(suppress_popup = False)
@@ -16825,6 +16849,37 @@ Parameter Descriptions:
 |--|--|--|
 | (subprocess.Popen) | subprocess_id | ID previously returned from Exec API calls that indicate this value is returned |
 | bool | **RETURN** | True if the subproces is running
+
+## Clipboard APIs
+
+Note that this clipboard uses tkinter's clipboard. There is a known limitation that your application needs to remain running until you've pasted the contents.  Managed to get around this limitation so that the clipboard stays set after you exit your application, but only have it working for Windows systems.
+
+Gets the clipboard current value.
+
+```
+clipboard_get()
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| (str) | **RETURN** | The current value of the clipboard
+
+Sets the clipboard to a specific value.
+IMPORTANT NOTE - Your PySimpleGUI application needs to remain running until you've pasted
+your clipboard. This is a tkinter limitation.  A workaround was found for Windows, but you still
+need to stay running for Linux systems.
+
+```
+clipboard_set(new_value)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | new_value | value to set the clipboard to. Will be converted to a string |
 
 ## Misc
 
