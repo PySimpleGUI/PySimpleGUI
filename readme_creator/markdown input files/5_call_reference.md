@@ -3074,6 +3074,13 @@ These API calls are used to launch subprocesses.
 <!-- <+func.execute_py_file+> -->
 <!-- <+func.execute_subprocess_still_running+> -->
 
+## Clipboard APIs
+
+Note that this clipboard uses tkinter's clipboard. There is a known limitation that your application needs to remain running until you've pasted the contents.  Managed to get around this limitation so that the clipboard stays set after you exit your application, but only have it working for Windows systems.
+
+<!-- <+func.clipboard_get+> -->
+<!-- <+func.clipboard_set+> -->
+
 
 ## Misc
 

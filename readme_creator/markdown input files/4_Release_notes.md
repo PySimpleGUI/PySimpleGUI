@@ -1962,6 +1962,38 @@ Window.ding() - because FUN is the #1 goal
 * Added Element.grab_anywhere_include - includes an element in grab_anywhere in case you have something like a Multiline element that you can to move the window using that element
 
 
+## 4.44.0 PySimpleGUI 13-Jun-2021
+
+popup with history
+clipboard functions
+fonts for printing
+
+* Added clipboard_set and clipboard_get functions
+	* Known tkinter problem requires application to remain running until pasted. Found a workaround for Windows.
+* History feature added to popup_get_file and popup_get_folder
+	* Set parameter history=True
+	* Your users will love it! (promise)
+* font parameter added for Multiline-type of outputs so font can be changed on a per char basis. Added to:
+	* Multiline.print
+	* cprint
+	* Debug print - Print, easy_print
+* Listbox visibility fix
+* Tree, Table expansion fixed
+* Combo size not changed unless the size parameter changes in the update call
+* Canvas removed from return values
+* Versions string returned from get_versions() is clearer
+* cwd automatically set for folder of application being launched when execute_py_file is called with cwd=None
+* Fix for Mac for popup_get_file
+* Better button error handling when bad Unicode chars are used or bad colors provided
+* Open GitHub Issue GUI improved. Added collapse button for top section
+* See-through mode in test harness changed to be a toggle
+* Several error messages changed to error popups with traceback
+* Combo added to list of elements that initially get focus when default focus is used
+* Sizegrip autoexpands row so that it anchors correctly to right hand side
+* MENU_SEPARATOR_LINE constant
+* Button highlightthickness set to 0 if padding on the button is 0 in either x or y
+* `__version__` fix for pip installed versions
+* Release dedicated to Lester Moore
 
 
 ## Upcoming

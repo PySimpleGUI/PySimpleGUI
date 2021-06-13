@@ -1720,35 +1720,39 @@ popup_get_file(message,
     initial_folder = None,
     image = None,
     files_delimiter = ";",
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |      message      | message displayed to user |
-|          str          |       title       | Window title |
-|          str          |   default_path    | path to display to user as starting point (filled into the input field) |
-|          str          | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|         bool          |      save_as      | if True, the "save as" dialog is shown which will verify before overwriting |
-|         bool          |  multiple_files   | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]] |    file_types     | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|         bool          |     no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size        | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color    | Color of the button (text, background) |
-|          str          | background_color  | background color of the entire window |
-|          str          |    text_color     | color of the text |
-|     bytes or str      |       icon        | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font        | specifies the font family, size, etc |
-|         bool          |    no_titlebar    | If True no titlebar will be shown |
-|         bool          |   grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |    keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location      | Location of upper left corner of the window |
-|          str          |  initial_folder   | location in filesystem to begin browsing |
-|     str or bytes      |       image       | Image to include at the top of the popup window |
-|          str          |  files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
-|         bool          |       modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|          str          |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|         bool          |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
+|         bool          |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+| Tuple[Tuple[str,str]] |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element or Combo element if using history feature |
+|   (str, str) or str   |       button_color       | Color of the button (text, background) |
+|          str          |     background_color     | background color of the entire window |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|          str          |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 If configured as an Open File Popup then (save_as is not True)  the dialog box will look like this.
@@ -1793,30 +1797,34 @@ popup_get_folder(message,
     location = (None, None),
     initial_folder = None,
     image = None,
-    modal = True)
+    modal = True,
+    history = False,
+    history_setting_filename = None)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |     message      | message displayed to user |
-|          str          |      title       | Window title |
-|          str          |   default_path   | path to display to user as starting point (filled into the input field) |
-|         bool          |    no_window     | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |       size       | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color   | button color (foreground, background) |
-|          str          | background_color | color of background |
-|          str          |    text_color    | color of the text |
-|     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
-|         bool          |   no_titlebar    | If True no titlebar will be shown |
-|         bool          |  grab_anywhere   | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |   keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location     | Location of upper left corner of the window |
-|          str          |  initial_folder  | location in filesystem to begin browsing |
-|     str or bytes      |      image       | Image to include at the top of the popup window |
-|         bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|          str          |         message          | message displayed to user |
+|          str          |          title           | Window title |
+|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
+|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|      (int, int)       |           size           | (width, height) of the InputText Element |
+|   (str, str) or str   |       button_color       | button color (foreground, background) |
+|          str          |     background_color     | color of background |
+|          str          |        text_color        | color of the text |
+|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+|         bool          |       no_titlebar        | If True no titlebar will be shown |
+|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|         bool          |       keep_on_top        | If True the window will remain above all current windows |
+|      (int, int)       |         location         | Location of upper left corner of the window |
+|          str          |      initial_folder      | location in filesystem to begin browsing |
+|     str or bytes      |          image           | Image to include at the top of the popup window |
+|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 This is a typical call
@@ -8755,6 +8763,39 @@ Window.ding() - because FUN is the #1 goal
 	* if no_titlebar is set, then a Sizegrip will be added
 * Window.ding() added - get your user's attention when errors happen or just for FUN
 * Added Element.grab_anywhere_include - includes an element in grab_anywhere in case you have something like a Multiline element that you can to move the window using that element
+
+## 4.44.0 PySimpleGUI 13-Jun-2021
+
+popup with history
+clipboard functions
+fonts for printing
+
+* Added clipboard_set and clipboard_get functions
+	* Known tkinter problem requires application to remain running until pasted. Found a workaround for Windows.
+* History feature added to popup_get_file and popup_get_folder
+	* Set parameter history=True
+	* Your users will love it! (promise)
+* font parameter added for Multiline-type of outputs so font can be changed on a per char basis. Added to:
+	* Multiline.print
+	* cprint
+	* Debug print - Print, easy_print
+* Listbox visibility fix
+* Tree, Table expansion fixed
+* Combo size not changed unless the size parameter changes in the update call
+* Canvas removed from return values
+* Versions string returned from get_versions() is clearer
+* cwd automatically set for folder of application being launched when execute_py_file is called with cwd=None
+* Fix for Mac for popup_get_file
+* Better button error handling when bad Unicode chars are used or bad colors provided
+* Open GitHub Issue GUI improved. Added collapse button for top section
+* See-through mode in test harness changed to be a toggle
+* Several error messages changed to error popups with traceback
+* Combo added to list of elements that initially get focus when default focus is used
+* Sizegrip autoexpands row so that it anchors correctly to right hand side
+* MENU_SEPARATOR_LINE constant
+* Button highlightthickness set to 0 if padding on the button is 0 in either x or y
+* `__version__` fix for pip installed versions
+* Release dedicated to Lester Moore
 
 ## Upcoming
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.43.0.16 Unreleased\nChanged get_versions string to be more clear, removed canvas from return values, cwd is automatically set to the folder of the application being launched when execute_py_file is called with cwd=None, popup_get_file changed to set parent=None if running on Mac, better Button error handling when bad Unicode chars are used or bad colors, open GitHub issue GUI - added collapse button to top section, see-through mode in test harness changed to be a toggle, font parm for multiline update print cprint for char by char font control, clipboard_set & clipboard_get, Listbox visibility fix, Tree element expansion fixed, added new element_frame convention for elements that are in frames like the Listbox and Tree (need to check the other elements and add those that have frames), fix in debug print for font not being passed along, removed print, Combo size is not changed when updating unless user specifies a size, converted prints in the packer function into error popups, added Combo to the list of element capable of initially getting focus when default focus is used, popup_get_file gets history feature (NICE!), popup_get_file tooltip and message for clear history button, popup_get_folder gets the history options too, fix for get folder and get file without history, support for expand for other elements with frames like Tables (using element_frame member variable), Sizegrip automatically expands row now."
+version = __version__ = "4.44.0 Released 13-Jun-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1295,10 +1295,6 @@ class Element():
         self.ParentRowFrame.pack(expand=expand_row, fill=fill)
         if self.element_frame is not None:
             self.element_frame.pack(expand=True, fill=fill)
-        # if self.Type == ELEM_TYPE_INPUT_LISTBOX:
-        #     self.element_frame.pack(expand=True, fill=fill)
-        # elif self.Type == ELEM_TYPE_TREE:
-        #     self.element_frame.pack(expand=True, fill=fill)
 
 
     def set_cursor(self,cursor=None, cursor_color=None):
@@ -2769,7 +2765,6 @@ class Multiline(Element):
                     tag = 'Multiline(' +  str(text_color_for_value) + ','+ str(background_color_for_value)+  ',' + str(font_for_value) + ')'
                     if  tag not in self.tags:
                         self.tags.add(tag)
-                        # print('adding tag', tag)
                     if background_color_for_value is not None:
                         self.TKText.tag_configure(tag, background=background_color_for_value)
                     if text_color_for_value is not None:
@@ -13989,7 +13984,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 row_should_expand = True
                 row_fill_direction = tk.BOTH
                 size_grip = None
-                # normally the widget would be packed here, but for the sizegrip, the pack happens after the window is created
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
@@ -14085,8 +14079,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                           expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
-    if size_grip:
-        size_grip.pack(side=tk.BOTTOM, anchor='se', padx=0, pady=0)
 
     return
 
@@ -15865,8 +15857,9 @@ def theme_previewer_swatches():
             else:
                 chosen_color = ''
         print('Copied to clipboard color = ', chosen_color)
-        window.TKroot.clipboard_clear()
-        window.TKroot.clipboard_append(chosen_color)
+        clipboard_set(chosen_color)
+        # window.TKroot.clipboard_clear()
+        # window.TKroot.clipboard_append(chosen_color)
     window.close()
     theme(current_theme)
 
@@ -16076,22 +16069,27 @@ def obj_to_string(obj, extra='    '):
 
 def clipboard_set(new_value):
     """
-    Sets the clipboard to a specific value
-    :param new_value:
+    Sets the clipboard to a specific value.
+    IMPORTANT NOTE - Your PySimpleGUI application needs to remain running until you've pasted
+    your clipboard. This is a tkinter limitation.  A workaround was found for Windows, but you still
+    need to stay running for Linux systems.
+
+    :param new_value: value to set the clipboard to. Will be converted to a string
     :type new_value: (str)
     """
     # Create and use a temp window
     root = tk.Tk()
     root.withdraw()
     root.clipboard_clear()
-    root.clipboard_append(new_value)
+    root.clipboard_append(str(new_value))
     root.update()
     root.destroy()
 
 
 def clipboard_get():
     """
-    Gets the clipboard current value
+    Gets the clipboard current value.
+
     :return: The current value of the clipboard
     :rtype: (str)
     """
@@ -20148,7 +20146,7 @@ def main_get_debug_data(suppress_popup=False):
     """
     Collect up and display the data needed to file GitHub issues.
     This function will place the information on the clipboard.
-    You MUST paste the information from the clipboard prior to existing your application.
+    You MUST paste the information from the clipboard prior to existing your application (except on Windows).
     :param suppress_popup: If True no popup window will be shown. The string will be only returned, not displayed
     :type suppress_popup: (bool)
     :returns: String containing the information to place into the GitHub Issue
@@ -20161,14 +20159,14 @@ def main_get_debug_data(suppress_popup=False):
         PySimpleGUI version: {}
         PySimpleGUI filename: {}""".format(sys.version, tclversion_detailed, ver, __file__)
 
+    clipboard_set(message)
     # create a temp window so that the clipboard can be set
-    root = tk.Tk()
-    root.withdraw()
-    root.clipboard_clear()
-    root.clipboard_append(message)
-    # root.update_idletasks()
-    root.update()
-    root.destroy()
+    # root = tk.Tk()
+    # root.withdraw()
+    # root.clipboard_clear()
+    # root.clipboard_append(message)
+    # root.update()
+    # root.destroy()
 
     if not suppress_popup:
         popup_scrolled('*** Version information copied to your clipboard. Paste into your GitHub Issue. ***\n',
@@ -20722,7 +20720,6 @@ def main():
     # Don't use the debug window
     # Print('', location=(0, 0), font='Courier 10', size=(100, 20), grab_anywhere=True)
     # print(window.element_list())
-    see_through=False
     while True:  # Event Loop
         event, values = window.read(timeout=5)
         if event != TIMEOUT_KEY:
