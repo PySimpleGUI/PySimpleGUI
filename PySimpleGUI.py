@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0 Released 13-Jun-2021"
+version = __version__ = "4.44.0.1 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar."
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -9335,7 +9335,10 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
 
     def current_location(self):
         """
-        Get the current location of the window's top left corner
+        Get the current location of the window's top left corner.
+        Note that this value may not take into account the titlebar and menubar.
+        These parts of a window are created by the OS.  As a result, the value returned may be
+        off depending on if your window has a titlebar or menubar.
 
         :return: The x and y location in tuple form (x,y)
         :rtype: Tuple[(int), (int)]
