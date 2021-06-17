@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.1 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar."
+version = __version__ = "4.44.0.2 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -115,6 +115,7 @@ import textwrap
 import inspect
 import traceback
 import difflib
+import copy
 
 try:        # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
     from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
@@ -6958,8 +6959,9 @@ class Menu(Element):
 
         self.BackgroundColor = background_color if background_color is not None else theme_input_background_color()
         self.TextColor = text_color if text_color is not None else theme_input_text_color()
+
         self.DisabledTextColor = disabled_text_color if disabled_text_color is not None else COLOR_SYSTEM_DEFAULT
-        self.MenuDefinition = menu_definition
+        self.MenuDefinition = copy.deepcopy(menu_definition)
         self.Widget = self.TKMenu = None  # type: tk.Menu
         self.MenuItemChosen = None
         key = key if key is not None else k
@@ -7001,10 +7003,10 @@ class Menu(Element):
             return
 
         if menu_definition is not None:
-            self.MenuDefinition = menu_definition
+            self.MenuDefinition = copy.deepcopy(menu_definition)
             self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
             menubar = self.TKMenu
-            for menu_entry in menu_definition:
+            for menu_entry in self.MenuDefinition:
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff)
                 if self.Font is not None:
                     baritem.config(font=self.Font)
@@ -7022,7 +7024,7 @@ class Menu(Element):
                 if len(menu_entry) > 1:
                     AddMenuItem(baritem, menu_entry[1], self)
 
-        if visible == False:
+        if visible is False:
             self.ParentForm.TKroot.configure(menu=[])  # this will cause the menubar to disappear
         elif self.TKMenu is not None:
             self.ParentForm.TKroot.configure(menu=self.TKMenu)
@@ -12177,12 +12179,12 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
                                              underline=pos, state='disabled')
                     else:
                         top_menu.add_cascade(label=sub_menu_info[i], menu=new_menu, underline=pos)
-                    AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True)
+                    AddMenuItem(new_menu, sub_menu_info[i + 1], element, is_sub_menu=True, right_click_menu=right_click_menu)
                     i += 1  # skip the next one
                 else:
-                    AddMenuItem(top_menu, item, element)
+                    AddMenuItem(top_menu, item, element, right_click_menu=right_click_menu)
             else:
-                AddMenuItem(top_menu, item, element)
+                AddMenuItem(top_menu, item, element, right_click_menu=right_click_menu)
             i += 1
     return return_val
 
@@ -12648,7 +12650,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                         tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                     if bc != (None, None) and COLOR_SYSTEM_DEFAULT not in bc:
-                                tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                                tkbutton.config(foreground=bc[0], background=bc[1])
                     else:
                         if bc[0] != COLOR_SYSTEM_DEFAULT:
                             tkbutton.config(foreground=bc[0])
@@ -12662,7 +12664,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                 # 'Button key: {}'.format(element.Key),
                                                 # 'Color string: {}'.format(bc),
                                                 "Parent Window's Title: {}".format(toplevel_form.Title))
-
 
                 if bd == 0 and not running_mac():
                     tkbutton.config(relief=tk.FLAT)
@@ -12724,7 +12725,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.DisabledButtonColor != (None, None) and element.DisabledButtonColor != (COLOR_SYSTEM_DEFAULT, COLOR_SYSTEM_DEFAULT):
                     if element.DisabledButtonColor[0] not in (None, COLOR_SYSTEM_DEFAULT):
                         element.TKButton['disabledforeground'] = element.DisabledButtonColor[0]
-                if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None) :
+                if element.MouseOverColors[1] not in (COLOR_SYSTEM_DEFAULT, None):
                     tkbutton.config(activebackground=element.MouseOverColors[1])
                 if element.MouseOverColors[0] not in (COLOR_SYSTEM_DEFAULT, None):
                     tkbutton.config(activeforeground=element.MouseOverColors[0])
@@ -12889,7 +12890,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                           justify=tk.LEFT, bd=bd, font=font)
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
-                    tkbutton.config(foreground=bc[0], background=bc[1], activebackground=bc[1])
+                    tkbutton.config(foreground=bc[0], background=bc[1])
                 elif bc[0] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0])
                 if bd == 0 and not running_mac():
@@ -12937,7 +12938,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     top_menu.config(font=element.ItemFont)
 
                 AddMenuItem(top_menu, menu_def[1], element)
-
+                if elementpad[0] == 0 or elementpad[1] == 0:
+                    tkbutton.config(highlightthickness=0)
                 tkbutton.configure(menu=top_menu)
                 element.TKMenu = top_menu
                 if element.visible is False:
@@ -12946,6 +12948,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKButton['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKButton, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+
             # -------------------------  INPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_TEXT:
                 element = element  # type: InputText
@@ -17729,6 +17732,22 @@ def popup_menu(window, element, menu_def, title=None, location=(None, None)):
     top_menu.invoke(0)
 
 
+def popup_error_with_traceback(title, *messages):
+    """
+    Show an error message and as many additoinal lines of messages as you want.
+    Will show the same error window as PySimpleGUI uses internally.  Has a button to
+    take the user to the line of code you called this popup from
+
+    :param title:
+    :type title: str
+    :param messages: A variable number of lines of messages you wish to show your user
+    :type messages: *Any
+    """
+
+    # For now, call the function that PySimpleGUI uses internally
+    _error_popup_with_traceback(str(title), *messages)
+
+
 
 def _error_popup_with_traceback(title, *args):
     if SUPPRESS_ERROR_POPUPS:
@@ -17762,8 +17781,13 @@ def _error_popup_with_traceback(title, *args):
 def _error_popup_with_code(title, filename=None, line_num=None,  *args):
     layout = [[Text('ERROR'), Text(title)],
               [Image(data=_random_error_emoji())]]
-    # make max length of line be 90 chars and allow the hieight to vary based on number of needed lines
-    layout += [[Text(str(msg), size=(min(90, len(str(msg))),None))] for msg in args]
+    # make max length of line be 90 chars and allow the height to vary based on number of needed lines
+    lines = [str(msg).split('\n') for msg in args]
+    max_line_len = 0
+    for line in lines:
+        max_line_len = max(max_line_len, max([len(s) for s in line]))
+
+    layout += [[Text(str(msg), size=(min(max_line_len, 90), None))] for msg in args]
 
     layout += [[Button('Close'), Button('Take me to error')]]
 
