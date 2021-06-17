@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.2 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem"
+version = __version__ = "4.44.0.3 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -11731,13 +11731,13 @@ def _simplified_dual_color_to_tuple(color_tuple_or_string, default=(None, None))
                 text_color, background_color = default
         else:
             if not SUPPRESS_ERROR_POPUPS:
-                popup_error('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string)
+                _error_popup_with_traceback('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string)
             else:
                 print('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string)
             text_color = background_color = COLOR_SYSTEM_DEFAULT
     except Exception as e:
         if not SUPPRESS_ERROR_POPUPS:
-            popup_error('** Badly formatted button color **', color_tuple_or_string, e)
+            _error_popup_with_traceback('** Badly formatted button color **', color_tuple_or_string, e)
         else:
             print('** Badly formatted button color... not a tuple nor string **', color_tuple_or_string, e)
         text_color = background_color = COLOR_SYSTEM_DEFAULT
