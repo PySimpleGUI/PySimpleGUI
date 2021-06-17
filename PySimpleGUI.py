@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.3 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected"
+version = __version__ = "4.44.0.5 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7008,6 +7008,16 @@ class Menu(Element):
             menubar = self.TKMenu
             for menu_entry in self.MenuDefinition:
                 baritem = tk.Menu(menubar, tearoff=self.Tearoff)
+
+                if self.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    baritem.config(bg=self.BackgroundColor)
+                if self.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    baritem.config(fg=self.TextColor)
+                if self.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                    baritem.config(disabledforeground=self.DisabledTextColor)
+                if self.Font is not None:
+                    baritem.config(font=self.Font)
+
                 if self.Font is not None:
                     baritem.config(font=self.Font)
                 pos = menu_entry[0].find(MENU_SHORTCUT_CHARACTER)
@@ -7035,6 +7045,7 @@ class Menu(Element):
 
 
 MenuBar = Menu  # another name for Menu to make it clear it's the Menu Bar
+Menubar = Menu  # another name for Menu to make it clear it's the Menu Bar
 
 
 
@@ -12886,8 +12897,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     bc = DEFAULT_BUTTON_COLOR
                 bd = element.BorderWidth
-                tkbutton = element.Widget = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height,
-                                                          justify=tk.LEFT, bd=bd, font=font)
+                tkbutton = element.Widget = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=bd, font=font)
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
                     tkbutton.config(foreground=bc[0], background=bc[1])
@@ -13515,6 +13525,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 menu_def = element.MenuDefinition
                 element.TKMenu = element.Widget = tk.Menu(toplevel_form.TKroot, tearoff=element.Tearoff, tearoffcommand=element._tearoff_menu_callback)  # create the menubar
                 menubar = element.TKMenu
+                if font is not None:            # if a font is used, make sure it's saved in the element
+                    element.Font = font
                 for menu_entry in menu_def:
                     baritem = tk.Menu(menubar, tearoff=element.Tearoff, tearoffcommand=element._tearoff_menu_callback)
                     if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
@@ -17738,7 +17750,7 @@ def popup_error_with_traceback(title, *messages):
     Will show the same error window as PySimpleGUI uses internally.  Has a button to
     take the user to the line of code you called this popup from
 
-    :param title:
+    :param title: The title that will be shown in the popup's titlebar and in the first line of the window
     :type title: str
     :param messages: A variable number of lines of messages you wish to show your user
     :type messages: *Any
