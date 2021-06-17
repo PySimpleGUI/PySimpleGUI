@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.5 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring"
+version = __version__ = "4.44.0.6 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7004,10 +7004,11 @@ class Menu(Element):
 
         if menu_definition is not None:
             self.MenuDefinition = copy.deepcopy(menu_definition)
-            self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff)  # create the menubar
+
+            self.TKMenu = tk.Menu(self.ParentForm.TKroot, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)  # create the menubar
             menubar = self.TKMenu
             for menu_entry in self.MenuDefinition:
-                baritem = tk.Menu(menubar, tearoff=self.Tearoff)
+                baritem = tk.Menu(menubar, tearoff=self.Tearoff, tearoffcommand=self._tearoff_menu_callback)
 
                 if self.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                     baritem.config(bg=self.BackgroundColor)
