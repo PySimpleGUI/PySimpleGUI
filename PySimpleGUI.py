@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.6 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def"
+version = __version__ = "4.44.0.7 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice."
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -3474,6 +3474,12 @@ class TKOutput(tk.Frame):
 class Output(Element):
     """
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
+
+    The Multiline Element is the superior and recommended method for showing the output of stdout.
+    The Multiline Element has been added to significantly while the Output element has not.
+
+    Of course, Output Element continues to operate and be backwards compatible, but you're missing out on
+    features such as routing the cprint output to the element.
     """
 
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None, key=None, k=None, right_click_menu=None, visible=True, metadata=None):
