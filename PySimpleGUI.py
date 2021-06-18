@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.7 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice."
+version = __version__ = "4.44.0.8 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice, set no titlebar settings twice now due to a Raspberry Pi problem"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14108,6 +14108,22 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
     return
 
 
+def _no_titlebar_setup(window):
+        # for the Raspberry Pi. Need to set the attributes here, prior to the building of the window
+    try:
+        if window.NoTitleBar:
+            if running_linux():
+                # window.TKroot.wm_attributes("-type", 'splash')
+                window.TKroot.wm_attributes("-type", 'dock')
+            else:
+                window.TKroot.wm_overrideredirect(True)
+                # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
+                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                    print('* Applying Mac no_titlebar patch *')
+                    window.TKroot.wm_overrideredirect(False)
+    except:
+        print('** Problem setting no titlebar **')
+
 
 def _convert_window_to_tk(window):
     """
@@ -14153,20 +14169,7 @@ def _convert_window_to_tk(window):
     window.starting_window_position =  (int(x), (int(y)))
     master.update_idletasks()  # don't forget
 
-    try:
-        if window.NoTitleBar:
-            if running_linux():
-                # window.TKroot.wm_attributes("-type", 'splash')
-                window.TKroot.wm_attributes("-type", 'dock')
-            else:
-                window.TKroot.wm_overrideredirect(True)
-                # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
-                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
-                    print('* Applying Mac no_titlebar patch *')
-                    window.TKroot.wm_overrideredirect(False)
-    except:
-        print('** Problem setting no titlebar **')
-        pass
+    _no_titlebar_setup(window)
 
     return
 
@@ -14225,6 +14228,10 @@ def StartupTK(window):
     window.TKroot = root
 
     window._create_thread_queue()
+
+    # for the Raspberry Pi. Need to set the attributes here, prior to the building of the window
+    # so going ahead and doing it for all platforms, in addition to doing it after the window is packed
+    _no_titlebar_setup(window)
 
 
     if not window.Resizable:
