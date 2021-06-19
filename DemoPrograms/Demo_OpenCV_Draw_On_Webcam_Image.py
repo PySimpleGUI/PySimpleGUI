@@ -23,7 +23,7 @@ def main():
             break
 
         ret, frame = cap.read()
-        imgbytes=cv2.imencode('.png', frame)[1].tobytes()
+        imgbytes=cv2.imencode('.ppm', frame)[1].tobytes()
         if a_id:
             graph_elem.delete_figure(a_id)             # delete previous image
         a_id = graph_elem.draw_image(data=imgbytes, location=(0,0))    # draw new image
