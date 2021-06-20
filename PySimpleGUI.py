@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.9 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice, set no titlebar settings twice now due to a Raspberry Pi problem, fix for Combo and Input elements readonly state not being recalled when updating disabled."
+version = __version__ = "4.44.0.10 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice, set no titlebar settings twice now due to a Raspberry Pi problem, fix for Combo and Input elements readonly state not being recalled when updating disabled. Moved *args to end in one_line_progress_meter"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14541,7 +14541,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def one_line_progress_meter(title, current_value, max_value, key='OK for 1 meter', *args, orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
+def one_line_progress_meter(title, current_value, max_value,  *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
     """
     :param title: text to display in eleemnt
     :type title: (str)
@@ -14549,10 +14549,10 @@ def one_line_progress_meter(title, current_value, max_value, key='OK for 1 meter
     :type current_value: (int)
     :param max_value: max value of QuickMeter
     :type max_value: (int)
-    :param key: Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
-    :type key: str | int | tuple | object
     :param *args: stuff to output
     :type *args: (Any)
+    :param key: Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters
+    :type key: str | int | tuple | object
     :param orientation: 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v')
     :type orientation: (str)
     :param bar_color: color of a bar line
