@@ -1996,6 +1996,28 @@ fonts for printing
 * Release dedicated to Lester Moore
 
 
+## 4.45.0 PySimpleGUI 21-Jun-2021
+
+Happy 1M installs and 3 year anniversary edition!
+
+* Fix for no titlebar windows on Raspberry Pi
+	* This appears to have fixed a problem on REPL.It
+	* And also on the Mac!
+	* Setting twice now - not sure if will cause a side effect
+* Docstring updates for more clarity on Window.current_location
+* Menu Element (recorded the Udemy lesson which generally results in finding some problems)
+	* fix for update modifying the caller's data!
+	* fix for color settings incorrectly in update
+	* fixed docstring
+	* fixed menu tearoff location after update
+* Better string length handling in the error popups
+* NEW popup - popup_error_with_traceback
+	* Provides the same error window as used internally with PySimpleGUI
+* Changed Output element's docstring to explain Multiline is now recommended instead
+* Fix for combo and input element readonly state not being recalled when updating disabled value
+* Moved *args to end in one_line_progress_meter
+
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  

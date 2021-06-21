@@ -6141,6 +6141,12 @@ Parameter Descriptions:
 
     Output Element - a multi-lined text area where stdout and stderr are re-routed to.
 
+    The Multiline Element is the superior and recommended method for showing the output of stdout.
+    The Multiline Element has been added to significantly while the Output element has not.
+
+    Of course, Output Element continues to operate and be backwards compatible, but you're missing out on
+    features such as routing the cprint output to the element.
+
 ```
 Output(size = (None, None),
     s = (None, None),
@@ -11266,7 +11272,10 @@ close()
 
 ### current_location
 
-Get the current location of the window's top left corner
+Get the current location of the window's top left corner.
+Note that this value may not take into account the titlebar and menubar.
+These parts of a window are created by the OS.  As a result, the value returned may be
+off depending on if your window has a titlebar or menubar.
 
 `current_location()`
 
@@ -11869,7 +11878,10 @@ Close()
 
 ### CurrentLocation
 
-Get the current location of the window's top left corner
+Get the current location of the window's top left corner.
+Note that this value may not take into account the titlebar and menubar.
+These parts of a window are created by the OS.  As a result, the value returned may be
+off depending on if your window has a titlebar or menubar.
 
 `CurrentLocation()`
 
@@ -14069,8 +14081,8 @@ Parameter Descriptions:
 OneLineProgressMeter(title,
     current_value,
     max_value,
-    key = "OK for 1 meter",
     args=*<1 or N object>,
+    key = "OK for 1 meter",
     orientation = "v",
     bar_color = (None, None),
     button_color = None,
@@ -14087,8 +14099,8 @@ Parameter Descriptions:
 |            str             |     title     | text to display in eleemnt |
 |            int             | current_value | current value |
 |            int             |   max_value   | max value of QuickMeter |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            Any             |     *args     | stuff to output |
+| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |      Tuple(str, str)       |   bar_color   | color of a bar line |
 |     (str, str) or str      | button_color  | button color (foreground, background) |
@@ -14115,8 +14127,8 @@ Parameter Descriptions:
 one_line_progress_meter(title,
     current_value,
     max_value,
-    key = "OK for 1 meter",
     args=*<1 or N object>,
+    key = "OK for 1 meter",
     orientation = "v",
     bar_color = (None, None),
     button_color = None,
@@ -14133,8 +14145,8 @@ Parameter Descriptions:
 |            str             |     title     | text to display in eleemnt |
 |            int             | current_value | current value |
 |            int             |   max_value   | max value of QuickMeter |
-| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            Any             |     *args     | stuff to output |
+| str or int or tuple or object |      key      | Used to differentiate between mutliple meters. Used to cancel meter early. Now optional as there is a default value for single meters |
 |            str             |  orientation  | 'horizontal' or 'vertical' ('h' or 'v' work) (Default value = 'vertical' / 'v') |
 |      Tuple(str, str)       |   bar_color   | color of a bar line |
 |     (str, str) or str      | button_color  | button color (foreground, background) |
