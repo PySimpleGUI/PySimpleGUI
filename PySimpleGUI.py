@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.44.0.10 Unreleased\nWindow.current_location docstring update to indicate value my be off due to titlebar, Menu element fixed problem of updates modifying the original menu spec, better string length handling in error popups, New popup function - popup_error_with_traceback allows you to show error info with a button to take the user to the line with the problem, replaced error popups with traceback popups when button colors problems are detected, fix for Menu.update - wasn't setting the colors and font correctly, title parm in the docstring, menu tearoff location fix after update with new menu def, Output element docstring update indicating Multiline is the superior choice, set no titlebar settings twice now due to a Raspberry Pi problem, fix for Combo and Input elements readonly state not being recalled when updating disabled. Moved *args to end in one_line_progress_meter"
+version = __version__ = "4.45.0  Released 21-Jun-2021"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
