@@ -50,7 +50,7 @@ def make_window(location):
     # ------------------- Window Layout -------------------
     # If this is a test window (for choosing theme), then uses some extra Text Elements to display theme info
     # and also enables events for the elements to make the window easy to close
-    right_click_menu = [[''], ['Choose Image Folder', 'Edit Me', 'Change Theme', 'Set Image Size',
+    right_click_menu = [[''], ['Choose Image Folder', 'Choose Single Image', 'Edit Me', 'Change Theme', 'Set Image Size',
                                'Set Time Per Image','Save Location', 'Refresh', 'Show Refresh Info', 'Hide Refresh Info', 'Alpha',
                                    [str(x) for x in range(1, 11)], 'Exit', ]]
 
@@ -82,8 +82,11 @@ def main():
         image_folder = None
         sg.user_settings_set_entry('-image_folder-', None)
 
-    if image_folder is None:
+    single_image = sg.user_settings_get_entry('-single image-', None)
+
+    if image_folder is None and single_image is None:
         while True:
+            images = None
             image_folder = sg.popup_get_folder('Choose location of your images', location=window.current_location(), keep_on_top=True)
             if image_folder is not None:
                 sg.user_settings_set_entry('-image_folder-', image_folder)
@@ -91,19 +94,26 @@ def main():
             else:
                 if sg.popup_yes_no('No folder entered','Go you want to exit the program entirely?', keep_on_top=True) == 'Yes':
                     exit()
-    images = os.listdir(image_folder)
-    images = [i for i in images if i.lower().endswith(('.png', '.jpg', '.gif'))]
+    elif single_image is None:
+        images = os.listdir(image_folder)
+        images = [i for i in images if i.lower().endswith(('.png', '.jpg', '.gif'))]
+    else:                   # means single image is not none
+        images = None
     while True:  # Event Loop
         # First update the status information
         # for debugging show the last update date time
-        image_name =random.choice(images)
-        image_data = convert_to_bytes(os.path.join(image_folder, image_name), (width, height))
-        window['-IMAGE-'].update(data=image_data)
-        window['-FOLDER-'].update(image_folder)
+        if single_image is None:
+            image_name =random.choice(images)
+            image_data = convert_to_bytes(os.path.join(image_folder, image_name), (width, height))
+            window['-FOLDER-'].update(image_folder)
+        else:
+            image_name = single_image
+            image_data = convert_to_bytes(single_image, (width, height))
         window['-FILENAME-'].update(image_name)
+        window['-IMAGE-'].update(data=image_data)
         window['-REFRESHED-'].update(datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p"))
         # -------------- Start of normal event loop --------------
-        timeout = time_per_image * 1000 + (random.randint(int(-time_per_image * 500), int(time_per_image * 500)) if vary_randomly else 0)
+        timeout = time_per_image * 1000 + (random.randint(int(-time_per_image * 500), int(time_per_image * 500)) if vary_randomly else 0) if single_image is None else None
         event, values = window.read(timeout=timeout)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
@@ -117,6 +127,8 @@ def main():
                 sg.user_settings_set_entry('-image_folder-', image_folder)
                 images = os.listdir(image_folder)
                 images = [i for i in images if i.lower().endswith(('.png', '.jpg', '.gif'))]
+                sg.user_settings_set_entry('-single image-', None)
+                single_image = None
         elif event == 'Set Time Per Image':
             layout = [[sg.T('Enter number of seconds each image should be displayed')],
                        [sg.I(time_per_image, size=(5,1),k='-TIME PER IMAGE-')],
@@ -159,6 +171,11 @@ def main():
             if choose_theme(loc) is not None:
                 window.close()
                 window = make_window(loc)
+        elif event == 'Choose Single Image':
+            single_image = sg.popup_get_file('Choose single image to show', history=True)
+            sg.user_settings_set_entry('-single image-', single_image)
+
+
 
     window.close()
 
