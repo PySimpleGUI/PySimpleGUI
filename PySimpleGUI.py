@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0  Released 21-Jun-2021"
+version = __version__ = "4.45.0.1  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible)"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -103,7 +103,6 @@ import tkinter.font
 # get the tkinter detailed version
 tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 framework_version = tclversion_detailed
-
 
 
 import time
@@ -2831,7 +2830,7 @@ class Multiline(Element):
 
 
 
-    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None,  c=None):
+    def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None,  c=None, autoscroll=True):
         """
         Print like Python normally prints except route the output to a multiline element and also add colors if desired
 
@@ -2871,6 +2870,8 @@ class Multiline(Element):
         :type b: (str)
         :param c: Either a tuple or a string that has both the text and background colors
         :type c: (str) or (str, str)
+        :param autoscroll: If True the contents of the element will automatically scroll as more data added to the end
+        :type autoscroll: (bool)
         """
 
         kw_text_color = text_color or t
@@ -2887,7 +2888,7 @@ class Multiline(Element):
             print('* cprint warning * you messed up with color formatting', e)
 
 
-        _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=True, font=font )
+        _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=autoscroll, font=font )
 
 
     def reroute_stdout_to_here(self):
@@ -14829,7 +14830,7 @@ def cprint_set_output_destination(window, multiline_key):
 
 
 
-def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None):
+def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, background_color=None, b=None, colors=None, c=None, window=None, key=None, justification=None, autoscroll=True):
     """
     Color print to a multiline element in a window of your choice.
     Must have EITHER called cprint_set_output_destination prior to making this call so that the
@@ -14884,8 +14885,8 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :param justification: text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
     :type justification: (str)
     :type window: (Window)
-    :return: None
-    :rtype: None
+    :param autoscroll: If True the contents of the element will automatically scroll as more data added to the end
+    :type autoscroll: (bool)
     """
 
     destination_key = CPRINT_DESTINATION_MULTILINE_ELMENT_KEY if key is None else key
@@ -14915,10 +14916,10 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     try:
         # mline = destination_window[destination_key]     # type: Multiline
         if end is None:
-            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font)
-            mline.print('', justification=justification)
+            mline.print(*args, text_color=kw_text_color, background_color=kw_background_color, end='', sep=sep, justification=justification, font=font, autoscroll=autoscroll)
+            mline.print('', justification=justification, autoscroll=autoscroll)
         else:
-            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification, font=font)
+            mline.print(*args,text_color=kw_text_color, background_color=kw_background_color, end=end, sep=sep, justification=justification, font=font, autoscroll=autoscroll)
     except Exception as e:
         print('** cprint error trying to print to the multiline. Printing to console instead **', e)
         print(*args, end=end, sep=sep)
