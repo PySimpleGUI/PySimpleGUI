@@ -211,6 +211,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
     #
     # Why?
     # Grep reads a *ton* of files into memory then searches through the memory to find the string or regex/pattern corresponding to the file.
+    # (This is useful if you ever accidently delete a file, grep may be able to get you the contents of it again!)
     # How can we load a file into memory on python as fast as grep whilst keeping it universal?
     # memory mapping (mmap).
     # We can't load a lot of files into memory as we may face issues with watchdog on other operating systems. So we load one file at a time and search though there.
@@ -270,9 +271,10 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                             for match_ in matches:
                                 match_str = match_.group(0).decode('utf-8')
                                 if match_str:
-                                    match_array.append(match_str)
-                                    if append_file == False:
-                                        append_file = True
+                                    if len(match_str) < 500:
+                                        match_array.append(match_str)
+                                        if append_file is False:
+                                            append_file = True
                             if append_file:
                                 file_list.append(file)
                                 num_files += 1
@@ -296,7 +298,10 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
             head, tail = os.path.split(key)
             # Tails. Don't wanna put Washington in places he doesn't want to be.
             file_array_old = [key]
+
             file_array_new = []
+
+            file_match_list = []
 
             if (verbose):
                 sg.cprint(f"{tail}:", c='white on green')
@@ -304,12 +309,14 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                 for _match in matched_dict[key]:
                     line_num_match = get_line_number(key, _match)
                     file_array_new.append(line_num_match)
+                    file_match_list.append(_match) # I *really* overthinked this.
                     if (verbose):
                         sg.cprint(f"Line: {line_num_match} ", c='white on purple', end='')
                         sg.cprint(f"{_match.strip()}\n")
                     # Make a list of the matches found in this file to add to the dictionry
                     list_of_matches.append(_match.strip())
                 file_array_old.append(file_array_new)
+                file_array_old.append(file_match_list)
                 file_lines_dict[tail] = file_array_old
             except:
                 pass
@@ -320,13 +327,16 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
     return file_list
 
 
-def window_choose_line_to_edit(filename, full_filename,  line_num_list):
+def window_choose_line_to_edit(filename, full_filename,  line_num_list, match_list):
     # sg.popup('matches previously found for this file:', filename, line_num_list)
+    i = 0
     if len(line_num_list) == 1:
         return full_filename, line_num_list[0]
     layout = [[sg.T(f'Choose line from {filename}', font='_ 14')]]
     for line in sorted(set(line_num_list)):
-        layout += [[sg.Text(f'Line {line}', key=('-T-', line), enable_events=True)]]
+        match_text = match_list[i]
+        layout += [[sg.Text(f'Line {line} : {match_text}', key=('-T-', line), enable_events=True, size=(min(len(match_text), 90), None))]]
+        i += 1
     layout += [[sg.B('Cancel')]]
 
     window = sg.Window('Open Editor', layout)
@@ -524,7 +534,7 @@ def main():
             editor_program = get_editor()
             for file in values['-DEMO LIST-']:
                 if find_in_file.file_list_dict is not None:
-                    full_filename, line = window_choose_line_to_edit(file, find_in_file.file_list_dict[file][0], find_in_file.file_list_dict[file][1])
+                    full_filename, line = window_choose_line_to_edit(file, find_in_file.file_list_dict[file][0], find_in_file.file_list_dict[file][1], find_in_file.file_list_dict[file][2])
                 else:
                     full_filename, line = get_file_list_dict()[file], 1
                 if line is not None:
