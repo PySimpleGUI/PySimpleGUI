@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.1  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible)"
+version = __version__ = "4.45.0.2  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -4172,8 +4172,8 @@ class ButtonMenu(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+        self.MenuDefinition = copy.deepcopy(menu_def)
 
-        self.MenuDefinition = menu_def
         self.AutoSizeButton = auto_size_button
         self.ButtonText = button_text
         self.ButtonColor = button_color_to_tuple(button_color)
@@ -4191,7 +4191,7 @@ class ButtonMenu(Element):
         self.Disabled = disabled
         self.IsButtonMenu = True
         self.MenuItemChosen = None
-        self.TKButtonMenu = None  # type: tk.Menubutton
+        self.Widget = self.TKButtonMenu = None  # type: tk.Menubutton
         self.TKMenu = None  # type: tk.Menu
         self.part_of_custom_menubar = False
         self.custom_menubar_key = None
@@ -4219,7 +4219,8 @@ class ButtonMenu(Element):
         #     self.ParentForm.TKroot.quit()  # kick the users out of the mainloop
         _exit_mainloop(self.ParentForm)
 
-    def update(self, menu_definition, visible=None):
+
+    def update(self, menu_definition=None, visible=None):
         """
         Changes some of the settings for the ButtonMenu Element. Must call `Window.Read` or `Window.Finalize` prior
 
@@ -4232,11 +4233,20 @@ class ButtonMenu(Element):
         if not self._widget_was_created():      # if widget hasn't been created yet, then don't allow
             return
 
-        self.MenuDefinition = menu_definition
         if menu_definition is not None:
-            self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff)  # create the menubar
-            AddMenuItem(self.TKMenu, menu_definition[1], self)
-        self.TKButtonMenu.configure(menu=self.TKMenu)
+            self.MenuDefinition = copy.deepcopy(menu_definition)
+            top_menu = self.TKMenu = tk.Menu(self.TKButtonMenu, tearoff=self.Tearoff, font=self.ItemFont, tearoffcommand=self._tearoff_menu_callback)
+
+            if self.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(bg=self.BackgroundColor)
+            if self.TextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(fg=self.TextColor)
+            if self.DisabledTextColor not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(disabledforeground=self.DisabledTextColor)
+            if self.ItemFont is not None:
+                top_menu.config(font=self.ItemFont)
+            AddMenuItem(self.TKMenu, self.MenuDefinition[1], self)
+            self.TKButtonMenu.configure(menu=self.TKMenu)
         if visible is False:
             self.TKButtonMenu.pack_forget()
         elif visible is True:
@@ -12905,6 +12915,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     bc = DEFAULT_BUTTON_COLOR
                 bd = element.BorderWidth
+                if element.ItemFont is None:
+                    element.ItemFont = font
                 tkbutton = element.Widget = tk.Menubutton(tk_row_frame, text=btext, width=width, height=height, justify=tk.LEFT, bd=bd, font=font)
                 element.TKButtonMenu = tkbutton
                 if bc != (None, None) and bc != COLOR_SYSTEM_DEFAULT and bc[1] != COLOR_SYSTEM_DEFAULT:
@@ -12944,7 +12956,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 menu_def = element.MenuDefinition
 
-                top_menu = tk.Menu(tkbutton, tearoff=element.Tearoff, font=font, tearoffcommand=element._tearoff_menu_callback)
+                element.TKMenu = top_menu = tk.Menu(tkbutton, tearoff=element.Tearoff, font=element.ItemFont, tearoffcommand=element._tearoff_menu_callback)
 
                 if element.BackgroundColor not in (COLOR_SYSTEM_DEFAULT, None):
                     top_menu.config(bg=element.BackgroundColor)
