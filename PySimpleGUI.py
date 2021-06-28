@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.3  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems"
+version = __version__ = "4.45.0.4  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -12163,7 +12163,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
                     item_without_key = sub_menu_info
 
                 if item_without_key[0] == MENU_DISABLED_CHARACTER:
-                    top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos,
+                    top_menu.add_command(label=item_without_key[len(MENU_DISABLED_CHARACTER):], underline=pos-1,
                                          command=lambda: element._MenuItemChosenCallback(sub_menu_info))
                     top_menu.entryconfig(item_without_key[len(MENU_DISABLED_CHARACTER):], state='disabled')
                 else:
@@ -13564,7 +13564,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             menu_entry[0] = menu_entry[0][:pos] + menu_entry[0][pos + 1:]
                     if menu_entry[0][0] == MENU_DISABLED_CHARACTER:
                         menubar.add_cascade(label=menu_entry[0][len(MENU_DISABLED_CHARACTER):], menu=baritem,
-                                            underline=pos)
+                                            underline=pos-1)
                         menubar.entryconfig(menu_entry[0][len(MENU_DISABLED_CHARACTER):], state='disabled')
                     else:
                         menubar.add_cascade(label=menu_entry[0], menu=baritem, underline=pos)
