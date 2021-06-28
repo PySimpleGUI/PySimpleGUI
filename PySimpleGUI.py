@@ -653,6 +653,7 @@ POPUP_BUTTONS_ERROR = 3
 POPUP_BUTTONS_OK_CANCEL = 4
 POPUP_BUTTONS_OK = 0
 POPUP_BUTTONS_NO_BUTTONS = 5
+POPUP_BUTTONS_YES_NO_CANCEL = 6
 
 
 # ------------------------------------------------------------------------- #
@@ -16287,6 +16288,12 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     elif button_type is POPUP_BUTTONS_OK_CANCEL:
         layout += [[PopupButton('OK', size=(6, 1), button_color=button_color, focus=True, bind_return_key=True),
                     PopupButton('Cancel', size=(6, 1), button_color=button_color)]]
+    elif button_type is POPUP_BUTTONS_YES_NO_CANCEL:
+        layout += [[PopupButton('Yes', button_color=button_color, focus=True,
+                                bind_return_key=True, pad=((20, 5), 3), size=(5, 1)),
+                    PopupButton('No', button_color=button_color, size=(5, 1)),
+                    PopupButton('Cancel', button_color=button_color, size=(6, 1)),
+                    ]]
     elif button_type is POPUP_BUTTONS_NO_BUTTONS:
         pass
     else:
@@ -17001,6 +17008,57 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :rtype: "Yes" | "No" | None
     """
     return popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO, background_color=background_color,
+                 text_color=text_color,
+                 non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
+                 auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
+                 grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, image=image, modal=modal)
+
+
+# --------------------------- popup_yes_no_cancel ---------------------------
+def popup_yes_no_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
+               auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
+               no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+    """
+    Display Popup with Yes, No and Cancel buttons
+
+    :param *args: Variable number of items to display
+    :type *args: (Any)
+    :param title: Title to display in the window.
+    :type title: (str)
+    :param button_color: button color (foreground, background)
+    :type button_color: (str, str) or str
+    :param background_color: color of background
+    :type background_color: (str)
+    :param text_color: color of the text
+    :type text_color: (str)
+    :param auto_close: if True window will close itself
+    :type auto_close: (bool)
+    :param auto_close_duration: Older versions only accept int. Time in seconds until window will close
+    :type auto_close_duration: int | float
+    :param non_blocking: if True the call will immediately return rather than waiting on user input
+    :type non_blocking: (bool)
+    :param icon: filename or base64 string to be used for the window's icon
+    :type icon: bytes | str
+    :param line_width: Width of lines in characters
+    :type line_width: (int)
+    :param font: specifies the font family, size, etc
+    :type font: str | Tuple[str, int]
+    :param no_titlebar: If True no titlebar will be shown
+    :type no_titlebar: (bool)
+    :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
+    :type grab_anywhere: (bool)
+    :param keep_on_top: If True the window will remain above all current windows
+    :type keep_on_top: (bool)
+    :param location: Location of upper left corner of the window
+    :type location: (int, int)
+    :param image: Image to include at the top of the popup window
+    :type image: (str) or (bytes)
+    :param modal: If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True
+    :type modal: bool
+    :return: clicked button
+    :rtype: "Yes" | "No" | "Cancel" | None
+    """
+    return popup(*args, title=title, button_type=POPUP_BUTTONS_YES_NO_CANCEL, background_color=background_color,
                  text_color=text_color,
                  non_blocking=non_blocking, icon=icon, line_width=line_width, button_color=button_color,
                  auto_close=auto_close, auto_close_duration=auto_close_duration, font=font, no_titlebar=no_titlebar,
