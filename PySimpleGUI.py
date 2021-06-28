@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.2  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings"
+version = __version__ = "4.45.0.3  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14219,11 +14219,10 @@ def StartupTK(window):
             print('* Error performing wm_overrideredirect *')
         Window.hidden_master_root.withdraw()
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
-        root = tk.Toplevel()
+        root = tk.Toplevel(class_=window.Title)
     else:
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
-        root = tk.Toplevel()
-
+        root = tk.Toplevel(class_=window.Title)
     if window.DebuggerEnabled:
         root.bind('<Cancel>', window._callback_main_debugger_window_create_keystroke)
         root.bind('<Pause>', window._callback_popout_window_create_keystroke)
