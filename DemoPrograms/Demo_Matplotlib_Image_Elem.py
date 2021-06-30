@@ -63,6 +63,7 @@ def your_matplotlib_code():
 # ooooooooooooooooooooooooooooo of your Matplotlib code
 
 
+# ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
 
 # dP     dP           dP
@@ -71,7 +72,7 @@ def your_matplotlib_code():
 # 88     88  88ooood8 88  88'  `88 88ooood8 88'  `88
 # 88     88  88.  ... 88  88.  .88 88.  ... 88
 # dP     dP  `88888P' dP  88Y888P' `88888P' dP
-# ooooooooooooooooooooooo~88~oooooooooooooooooooooooo function
+# ooooooooooooooooooooooo~88~oooooooooooooooooooooooo function starts below
 #                         dP
 
 def draw_figure(element, figure):
@@ -87,11 +88,12 @@ def draw_figure(element, figure):
     canv = FigureCanvasAgg(figure)
     buf = io.BytesIO()
     canv.print_figure(buf, format='png')
-    if buf is None:
+    if buf is not None:
+        buf.seek(0)
+        element.update(data=buf.read())
+        return canv
+    else:
         return None
-    buf.seek(0)
-    element.update(data=buf.read(), visible=True)
-    return canv
 
 
 
@@ -120,6 +122,7 @@ def main():
             break
         elif event == 'Ok':
             draw_figure(window['-IMAGE-'], your_matplotlib_code())
+            window['-IMAGE-'].update(visible=True)
         elif event == 'Clear':
             plt.close('all')                                # close all plots
             window['-IMAGE-'].update()                      # clears the image
