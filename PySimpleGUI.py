@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.4  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item"
+version = __version__ = "4.45.0.5  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row."
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1002,6 +1002,7 @@ class Element():
             self.ParentForm.TKroot.unbind('<Expose>')
             self.ParentForm.TKroot.wm_overrideredirect(True)
         self.ParentForm.normal()
+
 
 
     def _ReturnKeyHandler(self, event):
@@ -4497,13 +4498,13 @@ class Image(Element):
 
         if image is not None:
             if type(image) is not bytes:
-                width, height = size[0] or image.width(), size[1] or image.height()
+                width, height = size[0] if size[0] is not None else image.width(), size[1] if size[1] is not None else image.height()
             else:
                 width, height = size
             try:  # sometimes crashes if user closed with X
                 self.tktext_label.configure(image=image, width=width, height=height)
-            except:
-                pass
+            except Exception as e:
+                _error_popup_with_traceback('Exception updating Image element', e)
             self.tktext_label.image = image
         if visible is False:
             self.tktext_label.pack_forget()
@@ -7979,6 +7980,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         self.right_click_menu_selected_colors = _simplified_dual_color_to_tuple(right_click_menu_selected_colors, (self.right_click_menu_background_color, self.right_click_menu_text_color))
         self._grab_anywhere_ignore_these_list = []
         self._grab_anywhere_include_these_list = []
+        self._has_custom_titlebar = use_custom_titlebar
 
         if self.use_custom_titlebar:
             self.Margins = (0,0)
@@ -8173,7 +8175,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         if self._has_custom_titlebar_element():
             self.Margins = (0,0)
             self.NoTitleBar = True
-
+            self._has_custom_titlebar = True
         return self
 
 
@@ -8311,6 +8313,8 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
                 except:
                     pass
         self.WindowIcon = wicon
+
+
 
     def _GetElementAtLocation(self, location):
         """
@@ -9783,10 +9787,12 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
 
     def _has_custom_titlebar_element(self):
         for elem in self.AllKeysDict.values():
+            if elem.Key in (TITLEBAR_MAXIMIZE_KEY, TITLEBAR_CLOSE_KEY, TITLEBAR_IMAGE_KEY):
+                return True
             if elem.metadata == TITLEBAR_METADATA_MARKER:
                 return True
-
         return False
+
 
 
     AddRow = add_row
@@ -14019,7 +14025,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
                 size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X, expand=True)
-                row_should_expand = True
+                # row_should_expand = True
                 row_fill_direction = tk.BOTH
                 size_grip = None
             # -------------------------  StatusBar placement element  ------------------------- #
