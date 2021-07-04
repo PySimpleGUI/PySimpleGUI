@@ -7807,7 +7807,7 @@ class Window:
         :type auto_close: (bool)
         :param auto_close_duration: Number of seconds to wait before closing the window
         :type auto_close_duration: (int)
-        :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+        :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
         :type icon: (str | bytes)
         :param force_toplevel: If True will cause this window to skip the normal use of a hidden master window
         :type force_toplevel: (bool)
@@ -15047,7 +15047,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
                window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None):
     """
-    :param icon: filename or base64 string to be used for the window's icon
+    :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
     :type icon: bytes | str
     :param button_color: Color of the button (text, background)
     :type button_color: (str, str) or str
