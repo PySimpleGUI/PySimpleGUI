@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.5  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row."
+version = __version__ = "4.45.0.6  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -7807,7 +7807,7 @@ class Window:
         :type auto_close: (bool)
         :param auto_close_duration: Number of seconds to wait before closing the window
         :type auto_close_duration: (int)
-        :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+        :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
         :type icon: (str | bytes)
         :param force_toplevel: If True will cause this window to skip the normal use of a hidden master window
         :type force_toplevel: (bool)
@@ -15047,7 +15047,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
                window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None, suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None, enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None, titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None):
     """
-    :param icon: filename or base64 string to be used for the window's icon
+    :param icon: Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
     :type icon: bytes | str
     :param button_color: Color of the button (text, background)
     :type button_color: (str, str) or str
@@ -17833,7 +17833,7 @@ def _error_popup_with_code(title, filename=None, line_num=None,  *args):
 
     layout += [[Text(str(msg), size=(min(max_line_len, 90), None))] for msg in args]
 
-    layout += [[Button('Close'), Button('Take me to error')]]
+    layout += [[Button('Close'), Button('Take me to error'), Button('Kill Application', button_color='white on red')]]
 
     window = Window(title, layout, keep_on_top=True)
 
@@ -17841,6 +17841,10 @@ def _error_popup_with_code(title, filename=None, line_num=None,  *args):
         event, values = window.read()
         if event in ('Close', WIN_CLOSED):
             break
+        if event == 'Kill Application':
+            window.close()
+            popup_quick_message('KILLING APP!  BYE!', font='_ 18', keep_on_top=True, text_color='white', background_color='red', non_blocking=False)
+            sys.exit()
         if event == 'Take me to error' and filename is not None and line_num is not None:
             execute_editor(filename, line_num)
 
