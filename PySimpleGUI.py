@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.6  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup"
+version = __version__ = "4.45.0.7  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -2863,13 +2863,13 @@ class Multiline(Element):
         :type justification: (str)
         :param font: specifies the font family, size, etc for the args being printed
         :type font: str | (str, int) | (str, int, str)
-        :param colors: Either a tuple or a string that has both the text and background colors
+        :param colors: Either a tuple or a string that has both the text and background colors. Or just the text color
         :type colors: (str) or (str, str)
         :param t: Color of the text
         :type t: (str)
         :param b: The background color of the line
         :type b: (str)
-        :param c: Either a tuple or a string that has both the text and background colors
+        :param c: Either a tuple or a string that has both the text and background colors or just tex color (same as the color parm)
         :type c: (str) or (str, str)
         :param autoscroll: If True the contents of the element will automatically scroll as more data added to the end
         :type autoscroll: (bool)
@@ -2883,10 +2883,13 @@ class Multiline(Element):
                 kw_text_color = dual_color[0]
                 kw_background_color = dual_color[1]
             elif isinstance(dual_color, str):
-                kw_text_color = dual_color.split(' on ')[0]
-                kw_background_color = dual_color.split(' on ')[1]
+                if ' on ' in dual_color:                # if has "on" in the string, then have both text and background
+                    kw_text_color = dual_color.split(' on ')[0]
+                    kw_background_color = dual_color.split(' on ')[1]
+                else:                                   # if no "on" then assume the color string is just the text color
+                    kw_text_color = dual_color
         except Exception as e:
-            print('* cprint warning * you messed up with color formatting', e)
+            print('* multiline print warning * you messed up with color formatting', e)
 
 
         _print_to_element(self, *args, end=end, sep=sep, text_color=kw_text_color, background_color=kw_background_color, justification=justification, autoscroll=autoscroll, font=font )
@@ -14884,13 +14887,13 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :type font: str | (str, int) | (str, int, str)
     :param background_color: The background color of the line
     :type background_color: (str)
-    :param colors: Either a tuple or a string that has both the text and background colors
+    :param colors: Either a tuple or a string that has both the text and background colors "text on background" or just the text color
     :type colors: (str) or (str, str)
     :param t: Color of the text
     :type t: (str)
     :param b: The background color of the line
     :type b: (str)
-    :param c: Either a tuple or a string that has both the text and background colors
+    :param c: Either a tuple or a string.  Same as the color parm
     :type c: (str) or (str, str)
     :param end: end character
     :type end: (str)
@@ -14924,8 +14927,11 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
             kw_text_color = dual_color[0]
             kw_background_color = dual_color[1]
         elif isinstance(dual_color, str):
-            kw_text_color = dual_color.split(' on ')[0]
-            kw_background_color = dual_color.split(' on ')[1]
+            if ' on ' in dual_color:                # if has "on" in the string, then have both text and background
+                kw_text_color = dual_color.split(' on ')[0]
+                kw_background_color = dual_color.split(' on ')[1]
+            else:                                   # if no "on" then assume the color string is just the text color
+                kw_text_color = dual_color
     except Exception as e:
         print('* cprint warning * you messed up with color formatting', e)
 
@@ -15007,8 +15013,11 @@ def _parse_colors_parm(colors):
             kw_text_color = dual_color[0]
             kw_background_color = dual_color[1]
         elif isinstance(dual_color, str):
-            kw_text_color = dual_color.split(' on ')[0]
-            kw_background_color = dual_color.split(' on ')[1]
+            if ' on ' in dual_color:                # if has "on" in the string, then have both text and background
+                kw_text_color = dual_color.split(' on ')[0]
+                kw_background_color = dual_color.split(' on ')[1]
+            else:                                   # if no "on" then assume the color string is just the text color
+                kw_text_color = dual_color
     except Exception as e:
         print('* warning * you messed up with color formatting', e)
 
