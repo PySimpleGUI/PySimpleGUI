@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.5  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row."
+version = __version__ = "4.45.0.6  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -17833,7 +17833,7 @@ def _error_popup_with_code(title, filename=None, line_num=None,  *args):
 
     layout += [[Text(str(msg), size=(min(max_line_len, 90), None))] for msg in args]
 
-    layout += [[Button('Close'), Button('Take me to error')]]
+    layout += [[Button('Close'), Button('Take me to error'), Button('Kill Application', button_color='white on red')]]
 
     window = Window(title, layout, keep_on_top=True)
 
@@ -17841,6 +17841,10 @@ def _error_popup_with_code(title, filename=None, line_num=None,  *args):
         event, values = window.read()
         if event in ('Close', WIN_CLOSED):
             break
+        if event == 'Kill Application':
+            window.close()
+            popup_quick_message('KILLING APP!  BYE!', font='_ 18', keep_on_top=True, text_color='white', background_color='red', non_blocking=False)
+            sys.exit()
         if event == 'Take me to error' and filename is not None and line_num is not None:
             execute_editor(filename, line_num)
 
