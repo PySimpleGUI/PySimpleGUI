@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.7  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color"
+version = __version__ = "4.45.0.8  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -14448,7 +14448,7 @@ class QuickMeter(object):
     active_meters = {}
     exit_reasons = {}
 
-    def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
+    def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=(None, None), size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False):
         """
 
         :param title: text to display in element
@@ -14475,6 +14475,8 @@ class QuickMeter(object):
         :type grab_anywhere: (bool)
         :param no_titlebar: If True: window will be created without a titlebar
         :type no_titlebar: (bool)
+        :param keep_on_top: If True the window will remain above all current windows
+        :type keep_on_top: (bool)
         """
         self.start_time = datetime.datetime.utcnow()
         self.key = key
@@ -14489,6 +14491,8 @@ class QuickMeter(object):
         self.current_value = current_value
         self.max_value = max_value
         self.close_reason = None
+        self.keep_on_top = keep_on_top
+
         self.window = self.BuildWindow(*args)
 
     def BuildWindow(self, *args):
@@ -14511,7 +14515,7 @@ class QuickMeter(object):
             col2 += [[T('', size=(30, 10), key='_STATS_')],
                      [Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col), Column(col2)]
-        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar, disable_close=True)
+        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar, disable_close=True, keep_on_top=self.keep_on_top)
         self.window.Layout([layout]).Finalize()
 
         return self.window
@@ -14562,7 +14566,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def one_line_progress_meter(title, current_value, max_value,  *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False):
+def one_line_progress_meter(title, current_value, max_value,  *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False):
     """
     :param title: text to display in eleemnt
     :type title: (str)
@@ -14588,11 +14592,13 @@ def one_line_progress_meter(title, current_value, max_value,  *args, key='OK for
     :type grab_anywhere: (bool)
     :param no_titlebar: If True: no titlebar will be shown on the window
     :type no_titlebar: (bool)
+    :param keep_on_top: If True the window will remain above all current windows
+    :type keep_on_top: (bool)
     :return: True if updated successfully. False if user closed the meter with the X or Cancel button
     :rtype: (bool)
     """
     if key not in QuickMeter.active_meters:
-        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar)
+        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top)
         QuickMeter.active_meters[key] = meter
     else:
         meter = QuickMeter.active_meters[key]
