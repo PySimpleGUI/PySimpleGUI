@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.9  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world"
+version = __version__ = "4.45.0.10  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -6117,8 +6117,29 @@ class TabGroup(Element):
         return value
 
 
-    # def add_tab(self, tab_element):
-
+    def add_tab(self, tab_element):
+        self.add_row(tab_element)
+        tab_element.TKFrame = tab_element.Widget = tk.Frame(self.TKNotebook)
+        form = self.ParentForm
+        form._BuildKeyDictForWindow(form, tab_element, form.AllKeysDict)
+        form.AllKeysDict[tab_element.Key] = tab_element
+        PackFormIntoFrame(tab_element, tab_element.TKFrame, self.ParentForm)
+        state = 'normal'
+        if tab_element.Disabled:
+            state = 'disabled'
+        if tab_element.visible is False:
+            state = 'hidden'
+        self.TKNotebook.add(tab_element.TKFrame, text=tab_element.Title, state=state)
+        tab_element.ParentNotebook = self.TKNotebook
+        tab_element.TabID = self.TabCount
+        self.TabCount += 1
+        if tab_element.BackgroundColor != COLOR_SYSTEM_DEFAULT and tab_element.BackgroundColor is not None:
+            tab_element.TKFrame.configure(background=tab_element.BackgroundColor, highlightbackground=tab_element.BackgroundColor, highlightcolor=tab_element.BackgroundColor)
+        if tab_element.BorderWidth is not None:
+            tab_element.TKFrame.configure(borderwidth=tab_element.BorderWidth)
+        if tab_element.Tooltip is not None:
+            tab_element.TooltipObject = ToolTip(tab_element.TKFrame, text=tab_element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+        _add_right_click_menu(tab_element, form)
 
 
     AddRow = add_row
@@ -12312,6 +12333,29 @@ def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
         new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
     return new_map
 
+def _add_right_click_menu(element, toplevel_form):
+    if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
+        return
+    if element.RightClickMenu or toplevel_form.RightClickMenu:
+        menu = element.RightClickMenu or toplevel_form.RightClickMenu
+        top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
+
+        if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(bg=toplevel_form.right_click_menu_background_color)
+        if toplevel_form.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(fg=toplevel_form.right_click_menu_text_color)
+        if toplevel_form.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(disabledforeground=toplevel_form.right_click_menu_disabled_text_color)
+        if toplevel_form.right_click_menu_font is not None:
+            top_menu.config(font=toplevel_form.right_click_menu_font)
+
+        if toplevel_form.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
+        if toplevel_form.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
+        AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
+        element.TKRightClickMenu = top_menu
+        element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
 
 
 # @_timeit
