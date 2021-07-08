@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.8  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter"
+version = __version__ = "4.45.0.9  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1416,7 +1416,7 @@ class Element():
         Example:    If this text element was in yoiur layout:
                     sg.Text('foo', key='T')
                     Then you can call the Update method for that element by writing:
-                    window.FindElement('T')('new text value')
+                    window.find_element('T')('new text value')
         """
         return self.update(*args, **kwargs)
 
@@ -1623,7 +1623,7 @@ class Combo(Element):
         :type enable_events: (bool)
         :param disabled: set disable state for element
         :type disabled: (bool)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -1794,7 +1794,7 @@ class OptionMenu(Element):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -1927,7 +1927,7 @@ class Listbox(Element):
         :type highlight_background_color: (str)
         :param highlight_text_color: color of the text when an item is selected. Defaults to the normal background color (a rerverse look)
         :type highlight_text_color: (str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -2133,7 +2133,7 @@ class Radio(Element):
         :type circle_color: (str)
         :param font: specifies the font family, size, etc
         :type font: str | (str, int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -2311,7 +2311,7 @@ class Checkbox(Element):
         :type enable_events: (bool)
         :param disabled: set disable state
         :type disabled: (bool)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -2475,7 +2475,7 @@ class Spin(Element):
         :type background_color: (str)
         :param text_color: color of the text
         :type text_color: (str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -2636,7 +2636,7 @@ class Multiline(Element):
         :type enable_events: (bool)
         :param do_not_clear: if False the element will be cleared any time the Window.Read call returns
         :type do_not_clear: (bool)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -3014,7 +3014,7 @@ class Text(Element):
         :type justification: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str or int or tuple or object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -3198,7 +3198,7 @@ class StatusBar(Element):
         :type justification: (str)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -3301,7 +3301,7 @@ class TKProgressBar():
         :type orientation: (str)
         :param BarColor: The 2 colors that make up a progress bar. One is the background, the other is the bar
         :type BarColor: (str, str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         """
 
@@ -3505,7 +3505,7 @@ class Output(Element):
         :type font: str | (str, int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -3674,7 +3674,7 @@ class Button(Element):
         :type focus: (bool)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -3831,7 +3831,7 @@ class Button(Element):
                     target = [self.Position[0] + target[0], target[1]]
                 target_element = self.ParentContainer._GetElementAtLocation(target)
             else:
-                target_element = self.ParentForm.FindElement(target)
+                target_element = self.ParentForm.find_element(target)
             try:
                 strvar = target_element.TKStringVar
             except:
@@ -3871,7 +3871,7 @@ class Button(Element):
         #             target = [self.Position[0] + target[0], target[1]]
         #         target_element = self.ParentContainer._GetElementAtLocation(target)
         #     else:
-        #         target_element = self.ParentForm.FindElement(target)
+        #         target_element = self.ParentForm.find_element(target)
         #     try:
         #         strvar = target_element.TKStringVar
         #     except:
@@ -4165,7 +4165,7 @@ class ButtonMenu(Element):
         :type item_font: str | Tuple[str, int]
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -4302,7 +4302,7 @@ class ProgressBar(Element):
         :type border_width: (int)
         :param relief: relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF)
         :type relief: (str)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -4433,7 +4433,7 @@ class Image(Element):
         :type s: (int, int) | (None, None)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -4644,7 +4644,7 @@ class Canvas(Element):
         :type s: (int, int) | (None, None)
         :param pad:  Amount of padding to put around element
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -6116,6 +6116,11 @@ class TabGroup(Element):
             value = None
         return value
 
+
+    # def add_tab(self, tab_element):
+
+
+
     AddRow = add_row
     FindKeyFromTabName = find_key_from_tab_name
     Get = get
@@ -7140,7 +7145,7 @@ class Table(Element):
         :type bind_return_key: (bool)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -7396,7 +7401,7 @@ class Tree(Element):
         :type row_height: (int)
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param key: Used with window.FindElement and with return values to uniquely identify this element to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key: str | int | tuple | object
         :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k: str | int | tuple | object
@@ -7696,7 +7701,7 @@ class ErrorElement(Element):
 
     def __init__(self, key=None, metadata=None):
         """
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
+        :param key:  Used with window.find_element and with return values to uniquely identify this element
         """
         self.Key = key
 
@@ -8724,6 +8729,26 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
                 return k
         return matches[0] if len(matches) else None
 
+    def FindElement(self, key, silent_on_error=False):
+        """
+        ** Warning ** This call will eventually be depricated. **
+
+        It is suggested that you modify your code to use the recommended window[key] lookup or the PEP8 compliant window.find_element(key)
+
+        For now, you'll only see a message printed and the call will continue to funcation as before.
+
+        :param key: Used with window.find_element and with return values to uniquely identify this element
+        :type key: str | int | tuple | object
+        :param silent_on_error: If True do not display popup nor print warning of key errors
+        :type silent_on_error: (bool)
+        :return: Return value can be: the Element that matches the supplied key if found; an Error Element if silent_on_error is False; None if silent_on_error True;
+        :rtype: Element | Error Element | None
+        """
+
+        warnings.warn('Use of FindElement is not recommended.\nEither switch to the recommended window[key] format\nor the PEP8 compliant find_element',UserWarning)
+        print('** Warning - FindElement should not be used to look up elements. window[key] or window.find_element are recommended. **')
+
+        return self.find_element(key, silent_on_error=silent_on_error)
 
     def find_element(self, key, silent_on_error=False):
         """
@@ -8733,20 +8758,25 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         You can perform the same operation by writing this statement:
         element = window[key]
 
-        You can drop the entire "FindElement" function name and use [ ] instead.
+        You can drop the entire "find_element" function name and use [ ] instead.
 
-        Typically used in combination with a call to element's Update method (or any other element method!):
-        window[key].Update(new_value)
+        However, if you wish to perform a lookup without error checking, and don't have error popups turned
+        off globally, you'll need to make this call so that you can disable error checks on this call.
+
+        find_element is yypically used in combination with a call to element's Update method (or any other element method!):
+        window[key].update(new_value)
 
         Versus the "old way"
         window.FindElement(key).Update(new_value)
 
         This call can be abbreviated to any of these:
-        FindElement == Element == Find
+        find_element = FindElement == Element == Find
+        With find_element being the PEP8 compliant call that should be used.
+
         Rememeber that this call will return None if no match is found which may cause your code to crash if not
         checked for.
 
-        :param key: Used with window.FindElement and with return values to uniquely identify this element
+        :param key: Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param silent_on_error: If True do not display popup nor print warning of key errors
         :type silent_on_error: (bool)
@@ -9763,7 +9793,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :rtype: Element | Input | Combo | OptionMenu | Listbox | Radio | Checkbox | Spin | Multiline | Text | StatusBar | Output | Button | ButtonMenu | ProgressBar | Image | Canvas | Graph | Frame | VerticalSeparator | HorizontalSeparator | Tab | TabGroup | Slider | Column | Pane | Menu | Table | Tree | ErrorElement | None
         """
 
-        return self.FindElement(key)
+        return self.find_element(key)
 
 
     def __call__(self, *args, **kwargs):
@@ -9811,7 +9841,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
     EnableDebugger = enable_debugger
     Fill = fill
     Finalize = finalize
-    FindElement = find_element
+    # FindElement = find_element
     FindElementWithFocus = find_element_with_focus
     GetScreenDimensions = get_screen_dimensions
     GrabAnyWhereOff = grab_any_where_off
@@ -10570,7 +10600,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type font: str | Tuple[str, int]
     :param pad: Amount of padding to put around element
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: Used with window.FindElement and with return values to uniquely identify this element
+    :param key: Used with window.find_element and with return values to uniquely identify this element
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10619,7 +10649,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type disabled: (bool)
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10669,7 +10699,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type font: str | Tuple[str, int]
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10724,7 +10754,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type font: str | Tuple[str, int]
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10775,7 +10805,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type font: str | Tuple[str, int]
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10817,7 +10847,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10858,7 +10888,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10900,7 +10930,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10941,7 +10971,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -10982,7 +11012,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11022,7 +11052,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11062,7 +11092,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11102,7 +11132,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11142,7 +11172,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11182,7 +11212,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11222,7 +11252,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11262,7 +11292,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param focus: if focus should be set to this
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11313,7 +11343,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11365,7 +11395,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11419,7 +11449,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type focus: idk_yetReally
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11478,7 +11508,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type focus: (bool)
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11534,7 +11564,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type focus: (bool)
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11598,7 +11628,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type focus: bool
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -11682,7 +11712,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type focus: (bool)
     :param pad: Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-    :param key: key for uniquely identify this element (for window.FindElement)
+    :param key: key for uniquely identify this element (for window.find_element)
     :type key: str | int | tuple | object
     :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k: str | int | tuple | object
@@ -14457,7 +14487,7 @@ class QuickMeter(object):
         :type current_value: (int)
         :param max_value: max value of QuickMeter
         :type max_value: (int)
-        :param key:  Used with window.FindElement and with return values to uniquely identify this element
+        :param key:  Used with window.find_element and with return values to uniquely identify this element
         :type key: str | int | tuple | object
         :param *args: stuff to output
         :type *args: (Any)
