@@ -108,7 +108,7 @@ while True:
         filename = os.path.join(folder, fnames[i])
 
     # update window with new image
-    image_elem.update(data=get_img_data(filename, first=True))
+    image_elem.update(data=get_img_data(filename, first=False))
     # update window with filename
     filename_display_elem.update(filename)
     # update page display
