@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.11  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment."
+version = __version__ = "4.45.0.12  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -1487,6 +1487,7 @@ class Input(Element):
         :param metadata: User metadata that can be set to ANYTHING
         :type metadata: (Any)
         """
+
         self.DefaultText = default_text if default_text is not None else ''
         self.PasswordCharacter = password_char
         bg = background_color if background_color is not None else DEFAULT_INPUT_ELEMENTS_COLOR
@@ -5363,6 +5364,14 @@ class Graph(Element):
         Not called by the user.  It's called from another method/function that tkinter calledback
 
         :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
+        """
+        """
+        Updates the variable that's used when the values dictionary is returned from a window read.
+
+        Not called by the user.  It's called from another method/function that tkinter calledback
+
+        :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
+        :type event:
         """
 
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
@@ -9826,7 +9835,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :return: The famous event, values that Read returns.
         :rtype: Tuple[Any, Dict[Any, Any]]
         """
-        return self.Read(*args, **kwargs)
+        return self.read(*args, **kwargs)
 
     def _is_window_created(self, additional_message=''):
         msg = str(additional_message)
@@ -18706,7 +18715,7 @@ def execute_command_subprocess(command, *args, wait=False, cwd=None, pipe_output
                 print(err.decode("utf-8"))
     except Exception as e:
         warnings.warn('Error in execute_command_subprocess {}'.format(e), UserWarning)
-        _error_popup_with_traceback('Error in execute_command_subprocess', e, 'command={}'.format(command), 'args={}'.format(args))
+        _error_popup_with_traceback('Error in execute_command_subprocess', e, 'command={}'.format(command), 'args={}'.format(args), 'cwd={}'.format(cwd))
         sp = None
     return sp
 
@@ -18735,6 +18744,8 @@ def execute_py_file(pyfile, parms=None, cwd=None, interpreter_command=None, wait
     """
     if cwd is None:
         cwd = os.path.dirname(pyfile)
+        if cwd == '':
+            cwd = '.'
     if pyfile[0] != '"' and ' ' in pyfile:
         pyfile = '"'+pyfile+'"'
     if interpreter_command is not None:
