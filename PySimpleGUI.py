@@ -1738,8 +1738,11 @@ class Combo(Element):
             self.TKCombo['state'] = 'enable'
         if disabled is True:
             self.TKCombo['state'] = 'disable'
-        elif disabled is False and not self.Readonly:
-            self.TKCombo['state'] = 'enable'
+        elif disabled is False:
+            if self.Readonly:
+                self.TKCombo['state'] = 'readonly'
+            else:
+                self.TKCombo['state'] = 'enable'
         if font is not None:
             self.TKCombo.configure(font=font)
         if visible is False:
