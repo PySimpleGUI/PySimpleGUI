@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.13  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file"
+version = __version__ = "4.45.0.15  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window"
 
 __version__ = version.split()[0]    # For PEP 396 and PEP 345
 
@@ -832,7 +832,8 @@ class Element():
             self.DisabledTextColor = None
         if not hasattr(self, 'ItemFont'):
             self.ItemFont = None
-
+        if not hasattr(self, 'RightClickMenu'):
+            self.RightClickMenu = None
 
     @property
     def visible(self):
@@ -2110,47 +2111,50 @@ class Radio(Element):
 
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), s=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
-                 change_submits=False, enable_events=False, visible=True, metadata=None):
+                 change_submits=False, enable_events=False, right_click_menu=None, visible=True, metadata=None):
         """
-        :param text: Text to display next to button
-        :type text: (str)
-        :param group_id: Groups together multiple Radio Buttons. Any type works
-        :type group_id: (Any)
-        :param default: Set to True for the one element of the group you want initially selected
-        :type default: (bool)
-        :param disabled: set disable state
-        :type disabled: (bool)
-        :param size: (width, height) width = characters-wide, height = rows-high
-        :type size: (int, int) | (None, None)
-        :param s: Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s: (int, int) | (None, None)
-        :param auto_size_text: if True will size the element to match the length of the text
-        :type auto_size_text: (bool)
+        :param text:             Text to display next to button
+        :type text:              (str)
+        :param group_id:         Groups together multiple Radio Buttons. Any type works
+        :type group_id:          (Any)
+        :param default:          Set to True for the one element of the group you want initially selected
+        :type default:           (bool)
+        :param disabled:         set disable state
+        :type disabled:          (bool)
+        :param size:             (width, height) width = characters-wide, height = rows-high
+        :type size:              (int, int) | (None, None)
+        :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
+        :type s:                 (int, int) | (None, None)
+        :param auto_size_text:   if True will size the element to match the length of the text
+        :type auto_size_text:    (bool)
         :param background_color: color of background
-        :type background_color: (str)
-        :param text_color: color of the text
-        :type text_color: (str)
-        :param circle_color: color of background of the circle that has the dot selection indicator in it
-        :type circle_color: (str)
-        :param font: specifies the font family, size, etc
-        :type font: str | (str, int)
-        :param key: Used with window.find_element and with return values to uniquely identify this element
-        :type key: str | int | tuple | object
-        :param k: Same as the Key. You can use either k or key. Which ever is set will be used.
-        :type k: str | int | tuple | object
-        :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param tooltip: text, that will appear when mouse hovers over the element
-        :type tooltip: (str)
-        :param change_submits: DO NOT USE. Only listed for backwards compat - Use enable_events instead
-        :type change_submits: (bool)
-        :param enable_events: Turns on the element specific events. Radio Button events happen when an item is selected
-        :type enable_events: (bool)
-        :param visible: set visibility state of the element
-        :type visible: (bool)
-        :param metadata: User metadata that can be set to ANYTHING
-        :type metadata: (Any)
+        :type background_color:  (str)
+        :param text_color:       color of the text
+        :type text_color:        (str)
+        :param circle_color:     color of background of the circle that has the dot selection indicator in it
+        :type circle_color:      (str)
+        :param font:             specifies the font family, size, etc
+        :type font:              str | (str, int)
+        :param key:              Used with window.find_element and with return values to uniquely identify this element
+        :type key:               str | int | tuple | object
+        :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
+        :type k:                 str | int | tuple | object
+        :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param tooltip:          text, that will appear when mouse hovers over the element
+        :type tooltip:           (str)
+        :param change_submits:   DO NOT USE. Only listed for backwards compat - Use enable_events instead
+        :type change_submits:    (bool)
+        :param enable_events:    Turns on the element specific events. Radio Button events happen when an item is selected
+        :type enable_events:     (bool)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu:  List[List[ List[str] | str ]]
+        :param visible:          set visibility state of the element
+        :type visible:           (bool)
+        :param metadata:         User metadata that can be set to ANYTHING
+        :type metadata:          (Any)
         """
+
 
         self.InitialState = default
         self.Text = text
@@ -2159,6 +2163,8 @@ class Radio(Element):
         self.Value = None
         self.Disabled = disabled
         self.TextColor = text_color if text_color else theme_text_color()
+        self.RightClickMenu = right_click_menu
+
         if circle_color is None:
             # ---- compute color of circle background ---
             try:          # something in here will fail if a color is not specified in Hex
@@ -2286,7 +2292,7 @@ class Checkbox(Element):
     """
 
     def __init__(self, text, default=False, size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param text: Text to display next to checkbox
         :type text: (str)
@@ -2320,6 +2326,8 @@ class Checkbox(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -2332,6 +2340,8 @@ class Checkbox(Element):
         self.TKCheckbutton = self.Widget = None  # type: tk.Checkbutton
         self.Disabled = disabled
         self.TextColor = text_color if text_color else theme_text_color()
+        self.RightClickMenu = right_click_menu
+
         # ---- compute color of circle background ---
         if checkbox_color is None:
             try:        # something in here will fail if a color is not specified in Hex
@@ -2450,7 +2460,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
-                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param values: List of valid values
         :type values: Tuple[Any] or List[Any]
@@ -2484,6 +2494,8 @@ class Spin(Element):
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -2496,6 +2508,8 @@ class Spin(Element):
         self.TKSpinBox = self.Widget = None  # type: tk.Spinbox
         self.Disabled = disabled
         self.Readonly = readonly
+        self.RightClickMenu = right_click_menu
+
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
@@ -4283,7 +4297,7 @@ class ProgressBar(Element):
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
     """
 
-    def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None, relief=None, key=None, k=None, pad=None, visible=True, metadata=None):
+    def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None, relief=None, key=None, k=None, pad=None, right_click_menu=None,visible=True, metadata=None):
         """
         :param max_value: max value of progressbar
         :type max_value: (int)
@@ -4309,6 +4323,8 @@ class ProgressBar(Element):
         :type k: str | int | tuple | object
         :param pad: Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad: (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -4320,6 +4336,7 @@ class ProgressBar(Element):
         self.Cancelled = False
         self.NotRunning = True
         self.Orientation = orientation if orientation else DEFAULT_METER_ORIENTATION
+        self.RightClickMenu = right_click_menu
 
         # Progress Bar colors can be a tuple (text, background) or a string with format "bar on background" - examples "red on white" or ("red", "white")
         if bar_color is None:
@@ -5929,7 +5946,7 @@ class TabGroup(Element):
     TabGroup Element groups together your tabs into the group of tabs you see displayed in your window
     """
 
-    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None, size=(None, None), s=(None, None), tooltip=None, visible=True, metadata=None):
+    def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None, background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None, size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, visible=True, metadata=None):
         """
         :param layout: Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :type layout: List[List[Tab]]
@@ -5967,6 +5984,8 @@ class TabGroup(Element):
         :type s: (int|None, int|None)
         :param tooltip: text, that will appear when mouse hovers over the element
         :type tooltip: (str)
+        :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
+        :type right_click_menu: List[List[ List[str] | str ]]
         :param visible: set visibility state of the element
         :type visible: (bool)
         :param metadata: User metadata that can be set to ANYTHING
@@ -5993,6 +6012,8 @@ class TabGroup(Element):
         self.ChangeSubmits = change_submits or enable_events
         self.TabLocation = tab_location
         self.ElementJustification = 'left'
+        self.RightClickMenu = right_click_menu
+
         key = key if key is not None else k
         sz = size if size != (None, None) else s
 
@@ -13229,6 +13250,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCombo['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCombo, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                _add_right_click_menu(element)
+
             # -------------------------  OPTIONMENU placement Element (Like ComboBox but different) element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_OPTION_MENU:
                 max_line_len = max([len(str(l)) for l in element.Values])
@@ -13419,6 +13442,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKCheckbutton, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
+                _add_right_click_menu(element)
+
             # -------------------------  PROGRESS placement element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 element = element  # type: ProgressBar
@@ -13441,6 +13466,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 element.Widget = element.TKProgressBar.TKProgressBarForReal
+                _add_right_click_menu(element)
 
                 # -------------------------  RADIO placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_RADIO:
@@ -13491,6 +13517,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKRadio, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                _add_right_click_menu(element)
+
                 # -------------------------  SPIN placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SPIN:
                 element = element  # type: Spin
@@ -13522,6 +13550,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKSpinBox, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                _add_right_click_menu(element)
+
                 # -------------------------  OUTPUT placement element  ------------------------- #
             elif element_type == ELEM_TYPE_OUTPUT:
                 element = element                   # type: Output
@@ -13779,6 +13809,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                     timeout=DEFAULT_TOOLTIP_TIME)
                 if element.Size != (None, None):
                     element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
+                _add_right_click_menu(element)
+
                 # row_should_expand = True
                 # -------------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
@@ -13828,6 +13860,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKScale['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKScale, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
+                _add_right_click_menu(element)
+
             # -------------------------  TABLE placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TABLE:
                 element = element  # type: Table
