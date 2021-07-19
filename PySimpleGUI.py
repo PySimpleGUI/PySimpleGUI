@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.16  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability."
+version = __version__ = "4.45.0.17  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -197,7 +197,9 @@ def _timeit(func):
     Put @_timeit as a decorator to a function to get the time spent in that function printed out
 
     :param func: Decorated function
+    :type func:
     :return:     Execution time for the decorated function
+    :rtype:
     """
 
     @wraps(func)
@@ -222,7 +224,9 @@ def _timeit_summary(func):
     Put @_timeit_summary as a decorator to a function to get the time spent in that function printed out
 
     :param func: Decorated function
+    :type func:
     :return:     Execution time for the decorated function
+    :rtype:
     """
 
     @wraps(func)
@@ -688,6 +692,7 @@ class ToolTip:
         """
         Called by tkinter when mouse enters a widget
         :param event: from tkinter.  Has x,y coordinates of mouse
+        :type event:
 
         """
         self.x = event.x
@@ -698,6 +703,7 @@ class ToolTip:
         """
         Called by tktiner when mouse exits a widget
         :param event: from tkinter.  Event info that's not used by function.
+        :type event:
 
         """
         self.unschedule()
@@ -864,6 +870,7 @@ class Element():
         Callback function that's called when a right click happens. Shows right click menu as result
 
         :param event: information provided by tkinter about the event including x,y location of click
+        :type event:
 
         """
         self.TKRightClickMenu.tk_popup(event.x_root, event.y_root, 0)
@@ -878,7 +885,9 @@ class Element():
         This callback moves the right click menu window to the location of the current window
 
         :param parent: information provided by tkinter - the parent of the Meny
+        :type parent:
         :param menu:   information provided by tkinter - the menu window
+        :type menu:
 
         """
         if self._popup_menu_location == (None, None):
@@ -910,6 +919,7 @@ class Element():
         "Container Element" is encountered. Func has to walk entire window including these "sub-forms"
 
         :param form: the Window object to search
+        :type form:
         :return:     Button Object if a button is found, else None
         :rtype:      Button | None
         """
@@ -946,6 +956,7 @@ class Element():
         Result is that control is returned back to user (quits mainloop).
 
         :param event:
+        :type event:
 
         """
         # If this is a minimize button for a custom titlebar, then minimize the window
@@ -997,6 +1008,7 @@ class Element():
         Internal callback for the ENTER / RETURN key. Results in calling the ButtonCallBack for element that has the return key bound to it, just as if button was clicked.
 
         :param event:
+        :type event:
 
         """
         MyForm = self.ParentForm
@@ -1032,6 +1044,7 @@ class Element():
         Internal callback function for when a listbox item is selected
 
         :param event: Information from tkinter about the callback
+        :type event:
 
         """
         self._generic_callback_handler('')
@@ -1040,6 +1053,7 @@ class Element():
         """
         Internal callback function for when an entry is selected in a Combobox.
         :param event: Event data from tkinter (not used)
+        :type event:
 
         """
         self._generic_callback_handler('')
@@ -1061,6 +1075,7 @@ class Element():
         Internal callback for when a Tab is selected and enable events was set for TabGroup
 
         :param event: Event data passed in by tkinter (not used)
+        :type event:
         """
         self._generic_callback_handler('')
 
@@ -1069,6 +1084,7 @@ class Element():
         Internal callback for when a key is pressed andd return keyboard events was set for window
 
         :param event: Event data passed in by tkinter (not used)
+        :type event:
         """
         self._generic_callback_handler('')
 
@@ -1077,6 +1093,7 @@ class Element():
         Internal callback for when a mouse was clicked... I think.
 
         :param event: Event data passed in by tkinter (not used)
+        :type event:
         """
         self._generic_callback_handler('')
 
@@ -1087,6 +1104,7 @@ class Element():
         :param bind_string: The event that was bound so can lookup the key modifier
         :type bind_string:  Mike_please_insert_type_here
         :param event:       Event data passed in by tkinter (not used)
+        :type event:
         """
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
@@ -1872,7 +1890,6 @@ class Listbox(Element):
         :type auto_size_text:              (bool)
         :param font:                       specifies the font family, size, etc
         :type font:                        str | (str, int)
-        :param font:                       specifies the font family, size, etc
         :param no_scrollbar:               Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
         :type no_scrollbar:                (bool)
         :param background_color:           color of background
@@ -2533,6 +2550,7 @@ class Spin(Element):
         Callback function. Used internally only. Called by tkinter when Spinbox Widget changes.  Results in Window.Read() call returning
 
         :param event: passed in from tkinter
+        :type event:
         """
         # first, get the results table built
         if self.Key is not None:
@@ -3758,6 +3776,7 @@ class Button(Element):
         Not a user callable function.  Called by tkinter when a "realtime" button is released
 
         :param parm: the event info from tkinter
+        :type parm:
 
         """
         self.LastButtonClickedWasRealtime = False
@@ -3769,6 +3788,7 @@ class Button(Element):
         Not a user callable method. Callback called by tkinter when a "realtime" button is pressed
 
         :param parm: Event info passed in by tkinter
+        :type parm:
 
         """
         self.ParentForm.LastButtonClickedWasRealtime = True
@@ -5271,6 +5291,7 @@ class Graph(Element):
         Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
         :param event: (event) event info from tkinter. Note not used in this method
+        :type event:
         """
         if not self.DragSubmits:  # only report mouse up for drag operations
             return
@@ -5297,6 +5318,7 @@ class Graph(Element):
         Not a user callable method.  Used to get Graph click events. Called by tkinter when button is released
 
         :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
+        :type event:
         """
 
         self.ClickPosition = self._convert_canvas_xy_to_xy(event.x, event.y)
@@ -5317,6 +5339,7 @@ class Graph(Element):
         Not called by the user.  It's called from another method/function that tkinter calledback
 
         :param event: (event) event info from tkinter. Contains the x and y coordinates of a click
+        :type event:
         """
         """
         Updates the variable that's used when the values dictionary is returned from a window read.
@@ -5335,6 +5358,7 @@ class Graph(Element):
         Not a user callable method.  Used to get Graph mouse motion events. Called by tkinter when mouse moved
 
         :param event: (event) event info from tkinter. Contains the x and y coordinates of a mouse
+        :type event:
         """
 
         if not self.MouseButtonDown:
@@ -5792,6 +5816,7 @@ class Tab(Element):
         :param rows: List[List[Element]] The list of rows
         :type rows:  List[List[Element]]
         :return:     (Tab) used for chaining
+        :rtype:
         """
 
         for row in rows:
@@ -6242,6 +6267,7 @@ class Slider(Element):
         Not user callable.  Callback function for when slider is moved.
 
         :param event: (event) the event data provided by tkinter. Unknown format. Not used.
+        :type event:
         """
 
         if self.Key is not None:
@@ -6272,6 +6298,7 @@ class TkFixedFrame(tk.Frame):
         :param master:   The parent widget
         :type master:    (tk.Widget)
         :param **kwargs: The keyword args
+        :type **kwargs:
         """
         tk.Frame.__init__(self, master, **kwargs)
 
@@ -7666,6 +7693,7 @@ class TreeData(object):
         Converts the TreeData into a printable version, nicely formatted
 
         :return: (str) A formatted, text version of the TreeData
+        :rtype:
         """
         return self._NodeStr(self.root_node, 1)
 
@@ -7696,6 +7724,7 @@ class ErrorElement(Element):
     def __init__(self, key=None, metadata=None):
         """
         :param key: Used with window.find_element and with return values to uniquely identify this element
+        :type key:
         """
         self.Key = key
 
@@ -7809,7 +7838,7 @@ class Window:
         :type auto_close:                            (bool)
         :param auto_close_duration:                  Number of seconds to wait before closing the window
         :type auto_close_duration:                   (int)
-        :param icon:                                 Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
+        :param icon:                                 Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
         :type icon:                                  (str | bytes)
         :param force_toplevel:                       If True will cause this window to skip the normal use of a hidden master window
         :type force_toplevel:                        (bool)
@@ -7845,10 +7874,8 @@ class Window:
         :type right_click_menu_text_color:           (str)
         :param right_click_menu_disabled_text_color: Text color for disabled right click menu items
         :type right_click_menu_disabled_text_color:  (str)
-        :param right_click_menu_selected_colors:     Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
-Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
+        :param right_click_menu_selected_colors:     Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
         :type right_click_menu_selected_colors:     (str, str) | str | Tuple(int, int) | (None, None)
-        :type right_click_menu_disabled_text_color: (str)
         :param right_click_menu_font:               Font for right click menus
         :type right_click_menu_font:                str | Tuple[str, int]
         :param right_click_menu_tearoff:            If True then all right click menus can be torn off
@@ -8010,6 +8037,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
         Not user callable!
         :return: A simple counter that makes each container element unique
+        :rtype:
         """
         cls._container_element_counter += 1
         return cls._container_element_counter
@@ -8072,6 +8100,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Users, create a single layout (a list of lists) and pass as a parameter to Window object, or call Window.Layout(layout)
 
         :param *args: List[Elements]
+        :type *args:
         """
         NumRows = len(self.Rows)  # number of existing rows is our row number
         CurrentRowNumber = NumRows  # this row's number
@@ -8235,6 +8264,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param non_blocking: if True, this is a non-blocking call
         :type non_blocking:  (bool)
         :return:             Tuple[Any, Dict] The event, values turple that is returned from Read calls
+        :rtype:
         """
         self.Shown = True
         # Compute num rows & num cols (it'll come in handy debugging)
@@ -8282,7 +8312,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param icon:      Filename or bytes object
         :type icon:       (str)
         :param pngbase64: Base64 encoded image
-        :type pngbase64:  (str)
+        :type pngbase64:  (bytes)
         """
         if type(icon) is bytes or pngbase64 is not None:
             wicon = tkinter.PhotoImage(data=icon if icon is not None else pngbase64)
@@ -8320,7 +8350,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Given a (row, col) location in a layout, return the element located at that position
 
         :param location: (int, int) Return the element located at (row, col) in layout
+        :type location:
         :return:         (Element) The Element located at that position in this window
+        :rtype:
         """
 
         (row_num, col_num) = location
@@ -8373,7 +8405,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         """
 
         :param elem:
+        :type elem:
         :return:
+        :rtype:
         """
         target_element, strvar, should_submit_window = elem._find_target()
 
@@ -8825,7 +8859,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param window:     The "sub-window" (container element) to be searched
         :type window:      Column | Frame | TabGroup | Pane | Tab
         :param key_dict:   The dictionary as it currently stands.... used as part of recursive call
+        :type key_dict:
         :return:           (dict) Dictionary filled with all keys in the window
+        :rtype:
         """
         for row_num, row in enumerate(window.Rows):
             for col_num, element in enumerate(row):
@@ -9482,6 +9518,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         :param bind_string: The event that was bound so can lookup the key modifier
         :type bind_string:  Mike_please_insert_type_here
         :param event:       Event data passed in by tkinter (not used)
+        :type event:
         """
 
         key = self.user_bind_dict.get(bind_string, '')
@@ -9514,6 +9551,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Called when user presses the key that creates the main debugger window
 
         :param event: (event) not used. Passed in event info
+        :type event:
         """
         _Debugger.debugger._build_main_debugger_window()
 
@@ -9522,6 +9560,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Called when user presses the key that creates the floating debugger window
 
         :param event: (event) not used. Passed in event info
+        :type event:
         """
         _Debugger.debugger._build_floating_window()
 
@@ -9630,6 +9669,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
         Internal callback function for when the thread
 
         :param event: Information from tkinter about the callback
+        :type event:
 
         """
         # print('Thread callback info', threading.current_thread())
@@ -9725,6 +9765,7 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
     #     am afraid of removing right now
     #     :return: (window)
+    #      :rtype:
     #     """
     #     return self
 
@@ -9817,7 +9858,9 @@ Normally a tuple, but can be a simplified-dual-color-string "foreground on backg
     #     WAS used with context managers which are no longer needed nor advised.  It is here for legacy support and
     #     am afraid of removing right now
     #     :param *a: (?) Not sure what's passed in.
+    #      :type *a:
     #     :return:   Always returns False which was needed for context manager to work
+    #      :rtype:
     #     """
     #     self.__del__()
     #     return False
@@ -10073,7 +10116,9 @@ class SystemTray:
         """
         Reads the context menu
         :param timeout: Optional.  Any value other than None indicates a non-blocking read
+        :type timeout:
         :return:
+        :rtype:
         """
         if self.last_message_event != TIMEOUT_KEY and self.last_message_event is not None:
             event = self.last_message_event
@@ -10385,7 +10430,7 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
     The Titlebar is a COLUMN element.  You can thus call the update method for the column and
     perform operations such as making the column visible/invisible
 
-    :param icon:             Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :param icon:             Can be either a filename or Base64 byte string of a PNG. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
     :type icon:              str or bytes or None
     :param title:            The "title" to show in the titlebar
     :type title:             str
@@ -10500,7 +10545,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
     :param target:           target for the button (Default value = (ThisRow, -1))
-    :type target:            key or (row,col)
+    :type target:            str | (int, int)
     :param initial_folder:   starting path for folders and files
     :type initial_folder:    (str)
     :param tooltip:          text, that will appear when mouse hovers over the element
@@ -10512,6 +10557,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
+    :type button_color:
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param change_submits:   If True, pressing Enter key submits window (Default = False)
@@ -10548,9 +10594,11 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
+    :type target:            str | (int, int)
     :param file_types:       filter file types (Default value = (("ALL Files", "*.*")))
     :type file_types:        Tuple[(str, str), ...]
     :param initial_folder:   starting path for folders and files
+    :type initial_folder:
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
@@ -10597,6 +10645,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
+    :type target:            str | (int, int)
     :param file_types:       (Default value = (("ALL Files", "*.*")))
     :type file_types:        Tuple[(str, str), ...]
     :param disabled:         set disable state for element (Default = False)
@@ -10650,6 +10699,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param button_text:       text in the button (Default value = 'Save As...')
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
+    :type target:             str | (int, int)
     :param file_types:        (Default value = (("ALL Files", "*.*")))
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
@@ -10701,6 +10751,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param button_text:       text in the button (Default value = 'Save As...')
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
+    :type target:             str | (int, int)
     :param file_types:        (Default value = (("ALL Files", "*.*")))
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
@@ -10972,6 +11023,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11012,6 +11064,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11052,6 +11105,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11092,6 +11146,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11132,6 +11187,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11172,6 +11228,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11212,6 +11269,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
+    :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -12099,6 +12157,7 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False,
     :param top_menu:      ???
     :type top_menu:       ???
     :param sub_menu_info: ???
+    :type sub_menu_info:
     :param element:       ???
     :type element:        idk_yetReally
     :param is_sub_menu:   (Default = False)
@@ -13911,6 +13970,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     """
 
                     :param node:
+                    :type node:
 
                     """
                     if node.key != '':
@@ -14342,9 +14402,9 @@ def _set_icon_for_tkinter_window(root, icon=None, pngbase64=None):
     :param root:      The window being modified
     :type root:       (tk.Tk or tk.TopLevel)
     :param icon:      Filename or bytes object
-    :type icon:       (str)
+    :type icon:       (str | bytes)
     :param pngbase64: Base64 encoded image
-    :type pngbase64:  (str)
+    :type pngbase64:  (bytes)
     """
 
     if type(icon) is bytes or pngbase64 is not None:
@@ -14402,6 +14462,7 @@ def convert_args_to_single_string(*args):
     """
 
     :param *args:
+    :type *args:
 
     """
     max_line_total, width_used, total_lines, = 0, 0, 0
@@ -14893,6 +14954,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :param key:              key of multiline to output to (if you want to override the one previously set)
     :type key:               (Any)
     :param window:           Window containing the multiline to output to (if you want to override the one previously set)
+    :type window:
     :param justification:    text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
     :type justification:     (str)
     :type window:            (Window)
@@ -15028,8 +15090,6 @@ def set_global_icon(icon):
 
     :param icon: Either a Base64 byte string or a filename
     :type icon:  bytes | str
-    :return:     None
-    :rtype:      None
     """
 
     Window._user_defined_icon = icon
@@ -15053,7 +15113,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None):
     """
-    :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a GIF file. This works universally across all OS's
+    :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
     :param button_color:                    Color of the button (text, background)
     :type button_color:                     (str, str) or str
@@ -16570,6 +16630,7 @@ def MsgBox(*args):
     """
     Do not call this anymore it will raise exception.  Use Popups instead
     :param *args:
+    :type *args:
 
     """
     raise DeprecationWarning('MsgBox is no longer supported... change your call to Popup')
@@ -17694,7 +17755,7 @@ def popup_get_date(start_mon=None, start_day=None, start_year=None, begin_at_sun
     :param begin_at_sunday_plus: Determines the left-most day in the display. 0=sunday, 1=monday, etc
     :type begin_at_sunday_plus:  (int)
     :param icon:                 Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
-    :type icon:                  (str)
+    :type icon:                  (str | bytes)
     :param location:             (x,y) location on the screen to place the top left corner of your window. Default is to center on screen
     :type location:              (int, int)
     :param title:                Title that will be shown on the window
@@ -17881,8 +17942,8 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type transparent_color:    (str)
     :param title:               Title that will be shown on the window
     :type title:                (str)
-    :param icon:                Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
-    :type icon:                 str
+    :param icon:                Same as Window icon parameter. Can be either a filename or Base64 byte string. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO
+    :type icon:                 str | bytes
     :return:                    True if the window updated OK. False if the window was closed
     :rtype:                     bool
     """
@@ -18262,6 +18323,7 @@ class UserSettings:
         Converts the settings dictionary into a string for easy display
 
         :return: (str) the dictionary as a string
+        :rtype:
         """
         return str(self.dict)
 
@@ -19033,6 +19095,7 @@ def _create_full_editor_command(file_to_edit, line_number, edit_format_string):
     :param edit_format_string:
     :type edit_format_string:  str
     :return:
+    :rtype:
     """
 
     command = edit_format_string
@@ -19462,6 +19525,7 @@ class _Debugger():
         """
 
         :param location:
+        :type location:
 
         """
         if self.popout_window:  # if floating window already exists, close it first
