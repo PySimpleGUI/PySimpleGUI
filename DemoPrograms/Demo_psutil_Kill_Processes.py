@@ -64,21 +64,24 @@ def main():
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15), text_color='yellow')],
               [sg.Listbox(values=[' '], size=(90, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-PROCESSES-')],
+              [sg.Col([
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-FILTER-')],
               [sg.Button('Sort by Name', ),
                sg.Button('Sort by % CPU', button_color=('white', 'DarkOrange2')),
                sg.Button('Kill', button_color=('white','red'), bind_return_key=True),
-               sg.Exit(button_color=('white', 'sea green'))]]
+               sg.Exit(button_color=('white', 'sea green')), sg.Sizegrip()]], expand_x=True) ]]
 
     window = sg.Window('Process Killer', layout,
                        keep_on_top=True,
                        auto_size_buttons=False,
                        default_button_element_size=(12,1),
                        return_keyboard_events=True,
+                       resizable=True,
+                       right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT,
                        finalize=True)
-
-
+    window['-PROCESSES-'].expand(True, True)
+    window.set_min_size(window.size)
     display_list = show_list_by_name(window)
     # ----------------  main loop  ----------------
     while True:
@@ -102,6 +105,11 @@ def main():
             # for process in sorted_by_cpu_procs:
             #     display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
             # window['-PROCESSES-'].update(display_list)
+            new_output = []
+            for line in display_list:
+                if values['-FILTER-'] in line.lower():
+                    new_output.append(line)
+            window['-PROCESSES-'].update(new_output)
         elif event == 'Kill':
             processes_to_kill = values['-PROCESSES-']
             for proc in processes_to_kill:
@@ -120,6 +128,8 @@ def main():
             for process in sorted_by_cpu_procs:
                 display_list.append('{:5d} {:5.2f} {}\n'.format(process[2], process[0]/10, process[1]))
             window['-PROCESSES-'].update(display_list)
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
         else:                   # was a typed character
             if display_list is not None:
                 new_output = []
