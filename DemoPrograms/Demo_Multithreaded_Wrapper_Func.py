@@ -14,6 +14,13 @@ import PySimpleGUI as sg
         the window that will receive the results and a key that is used to signal that the function
         has completed running.
 
+    The overall idea here is you can directly call your function until it gets too lengthy for
+        the GUI to remain reasonably responsive.  When you get to the point the function takes too long, then
+        you'll copy and paste your function call into the call to perform_long_operation.  The function looks
+        identical to your original code, except that it's now a parameter to another function and the
+        return value is passed back to you later.
+
+
     Copyright 2021 PySimpleGUI
 """
 
@@ -71,17 +78,26 @@ def my_long_func(count, a=1, b=2):
 
 
 '''
-                    oo
-
-88d8b.d8b. .d8888b. dP 88d888b.
-88'`88'`88 88'  `88 88 88'  `88
-88  88  88 88.  .88 88 88    88
-dP  dP  dP `88888P8 dP dP    dP
+                    oo          
+                                
+88d8b.d8b. .d8888b. dP 88d888b. 
+88'`88'`88 88'  `88 88 88'  `88 
+88  88  88 88.  .88 88 88    88 
+dP  dP  dP `88888P8 dP dP    dP 
+                                
+                                
+oo                dP oo                              dP                        dP dP 
+                  88                                 88                        88 88 
+dP 88d888b. .d888b88 dP 88d888b. .d8888b. .d8888b. d8888P    .d8888b. .d8888b. 88 88 
+88 88'  `88 88'  `88 88 88'  `88 88ooood8 88'  `""   88      88'  `"" 88'  `88 88 88 
+88 88    88 88.  .88 88 88       88.  ... 88.  ...   88      88.  ... 88.  .88 88 88 
+dP dP    dP `88888P8 dP dP       `88888P' `88888P'   dP      `88888P' `88888P8 dP dP
 '''
 
+# This is your new code that uses a thread to perform the long operation
 
 def main():
-    layout = [  [sg.Text('Long running function call design pattern')],
+    layout = [  [sg.Text('Indirect Call Version')],
                 [sg.Text('How many times to run the loop?'), sg.Input(s=(4,1), key='-IN-')],
                 [sg.Text(s=(30,1), k='-STATUS-')],
                 [sg.Button('Go', bind_return_key=True), sg.Button('Exit')]  ]
@@ -96,14 +112,66 @@ def main():
         elif event == 'Go':
             window['-STATUS-'].update('Calling your function...')
             if values['-IN-'].isnumeric():
+
                 # This is where the magic happens.  Add your function call as a lambda
-                perform_long_operation(lambda : my_long_func(int(values['-IN-']), a=10),
-                                       window, '-END KEY-')
+                perform_long_operation(
+                    lambda : my_long_func(int(values['-IN-']), a=10),
+                    window, '-END KEY-')
+
             else:
                 window['-STATUS-'].update('Try again... how about an int?')
         elif event == '-END KEY-':
             window['-STATUS-'].update(f'Completed. Returned: {values[event]}')
     window.close()
 
+
+'''
+                    oo          
+                                
+88d8b.d8b. .d8888b. dP 88d888b. 
+88'`88'`88 88'  `88 88 88'  `88 
+88  88  88 88.  .88 88 88    88 
+dP  dP  dP `88888P8 dP dP    dP 
+                                
+                                
+      dP oo                              dP                        dP dP 
+      88                                 88                        88 88 
+.d888b88 dP 88d888b. .d8888b. .d8888b. d8888P    .d8888b. .d8888b. 88 88 
+88'  `88 88 88'  `88 88ooood8 88'  `""   88      88'  `"" 88'  `88 88 88 
+88.  .88 88 88       88.  ... 88.  ...   88      88.  ... 88.  .88 88 88 
+`88888P8 dP dP       `88888P' `88888P'   dP      `88888P' `88888P8 dP dP
+'''
+
+# This is your original code... it's all going great.... until the call takes too long
+def old_main():
+    layout = [  [sg.Text('Direct Call Version')],
+                [sg.Text('How many times to run the loop?'), sg.Input(s=(4,1), key='-IN-')],
+                [sg.Text(s=(30,1), k='-STATUS-')],
+                [sg.Button('Go', bind_return_key=True), sg.Button('Exit')]  ]
+
+    window = sg.Window('Window Title', layout)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        print(event, values)
+        if event == sg.WIN_CLOSED or event == 'Exit':
+            break
+        elif event == 'Go':
+            if values['-IN-'].isnumeric():
+                window['-STATUS-'].update('Calling your function...')
+                window.refresh()        # needed to make the message show up immediately20
+
+                return_value = my_long_func(int(values['-IN-']), a=10)
+
+                window['-STATUS-'].update(f'Completed. Returned: {return_value}')
+            else:
+                window['-STATUS-'].update('Try again... how about an int?')
+
+    window.close()
+
+
+
+
 if __name__ == '__main__':
+    old_main()
     main()
