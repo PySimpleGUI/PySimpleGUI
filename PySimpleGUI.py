@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.17  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries"
+version = __version__ = "4.45.0.18  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor!"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -780,7 +780,7 @@ class Element():
         :type size:              (int, int)  (width, height)
         :param auto_size_text:   True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text:    bool
-        :param font:             specifies the font family, size, etc (see docs for exact formats)
+        :param font:             specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param background_color: color of background. Can be in #RRGGBB format or a color name "black"
         :type background_color:  (str)
@@ -1410,7 +1410,7 @@ class Input(Element):
     def __init__(self, default_text='', size=(None, None), s=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
                  change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
-                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None,
+                 use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, expand_x=False, expand_y=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
@@ -1429,7 +1429,7 @@ class Input(Element):
         :type background_color:                    (str)
         :param text_color:                         color of the text
         :type text_color:                          (str)
-        :param font:                               specifies the font family, size, etc
+        :param font:                               specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                                str | (str, int)
         :param tooltip:                            text, that will appear when mouse hovers over the element
         :type tooltip:                             (str)
@@ -1457,6 +1457,10 @@ class Input(Element):
         :type disabled_readonly_background_color:  (str)
         :param disabled_readonly_text_color:       If state is set to readonly or disabled, the color to use for the text
         :type disabled_readonly_text_color:        (str)
+        :param expand_x:                           If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                            (bool)
+        :param expand_y:                           If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                            (bool)
         :param right_click_menu:                   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:                    List[List[ List[str] | str ]]
         :param visible:                            set visibility state of the element (Default = True)
@@ -1464,6 +1468,7 @@ class Input(Element):
         :param metadata:                           User metadata that can be set to ANYTHING
         :type metadata:                            (Any)
         """
+
 
         self.DefaultText = default_text if default_text is not None else ''
         self.PasswordCharacter = password_char
@@ -1483,6 +1488,8 @@ class Input(Element):
         self.TKEntry = self.Widget = None  # type: tk.Entry
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_TEXT, size=sz, background_color=bg, text_color=fg, key=key, pad=pad,
                          font=font, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -1573,7 +1580,7 @@ class Combo(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None,
+                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, expand_x=False, expand_y=False,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values:           values to choose. While displayed as text, the items returned are what the caller supplied, not text
@@ -1604,11 +1611,14 @@ class Combo(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param tooltip:          text that will appear when mouse hovers over this element
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)        :param tooltip:          text that will appear when mouse hovers over this element
         :type tooltip:           (str)
         :param readonly:         make element readonly (user can't change). True means user cannot change
         :type readonly:          (bool)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
@@ -1626,6 +1636,8 @@ class Combo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_COMBO, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, font=font or DEFAULT_FONT, visible=visible, metadata=metadata)
@@ -1646,7 +1658,7 @@ class Combo(Element):
         :type disabled:      (bool)
         :param readonly:     if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
         :type readonly:      (bool)
-        :param font:         specifies the font family, size, etc
+        :param font:         specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:          str | (str, int)
         :param visible:      control visibility of element
         :type visible:       (bool)
@@ -1750,7 +1762,7 @@ class OptionMenu(Element):
     it looks like a Combo Box that you scroll to select a choice.
     """
 
-    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), disabled=False, auto_size_text=None,
+    def __init__(self, values, default_value=None, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, expand_x=False, expand_y=False,
                  background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
         """
         :param values:           Values to be displayed
@@ -1765,6 +1777,10 @@ class OptionMenu(Element):
         :type disabled:          (bool)
         :param auto_size_text:   True if size of Element should match the contents of the items
         :type auto_size_text:    (bool)
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param background_color: color of background
         :type background_color:  (str)
         :param text_color:       color of the text
@@ -1782,6 +1798,7 @@ class OptionMenu(Element):
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
         self.Values = values
         self.DefaultValue = default_value
         self.Widget = self.TKOptionMenu = None  # type: tk.OptionMenu
@@ -1790,6 +1807,8 @@ class OptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_OPTION_MENU, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -1866,7 +1885,7 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
-                 key=None, k=None, pad=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, pad=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
         :param values:                     list of values to display. Can be any type including mixed types as long as they have __str__ method
         :type values:                      List[Any] or Tuple[Any]
@@ -1888,7 +1907,7 @@ class Listbox(Element):
         :type disabled:                    (bool)
         :param auto_size_text:             True if element should be the same size as the contents
         :type auto_size_text:              (bool)
-        :param font:                       specifies the font family, size, etc
+        :param font:                       specifies the font family, size, etc.  Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                        str | (str, int)
         :param no_scrollbar:               Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
         :type no_scrollbar:                (bool)
@@ -1908,6 +1927,10 @@ class Listbox(Element):
         :type pad:                         (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip:                    text, that will appear when mouse hovers over the element
         :type tooltip:                     (str)
+        :param expand_x:                   If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                    (bool)
+        :param expand_y:                   If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                    (bool)
         :param right_click_menu:           A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:            List[List[ List[str] | str ]]
         :param visible:                    set visibility state of the element
@@ -1915,6 +1938,7 @@ class Listbox(Element):
         :param metadata:                   User metadata that can be set to ANYTHING
         :type metadata:                    (Any)
         """
+
         self.Values = values
         self.DefaultValues = default_values
         self.TKListbox = None
@@ -1942,6 +1966,8 @@ class Listbox(Element):
         self.NoScrollbar = no_scrollbar
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_LISTBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=bg, text_color=fg, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2080,7 +2106,7 @@ class Radio(Element):
 
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), s=(None, None), auto_size_text=None,
                  background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
-                 change_submits=False, enable_events=False, right_click_menu=None, visible=True, metadata=None):
+                 change_submits=False, enable_events=False, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param text:             Text to display next to button
         :type text:              (str)
@@ -2102,7 +2128,7 @@ class Radio(Element):
         :type text_color:        (str)
         :param circle_color:     color of background of the circle that has the dot selection indicator in it
         :type circle_color:      (str)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param key:              Used with window.find_element and with return values to uniquely identify this element
         :type key:               str | int | tuple | object
@@ -2118,11 +2144,16 @@ class Radio(Element):
         :type enable_events:     (bool)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.InitialState = default
         self.Text = text
@@ -2152,6 +2183,8 @@ class Radio(Element):
         self.EncodedRadioValue = None
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_RADIO, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -2262,7 +2295,7 @@ class Checkbox(Element):
 
     def __init__(self, text, default=False, size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None,
                  text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None,
-                 right_click_menu=None, visible=True, metadata=None):
+                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param text:             Text to display next to checkbox
         :type text:              (str)
@@ -2274,7 +2307,7 @@ class Checkbox(Element):
         :type s:                 (int, int) | (None, None)
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param background_color: color of background
         :type background_color:  (str)
@@ -2298,11 +2331,16 @@ class Checkbox(Element):
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.Text = text
         self.InitialState = default
@@ -2330,6 +2368,8 @@ class Checkbox(Element):
         self.ChangeSubmits = change_submits or enable_events
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_CHECKBOX, size=sz, auto_size_text=auto_size_text, font=font,
                          background_color=background_color, text_color=self.TextColor, key=key, pad=pad,
@@ -2432,7 +2472,7 @@ class Spin(Element):
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
                  size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None,
-                 tooltip=None, right_click_menu=None, visible=True, metadata=None):
+                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:           List of valid values
         :type values:            Tuple[Any] or List[Any]
@@ -2452,7 +2492,7 @@ class Spin(Element):
         :type s:                 (int, int) | (None, None)
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param background_color: color of background
         :type background_color:  (str)
@@ -2468,11 +2508,16 @@ class Spin(Element):
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.Values = values
         self.DefaultValue = initial_value
@@ -2486,6 +2531,9 @@ class Spin(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
+
 
         super().__init__(ELEM_TYPE_INPUT_SPIN, size=sz, auto_size_text=auto_size_text, font=font, background_color=bg, text_color=fg,
                          key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -2647,7 +2695,7 @@ class Multiline(Element):
         :type echo_stdout_stderr:  (bool)
         :param focus:              if True initial focus will go to this element
         :type focus:               (bool)
-        :param font:               specifies the font family, size, etc
+        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                str | (str, int)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -2657,9 +2705,9 @@ class Multiline(Element):
         :type justification:       (str)
         :param no_scrollbar:       If False then a scrollbar will be shown (the default)
         :type no_scrollbar:        (bool)
-        :param expand_x:           If True the Multiline will automatically expand in the X direction to fill available space
+        :param expand_x:           If True the element will automatically expand in the X direction to fill available space
         :type expand_x:            (bool)
-        :param expand_y:           If True the Multiline will automatically expand in the Y direction to fill available space
+        :param expand_y:           If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:            (bool)
         :param right_click_menu:   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:    List[List[ List[str] | str ]]
@@ -2715,7 +2763,7 @@ class Multiline(Element):
         :type disabled:                    (bool)
         :param append:                     if True then new value will be added onto the end of the current value. if False then contents will be replaced.
         :type append:                      (bool)
-        :param font:                       specifies the font family, size, etc for the entire element
+        :param font:                       specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element
         :type font:                        str | (str, int)
         :param text_color:                 color of the text
         :type text_color:                  (str)
@@ -2731,7 +2779,7 @@ class Multiline(Element):
         :type autoscroll:                  (bool)
         :param justification:              text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification:               (str)
-        :param font_for_value:             specifies the font family, size, etc for the value being updated
+        :param font_for_value:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
         :type font_for_value:              str | (str, int)
         """
 
@@ -2853,7 +2901,7 @@ class Multiline(Element):
         :type background_color:  (str)
         :param justification:    text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification:     (str)
-        :param font:             specifies the font family, size, etc for the args being printed
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the args being printed
         :type font:              str | (str, int) | (str, int, str)
         :param colors:           Either a tuple or a string that has both the text and background colors. Or just the text color
         :type colors:            (str) or (str, str)
@@ -2972,7 +3020,7 @@ class Text(Element):
     """
 
     def __init__(self, text='', size=(None, None), s=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None,
-                 text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, grab=None,
+                 text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None,
                  tooltip=None, visible=True, metadata=None):
         """
         :param text:             The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
@@ -2989,7 +3037,7 @@ class Text(Element):
         :type enable_events:     (bool)
         :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
         :type relief:            (str/enum)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              (str or (str, int) or None)
         :param text_color:       color of the text
         :type text_color:        (str)
@@ -3007,6 +3055,10 @@ class Text(Element):
         :type k:                 str | int | tuple | object
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param grab:             If True can grab this element and move the window around. Default is False
         :type grab:              (bool)
         :param tooltip:          text, that will appear when mouse hovers over the element
@@ -3032,6 +3084,8 @@ class Text(Element):
         self.Grab = grab
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_TEXT, auto_size_text=auto_size_text, size=sz, background_color=bg, font=font if font else DEFAULT_FONT,
                          text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -3045,7 +3099,7 @@ class Text(Element):
         :type background_color:  (str)
         :param text_color:       color of the text
         :type text_color:        (str)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
@@ -3085,7 +3139,7 @@ class Text(Element):
         the character of your choosing if "W" is not a good representative character.
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
-        :param font:      specifies the font family, size, etc, to be measured
+        :param font:      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
         :type font:       (str or (str, int) or None)
         :param character: specifies a SINGLE CHARACTER character to measure
         :type character:  (str)
@@ -3105,7 +3159,7 @@ class Text(Element):
         Get the height of a string if using the supplied font in pixels.
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
-        :param font: specifies the font family, size, etc, to be measured
+        :param font: specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
         :type font:  (str or (str, int) or None)
         :return:     Height in pixels of "A"
         :rtype:      (int)
@@ -3123,7 +3177,7 @@ class Text(Element):
         Get the with of the supplied string in pixels for the font being passed in.
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
-        :param font:   specifies the font family, size, etc, to be measured
+        :param font:   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
         :type font:    (str or (str, int) or None)
         :param string: the string to measure
         :type string:  str
@@ -3157,7 +3211,7 @@ class StatusBar(Element):
 
     def __init__(self, text, size=(None, None), s=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
                  relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
-                 key=None, k=None, right_click_menu=None, tooltip=None, visible=True, metadata=None):
+                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, tooltip=None, visible=True, metadata=None):
         """
         :param text:             Text that is to be displayed in the widget
         :type text:              (str)
@@ -3173,7 +3227,7 @@ class StatusBar(Element):
         :type enable_events:     (bool)
         :param relief:           relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
         :type relief:            (enum)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param text_color:       color of the text
         :type text_color:        (str)
@@ -3189,6 +3243,10 @@ class StatusBar(Element):
         :type k:                 str | int | tuple | object
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param visible:          set visibility state of the element
@@ -3196,6 +3254,7 @@ class StatusBar(Element):
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.DisplayText = text
         self.TextColor = text_color if text_color else DEFAULT_TEXT_COLOR
@@ -3210,6 +3269,8 @@ class StatusBar(Element):
         key = key if key is not None else k
         self.RightClickMenu = right_click_menu
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_STATUSBAR, size=sz, auto_size_text=auto_size_text, background_color=bg,
                          font=font or DEFAULT_FONT, text_color=self.TextColor, pad=pad, key=key, tooltip=tooltip,
@@ -3225,7 +3286,7 @@ class StatusBar(Element):
         :type background_color:  (str)
         :param text_color:       color of the text
         :type text_color:        (str)
-        :param font:             specifies the font family, size, etc
+        :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:              str | (str, int)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
@@ -3382,7 +3443,7 @@ class TKOutput(tk.Frame):
         :type text_color:          (str)
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
-        :param font:               specifies the font family, size, etc
+        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                str | (str, int)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -3472,7 +3533,7 @@ class Output(Element):
     """
 
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None,
-                 key=None, k=None, right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param size:               (width, height) w=characters-wide, h=rows-high
         :type size:                (int, int) | (None, None)
@@ -3486,7 +3547,7 @@ class Output(Element):
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
-        :param font:               specifies the font family, size, etc
+        :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                str | (str, int)
         :param tooltip:            text, that will appear when mouse hovers over the element
         :type tooltip:             (str)
@@ -3496,6 +3557,10 @@ class Output(Element):
         :type k:                   str | int | tuple | object
         :param right_click_menu:   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:    List[List[ List[str] | str ]]
+        :param expand_x:           If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:            (bool)
+        :param expand_y:           If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:            (bool)
         :param visible:            set visibility state of the element
         :type visible:             (bool)
         :param metadata:           User metadata that can be set to ANYTHING
@@ -3509,6 +3574,8 @@ class Output(Element):
         key = key if key is not None else k
         self.echo_stdout_stderr = echo_stdout_stderr
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_OUTPUT, size=sz, background_color=bg, text_color=fg, pad=pad, font=font,
                          tooltip=tooltip, key=key, visible=visible, metadata=metadata)
@@ -3605,7 +3672,7 @@ class Button(Element):
                  image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
                  highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None,
-                 k=None, right_click_menu=None, visible=True, metadata=None):
+                 k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param button_text:           Text to be displayed on the button
         :type button_text:            (str)
@@ -3653,7 +3720,7 @@ class Button(Element):
         :type mouseover_colors:       (str, str) | str
         :param use_ttk_buttons:       True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :type use_ttk_buttons:        (bool)
-        :param font:                  specifies the font family, size, etc
+        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   str | (str, int)
         :param bind_return_key:       If True the return key will cause this button to be pressed
         :type bind_return_key:        (bool)
@@ -3667,11 +3734,16 @@ class Button(Element):
         :type k:                      str | int | tuple | object
         :param right_click_menu:      A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:       List[List[ List[str] | str ]]
+        :param expand_x:              If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:               (bool)
+        :param expand_y:              If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:               (bool)
         :param visible:               set visibility state of the element
         :type visible:                (bool)
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
+
 
         self.AutoSizeButton = auto_size_button
         self.BType = button_type
@@ -3748,6 +3820,8 @@ class Button(Element):
             self.MouseOverColors = (self.ButtonColor[1], self.ButtonColor[0])
         else:
             self.MouseOverColors = (theme_button_color()[1], theme_button_color()[0])
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         sz = size if size != (None, None) else s
         super().__init__(ELEM_TYPE_BUTTON, size=sz, font=font, pad=pad, key=_key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -4109,7 +4183,7 @@ class ButtonMenu(Element):
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None,
-                 font=None, item_font=None, pad=None, key=None, k=None, tearoff=False, visible=True, metadata=None):
+                 font=None, item_font=None, pad=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True, metadata=None):
         """
         :param button_text:         Text to be displayed on the button
         :type button_text:          (str)
@@ -4143,13 +4217,17 @@ class ButtonMenu(Element):
         :type text_color:           (str)
         :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
         :type disabled_text_color:  (str)
-        :param font:                specifies the font family, size, etc
+        :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                 str | Tuple[str, int]
-        :param item_font:           specifies the font family, size, etc, for the menu items
+        :param item_font:           specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items
         :type item_font:            str | Tuple[str, int]
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
+        :param expand_x:            If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:             (bool)
+        :param expand_y:            If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:             (bool)
         :type key:                  str | int | tuple | object
         :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                    str | int | tuple | object
@@ -4160,6 +4238,7 @@ class ButtonMenu(Element):
         :param metadata:            User metadata that can be set to ANYTHING
         :type metadata:             (Any)
         """
+
         self.MenuDefinition = copy.deepcopy(menu_def)
 
         self.AutoSizeButton = auto_size_button
@@ -4186,6 +4265,8 @@ class ButtonMenu(Element):
         # self.temp_size = size if size != (NONE, NONE) else
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_BUTTONMENU, size=sz, font=font, pad=pad, key=key, tooltip=tooltip,
                          text_color=self.TextColor, background_color=self.BackgroundColor, visible=visible, metadata=metadata)
@@ -4266,7 +4347,7 @@ class ProgressBar(Element):
     """
 
     def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None,
-                 relief=None, key=None, k=None, pad=None, right_click_menu=None, visible=True, metadata=None):
+                 relief=None, key=None, k=None, pad=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param max_value:        max value of progressbar
         :type max_value:         (int)
@@ -4294,11 +4375,16 @@ class ProgressBar(Element):
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.MaxValue = max_value
         self.TKProgressBar = None  # type: TKProgressBar
@@ -4324,6 +4410,8 @@ class ProgressBar(Element):
         self.BarExpired = False
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=sz, auto_size_text=auto_size_text, key=key, pad=pad,
                          visible=visible, metadata=metadata)
@@ -4405,7 +4493,7 @@ class Image(Element):
     """
 
     def __init__(self, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, enable_events=False, metadata=None):
+                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
         :param filename:         image filename if there is a button image. GIFs and PNGs only.
         :type filename:          str | None
@@ -4427,6 +4515,10 @@ class Image(Element):
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param enable_events:    Turns on the element specific events. For an Image element, the event is "image clicked"
@@ -4434,6 +4526,7 @@ class Image(Element):
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.Filename = filename
         self.Data = data
@@ -4451,6 +4544,8 @@ class Image(Element):
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_IMAGE, size=sz, background_color=background_color, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -4614,7 +4709,7 @@ Im = Image
 class Canvas(Element):
 
     def __init__(self, canvas=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, border_width=0, metadata=None):
+                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, border_width=0, metadata=None):
         """
         :param canvas:           Your own tk.Canvas if you already created it. Leave blank to create a Canvas
         :type canvas:            (tk.Canvas)
@@ -4634,6 +4729,10 @@ class Canvas(Element):
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
+        :param expand_x:         If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param border_width:     width of border around element in pixels. Not normally used with Canvas element
@@ -4642,12 +4741,15 @@ class Canvas(Element):
         :type metadata:          (Any)
         """
 
+
         self.BackgroundColor = background_color if background_color is not None else DEFAULT_BACKGROUND_COLOR
         self._TKCanvas = canvas
         self.RightClickMenu = right_click_menu
         self.BorderWidth = border_width
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_CANVAS, background_color=background_color, size=sz, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -4687,7 +4789,7 @@ class Graph(Element):
 
     def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, float_values=False, border_width=0, metadata=None):
+                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, float_values=False, border_width=0, metadata=None):
         """
         :param canvas_size:       size of the canvas area in pixels
         :type canvas_size:        (int, int)
@@ -4713,6 +4815,10 @@ class Graph(Element):
         :type tooltip:            (str)
         :param right_click_menu:  A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:   List[List[ List[str] | str ]]
+        :param expand_x:          If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:           (bool)
+        :param expand_y:          If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:           (bool)
         :param visible:           set visibility state of the element (Default = True)
         :type visible:            (bool)
         :param float_values:      If True x,y coordinates are returned as floats, not ints
@@ -4737,6 +4843,8 @@ class Graph(Element):
         self.FloatValues = float_values
         self.BorderWidth = border_width
         key = key if key is not None else k
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_GRAPH, background_color=background_color, size=canvas_size, pad=pad, key=key,
                          tooltip=tooltip, visible=visible, metadata=metadata)
@@ -5045,7 +5153,7 @@ class Graph(Element):
         :type location:       (int, int) | Tuple[float, float]
         :param color:         text color
         :type color:          (str)
-        :param font:          specifies the font family, size, etc
+        :param font:          specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:           str | Tuple[str, int]
         :param angle:         Angle 0 to 360 to draw the text.  Zero represents horizontal text
         :type angle:          (float)
@@ -5412,7 +5520,7 @@ class Frame(Element):
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
                  relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
-                 tooltip=None, right_click_menu=None, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
+                 tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
         """
         :param title:                 text that is displayed as the Frame's "label" or title
         :type title:                  (str)
@@ -5430,7 +5538,7 @@ class Frame(Element):
         :type size:                   (int, int)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int) | (None, None)
-        :param font:                  specifies the font family, size, etc
+        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   str | Tuple[str, int]
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -5444,6 +5552,10 @@ class Frame(Element):
         :type tooltip:                (str)
         :param right_click_menu:      A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:       List[List[ List[str] | str ]]
+        :param expand_x:              If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:               (bool)
+        :param expand_y:              If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:               (bool)
         :param visible:               set visibility state of the element
         :type visible:                (bool)
         :param element_justification: All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values
@@ -5453,6 +5565,7 @@ class Frame(Element):
         :param metadata:              User metadata that can be set to ANYTHING
         :type metadata:               (Any)
         """
+
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -5476,6 +5589,8 @@ class Frame(Element):
         self.Layout(layout)
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=sz,
                          font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -5699,7 +5814,7 @@ class Tab(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
-                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, visible=True, element_justification='left', metadata=None):
+                 border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', metadata=None):
         """
         :param title:                 text to show on the tab
         :type title:                  (str)
@@ -5709,7 +5824,7 @@ class Tab(Element):
         :type title_color:            (str)
         :param background_color:      color of background of the entire layout
         :type background_color:       (str)
-        :param font:                  specifies the font family, size, etc
+        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   str | Tuple[str, int]
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -5725,6 +5840,10 @@ class Tab(Element):
         :type tooltip:                (str)
         :param right_click_menu:      A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:       List[List[ List[str] | str ]]
+        :param expand_x:              If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:               (bool)
+        :param expand_y:              If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:               (bool)
         :param visible:               set visibility state of the element
         :type visible:                (bool)
         :param element_justification: All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values
@@ -5752,6 +5871,8 @@ class Tab(Element):
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         key = key if key is not None else k
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         self.Layout(layout)
 
@@ -5912,7 +6033,7 @@ class TabGroup(Element):
 
     def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
                  background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None,
-                 size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, visible=True, metadata=None):
+                 size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param layout:                    Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
         :type layout:                     List[List[Tab]]
@@ -5928,7 +6049,7 @@ class TabGroup(Element):
         :type selected_background_color:  (str)
         :param background_color:          color of background area that tabs are located on
         :type background_color:           (str)
-        :param font:                      specifies the font family, size, etc
+        :param font:                      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                       str | Tuple[str, int]
         :param change_submits:            * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:             (bool)
@@ -5952,11 +6073,16 @@ class TabGroup(Element):
         :type tooltip:                    (str)
         :param right_click_menu:          A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:           List[List[ List[str] | str ]]
+        :param expand_x:                  If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                   (bool)
+        :param expand_y:                  If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                   (bool)
         :param visible:                   set visibility state of the element
         :type visible:                    (bool)
         :param metadata:                  User metadata that can be set to ANYTHING
         :type metadata:                   (Any)
         """
+
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -5982,6 +6108,8 @@ class TabGroup(Element):
 
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         self.Layout(layout)
 
@@ -5994,7 +6122,7 @@ class TabGroup(Element):
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
         :param *args:     The list of elements for this row
-        :typeparam *args: List[Element]
+        :type: *args:     List[Element]
         """
 
         NumRows = len(self.Rows)  # number of existing rows is our row number
@@ -6155,7 +6283,7 @@ class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), s=(None, None), font=None, background_color=None,
-                 text_color=None, trough_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 text_color=None, trough_color=None, key=None, k=None, pad=None, expand_x=False, expand_y=False, tooltip=None, visible=True, metadata=None):
         """
         :param range:                  slider's range (min value, max value)
         :type range:                   (int, int) | Tuple[float, float]
@@ -6183,7 +6311,7 @@ class Slider(Element):
         :type size:                    (int, int)
         :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                       (int, int) | (None, None)
-        :param font:                   specifies the font family, size, etc
+        :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                    str | Tuple[str, int]
         :param background_color:       color of slider's background
         :type background_color:        (str)
@@ -6197,6 +6325,10 @@ class Slider(Element):
         :type k:                       str | int | tuple | object
         :param pad:                    Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :param expand_x:               If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                (bool)
+        :param expand_y:               If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                (bool)
         :param tooltip:                text, that will appear when mouse hovers over the element
         :type tooltip:                 (str)
         :param visible:                set visibility state of the element
@@ -6222,6 +6354,8 @@ class Slider(Element):
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
         key = key if key is not None else k
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_INPUT_SLIDER, size=temp_size, font=font, background_color=background_color,
                          text_color=text_color, key=key, pad=pad, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -6586,7 +6720,7 @@ class Column(Element):
         Not user callable. Used to find the Element at a row, col position within the layout
 
         :param location:     (row, column) position of the element to find in layout
-        :typeparam location: (int, int)
+        :type  location:     (int, int)
         :return:             The element found at the location
         :rtype:              (Element)
         """
@@ -6653,7 +6787,7 @@ class Pane(Element):
     """
 
     def __init__(self, pane_list, background_color=None, size=(None, None), s=(None, None), pad=None, orientation='vertical',
-                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None, visible=True, metadata=None):
+                 show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None,  expand_x=None, expand_y=None, visible=True, metadata=None):
         """
         :param pane_list:        Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
         :type pane_list:         List[Column]
@@ -6679,11 +6813,16 @@ class Pane(Element):
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
+        :param expand_x:         If True the column will automatically expand in the X direction to fill available space
+        :type expand_x:          (bool)
+        :param expand_y:         If True the column will automatically expand in the Y direction to fill available space
+        :type expand_y:          (bool)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+
 
         self.UseDictionary = False
         self.ReturnValues = None
@@ -6705,6 +6844,8 @@ class Pane(Element):
         self.Rows = [pane_list]
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_PANE, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata)
         return
@@ -6992,7 +7133,7 @@ class Menu(Element):
         :type tearoff:              (bool)
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
-        :param font:                specifies the font family, size, etc
+        :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                 str | Tuple[str, int]
         :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                  str | int | tuple | object
@@ -7107,7 +7248,7 @@ class Table(Element):
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
                  size=(None, None), s=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
-                 key=None, k=None, tooltip=None, right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:                  ???
         :type values:                   List[List[str | int | float]]
@@ -7131,7 +7272,7 @@ class Table(Element):
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
         :type row_height:               (int)
-        :param font:                    specifies the font family, size, etc
+        :param font:                    specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                     str | Tuple[str, int]
         :param justification:           'left', 'right', 'center' are valid choices
         :type justification:            (str)
@@ -7147,7 +7288,7 @@ class Table(Element):
         :type header_text_color:        (str)
         :param header_background_color: sets the background color for the header
         :type header_background_color:  (str)
-        :param header_font:             specifies the font family, size, etc
+        :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type header_font:              str | Tuple[str, int]
         :param row_colors:              list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
         :type row_colors:               List[Tuple[int, str] | Tuple[Int, str, str]]
@@ -7173,11 +7314,16 @@ class Table(Element):
         :type tooltip:                  (str)
         :param right_click_menu:        A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:         List[List[ List[str] | str ]]
+        :param expand_x:                If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                 (bool)
+        :param expand_y:                If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                 (bool)
         :param visible:                 set visibility state of the element
         :type visible:                  (bool)
         :param metadata:                User metadata that can be set to ANYTHING
         :type metadata:                 (Any)
         """
+
 
         self.Values = values
         self.ColumnHeadings = headings
@@ -7223,6 +7369,8 @@ class Table(Element):
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_TABLE, text_color=text_color, background_color=background_color, font=font,
                          size=sz, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
@@ -7373,7 +7521,7 @@ class Tree(Element):
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, num_rows=None,
                  row_height=None, pad=None, key=None, k=None, tooltip=None,
-                 right_click_menu=None, visible=True, metadata=None):
+                 right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param data:                    The data represented using a PySimpleGUI provided TreeData class
         :type data:                     (TreeData)
@@ -7399,7 +7547,7 @@ class Tree(Element):
         :type change_submits:           (bool)
         :param enable_events:           Turns on the element specific events. Tree events happen when row is clicked
         :type enable_events:            (bool)
-        :param font:                    specifies the font family, size, etc
+        :param font:                    specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                     str | Tuple[str, int]
         :param justification:           'left', 'right', 'center' are valid choices
         :type justification:            (str)
@@ -7413,7 +7561,7 @@ class Tree(Element):
         :type header_text_color:        (str)
         :param header_background_color: sets the background color for the header
         :type header_background_color:  (str)
-        :param header_font:             specifies the font family, size, etc
+        :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type header_font:              str | Tuple[str, int]
         :param num_rows:                The number of rows of the table to display at a time
         :type num_rows:                 (int)
@@ -7429,6 +7577,10 @@ class Tree(Element):
         :type tooltip:                  (str)
         :param right_click_menu:        A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:         List[List[str] | str]]
+        :param expand_x:                If True the element will automatically expand in the X direction to fill available space
+        :type expand_x:                 (bool)
+        :param expand_y:                If True the element will automatically expand in the Y direction to fill available space
+        :type expand_y:                 (bool)
         :param visible:                 set visibility state of the element
         :type visible:                  (bool)
         :param metadata:                User metadata that can be set to ANYTHING
@@ -7477,6 +7629,8 @@ class Tree(Element):
         self.IdToKey = {'': ''}
         self.KeyToID = {'': ''}
         key = key if key is not None else k
+        self.expand_x = expand_x
+        self.expand_y = expand_y
 
         super().__init__(ELEM_TYPE_TREE, text_color=text_color, background_color=background_color, font=font, pad=pad, key=key, tooltip=tooltip,
                          visible=visible, metadata=metadata)
@@ -7826,7 +7980,7 @@ class Window:
         :type margins:                               (int, int)
         :param button_color:                         Default button colors for all buttons in the window
         :type button_color:                          (str, str) or str
-        :param font:                                 specifies the font family, size, etc
+        :param font:                                 specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                                  str | Tuple[str, int] | None
         :param progress_bar_color:                   (bar color, background color) Sets the default colors for all progress bars in the window
         :type progress_bar_color:                    (str, str)
@@ -10564,7 +10718,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type enable_events:     (bool)
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param pad:              Amount of padding to put around element
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -10613,7 +10767,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type change_submits:    (bool)
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -10666,7 +10820,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type change_submits:    (bool)
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -10722,7 +10876,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type change_submits:     (bool)
     :param enable_events:     Turns on the element specific events.(Default = False)
     :type enable_events:      (bool)
-    :param font:              specifies the font family, size, etc
+    :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:               str | Tuple[str, int]
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -10774,7 +10928,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type change_submits:     (bool)
     :param enable_events:     Turns on the element specific events.(Default = False)
     :type enable_events:      (bool)
-    :param font:              specifies the font family, size, etc
+    :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:               str | Tuple[str, int]
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
@@ -10814,7 +10968,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
@@ -10855,7 +11009,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
@@ -10897,7 +11051,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
@@ -10938,7 +11092,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
@@ -10979,7 +11133,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type bind_return_key:   (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
@@ -11018,7 +11172,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11059,7 +11213,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11100,7 +11254,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11141,7 +11295,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11182,7 +11336,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :type disabled:          (bool)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11221,7 +11375,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :type button_color:      (str, str) or str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -11262,7 +11416,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :type button_color:      (str, str) or str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
@@ -11313,7 +11467,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11365,7 +11519,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11419,7 +11573,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -11478,7 +11632,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -11534,7 +11688,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -11601,7 +11755,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type button_color:            (str, str) or str
     :param disabled:               set disable state for element (Default = False)
     :type disabled:                (bool)
-    :param font:                   specifies the font family, size, etc
+    :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                    str | Tuple[str, int]
     :param bind_return_key:        (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:         bool
@@ -11685,7 +11839,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type button_color:      (str, str) or str
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param bind_return_key:  If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
@@ -12429,6 +12583,25 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             element.TKRightClickMenu = top_menu
             element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
 
+    def _add_expansion(element, row_should_expand, row_fill_direction):
+        expand = True
+
+        if element.expand_x and element.expand_y:
+            fill = tk.BOTH
+            row_fill_direction = tk.BOTH
+            row_should_expand = True
+        elif element.expand_x:
+            fill = tk.X
+            row_fill_direction = tk.X if row_fill_direction == tk.NONE else tk.BOTH if row_fill_direction == tk.Y else tk.X
+        elif element.expand_y:
+            fill = tk.Y
+            row_fill_direction = tk.Y if row_fill_direction == tk.NONE else tk.BOTH if row_fill_direction == tk.X else tk.Y
+            row_should_expand = True
+        else:
+            fill = tk.NONE
+            expand = False
+        return expand, fill, row_should_expand, row_fill_direction
+
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
     size_grip = None
@@ -12624,8 +12797,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         pane.TKColFrame.configure(background=pane.BackgroundColor,
                                                   highlightbackground=pane.BackgroundColor,
                                                   highlightcolor=pane.BackgroundColor)
-
-                element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
+                # element.PanedWindow.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
                 if element.visible is False:
                     element.PanedWindow.pack_forget()
             # -------------------------  TEXT placement element  ------------------------- #
@@ -12673,7 +12847,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tktext_label.configure(background=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     tktext_label.configure(fg=element.TextColor)
-                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     tktext_label.pack_forget()
                 element.TKText = tktext_label
@@ -12782,7 +12957,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
-                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+
+                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
@@ -12916,7 +13093,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.image = photo
 
                 element.TKButton = tkbutton  # not used yet but save the TK button in case
-                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     tkbutton.pack_forget()
                 if element.BindReturnKey:
@@ -12993,7 +13171,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.image = photo
                 if width != 0:
                     tkbutton.configure(wraplength=wraplen + 10)  # set wrap to width of widget
-                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                tkbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
 
                 menu_def = element.MenuDefinition
 
@@ -13053,7 +13232,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 element.Widget.config(highlightthickness=0)
                 # element.pack_keywords = {'side':tk.LEFT, 'padx':elementpad[0], 'pady':elementpad[1], 'expand':False, 'fill':tk.NONE }
                 # element.TKEntry.pack(**element.pack_keywords)
-                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=False, fill=tk.NONE)
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKEntry.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKEntry.pack_forget()
                 if element.Focus is True or (toplevel_form.UseDefaultFocus and not toplevel_form.FocusSet):
@@ -13156,8 +13336,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.Size[1] != 1 and element.Size[1] is not None:
                     element.TKCombo.configure(height=element.Size[1])
                 element.TKCombo['values'] = element.Values
-
-                element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKCombo.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKCombo.pack_forget()
                 if element.DefaultValue is not None:
@@ -13200,7 +13380,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.TextColor != COLOR_SYSTEM_DEFAULT and element.TextColor is not None:
                     element.TKOptionMenu.configure(fg=element.TextColor)
                     element.TKOptionMenu['menu'].config(fg=element.TextColor)
-                element.TKOptionMenu.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKOptionMenu.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKOptionMenu.pack_forget()
                 if element.Disabled == True:
@@ -13243,15 +13424,17 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     # Chr0nic
                     element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
                     element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
-                element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
-                element.TKListbox.pack(side=tk.LEFT)
+
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+                element.TKListbox.pack(side=tk.LEFT, fill=fill, expand=expand)
                 if element.visible is False:
                     element_frame.pack_forget()
                     element.vsb.pack_forget()
                 if element.BindReturnKey:
                     element.TKListbox.bind('<Return>', element._ListboxSelectHandler)
                     element.TKListbox.bind('<Double-Button-1>', element._ListboxSelectHandler)
-                if element.Disabled == True:
+                if element.Disabled is True:
                     element.TKListbox['state'] = 'disabled'
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKListbox, text=element.Tooltip,
@@ -13289,23 +13472,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.justification_tag = 'center'
                 # if DEFAULT_SCROLLBAR_COLOR not in (None, COLOR_SYSTEM_DEFAULT):               # only works on Linux so not including it
                 #     element.TKText.vbar.config(troughcolor=DEFAULT_SCROLLBAR_COLOR)
-                expand = True
-                if element.expand_x and element.expand_y:
-                    fill = tk.BOTH
-                    row_fill_direction = tk.BOTH
-                    row_should_expand = True
-                elif element.expand_x:
-                    fill = tk.X
-                    row_fill_direction = tk.X
-                elif element.expand_y:
-                    fill = tk.Y
-                    row_fill_direction = tk.Y
-                    row_should_expand = True
-                else:
-                    fill = tk.NONE
-                    expand = False
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
 
                 element.TKText.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+
+
                 if element.visible is False:
                     element.TKText.pack_forget()
                 else:
@@ -13364,8 +13535,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKCheckbutton.config(highlightbackground=element.BackgroundColor)
                 if element.TextColor != COLOR_SYSTEM_DEFAULT:
                     element.TKCheckbutton.config(highlightcolor=element.TextColor)
-
-                element.TKCheckbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKCheckbutton.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKCheckbutton.pack_forget()
                 if element.Tooltip is not None:
@@ -13391,7 +13562,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                       orientation=direction, BarColor=bar_color,
                                                       border_width=element.BorderWidth, relief=element.Relief,
                                                       style=toplevel_form.TtkTheme, key=element.Key)
-                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKProgressBar.TKProgressBarForReal.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKProgressBar.TKProgressBarForReal.pack_forget()
                 element.Widget = element.TKProgressBar.TKProgressBarForReal
@@ -13441,7 +13613,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.Disabled:
                     element.TKRadio['state'] = 'disabled'
-                element.TKRadio.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKRadio.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKRadio.pack_forget()
                 if element.Tooltip is not None:
@@ -13464,7 +13637,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TKSpinBox.configure(background=element.BackgroundColor)
                     element.TKSpinBox.configure(buttonbackground=element.BackgroundColor)
                 element.Widget.config(highlightthickness=0)
-                element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKSpinBox.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKSpinBox.pack_forget()
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
@@ -13490,7 +13664,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                            text_color=text_color, font=font,
                                                            pad=elementpad, echo_stdout_stderr=element.echo_stdout_stderr)
                 element._TKOut.output.configure(takefocus=0)  # make it so that Output does not get focus
-                element._TKOut.pack(side=tk.LEFT, expand=False, fill=tk.NONE)
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element._TKOut.pack(side=tk.LEFT, expand=expand, fill=fill)
                 if element.visible is False:
                     element._TKOut.frame.pack_forget()
                 if element.Tooltip is not None:
@@ -13529,7 +13704,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 element.tktext_label.image = photo
                 # tktext_label.configure(anchor=tk.NW, image=photo)
-                element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.tktext_label.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
 
                 if element.visible is False:
                     element.tktext_label.pack_forget()
@@ -13552,7 +13728,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element._TKCanvas.master = tk_row_frame
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
-                element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element._TKCanvas.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     element._TKCanvas.pack_forget()
                 if element.Tooltip is not None:
@@ -13572,12 +13749,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 #     element._TKCanvas.master = tk_row_frame
                 element._TKCanvas2 = element.Widget = tk.Canvas(tk_row_frame, width=width, height=height,
                                                                 bd=border_depth)
-                element._TKCanvas2.pack(side=tk.LEFT)
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element._TKCanvas2.pack(side=tk.LEFT, expand=expand, fill=fill)
                 element._TKCanvas2.addtag_all('mytag')
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
                     element._TKCanvas2.configure(background=element.BackgroundColor, highlightthickness=0)
                     # element._TKCanvas.configure(background=element.BackgroundColor, highlightthickness=0)
-                element._TKCanvas2.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                element._TKCanvas2.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     # element._TKCanvas.pack_forget()
                     element._TKCanvas2.pack_forget()
@@ -13630,7 +13808,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 labeled_frame = element.Widget = tk.LabelFrame(tk_row_frame, text=element.Title, relief=element.Relief)
                 element.TKFrame = labeled_frame
                 PackFormIntoFrame(element, labeled_frame, toplevel_form)
-
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 if element.VerticalAlignment is not None:
                     anchor = tk.CENTER  # Default to center if a bad choice is made
                     if element.VerticalAlignment.lower().startswith('t'):
@@ -13639,9 +13817,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         anchor = tk.CENTER
                     if element.VerticalAlignment.lower().startswith('b'):
                         anchor = tk.S
-                    labeled_frame.pack(side=tk.LEFT, anchor=anchor, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                    labeled_frame.pack(side=tk.LEFT, anchor=anchor, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 else:
-                    labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                    labeled_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
 
                 if element.Size != (None, None):
                     labeled_frame.config(width=element.Size[0], height=element.Size[1])
@@ -13678,7 +13856,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 # element.photo_image = tk.PhotoImage(data=DEFAULT_BASE64_ICON)
                 # form.TKNotebook.add(element.TKFrame, text=element.Title, compound=tk.LEFT, state=state,image = element.photo_image)
                 form.TKNotebook.add(element.TKFrame, text=element.Title, state=state)
-                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.NONE, expand=False)
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                form.TKNotebook.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+
                 element.ParentNotebook = form.TKNotebook
                 element.TabID = form.TabCount
                 form.TabCount += 1
@@ -13690,8 +13870,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.BorderWidth is not None:
                     element.TKFrame.configure(borderwidth=element.BorderWidth)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKFrame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu(element)
                 # row_should_expand = True
             # -------------------------  TabGroup placement element  ------------------------- #
@@ -13732,17 +13911,19 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 PackFormIntoFrame(element, toplevel_form.TKroot, toplevel_form)
 
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKNotebook.pack(anchor=tk.SW, side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
+
                 if element.ChangeSubmits:
                     element.TKNotebook.bind('<<NotebookTabChanged>>', element._TabGroupSelectHandler)
                 if element.Tooltip is not None:
-                    element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip,
-                                                    timeout=DEFAULT_TOOLTIP_TIME)
+                    element.TooltipObject = ToolTip(element.TKNotebook, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 if element.Size != (None, None):
                     element.TKNotebook.configure(width=element.Size[0], height=element.Size[1])
                 _add_right_click_menu(element)
 
                 # row_should_expand = True
-                # -------------------------  SLIDER placement element  ------------------------- #
+                # -------------------  SLIDER placement element  ------------------------- #
             elif element_type == ELEM_TYPE_INPUT_SLIDER:
                 element = element  # type: Slider
                 slider_length = element_size[0] * _char_width_in_pixels(font)
@@ -13782,7 +13963,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkscale.config(showvalue=0)
                 if text_color is not None and text_color != COLOR_SYSTEM_DEFAULT:
                     tkscale.configure(fg=text_color)
-                tkscale.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1])
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                tkscale.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.visible is False:
                     tkscale.pack_forget()
                 element.TKScale = tkscale
@@ -13913,11 +14095,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     hscrollbar.pack(side=tk.BOTTOM, fill='x')
                     hscrollbar.config(command=treeview.xview)
                     treeview.configure(xscrollcommand=hscrollbar.set)
-
-                element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKTreeview.pack_forget()
-                frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
+                frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 if element.Tooltip is not None:
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
                                                     timeout=DEFAULT_TOOLTIP_TIME)
@@ -14031,10 +14213,11 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 scrollbar.pack(side=tk.RIGHT, fill='y')
                 scrollbar.config(command=treeview.yview)
                 treeview.configure(yscrollcommand=scrollbar.set)
-                element.TKTreeview.pack(side=tk.LEFT, expand=True, padx=0, pady=0, fill='both')
+                expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
+                element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 if element.visible is False:
                     element.TKTreeview.pack_forget()
-                element_frame.pack(side=tk.LEFT, expand=True, padx=elementpad[0], pady=elementpad[1])
+                element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], expand=expand, fill=fill)
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.Tooltip is not None:  # tooltip
                     element.TooltipObject = ToolTip(element.TKTreeview, text=element.Tooltip,
@@ -14078,7 +14261,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
                 size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X, expand=True)
-                # row_should_expand = True
+                row_should_expand = True
                 row_fill_direction = tk.BOTH
                 size_grip = None
             # -------------------------  StatusBar placement element  ------------------------- #
@@ -14171,8 +14354,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #     AddMenuItem(top_menu, menu[1], form)
         #     tk_row_frame.bind('<Button-3>', form._RightClickMenuCallback)
 
-        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0,
-                          expand=row_should_expand, fill=row_fill_direction)
+        tk_row_frame.pack(side=tk.TOP, anchor=anchor, padx=0, pady=0, expand=row_should_expand, fill=row_fill_direction)
         if form.BackgroundColor is not None and form.BackgroundColor != COLOR_SYSTEM_DEFAULT:
             tk_row_frame.configure(background=form.BackgroundColor)
 
@@ -14707,7 +14889,7 @@ class _DebugWin():
         :type size:         (int, int)
         :param location:    Location of upper left corner of the window
         :type location:     (int, int)
-        :param font:        specifies the font family, size, etc
+        :param font:        specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:         str | Tuple[str, int]
         :param no_titlebar: If True no titlebar will be shown
         :type no_titlebar:  (bool)
@@ -14738,7 +14920,7 @@ class _DebugWin():
         self.resizable = resizable
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True,
+        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, reroute_stderr=False if do_not_reroute_stdout else True,
                                         expand_x=True, expand_y=True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
@@ -14817,7 +14999,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type sep:                    (str)
     :param location:              Location of upper left corner of the window
     :type location:               (int, int)
-    :param font:                  specifies the font family, size, etc
+    :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                   str | Tuple[str, int]
     :param no_titlebar:           If True no titlebar will be shown
     :type no_titlebar:            (bool)
@@ -14833,7 +15015,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type keep_on_top:            (bool)
     :param location:              Location of upper left corner of the window
     :type location:               (int, int)
-    :param do_not_reroute_stdout: do not reroute stdout
+    :param do_not_reroute_stdout: do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here
     :type do_not_reroute_stdout:  (bool)
     :param colors:                Either a tuple or a string that has both the text and background colors
     :type colors:                 (str) or (str, str)
@@ -14935,7 +15117,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :type *args:             (Any)
     :param text_color:       Color of the text
     :type text_color:        (str)
-    :param font:             specifies the font family, size, etc for the value being updated
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
     :type font:              str | (str, int) | (str, int, str)
     :param background_color: The background color of the line
     :type background_color:  (str)
@@ -15025,7 +15207,7 @@ def _print_to_element(multiline_element, *args, end=None, sep=None, text_color=N
     :type background_color:   (str)
     :param autoscroll:        If True (the default), the element will scroll to bottom after updating
     :type autoscroll:         (bool)
-    :param font:              specifies the font family, size, etc for the value being updated
+    :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
     :type font:               str | (str, int)
     """
     end_str = str(end) if end is not None else '\n'
@@ -15129,7 +15311,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type auto_size_text:                   bool
     :param auto_size_buttons:               True if Buttons in this Window should be sized to exactly fit the text on this.
     :type auto_size_buttons:                (bool)
-    :param font:                            specifies the font family, size, etc
+    :param font:                            specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                             str | Tuple[str, int]
     :param border_width:                    width of border around element
     :type border_width:                     (int)
@@ -16512,7 +16694,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     :type icon:                 str | bytes
     :param line_width:          Width of lines in characters.  Defaults to MESSAGE_BOX_LINE_WIDTH
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[font_name, size, modifiers]
     :param no_titlebar:         If True will not show the frame around the window and the titlebar across the top
     :type no_titlebar:          (bool)
@@ -16611,6 +16793,7 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
                     no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, return_keyboard_events=any_key_closes,
                     modal=modal)
 
+
     if non_blocking:
         button, values = window.read(timeout=0)
     else:
@@ -16673,7 +16856,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :type grab_anywhere:        (bool)
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
@@ -16772,7 +16955,7 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -16823,7 +17006,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -16875,7 +17058,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -16931,7 +17114,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -16982,7 +17165,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere:        (bool)
@@ -17033,7 +17216,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17085,7 +17268,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17137,7 +17320,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17188,7 +17371,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17238,7 +17421,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17289,7 +17472,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :type icon:                 bytes | str
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | Tuple[str, int]
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
@@ -17345,7 +17528,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :type text_color:                (str)
     :param icon:                     filename or base64 string to be used for the window's icon
     :type icon:                      bytes | str
-    :param font:                     specifies the font family, size, etc
+    :param font:                     specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                      str | Tuple[str, int]
     :param no_titlebar:              If True no titlebar will be shown
     :type no_titlebar:               (bool)
@@ -17513,7 +17696,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type text_color:                (str)
     :param icon:                     filename or base64 string to be used for the window's icon
     :type icon:                      bytes | str
-    :param font:                     specifies the font family, size, etc
+    :param font:                     specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                      str | Tuple[str, int]
     :param no_titlebar:              If True no titlebar will be shown
     :type no_titlebar:               (bool)
@@ -17698,7 +17881,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :type text_color:        (str)
     :param icon:             filename or base64 string to be used for the window's icon
     :type icon:              bytes | str
-    :param font:             specifies the font family, size, etc
+    :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              str | Tuple[str, int]
     :param no_titlebar:      If True no titlebar will be shown
     :type no_titlebar:       (bool)
@@ -17924,7 +18107,7 @@ def popup_animated(image_source, message=None, background_color=None, text_color
     :type background_color:     (str)
     :param text_color:          color of the text
     :type text_color:           (str)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | tuple
     :param no_titlebar:         If True then the titlebar and window frame will not be shown
     :type no_titlebar:          (bool)
@@ -18183,7 +18366,7 @@ def shell_with_animation(command, args=None, image_source=DEFAULT_BASE64_LOADING
     :type background_color:     (str)
     :param text_color:          color of the text
     :type text_color:           (str)
-    :param font:                specifies the font family, size, etc
+    :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:                 str | tuple
     :param no_titlebar:         If True then the titlebar and window frame will not be shown
     :type no_titlebar:          (bool)
@@ -20127,7 +20310,7 @@ def main_open_github_issue():
                       [In(size=(4, 1), k='-EXP PYTHON-'), T('Years Writing Python')],
                       [CB('Previously programmed a GUI', k='-CB PRIOR GUI-')],
                       [T('Share more if you want....')],
-                      [In(size=(25, 1), k='-EXP NOTES-')]]
+                      [In(size=(25, 1), k='-EXP NOTES-', expand_x=True)]]
 
     checklist = (('Searched main docs for your problem', 'www.PySimpleGUI.org'),
                  ('Looked for Demo Programs that are similar to your goal ', 'http://Demos.PySimpleGUI.org'),
@@ -20141,11 +20324,11 @@ def main_open_github_issue():
     checklist_col2 = Col([[CB(c, k=('-CB-', i + 4)), T(t, k='-T{}-'.format(i + 4), enable_events=True)] for i, (c, t) in enumerate(checklist[4:])], pad=(0, 0),
                          k='-C FRAME CBs2-')
     checklist_tabgropup = TabGroup(
-        [[Tab('Checklist 1 *', [[checklist_col1]]), Tab('Checklist 2  *', [[checklist_col2]]), Tab('Experience', col_experience, k='-Tab Exp-', pad=(0, 0))]])
+        [[Tab('Checklist 1 *', [[checklist_col1]], expand_x=True, expand_y=True), Tab('Checklist 2  *', [[checklist_col2]]), Tab('Experience', col_experience, k='-Tab Exp-', pad=(0, 0))]], expand_x=True, expand_y=True)
 
-    frame_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML DETAILS-')]]
-    frame_code = [[Multiline(size=(80, 10), font='Courier 8', k='-ML CODE-')]]
-    frame_markdown = [[Multiline(size=(80, 10), font='Courier 8', k='-ML MARKDOWN-')]]
+    frame_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML DETAILS-', expand_x=True, expand_y=True)]]
+    frame_code = [[Multiline(size=(80, 10), font='Courier 8', k='-ML CODE-', expand_x=True, expand_y=True)]]
+    frame_markdown = [[Multiline(size=(80, 10), font='Courier 8', k='-ML MARKDOWN-', expand_x=True, expand_y=True)]]
 
     top_layout = [[Col([[Text('Open A GitHub Issue (* = Required Info)', font='_ 15')]], expand_x=True),
                    Col([[B('Help')]])
@@ -20159,30 +20342,30 @@ def main_open_github_issue():
                   ])]
 
     middle_layout = [
-        [Frame('Checklist * (note that you can click the links)', [[checklist_tabgropup]], font=font_frame, k='-CLIST FRAME-')],
+        [Frame('Checklist * (note that you can click the links)', [[checklist_tabgropup]], font=font_frame, k='-CLIST FRAME-', expand_x=True, expand_y=True)],
         [HorizontalSeparator()],
         [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
     bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0, 0)), Tab('SHORT Code to duplicate Program *', frame_code, pad=(0, 0)),
-                                 Tab('Markdown Output', frame_markdown, pad=(0, 0))]], k='-TABGROUP-'),
-                      ]]
+                                 Tab('Markdown Output', frame_markdown, pad=(0, 0))]], k='-TABGROUP-', expand_x=True, expand_y=True)]]
 
-    layout_pane = Pane([Col(middle_layout), Col(bottom_layout)], key='-PANE-')
+
+    layout_pane = Pane([Col(middle_layout), Col(bottom_layout)], key='-PANE-', expand_x=True, expand_y=True)
 
     layout = [
         [pin(B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE CLIST-', tooltip='Hide/show upper sections of window')), pin(Col(top_layout, k='-TOP COL-'))],
         [layout_pane],
-        [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]], expand_x=False, expand_y=False)]]
+        [Col([[B('Post Issue'), B('Create Markdown Only'), B('Quit')]])]]
 
     window = Window('Open A GitHub Issue', layout, finalize=True, resizable=True, enable_close_attempted_event=True, margins=(0, 0))
 
-    for i in range(len(checklist)):
-        window['-T{}-'.format(i)].set_cursor('hand1')
-    window['-TABGROUP-'].expand(True, True, True)
-    window['-ML CODE-'].expand(True, True, True)
-    window['-ML DETAILS-'].expand(True, True, True)
-    window['-ML MARKDOWN-'].expand(True, True, True)
-    window['-PANE-'].expand(True, True, True)
+    # for i in range(len(checklist)):
+    [window['-T{}-'.format(i)].set_cursor('hand1') for i in range(len(checklist))]
+    # window['-TABGROUP-'].expand(True, True, True)
+    # window['-ML CODE-'].expand(True, True, True)
+    # window['-ML DETAILS-'].expand(True, True, True)
+    # window['-ML MARKDOWN-'].expand(True, True, True)
+    # window['-PANE-'].expand(True, True, True)
     window.bring_to_front()
     while True:  # Event Loop
         event, values = window.read()
