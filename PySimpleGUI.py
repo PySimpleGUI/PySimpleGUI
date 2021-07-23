@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.18  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor!"
+version = __version__ = "4.45.0.19  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -9904,6 +9904,24 @@ class Window:
         # self.thread_lock.release()
         return qsize != 0
 
+
+    def perform_long_operation(self, func, end_key):
+        """
+        Call your function that will take a long time to execute.  When it's complete, send an event
+        specified by the end_key.
+
+        :param func:    A lambda or a function name with no parms
+        :type func:     Any
+        :param end_key: The key that will be generated when the function returns
+        :type end_key:  (Any)
+        :return:        The id of the thread
+        :rtype:         threading.Thread
+        """
+
+        thread = threading.Thread(target=_long_func_thread, args=(self, end_key, func), daemon=True)
+        thread.start()
+        return thread
+
     @property
     def key_dict(self):
         """
@@ -10030,6 +10048,22 @@ class Window:
 
 
 FlexForm = Window
+
+
+def _long_func_thread(window, end_key, original_func):
+    """
+    Used to run long operations on the user's behalf. Called by the window object
+
+    :param window:        The window that will get the event
+    :type window:         (Window)
+    :param end_key:       The event that will be sent when function returns
+    :type end_key:        (Any)
+    :param original_func: The user's function that is called. Can be a function with no arguments or a lambda experession
+    :type original_func:  (Any)
+    """
+
+    return_value = original_func()
+    window.write_event_value(end_key, return_value)
 
 
 def _exit_mainloop(exiting_window):
@@ -12604,7 +12638,6 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     tclversion_detailed = tkinter.Tcl().eval('info patchlevel')
 
-    size_grip = None
 
     # --------------------------------------------------------------------------- #
     # ****************  Use FlexForm to build the tkinter window ********** ----- #
@@ -14261,9 +14294,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     style.configure(style_name, background=toplevel_form.TKroot['bg'])
                 size_grip.configure(style=style_name)
                 size_grip.pack(side=tk.RIGHT, anchor='se', padx=0, pady=0, fill=tk.X, expand=True)
-                row_should_expand = True
                 row_fill_direction = tk.BOTH
-                size_grip = None
             # -------------------------  StatusBar placement element  ------------------------- #
             elif element_type == ELEM_TYPE_STATUSBAR:
                 # auto_size_text = element.AutoSizeText
