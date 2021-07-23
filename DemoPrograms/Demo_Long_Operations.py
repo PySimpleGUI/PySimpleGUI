@@ -1,47 +1,29 @@
-import threading
 import time
 import PySimpleGUI as sg
 
 """
-    Performing function calls that are lengthy using a "wrapper function)
-
-    This is one way to use threads and PySimpleGUI's write_event_value to enable users
-        to call functions that would normally cause a GUI to appear hung.
-
-    A helper function, perform_long_operation is used where a function call is normally done in your code.
-
-    Instead of directly calling the function, a lambda is used and passed to the helper function along with
-        the window that will receive the results and a key that is used to signal that the function
-        has completed running.
-
-    The overall idea here is you can directly call your function until it gets too lengthy for
-        the GUI to remain reasonably responsive.  When you get to the point the function takes too long, then
-        you'll copy and paste your function call into the call to perform_long_operation.  The function looks
-        identical to your original code, except that it's now a parameter to another function and the
-        return value is passed back to you later.
-
+    Demo Long Operations
+    
+    How to make calls to your functions that take a very long time to complete.
+    
+    One of the classic GUI problems is when a function takes a long time to complete.
+    Normally these functions cause a GUI to appear to the operating system to have
+    hung and you'll see a message asking if you want to kill your program.
+    
+    PySimpleGUI has a Window method - perform_long_operation that can help in these situations
+    NOTE - because this method uses threads, it's important you do not make any PySimpleGUI calls
+    from your long function.  Also, some things simply cannot be safely run as a thread.  Just understand
+    that this function perform_long_operation utilizes threads.
+    
+    window.perform_long_operation takes 2 parameters:
+        * A lambda expression that represents your function call
+        * A key that is returned when you function completes
+        
+    When you function completes, you will receive an event when calling window.read() that
+    matches the key provided.
 
     Copyright 2021 PySimpleGUI
 """
-
-'''
-M""""""""M dP                                        dP
-Mmmm  mmmM 88                                        88
-MMMM  MMMM 88d888b. 88d888b. .d8888b. .d8888b. .d888b88
-MMMM  MMMM 88'  `88 88'  `88 88ooood8 88'  `88 88'  `88
-MMMM  MMMM 88    88 88       88.  ... 88.  .88 88.  .88
-MMMM  MMMM dP    dP dP       `88888P' `88888P8 `88888P8
-MMMMMMMMMM
-'''
-
-def perform_long_operation(func, window, end_key):
-    thread = threading.Thread(target=long_func_thread, args=(window, end_key, func))
-    thread.start()
-
-
-def long_func_thread(window: sg.Window, end_key, original_func):
-    return_value = original_func()
-    window.write_event_value(end_key,  return_value)
 
 
 '''
@@ -114,14 +96,14 @@ def main():
             if values['-IN-'].isnumeric():
 
                 # This is where the magic happens.  Add your function call as a lambda
-                perform_long_operation(
-                    lambda : my_long_func(int(values['-IN-']), a=10),
-                    window, '-END KEY-')
-
+                window.perform_long_operation(lambda :
+                                              my_long_func(int(values['-IN-']), a=10),
+                                              '-END KEY-')
             else:
                 window['-STATUS-'].update('Try again... how about an int?')
         elif event == '-END KEY-':
-            window['-STATUS-'].update(f'Completed. Returned: {values[event]}')
+            return_value = values[event]
+            window['-STATUS-'].update(f'Completed. Returned: {return_value}')
     window.close()
 
 
@@ -173,5 +155,5 @@ def old_main():
 
 
 if __name__ == '__main__':
-    old_main()
+    # old_main()
     main()
