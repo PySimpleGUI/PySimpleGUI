@@ -180,13 +180,16 @@ def get_theme():
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # New function
-def get_line_number(file_path, string):
+def get_line_number(file_path, string, dupe_lines):
     lmn = 0
-    with open(file_path) as f:
+    with open(file_path, encoding="utf-8") as f:
         for num, line in enumerate(f, 1):
-            if string.strip() == line.strip():
+            if string.strip() == line.strip() and num not in dupe_lines:
                 lmn = num
     return lmn
+    
+def kill_ascii(s):
+    return "".join([x if ord(x) < 128 else '?' for x in s])
 
 def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=None, ignore_case=True, show_first_match=True):
     """
@@ -306,8 +309,10 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
             if (verbose):
                 sg.cprint(f"{tail}:", c='white on green')
             try:
+                dupe_lines = []
                 for _match in matched_dict[key]:
-                    line_num_match = get_line_number(key, _match)
+                    line_num_match = get_line_number(key, _match, dupe_lines)
+                    dupe_lines.append(line_num_match)
                     file_array_new.append(line_num_match)
                     file_match_list.append(_match) # I *really* overthinked this.
                     if (verbose):
@@ -318,7 +323,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
                 file_array_old.append(file_array_new)
                 file_array_old.append(file_match_list)
                 file_lines_dict[tail] = file_array_old
-            except:
+            except Exception as e:
                 pass
 
         find_in_file.file_list_dict = file_lines_dict
@@ -457,7 +462,7 @@ def make_window():
         [sg.Text('Find (F3):', tooltip=find_re_tooltip), sg.Input(size=(25, 1),key='-FIND RE-', tooltip=find_re_tooltip),sg.B('Find RE')]], k='-RE COL-'))
 
     right_col = [
-        [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True)],
+        [sg.Multiline(size=(70, 21), write_only=True, key=ML_KEY, reroute_stdout=True, echo_stdout_stderr=True, reroute_cprint=True, expand_y=True, expand_x=True)],
         [sg.Button('Edit Me (this program)'), sg.B('Settings'), sg.Button('Exit')],
         [sg.T('PySimpleGUI ver ' + sg.version.split(' ')[0] + '  tkinter ver ' + sg.tclversion_detailed, font='Default 8', pad=(0,0))],
         [sg.T('Python ver ' + sys.version, font='Default 8', pad=(0,0))],
@@ -467,7 +472,7 @@ def make_window():
     options_at_bottom = sg.pin(sg.Column([[sg.CB('Verbose', enable_events=True, k='-VERBOSE-'),
                          sg.CB('Show only first match in file', default=True, enable_events=True, k='-FIRST MATCH ONLY-'),
                          sg.CB('Find ignore case', default=True, enable_events=True, k='-IGNORE CASE-'),
-                         sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-')
+                         sg.CB('Wait for Runs to Complete', default=False, enable_events=True, k='-WAIT-'),
                                            ]],
                                          pad=(0,0), k='-OPTIONS BOTTOM-',  expand_x=True, expand_y=False),  expand_x=True, expand_y=False)
 
@@ -479,12 +484,12 @@ def make_window():
               [choose_folder_at_top],
               # [sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True)],
               [sg.Pane([sg.Column([[left_col],[ lef_col_find_re]], element_justification='l',  expand_x=True, expand_y=True), sg.Column(right_col, element_justification='c', expand_x=True, expand_y=True) ], orientation='h', relief=sg.RELIEF_SUNKEN, k='-PANE-')],
-              [options_at_bottom]]
+              [options_at_bottom],]
 
     # --------------------------------- Create Window ---------------------------------
     window = sg.Window('PSG Demo & Project Browser', layout, finalize=True, icon=icon, resizable=True, use_default_focus=False)
     window.set_min_size(window.size)
-
+    window.bring_to_front()
     window['-DEMO LIST-'].expand(True, True, True)
     window[ML_KEY].expand(True, True, True)
     window['-PANE-'].expand(True, True, True)
@@ -492,6 +497,7 @@ def make_window():
     window.bind('<F1>', '-FOCUS FILTER-')
     window.bind('<F2>', '-FOCUS FIND-')
     window.bind('<F3>', '-FOCUS RE FIND-')
+
     if not advanced_mode():
         window['-FOLDER CHOOSE-'].update(visible=False)
         window['-RE COL-'].update(visible=False)
@@ -522,6 +528,7 @@ def main():
     while True:
         event, values = window.read()
         # print(event, values)
+        
         counter += 1
         if event in (sg.WINDOW_CLOSED, 'Exit'):
             break
