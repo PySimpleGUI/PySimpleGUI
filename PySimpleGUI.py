@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.22  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...)"
+version = __version__ = "4.45.0.23  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess."
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -14928,32 +14928,31 @@ class _DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, resizable=True):
+                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, echo_stdout=False, resizable=True):
         """
 
-        :param size:        (w,h) w=characters-wide, h=rows-high
-        :type size:         (int, int)
-        :param location:    Location of upper left corner of the window
-        :type location:     (int, int)
-        :param font:        specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:         str | Tuple[str, int]
-        :param no_titlebar: If True no titlebar will be shown
-        :type no_titlebar:  (bool)
-
-        :param no_button: show button
-        :type no_button:  (bool)
-
-        :param grab_anywhere: If True: can grab anywhere to move the window (Default = False)
-        :type grab_anywhere:  (bool)
-
+        :param size:                  (w,h) w=characters-wide, h=rows-high
+        :type size:                   (int, int)
+        :param location:              Location of upper left corner of the window
+        :type location:               (int, int)
+        :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
+        :type font:                   str | Tuple[str, int]
+        :param no_titlebar:           If True no titlebar will be shown
+        :type no_titlebar:            (bool)
+        :param no_button:             show button
+        :type no_button:              (bool)
+        :param grab_anywhere:         If True: can grab anywhere to move the window (Default = False)
+        :type grab_anywhere:          (bool)
         :param location:              Location of upper left corner of the window
         :type location:               (int, int)
         :param do_not_reroute_stdout: bool value
         :type do_not_reroute_stdout:  (bool)
+        :param echo_stdout:           If True stdout is sent to both the console and the debug window
+        :type echo_stdout:            (bool)
         :param resizable:             if True, makes the window resizble
         :type resizable:              (bool)
-        :rtype:                       (None)
         """
+
         # Show a form that's a running counter
         self.size = size
         self.location = location
@@ -14963,11 +14962,11 @@ class _DebugWin():
         self.grab_anywhere = grab_anywhere
         self.keep_on_top = keep_on_top
         self.do_not_reroute_stdout = do_not_reroute_stdout
+        self.echo_stdout = echo_stdout
         self.resizable = resizable
 
         win_size = size if size != (None, None) else DEFAULT_DEBUG_WINDOW_SIZE
-        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, reroute_stderr=False if do_not_reroute_stdout else True,
-                                        expand_x=True, expand_y=True, key='-MULTILINE-')
+        self.output_element = Multiline(size=win_size, autoscroll=True, auto_refresh=True, reroute_stdout=False if do_not_reroute_stdout else True, echo_stdout_stderr=self.echo_stdout, reroute_stderr=False if do_not_reroute_stdout else True, expand_x=True, expand_y=True, key='-MULTILINE-')
         if no_button:
             self.layout = [[self.output_element]]
         else:
@@ -14987,14 +14986,14 @@ class _DebugWin():
         if self.window is None:  # if window was destroyed already re-open it
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
 
         event, values = self.window.read(timeout=0)
         if event == 'Quit' or event is None:
             self.Close()
             self.__init__(size=self.size, location=self.location, font=self.font, no_titlebar=self.no_titlebar,
                           no_button=self.no_button, grab_anywhere=self.grab_anywhere, keep_on_top=self.keep_on_top,
-                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable)
+                          do_not_reroute_stdout=self.do_not_reroute_stdout, resizable=self.resizable, echo_stdout=self.echo_stdout)
             event, values = self.window.read(timeout=0)
         if erase_all:
             self.window['-MULTILINE-'].update('')
@@ -15023,7 +15022,7 @@ class _DebugWin():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, text_color=None, background_color=None, colors=None, c=None,
+               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
                erase_all=False, resizable=True):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
@@ -15063,6 +15062,8 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :type location:               (int, int)
     :param do_not_reroute_stdout: do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here
     :type do_not_reroute_stdout:  (bool)
+    :param echo_stdout:           If True stdout is sent to both the console and the debug window
+    :type echo_stdout:            (bool)
     :param colors:                Either a tuple or a string that has both the text and background colors
     :type colors:                 (str) or (str, str)
     :param c:                     Either a tuple or a string that has both the text and background colors
@@ -15077,7 +15078,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     if _DebugWin.debug_window is None:
         _DebugWin.debug_window = _DebugWin(size=size, location=location, font=font, no_titlebar=no_titlebar,
                                            no_button=no_button, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top,
-                                           do_not_reroute_stdout=do_not_reroute_stdout, resizable=resizable)
+                                           do_not_reroute_stdout=do_not_reroute_stdout, echo_stdout=echo_stdout, resizable=resizable)
     txt_color, bg_color = _parse_colors_parm(c or colors)
     _DebugWin.debug_window.Print(*args, end=end, sep=sep, text_color=text_color or txt_color, background_color=background_color or bg_color,
                                  erase_all=erase_all, font=font)
