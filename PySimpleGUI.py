@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.27  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670"
+version = __version__ = "4.45.0.28  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -524,7 +524,10 @@ SUPPRESS_RAISE_KEY_ERRORS = True
 SUPPRESS_KEY_GUESSING = False
 
 ENABLE_TREEVIEW_869_PATCH = True
+
+# These are now set based on the global settings file
 ENABLE_MAC_NOTITLEBAR_PATCH = False
+ENABLE_MAC_MODAL_DISABLE_PATCH = False
 
 OLD_TABLE_TREE_SELECTED_ROW_COLORS = ('#FFFFFF', '#4A6984')
 ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS = ('SystemHighlightText', 'SystemHighlight')
@@ -9768,8 +9771,8 @@ class Window:
         if not self._is_window_created('tried Window.make_modal'):
             return
 
-        # if running_mac():
-        #     return
+        if running_mac() and ENABLE_MAC_MODAL_DISABLE_PATCH:
+            return
 
         try:
             self.TKroot.transient()
@@ -14448,7 +14451,9 @@ def _no_titlebar_setup(window):
             else:
                 window.TKroot.wm_overrideredirect(True)
                 # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
-                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                # Previously restricted patch to only certain tkinter versions. Now use the patch setting exclusively regardless of tk ver
+                # if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
+                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
                     print('* Applying Mac no_titlebar patch *')
                     window.TKroot.wm_overrideredirect(False)
     except:
@@ -15003,8 +15008,8 @@ class _DebugWin():
         else:
             self.layout = [[self.output_element],
                            [DummyButton('Quit'), Stretch()]]
-        if no_titlebar and resizable:
-            self.layout[-1] += [Sizegrip()]
+
+        self.layout[-1] += [Sizegrip()]
 
         self.window = Window('Debug Window', self.layout, no_titlebar=no_titlebar, auto_size_text=True, location=location,
                              font=font or ('Courier New', 10), grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, finalize=False, resizable=resizable)
@@ -17729,7 +17734,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
                     history_settings.set('-PSG folder list-', list_of_entries)
             break
 
-    window.close();
+    window.close()
     del window
     if event in ('Cancel', WIN_CLOSED):
         return None
@@ -19392,6 +19397,74 @@ def _get_editor():
 
 
 '''
+'##::::'##::::'###:::::'######::::::'######::'########::'########::'######::'####:'########:'####::'######::
+ ###::'###:::'## ##:::'##... ##::::'##... ##: ##.... ##: ##.....::'##... ##:. ##:: ##.....::. ##::'##... ##:
+ ####'####::'##:. ##:: ##:::..::::: ##:::..:: ##:::: ##: ##::::::: ##:::..::: ##:: ##:::::::: ##:: ##:::..::
+ ## ### ##:'##:::. ##: ##::::::::::. ######:: ########:: ######::: ##:::::::: ##:: ######:::: ##:: ##:::::::
+ ##. #: ##: #########: ##:::::::::::..... ##: ##.....::: ##...:::: ##:::::::: ##:: ##...::::: ##:: ##:::::::
+ ##:.:: ##: ##.... ##: ##::: ##::::'##::: ##: ##:::::::: ##::::::: ##::: ##:: ##:: ##:::::::: ##:: ##::: ##:
+ ##:::: ##: ##:::: ##:. ######:::::. ######:: ##:::::::: ########:. ######::'####: ##:::::::'####:. ######::
+..:::::..::..:::::..:::......:::::::......:::..:::::::::........:::......:::....::..::::::::....:::......:::
+'''
+
+# Dictionary of Mac Patches.  Used to find the key in the global settings and the default value
+MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False, ''),
+                  'Disable Modal Windows' : ('-mac feature disable modal windows-', True)}
+
+def _read_mac_global_settings():
+    """
+    Reads the settings from the PySimpleGUI Global Settings and sets variables that
+    are used at runtime to control how certain features behave
+    """
+
+    global ENABLE_MAC_MODAL_DISABLE_PATCH
+    global ENABLE_MAC_NOTITLEBAR_PATCH
+
+    ENABLE_MAC_MODAL_DISABLE_PATCH = pysimplegui_user_settings.get(MAC_PATCH_DICT['Disable Modal Windows'][0],
+                                                                   MAC_PATCH_DICT['Disable Modal Windows'][1])
+    ENABLE_MAC_NOTITLEBAR_PATCH = pysimplegui_user_settings.get(MAC_PATCH_DICT['Enable No Titlebar Patch'][0],
+                                                                MAC_PATCH_DICT['Enable No Titlebar Patch'][1])
+
+def main_mac_feature_control():
+    """
+    Window to set settings that will be used across all PySimpleGUI programs that choose to use them.
+    Use set_options to set the path to the folder for all PySimpleGUI settings.
+
+    :return: True if settings were changed
+    :rtype:  (bool)
+    """
+
+    current_theme = theme()
+    theme('dark red')
+
+    layout = [[T('Mac PySimpleGUI Feature Control', font='DEFAIULT 18')],
+              [T('Use this window to enable / disable features.')],
+              [T('Unfortunately, on some releases of tkinter on the Mac, there are problems that')],
+              [T('create the need to enable and disable sets of features. This window facilitates the control.')],
+              [T('Feature Control / Settings', font='_ 16 bold')],
+              [T('You are running tkinter version:', font='_ 12 bold'), T(framework_version, font='_ 12 bold')]]
+
+
+    for key, value in MAC_PATCH_DICT.items():
+        layout += [[Checkbox(key, k=value[0], default=pysimplegui_user_settings.get(value[0], value[1]))]]
+
+    layout += [[Button('Ok'), Button('Cancel')]]
+
+    window = Window('Mac Feature Control', layout, keep_on_top=True, finalize=True )
+    while True:
+        event, values = window.read()
+        if event in ('Cancel', WIN_CLOSED):
+            break
+        if event == 'Ok':
+            for key, value in values.items():
+                print(f'setting {key} to {value}')
+                pysimplegui_user_settings.set(key, value)
+            break
+    window.close()
+    theme(current_theme)
+
+
+'''
 '########::'########:'########::'##::::'##::'######::::'######:::'########:'########::
  ##.... ##: ##.....:: ##.... ##: ##:::: ##:'##... ##::'##... ##:: ##.....:: ##.... ##:
  ##:::: ##: ##::::::: ##:::: ##: ##:::: ##: ##:::..::: ##:::..::: ##::::::: ##:::: ##:
@@ -20886,7 +20959,7 @@ def main_global_pysimplegui_settings():
                Combo([''] + theme_list(), settings.get('-theme-', None), readonly=True, k='-THEME-', tooltip=tooltip_theme)],
               # [T('Buttons (Leave Unchecked To Use Default) NOT YET IMPLEMENTED!',  font='_ 16')],
               #      [Checkbox('Always use TTK buttons'), CBox('Always use TK Buttons')],
-              [B('Ok', bind_return_key=True), B('Cancel')],
+              [B('Ok', bind_return_key=True), B('Cancel'), B('Mac Patch Control')],
               ]
 
     window = Window('Settings', layout, keep_on_top=True)
@@ -20908,6 +20981,8 @@ def main_global_pysimplegui_settings():
             for key in editor_format_dict.keys():
                 if key in values['-EDITOR PROGRAM-'].lower():
                     window['-EDITOR FORMAT-'].update(value=editor_format_dict[key])
+        elif event == 'Mac Patch Control':
+            main_mac_feature_control()
     window.close()
     return False
 
@@ -21486,9 +21561,11 @@ theme(theme_global())
 if running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
-# USE_CUSTOM_TITLEBAR = True
 if tclversion_detailed.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}'.format(tclversion_detailed), UserWarning)
+
+_read_mac_global_settings()
+
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
