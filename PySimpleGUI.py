@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.24  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them."
+version = __version__ = "4.45.0.25  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings."
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -5601,6 +5601,7 @@ class Frame(Element):
         super().__init__(ELEM_TYPE_FRAME, background_color=background_color, text_color=title_color, size=sz,
                          font=font, pad=pad, key=key, tooltip=tooltip, visible=visible, metadata=metadata)
         return
+
 
     def add_row(self, *args):
         """
@@ -18560,7 +18561,7 @@ class UserSettings:
     # to access the user settings without diarectly using the UserSettings class
     _default_for_function_interface = None  # type: UserSettings
 
-    def __init__(self, filename=None, path=None, silent_on_error=False):
+    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True):
         """
         User Settings
 
@@ -18575,6 +18576,7 @@ class UserSettings:
         self.dict = {}
         self.default_value = None
         self.silent_on_error = silent_on_error
+        self.autosave = autosave
         if filename is not None or path is not None:
             self.load(filename=filename, path=path)
 
@@ -18800,7 +18802,8 @@ class UserSettings:
         self.read()
         if key in self.dict:
             del self.dict[key]
-            self.save()
+            if self.autosave:
+                self.save()
         else:
             if not self.silent_on_error:
                 print('*** Warning - key ', key, ' not found in settings ***\n')
@@ -18812,18 +18815,24 @@ class UserSettings:
         then a default filename will be used.
         After value has been modified, the settings file is written to disk.
 
-        :param key:   Setting to be saved. Can be any valid dictionary key type
-        :type key:    (Any)
-        :param value: Value to save as the setting's value. Can be anything
-        :type value:  (Any)
-        :return:      value that key was set to
-        :rtype:       (Any)
+        :param key:      Setting to be saved. Can be any valid dictionary key type
+        :type key:       (Any)
+        :param value:    Value to save as the setting's value. Can be anything
+        :type value:     (Any)
+        :param autosave: If True then the value will be saved to the file
+        :type autosave:  (bool)
+        :return:         value that key was set to
+        :rtype:          (Any)
         """
+
         if self.full_filename is None:
             self.set_location()
-        self.read()
+        # if not autosaving, then don't read the file or else will lose changes
+        if self.autosave or self.dict == {}:
+            self.read()
         self.dict[key] = value
-        self.save()
+        if self.autosave:
+            self.save()
         return value
 
     def get(self, key, default=None):
@@ -18845,7 +18854,8 @@ class UserSettings:
 
         if self.full_filename is None:
             self.set_location()
-            self.read()
+            if self.autosave or self.dict == {}:
+                self.read()
         value = self.dict.get(key, default)
         # Previously was saving creating an entry and saving the dictionary if the
         # key was not found.  I don't understand why it was originally coded this way.
@@ -18867,8 +18877,9 @@ class UserSettings:
         """
         if self.full_filename is None:
             self.set_location()
-            self.read()
-            self.save()
+            if self.autosave or self.dict == {}:
+                self.read()
+                self.save()
         return self.dict
 
     def __setitem__(self, item, value):
@@ -21496,4 +21507,4 @@ if __name__ == '__main__':
         main_sdk_help()
         exit(0)
     main()
-    exit(0)
+    exit(0) 
