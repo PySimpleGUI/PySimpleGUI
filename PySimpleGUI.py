@@ -12516,6 +12516,31 @@ def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
     return new_map
 
 
+def _add_right_click_menu(element, toplevel_form):
+    if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
+        return
+    if element.RightClickMenu or toplevel_form.RightClickMenu:
+        menu = element.RightClickMenu or toplevel_form.RightClickMenu
+        top_menu = tk.Menu(toplevel_form.TKroot, tearoff=toplevel_form.right_click_menu_tearoff, tearoffcommand=element._tearoff_menu_callback)
+
+        if toplevel_form.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(bg=toplevel_form.right_click_menu_background_color)
+        if toplevel_form.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(fg=toplevel_form.right_click_menu_text_color)
+        if toplevel_form.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(disabledforeground=toplevel_form.right_click_menu_disabled_text_color)
+        if toplevel_form.right_click_menu_font is not None:
+            top_menu.config(font=toplevel_form.right_click_menu_font)
+
+        if toplevel_form.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activeforeground=toplevel_form.right_click_menu_selected_colors[0])
+        if toplevel_form.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
+            top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
+        AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
+        element.TKRightClickMenu = top_menu
+        element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
+
+
 # @_timeit
 def PackFormIntoFrame(form, containing_frame, toplevel_form):
     """
