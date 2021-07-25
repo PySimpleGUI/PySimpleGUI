@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.25  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings."
+version = __version__ = "4.45.0.27  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -21220,12 +21220,7 @@ def _create_main_window():
         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
              num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, )]]
     frame7 = [[T('ONE thing.... you had one thing to NOT do.  "Do NOT click"')], [Image(data=_random_error_emoji())],
-              [T("""Well, now what?\nYou could take moment and help this project out by sponsoring.
-PySimpleGUI is costly to simply exist.  If you work for a company and are receiving financial benefits in the way of cost
-savings or are selling a product, I hope that you will consider sharing a small portion of your savings.
-If you don't want to sponsor / contribute, that's OK too.  At the moment PySimpleGUI is still free of charge to use.
-You have no financial responsibility. 
-I hope you are enjoying using PySimpleGUI whether you sponsor the product or not.""")],
+              [T("""Well, now what?\nYou could take moment and help this project out by sponsoring.\nAt the moment PySimpleGUI is still free of charge to use.\nYou have no financial responsibility.\nI hope you are enjoying using PySimpleGUI whether you sponsor the product or not.""")],
               [T('Click here to help --->>>'),
                T('YES - I want to support PySimpleGUI!', enable_events=True, text_color='red', background_color='yellow', k='-SPONSOR-')], ]
 
@@ -21238,10 +21233,8 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     frame6 = [[graph_elem]]
 
     global_settings_tab_layout = [[T('Global Settings:', font='_ 15')],
-                                  [T('Settings Filename:'), T(pysimplegui_user_settings.full_filename)],
-                                  [T('Settings Dictionary:'), T(pysimplegui_user_settings.get_dict(), size=(60, 5))],
-                                  [],
-                                  [],
+                                  [T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
+                                  [T('Settings Dictionary:'), T(pysimplegui_user_settings.get_dict(), size=(50,10))],
                                   ]
 
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],
@@ -21262,7 +21255,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     tab9 = Tab('Global\nSettings', global_settings_tab_layout, k='-TAB GlOBAL SETTINGS-')
 
     def VerLine(version, description, justification='r', size=(40, 1)):
-        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size), vtop(T(description, font='Any 12'))]
+        return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size, pad=(0,0)), vtop(T(description, font='Any 12', pad=(0,0)))]
 
     layout_top = Column([
         [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
@@ -21278,15 +21271,15 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
     layout_bottom = [
         [B(SYMBOL_DOWN, pad=(0, 0), k='-HIDE TABS-'),
          pin(Col([[TabGroup([[tab1, tab2, tab3, tab6, tab4, tab5, tab7, tab8, tab9]], key='_TAB_GROUP_')]], k='-TAB GROUP-'))],
-        [Button('Button', highlight_colors=('yellow', 'red')), B('Hide Stuff', metadata='my metadata'),
-         Button('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button'),
-         Button('See-through Mode', tooltip='Make the background transparent'),
-         Button('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-'),
-         Button('Global Settings', tooltip='Settings across all PySimpleGUI programs'),
-         Button('Exit', tooltip='Exit button')],
-        [B(image_data=ICON_BUY_ME_A_COFFEE, key='-COFFEE-'),
-         B('SDK Reference'), B('Open GitHub Issue'), B('Versions for GitHub'),
-         ButtonMenu('ButtonMenu', button_menu_def, key='-BMENU-', tearoff=True)
+        [B('Button', highlight_colors=('yellow', 'red'),pad=(1, 0)), B('Hide Stuff',pad=(1, 0), metadata='my metadata'),
+         B('ttk Button', use_ttk_buttons=True, tooltip='This is a TTK Button',pad=(1, 0)),
+         B('See-through Mode', tooltip='Make the background transparent',pad=(1, 0)),
+         B('Upgrade PySimpleGUI from GitHub', button_color='white on red', key='-INSTALL-',pad=(1, 0)),
+         B('Global Settings', tooltip='Settings across all PySimpleGUI programs',pad=(1, 0)),
+         B('Exit', tooltip='Exit button',pad=(1, 0))],
+        [B(image_data=ICON_BUY_ME_A_COFFEE,pad=(1, 0), key='-COFFEE-'),
+         B('SDK Reference', pad=(1, 0)), B('Open GitHub Issue',pad=(1, 0)), B('Versions for GitHub',pad=(1, 0)),
+         ButtonMenu('ButtonMenu', button_menu_def, pad=(1, 0),key='-BMENU-', tearoff=True)
          ]]
 
     layout = [[]]
@@ -21297,7 +21290,7 @@ I hope you are enjoying using PySimpleGUI whether you sponsor the product or not
         layout += [[MenubarCustom(menu_def, key='_MENU_', font='Courier 15', bar_background_color=theme_background_color(), bar_text_color=theme_text_color(),
                                   background_color='red', text_color='white', disabled_text_color='yellow')]]
 
-    layout += [[layout_top] + [ProgressBar(max_value=800, size=(30, 25), orientation='v', key='+PROGRESS+')]]
+    layout += [[layout_top] + [ProgressBar(max_value=800, size=(20, 25), orientation='v', key='+PROGRESS+')]]
     layout += layout_bottom
 
     window = Window('PySimpleGUI Main Test Harness', layout,
