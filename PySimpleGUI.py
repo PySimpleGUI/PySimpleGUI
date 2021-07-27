@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.32  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better)"
+version = __version__ = "4.45.0.33  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental)"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -9232,6 +9232,14 @@ class Window:
             pass
         # print('Start move {},{} widget {}'.format(event.x,event.y, event.widget))
 
+        if Window._move_all_windows:
+            for window in Window._active_windows:
+                window._offsetx = event.x + event.widget.winfo_rootx() - window.TKroot.winfo_rootx()
+                # self.TKroot.y = event.y
+                window._offsety = event.y + event.widget.winfo_rooty() - window.TKroot.winfo_rooty()
+
+
+
     def _StopMove(self, event):
         """
         Used by "Grab Anywhere" style windows. This function is bound to mouse-up. It marks the ending of a drag.
@@ -9275,6 +9283,8 @@ class Window:
 
             if Window._move_all_windows:
                 for window in Window._active_windows:
+                    deltax = window._offsetx
+                    deltay = window._offsety
                     x = window.TKroot.winfo_pointerx() - deltax
                     y = window.TKroot.winfo_pointery() - deltay
                     window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
