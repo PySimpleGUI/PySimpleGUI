@@ -21574,7 +21574,10 @@ if tclversion_detailed.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}'.format(tclversion_detailed), UserWarning)
 
 _read_mac_global_settings()
-
+if running_mac():
+    print('Your Mac patches are:')
+    print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
+    print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
     # To execute the upgrade from command line, type:
