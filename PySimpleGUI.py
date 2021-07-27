@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.28  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control"
+version = __version__ = "4.45.0.29  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart."
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -19408,7 +19408,7 @@ def _get_editor():
 '''
 
 # Dictionary of Mac Patches.  Used to find the key in the global settings and the default value
-MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False, ''),
+MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False),
                   'Disable Modal Windows' : ('-mac feature disable modal windows-', True)}
 
 def _read_mac_global_settings():
@@ -19582,6 +19582,7 @@ class _Debugger():
         theme(old_theme)
         return window
 
+    '''
     #     #                    #######                               #
     ##   ##   ##   # #    #    #       #    # ###### #    # #####    #        ####   ####  #####
     # # # #  #  #  # ##   #    #       #    # #      ##   #   #      #       #    # #    # #    #
@@ -19589,6 +19590,7 @@ class _Debugger():
     #     # ###### # #  # #    #       #    # #      #  # #   #      #       #    # #    # #####
     #     # #    # # #   ##    #        #  #  #      #   ##   #      #       #    # #    # #
     #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
+    '''
 
     def _refresh_main_debugger_window(self, mylocals, myglobals):
         if not self.watcher_window:  # if there is no window setup, nothing to do
@@ -19733,23 +19735,24 @@ class _Debugger():
             filename = error_parts[0][error_parts[0].index('File ') + 5:]
             return filename
         except:
-            return ''
-
-    ######                                 #     #
-    #     #  ####  #####  #    # #####     #  #  # # #    # #####   ####  #    #
-    #     # #    # #    # #    # #    #    #  #  # # ##   # #    # #    # #    #
-    ######  #    # #    # #    # #    #    #  #  # # # #  # #    # #    # #    #
-    #       #    # #####  #    # #####     #  #  # # #  # # #    # #    # # ## #
-    #       #    # #      #    # #         #  #  # # #   ## #    # #    # ##  ##
-    #        ####  #       ####  #          ## ##  # #    # #####   ####  #    #
-
-    ######                                    #                     #     #
-    #     # #    # #    # #####   ####       # #   #      #         #     #   ##   #####   ####
-    #     # #    # ##  ## #    # #          #   #  #      #         #     #  #  #  #    # #
-    #     # #    # # ## # #    #  ####     #     # #      #         #     # #    # #    #  ####
-    #     # #    # #    # #####       #    ####### #      #          #   #  ###### #####       #
-    #     # #    # #    # #      #    #    #     # #      #           # #   #    # #   #  #    #
-    ######   ####  #    # #       ####     #     # ###### ######       #    #    # #    #  ####
+            return
+    '''
+        ######                                 #     #
+        #     #  ####  #####  #    # #####     #  #  # # #    # #####   ####  #    #
+        #     # #    # #    # #    # #    #    #  #  # # ##   # #    # #    # #    #
+        ######  #    # #    # #    # #    #    #  #  # # # #  # #    # #    # #    #
+        #       #    # #####  #    # #####     #  #  # # #  # # #    # #    # # ## #
+        #       #    # #      #    # #         #  #  # # #   ## #    # #    # ##  ##
+        #        ####  #       ####  #          ## ##  # #    # #####   ####  #    #
+    
+        ######                                    #                     #     #
+        #     # #    # #    # #####   ####       # #   #      #         #     #   ##   #####   ####
+        #     # #    # ##  ## #    # #          #   #  #      #         #     #  #  #  #    # #
+        #     # #    # # ## # #    #  ####     #     # #      #         #     # #    # #    #  ####
+        #     # #    # #    # #####       #    ####### #      #          #   #  ###### #####       #
+        #     # #    # #    # #      #    #    #     # #      #           # #   #    # #   #  #    #
+        ######   ####  #    # #       ####     #     # ###### ######       #    #    # #    #  ####
+    '''
     # displays them into a single text box
 
     def _display_all_vars(self, dict):
@@ -19773,23 +19776,25 @@ class _Debugger():
                 num_lines += len(wrapped_list)
             else:
                 cur_col += 1
-        ScrolledTextBox(out_text, non_blocking=True)
+        popup_scrolled(out_text, non_blocking=True)
 
-    #####                                        #     #
-    #     # #    #  ####   ####   ####  ######    #  #  #   ##   #####  ####  #    #
-    #       #    # #    # #    # #      #         #  #  #  #  #    #   #    # #    #
-    #       ###### #    # #    #  ####  #####     #  #  # #    #   #   #      ######
-    #       #    # #    # #    #      # #         #  #  # ######   #   #      #    #
-    #     # #    # #    # #    # #    # #         #  #  # #    #   #   #    # #    #
-    #####  #    #  ####   ####   ####  ######     ## ##  #    #   #    ####  #    #
-
-    #     #                                                       #     #
-    #     #   ##   #####  #   ##   #####  #      ######  ####     #  #  # # #    #
-    #     #  #  #  #    # #  #  #  #    # #      #      #         #  #  # # ##   #
-    #     # #    # #    # # #    # #####  #      #####   ####     #  #  # # # #  #
-    #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
-    # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
-    #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
+    '''
+        #####                                        #     #
+       #     # #    #  ####   ####   ####  ######    #  #  #   ##   #####  ####  #    #
+       #       #    # #    # #    # #      #         #  #  #  #  #    #   #    # #    #
+       #       ###### #    # #    #  ####  #####     #  #  # #    #   #   #      ######
+       #       #    # #    # #    #      # #         #  #  # ######   #   #      #    #
+       #     # #    # #    # #    # #    # #         #  #  # #    #   #   #    # #    #
+        #####  #    #  ####   ####   ####  ######     ## ##  #    #   #    ####  #    #
+    
+        #     #                                                       #     #
+        #     #   ##   #####  #   ##   #####  #      ######  ####     #  #  # # #    #
+        #     #  #  #  #    # #  #  #  #    # #      #      #         #  #  # # ##   #
+        #     # #    # #    # # #    # #####  #      #####   ####     #  #  # # # #  #
+         #   #  ###### #####  # ###### #    # #      #           #    #  #  # # #  # #
+          # #   #    # #   #  # #    # #    # #      #      #    #    #  #  # # #   ##
+           #    #    # #    # # #    # #####  ###### ######  ####      ## ##  # #    #
+    '''
 
     def _choose_auto_watches(self, my_locals):
         old_theme = theme()
@@ -19847,23 +19852,25 @@ class _Debugger():
         # exited event loop
         window.Close()
         theme(old_theme)
-        # ChangeLookAndFeel('SystemDefault')
 
-    ######                            #######
-    #     # #    # # #      #####     #       #       ####    ##   ##### # #    #  ####
-    #     # #    # # #      #    #    #       #      #    #  #  #    #   # ##   # #    #
-    ######  #    # # #      #    #    #####   #      #    # #    #   #   # # #  # #
-    #     # #    # # #      #    #    #       #      #    # ######   #   # #  # # #  ###
-    #     # #    # # #      #    #    #       #      #    # #    #   #   # #   ## #    #
-    ######   ####  # ###### #####     #       ######  ####  #    #   #   # #    #  ####
 
-    #     #
-    #  #  # # #    # #####   ####  #    #
-    #  #  # # ##   # #    # #    # #    #
-    #  #  # # # #  # #    # #    # #    #
-    #  #  # # #  # # #    # #    # # ## #
-    #  #  # # #   ## #    # #    # ##  ##
-    ## ##  # #    # #####   ####  #    #
+    '''
+        ######                            #######
+        #     # #    # # #      #####     #       #       ####    ##   ##### # #    #  ####
+        #     # #    # # #      #    #    #       #      #    #  #  #    #   # ##   # #    #
+        ######  #    # # #      #    #    #####   #      #    # #    #   #   # # #  # #
+        #     # #    # # #      #    #    #       #      #    # ######   #   # #  # # #  ###
+        #     # #    # # #      #    #    #       #      #    # #    #   #   # #   ## #    #
+        ######   ####  # ###### #####     #       ######  ####  #    #   #   # #    #  ####
+    
+        #     #
+        #  #  # # #    # #####   ####  #    #
+        #  #  # # ##   # #    # #    # #    #
+        #  #  # # # #  # #    # #    # #    #
+        #  #  # # #  # # #    # #    # # ## #
+        #  #  # # #   ## #    # #    # ##  ##
+         ## ##  # #    # #####   ####  #    #
+    '''
 
     def _build_floating_window(self, location=(None, None)):
         """
@@ -20983,6 +20990,8 @@ def main_global_pysimplegui_settings():
                     window['-EDITOR FORMAT-'].update(value=editor_format_dict[key])
         elif event == 'Mac Patch Control':
             main_mac_feature_control()
+            # re-read the settings in case they changed
+            _read_mac_global_settings()
     window.close()
     return False
 
