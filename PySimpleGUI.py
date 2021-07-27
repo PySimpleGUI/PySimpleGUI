@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.30  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix."
+version = __version__ = "4.45.0.32  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better)"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -9224,8 +9224,10 @@ class Window:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
-            self.TKroot.x = event.x
-            self.TKroot.y = event.y
+            # self.TKroot.x = event.x
+            self._offsetx = event.x + event.widget.winfo_rootx() - self.TKroot.winfo_rootx()
+            # self.TKroot.y = event.y
+            self._offsety = event.y + event.widget.winfo_rooty() - self.TKroot.winfo_rooty()
         except:
             pass
         # print('Start move {},{} widget {}'.format(event.x,event.y, event.widget))
@@ -9242,8 +9244,10 @@ class Window:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
-            self.TKroot.x = event.x
-            self.TKroot.y = event.y
+            self._offsetx = event.x + event.widget.winfo_rootx() - self.TKroot.winfo_rootx()
+            self._offsety = event.y + event.widget.winfo_rooty() - self.TKroot.winfo_rooty()
+            # self.TKroot.x = event.x
+            # self.TKroot.y = event.y
         except Exception as e:
             print('stop move error', e, event)
 
@@ -9258,17 +9262,21 @@ class Window:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
-            deltax = event.x - self.TKroot.x
-            deltay = event.y - self.TKroot.y
-            x = self.TKroot.winfo_x() + deltax
-            y = self.TKroot.winfo_y() + deltay
+            # deltax = event.x - self.TKroot.x
+            # deltay = event.y - self.TKroot.y
+            deltax = self._offsetx
+            deltay = self._offsety
+            # x = self.TKroot.winfo_x() + deltax
+            x = self.TKroot.winfo_pointerx() - deltax
+            # y = self.TKroot.winfo_y() + deltay
+            y = self.TKroot.winfo_pointery() - deltay
             self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
             # print('{},{}'.format(x,y))
 
             if Window._move_all_windows:
                 for window in Window._active_windows:
-                    x = window.TKroot.winfo_x() + deltax
-                    y = window.TKroot.winfo_y() + deltay
+                    x = window.TKroot.winfo_pointerx() - deltax
+                    y = window.TKroot.winfo_pointery() - deltay
                     window.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
         except Exception as e:
             print('on motion error', e)
@@ -12542,7 +12550,7 @@ def _add_right_click_menu(element, toplevel_form):
             top_menu.config(activebackground=toplevel_form.right_click_menu_selected_colors[1])
         AddMenuItem(top_menu, menu[1], element, right_click_menu=True)
         element.TKRightClickMenu = top_menu
-        element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
+        element.Widget.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
 
 
 # @_timeit
@@ -12655,8 +12663,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             if toplevel_form.RightClickMenu:            # if the top level has a right click menu, then setup a callback for the Window itself
                 if toplevel_form.TKRightClickMenu is None:
                     toplevel_form.TKRightClickMenu = top_menu
-                    toplevel_form.TKroot.bind('<Button-3>', toplevel_form._RightClickMenuCallback)
-            element.Widget.bind('<Button-3>', element._RightClickMenuCallback)
+                    toplevel_form.TKroot.bind('<ButtonRelease-3>', toplevel_form._RightClickMenuCallback)
+            element.Widget.bind('<ButtonRelease-3>', element._RightClickMenuCallback)
 
     def _add_expansion(element, row_should_expand, row_fill_direction):
         expand = True
