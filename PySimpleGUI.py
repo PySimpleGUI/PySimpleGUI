@@ -14523,9 +14523,8 @@ def _convert_window_to_tk(window):
     window.TKroot.y = int(y)
     window.starting_window_position = (int(x), (int(y)))
     master.update_idletasks()  # don't forget
-    # The Mac is sensative to notitlebar, so skipping the second call
-    if not running_mac():
-        _no_titlebar_setup(window)
+
+    _no_titlebar_setup(window)
 
     return
 
@@ -14614,8 +14613,7 @@ def StartupTK(window):
     window.SetIcon(window.WindowIcon)
 
     try:
-        root.attributes('-alpha',
-                        1 if window.AlphaChannel is None else window.AlphaChannel)  # Make window visible again
+        root.attributes('-alpha', 1 if window.AlphaChannel is None else window.AlphaChannel)  # Make window visible again
     except:
         pass
 
