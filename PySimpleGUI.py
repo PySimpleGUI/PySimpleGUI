@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.37  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac"
+version = __version__ = "4.45.0.38  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -14574,7 +14574,8 @@ def StartupTK(window):
         # root.bind('<Cancel>', Debugger._build_main_debugger_window)
         # root.bind('<Pause>', Debugger._build_floating_window)
     try:
-        root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
+        if not running_mac() or (running_mac() and not ENABLE_MAC_NOTITLEBAR_PATCH):
+            root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except Exception as e:
         print('*** Exception setting alpha channel to zero while creating window ***', e)
 
@@ -19527,15 +19528,15 @@ DEBUGGER_VARIABLE_DETAILS_FONT = 'Courier 10'
 
 class _Debugger():
     debugger = None
-
-    #     #                    ######
-    ##   ##   ##   # #    #    #     # ###### #####  #    #  ####   ####  ###### #####
-    # # # #  #  #  # ##   #    #     # #      #    # #    # #    # #    # #      #    #
-    #  #  # #    # # # #  #    #     # #####  #####  #    # #      #      #####  #    #
-    #     # ###### # #  # #    #     # #      #    # #    # #  ### #  ### #      #####
-    #     # #    # # #   ##    #     # #      #    # #    # #    # #    # #      #   #
-    #     # #    # # #    #    ######  ###### #####   ####   ####   ####  ###### #    #
-
+    '''
+        #     #                    ######
+        ##   ##   ##   # #    #    #     # ###### #####  #    #  ####   ####  ###### #####
+        # # # #  #  #  # ##   #    #     # #      #    # #    # #    # #    # #      #    #
+        #  #  # #    # # # #  #    #     # #####  #####  #    # #      #      #####  #    #
+        #     # ###### # #  # #    #     # #      #    # #    # #  ### #  ### #      #####
+        #     # #    # # #   ##    #     # #      #    # #    # #    # #    # #      #   #
+        #     # #    # # #    #    ######  ###### #####   ####   ####   ####  ###### #    #
+    '''
     def __init__(self):
         self.watcher_window = None  # type: Window
         self.popout_window = None  # type: Window
@@ -19608,13 +19609,13 @@ class _Debugger():
         return window
 
     '''
-    #     #                    #######                               #
-    ##   ##   ##   # #    #    #       #    # ###### #    # #####    #        ####   ####  #####
-    # # # #  #  #  # ##   #    #       #    # #      ##   #   #      #       #    # #    # #    #
-    #  #  # #    # # # #  #    #####   #    # #####  # #  #   #      #       #    # #    # #    #
-    #     # ###### # #  # #    #       #    # #      #  # #   #      #       #    # #    # #####
-    #     # #    # # #   ##    #        #  #  #      #   ##   #      #       #    # #    # #
-    #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
+        #     #                    #######                               #
+        ##   ##   ##   # #    #    #       #    # ###### #    # #####    #        ####   ####  #####
+        # # # #  #  #  # ##   #    #       #    # #      ##   #   #      #       #    # #    # #    #
+        #  #  # #    # # # #  #    #####   #    # #####  # #  #   #      #       #    # #    # #    #
+        #     # ###### # #  # #    #       #    # #      #  # #   #      #       #    # #    # #####
+        #     # #    # # #   ##    #        #  #  #      #   ##   #      #       #    # #    # #
+        #     # #    # # #    #    #######   ##   ###### #    #   #      #######  ####   ####  #
     '''
 
     def _refresh_main_debugger_window(self, mylocals, myglobals):
@@ -19954,29 +19955,31 @@ class _Debugger():
         theme(old_theme)
         return True
 
-    ######
-    #     # ###### ###### #####  ######  ####  #    #
-    #     # #      #      #    # #      #      #    #
-    ######  #####  #####  #    # #####   ####  ######
-    #   #   #      #      #####  #           # #    #
-    #    #  #      #      #   #  #      #    # #    #
-    #     # ###### #      #    # ######  ####  #    #
-
-    #######
-    #       #       ####    ##   ##### # #    #  ####
-    #       #      #    #  #  #    #   # ##   # #    #
-    #####   #      #    # #    #   #   # # #  # #
-    #       #      #    # ######   #   # #  # # #  ###
-    #       #      #    # #    #   #   # #   ## #    #
-    #       ######  ####  #    #   #   # #    #  ####
-
-    #     #
-    #  #  # # #    # #####   ####  #    #
-    #  #  # # ##   # #    # #    # #    #
-    #  #  # # # #  # #    # #    # #    #
-    #  #  # # #  # # #    # #    # # ## #
-    #  #  # # #   ## #    # #    # ##  ##
-    ## ##  # #    # #####   ####  #    #
+    '''
+        ######
+        #     # ###### ###### #####  ######  ####  #    #
+        #     # #      #      #    # #      #      #    #
+        ######  #####  #####  #    # #####   ####  ######
+        #   #   #      #      #####  #           # #    #
+        #    #  #      #      #   #  #      #    # #    #
+        #     # ###### #      #    # ######  ####  #    #
+    
+        #######
+        #       #       ####    ##   ##### # #    #  ####
+        #       #      #    #  #  #    #   # ##   # #    #
+        #####   #      #    # #    #   #   # # #  # #
+        #       #      #    # ######   #   # #  # # #  ###
+        #       #      #    # #    #   #   # #   ## #    #
+        #       ######  ####  #    #   #   # #    #  ####
+    
+        #     #
+        #  #  # # #    # #####   ####  #    #
+        #  #  # # ##   # #    # #    # #    #
+        #  #  # # # #  # #    # #    # #    #
+        #  #  # # #  # # #    # #    # # ## #
+        #  #  # # #   ## #    # #    # ##  ##
+         ## ##  # #    # #####   ####  #    #
+    '''
 
     def _refresh_floating_window(self):
         if not self.popout_window:
