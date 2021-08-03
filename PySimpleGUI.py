@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.40  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment"
+version = __version__ = "4.45.0.41  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try..."
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -9230,15 +9230,15 @@ class Window:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
-            # self._offsetx = event.y
-            # self._offsetx = event.x
-            # self._offsetx = event.x + self.TKroot.winfo_rootx()
-            # self._offsety = event.y + self.TKroot.winfo_rooty()
-            # self._offsetx = self.TKroot.winfo_pointerx()
-            # self._offsety = self.TKroot.winfo_pointery()
-            # self._offsety = event.y + event.widget.winfo_rooty() - self.TKroot.winfo_rooty()
-            self._offsetx = event.x + event.widget.winfo_rootx() - self.TKroot.winfo_x()
-            self._offsety = event.y + event.widget.winfo_rooty() - self.TKroot.winfo_y()
+            geometry = self.TKroot.geometry()
+            location = geometry[geometry.find('+')+1:].split('+')
+            self._startx = int(location[0])
+            self._starty = int(location[1])
+            self._mousex = event.x + event.widget.winfo_rootx()
+            self._mousey = event.y + event.widget.winfo_rooty()
+            # print(self._startx, self._starty)
+            # print(self._mousex, self._mousey)
+            # print(self.TKroot.geometry())
         except:
             pass
         # print('Start move {},{} widget {}'.format(event.x,event.y, event.widget))
@@ -9257,15 +9257,8 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if (isinstance(event.widget,
-                       GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
-            # print('Found widget to ignore in grab anywhere...')
-            return
-        try:
-            self._offsetx = event.x + event.widget.winfo_rootx() - self.TKroot.winfo_rootx()
-            self._offsety = event.y + event.widget.winfo_rooty() - self.TKroot.winfo_rooty()
-        except Exception as e:
-            print('stop move error', e, event)
+        return
+
 
     def _OnMotion(self, event):
         """
@@ -9278,17 +9271,14 @@ class Window:
             # print('Found widget to ignore in grab anywhere...')
             return
         try:
-            # deltax = event.x - self.TKroot.x
-            # deltay = event.y - self.TKroot.y
-            deltax = self._offsetx
-            deltay = self._offsety
-            # x = self.TKroot.winfo_x() + deltax
-            x = self.TKroot.winfo_pointerx() - deltax
-            # y = self.TKroot.winfo_y() + deltay
-            y = self.TKroot.winfo_pointery() - deltay
-            self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
-            # print('{},{}'.format(x,y))
 
+            _mousex = event.x + event.widget.winfo_rootx()
+            _mousey = event.y + event.widget.winfo_rooty()
+            deltax = _mousex - self._mousex
+            deltay = _mousey - self._mousey
+            x = self._startx + deltax
+            y = self._starty + deltay
+            self.TKroot.geometry("+%s+%s" % (x, y))  # this is what really moves the window
             if Window._move_all_windows:
                 for window in Window._active_windows:
                     deltax = window._offsetx
