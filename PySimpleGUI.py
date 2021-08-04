@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.42  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try... Mac option to disable grab anywhere for windows that have a titlebar (Defaults to True)"
+version = __version__ = "4.45.0.43  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try... Mac option to disable grab anywhere for windows that have a titlebar (Defaults to True). Mac will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -740,7 +740,8 @@ class ToolTip:
         # if not sys.platform.startswith('darwin'):
         try:
             self.tipwindow.wm_overrideredirect(True)
-            if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
+            # if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
+            if _mac_should_apply_notitlebar_patch():
                 self.tipwindow.wm_overrideredirect(False)
         except:
             print('* Error performing wm_overrideredirect *')
@@ -14462,7 +14463,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
 
 def _no_titlebar_setup(window):
-    # for the Raspberry Pi. Need to set the attributes here, prior to the building of the window
+    """
+    Does the operations required to turn off the titlebar for the window.
+    The Raspberry Pi required the settings to be make after the window's creation.
+    Calling twice seems to have had better overall results so that's what's currently done.
+    The MAC has been the problem with this feature.  It's been a chronic problem on the Mac.
+    :param window:          window to turn off the titlebar if indicated in the settings
+    :type:                  Window
+    """
     try:
         if window.NoTitleBar:
             if running_linux():
@@ -14473,11 +14481,12 @@ def _no_titlebar_setup(window):
                 # Special case for Mac. Need to clear flag again if not tkinter version 8.6.10+
                 # Previously restricted patch to only certain tkinter versions. Now use the patch setting exclusively regardless of tk ver
                 # if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH and (sum([int(i) for i in tclversion_detailed.split('.')]) < 24):
-                if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
+                # if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
+                if _mac_should_apply_notitlebar_patch():
                     print('* Applying Mac no_titlebar patch *')
                     window.TKroot.wm_overrideredirect(False)
-    except:
-        print('** Problem setting no titlebar **')
+    except Exception as e:
+        warnings.warn('** Problem setting no titlebar {} **'.format(e), UserWarning)
 
 
 def _convert_window_to_tk(window):
@@ -14570,7 +14579,9 @@ def StartupTK(window):
         # root.bind('<Cancel>', Debugger._build_main_debugger_window)
         # root.bind('<Pause>', Debugger._build_floating_window)
     try:
-        if not running_mac() or (running_mac() and not ENABLE_MAC_NOTITLEBAR_PATCH):
+        if not running_mac() or \
+            (running_mac() and not window.NoTitleBar) or \
+            (running_mac() and window.NoTitleBar and not _mac_should_apply_notitlebar_patch()):
             root.attributes('-alpha', 0)  # hide window while building it. makes for smoother 'paint'
     except Exception as e:
         print('*** Exception setting alpha channel to zero while creating window ***', e)
@@ -19430,6 +19441,14 @@ def _get_editor():
 ..:::::..::..:::::..:::......:::::::......:::..:::::::::........:::......:::....::..::::::::....:::......:::
 '''
 
+'''
+The Mac problems have been significant enough to warrant the addition of a series of settings that allow
+users to turn specific patches and features on or off depending on their setup.  There is not enough information
+available to make this process more atuomatic.  
+
+'''
+
+
 # Dictionary of Mac Patches.  Used to find the key in the global settings and the default value
 MAC_PATCH_DICT = {'Enable No Titlebar Patch' : ('-mac feature enable no titlebar patch-', False),
                   'Disable Modal Windows' : ('-mac feature disable modal windows-', True),
@@ -19451,6 +19470,29 @@ def _read_mac_global_settings():
                                                                 MAC_PATCH_DICT['Enable No Titlebar Patch'][1])
     ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR = pysimplegui_user_settings.get(MAC_PATCH_DICT['Disable Grab Anywhere with Titlebar'][0],
                                                                 MAC_PATCH_DICT['Disable Grab Anywhere with Titlebar'][1])
+
+
+def _mac_should_apply_notitlebar_patch():
+    """
+    Uses a combination of the tkinter version number and the setting from the global settings
+    to determine if the notitlebar patch should be applied
+
+    :return:    True if should apply the no titlebar patch on the Mac
+    :rtype:     (bool)
+    """
+
+    if not running_mac():
+        return False
+
+    try:
+        tver = [int(n) for n in framework_version.split('.')]
+        if tver[0] == 8 and tver[1] == 6 and tver[2] < 10 and ENABLE_MAC_NOTITLEBAR_PATCH:
+            return True
+    except Exception as e:
+        warnings.warn('Exception while trying to parse tkinter version {} Error = {}'.format(framework_version, e), UserWarning)
+
+    return False
+
 
 def main_mac_feature_control():
     """
@@ -19474,7 +19516,8 @@ def main_mac_feature_control():
 
     for key, value in MAC_PATCH_DICT.items():
         layout += [[Checkbox(key, k=value[0], default=pysimplegui_user_settings.get(value[0], value[1]))]]
-
+    layout += [[T('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')],
+               [T('The no titlebar patch will ONLY be applied on tkinter versions < 8.6.10')]]
     layout += [[Button('Ok'), Button('Cancel')]]
 
     window = Window('Mac Feature Control', layout, keep_on_top=True, finalize=True )
@@ -21608,6 +21651,7 @@ if running_mac():
     print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
     print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
+    print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
