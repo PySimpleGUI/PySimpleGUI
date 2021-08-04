@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.43  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try... Mac option to disable grab anywhere for windows that have a titlebar (Defaults to True). Mac will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings"
+version = __version__ = "4.45.0.44  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try... Mac option to disable grab anywhere for windows that have a titlebar (Defaults to True). Mac will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings. Call Window.set_icon earlier in window creation to get around problem with update_idletasks, no_button parm added to one_line_progress_meter"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -14611,6 +14611,10 @@ def StartupTK(window):
     if window.TransparentColor is not None:
         window.SetTransparentColor(window.TransparentColor)
 
+
+    window.set_icon(window.WindowIcon)
+
+
     # root.protocol("WM_DELETE_WINDOW", MyFlexForm.DestroyedCallback())
     # root.bind('<Destroy>', MyFlexForm.DestroyedCallback())
     _convert_window_to_tk(window)
@@ -14623,7 +14627,6 @@ def StartupTK(window):
             root.bind("<ButtonRelease-1>", window._StopMove)
             root.bind("<B1-Motion>", window._OnMotion)
 
-    window.SetIcon(window.WindowIcon)
 
     try:
         root.attributes('-alpha', 1 if window.AlphaChannel is None else window.AlphaChannel)  # Make window visible again
@@ -14791,7 +14794,7 @@ class QuickMeter(object):
     exit_reasons = {}
 
     def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=(None, None),
-                 size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False):
+                 size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False, no_button=False):
         """
 
         :param title:         text to display in element
@@ -14820,6 +14823,8 @@ class QuickMeter(object):
         :type no_titlebar:    (bool)
         :param keep_on_top:   If True the window will remain above all current windows
         :type keep_on_top:    (bool)
+        :param no_button:     If True: window will be created without a cancel button
+        :type no_button:      (bool)
         """
         self.start_time = datetime.datetime.utcnow()
         self.key = key
@@ -14835,7 +14840,7 @@ class QuickMeter(object):
         self.max_value = max_value
         self.close_reason = None
         self.keep_on_top = keep_on_top
-
+        self.no_button = no_button
         self.window = self.BuildWindow(*args)
 
     def BuildWindow(self, *args):
@@ -14855,11 +14860,12 @@ class QuickMeter(object):
             col2 = []
             col2 += [[T(''.join(map(lambda x: str(x) + '\n', args)),
                         key='_OPTMSG_')]]  ### convert all *args into one string that can be updated
-            col2 += [[T('', size=(30, 10), key='_STATS_')],
-                     [Cancel(button_color=self.button_color), Stretch()]]
+            col2 += [[T('', size=(30, 10), key='_STATS_')]]
+            if not self.no_button:
+                col2 += [[Cancel(button_color=self.button_color), Stretch()]]
+
             layout = [Column(col), Column(col2)]
-        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar, disable_close=True,
-                             keep_on_top=self.keep_on_top)
+        self.window = Window(self.title, grab_anywhere=self.grab_anywhere, border_depth=self.border_width, no_titlebar=self.no_titlebar, disable_close=True, keep_on_top=self.keep_on_top)
         self.window.Layout([layout]).Finalize()
 
         return self.window
@@ -14910,8 +14916,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None,
-                            size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False):
+def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False, no_button=False):
     """
     :param title:         text to display in eleemnt
     :type title:          (str)
@@ -14939,12 +14944,13 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     :type no_titlebar:    (bool)
     :param keep_on_top:   If True the window will remain above all current windows
     :type keep_on_top:    (bool)
+    :param no_button:     If True: window will be created without a cancel button
+    :type no_button:      (bool)
     :return:              True if updated successfully. False if user closed the meter with the X or Cancel button
     :rtype:               (bool)
     """
     if key not in QuickMeter.active_meters:
-        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size,
-                           border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top)
+        meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top, no_button=no_button)
         QuickMeter.active_meters[key] = meter
     else:
         meter = QuickMeter.active_meters[key]
