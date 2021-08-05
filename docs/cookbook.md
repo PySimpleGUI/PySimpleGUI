@@ -2683,7 +2683,7 @@ sg.popup_ok('Done')
 ```  
 
       
-# Recipe - OneLineProgressMeter      
+# Recipe - one_line_progress_meter      
       
 This recipe shows just how easy it is to add a progress meter to your code.      
       
@@ -2696,11 +2696,83 @@ import PySimpleGUI as sg
 sg.theme('Dark Blue 8')
 
 for i in range(1000):   # this is your "work loop" that you want to monitor
-    sg.OneLineProgressMeter('One Line Meter Example', i + 1, 1000, 'key')
+    sg.one_line_progress_meter('One Line Meter Example', i + 1, 1000)
 ```      
 
 Unlike other progress meter Python packages, PySimpleGUI's one-line-progress-meter is 1 line of code, not 2.  Historicly you would setup the meter outside your work loop and then update that meter inside of your loop.  With PySimpleGUI you do not need to setup the meter outside the loop.  You only need to add the line of code to update the meter insdie of your loop.
-     
+
+## Cancelling - User Generated
+
+If you want to enable the user to break out of your loop, then **you** will need to take action.  `one_line_progress_meter` returns `False` if the cancel button is clicked or the window is somehow closed.  The way you can turn the user's click on the Cancel button into cancelling the loop is by checking the return value and then breaking from your loop.
+
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 8')
+
+for i in range(1000):   # this is your "work loop" that you want to monitor
+    if not sg.one_line_progress_meter('One Line Meter Example', i + 1, 1000):
+        break
+```
+
+## Cancelling - Program Generated
+
+You've seen how the user can cancel the progress meter, now let's look at how your program can cancel the progress meter.  Maybe you got an error 1/2 way through the processing and you want to stop the meter.  To cancel the `one_line_progress_meter` ... I bet you can't guess what function you would call....
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 8')
+
+for i in range(1000):   # this is your "work loop" that you want to monitor
+    sg.one_line_progress_meter('One Line Meter Example', i + 1, 1000)
+    # after 500 iterations, cancel the meter
+    if i == 500:
+        sg.one_line_progress_meter_cancel()
+        sg.popup('Cancelled!')
+        break
+```
+
+## Other Parameters
+
+Care is neeeded when it comes to the parameters after the first 3 parms.  You can add any number of variable arguments to be shown in the progress meter window.
+
+The first 3 parms are required.  Then there are any number of parms you can add to your progress meter window. After those then there are other parameters after the variable numbered *args.  Here's the definition (see the Call Reference Documentaion for the most up to date version)
+
+```python
+def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False, no_button=False):
+```
+
+If you wanted your meter to be horizontal instead of vertical and include some additional information, then your call may look like this:
+
+```python
+    sg.one_line_progress_meter('One Line Meter Example', i + 1, 1000, 'This is my custom message', i*300, orientation='h')
+```
+
+## Keys
+
+If you have only 1 one_line_progress_meter running at a time, then you don't need to set a key.  The default keyt is fine.  If you want multiple windows running simultaneously, then you will need to set keys for each window.  You will need to use the same keys for cancelling the meter early.
+
+Here's the example with the cancel using a custom key:
+
+```python
+import PySimpleGUI as sg
+
+sg.theme('Dark Blue 8')
+
+for i in range(1000):   # this is your "work loop" that you want to monitor
+    sg.one_line_progress_meter('One Line Meter Example', i + 1, 1000, key=1)
+    # after 500 iterations, cancel the meter
+    if i == 500:
+        sg.one_line_progress_meter_cancel(key=1)
+        sg.popup('Cancelled!')
+        break
+```
+
+
+
+
  -------
 
 # Recipe -  Minesweeper-style Grid of Buttons
