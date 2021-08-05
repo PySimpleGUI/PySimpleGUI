@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.45  Unreleased\nAdded autoscroll parameter to Multiline.print & cprint - defaults to True (backward compatible), ButtonMenu use font for button as menu font if none is supplied, make a copy of menu definition when making ButtonMenu, made menu definition optional for ButtonMenu so can change only some other settings, set class_ for Toplevel windows to fix problem with titles on some Linux systems, fix bug when menu shortcut char in first pos and item is disabled !&Item, Sizegrip - fixed expansion problem. Should not have expanded row, added kill application button to error popup. cprint & Multiline.print will now take a single color and use as text color, keep_on_top added to one_line_progress_meter. Deprication warning added to FindElement as first step of moving out of non-PEP8 world, added TabGroup.add_tab, allow modal window on the Mac again as an experiment. set cwd='.' if dir not found in execute_py_file, check for exists in execute_py_file, right_click_menu added to Radio Checkbox Tabgroup Spin Dlider. Elements that don't have a right_click_menu parm now pick up the default from the Window. Reformatted all docstrings to line up the desriptions for better readability. Added type and rtype to docstrings that were missing any entries. added stderr to Debug print if rerouting stdout. Updated all font entires in docstrings to include styles list, all elements updated to include expand_x and expand_y in the constructor! Added Window.perform_long_operation to automatically run users functions as threads. Fixed Text.get() was returning not the latest value when set by another element. Set cursor color to the same as the text color for Input Combo Spin Multiline Output. Another Sizegrip fix (LAST one... promise... egads...). Added echo_stdout to debug print so that stdout can be captured when run as a subprocess. Added a right click menu callback to cover portions of the window that don't have an element on them. Addition of autosave for UserSettings. Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle). Compacted Test Harness significantly so it's 690x670. Always add Sizegrip to Debug Window now. New Mac patch control window available through the global settings or directly called via main_mac_feature_control. For Mac immediately apply the patch settings instead of requiring a restart. Trying another Mac no-titlebar fix. New Grab Anywhere move algorithm. Made right click menus based on button release (MUCH better). Completed implementation of move all windows (experimental). Table element - set the headers to stretch if expand_x is True. Element.set_size - if Graph element then also set the member variable CanvasSize, added exception details when making window with 0 alpha, added patch to tooltips for Mac, disable the alpha chan to zero if the no titlebar patch is set on the Mac. Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests). Grab anywhere exeriment. And another grab anywhere try... Mac option to disable grab anywhere for windows that have a titlebar (Defaults to True). Mac will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings. Call Window.set_icon earlier in window creation to get around problem with update_idletasks, no_button parm added to one_line_progress_meter.  Moved back the set_icon call.  Changed the right click binding for Macs to be Button2"
+version = __version__ = "4.46.0.46  Unreleased\nAdded exception details if have a problem with the wm_overriderediect"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -116,8 +116,7 @@ import difflib
 import copy
 
 try:  # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
-    from typing import List, Any, Union, Tuple, Dict, SupportsAbs, \
-        Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
+    from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 except:
     print('*** Skipping import of Typing module. "pip3 install typing" to remove this warning ***')
 import random
@@ -743,8 +742,8 @@ class ToolTip:
             # if running_mac() and ENABLE_MAC_NOTITLEBAR_PATCH:
             if _mac_should_apply_notitlebar_patch():
                 self.tipwindow.wm_overrideredirect(False)
-        except:
-            print('* Error performing wm_overrideredirect *')
+        except Exception as e:
+            print('* Error performing wm_overrideredirect in showtip *', e)
         self.tipwindow.wm_geometry("+%d+%d" % (x, y))
         self.tipwindow.wm_attributes("-topmost", 1)
 
@@ -1109,9 +1108,9 @@ class Element():
         Used when user binds a tkinter event directly to an element
 
         :param bind_string: The event that was bound so can lookup the key modifier
-        :type bind_string:  Mike_please_insert_type_here
+        :type bind_string:  (str)
         :param event:       Event data passed in by tkinter (not used)
-        :type event:
+        :type event:        (Any)
         """
         key_suffix = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
@@ -9700,7 +9699,7 @@ class Window:
         Used when user binds a tkinter event directly to an element
 
         :param bind_string: The event that was bound so can lookup the key modifier
-        :type bind_string:  Mike_please_insert_type_here
+        :type bind_string:  (str)
         :param event:       Event data passed in by tkinter (not used)
         :type event:
         """
@@ -14573,8 +14572,8 @@ def StartupTK(window):
         # if not running_mac():
         try:
             Window.hidden_master_root.wm_overrideredirect(True)
-        except:
-            print('* Error performing wm_overrideredirect *')
+        except Exception as e:
+            print('* Error performing wm_overrideredirect while hiding the hidden master root*', e)
         Window.hidden_master_root.withdraw()
         # root = tk.Toplevel(Window.hidden_master_root)     # This code caused problems when running with timeout=0 and closed with X
         root = tk.Toplevel(class_=window.Title)
@@ -17712,8 +17711,9 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             # if not running_mac():
             try:
                 Window.hidden_master_root.wm_overrideredirect(True)
-            except:
-                print('* Error performing wm_overrideredirect *')
+            except Exception as e:
+                print('* Error performing wm_overrideredirect while hiding hidden master root in get folder *', e)
+
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
@@ -17722,8 +17722,8 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
             # if not running_mac():
             try:
                 root.wm_overrideredirect(True)
-            except:
-                print('* Error performing wm_overrideredirect *')
+            except Exception as e:
+                print('* Error performing wm_overrideredirect while hiding the window during creation in get folder *', e)
             root.withdraw()
         except:
             pass
@@ -17882,8 +17882,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
             # if not running_mac():
             try:
                 Window.hidden_master_root.wm_overrideredirect(True)
-            except:
-                print('* Error performing wm_overrideredirect *')
+            except Exception as e:
+                print('* Error performing wm_overrideredirect in get file hiding the master root *', e)
             Window.hidden_master_root.withdraw()
         root = tk.Toplevel()
 
@@ -17892,8 +17892,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
             # if not running_mac():
             try:
                 root.wm_overrideredirect(True)
-            except:
-                print('* Error performing wm_overrideredirect *')
+            except Exception as e:
+                print('* Error performing wm_overrideredirect in get file *', e)
             root.withdraw()
         except:
             pass
@@ -18619,11 +18619,16 @@ class UserSettings:
         """
         User Settings
 
-        :param filename: The name of the file to use. Can be a full path and filename or just filename
-        :type filename:  (str or None)
-        :param path:     The folder that the settings file will be stored in. Do not include the filename.
-        :type path:      (str or None)
+        :param filename:        The name of the file to use. Can be a full path and filename or just filename
+        :type filename:         (str or None)
+        :param path:            The folder that the settings file will be stored in. Do not include the filename.
+        :type path:             (str or None)
+        :param silent_on_error: If True errors will not be reported
+        :type silent_on_error:  (bool)
+        :param autosave:        If True the settings file is saved after every update
+        :type autosave:         (bool)
         """
+
         self.path = path
         self.filename = filename
         self.full_filename = None
@@ -18638,8 +18643,8 @@ class UserSettings:
         """
         Converts the settings dictionary into a string for easy display
 
-        :return: (str) the dictionary as a string
-        :rtype:
+        :return: the dictionary as a string
+        :rtype:  (str)
         """
         return str(self.dict)
 
