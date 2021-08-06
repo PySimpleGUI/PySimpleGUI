@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.47  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix."
+version = __version__ = "4.46.0.48  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix. Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!) "
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -12909,14 +12909,15 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if auto_size_text is False:
                     width, height = element_size
                 else:
-                    lines = display_text.split('\n')
-                    max_line_len = max([len(l) for l in lines])
-                    num_lines = len(lines)
-                    if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
-                        width = element_size[0]
-                    else:
-                        width = max_line_len
-                    height = num_lines
+                    width, height = None, None
+                    # lines = display_text.split('\n')
+                    # max_line_len = max([len(l) for l in lines])
+                    # num_lines = len(lines)
+                    # if max_line_len > element_size[0]:  # if text exceeds element size, the will have to wrap
+                    #     width = element_size[0]
+                    # else:
+                    #     width = max_line_len
+                    # height = num_lines
                 # ---===--- LABEL widget create and place --- #
                 element = element  # type: Text
                 bd = element.BorderWidth if element.BorderWidth is not None else border_depth
@@ -12937,7 +12938,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                                                          height=height, justify=justify, bd=bd, font=font)
                 # Set wrap-length for text (in PIXELS) == PAIN IN THE ASS
                 wraplen = tktext_label.winfo_reqwidth()  # width of widget in Pixels
-                if not auto_size_text and height == 1:  # if just 1 line high, ensure no wrap happens
+                if auto_size_text or (not auto_size_text and height == 1):  # if just 1 line high, ensure no wrap happens
                     wraplen = 0
                 tktext_label.configure(anchor=anchor, wraplen=wraplen)  # set wrap to width of widget
                 if element.Relief is not None:
