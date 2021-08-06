@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.46  Unreleased\nAdded exception details if have a problem with the wm_overriderediect"
+version = __version__ = "4.46.0.47  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix."
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -6139,7 +6139,7 @@ class TabGroup(Element):
         Not recommended user call.  Used to add rows of Elements to the Frame Element.
 
         :param *args:     The list of elements for this row
-        :type: *args:     List[Element]
+        :type *args:      List[Element]
         """
 
         NumRows = len(self.Rows)  # number of existing rows is our row number
@@ -14477,7 +14477,7 @@ def _no_titlebar_setup(window):
     Calling twice seems to have had better overall results so that's what's currently done.
     The MAC has been the problem with this feature.  It's been a chronic problem on the Mac.
     :param window:          window to turn off the titlebar if indicated in the settings
-    :type:                  Window
+    :type window:           Window
     """
     try:
         if window.NoTitleBar:
