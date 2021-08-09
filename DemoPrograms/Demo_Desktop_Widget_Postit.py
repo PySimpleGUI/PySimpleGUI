@@ -23,7 +23,7 @@ def make_window(loc):
                                sg.Sizegrip(background_color='#FFFF88')]]
     window = sg.Window('Postit',layout,
                    no_titlebar=True, grab_anywhere=True, margins=(0, 0), background_color='#FFFF88', element_padding=(0, 0), location=loc,
-                   right_click_menu=[[''], ['Edit Me', 'Change Font', 'Save Location', 'Alpha', [str(x) for x in range(1, 11)], 'Choose Title', 'Exit', ]], keep_on_top=True,
+                   right_click_menu=[[''], ['Edit Me', 'Change Font', 'Alpha', [str(x) for x in range(1, 11)], 'Choose Title', 'Exit', ]], keep_on_top=True,
                    font='_ 20', right_click_menu_font=text_font, resizable=True, finalize=True, alpha_channel=alpha)
     window.set_min_size(window.size)
 
@@ -38,7 +38,9 @@ def main():
     while True:             # Event Loop
         event, values = window.read()
         print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event in (sg.WIN_CLOSED, 'Exit'):
+            if event == 'Exit':
+                sg.user_settings_set_entry('-location-', window.current_location())
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
@@ -46,9 +48,9 @@ def main():
             font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-font-'), keep_on_top=True, location=window.current_location())
             if font:
                 sg.user_settings_set_entry('-font-', font)
-                _, window = window.close(), make_window(loc)
-        elif event == 'Save Location':
-            sg.user_settings_set_entry('-location-', window.current_location())
+                loc = window.current_location()
+                window.close()
+                window = make_window(loc)
         elif event in [str(x) for x in range(1,11)]:
             window.set_alpha(int(event)/10)
             sg.user_settings_set_entry('-alpha-', int(event)/10)
