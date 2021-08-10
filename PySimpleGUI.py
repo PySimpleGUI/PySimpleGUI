@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.48  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix. Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!) "
+version = __version__ = "4.45.0.49  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix. Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!), Addition of project information to the issue"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -13949,6 +13949,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     element.TooltipObject = ToolTip(labeled_frame, text=element.Tooltip, timeout=DEFAULT_TOOLTIP_TIME)
                 _add_right_click_menu(element)
 
+
                 # row_should_expand=True
             # -------------------------  Tab placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB:
@@ -20322,13 +20323,16 @@ def _random_happy_emoji():
 def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_port, psg_ver, gui_ver, python_ver,
                                      python_exp, prog_exp, used_gui, gui_notes,
                                      cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                                     detailed_desc, code, ):
+                                     detailed_desc, code, project_details):
     body = \
 """
-### Type of Issue (Enhancement, Error, Bug, Question)
+## Type of Issue (Enhancement, Error, Bug, Question)
 
 {}
+
 ----------------------------------------
+
+## Environment 
 
 #### Operating System
 
@@ -20342,8 +20346,6 @@ def _github_issue_post_make_markdown(issue_type, operating_system, os_ver, psg_p
 
 ## Versions
 
-Version information can be obtained by calling `sg.main_get_debug_data()`
-Or you can print each version shown in ()
 
 #### Python version (`sg.sys.version`)
 
@@ -20356,7 +20358,7 @@ Or you can print each version shown in ()
 #### GUI Version  (tkinter (`sg.tclversion_detailed`), PySide2, WxPython, Remi)
 
 {}
-""".format(issue_type, operating_system,os_ver, psg_port,python_ver, psg_ver, gui_ver)
+""".format(issue_type, operating_system,os_ver, psg_port,python_ver, psg_ver, gui_ver, project_details)
 
     body2 = \
 """
@@ -20364,7 +20366,7 @@ Or you can print each version shown in ()
 
 ---------------------
 
-#### Your Experience In Months or Years (optional)
+## Your Experience In Months or Years (optional)
 
 {} Years Python programming experience
 {} Years Programming experience overall
@@ -20373,7 +20375,7 @@ Or you can print each version shown in ()
 
 ---------------------
 
-#### Troubleshooting
+## Troubleshooting
 
 These items may solve your problem. Please check those you've done by changing - [ ] to - [X]
 
@@ -20385,7 +20387,7 @@ These items may solve your problem. Please check those you've done by changing -
 - [{}] Searched through Issues (open and closed) to see if already reported Issues.PySimpleGUI.org
 - [{}] Tried using the PySimpleGUI.py file on GitHub. Your problem may have already been fixed but not released
 
-#### Detailed Description
+## Detailed Description
 
 {}
 
@@ -20401,10 +20403,15 @@ These items may solve your problem. Please check those you've done by changing -
 #### Screenshot, Sketch, or Drawing
 
 
+-------------------------
+
+{}
+
 
     """.format(python_exp, prog_exp, used_gui, gui_notes,
                 cb_docs, cb_demos, cb_demo_port, cb_readme_other, cb_command_line, cb_issues, cb_github,
-                detailed_desc, code if len(code) > 10 else '# Paste your code here')
+                detailed_desc, code if len(code) > 10 else '# Paste your code here',
+               '## Watcha Makin?\n' + str(project_details) if project_details else '')
 
     return body + body2
 
@@ -20588,6 +20595,8 @@ def main_open_github_issue():
         [[Tab('Checklist 1 *', [[checklist_col1]], expand_x=True, expand_y=True), Tab('Checklist 2  *', [[checklist_col2]]), Tab('Experience', col_experience, k='-Tab Exp-', pad=(0, 0))]], expand_x=True, expand_y=True)
 
     frame_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML DETAILS-', expand_x=True, expand_y=True)]]
+    tooltip_project_details = 'If you care to share a little about your project,\nthen by all means tell us what you are making!'
+    frame_project_details = [[Multiline(size=(65, 10), font='Courier 10', k='-ML PROJECT DETAILS-', expand_x=True, expand_y=True, tooltip=tooltip_project_details)]]
     frame_code = [[Multiline(size=(80, 10), font='Courier 8', k='-ML CODE-', expand_x=True, expand_y=True)]]
     frame_markdown = [[Multiline(size=(80, 10), font='Courier 8', k='-ML MARKDOWN-', expand_x=True, expand_y=True)]]
 
@@ -20607,8 +20616,12 @@ def main_open_github_issue():
         [HorizontalSeparator()],
         [T(SYMBOL_DOWN + ' If you need more room for details grab the dot and drag to expand', background_color='red', text_color='white')]]
 
-    bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0, 0)), Tab('SHORT Code to duplicate Program *', frame_code, pad=(0, 0)),
-                                 Tab('Markdown Output', frame_markdown, pad=(0, 0))]], k='-TABGROUP-', expand_x=True, expand_y=True)]]
+    bottom_layout = [[TabGroup([[Tab('Details *', frame_details, pad=(0, 0)),
+                                 Tab('SHORT Code to duplicate Program *', frame_code, pad=(0, 0)),
+                                 Tab('Your Project Details (optional)', frame_project_details, pad=(0, 0)),
+                                 Tab('Markdown Output', frame_markdown, pad=(0, 0)),
+                                 ]], k='-TABGROUP-', expand_x=True, expand_y=True),
+                      ]]
 
 
     layout_pane = Pane([Col(middle_layout), Col(bottom_layout)], key='-PANE-', expand_x=True, expand_y=True)
@@ -20689,7 +20702,8 @@ def main_open_github_issue():
 
             cb_dict = {'cb_docs': checkboxes[0], 'cb_demos': checkboxes[1], 'cb_demo_port': checkboxes[2], 'cb_readme_other': checkboxes[3],
                        'cb_command_line': checkboxes[4], 'cb_issues': checkboxes[5], 'cb_github': checkboxes[6], 'detailed_desc': values['-ML DETAILS-'],
-                       'code': values['-ML CODE-']}
+                       'code': values['-ML CODE-'],
+                       'project_details': values['-ML PROJECT DETAILS-'].rstrip()}
 
             markdown = _github_issue_post_make_markdown(issue_type, operating_system, os_ver, 'tkinter', values['-VER PSG-'], values['-VER TK-'],
                                                         values['-VER PYTHON-'],
