@@ -1474,7 +1474,7 @@ Parameter Descriptions:
 |                  bool                   |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. |
 |              str or bytes               |        icon         | icon to display on the window. Same format as a Window call |
 |                   int                   |     line_width      | Width of lines in characters. Defaults to MESSAGE_BOX_LINE_WIDTH |
-| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc |
+| str or Tuple[font_name, size, modifiers] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                  bool                   |     no_titlebar     | If True will not show the frame around the window and the titlebar across the top |
 |                  bool                   |    grab_anywhere    | If True can grab anywhere to move the window. If no_titlebar is True, grab_anywhere should likely be enabled too |
 |               (int, int)                |      location       | Location on screen to display the top left corner of window. Defaults to window centered on screen |
@@ -1545,7 +1545,7 @@ Parameter Descriptions:
 |         bool          |     no_titlebar     | If True no titlebar will be shown |
 |         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
 |         bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |     str or bytes      |        image        | Image to include at the top of the popup window |
 |     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
@@ -1610,7 +1610,7 @@ Parameter Descriptions:
 |         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
 |     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
 |          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc |
+| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |         bool          |     no_titlebar     | If True no titlebar will be shown |
 |         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
 |      (int, int)       |      location       | Location of upper left corner of the window |
@@ -1673,7 +1673,7 @@ Parameter Descriptions:
 |          str          | background_color | background color of the entire window |
 |          str          |    text_color    | color of the message text |
 |     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc |
+| str or Tuple[str, int] |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |         bool          |   no_titlebar    | If True no titlebar will be shown |
 |         bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
 |         bool          |   keep_on_top    | If True the window will remain above all current windows |
@@ -1742,7 +1742,7 @@ Parameter Descriptions:
 |          str          |     background_color     | background color of the entire window |
 |          str          |        text_color        | color of the text |
 |     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |         bool          |       no_titlebar        | If True no titlebar will be shown |
 |         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |         bool          |       keep_on_top        | If True the window will remain above all current windows |
@@ -1815,7 +1815,7 @@ Parameter Descriptions:
 |          str          |     background_color     | color of background |
 |          str          |        text_color        | color of the text |
 |     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc |
+| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |         bool          |       no_titlebar        | If True no titlebar will be shown |
 |         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
 |         bool          |       keep_on_top        | If True the window will remain above all current windows |
@@ -1872,7 +1872,7 @@ Parameter Descriptions:
 |        str         |       message       | An optional message to be shown with the animation |
 |        str         |  background_color   | color of background |
 |        str         |     text_color      | color of the text |
-|    str or tuple    |        font         | specifies the font family, size, etc |
+|    str or tuple    |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |        bool        |     no_titlebar     | If True then the titlebar and window frame will not be shown |
 |        bool        |    grab_anywhere    | If True then you can move the window just clicking anywhere on window, hold and drag |
 |        bool        |     keep_on_top     | If True then Window will remain on top of all other windows currently shownn |
@@ -1881,7 +1881,7 @@ Parameter Descriptions:
 |        int         | time_between_frames | Amount of time in milliseconds between each frame |
 |        str         |  transparent_color  | This color will be completely see-through in your window. Can even click through |
 |        str         |        title        | Title that will be shown on the window |
-|        str         |        icon         | Same as Window icon parameter. Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|    str or bytes    |        icon         | Same as Window icon parameter. Can be either a filename or Base64 byte string. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
 | bool | **RETURN** | True if the window updated OK. False if the window was closed
 
 ***To close animated popups***, call PopupAnimated with `image_source=None`.  This will close all of the currently open PopupAnimated windows.
@@ -1901,7 +1901,9 @@ one_line_progress_meter(title,
     size = (20, 20),
     border_width = None,
     grab_anywhere = False,
-    no_titlebar = False)
+    no_titlebar = False,
+    keep_on_top = False,
+    no_button = False)
 ```
 
 Parameter Descriptions:
@@ -1920,6 +1922,8 @@ Parameter Descriptions:
 |            int             | border_width  | width of border around element |
 |            bool            | grab_anywhere | If True: can grab anywhere to move the window (Default = False) |
 |            bool            |  no_titlebar  | If True: no titlebar will be shown on the window |
+|            bool            |  keep_on_top  | If True the window will remain above all current windows |
+|            bool            |   no_button   | If True: window will be created without a cancel button |
 | (bool) | **RETURN** | True if updated successfully. False if user closed the meter with the X or Cancel button
 
 Here's the one-line Progress Meter in action!
@@ -3757,6 +3761,23 @@ String - "Family Size Styles"
 To specify an underlined, Helvetica font with a size of 15 the values:
 ('Helvetica', 15, 'underline italics')
 'Helvetica 15 underline italics'
+
+**Font Style - Valid font styles include:**
+
+* italic
+* roman
+* bold
+* normal
+* underline
+* overstrike
+
+An example with many styles is:
+
+```python
+font='Courier 12 italic bold underline overstrike'
+```
+
+The same styles can be used with the tuple format for fonts.
 
 #### Key
 
@@ -8818,6 +8839,72 @@ Happy 1M installs and 3 year anniversary edition!
 * Fix for combo and input element readonly state not being recalled when updating disabled value
 * Moved *args to end in one_line_progress_meter
 
+## 4.46.0 PySimpleGUI 10-Aug-2021
+
+McRelease - Lots of Mac changes including new Mac patch control panel in global settings
+expand_x, expand_y in the constructors
+docstrings reformatted
+Text Elements really autosize now
+
+Multiline.print & cprint 
+	* Added autoscroll parameter - defaults to True (backward compatible)
+	* will now take a single color and use as text color
+Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!),
+ButtonMenu 
+	* use font for button as menu font if none is supplied
+	* fixed mutible problem - makes a copy of menu definition when making ButtonMenu
+	* made menu definition optional so can change only some other settings
+Mac
+	* New window added to control the patches and feature disables. Access by calling main_mac_feature_control or through the global settings window from main()
+	* Disables grab anywhere if a titlebar is present
+	* Right click menu bound to Button2 which is the right button on a Mac (Button3 for all other systems)
+	* FINALLY found the no-titlebar problem - weird tkinter bug. Can't set alpha channel while making window if no titlebar on Mac (credit to Tanay for this find!!)
+	* Allowed Modal windows again
+	* Will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings
+	* Disable the alpha chan to zero if the no titlebar patch is set on the Mac. Will see the window move to center of screen for these windows.
+	* Added no-titlebar batch to toolore neetips
+Fixed problem with titles on some Linux systems - set class_ for Toplevel windows
+Menu defintion bug fix - when menu shortcut char in first pos and item is disabled !&Item
+Sizegrip - fixed expansion problem
+Added kill application button to error popup
+one_line_progress_meter
+	* keep_on_top parameter added
+	* no_button parameter added so that no cancel button is shown
+Deprication warning added to FindElement as first step of moving out of non-PEP8 world,
+Added TabGroup.add_tab to add new tab to TabGroup at runtime
+execute_py_file
+	* set cwd='.' if dir not found
+	* check for file exists
+Right click menu	
+	* added to Radio Checkbox Tabgroup Spin Slider
+	* Elements that don't have a right_click_menu parm now pick up the default from the Window
+	* Added a right click menu callback to cover portions of the window that don't have an element on them
+	* Changed Button binding for Mac to Button2 (the right button rather than middle on the other systems)
+	* Made right click menus based on button release (MUCH better)
+docstrings
+	* Reformatted all docstrings to line up the desriptions for better readability
+	* Added type and rtype to docstrings that were missing any entries
+	* Updated all font entires in docstrings to include list as well as string
+Added stderr to Debug print if rerouting stdout
+expand_x and expand_y now in the constructor of all elements. No longer need to call Element.expand after finalizing window if using these.
+Added Window.perform_long_operation to automatically run users functions as threads
+Fixed Text.get() was returning not the latest value when set by another element
+Set cursor color to the same as the text color for Input Combo Spin Multiline Output
+Added echo_stdout to debug print so that stdout can be captured when run as a subprocess
+Addition of autosave parameter for UserSettings
+Test harness
+	Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle)
+	Compacted Test Harness significantly so it's 690x670
+Added Sizegrip to Debug Window
+New Grab Anywhere move code
+Move all windows at the same timed if using grab_anywhere (experimental) (set Window._move_all_windows = True)
+Table element - set the headers to stretch if expand_x is True
+Element.set_size - if Graph element then also set the member variable CanvasSize
+added exception details when making window with 0 alpha
+Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests)
+Added exception details if have a problem with the wm_overriderediect
+Addition of "project information" to the issue - your opportunity to share something about what you're making
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
@@ -8889,7 +8976,7 @@ If you've helped, I sure hope that you feel like you've been properly thanked.  
 
 In response to a number of email contacts from individuals and corporations that are using PySimpleGUI that wanted to financially support the project a "Support" Button was added to the GitHub site.  This support button is connected with a PayPal account.  If you wish to help support this currently freely supplied software and free technical support, then follow this link: www.paypal.me/psgui . 
 
-To be clear, this is not a solicitation for your money.  No one is being directly asked to support / contribute.  The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free, but until then we'll all enjoy the successes we're having.
+The project is self-funded and there are ongoing costs just to offer the software (URLs, ReadTheDocs, etc). If you're a corporate user and find that PySimpleGUI is helping you financially, that's awesome.  If you want to help ensure PySimpleGUI has a future, you now have that option to help.  It's likely that at some point the costs will become too high for the project to continue to be free or perhaps continue at all, but until then we'll all enjoy the successes we're having.
 
 ## Legal
 

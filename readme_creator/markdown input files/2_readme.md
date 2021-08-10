@@ -2190,6 +2190,24 @@ To specify an underlined, Helvetica font with a size of 15 the values:
 ('Helvetica', 15, 'underline italics')
 'Helvetica 15 underline italics'
 
+**Font Style - Valid font styles include:**
+
+* italic
+* roman
+* bold
+* normal
+* underline
+* overstrike
+
+An example with many styles is:
+
+```python
+font='Courier 12 italic bold underline overstrike'
+```
+
+The same styles can be used with the tuple format for fonts.
+
+
 #### Key
 
 See the section above that has full information about keys.

@@ -2040,6 +2040,9 @@ The following methods are here for backwards compatibility reference.  You will 
 <!-- <+TabGroup.doc+> -->
 <!-- <+TabGroup.__init__+> -->
 
+### add_tab
+<!-- <+TabGroup.add_tab+> -->
+
 ### bind
 <!-- <+TabGroup.bind+> -->
 
@@ -2604,6 +2607,9 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### normal
 <!-- <+Window.normal+> -->
+
+### perform_long_operation
+<!-- <+Window.perform_long_operation+> -->
 
 ### read
 <!-- <+Window.read+> -->
