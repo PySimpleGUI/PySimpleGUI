@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.45.0.49  Unreleased\nAdded exception details if have a problem with the wm_overriderediect. docstring fix. Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!), Addition of project information to the issue"
+version = __version__ = "4.46.0 Released 10-Aug-2021"
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -71,8 +71,9 @@ port = 'PySimpleGUI'
     3. If you use PySimpleGUI in your project/product, a notice of its use needs to be displayed in your readme file
     -----------------------------------------------------------------------------------------------------------------
 
-    How about having FUN with this package??  Terrible note to begin this journey of actually having fun making
-    GUI based applications so I'll try to make it up to you.
+    The PySimpleGUI project goals are simple:
+        1. Have fun
+        2. You, the user, are successful
 
     The first bit of good news for you is that literally 100s of pages of documentation await you. 
     300 Demo Programs have been written as a "jump start" mechanism to get your running as quickly as possible.
@@ -89,6 +90,21 @@ port = 'PySimpleGUI'
 
     The User Manual and the Cookbook are both designed to paint some nice looking GUIs on your screen within 5 minutes of you deciding to PySimpleGUI out.
 
+    A note from your sponsor....
+        “Don’t aim at success. The more you aim at it and make it a target, the more you are going to miss it. 
+        For success, like happiness, cannot be pursued; it must ensue, and it only does so as the unintended side effect of one’s personal dedication to a cause greater.”
+            — Viktor Frankl
+    
+        I first saw this quote in a truncated format:
+            "Happiness, cannot be pursued; it must ensue, and it only does so as the unintended side effect of one’s personal dedication to a cause greater."    
+    
+        Everyone is different, but my experience with the PySimpleGUI project matches this theory.  It's taken a lifetime of trying and "failing" and trying
+        to find happiness before I finally figured this truth-for-me out.  If I do a long list of things, and live life in a kind & loving way, then the
+        result is happiness.  It's a biproduct, not a directly produced thing.  This should be taught in school.  Or maybe it can't.
+        I hope you find happiness, but more importantly, or maybe first, I hope you find that bigger-than-you thing. For me it's always been programming.  It seems to be
+        the giving back part, not just the calling, that makes the happiness fusion-reactor operate.
+
+    "Thank you" has fueled this project. I'm incredibly grateful to have users that are in turn grateful. It's a feedback loop of gratitude. What a fantastic thing!
 """
 
 # all of the tkinter involved imports
@@ -6259,6 +6275,15 @@ class TabGroup(Element):
         return value
 
     def add_tab(self, tab_element):
+        """
+        Add a new tab to an existing TabGroup
+        This call was written so that tabs can be added at runtime as your user performs operations.
+        Your Window should already be created and finalized.
+
+        :param tab_element: A Tab Element that has a layout in it
+        :type tab_element:  Tab
+        """
+
         self.add_row(tab_element)
         tab_element.TKFrame = tab_element.Widget = tk.Frame(self.TKNotebook)
         form = self.ParentForm
