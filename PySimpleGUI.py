@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.1 Unreleased"
+version = __version__ = "4.46.0.2 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
     
     4.46.0.1
         Added rstrip parm to Multiline element
+    4.46.0.2
+        Combo.update - fixed bug added in 4.45.0 with disabled not working correctly when calling update
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1745,8 +1747,11 @@ class Combo(Element):
             self.TKCombo['state'] = 'enable'
         if disabled is True:
             self.TKCombo['state'] = 'disable'
-        elif disabled is False and not self.Readonly:
-            self.TKCombo['state'] = 'enable'
+        elif disabled is False and self.Readonly is True:
+                self.TKCombo['state'] = 'readonly'
+        elif disabled is False and self.Readonly is False:
+                self.TKCombo['state'] = 'enable'
+        self.Disabled = disabled if disabled is not None else self.Disabled
         if font is not None:
             self.TKCombo.configure(font=font)
         if visible is False:
@@ -2905,7 +2910,7 @@ class Multiline(Element):
         if self.rstrip:
             return value.rstrip()
         return value
-    
+
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None, c=None,
               autoscroll=True):
