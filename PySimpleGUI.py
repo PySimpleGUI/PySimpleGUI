@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.2 Unreleased"
+version = __version__ = "4.46.0.3 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -9,6 +9,9 @@ version = __version__ = "4.46.0.2 Unreleased"
         Added rstrip parm to Multiline element
     4.46.0.2
         Combo.update - fixed bug added in 4.45.0 with disabled not working correctly when calling update
+    4.46.0.3
+        Changed font type in all docstrings to be (str or (str, int[, str]) or None) (thank you Jason!!)
+        
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -812,7 +815,7 @@ class Element():
         :param auto_size_text:   True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text:    bool
         :param font:             specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param background_color: color of background. Can be in #RRGGBB format or a color name "black"
         :type background_color:  (str)
         :param text_color:       element's text color. Can be in #RRGGBB format or a color name "black"
@@ -1465,7 +1468,7 @@ class Input(Element):
         :param text_color:                         color of the text
         :type text_color:                          (str)
         :param font:                               specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                                str | (str, int)
+        :type font:                                (str or (str, int[, str]) or None)
         :param tooltip:                            text, that will appear when mouse hovers over the element
         :type tooltip:                             (str)
         :param border_width:                       width of border around element in pixels
@@ -1654,7 +1657,7 @@ class Combo(Element):
         :param readonly:         make element readonly (user can't change). True means user cannot change
         :type readonly:          (bool)
         :param font:             specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         :param metadata:         User metadata that can be set to ANYTHING
@@ -1694,7 +1697,7 @@ class Combo(Element):
         :param readonly:     if True make element readonly (user cannot change any choices). Enables the element if either choice are made.
         :type readonly:      (bool)
         :param font:         specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:          str | (str, int)
+        :type font:          (str or (str, int[, str]) or None)
         :param visible:      control visibility of element
         :type visible:       (bool)
         :param size:         width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
@@ -1946,7 +1949,7 @@ class Listbox(Element):
         :param auto_size_text:             True if element should be the same size as the contents
         :type auto_size_text:              (bool)
         :param font:                       specifies the font family, size, etc.  Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                        str | (str, int)
+        :type font:                        (str or (str, int[, str]) or None)
         :param no_scrollbar:               Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
         :type no_scrollbar:                (bool)
         :param background_color:           color of background
@@ -2167,7 +2170,7 @@ class Radio(Element):
         :param circle_color:     color of background of the circle that has the dot selection indicator in it
         :type circle_color:      (str)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param key:              Used with window.find_element and with return values to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -2346,7 +2349,7 @@ class Checkbox(Element):
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param background_color: color of background
         :type background_color:  (str)
         :param text_color:       color of the text
@@ -2531,7 +2534,7 @@ class Spin(Element):
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param background_color: color of background
         :type background_color:  (str)
         :param text_color:       color of the text
@@ -2731,7 +2734,7 @@ class Multiline(Element):
         :param focus:              if True initial focus will go to this element
         :type focus:               (bool)
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                str | (str, int)
+        :type font:                (str or (str, int[, str]) or None)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param tooltip:            text, that will appear when mouse hovers over the element
@@ -2802,7 +2805,7 @@ class Multiline(Element):
         :param append:                     if True then new value will be added onto the end of the current value. if False then contents will be replaced.
         :type append:                      (bool)
         :param font:                       specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element
-        :type font:                        str | (str, int)
+        :type font:                        (str or (str, int[, str]) or None)
         :param text_color:                 color of the text
         :type text_color:                  (str)
         :param background_color:           color of background
@@ -2944,7 +2947,7 @@ class Multiline(Element):
         :param justification:    text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element
         :type justification:     (str)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the args being printed
-        :type font:              str | (str, int) | (str, int, str)
+        :type font:              (str or (str, int[, str]) or None)
         :param colors:           Either a tuple or a string that has both the text and background colors. Or just the text color
         :type colors:            (str) or (str, str)
         :param t:                Color of the text
@@ -3080,7 +3083,7 @@ class Text(Element):
         :param relief:           relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID`
         :type relief:            (str/enum)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              (str or (str, int) or None)
+        :type font:              (str or (str, int[, str]) or None)
         :param text_color:       color of the text
         :type text_color:        (str)
         :param background_color: color of background
@@ -3142,7 +3145,7 @@ class Text(Element):
         :param text_color:       color of the text
         :type text_color:        (str)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         """
@@ -3187,7 +3190,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font:      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
-        :type font:       (str or (str, int) or None)
+        :type font:       (str or (str, int[, str]) or None)
         :param character: specifies a SINGLE CHARACTER character to measure
         :type character:  (str)
         :return:          Width in pixels of "A"
@@ -3207,7 +3210,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font: specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
-        :type font:  (str or (str, int) or None)
+        :type font:  (str or (str, int[, str]) or None)
         :return:     Height in pixels of "A"
         :rtype:      (int)
         """
@@ -3225,7 +3228,7 @@ class Text(Element):
         Cannot be used until a window has been created.
         If an error occurs, 0 will be returned
         :param font:   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, to be measured
-        :type font:    (str or (str, int) or None)
+        :type font:    (str or (str, int[, str]) or None)
         :param string: the string to measure
         :type string:  str
         :return:       Width in pixels of string
@@ -3275,7 +3278,7 @@ class StatusBar(Element):
         :param relief:           relief style. Values are same as progress meter relief values.  Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID`
         :type relief:            (enum)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param text_color:       color of the text
         :type text_color:        (str)
         :param background_color: color of background
@@ -3334,7 +3337,7 @@ class StatusBar(Element):
         :param text_color:       color of the text
         :type text_color:        (str)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:              str | (str, int)
+        :type font:              (str or (str, int[, str]) or None)
         :param visible:          set visibility state of the element
         :type visible:           (bool)
         """
@@ -3491,7 +3494,7 @@ class TKOutput(tk.Frame):
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                str | (str, int)
+        :type font:                (str or (str, int[, str]) or None)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         """
@@ -3596,7 +3599,7 @@ class Output(Element):
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                str | (str, int)
+        :type font:                (str or (str, int[, str]) or None)
         :param tooltip:            text, that will appear when mouse hovers over the element
         :type tooltip:             (str)
         :param key:                Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
@@ -3769,7 +3772,7 @@ class Button(Element):
         :param use_ttk_buttons:       True = use ttk buttons. False = do not use ttk buttons.  None (Default) = use ttk buttons only if on a Mac and not with button images
         :type use_ttk_buttons:        (bool)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                   str | (str, int)
+        :type font:                   (str or (str, int[, str]) or None)
         :param bind_return_key:       If True the return key will cause this button to be pressed
         :type bind_return_key:        (bool)
         :param focus:                 if True, initial focus will be put on this button
@@ -4266,9 +4269,9 @@ class ButtonMenu(Element):
         :param disabled_text_color: color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
         :type disabled_text_color:  (str)
         :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                 str | Tuple[str, int]
+        :type font:                 (str or (str, int[, str]) or None)
         :param item_font:           specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items
-        :type item_font:            str | Tuple[str, int]
+        :type item_font:            (str or (str, int[, str]) or None)
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
@@ -5202,7 +5205,7 @@ class Graph(Element):
         :param color:         text color
         :type color:          (str)
         :param font:          specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:           str | Tuple[str, int]
+        :type font:           (str or (str, int[, str]) or None)
         :param angle:         Angle 0 to 360 to draw the text.  Zero represents horizontal text
         :type angle:          (float)
         :param text_location: "anchor" location for the text. Values start with TEXT_LOCATION_
@@ -5587,7 +5590,7 @@ class Frame(Element):
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int) | (None, None)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                   str | Tuple[str, int]
+        :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param border_width:          width of border around element in pixels
@@ -5874,7 +5877,7 @@ class Tab(Element):
         :param background_color:      color of background of the entire layout
         :type background_color:       (str)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                   str | Tuple[str, int]
+        :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param disabled:              If True button will be created disabled
@@ -6099,7 +6102,7 @@ class TabGroup(Element):
         :param background_color:          color of background area that tabs are located on
         :type background_color:           (str)
         :param font:                      specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                       str | Tuple[str, int]
+        :type font:                       (str or (str, int[, str]) or None)
         :param change_submits:            * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:             (bool)
         :param enable_events:             If True then switching tabs will generate an Event
@@ -6370,7 +6373,7 @@ class Slider(Element):
         :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                       (int, int) | (None, None)
         :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                    str | Tuple[str, int]
+        :type font:                    (str or (str, int[, str]) or None)
         :param background_color:       color of slider's background
         :type background_color:        (str)
         :param text_color:             color of the slider's text
@@ -7192,7 +7195,7 @@ class Menu(Element):
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                 str | Tuple[str, int]
+        :type font:                 (str or (str, int[, str]) or None)
         :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:                  str | int | tuple | object
         :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -7331,7 +7334,7 @@ class Table(Element):
         :param row_height:              height of a single row in pixels
         :type row_height:               (int)
         :param font:                    specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                     str | Tuple[str, int]
+        :type font:                     (str or (str, int[, str]) or None)
         :param justification:           'left', 'right', 'center' are valid choices
         :type justification:            (str)
         :param text_color:              color of the text
@@ -7347,7 +7350,7 @@ class Table(Element):
         :param header_background_color: sets the background color for the header
         :type header_background_color:  (str)
         :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type header_font:              str | Tuple[str, int]
+        :type header_font:              (str or (str, int[, str]) or None)
         :param row_colors:              list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color)
         :type row_colors:               List[Tuple[int, str] | Tuple[Int, str, str]]
         :param vertical_scroll_only:    if True only the vertical scrollbar will be visible
@@ -7606,7 +7609,7 @@ class Tree(Element):
         :param enable_events:           Turns on the element specific events. Tree events happen when row is clicked
         :type enable_events:            (bool)
         :param font:                    specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                     str | Tuple[str, int]
+        :type font:                     (str or (str, int[, str]) or None)
         :param justification:           'left', 'right', 'center' are valid choices
         :type justification:            (str)
         :param text_color:              color of the text
@@ -7620,7 +7623,7 @@ class Tree(Element):
         :param header_background_color: sets the background color for the header
         :type header_background_color:  (str)
         :param header_font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type header_font:              str | Tuple[str, int]
+        :type header_font:              (str or (str, int[, str]) or None)
         :param num_rows:                The number of rows of the table to display at a time
         :type num_rows:                 (int)
         :param row_height:              height of a single row in pixels
@@ -8039,7 +8042,7 @@ class Window:
         :param button_color:                         Default button colors for all buttons in the window
         :type button_color:                          (str, str) or str
         :param font:                                 specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                                  str | Tuple[str, int] | None
+        :type font:                                  (str or (str, int[, str]) or None)
         :param progress_bar_color:                   (bar color, background color) Sets the default colors for all progress bars in the window
         :type progress_bar_color:                    (str, str)
         :param background_color:                     color of background
@@ -8089,7 +8092,7 @@ class Window:
         :param right_click_menu_selected_colors:     Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
         :type right_click_menu_selected_colors:     (str, str) | str | Tuple(int, int) | (None, None)
         :param right_click_menu_font:               Font for right click menus
-        :type right_click_menu_font:                str | Tuple[str, int]
+        :type right_click_menu_font:                (str or (str, int[, str]) or None)
         :param right_click_menu_tearoff:            If True then all right click menus can be torn off
         :type right_click_menu_tearoff:             bool
         :param finalize:                            If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code
@@ -8109,7 +8112,7 @@ class Window:
         :param titlebar_text_color:                 If custom titlebar indicated by use_custom_titlebar, then use this as text color
         :type titlebar_text_color:                  (str | None)
         :param titlebar_font:                       If custom titlebar indicated by use_custom_titlebar, then use this as title font
-        :type titlebar_font:                        (str | Tuple[str, int] | None)
+        :type titlebar_font:                        (str or (str, int[, str]) or None)
         :param titlebar_icon:                       If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
         :type titlebar_icon:                        (bytes | str)
         :param use_custom_titlebar:                 If True, then a custom titlebar will be used instead of the normal titlebar
@@ -10722,7 +10725,7 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
     :param background_color: Background color for titlebar
     :type background_color:  str | None
     :param font:             Font to be used for the text and the symbols
-    :type font:              str | None
+    :type font:              (str or (str, int[, str]) or None)
     :param key:              Identifies an Element. Should be UNIQUE to this window.
     :type key:               str | int | tuple | object | None
     :param k:                Exactly the same as key.  Choose one of them to use
@@ -10773,9 +10776,9 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :param disabled_text_color:  color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black"
     :type disabled_text_color:   (str)
     :param bar_font:             specifies the font family, size to be used for the chars in the bar itself
-    :type bar_font:              str | Tuple[str, int]
+    :type bar_font:              (str or (str, int[, str]) or None)
     :param font:                 specifies the font family, size to be used for the menu items
-    :type font:                  str | Tuple[str, int]
+    :type font:                  (str or (str, int[, str]) or None)
     :param tearoff:              if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
     :type tearoff:               (bool)
     :param pad:                  Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -10848,7 +10851,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              Used with window.find_element and with return values to uniquely identify this element
@@ -10897,7 +10900,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -10950,7 +10953,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param enable_events:    Turns on the element specific events.(Default = False)
     :type enable_events:     (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:              key for uniquely identify this element (for window.find_element)
@@ -11006,7 +11009,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param enable_events:     Turns on the element specific events.(Default = False)
     :type enable_events:      (bool)
     :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:               str | Tuple[str, int]
+    :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:               key for uniquely identify this element (for window.find_element)
@@ -11058,7 +11061,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param enable_events:     Turns on the element specific events.(Default = False)
     :type enable_events:      (bool)
     :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:               str | Tuple[str, int]
+    :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
     :param key:               key for uniquely identify this element (for window.find_element)
@@ -11098,7 +11101,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -11139,7 +11142,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -11181,7 +11184,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -11222,7 +11225,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -11263,7 +11266,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
@@ -11302,7 +11305,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
@@ -11343,7 +11346,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
@@ -11384,7 +11387,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
@@ -11425,7 +11428,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = True) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
@@ -11466,7 +11469,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            if focus should be set to this
@@ -11505,7 +11508,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11546,7 +11549,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param tooltip:          text, that will appear when mouse hovers over the element
     :type tooltip:           (str)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11597,7 +11600,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
@@ -11649,7 +11652,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
@@ -11703,7 +11706,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param disabled:         set disable state for element (Default = False)
@@ -11762,7 +11765,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11818,7 +11821,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param button_color:     button color (foreground, background)
     :type button_color:      (str, str) or str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param bind_return_key:  (Default = False) If True, then the return key will cause a the Listbox to generate an event
@@ -11885,7 +11888,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param disabled:               set disable state for element (Default = False)
     :type disabled:                (bool)
     :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                    str | Tuple[str, int]
+    :type font:                    (str or (str, int[, str]) or None)
     :param bind_return_key:        (Default = False) If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:         bool
     :param focus:                  if focus should be set to this
@@ -11969,7 +11972,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param bind_return_key:  If True, then the return key will cause a the Listbox to generate an event
     :type bind_return_key:   (bool)
     :param focus:            Determines if initial focus should go to this element.
@@ -15065,7 +15068,7 @@ class _DebugWin():
         :param location:              Location of upper left corner of the window
         :type location:               (int, int)
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-        :type font:                   str | Tuple[str, int]
+        :type font:                   (str or (str, int[, str]) or None)
         :param no_titlebar:           If True no titlebar will be shown
         :type no_titlebar:            (bool)
         :param no_button:             show button
@@ -15174,7 +15177,7 @@ def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, Non
     :param location:              Location of upper left corner of the window
     :type location:               (int, int)
     :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                   str | Tuple[str, int]
+    :type font:                   (str or (str, int[, str]) or None)
     :param no_titlebar:           If True no titlebar will be shown
     :type no_titlebar:            (bool)
     :param no_button:             don't show button
@@ -15294,7 +15297,7 @@ def cprint(*args, end=None, sep=' ', text_color=None, font=None, t=None, backgro
     :param text_color:       Color of the text
     :type text_color:        (str)
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated
-    :type font:              str | (str, int) | (str, int, str)
+    :type font:              (str or (str, int[, str]) or None)
     :param background_color: The background color of the line
     :type background_color:  (str)
     :param colors:           Either a tuple or a string that has both the text and background colors "text on background" or just the text color
@@ -15488,7 +15491,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param auto_size_buttons:               True if Buttons in this Window should be sized to exactly fit the text on this.
     :type auto_size_buttons:                (bool)
     :param font:                            specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                             str | Tuple[str, int]
+    :type font:                             (str or (str, int[, str]) or None)
     :param border_width:                    width of border around element
     :type border_width:                     (int)
     :param slider_border_width:             Width of the border around sliders
@@ -15560,7 +15563,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :param titlebar_text_color:             If custom titlebar indicated by use_custom_titlebar, then use this as text color
     :type titlebar_text_color:              str | None
     :param titlebar_font:                   If custom titlebar indicated by use_custom_titlebar, then use this as title font
-    :type titlebar_font:                    str | Tuple[str, int] | None
+    :type titlebar_font:                    (str or (str, int[, str]) or None) | None
     :param titlebar_icon:                   If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes)
     :type titlebar_icon:                    bytes | str
     :param user_settings_path:              default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user
@@ -17033,7 +17036,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
     :param keep_on_top:         If True the window will remain above all current windows
     :type keep_on_top:          (bool)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param image:               Image to include at the top of the popup window
     :type image:                (str) or (bytes)
     :param icon:                filename or base64 string to be used for the window's icon
@@ -17132,7 +17135,7 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True, than can grab anywhere to move the window (Default = False)
@@ -17183,7 +17186,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17235,7 +17238,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17291,7 +17294,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17342,7 +17345,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
     :type grab_anywhere:        (bool)
     :param keep_on_top:         If True the window will remain above all current windows
@@ -17393,7 +17396,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17445,7 +17448,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17497,7 +17500,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17548,7 +17551,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17598,7 +17601,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17649,7 +17652,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
     :param line_width:          Width of lines in characters
     :type line_width:           (int)
     :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                 str | Tuple[str, int]
+    :type font:                 (str or (str, int[, str]) or None)
     :param no_titlebar:         If True no titlebar will be shown
     :type no_titlebar:          (bool)
     :param grab_anywhere:       If True: can grab anywhere to move the window (Default = False)
@@ -17705,7 +17708,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
     :param icon:                     filename or base64 string to be used for the window's icon
     :type icon:                      bytes | str
     :param font:                     specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                      str | Tuple[str, int]
+    :type font:                      (str or (str, int[, str]) or None)
     :param no_titlebar:              If True no titlebar will be shown
     :type no_titlebar:               (bool)
     :param grab_anywhere:            If True: can grab anywhere to move the window (Default = False)
@@ -17874,7 +17877,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :param icon:                     filename or base64 string to be used for the window's icon
     :type icon:                      bytes | str
     :param font:                     specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:                      str | Tuple[str, int]
+    :type font:                      (str or (str, int[, str]) or None)
     :param no_titlebar:              If True no titlebar will be shown
     :type no_titlebar:               (bool)
     :param grab_anywhere:            If True: can grab anywhere to move the window (Default = False)
@@ -18059,7 +18062,7 @@ def popup_get_text(message, title=None, default_text='', password_char='', size=
     :param icon:             filename or base64 string to be used for the window's icon
     :type icon:              bytes | str
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
-    :type font:              str | Tuple[str, int]
+    :type font:              (str or (str, int[, str]) or None)
     :param no_titlebar:      If True no titlebar will be shown
     :type no_titlebar:       (bool)
     :param grab_anywhere:    If True can click and drag anywhere in the window to move the window
