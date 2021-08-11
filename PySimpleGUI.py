@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0 Released 10-Aug-2021"
+version = __version__ = "4.46.0.1 Unreleased"
+
+"""
+    Changelog since 4.46.0 release to PyPI on 10 Aug 2021
+    
+    4.46.0.1
+        Added rstrip parm to Multiline element
+"""
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -2672,10 +2679,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False,
-                 reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False,
-                 expand_x=False, expand_y=False,
-                 right_click_menu=None, visible=True, metadata=None):
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:       Initial text to show
         :type default_text:        (str)
@@ -2735,6 +2739,8 @@ class Multiline(Element):
         :type expand_x:            (bool)
         :param expand_y:           If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:            (bool)
+        :param rstrip:             If True the value returned in will have whitespace stripped from the right side
+        :type rstrip:              (bool)
         :param right_click_menu:   A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:    List[List[ List[str] | str ]]
         :param visible:            set visibility state of the element
@@ -2768,6 +2774,7 @@ class Multiline(Element):
         self.justification_tag = self.just_center_tag = self.just_left_tag = self.just_right_tag = None
         self.expand_x = expand_x
         self.expand_y = expand_y
+        self.rstrip = rstrip
         if reroute_stdout:
             self.reroute_stdout_to_here()
         if reroute_stderr:
@@ -2894,7 +2901,11 @@ class Multiline(Element):
         :return: current contents of the Multiline Element (used as an input type of Multiline
         :rtype:  (str)
         """
-        return self.TKText.get(1.0, tk.END)
+        value = str(self.TKText.get(1.0, tk.END))
+        if self.rstrip:
+            return value.rstrip()
+        return value
+    
 
     def print(self, *args, end=None, sep=None, text_color=None, background_color=None, justification=None, font=None, colors=None, t=None, b=None, c=None,
               autoscroll=True):
@@ -12254,6 +12265,8 @@ def _BuildResultsForSubform(form, initialize_only, top_level_form):
                         continue
                     try:
                         value = element.TKText.get(1.0, tk.END)
+                        if element.rstrip:
+                            value = value.rstrip()
                         if not top_level_form.NonBlocking and not element.do_not_clear and not top_level_form.ReturnKeyboardEvents:
                             element.TKText.delete('1.0', tk.END)
                     except:
