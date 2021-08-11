@@ -86,7 +86,7 @@ Parameter Descriptions:
 |                                (str, str)                                |   highlight_colors    | colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button |
 |                            (str, str) or str                             |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
 |                                   bool                                   |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
-|                            str or (str, int)                             |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |    bind_return_key    | If True the return key will cause this button to be pressed |
 |                                   bool                                   |         focus         | if True, initial focus will be put on this button |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -492,8 +492,8 @@ Parameter Descriptions:
 |                                   str                                    |  background_color   | color of the background |
 |                                   str                                    |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
 |                                   str                                    | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
-|                          str or Tuple[str, int]                          |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                          str or Tuple[str, int]                          |      item_font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items |
+|                    (str or (str, int[, str]) or None)                    |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |      item_font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   bool                                   |         key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element :param expand_x: If True the element will automatically expand in the X direction to fill available space |
 |                                   bool                                   |      expand_y       | If True the element will automatically expand in the Y direction to fill available space |
@@ -1108,7 +1108,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |       size       | (width, height) width = characters-wide, height = rows-high |
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
-|                            str or (str, int)                             |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
 |                                   str                                    |  checkbox_color  | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
@@ -1862,7 +1862,7 @@ Parameter Descriptions:
 |                                              bool                                               |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 | bool)        :param tooltip:          text that will appear when mouse hovers over this element |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
 |                                              bool                                               |     readonly     | make element readonly (user can't change). True means user cannot change |
-|                                        str or (str, int)                                        |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                               (str or (str, int[, str]) or None)                                |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                              bool                                               |     visible      | set visibility state of the element |
 |                                               Any                                               |     metadata     | User metadata that can be set to ANYTHING |
 
@@ -2082,14 +2082,14 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       Any        |    value     | change which value is current selected based on new list of previous list of choices |
-|    List[Any]     |    values    | change list of choices |
-|       int        | set_to_index | change selection to a particular choice starting with index = 0 |
-|       bool       |   disabled   | disable or enable state of the element |
-|       bool       |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
-| str or (str, int) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |   visible    | control visibility of element |
-|    (int, int)    |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
+|                Any                 |    value     | change which value is current selected based on new list of previous list of choices |
+|             List[Any]              |    values    | change list of choices |
+|                int                 | set_to_index | change selection to a particular choice starting with index = 0 |
+|                bool                |   disabled   | disable or enable state of the element |
+|                bool                |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+| (str or (str, int[, str]) or None) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |   visible    | control visibility of element |
+|             (int, int)             |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
 
 ### visible
 
@@ -2168,14 +2168,14 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       Any        |    value     | change which value is current selected based on new list of previous list of choices |
-|    List[Any]     |    values    | change list of choices |
-|       int        | set_to_index | change selection to a particular choice starting with index = 0 |
-|       bool       |   disabled   | disable or enable state of the element |
-|       bool       |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
-| str or (str, int) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |   visible    | control visibility of element |
-|    (int, int)    |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
+|                Any                 |    value     | change which value is current selected based on new list of previous list of choices |
+|             List[Any]              |    values    | change list of choices |
+|                int                 | set_to_index | change selection to a particular choice starting with index = 0 |
+|                bool                |   disabled   | disable or enable state of the element |
+|                bool                |   readonly   | if True make element readonly (user cannot change any choices). Enables the element if either choice are made. |
+| (str or (str, int[, str]) or None) |     font     | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |   visible    | control visibility of element |
+|             (int, int)             |     size     | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
 
 ---------
 
@@ -2219,7 +2219,7 @@ Parameter Descriptions:
 |                                   enum                                   |        relief         | relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
 |                                (int, int)                                |         size          | (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column |
 |                        (int, int) or (None, None)                        |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                          str or Tuple[str, int]                          |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   int                                    |     border_width      | width of border around element in pixels |
 |                      str or int or tuple or object                       |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
@@ -2892,12 +2892,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|               Any                |     text      | text to display |
-| (int, int) or Tuple[float, float] |   location    | location to place first letter |
-|               str                |     color     | text color |
-|      str or Tuple[str, int]      |     font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|              float               |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
-|               enum               | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
+|                Any                 |     text      | text to display |
+| (int, int) or Tuple[float, float]  |   location    | location to place first letter |
+|                str                 |     color     | text color |
+| (str or (str, int[, str]) or None) |     font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|               float                |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
+|                enum                | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
 | int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
 
 ### erase
@@ -3417,12 +3417,12 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|               Any                |     text      | text to display |
-| (int, int) or Tuple[float, float] |   location    | location to place first letter |
-|               str                |     color     | text color |
-|      str or Tuple[str, int]      |     font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|              float               |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
-|               enum               | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
+|                Any                 |     text      | text to display |
+| (int, int) or Tuple[float, float]  |   location    | location to place first letter |
+|                str                 |     color     | text color |
+| (str or (str, int[, str]) or None) |     font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|               float                |     angle     | Angle 0 to 360 to draw the text. Zero represents horizontal text |
+|                enum                | text_location | "anchor" location for the text. Values start with TEXT_LOCATION_ |
 | int or None | **RETURN** | id returned from tkinter that you'll need if you want to manipulate the text
 
 ### Erase
@@ -4227,7 +4227,7 @@ Parameter Descriptions:
 |                                   str                                    |           justification            | justification for data display. Valid choices - left, right, center |
 |                                   str                                    |          background_color          | color of background in one of the color formats |
 |                                   str                                    |             text_color             | color of the text |
-|                            str or (str, int)                             |                font                | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |                font                | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |              tooltip               | text, that will appear when mouse hovers over the element |
 |                                   int                                    |            border_width            | width of border around element in pixels |
 |                                   bool                                   |           change_submits           | * DEPRICATED DO NOT USE. Use `enable_events` instead |
@@ -4613,7 +4613,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |             s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   |          disabled          | set disable state for element |
 |                                   bool                                   |       auto_size_text       | True if element should be the same size as the contents |
-|                            str or (str, int)                             |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |        no_scrollbar        | Controls if a scrollbar should be shown. If True, no scrollbar will be shown |
 |                                   str                                    |      background_color      | color of background |
 |                                   str                                    |         text_color         | color of the text |
@@ -5044,7 +5044,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                          str or Tuple[str, int]                          |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                      str or int or tuple or object                       |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                      str or int or tuple or object                       |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                   bool                                   |       visible       | set visibility state of the element |
@@ -5341,8 +5341,8 @@ Parameter Descriptions:
 |--|--|--|
 |                     List[List[Tuple[str, List[str]]]                     |   menu_definition    | The Menu definition specified using lists (docs explain the format) |
 |                                   str                                    | disabled_text_color  | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
-|                          str or Tuple[str, int]                          |       bar_font       | specifies the font family, size to be used for the chars in the bar itself |
-|                          str or Tuple[str, int]                          |         font         | specifies the font family, size to be used for the menu items |
+|                    (str or (str, int[, str]) or None)                    |       bar_font       | specifies the font family, size to be used for the chars in the bar itself |
+|                    (str or (str, int[, str]) or None)                    |         font         | specifies the font family, size to be used for the menu items |
 |                                   bool                                   |       tearoff        | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   str                                    |   background_color   | color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text |
@@ -5390,6 +5390,7 @@ Multiline(default_text = "",
     no_scrollbar = False,
     expand_x = False,
     expand_y = False,
+    rstrip = True,
     right_click_menu = None,
     visible = True,
     metadata = None)
@@ -5421,13 +5422,14 @@ Parameter Descriptions:
 |                                   bool                                   |   reroute_cprint   | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
 |                                   bool                                   | echo_stdout_stderr | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
 |                                   bool                                   |       focus        | if True initial focus will go to this element |
-|                            str or (str, int)                             |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
 |                                   str                                    |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
 |                                   bool                                   |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
 |                                   bool                                   |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
 |                                   bool                                   |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
+|                                   bool                                   |       rstrip       | If True the value returned in will have whitespace stripped from the right side |
 |                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                   bool                                   |      visible       | set visibility state of the element |
 |                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
@@ -5573,7 +5575,7 @@ Parameter Descriptions:
 |                str                 |    text_color    | The color of the text |
 |                str                 | background_color | The background color of the line |
 |                str                 |  justification   | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
-| str or (str, int) or (str, int, str) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the args being printed |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the args being printed |
 |          str or str, str           |      colors      | Either a tuple or a string that has both the text and background colors. Or just the text color |
 |                str                 |        t         | Color of the text |
 |                str                 |        b         | The background color of the line |
@@ -5744,18 +5746,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |           value            | new text to display |
-|       bool       |          disabled          | disable or enable state of the element |
-|       bool       |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| str or (str, int) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
-|       str        |         text_color         | color of the text |
-|       str        |      background_color      | color of background |
-|       str        |    text_color_for_value    | color of the new text being added (the value paramter) |
-|       str        | background_color_for_value | color of the new background of the text being added (the value paramter) |
-|       bool       |          visible           | set visibility state of the element |
-|       bool       |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
-|       str        |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
-| str or (str, int) |       font_for_value       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
+|                str                 |           value            | new text to display |
+|                bool                |          disabled          | disable or enable state of the element |
+|                bool                |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
+| (str or (str, int[, str]) or None) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
+|                str                 |         text_color         | color of the text |
+|                str                 |      background_color      | color of background |
+|                str                 |    text_color_for_value    | color of the new text being added (the value paramter) |
+|                str                 | background_color_for_value | color of the new background of the text being added (the value paramter) |
+|                bool                |          visible           | set visibility state of the element |
+|                bool                |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
+|                str                 |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|         str or (str, int)          |       font_for_value       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
 
 ### visible
 
@@ -5834,18 +5836,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |           value            | new text to display |
-|       bool       |          disabled          | disable or enable state of the element |
-|       bool       |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
-| str or (str, int) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
-|       str        |         text_color         | color of the text |
-|       str        |      background_color      | color of background |
-|       str        |    text_color_for_value    | color of the new text being added (the value paramter) |
-|       str        | background_color_for_value | color of the new background of the text being added (the value paramter) |
-|       bool       |          visible           | set visibility state of the element |
-|       bool       |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
-|       str        |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
-| str or (str, int) |       font_for_value       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
+|                str                 |           value            | new text to display |
+|                bool                |          disabled          | disable or enable state of the element |
+|                bool                |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
+| (str or (str, int[, str]) or None) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
+|                str                 |         text_color         | color of the text |
+|                str                 |      background_color      | color of background |
+|                str                 |    text_color_for_value    | color of the new text being added (the value paramter) |
+|                str                 | background_color_for_value | color of the new background of the text being added (the value paramter) |
+|                bool                |          visible           | set visibility state of the element |
+|                bool                |         autoscroll         | if True then contents of element are scrolled down when new text is added to the end |
+|                str                 |       justification        | text justification. left, right, center. Can use single characters l, r, c. Sets only for this value, not entire element |
+|         str or (str, int)          |       font_for_value       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
 
 ---------
 
@@ -6221,7 +6223,7 @@ Parameter Descriptions:
 |                                   str                                    |     text_color     | color of the text |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   bool                                   | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
-|                            str or (str, int)                             |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
 |                      str or int or tuple or object                       |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                      str or int or tuple or object                       |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -7208,7 +7210,7 @@ Parameter Descriptions:
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
 |                                   str                                    |   circle_color   | color of background of the circle that has the dot selection indicator in it |
-|                            str or (str, int)                             |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -7805,7 +7807,7 @@ Parameter Descriptions:
 |                                   bool                                   |        disabled        | set disable state for element |
 |                                (int, int)                                |          size          | (w=characters-wide, h=rows-high) |
 |                        (int, int) or (None, None)                        |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                          str or Tuple[str, int]                          |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |    background_color    | color of slider's background |
 |                                   str                                    |       text_color       | color of the slider's text |
 |                                   str                                    |      trough_color      | color of the slider's trough |
@@ -8128,7 +8130,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |       size       | (width, height) width = characters-wide, height = rows-high |
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
-|                            str or (str, int)                             |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |    text_color    | color of the text |
 |                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
@@ -8482,7 +8484,7 @@ Parameter Descriptions:
 |                                   bool                                   |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                   bool                                   |  enable_events   | Turns on the element specific events. StatusBar events occur when the bar is clicked |
 |                                   enum                                   |      relief      | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` |
-|                            str or (str, int)                             |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |    text_color    | color of the text |
 |                                   str                                    | background_color | color of background |
 |                                   str                                    |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
@@ -8695,11 +8697,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |      value       | new text to show |
-|       str        | background_color | color of background |
-|       str        |    text_color    | color of the text |
-| str or (str, int) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |     visible      | set visibility state of the element |
+|                str                 |      value       | new text to show |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | set visibility state of the element |
 
 ### visible
 
@@ -8761,11 +8763,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |      value       | new text to show |
-|       str        | background_color | color of background |
-|       str        |    text_color    | color of the text |
-| str or (str, int) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |     visible      | set visibility state of the element |
+|                str                 |      value       | new text to show |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | set visibility state of the element |
 
 ---------
 
@@ -8802,7 +8804,7 @@ Parameter Descriptions:
 |                           List[List[Element]]                            |        layout         | The element layout that will be shown in the tab |
 |                                   str                                    |      title_color      | color of the tab text (note not currently working on tkinter) |
 |                                   str                                    |   background_color    | color of background of the entire layout |
-|                          str or Tuple[str, int]                          |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                                   bool                                   |       disabled        | If True button will be created disabled |
 |                                   int                                    |     border_width      | width of border around element in pixels |
@@ -9196,7 +9198,7 @@ Parameter Descriptions:
 |                                   str                                    |   selected_title_color    | color of tab text when it is selected |
 |                                   str                                    | selected_background_color | color of tab when it is selected |
 |                                   str                                    |     background_color      | color of background area that tabs are located on |
-|                          str or Tuple[str, int]                          |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                   bool                                   |       enable_events       | If True then switching tabs will generate an Event |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |            pad            | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -9585,7 +9587,7 @@ Parameter Descriptions:
 |                                   bool                                   |   display_row_numbers   | if True, the first column of the table will be the row # |
 |                                   int                                    |        num_rows         | The number of rows of the table to display at a time |
 |                                   int                                    |       row_height        | height of a single row in pixels |
-|                          str or Tuple[str, int]                          |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |      justification      | 'left', 'right', 'center' are valid choices |
 |                                   str                                    |       text_color        | color of the text |
 |                                   str                                    |    background_color     | color of background |
@@ -9593,7 +9595,7 @@ Parameter Descriptions:
 |                            str or (str, str)                             |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
 |                                   str                                    |    header_text_color    | sets the text color for the header |
 |                                   str                                    | header_background_color | sets the background color for the header |
-|                          str or Tuple[str, int]                          |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |              List[Tuple[int, str] or Tuple[Int, str, str]]               |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
 |                                   bool                                   |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
 |                                   bool                                   |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
@@ -9952,7 +9954,7 @@ Parameter Descriptions:
 |                                   bool                                   |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                   bool                                   |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
 |                                (str/enum)                                |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID` |
-|                       (str or (str, int) or None)                        |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |    text_color    | color of the text |
 |                                   str                                    | background_color | color of background |
 |                                   int                                    |   border_width   | number of pixels for the border (if using a relief) |
@@ -10160,11 +10162,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |      value       | new text to show |
-|       str        | background_color | color of background |
-|       str        |    text_color    | color of the text |
-| str or (str, int) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |     visible      | set visibility state of the element |
+|                str                 |      value       | new text to show |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | set visibility state of the element |
 
 ### visible
 
@@ -10236,11 +10238,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str        |      value       | new text to show |
-|       str        | background_color | color of background |
-|       str        |    text_color    | color of the text |
-| str or (str, int) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|       bool       |     visible      | set visibility state of the element |
+|                str                 |      value       | new text to show |
+|                str                 | background_color | color of background |
+|                str                 |    text_color    | color of the text |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     visible      | set visibility state of the element |
 
 ---------
 
@@ -10280,11 +10282,11 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|       str or bytes or None        |       icon       | Can be either a filename or Base64 byte string of a PNG. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
-|                str                |      title       | The "title" to show in the titlebar |
-|            str or None            |    text_color    | Text color for titlebar |
-|            str or None            | background_color | Background color for titlebar |
-|            str or None            |       font       | Font to be used for the text and the symbols |
+|        str or bytes or None        |       icon       | Can be either a filename or Base64 byte string of a PNG. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO |
+|                str                 |      title       | The "title" to show in the titlebar |
+|            str or None             |    text_color    | Text color for titlebar |
+|            str or None             | background_color | Background color for titlebar |
+| (str or (str, int[, str]) or None) |       font       | Font to be used for the text and the symbols |
 | str or int or tuple or object or None |       key        | Identifies an Element. Should be UNIQUE to this window. |
 | str or int or tuple or object or None |        k         | Exactly the same as key. Choose one of them to use |
 | Column | **RETURN** | A single Column element that has eveything in 1 element
@@ -10346,14 +10348,14 @@ Parameter Descriptions:
 |                                   bool                                   |      show_expanded      | if True then the tree will be initially shown with all nodes completely expanded |
 |                                   bool                                   |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                   bool                                   |      enable_events      | Turns on the element specific events. Tree events happen when row is clicked |
-|                          str or Tuple[str, int]                          |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |      justification      | 'left', 'right', 'center' are valid choices |
 |                                   str                                    |       text_color        | color of the text |
 |                                   str                                    |    background_color     | color of background |
 |                            str or (str, str)                             |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
 |                                   str                                    |    header_text_color    | sets the text color for the header |
 |                                   str                                    | header_background_color | sets the background color for the header |
-|                          str or Tuple[str, int]                          |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   int                                    |        num_rows         | The number of rows of the table to display at a time |
 |                                   int                                    |       row_height        | height of a single row in pixels |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
@@ -11283,7 +11285,7 @@ Parameter Descriptions:
 |        (int, int or (int, int),(int,int))         |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                    (int, int)                     |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
 |                 (str, str) or str                 |             button_color             | Default button colors for all buttons in the window |
-|          str or Tuple[str, int] or None           |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|        (str or (str, int[, str]) or None)         |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                    (str, str)                     |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
 |                        str                        |           background_color           | color of background |
 |                        int                        |             border_depth             | Default border depth (width) for all elements in the window |
@@ -11308,7 +11310,7 @@ Parameter Descriptions:
 |                        str                        |     right_click_menu_text_color      | Text color for right click menus |
 |                        str                        | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
 | (str, str) or str or Tuple(int, int) or (None, None) |   right_click_menu_selected_colors   | Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background. |
-|              str or Tuple[str, int]               |        right_click_menu_font         | Font for right click menus |
+|        (str or (str, int[, str]) or None)         |        right_click_menu_font         | Font for right click menus |
 |                       bool                        |       right_click_menu_tearoff       | If True then all right click menus can be torn off |
 |                       bool                        |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
 |                        str                        |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
@@ -11318,7 +11320,7 @@ Parameter Descriptions:
 |                       bool                        |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
 |                   (str or None)                   |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
 |                   (str or None)                   |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|         (str or Tuple[str, int] or None)          |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|        (str or (str, int[, str]) or None)         |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  (bytes or str)                   |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                       bool                        |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
 |                        Any                        |               metadata               | User metadata that can be set to ANYTHING |
@@ -12853,7 +12855,7 @@ Parameter Descriptions:
 |                                   bool                                   |    auto_size_button    | True if button size is determined by button text |
 |                            (str, str) or str                             |      button_color      | button color (foreground, background) |
 |                                   bool                                   |        disabled        | set disable state for element (Default = False) |
-|                          str or Tuple[str, int]                          |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |         focus          | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -12897,7 +12899,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -12946,7 +12948,7 @@ Parameter Descriptions:
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |      focus       | Determines if initial focus should go to this element. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -12982,7 +12984,7 @@ Parameter Descriptions:
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
@@ -13029,7 +13031,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |      focus       | if focus should be set to this |
@@ -13067,7 +13069,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -13111,7 +13113,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
 |                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13157,7 +13159,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color    | button color (foreground, background) |
 |                                   bool                                   |  change_submits   | If True, pressing Enter key submits window (Default = False) |
 |                                   bool                                   |   enable_events   | Turns on the element specific events.(Default = False) |
-|                          str or Tuple[str, int]                          |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.find_element) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -13203,7 +13205,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
 |                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -13245,7 +13247,7 @@ Parameter Descriptions:
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
 |                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
 |                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -13279,7 +13281,7 @@ Parameter Descriptions:
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
@@ -13317,7 +13319,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -13355,7 +13357,7 @@ Parameter Descriptions:
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13420,7 +13422,7 @@ Parameter Descriptions:
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13457,7 +13459,7 @@ Parameter Descriptions:
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13493,7 +13495,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -13538,7 +13540,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |      focus       | if focus should be set to this |
@@ -13578,7 +13580,7 @@ Parameter Descriptions:
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13624,7 +13626,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color    | button color (foreground, background) |
 |                                   bool                                   |  change_submits   | If True, pressing Enter key submits window (Default = False) |
 |                                   bool                                   |   enable_events   | Turns on the element specific events.(Default = False) |
-|                          str or Tuple[str, int]                          |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.find_element) |
 |                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -13660,7 +13662,7 @@ Parameter Descriptions:
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
 |                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
@@ -13696,7 +13698,7 @@ Parameter Descriptions:
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                          |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
@@ -13746,7 +13748,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
@@ -13793,7 +13795,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
@@ -13840,7 +13842,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
@@ -13886,7 +13888,7 @@ Parameter Descriptions:
 |                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                   bool                                   | auto_size_button | True if button size is determined by button text |
 |                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                          str or Tuple[str, int]                          |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                   bool                                   |     disabled     | set disable state for element (Default = False) |
 |                              idk_yetReally                               |      focus       | if focus should be set to this |
@@ -13932,25 +13934,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
-|         bool          |      echo_stdout      | If True stdout is sent to both the console and the debug window |
-|    str or str, str    |        colors         | Either a tuple or a string that has both the text and background colors |
-|    str or str, str    |           c           | Either a tuple or a string that has both the text and background colors |
-|         bool          |       resizable       | if True, the user can resize the debug window. Default is True |
-|         bool          |       erase_all       | If True when erase the output before printing |
+|                Any                 |         *args         | stuff to output |
+|             (int, int)             |         size          | (w,h) w=characters-wide, h=rows-high |
+|                str                 |          end          | end character |
+|                str                 |          sep          | separator character |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+| (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |      no_titlebar      | If True no titlebar will be shown |
+|                bool                |       no_button       | don't show button |
+|                bool                |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|                str                 |   background_color    | color of background |
+|                str                 |      text_color       | color of the text |
+|                bool                |      keep_on_top      | If True the window will remain above all current windows |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+|                bool                | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
+|                bool                |      echo_stdout      | If True stdout is sent to both the console and the debug window |
+|          str or str, str           |        colors         | Either a tuple or a string that has both the text and background colors |
+|          str or str, str           |           c           | Either a tuple or a string that has both the text and background colors |
+|                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
+|                bool                |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -13992,25 +13994,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
-|         bool          |      echo_stdout      | If True stdout is sent to both the console and the debug window |
-|    str or str, str    |        colors         | Either a tuple or a string that has both the text and background colors |
-|    str or str, str    |           c           | Either a tuple or a string that has both the text and background colors |
-|         bool          |       resizable       | if True, the user can resize the debug window. Default is True |
-|         bool          |       erase_all       | If True when erase the output before printing |
+|                Any                 |         *args         | stuff to output |
+|             (int, int)             |         size          | (w,h) w=characters-wide, h=rows-high |
+|                str                 |          end          | end character |
+|                str                 |          sep          | separator character |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+| (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |      no_titlebar      | If True no titlebar will be shown |
+|                bool                |       no_button       | don't show button |
+|                bool                |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|                str                 |   background_color    | color of background |
+|                str                 |      text_color       | color of the text |
+|                bool                |      keep_on_top      | If True the window will remain above all current windows |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+|                bool                | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
+|                bool                |      echo_stdout      | If True stdout is sent to both the console and the debug window |
+|          str or str, str           |        colors         | Either a tuple or a string that has both the text and background colors |
+|          str or str, str           |           c           | Either a tuple or a string that has both the text and background colors |
+|                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
+|                bool                |       erase_all       | If True when erase the output before printing |
 
 Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
 
@@ -14046,25 +14048,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
-|         bool          |      echo_stdout      | If True stdout is sent to both the console and the debug window |
-|    str or str, str    |        colors         | Either a tuple or a string that has both the text and background colors |
-|    str or str, str    |           c           | Either a tuple or a string that has both the text and background colors |
-|         bool          |       resizable       | if True, the user can resize the debug window. Default is True |
-|         bool          |       erase_all       | If True when erase the output before printing |
+|                Any                 |         *args         | stuff to output |
+|             (int, int)             |         size          | (w,h) w=characters-wide, h=rows-high |
+|                str                 |          end          | end character |
+|                str                 |          sep          | separator character |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+| (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |      no_titlebar      | If True no titlebar will be shown |
+|                bool                |       no_button       | don't show button |
+|                bool                |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|                str                 |   background_color    | color of background |
+|                str                 |      text_color       | color of the text |
+|                bool                |      keep_on_top      | If True the window will remain above all current windows |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+|                bool                | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
+|                bool                |      echo_stdout      | If True stdout is sent to both the console and the debug window |
+|          str or str, str           |        colors         | Either a tuple or a string that has both the text and background colors |
+|          str or str, str           |           c           | Either a tuple or a string that has both the text and background colors |
+|                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
+|                bool                |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -14106,25 +14108,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
-|         bool          |      echo_stdout      | If True stdout is sent to both the console and the debug window |
-|    str or str, str    |        colors         | Either a tuple or a string that has both the text and background colors |
-|    str or str, str    |           c           | Either a tuple or a string that has both the text and background colors |
-|         bool          |       resizable       | if True, the user can resize the debug window. Default is True |
-|         bool          |       erase_all       | If True when erase the output before printing |
+|                Any                 |         *args         | stuff to output |
+|             (int, int)             |         size          | (w,h) w=characters-wide, h=rows-high |
+|                str                 |          end          | end character |
+|                str                 |          sep          | separator character |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+| (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |      no_titlebar      | If True no titlebar will be shown |
+|                bool                |       no_button       | don't show button |
+|                bool                |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|                str                 |   background_color    | color of background |
+|                str                 |      text_color       | color of the text |
+|                bool                |      keep_on_top      | If True the window will remain above all current windows |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+|                bool                | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
+|                bool                |      echo_stdout      | If True stdout is sent to both the console and the debug window |
+|          str or str, str           |        colors         | Either a tuple or a string that has both the text and background colors |
+|          str or str, str           |           c           | Either a tuple or a string that has both the text and background colors |
+|                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
+|                bool                |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -14166,25 +14168,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |         *args         | stuff to output |
-|      (int, int)       |         size          | (w,h) w=characters-wide, h=rows-high |
-|          str          |          end          | end character |
-|          str          |          sep          | separator character |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-| str or Tuple[str, int] |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |      no_titlebar      | If True no titlebar will be shown |
-|         bool          |       no_button       | don't show button |
-|         bool          |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
-|          str          |   background_color    | color of background |
-|          str          |      text_color       | color of the text |
-|         bool          |      keep_on_top      | If True the window will remain above all current windows |
-|      (int, int)       |       location        | Location of upper left corner of the window |
-|         bool          | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
-|         bool          |      echo_stdout      | If True stdout is sent to both the console and the debug window |
-|    str or str, str    |        colors         | Either a tuple or a string that has both the text and background colors |
-|    str or str, str    |           c           | Either a tuple or a string that has both the text and background colors |
-|         bool          |       resizable       | if True, the user can resize the debug window. Default is True |
-|         bool          |       erase_all       | If True when erase the output before printing |
+|                Any                 |         *args         | stuff to output |
+|             (int, int)             |         size          | (w,h) w=characters-wide, h=rows-high |
+|                str                 |          end          | end character |
+|                str                 |          sep          | separator character |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+| (str or (str, int[, str]) or None) |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |      no_titlebar      | If True no titlebar will be shown |
+|                bool                |       no_button       | don't show button |
+|                bool                |     grab_anywhere     | If True: can grab anywhere to move the window (Default = False) |
+|                str                 |   background_color    | color of background |
+|                str                 |      text_color       | color of the text |
+|                bool                |      keep_on_top      | If True the window will remain above all current windows |
+|             (int, int)             |       location        | Location of upper left corner of the window |
+|                bool                | do_not_reroute_stdout | do not reroute stdout and stderr. If False, both stdout and stderr will reroute to here |
+|                bool                |      echo_stdout      | If True stdout is sent to both the console and the debug window |
+|          str or str, str           |        colors         | Either a tuple or a string that has both the text and background colors |
+|          str or str, str           |           c           | Either a tuple or a string that has both the text and background colors |
+|                bool                |       resizable       | if True, the user can resize the debug window. Default is True |
+|                bool                |       erase_all       | If True when erase the output before printing |
 
 Close a previously opened EasyPrint window
 
@@ -14244,7 +14246,7 @@ Parameter Descriptions:
 |--|--|--|
 |                Any                 |      *args       | stuff to output |
 |                str                 |    text_color    | Color of the text |
-| str or (str, int) or (str, int, str) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the value being updated |
 |                str                 | background_color | The background color of the line |
 |          str or str, str           |      colors      | Either a tuple or a string that has both the text and background colors "text on background" or just the text color |
 |                str                 |        t         | Color of the text |
@@ -14496,24 +14498,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -14542,23 +14544,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -14587,23 +14589,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a calendar window, get the user's choice, return as a tuple (mon, day, year)
@@ -14678,30 +14680,30 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |         message          | message displayed to user |
-|          str          |          title           | Window title |
-|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
-|          str          |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|         bool          |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
-|         bool          |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]] |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |           size           | (width, height) of the InputText Element or Combo element if using history feature |
-|   (str, str) or str   |       button_color       | Color of the button (text, background) |
-|          str          |     background_color     | background color of the entire window |
-|          str          |        text_color        | color of the text |
-|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |       no_titlebar        | If True no titlebar will be shown |
-|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |       keep_on_top        | If True the window will remain above all current windows |
-|      (int, int)       |         location         | Location of upper left corner of the window |
-|          str          |      initial_folder      | location in filesystem to begin browsing |
-|     str or bytes      |          image           | Image to include at the top of the popup window |
-|          str          |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
-|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
-|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
+|                str                 |         message          | message displayed to user |
+|                str                 |          title           | Window title |
+|                str                 |       default_path       | path to display to user as starting point (filled into the input field) |
+|                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
+|                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
+|         (str, str) or str          |       button_color       | Color of the button (text, background) |
+|                str                 |     background_color     | background color of the entire window |
+|                str                 |        text_color        | color of the text |
+|            bytes or str            |           icon           | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |       no_titlebar        | If True no titlebar will be shown |
+|                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |       keep_on_top        | If True the window will remain above all current windows |
+|             (int, int)             |         location         | Location of upper left corner of the window |
+|                str                 |      initial_folder      | location in filesystem to begin browsing |
+|            str or bytes            |          image           | Image to include at the top of the popup window |
+|                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
+|                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -14732,25 +14734,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |         message          | message displayed to user |
-|          str          |          title           | Window title |
-|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
-|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |           size           | (width, height) of the InputText Element |
-|   (str, str) or str   |       button_color       | button color (foreground, background) |
-|          str          |     background_color     | color of background |
-|          str          |        text_color        | color of the text |
-|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |       no_titlebar        | If True no titlebar will be shown |
-|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |       keep_on_top        | If True the window will remain above all current windows |
-|      (int, int)       |         location         | Location of upper left corner of the window |
-|          str          |      initial_folder      | location in filesystem to begin browsing |
-|     str or bytes      |          image           | Image to include at the top of the popup window |
-|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
-|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
+|                str                 |         message          | message displayed to user |
+|                str                 |          title           | Window title |
+|                str                 |       default_path       | path to display to user as starting point (filled into the input field) |
+|                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|             (int, int)             |           size           | (width, height) of the InputText Element |
+|         (str, str) or str          |       button_color       | button color (foreground, background) |
+|                str                 |     background_color     | color of background |
+|                str                 |        text_color        | color of the text |
+|            bytes or str            |           icon           | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |       no_titlebar        | If True no titlebar will be shown |
+|                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |       keep_on_top        | If True the window will remain above all current windows |
+|             (int, int)             |         location         | Location of upper left corner of the window |
+|                str                 |      initial_folder      | location in filesystem to begin browsing |
+|            str or bytes            |          image           | Image to include at the top of the popup window |
+|                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -14778,22 +14780,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |     message      | message displayed to user |
-|          str          |      title       | Window title |
-|          str          |   default_text   | default value to put into input area |
-|          str          |  password_char   | character to be shown instead of actually typed characters |
-|      (int, int)       |       size       | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color   | Color of the button (text, background) |
-|          str          | background_color | background color of the entire window |
-|          str          |    text_color    | color of the message text |
-|     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |   no_titlebar    | If True no titlebar will be shown |
-|         bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|         bool          |   keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location     | (x,y) Location on screen to display the upper left corner of window |
-|     str or bytes      |      image       | Image to include at the top of the popup window |
-|         bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |     message      | message displayed to user |
+|                str                 |      title       | Window title |
+|                str                 |   default_text   | default value to put into input area |
+|                str                 |  password_char   | character to be shown instead of actually typed characters |
+|             (int, int)             |       size       | (width, height) of the InputText Element |
+|         (str, str) or str          |   button_color   | Color of the button (text, background) |
+|                str                 | background_color | background color of the entire window |
+|                str                 |    text_color    | color of the message text |
+|            bytes or str            |       icon       | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |   no_titlebar    | If True no titlebar will be shown |
+|                bool                |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|                bool                |   keep_on_top    | If True the window will remain above all current windows |
+|             (int, int)             |     location     | (x,y) Location on screen to display the upper left corner of window |
+|            str or bytes            |      image       | Image to include at the top of the popup window |
+|                bool                |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Makes a "popup menu"
@@ -14843,21 +14845,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -14886,23 +14888,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -14932,23 +14934,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None | **RETURN** | Reason for popup closing
 
 Displays a "notification window", usually in the bottom right corner of your display.  Has an icon, a title, and a message.  It is more like a "toaster" window than the normal popups.
@@ -15006,23 +15008,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -15051,23 +15053,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "OK" or "Cancel" or None | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -15097,24 +15099,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
@@ -15144,24 +15146,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -15193,25 +15195,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|      (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|      (int, int)       |      location       | Location on the screen to place the upper left corner of the window |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -15240,23 +15242,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
 
 ### Popup Alias - Same as popup_scrolled
@@ -15290,25 +15292,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|      (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|      (int, int)       |      location       | Location on the screen to place the upper left corner of the window |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -15340,25 +15342,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|      (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|      (int, int)       |      location       | Location on the screen to place the upper left corner of the window |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 ## Popup Not PEP8 Compliant names
@@ -15487,23 +15489,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -15533,24 +15535,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with "cancelled" button text
@@ -15579,23 +15581,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup with colored button and 'Error' as button text
@@ -15624,23 +15626,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -15676,30 +15678,30 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |         message          | message displayed to user |
-|          str          |          title           | Window title |
-|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
-|          str          |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|         bool          |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
-|         bool          |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-| Tuple[Tuple[str,str]] |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
-|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |           size           | (width, height) of the InputText Element or Combo element if using history feature |
-|   (str, str) or str   |       button_color       | Color of the button (text, background) |
-|          str          |     background_color     | background color of the entire window |
-|          str          |        text_color        | color of the text |
-|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |       no_titlebar        | If True no titlebar will be shown |
-|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |       keep_on_top        | If True the window will remain above all current windows |
-|      (int, int)       |         location         | Location of upper left corner of the window |
-|          str          |      initial_folder      | location in filesystem to begin browsing |
-|     str or bytes      |          image           | Image to include at the top of the popup window |
-|          str          |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
-|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
-|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
+|                str                 |         message          | message displayed to user |
+|                str                 |          title           | Window title |
+|                str                 |       default_path       | path to display to user as starting point (filled into the input field) |
+|                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
+|                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
+|         (str, str) or str          |       button_color       | Color of the button (text, background) |
+|                str                 |     background_color     | background color of the entire window |
+|                str                 |        text_color        | color of the text |
+|            bytes or str            |           icon           | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |       no_titlebar        | If True no titlebar will be shown |
+|                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |       keep_on_top        | If True the window will remain above all current windows |
+|             (int, int)             |         location         | Location of upper left corner of the window |
+|                str                 |      initial_folder      | location in filesystem to begin browsing |
+|            str or bytes            |          image           | Image to include at the top of the popup window |
+|                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
+|                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
 Display popup with text entry field and browse button so that a folder can be chosen.
@@ -15730,25 +15732,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |         message          | message displayed to user |
-|          str          |          title           | Window title |
-|          str          |       default_path       | path to display to user as starting point (filled into the input field) |
-|         bool          |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
-|      (int, int)       |           size           | (width, height) of the InputText Element |
-|   (str, str) or str   |       button_color       | button color (foreground, background) |
-|          str          |     background_color     | color of background |
-|          str          |        text_color        | color of the text |
-|     bytes or str      |           icon           | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |       no_titlebar        | If True no titlebar will be shown |
-|         bool          |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |       keep_on_top        | If True the window will remain above all current windows |
-|      (int, int)       |         location         | Location of upper left corner of the window |
-|          str          |      initial_folder      | location in filesystem to begin browsing |
-|     str or bytes      |          image           | Image to include at the top of the popup window |
-|         bool          |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
-|          str          | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
+|                str                 |         message          | message displayed to user |
+|                str                 |          title           | Window title |
+|                str                 |       default_path       | path to display to user as starting point (filled into the input field) |
+|                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
+|             (int, int)             |           size           | (width, height) of the InputText Element |
+|         (str, str) or str          |       button_color       | button color (foreground, background) |
+|                str                 |     background_color     | color of background |
+|                str                 |        text_color        | color of the text |
+|            bytes or str            |           icon           | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |           font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |       no_titlebar        | If True no titlebar will be shown |
+|                bool                |      grab_anywhere       | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |       keep_on_top        | If True the window will remain above all current windows |
+|             (int, int)             |         location         | Location of upper left corner of the window |
+|                str                 |      initial_folder      | location in filesystem to begin browsing |
+|            str or bytes            |          image           | Image to include at the top of the popup window |
+|                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the path chosen, None if cancelled or window closed with X
 
 Display Popup with text entry field. Returns the text entered or None if closed / cancelled
@@ -15776,22 +15778,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          str          |     message      | message displayed to user |
-|          str          |      title       | Window title |
-|          str          |   default_text   | default value to put into input area |
-|          str          |  password_char   | character to be shown instead of actually typed characters |
-|      (int, int)       |       size       | (width, height) of the InputText Element |
-|   (str, str) or str   |   button_color   | Color of the button (text, background) |
-|          str          | background_color | background color of the entire window |
-|          str          |    text_color    | color of the message text |
-|     bytes or str      |       icon       | filename or base64 string to be used for the window's icon |
-| str or Tuple[str, int] |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |   no_titlebar    | If True no titlebar will be shown |
-|         bool          |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
-|         bool          |   keep_on_top    | If True the window will remain above all current windows |
-|      (int, int)       |     location     | (x,y) Location on screen to display the upper left corner of window |
-|     str or bytes      |      image       | Image to include at the top of the popup window |
-|         bool          |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                str                 |     message      | message displayed to user |
+|                str                 |      title       | Window title |
+|                str                 |   default_text   | default value to put into input area |
+|                str                 |  password_char   | character to be shown instead of actually typed characters |
+|             (int, int)             |       size       | (width, height) of the InputText Element |
+|         (str, str) or str          |   button_color   | Color of the button (text, background) |
+|                str                 | background_color | background color of the entire window |
+|                str                 |    text_color    | color of the message text |
+|            bytes or str            |       icon       | filename or base64 string to be used for the window's icon |
+| (str or (str, int[, str]) or None) |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |   no_titlebar    | If True no titlebar will be shown |
+|                bool                |  grab_anywhere   | If True can click and drag anywhere in the window to move the window |
+|                bool                |   keep_on_top    | If True the window will remain above all current windows |
+|             (int, int)             |     location     | (x,y) Location on screen to display the upper left corner of window |
+|            str or bytes            |      image       | Image to include at the top of the popup window |
+|                bool                |      modal       | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None | **RETURN** | Text entered or None if window was closed or cancel button clicked
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -15820,23 +15822,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a Popup but without any buttons
@@ -15864,21 +15866,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | If True then will immediately return from the function without waiting for the user's input. (Default = False) |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -15907,23 +15909,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display a Popup without a titlebar.   Enables grab anywhere so you can move it
@@ -15952,23 +15954,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window and immediately return (does not block)
@@ -15998,23 +16000,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None | **RETURN** | Reason for popup closing
 
 Display Popup with OK button only
@@ -16043,23 +16045,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display popup with OK and Cancel buttons
@@ -16088,23 +16090,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "OK" or "Cancel" or None | **RETURN** | clicked button
 
 Show Popup box that doesn't block and closes itself
@@ -16134,24 +16136,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show Popup window with no titlebar, doesn't block, and auto closes itself.
@@ -16181,24 +16183,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = False |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -16230,25 +16232,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|         bool          |       yes_no        | If True, displays Yes and No buttons instead of Ok |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|      (int, int)       |        size         | (w,h) w=characters-wide, h=rows-high |
-|      (int, int)       |      location       | Location on the screen to place the upper left corner of the window |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
-|         bool          |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                bool                |       yes_no        | If True, displays Yes and No buttons instead of Ok |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|             (int, int)             |        size         | (w,h) w=characters-wide, h=rows-high |
+|             (int, int)             |      location       | Location on the screen to place the upper left corner of the window |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True, than can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                bool                |     no_sizegrip     | If True no Sizegrip will be shown when there is no titlebar. It's only shown if there is no titlebar |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Popup that closes itself after some time period
@@ -16278,24 +16280,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|          int          |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|                int                 |     button_type     | Determines which pre-defined buttons will be shown (Default value = POPUP_BUTTONS_OK). |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | str or None or TIMEOUT_KEY | **RETURN** | Returns text of the button that was pressed.  None will be returned if user closed window with X
 
 Display Popup with Yes and No buttons
@@ -16324,23 +16326,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|          Any          |        *args        | Variable number of items to display |
-|          str          |        title        | Title to display in the window. |
-|   (str, str) or str   |    button_color     | button color (foreground, background) |
-|          str          |  background_color   | color of background |
-|          str          |     text_color      | color of the text |
-|         bool          |     auto_close      | if True window will close itself |
-|     int or float      | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
-|         bool          |    non_blocking     | if True the call will immediately return rather than waiting on user input |
-|     bytes or str      |        icon         | filename or base64 string to be used for the window's icon |
-|          int          |     line_width      | Width of lines in characters |
-| str or Tuple[str, int] |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|         bool          |     no_titlebar     | If True no titlebar will be shown |
-|         bool          |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
-|         bool          |     keep_on_top     | If True the window will remain above all current windows |
-|      (int, int)       |      location       | Location of upper left corner of the window |
-|     str or bytes      |        image        | Image to include at the top of the popup window |
-|         bool          |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
+|                Any                 |        *args        | Variable number of items to display |
+|                str                 |        title        | Title to display in the window. |
+|         (str, str) or str          |    button_color     | button color (foreground, background) |
+|                str                 |  background_color   | color of background |
+|                str                 |     text_color      | color of the text |
+|                bool                |     auto_close      | if True window will close itself |
+|            int or float            | auto_close_duration | Older versions only accept int. Time in seconds until window will close |
+|                bool                |    non_blocking     | if True the call will immediately return rather than waiting on user input |
+|            bytes or str            |        icon         | filename or base64 string to be used for the window's icon |
+|                int                 |     line_width      | Width of lines in characters |
+| (str or (str, int[, str]) or None) |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                bool                |     no_titlebar     | If True no titlebar will be shown |
+|                bool                |    grab_anywhere    | If True: can grab anywhere to move the window (Default = False) |
+|                bool                |     keep_on_top     | If True the window will remain above all current windows |
+|             (int, int)             |      location       | Location of upper left corner of the window |
+|            str or bytes            |        image        | Image to include at the top of the popup window |
+|                bool                |        modal        | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 | "Yes" or "No" or None | **RETURN** | clicked button
 
 ## PEP8 Function Bindings
@@ -17281,7 +17283,7 @@ Parameter Descriptions:
 |       (int, int or (int, int),(int,int))       |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
 |                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|             str or Tuple[str, int]             |              font               | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|       (str or (str, int[, str]) or None)       |              font               | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                      int                       |          border_width           | width of border around element |
 |                      int                       |       slider_border_width       | Width of the border around sliders |
 |                      str                       |          slider_relief          | Type of relief to use for sliders |
@@ -17317,7 +17319,7 @@ Parameter Descriptions:
 |                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |
 |                  str or None                   |    titlebar_background_color    | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
 |                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|   (str or (str, int[, str]) or None) or None   |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
@@ -17403,7 +17405,7 @@ Parameter Descriptions:
 |       (int, int or (int, int),(int,int))       |         element_padding         | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
 |                      bool                      |         auto_size_text          | True if the Widget should be shrunk to exactly fit the number of chars to show |
 |                      bool                      |        auto_size_buttons        | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|             str or Tuple[str, int]             |              font               | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|       (str or (str, int[, str]) or None)       |              font               | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                      int                       |          border_width           | width of border around element |
 |                      int                       |       slider_border_width       | Width of the border around sliders |
 |                      str                       |          slider_relief          | Type of relief to use for sliders |
@@ -17439,7 +17441,7 @@ Parameter Descriptions:
 |                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |
 |                  str or None                   |    titlebar_background_color    | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
 |                  str or None                   |       titlebar_text_color       | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|         str or Tuple[str, int] or None         |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|   (str or (str, int[, str]) or None) or None   |          titlebar_font          | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
 |                  bytes or str                  |          titlebar_icon          | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
 |                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
