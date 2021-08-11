@@ -87,4 +87,8 @@ This pre-formatted code block is all set for you to paste in your bit of code:
 
 #### Screenshot, Sketch, or Drawing
 
+---------------------
 
+### Watcha Makin?
+
+If you care to share something about your project, it would be awesome to hear what you're building.
