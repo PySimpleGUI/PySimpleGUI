@@ -675,6 +675,7 @@ sg.set_options(button_element_size=(12, 1),
 
 # start layout with the tittle
 # layout = [[sg.Text('Hover mouse to see RGB value, click for popup with buttons',
+#           justification='center',  font='Default 20')]]
 
 # -- Create primary color viewer window --
 color_list = list(color_map.keys())
