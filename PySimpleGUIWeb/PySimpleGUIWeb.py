@@ -1,6 +1,6 @@
 #usr/bin/python3
 
-version = __version__ = "0.39.0.5  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image, added theme_add_new"
+version = __version__ = "0.39.0.6  Unreleased\n , VSeparator added (spelling error), added default key for one_line_progress_meter, auto-add keys to tables & trees, Graph.draw_image now uses image_data property instead of calling set_image, added theme_add_new, changed Remi call menu_item.set_on_click_listener to menu_item.onclick.connect so it can run with latest Remi"
 
 port = 'PySimpleGUIWeb'
 
@@ -8,7 +8,6 @@ import sys
 import datetime
 import textwrap
 import pickle
-import calendar
 import threading
 from queue import Queue
 import remi
@@ -3316,6 +3315,7 @@ class Window:
 
 
     def remi_thread(self):
+        # print('Remi Thread started')
         logging.getLogger('remi').setLevel(logging.CRITICAL)
         logging.getLogger('remi').disabled = True
         logging.getLogger('remi.server.ws').disabled = True
@@ -4136,7 +4136,8 @@ def AddMenuItem(top_menu, sub_menu_info, element, is_sub_menu=False, skip=False)
                 else:
                     menu_item =  remi.gui.MenuItem(item_without_key, width=100, height=30)
                     top_menu.append([menu_item,])
-                menu_item.set_on_click_listener(element._ChangedCallbackMenu, sub_menu_info)
+                # menu_item.set_on_click_listener(element._ChangedCallbackMenu, sub_menu_info)
+                menu_item.onclick.connect(element._ChangedCallbackMenu, sub_menu_info)
     else:
         i = 0
         while i < (len(sub_menu_info)):
