@@ -10,6 +10,7 @@ import PySimpleGUI as sg
     You will find the list of tkinter colors here:
          http://www.tcl.tk/man/tcl8.5/TkCmd/colors.htm
     
+    Copyright 2021 PySimpleGUI
 """
 
 color_map = {
@@ -673,23 +674,28 @@ sg.set_options(button_element_size=(12, 1),
                border_width=0, tooltip_time=100)
 
 # start layout with the tittle
-layout = [[sg.Text('Hover mouse to see RGB value, click for popup with buttons',
-          justification='center',  font='Default 20')]]
+# layout = [[sg.Text('Hover mouse to see RGB value, click for popup with buttons',
+#           justification='center',  font='Default 20')]]
 
 # -- Create primary color viewer window --
 color_list = list(color_map.keys())
 num_colors = len(color_list)
 colors_per_row = 15
 total_rows = num_colors//colors_per_row
-for row_num in range(total_rows):
-    row = []
-    for i in range(colors_per_row):
-        color = color_list[row_num + i * total_rows]
-        row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color], border_width=0))
-    layout.append(row)
+# for row_num in range(total_rows):
+#     row = []
+#     for i in range(colors_per_row):
+#         color = color_list[row_num + i * total_rows]
+#         row.append(sg.Button(color, button_color=('black', color), key=color, tooltip=color_map[color], border_width=0))
+#     layout.append(row)
 
 
-window = sg.Window('Color Viewer', layout, font='Default 9',  element_justification='c', use_default_focus=False)
+# layout = [[sg.Text('Hover mouse to see RGB value, click for popup with buttons',
+#           justification='center',  font='Default 20')]] + [[sg.Button(color_list[row_num + i * total_rows], button_color=('black', color_list[row_num + i * total_rows]), key=color_list[row_num + i * total_rows], tooltip=color_map[color_list[row_num + i * total_rows]], border_width=0) for i in range(colors_per_row)] for row_num in range(total_rows)]
+
+window = sg.Window('Color Viewer',
+                   [[sg.Text('Hover mouse to see RGB value, click for popup with buttons', justification='center',  font='Default 20')]] +
+                   [[sg.Button(color_list[row_num + i * total_rows], button_color=('black', color_list[row_num + i * total_rows]), key=color_list[row_num + i * total_rows], tooltip=color_map[color_list[row_num + i * total_rows]], border_width=0) for i in range(colors_per_row)] for row_num in range(total_rows)], font='Default 9',  element_justification='c', use_default_focus=False)
 
 # -- Event loop --
 while True:
