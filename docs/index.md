@@ -8842,19 +8842,22 @@ Happy 1M installs and 3 year anniversary edition!
 ## 4.46.0 PySimpleGUI 10-Aug-2021
 
 McRelease - Lots of Mac changes including new Mac patch control panel in global settings
+
 expand_x, expand_y in the constructors
+
 docstrings reformatted
+
 Text Elements really autosize now
 
-Multiline.print & cprint 
+* Multiline.print & cprint 
 	* Added autoscroll parameter - defaults to True (backward compatible)
 	* will now take a single color and use as text color
-Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!),
-ButtonMenu 
+* Text element - autosize with size of None, None creates an expanding Label widget with size and width of None and wraplen=0 (truely autosizing it appears!),
+* ButtonMenu 
 	* use font for button as menu font if none is supplied
 	* fixed mutible problem - makes a copy of menu definition when making ButtonMenu
 	* made menu definition optional so can change only some other settings
-Mac
+* Mac
 	* New window added to control the patches and feature disables. Access by calling main_mac_feature_control or through the global settings window from main()
 	* Disables grab anywhere if a titlebar is present
 	* Right click menu bound to Button2 which is the right button on a Mac (Button3 for all other systems)
@@ -8863,47 +8866,47 @@ Mac
 	* Will not try to apply no titlebar patch if tkinter version >= 8.6.10 regardless of user settings
 	* Disable the alpha chan to zero if the no titlebar patch is set on the Mac. Will see the window move to center of screen for these windows.
 	* Added no-titlebar batch to toolore neetips
-Fixed problem with titles on some Linux systems - set class_ for Toplevel windows
-Menu defintion bug fix - when menu shortcut char in first pos and item is disabled !&Item
-Sizegrip - fixed expansion problem
-Added kill application button to error popup
-one_line_progress_meter
-	* keep_on_top parameter added
-	* no_button parameter added so that no cancel button is shown
-Deprication warning added to FindElement as first step of moving out of non-PEP8 world,
-Added TabGroup.add_tab to add new tab to TabGroup at runtime
-execute_py_file
+- Fixed problem with titles on some Linux systems set class_ for Toplevel windows
+- Menu defintion bug fix when menu shortcut char in first pos and item is disabled !&Item
+- Sizegrip fixed expansion problem
+- Added kill application button to error popup
+- one_line_progress_meter
+	- keep_on_top parameter added
+	- no_button parameter added so that no cancel button is shown
+- Deprication warning added to FindElement as first step of moving out of non-PEP8 world,
+- Added TabGroup.add_tab to add new tab to TabGroup at runtime
+- execute_py_file
 	* set cwd='.' if dir not found
 	* check for file exists
-Right click menu	
-	* added to Radio Checkbox Tabgroup Spin Slider
-	* Elements that don't have a right_click_menu parm now pick up the default from the Window
-	* Added a right click menu callback to cover portions of the window that don't have an element on them
-	* Changed Button binding for Mac to Button2 (the right button rather than middle on the other systems)
-	* Made right click menus based on button release (MUCH better)
-docstrings
-	* Reformatted all docstrings to line up the desriptions for better readability
-	* Added type and rtype to docstrings that were missing any entries
-	* Updated all font entires in docstrings to include list as well as string
-Added stderr to Debug print if rerouting stdout
-expand_x and expand_y now in the constructor of all elements. No longer need to call Element.expand after finalizing window if using these.
-Added Window.perform_long_operation to automatically run users functions as threads
-Fixed Text.get() was returning not the latest value when set by another element
-Set cursor color to the same as the text color for Input Combo Spin Multiline Output
-Added echo_stdout to debug print so that stdout can be captured when run as a subprocess
-Addition of autosave parameter for UserSettings
-Test harness
-	Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle)
-	Compacted Test Harness significantly so it's 690x670
-Added Sizegrip to Debug Window
-New Grab Anywhere move code
-Move all windows at the same timed if using grab_anywhere (experimental) (set Window._move_all_windows = True)
-Table element - set the headers to stretch if expand_x is True
-Element.set_size - if Graph element then also set the member variable CanvasSize
-added exception details when making window with 0 alpha
-Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests)
-Added exception details if have a problem with the wm_overriderediect
-Addition of "project information" to the issue - your opportunity to share something about what you're making
+- Right click menu	
+	- added to Radio Checkbox Tabgroup Spin Slider
+	- Elements that don't have a right_click_menu parm now pick up the default from the Window
+	- Added a right click menu callback to cover portions of the window that don't have an element on them
+	- Changed Button binding for Mac to Button2 (the right button rather than middle on the other systems)
+	- Made right click menus based on button release (MUCH better)
+- docstrings
+	- Reformatted all docstrings to line up the desriptions for better readability
+	- Added type and rtype to docstrings that were missing any entries
+	- Updated all font entires in docstrings to include list as well as string
+- Added stderr to Debug print if rerouting stdout
+- expand_x and expand_y now in the constructor of all elements. No longer need to call Element.expand after finalizing window if using these.
+- Added Window.perform_long_operation to automatically run users functions as threads
+- Fixed Text.get() was returning not the latest value when set by another element
+- Set cursor color to the same as the text color for Input Combo Spin Multiline Output
+- Added echo_stdout to debug print so that stdout can be captured when run as a subprocess
+- Addition of autosave parameter for UserSettings
+- Test harness
+	- Made progress meter shorter so that the test harness fit better on smaller screens (a constant battle)
+	- Compacted Test Harness significantly so it's 690x670
+- Added Sizegrip to Debug Window
+- New Grab Anywhere move code
+- Move all windows at the same timed if using grab_anywhere (experimental) (set Window._move_all_windows = True)
+- Table element set the headers to stretch if expand_x is True
+- Element.set_size if Graph element then also set the member variable CanvasSize
+- added exception details when making window with 0 alpha
+- Check for no color setting when setting the cursor color for inputs (must test for gray gray gray theme in the future regression tests)
+- Added exception details if have a problem with the wm_overriderediect
+- Addition of "project information" to the issue your opportunity to share something about what you're making
 
 ## Upcoming
 
