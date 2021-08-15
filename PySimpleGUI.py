@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.3 Unreleased"
+version = __version__ = "4.46.0.4 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -11,7 +11,8 @@ version = __version__ = "4.46.0.3 Unreleased"
         Combo.update - fixed bug added in 4.45.0 with disabled not working correctly when calling update
     4.46.0.3
         Changed font type in all docstrings to be (str or (str, int[, str]) or None) (thank you Jason!!)
-        
+    4.46.0.4
+        Added code from Jason (slightly modified) for _fixed_map
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12563,9 +12564,10 @@ def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
     # Fix for setting text colour for Tkinter 8.6.9
     # From: https://core.tcl.tk/tk/info/509cafafae
 
-    default_map = [elm for elm in style.map("Treeview", query_opt=option) if '!' not in elm[0]]
-    custom_map = [elm for elm in style.map(style_name, query_opt=option) if '!' not in elm[0]]
-
+    # default_map = [elm for elm in style.map("Treeview", query_opt=option) if '!' not in elm[0]]
+    # custom_map = [elm for elm in style.map(style_name, query_opt=option) if '!' not in elm[0]]
+    default_map = [elm for elm in style.map("Treeview", query_opt=option) if '!' not in elm[0] and 'selected' not in elm[0]]
+    custom_map = [elm for elm in style.map(style_name, query_opt=option) if '!' not in elm[0] and 'selected' not in elm[0]]
     if option == 'background':
         custom_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
     elif option == 'foreground':
@@ -12573,15 +12575,15 @@ def _fixed_map(style, style_name, option, highlight_colors=(None, None)):
 
     new_map = custom_map + default_map
     return new_map
-
-    new_map = [elm for elm in style.map(style_name, query_opt=option) if elm[:2] != ('!disabled', '!selected')]
-
-    if option == 'background':
-        new_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
-    elif option == 'foreground':
-        new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
-    return new_map
-
+    #
+    # new_map = [elm for elm in style.map(style_name, query_opt=option) if elm[:2] != ('!disabled', '!selected')]
+    #
+    # if option == 'background':
+    #     new_map.append(('selected', highlight_colors[1] if highlight_colors[1] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[1]))
+    # elif option == 'foreground':
+    #     new_map.append(('selected', highlight_colors[0] if highlight_colors[0] is not None else ALTERNATE_TABLE_AND_TREE_SELECTED_ROW_COLORS[0]))
+    # return new_map
+    #
 
 def _add_right_click_menu(element, toplevel_form):
     if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
