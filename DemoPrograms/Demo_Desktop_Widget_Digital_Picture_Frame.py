@@ -61,7 +61,7 @@ def make_window(location):
     layout = [[sg.Image(k='-IMAGE-', enable_events=True)],
               [sg.pin(sg.Column(refresh_info, key='-REFRESH INFO-', element_justification='c', visible=sg.user_settings_get_entry('-show refresh-', True)))]]
 
-    window = sg.Window('Photo Frame', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True)
+    window = sg.Window('Photo Frame', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_justification='c', element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, keep_on_top=True, enable_close_attempted_event=True)
 
     return window
 
@@ -115,7 +115,10 @@ def main():
         # -------------- Start of normal event loop --------------
         timeout = time_per_image * 1000 + (random.randint(int(-time_per_image * 500), int(time_per_image * 500)) if vary_randomly else 0) if single_image is None else None
         event, values = window.read(timeout=timeout)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event == sg.WIN_CLOSED:
+            break
+        elif event in (sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-location-', window.current_location())  # The line of code to save the position before exiting
             break
         if event == 'Edit Me':
             sg.execute_editor(__file__)
