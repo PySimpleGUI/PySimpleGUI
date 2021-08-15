@@ -668,7 +668,7 @@ color_map = {
 
 sg.popup_quick_message('Building your table... one moment please...', background_color='red', text_color='white', font='_ 20')
 
-sg.set_options(button_element_size=(12, 1),
+sg.set_options(button_element_size=(11, 1),
                element_padding=(0, 0),
                auto_size_buttons=False,
                border_width=0, tooltip_time=100)
@@ -694,8 +694,8 @@ total_rows = num_colors//colors_per_row
 #           justification='center',  font='Default 20')]] + [[sg.Button(color_list[row_num + i * total_rows], button_color=('black', color_list[row_num + i * total_rows]), key=color_list[row_num + i * total_rows], tooltip=color_map[color_list[row_num + i * total_rows]], border_width=0) for i in range(colors_per_row)] for row_num in range(total_rows)]
 
 window = sg.Window('Color Viewer',
-                   [[sg.Text('Hover mouse to see RGB value, click for popup with buttons', justification='center',  font='Default 20')]] +
-                   [[sg.Button(color_list[row_num + i * total_rows], button_color=('black', color_list[row_num + i * total_rows]), key=color_list[row_num + i * total_rows], tooltip=color_map[color_list[row_num + i * total_rows]], border_width=0) for i in range(colors_per_row)] for row_num in range(total_rows)], font='Default 9',  element_justification='c', use_default_focus=False)
+                   [[sg.Text('Hover mouse to see RGB value, click for popup with buttons', justification='center',  font='Default 15')]] +
+                   [[sg.Button(color_list[row_num + i * total_rows], button_color=('black', color_list[row_num + i * total_rows]), key=color_list[row_num + i * total_rows], tooltip=color_map[color_list[row_num + i * total_rows]], border_width=0) for i in range(colors_per_row)] for row_num in range(total_rows)], font='Default 7',  element_justification='c', use_default_focus=False)
 
 # -- Event loop --
 while True:
