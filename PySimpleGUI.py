@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.4 Unreleased"
+version = __version__ = "4.46.0.5 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -13,6 +13,9 @@ version = __version__ = "4.46.0.4 Unreleased"
         Changed font type in all docstrings to be (str or (str, int[, str]) or None) (thank you Jason!!)
     4.46.0.4
         Added code from Jason (slightly modified) for _fixed_map
+    4.46.0.5
+        Fix for default element size - was incorrectly using as the default for parm in Window.
+            Needed to set it in the init code rather than using the parm to set it.
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8004,7 +8007,7 @@ class Window:
     _read_call_from_debugger = False
     _timeout_0_counter = 0  # when timeout=0 then go through each window one at a time
 
-    def __init__(self, title, layout=None, default_element_size=DEFAULT_ELEMENT_SIZE,
+    def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
                  auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
                  element_padding=None, margins=(None, None), button_color=None, font=None,
@@ -8127,7 +8130,7 @@ class Window:
         self.AutoSizeButtons = auto_size_buttons if auto_size_buttons is not None else DEFAULT_AUTOSIZE_BUTTONS
         self.Title = str(title)
         self.Rows = []  # a list of ELEMENTS for this row
-        self.DefaultElementSize = default_element_size
+        self.DefaultElementSize = default_element_size if default_element_size is not None else DEFAULT_ELEMENT_SIZE
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
