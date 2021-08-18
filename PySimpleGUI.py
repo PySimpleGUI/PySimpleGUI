@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.5 Unreleased"
+version = __version__ = "4.46.0.6 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -16,6 +16,8 @@ version = __version__ = "4.46.0.5 Unreleased"
     4.46.0.5
         Fix for default element size - was incorrectly using as the default for parm in Window.
             Needed to set it in the init code rather than using the parm to set it.
+    4.46.0.6
+        Window.current_location gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9644,19 +9646,33 @@ class Window:
         except:
             pass
 
-    def current_location(self):
+    def current_location(self, more_accurate=False):
         """
         Get the current location of the window's top left corner.
-        Note that this value may not take into account the titlebar and menubar.
-        These parts of a window are created by the OS.  As a result, the value returned may be
-        off depending on if your window has a titlebar or menubar.
+        Sometimes, depending on the environment, the value returned does not include the titlebar,etc
+        A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
+        The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
+        Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
 
-        :return: The x and y location in tuple form (x,y)
-        :rtype:  Tuple[(int), (int)]
+        :param more_accurate: If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account
+        :type more_accurate:  (bool)
+        :return:              The x and y location in tuple form (x,y)
+        :rtype:               Tuple[(int | None), (int | None)]
         """
+
         if not self._is_window_created('tried Window.current_location'):
-            return
-        return int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+            return (None, None)
+        try:
+            if more_accurate:
+                geometry = self.TKroot.geometry()
+                location = geometry[geometry.find('+') + 1:].split('+')
+                x, y = int(location[0]), int(location[1])
+            else:
+                x, y =  int(self.TKroot.winfo_x()), int(self.TKroot.winfo_y())
+        except Exception as e:
+            warnings.warn('Error in Window.current_location. Trouble getting x,y location\n' + str(e), UserWarning)
+            x, y = (None, None)
+        return (x,y)
 
     @property
     def size(self):
