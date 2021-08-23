@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.6 Unreleased"
+version = __version__ = "4.46.0.7 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -17,7 +17,9 @@ version = __version__ = "4.46.0.6 Unreleased"
         Fix for default element size - was incorrectly using as the default for parm in Window.
             Needed to set it in the init code rather than using the parm to set it.
     4.46.0.6
-        Window.current_location gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
+        Window.ation gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
+    4.46.0.7
+        Added Window.keep_on_top_set and Window.keep_on_top_clear. Makes window behave like was set when creating Window
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9627,8 +9629,8 @@ class Window:
                 self.TKroot.wm_attributes("-topmost", 1)
                 if not self.KeepOnTop:
                     self.TKroot.wm_attributes("-topmost", 0)
-            except:
-                pass
+            except Exception as e:
+                warnings.warn('Problem in Window.bring_to_front' + str(e), UserWarning)
         else:
             try:
                 self.TKroot.lift()
@@ -9645,6 +9647,38 @@ class Window:
             self.TKroot.lower()
         except:
             pass
+
+
+    def keep_on_top_set(self):
+        """
+        Sets keep_on_top after a window has been created.  Effect is the same
+        as if the window was created with this set.  The Window is also brought
+        to the front
+        """
+        if not self._is_window_created('tried Window.keep_on_top_set'):
+            return
+        self.KeepOnTop = True
+        self.bring_to_front()
+        try:
+            self.TKroot.wm_attributes("-topmost", 1)
+        except Exception as e:
+            warnings.warn('Problem in Window.keep_on_top_set trying to set wm_attributes topmost' + str(e), UserWarning)
+
+
+    def keep_on_top_clear(self):
+        """
+        Clears keep_on_top after a window has been created.  Effect is the same
+        as if the window was created with this set.
+        """
+        if not self._is_window_created('tried Window.keep_on_top_clear'):
+            return
+        self.KeepOnTop = False
+        try:
+            self.TKroot.wm_attributes("-topmost", 0)
+        except Exception as e:
+            warnings.warn('Problem in Window.keep_on_top_clear trying to clear wm_attributes topmost' + str(e), UserWarning)
+
+
 
     def current_location(self, more_accurate=False):
         """
