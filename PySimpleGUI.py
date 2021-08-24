@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.8 Unreleased"
+version = __version__ = "4.46.0.9 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -22,6 +22,9 @@ version = __version__ = "4.46.0.8 Unreleased"
         Added Window.keep_on_top_set and Window.keep_on_top_clear. Makes window behave like was set when creating Window
     4.46.0.8
         Added new constant BLANK_BASE64 that essentlly erases an Image element if assigned to it. It's 1x1 pixel and Alpha=0
+    4.46.0.9
+        Image element - New source parameter as the first parm. Can be a string or a bytestring. Backwards compatible because first was filename.
+        Works for both the init and the update. No need to specify any name at all... just pass in the thing you want to change to.
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4556,9 +4559,11 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
+    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
+        :param source:           A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
+        :type source:            str | bytes | None
         :param filename:         image filename if there is a button image. GIFs and PNGs only.
         :type filename:          str | None
         :param data:             Raw or Base64 representation of the image to put on button. Choose either filename or data
@@ -4591,6 +4596,13 @@ class Image(Element):
         :type metadata:          (Any)
         """
 
+        if source is not None:
+            if isinstance(source, bytes):
+                data = source
+            elif isinstance(source, str):
+                filename = source
+            else:
+                warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
         self.Filename = filename
         self.Data = data
@@ -4615,11 +4627,13 @@ class Image(Element):
                          tooltip=tooltip, visible=visible, metadata=metadata)
         return
 
-    def update(self, filename=None, data=None, size=(None, None), visible=None):
+    def update(self, source=None, filename=None, data=None, size=(None, None), visible=None):
         """
         Changes some of the settings for the Image Element. Must call `Window.Read` or `Window.Finalize` prior.
         To clear an image that's been displayed, call with NONE of the options set.  A blank update call will
         delete the previously shown image.
+        :param source:   A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
+        :type source:    str | bytes | None
         :param filename: filename to the new image to display.
         :type filename:  (str)
         :param data:     Base64 encoded string OR a tk.PhotoImage object
@@ -4632,6 +4646,14 @@ class Image(Element):
 
         if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
             return
+
+        if source is not None:
+            if isinstance(source, bytes):
+                data = source
+            elif isinstance(source, str):
+                filename = source
+            else:
+                warnings.warn('Image element - source is not a valid type: {}'.format(type(source)), UserWarning)
 
         image = None
         if filename is not None:
