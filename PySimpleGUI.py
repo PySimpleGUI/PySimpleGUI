@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.10 Unreleased"
+version = __version__ = "4.46.0.11 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -28,6 +28,10 @@ version = __version__ = "4.46.0.10 Unreleased"
     4.46.0.10
         Element sizes, when being created, can be an int.  If size=int, then it represents a size of (int, 1). GREATLY shortens layouts.
         Sometimes this these things only become apparent later even though it seems obvious
+    4.46.0.11
+        Another tuple / int convenience change. Tired of typing pad=(0,0)?  Yea, me too. Now we can type pad=0.
+        If an int is specified instead of a typle, then a tuple will be created to be same as the int --->  (int, int)
+        
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -842,7 +846,7 @@ class Element():
         :param key:              Identifies an Element. Should be UNIQUE to this window.
         :type key:               str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param visible:          set visibility state of the element (Default = True)
@@ -854,9 +858,15 @@ class Element():
             if isinstance(size, int):
                 size = (size, 1)
 
+        if pad is not None:
+            if isinstance(pad, int):
+                pad = (pad, pad)
+
+
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
+
         self.Pad = pad
         self.Font = font
 
@@ -1509,7 +1519,7 @@ class Input(Element):
         :param focus:                              Determines if initial focus should go to this element.
         :type focus:                               (bool)
         :param pad:                                Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below))
-        :type pad:                                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param use_readonly_for_disable:           If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
         :type use_readonly_for_disable:            (bool)
         :param readonly:                           If True tkinter state set to 'readonly'.  Use this in place of use_readonly_for_disable as another way of achieving readonly.  Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag
@@ -1671,7 +1681,7 @@ class Combo(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
         :type expand_x:          (bool)
         :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
@@ -1854,7 +1864,7 @@ class OptionMenu(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text that will appear when mouse hovers over this element
         :type tooltip:           (str)
         :param visible:          set visibility state of the element
@@ -1988,7 +1998,7 @@ class Listbox(Element):
         :param k:                          Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                           str | int | tuple | object
         :param pad:                        Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                         (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                         (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:                    text, that will appear when mouse hovers over the element
         :type tooltip:                     (str)
         :param expand_x:                   If True the element will automatically expand in the X direction to fill available space
@@ -2199,7 +2209,7 @@ class Radio(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param change_submits:   DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -2390,7 +2400,7 @@ class Checkbox(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -2567,7 +2577,7 @@ class Spin(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -2759,7 +2769,7 @@ class Multiline(Element):
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                (str or (str, int[, str]) or None)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:            text, that will appear when mouse hovers over the element
         :type tooltip:             (str)
         :param justification:      text justification. left, right, center. Can use single characters l, r, c.
@@ -3116,7 +3126,7 @@ class Text(Element):
         :param justification:    how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
         :type justification:     (str)
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str or int or tuple or object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -3309,7 +3319,7 @@ class StatusBar(Element):
         :param justification:    how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center`
         :type justification:     (str)
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -3519,7 +3529,7 @@ class TKOutput(tk.Frame):
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                (str or (str, int[, str]) or None)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         """
         self.frame = tk.Frame(parent)
         tk.Frame.__init__(self, self.frame)
@@ -3618,7 +3628,7 @@ class Output(Element):
         :param text_color:         color of the text
         :type text_color:          (str)
         :param pad:                Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -3801,7 +3811,7 @@ class Button(Element):
         :param focus:                 if True, initial focus will be put on this button
         :type focus:                  (bool)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                   Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                    str | int | tuple | object
         :param k:                     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -4296,7 +4306,7 @@ class ButtonMenu(Element):
         :param item_font:           specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items
         :type item_font:            (str or (str, int[, str]) or None)
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :param expand_x:            If True the element will automatically expand in the X direction to fill available space
         :type expand_x:             (bool)
@@ -4446,7 +4456,7 @@ class ProgressBar(Element):
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
@@ -4582,7 +4592,7 @@ class Image(Element):
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -4814,7 +4824,7 @@ class Canvas(Element):
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -4894,7 +4904,7 @@ class Graph(Element):
         :param background_color:  background color of the drawing area
         :type background_color:   (str)
         :param pad:               Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param change_submits:    * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:     (bool)
         :param drag_submits:      if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
@@ -5635,7 +5645,7 @@ class Frame(Element):
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param border_width:          width of border around element in pixels
         :type border_width:           (int)
         :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -5826,7 +5836,7 @@ class VerticalSeparator(Element):
         :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
         :type color:  (str)
         :param pad:   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:    str | int | tuple | object
         :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -5857,7 +5867,7 @@ class HorizontalSeparator(Element):
         :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
         :type color:  (str)
         :param pad:   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:    str | int | tuple | object
         :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -5922,7 +5932,7 @@ class Tab(Element):
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param disabled:              If True button will be created disabled
         :type disabled:               (bool)
         :param border_width:          width of border around element in pixels
@@ -6151,7 +6161,7 @@ class TabGroup(Element):
         :param enable_events:             If True then switching tabs will generate an Event
         :type enable_events:              (bool)
         :param pad:                       Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param border_width:              width of border around element in pixels
         :type border_width:               (int)
         :param theme:                     DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
@@ -6428,7 +6438,7 @@ class Slider(Element):
         :param k:                      Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                       str | int | tuple | object
         :param pad:                    Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param expand_x:               If True the element will automatically expand in the X direction to fill available space
         :type expand_x:                (bool)
         :param expand_y:               If True the element will automatically expand in the Y direction to fill available space
@@ -6686,7 +6696,7 @@ class Column(Element):
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int)  | (None, None) | int
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param scrollable:            if True then scrollbars will be added to the column
         :type scrollable:             (bool)
         :param vertical_scroll_only:  if Truen then no horizontal scrollbar will be shown
@@ -6902,7 +6912,7 @@ class Pane(Element):
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param orientation:      'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
         :type orientation:       (str)
         :param show_handle:      if True, the handle is drawn that makes it easier to grab and slide
@@ -7236,7 +7246,7 @@ class Menu(Element):
         :param tearoff:             if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
         :type tearoff:              (bool)
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                 (str or (str, int[, str]) or None)
         :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -7409,7 +7419,7 @@ class Table(Element):
         :param bind_return_key:         if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
         :type bind_return_key:          (bool)
         :param pad:                     Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                     Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                      str | int | tuple | object
         :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -7672,7 +7682,7 @@ class Tree(Element):
         :param row_height:              height of a single row in pixels
         :type row_height:               (int)
         :param pad:                     Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+        :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                     Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                      str | int | tuple | object
         :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -8079,7 +8089,7 @@ class Window:
         :param size:                                 (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user
         :type size:                                  (int, int)
         :param element_padding:                      Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom))
-        :type element_padding:                       (int, int) or ((int, int),(int,int))
+        :type element_padding:                       (int, int) or ((int, int),(int,int)) or int
         :param margins:                              (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown.
         :type margins:                               (int, int)
         :param button_color:                         Default button colors for all buttons in the window
@@ -8221,7 +8231,14 @@ class Window:
         self._Hidden = False
         self._Size = size
         self.XFound = False
-        self.ElementPadding = element_padding or DEFAULT_ELEMENT_PADDING
+        if element_padding is not None:
+            if isinstance(element_padding, int):
+                element_padding = (element_padding, element_padding)
+
+        if element_padding is None:
+            self.ElementPadding = DEFAULT_ELEMENT_PADDING
+        else:
+            self.ElementPadding = element_padding
         self.RightClickMenu = right_click_menu
         self.Margins = margins if margins != (None, None) else DEFAULT_MARGINS
         self.ContainerElemementNumber = Window._GetAContainerNumber()
@@ -10871,7 +10888,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :param tearoff:              if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
     :type tearoff:               (bool)
     :param pad:                  Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
-    :type pad:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param background_color:     color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text
     :type background_color:      (str)
     :param text_color:           color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background
@@ -10942,7 +10959,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              Used with window.find_element and with return values to uniquely identify this element
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -10993,7 +11010,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11044,7 +11061,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11100,7 +11117,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:               key for uniquely identify this element (for window.find_element)
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11152,7 +11169,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param font:              specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
     :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:               key for uniquely identify this element (for window.find_element)
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11194,7 +11211,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11235,7 +11252,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11277,7 +11294,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11318,7 +11335,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11359,7 +11376,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11400,7 +11417,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11441,7 +11458,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11482,7 +11499,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11523,7 +11540,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11564,7 +11581,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11605,7 +11622,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11646,7 +11663,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param focus:            if focus should be set to this
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11697,7 +11714,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11749,7 +11766,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11803,7 +11820,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param focus:            if focus should be set to this
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11862,7 +11879,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param focus:            if focus should be set to this
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11918,7 +11935,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param focus:            if focus should be set to this
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11983,7 +12000,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param focus:                  if focus should be set to this
     :type focus:                   bool
     :param pad:                    Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:                    key for uniquely identify this element (for window.find_element)
     :type key:                     str | int | tuple | object
     :param k:                      Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -12067,7 +12084,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param focus:            Determines if initial focus should go to this element.
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom)
-    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
+    :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
