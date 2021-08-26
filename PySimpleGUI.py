@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.9 Unreleased"
+version = __version__ = "4.46.0.10 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -25,6 +25,9 @@ version = __version__ = "4.46.0.9 Unreleased"
     4.46.0.9
         Image element - New source parameter as the first parm. Can be a string or a bytestring. Backwards compatible because first was filename.
         Works for both the init and the update. No need to specify any name at all... just pass in the thing you want to change to.
+    4.46.0.10
+        Element sizes, when being created, can be an int.  If size=int, then it represents a size of (int, 1). GREATLY shortens layouts.
+        Sometimes this these things only become apparent later even though it seems obvious
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -827,7 +830,7 @@ class Element():
         :param type:             The type of element. These constants all start with "ELEM_TYPE_"
         :type type:              (int) (could be enum)
         :param size:             w=characters-wide, h=rows-high
-        :type size:              (int, int)  (width, height)
+        :type size:              (int, int) | (None, None) | int
         :param auto_size_text:   True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text:    bool
         :param font:             specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -847,6 +850,10 @@ class Element():
         :param metadata:         User metadata that can be set to ANYTHING
         :type metadata:          (Any)
         """
+        if size is not None:
+            if isinstance(size, int):
+                size = (size, 1)
+
         self.Size = size
         self.Type = type
         self.AutoSizeText = auto_size_text
@@ -1470,9 +1477,9 @@ class Input(Element):
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
         :type default_text:                        (Any)
         :param size:                               w=characters-wide, h=rows-high
-        :type size:                                (int, int)  | (None, None)
+        :type size:                                (int, int) |  (int, None) | int
         :param s:                                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                                   (int, int) | (None, None)
+        :type s:                                   (int, int)  | (None, None) | int
         :param disabled:                           set disable state for element (Default = False)
         :type disabled:                            (bool)
         :param password_char:                      Password character if this is a password field (Default value = '')
@@ -1642,9 +1649,9 @@ class Combo(Element):
         :param default_value:    Choice to be displayed as initial value. Must match one of values variable contents
         :type default_value:     (Any)
         :param size:             width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list
-        :type size:              (int, int) | (None, None)
+        :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   True if element should be the same size as the contents
         :type auto_size_text:    (bool)
         :param background_color: color of background
@@ -1829,7 +1836,7 @@ class OptionMenu(Element):
         :param size:             (width, height) size in characters (wide), height is ignored and present to be consistent with other elements
         :type size:              (int, int) (width, UNUSED)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param disabled:         control enabled / disabled
         :type disabled:          (bool)
         :param auto_size_text:   True if size of Element should match the contents of the items
@@ -1957,9 +1964,9 @@ class Listbox(Element):
         :param bind_return_key:            If True, then the return key will cause a the Listbox to generate an event
         :type bind_return_key:             (bool)
         :param size:                       width = characters-wide, height = rows-high
-        :type size:                        (int, int)  | (None, None)
+        :type size:                        (int, int) |  (int, None) | int
         :param s:                          Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                           (int, int) | (None, None)
+        :type s:                           (int, int)  | (None, None) | int
         :param disabled:                   set disable state for element
         :type disabled:                    (bool)
         :param auto_size_text:             True if element should be the same size as the contents
@@ -2174,9 +2181,9 @@ class Radio(Element):
         :param disabled:         set disable state
         :type disabled:          (bool)
         :param size:             (width, height) width = characters-wide, height = rows-high
-        :type size:              (int, int) | (None, None)
+        :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
         :param background_color: color of background
@@ -2359,9 +2366,9 @@ class Checkbox(Element):
         :param default:          Set to True if you want this checkbox initially checked
         :type default:           (bool)
         :param size:             (width, height) width = characters-wide, height = rows-high
-        :type size:              (int, int) | (None, None)
+        :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -2544,9 +2551,9 @@ class Spin(Element):
         :param readonly:         Turns on the element specific events. Spin events happen when an item changes
         :type readonly:          (bool)
         :param size:             (width, height) width = characters-wide, height = rows-high
-        :type size:              (int, int) | (None, None)
+        :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   if True will size the element to match the length of the text
         :type auto_size_text:    (bool)
         :param font:             specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -2716,9 +2723,9 @@ class Multiline(Element):
         :param border_width:       width of border around element in pixels
         :type border_width:        (int)
         :param size:               (width, height) width = characters-wide, height = rows-high
-        :type size:                (int, int) | (None, None)
+        :type size:                (int, int)  | (None, None) | int
         :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                   (int, int) | (None, None)
+        :type s:                   (int, int)  | (None, None) | int
         :param auto_size_text:     if True will size the element to match the length of the text
         :type auto_size_text:      (bool)
         :param background_color:   color of background
@@ -3087,9 +3094,9 @@ class Text(Element):
         :param text:             The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text:              Any
         :param size:             (width, height) width = characters-wide, height = rows-high
-        :type size:              (int, int) |  (int, None) | (None, None)
+        :type size:              (int, int) |  (int, None) | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) |  (int, None) | (None, None)
+        :type s:                 (int, int) |  (int, None) | (None, None) | int
         :param auto_size_text:   if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :type auto_size_text:    (bool)
         :param click_submits:    DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -3282,9 +3289,9 @@ class StatusBar(Element):
         :param text:             Text that is to be displayed in the widget
         :type text:              (str)
         :param size:             (w,h) w=characters-wide, h=rows-high
-        :type size:              (int, int)  | (None, None)
+        :type size:              (int, int) |  (int, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param auto_size_text:   True if size should fit the text length
         :type auto_size_text:    (bool)
         :param click_submits:    DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -3603,9 +3610,9 @@ class Output(Element):
                  key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param size:               (width, height) w=characters-wide, h=rows-high
-        :type size:                (int, int) | (None, None)
+        :type size:                (int, int)  | (None, None) | int
         :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                   (int, int) | (None, None)
+        :type s:                   (int, int)  | (None, None) | int
         :param background_color:   color of background
         :type background_color:    (str)
         :param text_color:         color of the text
@@ -3772,9 +3779,9 @@ class Button(Element):
         :param border_width:          width of border around button in pixels
         :type border_width:           (int)
         :param size:                  (width, height) of the button in characters wide, rows high
-        :type size:                   (int, int) | (None, None)
+        :type size:                   (int, int)  | (None, None) | int
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int, int) | (None, None)
+        :type s:                      (int, int)  | (None, None) | int
         :param auto_size_button:      if True the button size is sized to fit the text
         :type auto_size_button:       (bool)
         :param button_color:          Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background.
@@ -4271,9 +4278,9 @@ class ButtonMenu(Element):
         :param border_width:        width of border around button in pixels
         :type border_width:         (int)
         :param size:                (width, height) of the button in characters wide, rows high
-        :type size:                 (int, int) | (None, None)
+        :type size:                 (int, int)  | (None, None) | int
         :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                    (int, int) | (None, None)
+        :type s:                    (int, int)  | (None, None) | int
         :param auto_size_button:    if True the button size is sized to fit the text
         :type auto_size_button:     (bool)
         :param button_color:        of button. Easy to remember which is which if you say "ON" between colors. "red" on "green"
@@ -4421,9 +4428,9 @@ class ProgressBar(Element):
         :param orientation:      'horizontal' or 'vertical'
         :type orientation:       (str)
         :param size:             Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
-        :type size:              (int, int)  | (None, None)
+        :type size:              (int, int) |  (int, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None)
         :param auto_size_text:   Not sure why this is here
         :type auto_size_text:    (bool)
         :param bar_color:        The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
@@ -4573,7 +4580,7 @@ class Image(Element):
         :param size:             (width, height) size of image in pixels
         :type size:              (int, int)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
@@ -4740,6 +4747,7 @@ class Image(Element):
         """
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
         NOTE - does NOT perform a sleep call to delay
+
         :param source:              Filename or Base64 encoded string containing Animated GIF
         :type source:               str | bytes
         :param time_between_frames: Number of milliseconds to wait between showing frames
@@ -4804,7 +4812,7 @@ class Canvas(Element):
         :param size:             (width in char, height in rows) size in pixels to make canvas
         :type size:              (int,int) | (None, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param key:              Used with window.find_element and with return values to uniquely identify this element
@@ -5623,7 +5631,7 @@ class Frame(Element):
         :param size:                  (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column
         :type size:                   (int, int)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int, int) | (None, None)
+        :type s:                      (int, int)  | (None, None) | int
         :param font:                  specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -6406,7 +6414,7 @@ class Slider(Element):
         :param size:                   (w=characters-wide, h=rows-high)
         :type size:                    (int, int)
         :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                       (int, int) | (None, None)
+        :type s:                       (int, int)  | (None, None) | int
         :param font:                   specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                    (str or (str, int[, str]) or None)
         :param background_color:       color of slider's background
@@ -6676,7 +6684,7 @@ class Column(Element):
         :param size:                  (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter
         :type size:                   (int, int)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int, int) | (None, None)
+        :type s:                      (int, int)  | (None, None) | int
         :param pad:                   Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param scrollable:            if True then scrollbars will be added to the column
@@ -6892,7 +6900,7 @@ class Pane(Element):
         :param size:             (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane
         :type size:              (int, int)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) | (None, None)
+        :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int)
         :param orientation:      'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
@@ -7224,7 +7232,7 @@ class Menu(Element):
         :param size:                Not used in the tkinter port
         :type size:                 (int, int)
         :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                    (int, int) | (None, None)
+        :type s:                    (int, int)  | (None, None) | int
         :param tearoff:             if True, then can tear the menu off from the window ans use as a floating window. Very cool effect
         :type tearoff:              (bool)
         :param pad:                 Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom))
@@ -8125,7 +8133,7 @@ class Window:
         :param right_click_menu_disabled_text_color: Text color for disabled right click menu items
         :type right_click_menu_disabled_text_color:  (str)
         :param right_click_menu_selected_colors:     Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background.
-        :type right_click_menu_selected_colors:     (str, str) | str | Tuple(int, int) | (None, None)
+        :type right_click_menu_selected_colors:     (str, str) | str | Tuple
         :param right_click_menu_font:               Font for right click menus
         :type right_click_menu_font:                (str or (str, int[, str]) or None)
         :param right_click_menu_tearoff:            If True then all right click menus can be torn off
@@ -10920,7 +10928,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -10971,7 +10979,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11024,7 +11032,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11080,7 +11088,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :param size:              (w,h) w=characters-wide, h=rows-high
     :type size:               (int, int)
     :param s:                 Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                  (int, int) | (None, None)
+    :type s:                  (int, int)  | (None, None) | int
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button:   (bool)
     :param button_color:      button color (foreground, background)
@@ -11132,7 +11140,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :param size:              (w,h) w=characters-wide, h=rows-high
     :type size:               (int, int)
     :param s:                 Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                  (int, int) | (None, None)
+    :type s:                  (int, int)  | (None, None) | int
     :param auto_size_button:  True if button size is determined by button text
     :type auto_size_button:   (bool)
     :param button_color:      button color (foreground, background)
@@ -11170,7 +11178,7 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11211,7 +11219,7 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11253,7 +11261,7 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11294,7 +11302,7 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11335,7 +11343,7 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11376,7 +11384,7 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11417,7 +11425,7 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11458,7 +11466,7 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11499,7 +11507,7 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11540,7 +11548,7 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11581,7 +11589,7 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11622,7 +11630,7 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11675,7 +11683,7 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11727,7 +11735,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11781,7 +11789,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11840,7 +11848,7 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11896,7 +11904,7 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
@@ -11961,7 +11969,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :param size:                   (w,h) w=characters-wide, h=rows-high
     :type size:                    (int, int)
     :param s:                      Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                       (int, int) | (None, None)
+    :type s:                       (int, int)  | (None, None) | int
     :param auto_size_button:       True if button size is determined by button text
     :type auto_size_button:        (bool)
     :param button_color:           button color (foreground, background)
@@ -12045,7 +12053,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :param size:             (w,h) w=characters-wide, h=rows-high
     :type size:              (int, int)
     :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-    :type s:                 (int, int) | (None, None)
+    :type s:                 (int, int)  | (None, None) | int
     :param auto_size_button: True if button size is determined by button text
     :type auto_size_button:  (bool)
     :param button_color:     button color (foreground, background)
