@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.11 Unreleased"
+version = __version__ = "4.46.0.12 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -31,7 +31,9 @@ version = __version__ = "4.46.0.11 Unreleased"
     4.46.0.11
         Another tuple / int convenience change. Tired of typing pad=(0,0)?  Yea, me too. Now we can type pad=0.
         If an int is specified instead of a typle, then a tuple will be created to be same as the int --->  (int, int)
-        
+    4.46.0.12
+        Add NEW upgrade from GitHub code.  Thank you @israel-dryer!
+        Fix for Image.update docstring
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -193,15 +195,16 @@ except:
     webbrowser_available = False
 # used for github upgrades
 import sys
-import site
-import shutil
-import hashlib
-import base64
-import glob
-import configparser
 import urllib.request
 import urllib.error
 import urllib.parse
+
+from urllib import request
+import os
+import sys
+import re
+import site
+import tempfile
 
 warnings.simplefilter('always', UserWarning)
 
@@ -857,6 +860,8 @@ class Element():
         if size is not None:
             if isinstance(size, int):
                 size = (size, 1)
+            if isinstance(size, tuple) and len(size) == 1:
+                size = (size[0],  1)
 
         if pad is not None:
             if isinstance(pad, int):
@@ -3104,9 +3109,9 @@ class Text(Element):
         :param text:             The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text:              Any
         :param size:             (width, height) width = characters-wide, height = rows-high
-        :type size:              (int, int) |  (int, None) | (None, None) | int
+        :type size:              (int, int) |  (int, None) | (None, None) | (int, ) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                 (int, int) |  (int, None) | (None, None) | int
+        :type s:                 (int, int) |  (int, None) | (None, None) | (int, ) | int
         :param auto_size_text:   if True size of the Text Element will be sized to fit the string provided in 'text' parm
         :type auto_size_text:    (bool)
         :param click_submits:    DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -4655,7 +4660,7 @@ class Image(Element):
         :type filename:  (str)
         :param data:     Base64 encoded string OR a tk.PhotoImage object
         :type data:      str | tkPhotoImage
-        :param size:     size of a image (w,h) w=characters-wide, h=rows-high
+        :param size:     (width, height) size of image in pixels
         :type size:      Tuple[int,int]
         :param visible:  control visibility of element
         :type visible:   (bool)
@@ -20873,182 +20878,145 @@ def main_open_github_issue():
     window.close()
 
 
-def _copy_files_from_github(files, github_url=None):
+'''
+MM'"""""`MM oo   dP   M""MMMMM""MM          dP       
+M' .mmm. `M      88   M  MMMMM  MM          88       
+M  MMMMMMMM dP d8888P M         `M dP    dP 88d888b. 
+M  MMM   `M 88   88   M  MMMMM  MM 88    88 88'  `88 
+M. `MMM' .M 88   88   M  MMMMM  MM 88.  .88 88.  .88 
+MM.     .MM dP   dP   M  MMMMM  MM `88888P' 88Y8888' 
+MMMMMMMMMMM           MMMMMMMMMMMM                   
+                                                     
+M""MMMMM""M                                           dP          
+M  MMMMM  M                                           88          
+M  MMMMM  M 88d888b. .d8888b. 88d888b. .d8888b. .d888b88 .d8888b. 
+M  MMMMM  M 88'  `88 88'  `88 88'  `88 88'  `88 88'  `88 88ooood8 
+M  `MMM'  M 88.  .88 88.  .88 88       88.  .88 88.  .88 88.  ... 
+Mb       dM 88Y888P' `8888P88 dP       `88888P8 `88888P8 `88888P' 
+MMMMMMMMMMM 88            .88                                     
+            dP        d8888P
+
+'''
+
+
+'''
+M""""""""M dP                                        dP 
+Mmmm  mmmM 88                                        88 
+MMMM  MMMM 88d888b. 88d888b. .d8888b. .d8888b. .d888b88 
+MMMM  MMMM 88'  `88 88'  `88 88ooood8 88'  `88 88'  `88 
+MMMM  MMMM 88    88 88       88.  ... 88.  .88 88.  .88 
+MMMM  MMMM dP    dP dP       `88888P' `88888P8 `88888P8 
+MMMMMMMMMM
+'''
+
+def _the_github_upgrade_thread(window, sp):
     """
-    install one file package from GitHub or current directory
+    The thread that's used to run the subprocess so that the GUI can continue and the stdout/stderror is collected
 
-    Parameters
-    ----------
-    files : list
-        files to be installed
-        the first item (files[0]) will be used as the name of the package''
-        optional files should be preceded with an exclamation mark (!)
-
-    github_url : str
-        url of the location of the GitHub repository
-        this will start usually with https://raw.githubusercontent.com/ and end with /master/
-        if omitted, the files will be copied from the current directory (not GitHub)
-
-
-    Returns
-    -------
-    info : Info instance
-        info.package : name of the package installed
-        info.path : name where the package is installed in the site-packages
-        info.version : version of the package (obtained from <package>.py)
-        info.files_copied : list of copied files
-
-    Notes
-    -----
-    The program automatically makes the required __init__.py file (unless given in files) and
-    <package><version>.dist-info folder with the usual files METADATA, INSTALLER and RECORDS.
-    As the setup.py is not run, the METADATA is very limited, i.e. is contains just name and version.
-
-    If a __init__.py is in files that file will be used.
-    Otherwise, an __init__/py file will be generated. In thet case, if a __version__ = statement
-    is found in the source file, the __version__ will be included in that __init__.py file.
-
+    :param window:
+    :param sp:
+    :return:
     """
 
-    class _ReturnInfo:
-        src = ""
-        package = ""
-        new_files = ""
-        path = ""
-        version = ""
+    window.write_event_value('-THREAD-', (sp, '===THEAD STARTING==='))
+    window.write_event_value('-THREAD-', (sp, '----- STDOUT Follows ----'))
+    for line in sp.stdout:
+        oline = line.decode().rstrip()
+        window.write_event_value('-THREAD-', (sp, oline))
+    window.write_event_value('-THREAD-', (sp, '----- STDERR ----'))
 
-    def path_stem(path):
-        head, tail = os.path.split(path)
-        retval = tail or os.path.basename(head)
-        return os.path.splitext(retval)[0]
+    for line in sp.stderr:
+        oline = line.decode().rstrip()
+        window.write_event_value('-THREAD-', (sp, oline))
+    window.write_event_value('-THREAD-', (sp, '===THEAD DONE==='))
 
-    info = _ReturnInfo()
-    info.src = files[0]
-    info.package = path_stem(files[0])
 
-    page_contents = {}
-    for f in files:
-        is_file_optional = f[0] == "!"
-        if (is_file_optional):
-            f = f[1:]
-            if (os.path.exists(f)):
-                with urllib.request.urlopen(github_url + f) as resp:
-                    page = resp.read()
-                    page_contents[f] = page
-        else:
-            with urllib.request.urlopen(github_url + f) as resp:
-                page = resp.read()
-                page_contents[f] = page
 
-    version = "?"
-    for line in page_contents[info.src].decode("utf-8").split("\n"):
-        line_split = line.split("__version__ =")
-        if len(line_split) > 1:
-            raw_version = line_split[-1].strip(" '\"")
-            version = ""
-            for c in raw_version:
-                if c in "0123456789-.":
-                    version += c
-                else:
-                    break
+def _copy_files_from_github():
+    """Update the local PySimpleGUI installation from Github"""
+
+    github_url = 'https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/'
+    files = ["PySimpleGUI.py", "setup.py"]
+
+    # add a temp directory
+    temp_dir = tempfile.TemporaryDirectory()
+    path = temp_dir.name
+
+
+    # os.mkdir('temp')
+    # path = os.path.abspath('temp')
+
+    # download the files
+    downloaded = []
+    for file in files:
+        with request.urlopen(github_url + file) as response:
+            with open(os.path.join(path, file), 'wb') as f:
+                f.write(response.read())
+                downloaded.append(file)
+
+    # get the new version number if possible
+    with open(os.path.join(path, files[0]), encoding='utf-8') as f:
+        text_data = f.read()
+
+    package_version = "Unknown"
+    match = re.search(r'__version__ = \"([\d\.]+)', text_data)
+    if match:
+        package_version = match.group(1)
+
+    # update the setup.py file
+    with open(os.path.join(path, files[1]), encoding='utf-8') as f:
+        text_data = f.read()
+
+    with open(os.path.join(path, files[1]), 'w', encoding='utf-8') as f:
+        edit1 = re.sub("version.+", 'version="' + package_version + '",', text_data)
+        edit2 = re.sub("packages.+", r'packages=["."],', edit1)
+        f.write(edit2)
+
+    # create an __init__.py file
+    with open(os.path.join(path, '__init__.py'), 'w', encoding='utf-8') as f:
+        f.write('')
+
+    # install the pysimplegui package from local dist
+    # https://pip.pypa.io/en/stable/user_guide/?highlight=subprocess#using-pip-from-your-program
+    # subprocess.check_call([sys.executable, '-m', 'pip', 'install', path])
+    sp = execute_command_subprocess(sys.executable, '-m pip install', path,  pipe_output=True)
+
+    layout = [[Text('Pip Upgrade Progress')],
+              [Multiline(s=(80,20), k='-MLINE-', reroute_cprint=True, write_only=True)],
+              [Button('Downloading...', k='-EXIT-')]]
+
+    window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
+
+    threading.Thread(target=_the_github_upgrade_thread, args=(window, sp), daemon=True).start()
+
+    while True:
+        event, values = window.read()
+        if event == WIN_CLOSED or (event == '-EXIT-' and window['-EXIT-'].ButtonText == 'Done'):
             break
-    info.version = version
-    info.new_files = info.files_copied = list(page_contents.keys())
-    sitepackages_path = ""
-    if "__init__.py" not in page_contents:
-        page_contents["__init__.py"] = ("from ." + info.package + " import *\n").encode()
-        if version != "unknown":
-            page_contents["__init__.py"] += ("from ." + info.package + " import __version__\n").encode()
-    if running_linux() or running_mac():
-        dir_search = sys.path
-    else:
-        dir_search = site.getsitepackages()
+        if event == '-THREAD-':
+            cprint(values['-THREAD-'][1])
+            if values['-THREAD-'][1] == '===THEAD DONE===':
+                window['-EXIT-'].update(text='Done', button_color='white on red')
+    window.close()
+    # cleanup and remove files
+    temp_dir.cleanup()
 
-    for f in dir_search:
-        if ((os.path.isdir(f)) and (str("site-packages") in str(f))):
-            sitepackages_path = f
-            break
-    else:
-        raise ModuleNotFoundError("Unable to find site-packages folder!")
+    # return metadata
+    try:
+        mod_path = site.getsitepackages()[0]
+    except IndexError:
+        mod_path = ''
 
-    path = os.path.join(str(sitepackages_path), str(info.package))
-    info.path = str(path)
-
-    if (os.path.isfile(path)):
-        os.unlink(path)
-
-    if not os.path.isdir(path):
-        os.mkdir(path)
-
-    for file, contents in page_contents.items():
-        with open(os.path.join(str(path), str(file)), "wb") as f:
-            f.write(contents)
-
-    if running_mac():
-        pypi_packages = str(sitepackages_path) + "/.pypi_packages"
-        config = configparser.ConfigParser()
-        config.read(pypi_packages)
-        config[info.package] = {}
-        config[info.package]["github_url"] = "github"
-        config[info.package]["version"] = version
-        config[info.package]["summary"] = ""
-        config[info.package]["files"] = path.as_posix()
-        config[info.package]["dependency"] = ""
-        with open(pypi_packages, "w") as f:
-            config.write(f)
-    else:
-        for entry in glob.glob(sitepackages_path + "/*"):
-            if os.path.isdir(entry):
-                if path_stem(entry).startswith(info.package + "-") and ".dist-info" in entry:
-                    shutil.rmtree(entry)
-        path_distinfo = str(path) + "-" + str(version) + ".dist-info"
-        if not os.path.isdir(path_distinfo):
-            os.mkdir(path_distinfo)
-        with open(path_distinfo + "/METADATA", "w") as f:
-            f.write("Name: " + info.package + "\n")
-            f.write("Version: " + version + "\n")
-
-        with open(path_distinfo + "/INSTALLER", "w") as f:
-            f.write("github\n")
-        with open(path_distinfo + "/RECORD", "w") as f:
-            pass
-
-        with open(str(path_distinfo) + "/RECORD", "w") as record_file:
-
-            for p in (path, path_distinfo):
-                for file in glob.glob(str(p) + "**/*"):
-
-                    if os.path.isfile(file):
-                        name = os.path.join(sitepackages_path, file)  # make sure we have slashes
-                        record_file.write(name + ",")
-
-                        if (path_stem(file) == "RECORD" and p == path_distinfo) or ("__pycache__" in name.lower()):
-                            record_file.write(",")
-                        else:
-                            with open(file, "rb") as f:
-                                file_contents = f.read()
-                                hash = "sha256=" + base64.urlsafe_b64encode(
-                                    hashlib.sha256(file_contents).digest()
-                                ).decode("latin1").rstrip("=")
-                                # hash calculation derived from wheel.py in pip
-
-                                length = str(len(file_contents))
-                                record_file.write(hash + "," + length)
-
-                        record_file.write("\n")
-
-    return info
+    return package_version, mod_path or ''
 
 
 def _upgrade_from_github():
-    info = _copy_files_from_github(
-        files="PySimpleGUI.py !init.py".split(), github_url="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/"
-    )
-    # print(info.package + " " + info.version + " successfully installed in " + info.path)
-    # print("files copied: ", ", ".join(info.files_copied))
+    mod_version, mod_path = _copy_files_from_github()
 
-    popup("*** SUCCESS ***", info.package, info.version, "successfully installed in ", info.path, "files copied: ", info.files_copied, keep_on_top=True,
-          background_color='red', text_color='white')
+    popup("*** SUCCESS ***", "PySimpleGUI", mod_version,
+          "successfully installed in ", mod_path, "files copied: ",
+          "PySimpleGUI.py", keep_on_top=True, background_color='red',
+          text_color='white')
 
 
 def _upgrade_gui():
@@ -21060,6 +21028,7 @@ def _upgrade_gui():
     if popup_yes_no('* WARNING *',
                     'You are about to upgrade your PySimpleGUI package previously installed via pip to the latest version location on the GitHub server.',
                     'You are running verrsion {}'.format(cur_ver),
+                    '',
                     'Are you sure you want to overwrite this release?', title='Are you sure you want to overwrite?',
                     keep_on_top=True) == 'Yes':
         _upgrade_from_github()
