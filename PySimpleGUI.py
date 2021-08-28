@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.13 Unreleased"
+version = __version__ = "4.46.0.14 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -36,7 +36,8 @@ version = __version__ = "4.46.0.13 Unreleased"
         Fix for Image.update docstring
     4.46.0.13
         Change in ttk style naming to ensure more unique style names are used
-        
+    4.46.0.14
+        Cast key to string when making a ttk style
         
 """
 
@@ -12819,7 +12820,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     def _make_ttk_style_name(base_style, element):
         Window._counter_for_ttk_widgets += 1
-        style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + base_style
+        style_name = str(Window._counter_for_ttk_widgets) + str(element.Key) + base_style
         element.ttk_style_name = style_name
         return style_name
 
@@ -13302,7 +13303,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
                 # Window._counter_for_ttk_widgets += 1
                 # style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + 'custombutton.TButton'
-                style_name = _make_ttk_style_name('custombutton.TButton', element)
+                style_name = _make_ttk_style_name('.custombutton.TButton', element)
                 button_style = ttk.Style()
                 if _valid_theme(button_style, toplevel_form.TtkTheme):
                     button_style.theme_use(toplevel_form.TtkTheme)
@@ -14163,7 +14164,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element  # type: TabGroup
                 # custom_style = str(element.Key) + 'customtab.TNotebook'
-                custom_style = _make_ttk_style_name('customtab.TNotebook', element)
+                custom_style = _make_ttk_style_name('.customtab.TNotebook', element)
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
                 if element.TabLocation is not None:
@@ -14340,7 +14341,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                             treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
                 # ------ Do Styling of Colors -----
                 # style_name = str(element.Key) + 'customtable.Treeview'
-                style_name = _make_ttk_style_name( 'customtable.Treeview', element)
+                style_name = _make_ttk_style_name( '.customtable.Treeview', element)
 
                 table_style = ttk.Style()
 
@@ -14524,7 +14525,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
                 # style_name = str(element.Key) + "Line.TSeparator"
-                style_name = _make_ttk_style_name("Line.TSeparator", element)
+                style_name = _make_ttk_style_name(".Line.TSeparator", element)
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
                 if element.color is not None:
