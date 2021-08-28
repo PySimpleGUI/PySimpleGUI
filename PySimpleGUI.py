@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.12 Unreleased"
+version = __version__ = "4.46.0.13 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -34,6 +34,10 @@ version = __version__ = "4.46.0.12 Unreleased"
     4.46.0.12
         Add NEW upgrade from GitHub code.  Thank you @israel-dryer!
         Fix for Image.update docstring
+    4.46.0.13
+        Change in ttk style naming to ensure more unique style names are used
+        
+        
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -880,6 +884,7 @@ class Element():
         self.TKText = None
         self.TKEntry = None
         self.TKImage = None
+        self.ttk_style_name = ''        # set in the packer function
 
         self._metadata = None  # type: Any
 
@@ -3889,6 +3894,7 @@ class Button(Element):
         self.Disabled = disabled
         self.ChangeSubmits = change_submits or enable_events
         self.UseTtkButtons = use_ttk_buttons
+        self.ttk_style_name = ''        # set in the packer function
         self._files_delimiter = BROWSE_FILES_DELIMITER  # used by the file browse button. used when multiple files are selected by user
         if use_ttk_buttons is None and running_mac():
             self.UseTtkButtons = True
@@ -4156,7 +4162,8 @@ class Button(Element):
             return
 
         if self.UseTtkButtons:
-            style_name = str(self.Key) + 'custombutton.TButton'
+            style_name = self.ttk_style_name        # created when made initial window (in the pack)
+            # style_name = str(self.Key) + 'custombutton.TButton'
             button_style = ttk.Style()
         if text is not None:
             self.TKButton.configure(text=text)
@@ -8060,6 +8067,7 @@ class Window:
     _container_element_counter = 0  # used to get a number of Container Elements (Frame, Column, Tab)
     _read_call_from_debugger = False
     _timeout_0_counter = 0  # when timeout=0 then go through each window one at a time
+    _counter_for_ttk_widgets = 0
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
@@ -12808,6 +12816,13 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
         #       '\nValid choices include: {}'.format(style.theme_names()))
         return False
 
+
+    def _make_ttk_style_name(base_style, element):
+        Window._counter_for_ttk_widgets += 1
+        style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + base_style
+        element.ttk_style_name = style_name
+        return style_name
+
     def _add_right_click_menu(element):
         if element.RightClickMenu == MENU_RIGHT_CLICK_DISABLED:
             return
@@ -13285,8 +13300,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     tkbutton = element.Widget = ttk.Button(tk_row_frame, text=btext, width=width)
                     tkbutton.bind('<ButtonRelease-1>', element.ButtonReleaseCallBack)
                     tkbutton.bind('<ButtonPress-1>', element.ButtonPressCallBack)
-
-                style_name = str(element.Key) + 'custombutton.TButton'
+                # Window._counter_for_ttk_widgets += 1
+                # style_name = str(Window._counter_for_ttk_widgets) + (element.Key) + 'custombutton.TButton'
+                style_name = _make_ttk_style_name('custombutton.TButton', element)
                 button_style = ttk.Style()
                 if _valid_theme(button_style, toplevel_form.TtkTheme):
                     button_style.theme_use(toplevel_form.TtkTheme)
@@ -13519,7 +13535,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 else:
                     width = max_line_len + 1
                 element.TKStringVar = tk.StringVar()
-                style_name = 'TCombobox'
+                style_name = _make_ttk_style_name('.TCombobox', element)
+                # style_name = 'TCombobox'
                 s = ttk.Style()
                 if _valid_theme(s, toplevel_form.TtkTheme):
                     s.theme_use(toplevel_form.TtkTheme)
@@ -13527,14 +13544,16 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
                 if element.TextColor is not None and element.TextColor != COLOR_SYSTEM_DEFAULT:
                     # Creates 1 style per Text Color/ Background Color combination
-                    style_name = str(element.Key) + '.TCombobox'
+                    # style_name = str(element.Key) + '.TCombobox'
+
                     combostyle = ttk.Style()
                     if _valid_theme(combostyle, toplevel_form.TtkTheme):
                         combostyle.theme_use(toplevel_form.TtkTheme)
 
                     # Creates a unique name for each field element(Sure there is a better way to do this)
+                    # unique_field = str(element.Key) + '.TCombobox.field'
+                    unique_field = _make_ttk_style_name('.TCombobox.field', element)
 
-                    unique_field = str(element.Key) + '.TCombobox.field'
 
                     # Clones over the TCombobox.field element from the "alt" theme.
                     # This is what will allow us to change the background color without altering the whole programs theme
@@ -14143,7 +14162,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  TabGroup placement element  ------------------------- #
             elif element_type == ELEM_TYPE_TAB_GROUP:
                 element = element  # type: TabGroup
-                custom_style = str(element.Key) + 'customtab.TNotebook'
+                # custom_style = str(element.Key) + 'customtab.TNotebook'
+                custom_style = _make_ttk_style_name('customtab.TNotebook', element)
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
                 if element.TabLocation is not None:
@@ -14319,7 +14339,9 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         else:
                             treeview.tag_configure(row_def[0], background=row_def[2], foreground=row_def[1])
                 # ------ Do Styling of Colors -----
-                style_name = str(element.Key) + 'customtable.Treeview'
+                # style_name = str(element.Key) + 'customtable.Treeview'
+                style_name = _make_ttk_style_name( 'customtable.Treeview', element)
+
                 table_style = ttk.Style()
 
                 table_style.theme_use(toplevel_form.TtkTheme)
@@ -14453,7 +14475,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 add_treeview_data(element.TreeData.root_node)
                 treeview.column('#0', width=element.Col0Width * _char_width_in_pixels(font), anchor=anchor)
                 # ----- configure colors -----
-                style_name = str(element.Key) + '.Treeview'
+                # style_name = str(element.Key) + '.Treeview'
+                style_name = _make_ttk_style_name('.Treeview', element)
                 tree_style = ttk.Style()
                 tree_style.theme_use(toplevel_form.TtkTheme)
                 if element.BackgroundColor is not None and element.BackgroundColor != COLOR_SYSTEM_DEFAULT:
@@ -14500,7 +14523,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  Separator placement element  ------------------------- #
             elif element_type == ELEM_TYPE_SEPARATOR:
                 element = element  # type: VerticalSeparator
-                style_name = str(element.Key) + "Line.TSeparator"
+                # style_name = str(element.Key) + "Line.TSeparator"
+                style_name = _make_ttk_style_name("Line.TSeparator", element)
                 style = ttk.Style()
                 style.theme_use(toplevel_form.TtkTheme)
                 if element.color is not None:
