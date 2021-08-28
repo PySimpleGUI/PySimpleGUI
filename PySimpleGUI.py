@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.15 Unreleased"
+version = __version__ = "4.46.0.16 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -40,6 +40,9 @@ version = __version__ = "4.46.0.15 Unreleased"
         Cast key to string when making a ttk style
     4.46.0.15
         Added '___' between unique counter and user's key when making a unique style string for ttk widgets
+        When upgrading, use the interpreter from the global settings for the upgrade!  This could get tricky, but trying to make it logical
+    4.46.0.16
+        Made the window larger for when pip install runs when upgrading to GitHub version.
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21011,7 +21014,7 @@ def _copy_files_from_github():
     sp = execute_command_subprocess(python_command, '-m pip install', path,  pipe_output=True)
 
     layout = [[Text('Pip Upgrade Progress')],
-              [Multiline(s=(80,20), k='-MLINE-', reroute_cprint=True, write_only=True)],
+              [Multiline(s=(90,30), k='-MLINE-', reroute_cprint=True, write_only=True)],
               [Button('Downloading...', k='-EXIT-')]]
 
     window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
