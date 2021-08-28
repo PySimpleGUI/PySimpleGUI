@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.14 Unreleased"
+version = __version__ = "4.46.0.15 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -17,11 +17,11 @@ version = __version__ = "4.46.0.14 Unreleased"
         Fix for default element size - was incorrectly using as the default for parm in Window.
             Needed to set it in the init code rather than using the parm to set it.
     4.46.0.6
-        Window.ation gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
+        Window.location gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
     4.46.0.7
         Added Window.keep_on_top_set and Window.keep_on_top_clear. Makes window behave like was set when creating Window
     4.46.0.8
-        Added new constant BLANK_BASE64 that essentlly erases an Image element if assigned to it. It's 1x1 pixel and Alpha=0
+        Added new constant BLANK_BASE64 that essentially erases an Image element if assigned to it. It's 1x1 pixel and Alpha=0
     4.46.0.9
         Image element - New source parameter as the first parm. Can be a string or a bytestring. Backwards compatible because first was filename.
         Works for both the init and the update. No need to specify any name at all... just pass in the thing you want to change to.
@@ -38,7 +38,8 @@ version = __version__ = "4.46.0.14 Unreleased"
         Change in ttk style naming to ensure more unique style names are used
     4.46.0.14
         Cast key to string when making a ttk style
-        
+    4.46.0.15
+        Added '___' between unique counter and user's key when making a unique style string for ttk widgets
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -12820,7 +12821,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
 
     def _make_ttk_style_name(base_style, element):
         Window._counter_for_ttk_widgets += 1
-        style_name = str(Window._counter_for_ttk_widgets) + str(element.Key) + base_style
+        style_name = str(Window._counter_for_ttk_widgets) + '___' + str(element.Key) + base_style
         element.ttk_style_name = style_name
         return style_name
 
@@ -21004,7 +21005,10 @@ def _copy_files_from_github():
     # install the pysimplegui package from local dist
     # https://pip.pypa.io/en/stable/user_guide/?highlight=subprocess#using-pip-from-your-program
     # subprocess.check_call([sys.executable, '-m', 'pip', 'install', path])
-    sp = execute_command_subprocess(sys.executable, '-m pip install', path,  pipe_output=True)
+    python_command = execute_py_get_interpreter()
+    if not python_command:
+        python_command = sys.executable
+    sp = execute_command_subprocess(python_command, '-m pip install', path,  pipe_output=True)
 
     layout = [[Text('Pip Upgrade Progress')],
               [Multiline(s=(80,20), k='-MLINE-', reroute_cprint=True, write_only=True)],
