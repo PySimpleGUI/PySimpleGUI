@@ -21046,7 +21046,7 @@ def _copy_files_from_github():
 
     cprint('Installing with the Python interpreter =', python_command, c='white on purple')
 
-    sp = execute_command_subprocess(python_command, '-m pip install --upgrade --no-cache-dir', temp_dir.name,  pipe_output=True)
+    sp = execute_command_subprocess(python_command, '-m pip install', temp_dir.name,  pipe_output=True)
 
     threading.Thread(target=_the_github_upgrade_thread, args=(window, sp), daemon=True).start()
 
