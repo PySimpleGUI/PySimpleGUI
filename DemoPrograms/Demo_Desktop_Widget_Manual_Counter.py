@@ -128,7 +128,7 @@ def main():
             if new_count is not None:
                 counter = int(new_count)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your date', location=window.current_location(), keep_on_top=True)
+            new_title = sg.popup_get_text('Choose a title for your counter', default_text=sg.user_settings_get_entry('-coutitle-', ''), location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
@@ -165,7 +165,7 @@ def main():
                 winsound.PlaySound(sound_file, 1)
         elif event == 'Set Click Sound':
             if not sg.running_windows():
-                sg.popup_error('I am terribly sorry to inform you that you are not running Windows and thus, no clicky sound for you.', location=window.current_location())
+                sg.popup_error('I am terribly sorry to inform you that you are not running Windows and thus, no clicky sound for you.', keep_on_top=True, location=window.current_location())
             else:
                 sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), location=window.current_location(), default_path=sg.user_settings_get_entry('-sound file-', ''))
                 if sound_file is not None:
