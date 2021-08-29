@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.18 Unreleased"
+version = __version__ = "4.46.0.19 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -50,6 +50,8 @@ version = __version__ = "4.46.0.18 Unreleased"
         Redefinition of the Stretch element.  No longer returns an Error Element.  It now returns a Text element that does
             the same kind of operation as the PySimpleGUIQt's Stretch element!  Very nice!
         Changed the repr method of the user settings object to use the pretty printer to format the information into a nicer string
+    4.46.0.19
+        Added a vert parm to the Stretch element so that it's used in a vertical manner.  MUCH easier to center things in windows now
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8061,9 +8063,18 @@ class ErrorElement(Element):
 #                           Stretch Element                              #
 # ---------------------------------------------------------------------- #
 # This is for source code compatibility with tkinter version. No tkinter equivalent but you can fake it using a Text element that expands in the X direction
-def Stretch():
-    return Text(font='_ 1', pad=(0,0), expand_x=True)
-
+def Stretch(vert=False):
+    """
+    Acts like a Stretch element found in the Qt port.  Takes an optional parm that will change it into a vertical stretch.
+    Normally used in a horizontl fashion.  Placing one on each side of an element will enter the element.
+    :param vert:        If True, then the stretch will be in the vertical direction instead of horizontal
+    :type vert:         (bool)
+    :return:            (Text)
+    """
+    if not vert:
+        return Text(font='_ 1', pad=(0,0), expand_x=True)
+    else:
+        return Text(font='_ 1', pad=(0,0), expand_y=True)
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                        #
