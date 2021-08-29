@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.17 Unreleased"
+version = __version__ = "4.46.0.18 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -46,6 +46,10 @@ version = __version__ = "4.46.0.17 Unreleased"
     4.46.0.17
         Added printing of the value of sys.executable to the upgrade information
         Added --upgrade and --no-cache-dir to the pip install
+    4.46.0.18
+        Redefinition of the Stretch element.  No longer returns an Error Element.  It now returns a Text element that does
+            the same kind of operation as the PySimpleGUIQt's Stretch element!  Very nice!
+        Changed the repr method of the user settings object to use the pretty printer to format the information into a nicer string
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -176,7 +180,7 @@ import inspect
 import traceback
 import difflib
 import copy
-
+import pprint
 try:  # Because Raspberry Pi is still on 3.4....it's not critical if this module isn't imported on the Pi
     from typing import List, Any, Union, Tuple, Dict, SupportsAbs, Optional  # because this code has to run on 2.7 can't use real type hints.  Must do typing only in comments
 except:
@@ -8056,8 +8060,9 @@ class ErrorElement(Element):
 # ---------------------------------------------------------------------- #
 #                           Stretch Element                              #
 # ---------------------------------------------------------------------- #
-# This is for source code compatibility with tkinter version. No tkinter equivalent
-Stretch = ErrorElement
+# This is for source code compatibility with tkinter version. No tkinter equivalent but you can fake it using a Text element that expands in the X direction
+def Stretch():
+    return Text(font='_ 1', pad=(0,0), expand_x=True)
 
 
 # ------------------------------------------------------------------------- #
@@ -18844,7 +18849,8 @@ class UserSettings:
         :return: the dictionary as a string
         :rtype:  (str)
         """
-        return str(self.dict)
+        return pprint.pformat(self.dict)
+        return str(self.dict)           # previouisly returned just a string version of the dictionary
 
     def set_default_value(self, default):
         """
