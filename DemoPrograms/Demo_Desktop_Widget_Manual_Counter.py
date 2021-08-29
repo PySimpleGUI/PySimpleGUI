@@ -64,13 +64,13 @@ def make_window(location, test_window=False):
     # If this is a test window (for choosing theme), then uses some extra Text Elements to display theme info
     # and also enables events for the elements to make the window easy to close
     if test_window:
-        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-', enable_events=True)],
+        top_elements = [[sg.Text(title, expand_x=True, font=title_font,  k='-TITLE-', enable_events=True)],
                         [sg.Text('Click to close', font=title_font, enable_events=True)],
                         [sg.Text('This is theme', font=title_font, enable_events=True)],
                         [sg.Text(sg.theme(), font=title_font, enable_events=True)]]
         right_click_menu = [[''], ['Exit', ]]
     else:
-        top_elements = [[sg.Text(title, size=(20, 1), font=title_font, justification='c', k='-TITLE-')]]
+        top_elements = [[sg.Text(title, expand_x=True, font=title_font, justification='c', k='-TITLE-')]]
 
         right_click_menu = [[''],
                             ['Set Counter', 'Choose Title', 'Edit Me', 'Change Theme', 'Set Button Font',
@@ -141,17 +141,17 @@ def main():
                 # this is result of hacking code down to 99 lines in total. Not tried it before. Interesting test.
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Main Font':
-            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=True)
+            font = sg.popup_get_text('Main Information Font and Size (e.g. courier 70)', default_text=sg.user_settings_get_entry('-main number font-'), keep_on_top=True, location=window.current_location())
             if font:
                 sg.user_settings_set_entry('-main number font-', font)
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Button Font':
-            font = sg.popup_get_text('Font for the +/- symbols (e.g. courier 70)', default_text=sg.user_settings_get_entry('-button font-'), keep_on_top=True)
+            font = sg.popup_get_text('Font for the +/- symbols (e.g. courier 70)', default_text=sg.user_settings_get_entry('-button font-'), keep_on_top=True, location=window.current_location())
             if font:
                 sg.user_settings_set_entry('-button font-', font)
                 _, window = window.close(), make_window(loc)
         elif event == 'Set Title Font':
-            font = sg.popup_get_text('Title Font and Size (e.g. courier 8)', default_text=sg.user_settings_get_entry('-title font-'), keep_on_top=True)
+            font = sg.popup_get_text('Title Font and Size (e.g. courier 8)', default_text=sg.user_settings_get_entry('-title font-'), keep_on_top=True, location=window.current_location())
             if font:
                 sg.user_settings_set_entry('-title font-', font)
                 _, window = window.close(), make_window(loc)
@@ -165,9 +165,9 @@ def main():
                 winsound.PlaySound(sound_file, 1)
         elif event == 'Set Click Sound':
             if not sg.running_windows():
-                sg.popup_error('I am terribly sorry to inform you that you are not running Windows and thus, no clicky sound for you.')
+                sg.popup_error('I am terribly sorry to inform you that you are not running Windows and thus, no clicky sound for you.', location=window.current_location())
             else:
-                sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), default_path=sg.user_settings_get_entry('-sound file-', ''))
+                sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), location=window.current_location(), default_path=sg.user_settings_get_entry('-sound file-', ''))
                 if sound_file is not None:
                     sg.user_settings_set_entry('-sound file-', sound_file)
 
