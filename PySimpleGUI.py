@@ -20980,14 +20980,16 @@ def _copy_files_from_github():
     """Update the local PySimpleGUI installation from Github"""
 
     github_url = 'https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/'
-    files = ["PySimpleGUI.py", "setup.py"]
+    #files = ["PySimpleGUI.py", "setup.py"]
+    files = ["PySimpleGUI.py"]
 
     # add a temp directory
     temp_dir = tempfile.TemporaryDirectory()
-    path = temp_dir.name
+    psg_dir = os.path.join(temp_dir.name, 'PySimpleGUI')
+    path = psg_dir
 
 
-    # os.mkdir('temp')
+    os.mkdir(path)
     # path = os.path.abspath('temp')
 
     # download the files
@@ -21007,14 +21009,20 @@ def _copy_files_from_github():
     if match:
         package_version = match.group(1)
 
-    # update the setup.py file
-    with open(os.path.join(path, files[1]), encoding='utf-8') as f:
-        text_data = f.read()
-
-    with open(os.path.join(path, files[1]), 'w', encoding='utf-8') as f:
-        edit1 = re.sub("version.+", 'version="' + package_version + '",', text_data)
-        edit2 = re.sub("packages.+", r'packages=["."],', edit1)
-        f.write(edit2)
+    # create a setup.py file from scratch
+    setup_text = ''.join([
+            "import setuptools\n",
+            "setuptools.setup(",
+            "name='PySimpleGUI',",
+            "author='PySimpleGUI',"
+            "author_email='PySimpleGUI@PySimpleGUI.org',",
+            "description='Unreleased Development Version',",
+            "url='https://github.com/PySimpleGUI/PySimpleGUI',"
+            "packages=setuptools.find_packages(),",
+            "version='", package_version, "')"
+            ])
+    with open(os.path.join(temp_dir.name, 'setup.py'), 'w', encoding='utf-8') as f:
+        f.write(setup_text)
 
     # create an __init__.py file
     with open(os.path.join(path, '__init__.py'), 'w', encoding='utf-8') as f:
@@ -21023,7 +21031,7 @@ def _copy_files_from_github():
     # install the pysimplegui package from local dist
     # https://pip.pypa.io/en/stable/user_guide/?highlight=subprocess#using-pip-from-your-program
     # subprocess.check_call([sys.executable, '-m', 'pip', 'install', path])
-
+    python_command = execute_py_get_interpreter()
 
     layout = [[Text('Pip Upgrade Progress')],
               [Multiline(s=(90,30), k='-MLINE-', reroute_cprint=True, write_only=True)],
@@ -21031,14 +21039,14 @@ def _copy_files_from_github():
 
     window = Window('Pip Upgrade', layout, finalize=True, keep_on_top=True, modal=True, disable_close=True)
 
-    python_command = execute_py_get_interpreter()
+    cprint('The value of sys.executable = ', sys.executable, c='white on red')
+
     if not python_command:
         python_command = sys.executable
 
+    cprint('Installing with the Python interpreter =', python_command, c='white on purple')
 
-    cprint('The python command in sys.executable = ', sys.executable, c='white on red')
-    sp = execute_command_subprocess(python_command, '-m pip install --upgrade --no-cache-dir', path,  pipe_output=True)
-
+    sp = execute_command_subprocess(python_command, '-m pip install --upgrade --no-cache-dir', temp_dir.name,  pipe_output=True)
 
     threading.Thread(target=_the_github_upgrade_thread, args=(window, sp), daemon=True).start()
 
