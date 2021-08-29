@@ -167,7 +167,7 @@ def main():
             if not sg.running_windows():
                 sg.popup_error('I am terribly sorry to inform you that you are not running Windows and thus, no clicky sound for you.', keep_on_top=True, location=window.current_location())
             else:
-                sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), location=window.current_location(), default_path=sg.user_settings_get_entry('-sound file-', ''))
+                sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), keep_on_top=True, location=window.current_location(), default_path=sg.user_settings_get_entry('-sound file-', ''))
                 if sound_file is not None:
                     sg.user_settings_set_entry('-sound file-', sound_file)
 
