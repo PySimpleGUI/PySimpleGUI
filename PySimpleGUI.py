@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.19 Unreleased"
+version = __version__ = "4.46.0.20 Unreleased"
 
 """
     Changelog since 4.46.0 release to PyPI on 10 Aug 2021
@@ -52,6 +52,9 @@ version = __version__ = "4.46.0.19 Unreleased"
         Changed the repr method of the user settings object to use the pretty printer to format the information into a nicer string
     4.46.0.19
         Added a vert parm to the Stretch element so that it's used in a vertical manner.  MUCH easier to center things in windows now
+    4.46.0.20
+        Added VStretch element that does the same as the Strech except in the vertical direction.  Removed the vert parm from Stretch
+        Added fix for the upgrade from GitHub that now creates __init__.py file
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8063,18 +8066,26 @@ class ErrorElement(Element):
 #                           Stretch Element                              #
 # ---------------------------------------------------------------------- #
 # This is for source code compatibility with tkinter version. No tkinter equivalent but you can fake it using a Text element that expands in the X direction
-def Stretch(vert=False):
+def Stretch():
     """
-    Acts like a Stretch element found in the Qt port.  Takes an optional parm that will change it into a vertical stretch.
-    Normally used in a horizontl fashion.  Placing one on each side of an element will enter the element.
-    :param vert:        If True, then the stretch will be in the vertical direction instead of horizontal
-    :type vert:         (bool)
+    Acts like a Stretch element found in the Qt port.
+    Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
+    Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
     :return:            (Text)
     """
-    if not vert:
-        return Text(font='_ 1', pad=(0,0), expand_x=True)
-    else:
-        return Text(font='_ 1', pad=(0,0), expand_y=True)
+    return Text(font='_ 1', pad=(0,0), expand_x=True)
+
+
+def VStretch():
+    """
+    Acts like a Stretch element found in the Qt port.
+    Used in a Vertical fashion.
+    :return:            (Text)
+    """
+    return Text(font='_ 1', pad=(0,0), expand_y=True)
+
+
+
 
 # ------------------------------------------------------------------------- #
 #                       Window CLASS                                        #
@@ -21037,7 +21048,11 @@ def _copy_files_from_github():
 
     # create an __init__.py file
     with open(os.path.join(path, '__init__.py'), 'w', encoding='utf-8') as f:
-        f.write('')
+        f.writelines([
+            'name="PySimpleGUI"\n',
+            'from .PySimpleGUI import *\n',
+            'from .PySimpleGUI import __version__'
+        ])
 
     # install the pysimplegui package from local dist
     # https://pip.pypa.io/en/stable/user_guide/?highlight=subprocess#using-pip-from-your-program
