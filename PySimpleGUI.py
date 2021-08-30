@@ -1,60 +1,11 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.46.0.20 Unreleased"
+version = __version__ = "4.47.0 Released 30-Aug-2021"
 
 """
-    Changelog since 4.46.0 release to PyPI on 10 Aug 2021
+    Changelog since 4.47.0 release to PyPI on 30 Aug 2021
     
-    4.46.0.1
-        Added rstrip parm to Multiline element
-    4.46.0.2
-        Combo.update - fixed bug added in 4.45.0 with disabled not working correctly when calling update
-    4.46.0.3
-        Changed font type in all docstrings to be (str or (str, int[, str]) or None) (thank you Jason!!)
-    4.46.0.4
-        Added code from Jason (slightly modified) for _fixed_map
-    4.46.0.5
-        Fix for default element size - was incorrectly using as the default for parm in Window.
-            Needed to set it in the init code rather than using the parm to set it.
-    4.46.0.6
-        Window.location gets a new parm - more_accurate (defaults to False). If True, uses window's geometry
-    4.46.0.7
-        Added Window.keep_on_top_set and Window.keep_on_top_clear. Makes window behave like was set when creating Window
-    4.46.0.8
-        Added new constant BLANK_BASE64 that essentially erases an Image element if assigned to it. It's 1x1 pixel and Alpha=0
-    4.46.0.9
-        Image element - New source parameter as the first parm. Can be a string or a bytestring. Backwards compatible because first was filename.
-        Works for both the init and the update. No need to specify any name at all... just pass in the thing you want to change to.
-    4.46.0.10
-        Element sizes, when being created, can be an int.  If size=int, then it represents a size of (int, 1). GREATLY shortens layouts.
-        Sometimes this these things only become apparent later even though it seems obvious
-    4.46.0.11
-        Another tuple / int convenience change. Tired of typing pad=(0,0)?  Yea, me too. Now we can type pad=0.
-        If an int is specified instead of a typle, then a tuple will be created to be same as the int --->  (int, int)
-    4.46.0.12
-        Add NEW upgrade from GitHub code.  Thank you @israel-dryer!
-        Fix for Image.update docstring
-    4.46.0.13
-        Change in ttk style naming to ensure more unique style names are used
-    4.46.0.14
-        Cast key to string when making a ttk style
-    4.46.0.15
-        Added '___' between unique counter and user's key when making a unique style string for ttk widgets
-        When upgrading, use the interpreter from the global settings for the upgrade!  This could get tricky, but trying to make it logical
-    4.46.0.16
-        Made the window larger for when pip install runs when upgrading to GitHub version.
-    4.46.0.17
-        Added printing of the value of sys.executable to the upgrade information
-        Added --upgrade and --no-cache-dir to the pip install
-    4.46.0.18
-        Redefinition of the Stretch element.  No longer returns an Error Element.  It now returns a Text element that does
-            the same kind of operation as the PySimpleGUIQt's Stretch element!  Very nice!
-        Changed the repr method of the user settings object to use the pretty printer to format the information into a nicer string
-    4.46.0.19
-        Added a vert parm to the Stretch element so that it's used in a vertical manner.  MUCH easier to center things in windows now
-    4.46.0.20
-        Added VStretch element that does the same as the Strech except in the vertical direction.  Removed the vert parm from Stretch
-        Added fix for the upgrade from GitHub that now creates __init__.py file
+ 
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -857,7 +808,7 @@ class Element():
 
         :param type:             The type of element. These constants all start with "ELEM_TYPE_"
         :type type:              (int) (could be enum)
-        :param size:             w=characters-wide, h=rows-high. It an int instead of a tuple is supplied, then height is auto-set to 1
+        :param size:             w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int) | (None, None) | int
         :param auto_size_text:   True if the Widget should be shrunk to exactly fit the number of chars to show
         :type auto_size_text:    bool
@@ -1513,7 +1464,7 @@ class Input(Element):
         """
         :param default_text:                       Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string
         :type default_text:                        (Any)
-        :param size:                               w=characters-wide, h=rows-high. If an int is sppplied rather than a tuple, then a tuple is created width=int supplied and heigh=1
+        :param size:                               w=characters-wide, h=rows-high. If an int is supplied rather than a tuple, then a tuple is created width=int supplied and heigh=1
         :type size:                                (int, int) |  (int, None) | int
         :param s:                                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                                   (int, int)  | (None, None) | int
@@ -2006,7 +1957,7 @@ class Listbox(Element):
         :type enable_events:               (bool)
         :param bind_return_key:            If True, then the return key will cause a the Listbox to generate an event
         :type bind_return_key:             (bool)
-        :param size:                       width = characters-wide, height = rows-high
+        :param size:                       w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                        (int, int) |  (int, None) | int
         :param s:                          Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                           (int, int)  | (None, None) | int
@@ -2223,7 +2174,7 @@ class Radio(Element):
         :type default:           (bool)
         :param disabled:         set disable state
         :type disabled:          (bool)
-        :param size:             (width, height) width = characters-wide, height = rows-high
+        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
@@ -2408,7 +2359,7 @@ class Checkbox(Element):
         :type text:              (str)
         :param default:          Set to True if you want this checkbox initially checked
         :type default:           (bool)
-        :param size:             (width, height) width = characters-wide, height = rows-high
+        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
@@ -2593,7 +2544,7 @@ class Spin(Element):
         :type enable_events:     (bool)
         :param readonly:         Turns on the element specific events. Spin events happen when an item changes
         :type readonly:          (bool)
-        :param size:             (width, height) width = characters-wide, height = rows-high
+        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int)  | (None, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
@@ -2765,7 +2716,7 @@ class Multiline(Element):
         :type autoscroll:          (bool)
         :param border_width:       width of border around element in pixels
         :type border_width:        (int)
-        :param size:               (width, height) width = characters-wide, height = rows-high
+        :param size:               (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                (int, int)  | (None, None) | int
         :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                   (int, int)  | (None, None) | int
@@ -3136,7 +3087,7 @@ class Text(Element):
         """
         :param text:             The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
         :type text:              Any
-        :param size:             (width, height) width = characters-wide, height = rows-high
+        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int) |  (int, None) | (None, None) | (int, ) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int) |  (int, None) | (None, None) | (int, ) | int
@@ -3331,7 +3282,7 @@ class StatusBar(Element):
         """
         :param text:             Text that is to be displayed in the widget
         :type text:              (str)
-        :param size:             (w,h) w=characters-wide, h=rows-high
+        :param size:             (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:              (int, int) |  (int, None) | int
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None) | int
@@ -3652,7 +3603,7 @@ class Output(Element):
     def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None,
                  key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
-        :param size:               (width, height) w=characters-wide, h=rows-high
+        :param size:               (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                (int, int)  | (None, None) | int
         :param s:                  Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                   (int, int)  | (None, None) | int
@@ -3821,7 +3772,7 @@ class Button(Element):
         :type image_subsample:        (int)
         :param border_width:          width of border around button in pixels
         :type border_width:           (int)
-        :param size:                  (width, height) of the button in characters wide, rows high
+        :param size:                  (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                   (int, int)  | (None, None) | int
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                      (int, int)  | (None, None) | int
@@ -4322,7 +4273,7 @@ class ButtonMenu(Element):
         :type image_subsample:      (int)
         :param border_width:        width of border around button in pixels
         :type border_width:         (int)
-        :param size:                (width, height) of the button in characters wide, rows high
+        :param size:                (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
         :type size:                 (int, int)  | (None, None) | int
         :param s:                   Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                    (int, int)  | (None, None) | int
@@ -8341,7 +8292,7 @@ class Window:
         self._grab_anywhere_ignore_these_list = []
         self._grab_anywhere_include_these_list = []
         self._has_custom_titlebar = use_custom_titlebar
-
+        self._mousex = self._mousey = 0
         if self.use_custom_titlebar:
             self.Margins = (0, 0)
             self.NoTitleBar = True
@@ -21634,7 +21585,7 @@ def _create_main_window():
 
     global_settings_tab_layout = [[T('Global Settings:', font='_ 15')],
                                   [T('Settings Filename:'), T(pysimplegui_user_settings.full_filename, s=(50,2))],
-                                  [T('Settings Dictionary:'), T(pysimplegui_user_settings.get_dict(), size=(50,10))],
+                                  [T('Settings Dictionary:'), MLine(pysimplegui_user_settings, size=(50,10))],
                                   ]
 
     themes_tab_layout = [[T('You can see a preview of the themes, the color swatches, or switch themes for this window')],

@@ -13,7 +13,7 @@ Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
-This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidently shown in this documentation.  Hopefully these accidents don't happen often.
+This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
 Here are all of the Elements, the Window & SystemTray classes, and all functions
 
@@ -1944,6 +1944,12 @@ The following methods are here for backwards compatibility reference.  You will 
 ---------
 
 
+
+## Stretch Element 
+<!-- <+func.Stretch+> -->
+
+---------
+
 ## Tab Element 
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
@@ -2424,8 +2430,11 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+VerticalSeparator.visible+> -->
+---------
 
 
+## VStretch Element
+<!-- <+func.VStretch+> -->
 ---------
 
 ### These are non-PEP8 Compliant Methods - do NOT use
@@ -2580,6 +2589,12 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide
 <!-- <+Window.hide+> -->
+
+### keep_on_top_clear
+<!-- <+Window.keep_on_top_clear+> -->
+
+### keep_on_top_set
+<!-- <+Window.keep_on_top_set+> -->
 
 ### key_dict
 <!-- <+Window.key_dict+> -->
@@ -2799,6 +2814,7 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### hide
 <!-- <+SystemTray.hide+> -->
+
 
 ### metadata
 <!-- <+SystemTray.metadata+> -->

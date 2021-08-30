@@ -557,7 +557,7 @@ Be aware that Macs default to using ttk buttons.  You can override this setting 
 
 ## Don't Suffer Silently
 
-The GitHub Issues are checked *often*.  Very often.  **Please** post your questions and problems there and there only.  Please don't post on Reddit, Stackoverflow, on forums, until you've tried posting on the GitHub.
+The GitHub Issues are checked *often*.  Very often.  **Please** post your questions and problems there and there only.  Please don't post on Reddit, StackOverflow, on forums, until you've tried posting on the GitHub.
 
 Why?  *It will get you the best support possible.*  Second, you'll be helping the project as what you're experiencing might very well be a bug, or even a *known* bug. Why spend hours thrashing, fighting against a known bug?
 
@@ -589,7 +589,7 @@ Is file I/O in Python limited to only certain people?  Is starting a thread, bui
 
 Why can't it be 2 lines of code to show a GUI window?  What's SO special about the Python GUI libraries that they require you to follow a specific Object Oriented model of development?  Other parts and packages of Python don't tend to do that.  
 
-The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a vaneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
+The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a veneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
 
 PySimpleGUI is designed with both the beginner and the experienced developer in mind.  Why?  Because both tend to like compact code.  Most like people, we just want to get sh\*t done, right?  And, why not do it in a way that's like how most of Python works?
 
