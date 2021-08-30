@@ -496,7 +496,7 @@ Be aware that Macs default to using ttk buttons.  You can override this setting 
 
 ## Don't Suffer Silently
 
-The GitHub Issues are checked *often*.  Very often.  **Please** post your questions and problems there and there only.  Please don't post on Reddit, Stackoverflow, on forums, until you've tried posting on the GitHub.
+The GitHub Issues are checked *often*.  Very often.  **Please** post your questions and problems there and there only.  Please don't post on Reddit, StackOverflow, on forums, until you've tried posting on the GitHub.
 
 Why?  *It will get you the best support possible.*  Second, you'll be helping the project as what you're experiencing might very well be a bug, or even a *known* bug. Why spend hours thrashing, fighting against a known bug?
 
@@ -526,7 +526,7 @@ Is file I/O in Python limited to only certain people?  Is starting a thread, bui
 
 Why can't it be 2 lines of code to show a GUI window?  What's SO special about the Python GUI libraries that they require you to follow a specific Object Oriented model of development?  Other parts and packages of Python don't tend to do that.  
 
-The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a vaneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
+The reason is because they didn't originate in Python. They are strangers in a strange land and they had to be "adapted".  They started as C++ programs / SDKs, and remain that way too.  There's a veneer of Python slapped onto the top of them, but that sure didn't make them fit the language as well as they could have.
 
 PySimpleGUI is designed with both the beginner and the experienced developer in mind.  Why?  Because both tend to like compact code.  Most like people, we just want to get sh\*t done, right?  And, why not do it in a way that's like how most of Python works?
 
@@ -3713,6 +3713,8 @@ Specifies the amount of room reserved for the Element.  For elements that are ch
 
 Some elements, Text and Button, have an auto-size setting that is `on` by default. It will size the element based on the contents.  The result is that buttons and text fields will be the size of the string creating them.  You can turn it off.  For example, for Buttons, the effect will be that all buttons will be the same size in that window.
 
+Beginning in release 4.47.0 sizes can also be an `int` in addition to a tuple.  If an int is specified, then that value is taken as the width and the height is set to 1. If given `size=12` then it's the same as `size=(12,1)`
+
 #### Element Sizes - Non-tkinter Ports (Qt, WxPython, Web)
 
 In non-tkinter ports you can set the specific element sizes in 2 ways.  One is to use the normal `size` parameter like you're used to using.  This will be in characters and rows.
@@ -3727,6 +3729,10 @@ If you're curious about the math used to do the character to pixels conversion, 
 
 The conversion simply takes your `size[0]` and multiplies by 10 and your `size[1]` and multiplies it by 26.
 
+##### Specifying Size as an INT
+
+Beginning in version 4.47.0 you can specify a single int as the size.  This will set the size to be a single row in height (1).  Writing `size=10` is now the same as writing `size=(10,1)`. A tuple is created on your behalf when you specify a size and an int.  This will save a considerable amount of typing, especially for the elements where you typically have only 1 row or can only have 1 row.  
+
 #### Colors
 
 A string representing color.  Anytime colors are involved, you can specify the tkinter color name such as 'lightblue' or an RGB hex value '#RRGGBB'.  For buttons, the color parameter is a tuple (text color, background color)
@@ -3738,6 +3744,10 @@ Anytime colors are written as a tuple in PySimpleGUI, the way to figure out whic
 The amount of room around the element in pixels. The default value is (5,3) which means leave 5 pixels on each side of the x-axis and 3 pixels on each side of the y-axis.  You can change this on a global basis using a call to SetOptions, or on an element basis.
 
 If you want more pixels on one side than the other, then you can split the number into 2 number.  If you want 200 pixels on the left side, and 3 pixels on the right, the pad would be ((200,3), 3).  In this example, only the x-axis is split.
+
+##### Specifying pad as an INT
+
+Starting in version 4.47.0, it's possible to set pad to be an int rather than a tuple. If an int is specified, then the pad is set to a tuple with each position being the same as the int.  This reduces the code in your layout significantly if you use values such as (0,0) for your pad.  This is not an uncommon value.  Now you can write `pad=0` and you will get the same result as if you typed `pad=(0,0)`
 
 #### Font
 
@@ -3925,9 +3935,13 @@ Individual colors are specified using either the color names as defined in tkint
 ### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.
 
-`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
+`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  Prior to release 4.45.0 you needed to reserve enough room for your longest string. If you tried to output a string that's 5 characters, it wasn't shown in the window because there wasn't enough room.  The remedy was to manually set the size to what you expect to output
 
 `Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
+
+With the newer versions, after 4.45.0, if you set no size at all, that is `size=(None, None)`, then both the `Text` element will grow and shrink to fit the text and so will the `Window`.  Additionally, if you indicate that the height is `None` then the element will grow and shrink in their to match the string.
+
+The way the `Text` element now works is truly auto-sized.
 
 ### Chortcut functions
 The shorthand functions for `Text` are `Txt` and `T`
@@ -8908,11 +8922,52 @@ Text Elements really autosize now
 - Added exception details if have a problem with the wm_overriderediect
 - Addition of "project information" to the issue your opportunity to share something about what you're making
 
+## 4.47.0 PySimpleGUI 30-Aug-2021
+
+Stretch & VStretch - A new era of element alignment!   
+Upgrade from GitHub - uses pip for real now   
+Image element - Simpler to use   
+`size` and `pad` parms can be ints in addition to tuples    to speed up coding   
+
+- `rstrip` parm added to `Multiline` element
+- `Combo.update` fixed bug added in 4.45.0 with disabled not working correctly when calling update   
+- Changed font type in all docstrings to be (str or (str, int[, str]) or None) (thank you Jason!!)  
+- Added code from Jason (slightly modified) for _fixed_map  
+- Fix for default element size was incorrectly using as the default for parm in Window.  
+    - Needed to set it in the init code rather than using the parm to set it.  
+- `Window.location` gets a new parm `more_accurate` (defaults to `False`). If `True`, uses window's geometry   
+- Added `Window.keep_on_top_set` and `Window.keep_on_top_clear`. Makes window behave like was set when creating Window   
+- Image Element
+	- Added new constant `BLANK_BASE64` that essentially erases an Image element if assigned to it. It's 1x1 pixel and Alpha=0
+	- Image element New `source` parameter as the first parm. 
+		- Can be a string or a bytestring. Backwards compatible because first was filename.
+		- Works for both the init and the update. No need to specify any name at all... just pass in the thing you want to change to. Greatly shortens code.
+		- Ths idea is to not have to specify the parameter name. `sg.Image('filename')` and `sg.Image(base64)` both work without using any parameter names.
+	- Fix for `Image.update` docstring
+- Element sizes, when being created, can be an **int**.  If `size=int`, then it represents a `size=(int, 1)`. GREATLY shortens layouts.
+	- Sometimes this these things only become apparent later even though it seems obvious
+- padding - Another tuple / int convenience change. 
+	- Tired of typing `pad=(0,0)`?  Yea, me too. Now we can type `pad=0`.
+	- If an int is specified instead of a tuple, then a tuple will be created to be same as the int.  `pad=0` is the same as `pad=(0,0)`
+- Add NEW upgrade from GitHub code.  Thank you @israel-dryer!
+- Change in ttk style naming to ensure more unique style names are used
+- Cast key to string when making a ttk style
+- Added `"___"` between unique counter and user's key when making a unique style string for ttk widgets. Fixed problem with elements from one window interfering with another window elements
+- Changed Upgrade From GitHub Code
+	- When upgrading, use the interpreter from the global settings for the upgrade!  This could get tricky, but trying to make it logical
+	- Output of the pip command shown in an upgrade window using a `Multiline` element so errors can be copied from it.
+	- Added printing of the value of `sys.executable` to the upgrade information
+- `Stretch` and `VStretch` Elements - a promising solution to element justification!
+	- Redefinition of the `Stretch` element.  No longer returns an Error Element.  It now returns a Text element that does the same kind of operation as the PySimpleGUIQt's `Stretch` element!  Very nice!
+    - `VStretch` stretches vertically instead of horizontally
+- UserSettings APIs
+	- Changed the repr method of the user settings object to use the pretty printer to format the dictionary information into a nicer string
+
 ## Upcoming
 
 The future for PySimpleGUI looks bright!  
 
-The overall roadmap is a simple one:
+The overall road-map is a simple one:
 * Continue to build-out the tkinter port
 * Continue to bring features forward from the tkinter port to the other ports (Qt, WxPython, Remi)
 * Add mobile applications (native built applications instead of PyDriod3 that's used today)
@@ -8983,6 +9038,6 @@ The project is self-funded and there are ongoing costs just to offer the softwar
 
 ## Legal
 
-All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Inc.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
+All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Tech LLC.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
 
 The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked

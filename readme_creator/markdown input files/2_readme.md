@@ -2140,6 +2140,8 @@ Specifies the amount of room reserved for the Element.  For elements that are ch
 
 Some elements, Text and Button, have an auto-size setting that is `on` by default. It will size the element based on the contents.  The result is that buttons and text fields will be the size of the string creating them.  You can turn it off.  For example, for Buttons, the effect will be that all buttons will be the same size in that window.
 
+Beginning in release 4.47.0 sizes can also be an `int` in addition to a tuple.  If an int is specified, then that value is taken as the width and the height is set to 1. If given `size=12` then it's the same as `size=(12,1)`
+
 #### Element Sizes - Non-tkinter Ports (Qt, WxPython, Web)
 
 In non-tkinter ports you can set the specific element sizes in 2 ways.  One is to use the normal `size` parameter like you're used to using.  This will be in characters and rows.
@@ -2154,6 +2156,9 @@ If you're curious about the math used to do the character to pixels conversion, 
 
 The conversion simply takes your `size[0]` and multiplies by 10 and your `size[1]` and multiplies it by 26.
 
+##### Specifying Size as an INT
+
+Beginning in version 4.47.0 you can specify a single int as the size.  This will set the size to be a single row in height (1).  Writing `size=10` is now the same as writing `size=(10,1)`. A tuple is created on your behalf when you specify a size and an int.  This will save a considerable amount of typing, especially for the elements where you typically have only 1 row or can only have 1 row.  
 
 #### Colors
 
@@ -2166,6 +2171,10 @@ Anytime colors are written as a tuple in PySimpleGUI, the way to figure out whic
 The amount of room around the element in pixels. The default value is (5,3) which means leave 5 pixels on each side of the x-axis and 3 pixels on each side of the y-axis.  You can change this on a global basis using a call to SetOptions, or on an element basis.
 
 If you want more pixels on one side than the other, then you can split the number into 2 number.  If you want 200 pixels on the left side, and 3 pixels on the right, the pad would be ((200,3), 3).  In this example, only the x-axis is split.
+
+##### Specifying pad as an INT
+
+Starting in version 4.47.0, it's possible to set pad to be an int rather than a tuple. If an int is specified, then the pad is set to a tuple with each position being the same as the int.  This reduces the code in your layout significantly if you use values such as (0,0) for your pad.  This is not an uncommon value.  Now you can write `pad=0` and you will get the same result as if you typed `pad=(0,0)`
 
 #### Font
 
@@ -2368,9 +2377,13 @@ Individual colors are specified using either the color names as defined in tkint
 ### `auto_size_text      `
 A `True` value for `auto_size_text`, when placed on Text Elements, indicates that the width of the Element should be shrunk do the width of the text.   The default setting is True.  You need to remember this when you create `Text` elements that you are using for output.
 
-`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  If you try to output a string that's 5 characters, it won't be shown in the window because there isn't enough room.  The remedy is to manually set the size to what you expect to output
+`Text(key='-TXTOUT-)` will create a `Text` Element that has 0 length.  Notice that for Text elements with an empty string, no string value needs to be indicated.  The default value for strings is `''` for Text Elements.  Prior to release 4.45.0 you needed to reserve enough room for your longest string. If you tried to output a string that's 5 characters, it wasn't shown in the window because there wasn't enough room.  The remedy was to manually set the size to what you expect to output
 
 `Text(size=(15,1), key='-TXTOUT-)` creates a `Text` Element that can hold 15 characters.
+
+With the newer versions, after 4.45.0, if you set no size at all, that is `size=(None, None)`, then both the `Text` element will grow and shrink to fit the text and so will the `Window`.  Additionally, if you indicate that the height is `None` then the element will grow and shrink in their to match the string.
+
+The way the `Text` element now works is truly auto-sized.
 
 
 ### Chortcut functions

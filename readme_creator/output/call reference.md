@@ -12,7 +12,7 @@ Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
-This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidently shown in this documentation.  Hopefully these accidents don't happen often.
+This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
 Here are all of the Elements, the Window & SystemTray classes, and all functions
 
@@ -63,40 +63,40 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |      button_text      | Text to be displayed on the button |
-|                                   int                                    |      button_type      | You should NOT be setting this directly. ONLY the shortcut functions set this |
-|                            str or (int, int)                             |        target         | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
-|                                   str                                    |        tooltip        | text, that will appear when mouse hovers over the element |
-|                          Tuple[(str, str), ...]                          |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
-|                                   str                                    |    initial_folder     | starting path for folders and files |
-|                                   str                                    |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|                              (bool or str)                               |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinter |
-|                                   bool                                   |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
-|                                   str                                    |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
-|                               bytes or str                               |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                                (int, int)                                |      image_size       | Size of the image in pixels (width, height) |
-|                                   int                                    |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                                   int                                    |     border_width      | width of border around button in pixels |
-|                        (int, int) or (None, None)                        |         size          | (width, height) of the button in characters wide, rows high |
-|                        (int, int) or (None, None)                        |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |   auto_size_button    | if True the button size is sized to fit the text |
-|                 (str, str) or str or (int, int) or None                  |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
-|                            (str, str) or str                             | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
-|                                (str, str)                                |   highlight_colors    | colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button |
-|                            (str, str) or str                             |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
-|                                   bool                                   |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
-|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |    bind_return_key    | If True the return key will cause this button to be pressed |
-|                                   bool                                   |         focus         | if True, initial focus will be put on this button |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                      List[List[ List[str] or str ]]                      |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |        visible        | set visibility state of the element |
-|                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |      button_text      | Text to be displayed on the button |
+|                                      int                                       |      button_type      | You should NOT be setting this directly. ONLY the shortcut functions set this |
+|                               str or (int, int)                                |        target         | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
+|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
+|                             Tuple[(str, str), ...]                             |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
+|                                      str                                       |    initial_folder     | starting path for folders and files |
+|                                      str                                       |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                 (bool or str)                                  |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinter |
+|                                      bool                                      |    change_submits     | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |     enable_events     | Turns on the element specific events. If this button is a target, should it generate an event when filled in |
+|                                      str                                       |    image_filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                                  bytes or str                                  |      image_data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                   (int, int)                                   |      image_size       | Size of the image in pixels (width, height) |
+|                                      int                                       |    image_subsample    | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |     border_width      | width of border around button in pixels |
+|                       (int, int)  or (None, None) or int                       |         size          | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |   auto_size_button    | if True the button size is sized to fit the text |
+|                    (str, str) or str or (int, int) or None                     |     button_color      | Color of button. default is from theme or the window. Easy to remember which is which if you say "ON" between colors. "red" on "green". Normally a tuple, but can be a simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. |
+|                               (str, str) or str                                | disabled_button_color | colors to use when button is disabled (text, background). Use None for a color if don't want to change. Only ttk buttons support both text and background colors. tk buttons only support changing text color |
+|                                   (str, str)                                   |   highlight_colors    | colors to use when button has focus (has focus, does not have focus). None will use colors based on theme. Only used by Linux and only for non-TTK button |
+|                               (str, str) or str                                |   mouseover_colors    | Important difference between Linux & Windows! Linux - Colors when mouse moved over button. Windows - colors when button is pressed. The default is to switch the text and background colors (an inverse effect) |
+|                                      bool                                      |    use_ttk_buttons    | True = use ttk buttons. False = do not use ttk buttons. None (Default) = use ttk buttons only if on a Mac and not with button images |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |    bind_return_key    | If True the return key will cause this button to be pressed |
+|                                      bool                                      |         focus         | if True, initial focus will be put on this button |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -476,31 +476,31 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |     button_text     | Text to be displayed on the button |
-|                             List[List[str]]                              |      menu_def       | A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types |
-|                                   str                                    |       tooltip       | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |      disabled       | If True button will be created disabled |
-|                                   str                                    |   image_filename    | image filename if there is a button image. GIFs and PNGs only. |
-|                               bytes or str                               |     image_data      | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                                (int, int)                                |     image_size      | Size of the image in pixels (width, height) |
-|                                   int                                    |   image_subsample   | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                                   int                                    |    border_width     | width of border around button in pixels |
-|                        (int, int) or (None, None)                        |        size         | (width, height) of the button in characters wide, rows high |
-|                        (int, int) or (None, None)                        |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_button   | if True the button size is sized to fit the text |
-|                            (str, str) or str                             |    button_color     | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
-|                                   str                                    |  background_color   | color of the background |
-|                                   str                                    |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
-|                                   str                                    | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
-|                    (str or (str, int[, str]) or None)                    |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                    (str or (str, int[, str]) or None)                    |      item_font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   |         key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element :param expand_x: If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |      expand_y       | If True the element will automatically expand in the Y direction to fill available space |
-|                      str or int or tuple or object                       |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |       tearoff       | Determines if menus should allow them to be torn off |
-|                                   bool                                   |       visible       | set visibility state of the element |
-|                                   Any                                    |      metadata       | User metadata that can be set to ANYTHING |
+|                                      str                                       |     button_text     | Text to be displayed on the button |
+|                                List[List[str]]                                 |      menu_def       | A list of lists of Menu items to show when this element is clicked. See docs for format as they are the same for all menu types |
+|                                      str                                       |       tooltip       | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |      disabled       | If True button will be created disabled |
+|                                      str                                       |   image_filename    | image filename if there is a button image. GIFs and PNGs only. |
+|                                  bytes or str                                  |     image_data      | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                   (int, int)                                   |     image_size      | Size of the image in pixels (width, height) |
+|                                      int                                       |   image_subsample   | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      int                                       |    border_width     | width of border around button in pixels |
+|                       (int, int)  or (None, None) or int                       |        size         | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_button   | if True the button size is sized to fit the text |
+|                               (str, str) or str                                |    button_color     | of button. Easy to remember which is which if you say "ON" between colors. "red" on "green" |
+|                                      str                                       |  background_color   | color of the background |
+|                                      str                                       |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
+|                                      str                                       | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                       (str or (str, int[, str]) or None)                       |      item_font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      |         key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element :param expand_x: If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |      expand_y       | If True the element will automatically expand in the Y direction to fill available space |
+|                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |       tearoff       | Determines if menus should allow them to be torn off |
+|                                      bool                                      |       visible       | set visibility state of the element |
+|                                      Any                                       |      metadata       | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -807,20 +807,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               (tk.Canvas)                                |      canvas      | Your own tk.Canvas if you already created it. Leave blank to create a Canvas |
-|                                   str                                    | background_color | color of background |
-|                        (int,int) or (None, None)                         |       size       | (width in char, height in rows) size in pixels to make canvas |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   int                                    |   border_width   | width of border around element in pixels. Not normally used with Canvas element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                  (tk.Canvas)                                   |      canvas      | Your own tk.Canvas if you already created it. Leave blank to create a Canvas |
+|                                      str                                       | background_color | color of background |
+|                           (int,int) or (None, None)                            |       size       | (width in char, height in rows) size in pixels to make canvas |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      int                                       |   border_width   | width of border around element in pixels. Not normally used with Canvas element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -1103,27 +1103,27 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |       text       | Text to display next to checkbox |
-|                                   bool                                   |     default      | Set to True if you want this checkbox initially checked |
-|                        (int, int) or (None, None)                        |       size       | (width, height) width = characters-wide, height = rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    | background_color | color of background |
-|                                   str                                    |    text_color    | color of the text |
-|                                   str                                    |  checkbox_color  | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
-|                                   bool                                   |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. Checkbox events happen when an item changes |
-|                                   bool                                   |     disabled     | set disable state |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      str                                       |       text       | Text to display next to checkbox |
+|                                      bool                                      |     default      | Set to True if you want this checkbox initially checked |
+|                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       | background_color | color of background |
+|                                      str                                       |    text_color    | color of the text |
+|                                      str                                       |  checkbox_color  | color of background of the box that has the check mark in it. The checkmark is the same color as the text |
+|                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. Checkbox events happen when an item changes |
+|                                      bool                                      |     disabled     | set disable state |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -1455,24 +1455,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                           List[List[Element]]                            |        layout         | Layout that will be shown in the Column container |
-|                                   str                                    |   background_color    | color of background of entire Column |
-|                                (int, int)                                |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter |
-|                        (int, int) or (None, None)                        |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   |      scrollable       | if True then scrollbars will be added to the column |
-|                                   bool                                   | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
-|                      List[List[ List[str] or str ]]                      |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                      str or int or tuple or object                       |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |        visible        | set visibility state of the element |
-|                                   str                                    |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
-|                                   str                                    | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
-|                                   str                                    |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
-|                                   bool                                   |         grab          | If True can grab this element and move the window around. Default is False |
-|                                   bool                                   |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
-|                                   bool                                   |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
-|                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
+|                              List[List[Element]]                               |        layout         | Layout that will be shown in the Column container |
+|                                      str                                       |   background_color    | color of background of entire Column |
+|                                   (int, int)                                   |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
+|                          (int, int)  or (None, None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column |
+|                                      bool                                      | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      str                                       |     justification     | set justification for the Column itself. Note entire row containing the Column will be affected |
+|                                      str                                       | element_justification | All elements inside the Column will have this justification 'left', 'right', 'center' are valid values |
+|                                      str                                       |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                      bool                                      |         grab          | If True can grab this element and move the window around. Default is False |
+|                                      bool                                      |       expand_x        | If True the column will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the column will automatically expand in the Y direction to fill available space |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
 
@@ -1847,8 +1847,8 @@ Parameter Descriptions:
 |--|--|--|
 |                                     List[Any] or Tuple[Any]                                     |      values      | values to choose. While displayed as text, the items returned are what the caller supplied, not text |
 |                                               Any                                               |  default_value   | Choice to be displayed as initial value. Must match one of values variable contents |
-|                                   (int, int) or (None, None)                                    |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list |
-|                                   (int, int) or (None, None)                                    |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                               (int, int)  or (None, None) or int                                |       size       | width, height. Width = characters-wide, height = NOTE it's the number of entries to show in the list. If an Int is passed rather than a tuple, then height is auto-set to 1 and width is value of the int |
+|                               (int, int)  or (None, None) or int                                |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                              bool                                               |  auto_size_text  | True if element should be the same size as the contents |
 |                                               str                                               | background_color | color of background |
 |                                               str                                               |    text_color    | color of the text |
@@ -1858,7 +1858,7 @@ Parameter Descriptions:
 |                                              bool                                               |     disabled     | set disable state for element |
 |                                  str or int or tuple or object                                  |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                                  str or int or tuple or object                                  |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|            (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int)             |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
+|         (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int         |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 |                                              bool                                               |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 | bool)        :param tooltip:          text that will appear when mouse hovers over this element |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
 |                                              bool                                               |     readonly     | make element readonly (user can't change). True means user cannot change |
@@ -2211,27 +2211,27 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |         title         | text that is displayed as the Frame's "label" or title |
-|                           List[List[Elements]]                           |        layout         | The layout to put inside the Frame |
-|                                   str                                    |      title_color      | color of the title text |
-|                                   str                                    |   background_color    | background color of the Frame |
-|                                   enum                                   |    title_location     | location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT |
-|                                   enum                                   |        relief         | relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                (int, int)                                |         size          | (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column |
-|                        (int, int) or (None, None)                        |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   int                                    |     border_width      | width of border around element in pixels |
-|                      str or int or tuple or object                       |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |        tooltip        | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |        visible        | set visibility state of the element |
-|                                   str                                    | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
-|                                   str                                    |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
-|                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |         title         | text that is displayed as the Frame's "label" or title |
+|                              List[List[Elements]]                              |        layout         | The layout to put inside the Frame |
+|                                      str                                       |      title_color      | color of the title text |
+|                                      str                                       |   background_color    | background color of the Frame |
+|                                      enum                                      |    title_location     | location to place the text title. Choices include: TITLE_LOCATION_TOP TITLE_LOCATION_BOTTOM TITLE_LOCATION_LEFT TITLE_LOCATION_RIGHT TITLE_LOCATION_TOP_LEFT TITLE_LOCATION_TOP_RIGHT TITLE_LOCATION_BOTTOM_LEFT TITLE_LOCATION_BOTTOM_RIGHT |
+|                                      enum                                      |        relief         | relief style. Values are same as other elements with reliefs. Choices include RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                                   (int, int)                                   |         size          | (width, height) DO NOT use this. Instead, place your layout in a Column element with the size set on the Column element. Set pad=(0,0) on your Column |
+|                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      int                                       |     border_width      | width of border around element in pixels |
+|                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      str                                       | element_justification | All elements inside the Frame will have this justification 'left', 'right', 'center' are valid values |
+|                                      str                                       |  vertical_alignment   | Place the column at the 'top', 'center', 'bottom' of the row (can also use t,c,r). Defaults to no setting (tkinter decides) |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
 
@@ -2587,24 +2587,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                (int, int)                                |    canvas_size    | size of the canvas area in pixels |
-|                                (int, int)                                | graph_bottom_left | (x,y) The bottoms left corner of your coordinate system |
-|                                (int, int)                                |  graph_top_right  | (x,y) The top right corner of your coordinate system |
-|                                   str                                    | background_color  | background color of the drawing area |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                   bool                                   |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
-|                                   bool                                   |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
-|                      str or int or tuple or object                       |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |      tooltip      | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      | right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x      | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y      | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |      visible      | set visibility state of the element (Default = True) |
-|                                   bool                                   |   float_values    | If True x,y coordinates are returned as floats, not ints |
-|                                   int                                    |   border_width    | width of border around element in pixels. Not normally used for Graph Elements |
-|                                   Any                                    |     metadata      | User metadata that can be set to ANYTHING |
+|                                   (int, int)                                   |    canvas_size    | size of the canvas area in pixels |
+|                                   (int, int)                                   | graph_bottom_left | (x,y) The bottoms left corner of your coordinate system |
+|                                   (int, int)                                   |  graph_top_right  | (x,y) The top right corner of your coordinate system |
+|                                      str                                       | background_color  | background color of the drawing area |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                      bool                                      |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
+|                                      bool                                      |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
+|                         str or int or tuple or object                          |        key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         | right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x      | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y      | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |      visible      | set visibility state of the element (Default = True) |
+|                                      bool                                      |   float_values    | If True x,y coordinates are returned as floats, not ints |
+|                                      int                                       |   border_width    | width of border around element in pixels. Not normally used for Graph Elements |
+|                                      Any                                       |     metadata      | User metadata that can be set to ANYTHING |
 
 ### Update
 
@@ -3584,10 +3584,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |  pad  | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### bind
 
@@ -3823,7 +3823,8 @@ Parameter Descriptions:
     Image Element - show an image in the window. Should be a GIF or a PNG only
 
 ```
-Image(filename = None,
+Image(source = None,
+    filename = None,
     data = None,
     background_color = None,
     size = (None, None),
@@ -3844,21 +3845,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               str or None                                |     filename     | image filename if there is a button image. GIFs and PNGs only. |
-|                           bytes or str or None                           |       data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                                                                          | background_color | color of background |
-|                                (int, int)                                |       size       | (width, height) size of image in pixels |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. For an Image element, the event is "image clicked" |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                              str or bytes or None                              |      source      | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
+|                                  str or None                                   |     filename     | image filename if there is a button image. GIFs and PNGs only. |
+|                              bytes or str or None                              |       data       | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                                                                | background_color | color of background |
+|                                   (int, int)                                   |       size       | (width, height) size of image in pixels |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. For an Image element, the event is "image clicked" |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -4050,7 +4052,8 @@ To clear an image that's been displayed, call with NONE of the options set.  A b
 delete the previously shown image.
 
 ```
-update(filename = None,
+update(source = None,
+    filename = None,
     data = None,
     size = (None, None),
     visible = None)
@@ -4060,9 +4063,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
+| str or bytes or None |  source  | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
 |        str         | filename | filename to the new image to display. |
 | str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
-|   Tuple[int,int]   |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
+|   Tuple[int,int]   |   size   | (width, height) size of image in pixels |
 |        bool        | visible  | control visibility of element |
 
 ### update_animation
@@ -4148,7 +4152,8 @@ To clear an image that's been displayed, call with NONE of the options set.  A b
 delete the previously shown image.
 
 ```
-Update(filename = None,
+Update(source = None,
+    filename = None,
     data = None,
     size = (None, None),
     visible = None)
@@ -4158,9 +4163,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
+| str or bytes or None |  source  | A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you. |
 |        str         | filename | filename to the new image to display. |
 | str or tkPhotoImage |   data   | Base64 encoded string OR a tk.PhotoImage object |
-|   Tuple[int,int]   |   size   | size of a image (w,h) w=characters-wide, h=rows-high |
+|   Tuple[int,int]   |   size   | (width, height) size of image in pixels |
 |        bool        | visible  | control visibility of element |
 
 ### UpdateAnimation
@@ -4219,33 +4225,33 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   Any                                    |            default_text            | Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string |
-|                       (int, int)  or (None, None)                        |                size                | w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |                 s                  | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |              disabled              | set disable state for element (Default = False) |
-|                                   char                                   |           password_char            | Password character if this is a password field (Default value = '') |
-|                                   str                                    |           justification            | justification for data display. Valid choices - left, right, center |
-|                                   str                                    |          background_color          | color of background in one of the color formats |
-|                                   str                                    |             text_color             | color of the text |
-|                    (str or (str, int[, str]) or None)                    |                font                | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |              tooltip               | text, that will appear when mouse hovers over the element |
-|                                   int                                    |            border_width            | width of border around element in pixels |
-|                                   bool                                   |           change_submits           | * DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                   bool                                   |           enable_events            | If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False) |
-|                                   bool                                   |            do_not_clear            | If False then the field will be set to blank after ANY event (button, any event) (Default = True) |
-|                      str or int or tuple or object                       |                key                 | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |                 k                  | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |               focus                | Determines if initial focus should go to this element. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |                pad                 | Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)) |
-|                                   bool                                   |      use_readonly_for_disable      | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
-|                                   bool                                   |              readonly              | If True tkinter state set to 'readonly'. Use this in place of use_readonly_for_disable as another way of achieving readonly. Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag |
-|                                   str                                    | disabled_readonly_background_color | If state is set to readonly or disabled, the color to use for the background |
-|                                   str                                    |    disabled_readonly_text_color    | If state is set to readonly or disabled, the color to use for the text |
-|                                   bool                                   |              expand_x              | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |              expand_y              | If True the element will automatically expand in the Y direction to fill available space |
-|                      List[List[ List[str] or str ]]                      |          right_click_menu          | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |              visible               | set visibility state of the element (Default = True) |
-|                                   Any                                    |              metadata              | User metadata that can be set to ANYTHING |
+|                                      Any                                       |            default_text            | Text initially shown in the input box as a default value(Default value = ''). Will automatically be converted to string |
+|                       (int, int) or  (int, None) or int                        |                size                | w=characters-wide, h=rows-high. If an int is supplied rather than a tuple, then a tuple is created width=int supplied and heigh=1 |
+|                       (int, int)  or (None, None) or int                       |                 s                  | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |              disabled              | set disable state for element (Default = False) |
+|                                      char                                      |           password_char            | Password character if this is a password field (Default value = '') |
+|                                      str                                       |           justification            | justification for data display. Valid choices - left, right, center |
+|                                      str                                       |          background_color          | color of background in one of the color formats |
+|                                      str                                       |             text_color             | color of the text |
+|                       (str or (str, int[, str]) or None)                       |                font                | specifies the font family, size. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |              tooltip               | text, that will appear when mouse hovers over the element |
+|                                      int                                       |            border_width            | width of border around element in pixels |
+|                                      bool                                      |           change_submits           | * DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                      bool                                      |           enable_events            | If True then changes to this element are immediately reported as an event. Use this instead of change_submits (Default = False) |
+|                                      bool                                      |            do_not_clear            | If False then the field will be set to blank after ANY event (button, any event) (Default = True) |
+|                         str or int or tuple or object                          |                key                 | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |                 k                  | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |               focus                | Determines if initial focus should go to this element. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |                pad                 | Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)). If int is given, then converted to tuple (int, int) with the value provided duplicated |
+|                                      bool                                      |      use_readonly_for_disable      | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
+|                                      bool                                      |              readonly              | If True tkinter state set to 'readonly'. Use this in place of use_readonly_for_disable as another way of achieving readonly. Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag |
+|                                      str                                       | disabled_readonly_background_color | If state is set to readonly or disabled, the color to use for the background |
+|                                      str                                       |    disabled_readonly_text_color    | If state is set to readonly or disabled, the color to use for the text |
+|                                      bool                                      |              expand_x              | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |              expand_y              | If True the element will automatically expand in the Y direction to fill available space |
+|                         List[List[ List[str] or str ]]                         |          right_click_menu          | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |              visible               | set visibility state of the element (Default = True) |
+|                                      Any                                       |              metadata              | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -4603,31 +4609,31 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                         List[Any] or Tuple[Any]                          |           values           | list of values to display. Can be any type including mixed types as long as they have __str__ method |
-|                                List[Any]                                 |       default_values       | which values should be initially selected |
-|                                  [enum]                                  |        select_mode         | Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED |
-|                                   bool                                   |       change_submits       | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |       enable_events        | Turns on the element specific events. Listbox generates events when an item is clicked |
-|                                   bool                                   |      bind_return_key       | If True, then the return key will cause a the Listbox to generate an event |
-|                       (int, int)  or (None, None)                        |            size            | width = characters-wide, height = rows-high |
-|                        (int, int) or (None, None)                        |             s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |          disabled          | set disable state for element |
-|                                   bool                                   |       auto_size_text       | True if element should be the same size as the contents |
-|                    (str or (str, int[, str]) or None)                    |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |        no_scrollbar        | Controls if a scrollbar should be shown. If True, no scrollbar will be shown |
-|                                   str                                    |      background_color      | color of background |
-|                                   str                                    |         text_color         | color of the text |
-|                                   str                                    | highlight_background_color | color of the background when an item is selected. Defaults to normal text color (a reverse look) |
-|                                   str                                    |    highlight_text_color    | color of the text when an item is selected. Defaults to the normal background color (a rerverse look) |
-|                      str or int or tuple or object                       |            key             | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |             k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |            pad             | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |          tooltip           | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |          expand_x          | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |          expand_y          | If True the element will automatically expand in the Y direction to fill available space |
-|                      List[List[ List[str] or str ]]                      |      right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |          visible           | set visibility state of the element |
-|                                   Any                                    |          metadata          | User metadata that can be set to ANYTHING |
+|                            List[Any] or Tuple[Any]                             |           values           | list of values to display. Can be any type including mixed types as long as they have __str__ method |
+|                                   List[Any]                                    |       default_values       | which values should be initially selected |
+|                                     [enum]                                     |        select_mode         | Select modes are used to determine if only 1 item can be selected or multiple and how they can be selected. Valid choices begin with "LISTBOX_SELECT_MODE_" and include: LISTBOX_SELECT_MODE_SINGLE LISTBOX_SELECT_MODE_MULTIPLE LISTBOX_SELECT_MODE_BROWSE LISTBOX_SELECT_MODE_EXTENDED |
+|                                      bool                                      |       change_submits       | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |       enable_events        | Turns on the element specific events. Listbox generates events when an item is clicked |
+|                                      bool                                      |      bind_return_key       | If True, then the return key will cause a the Listbox to generate an event |
+|                       (int, int) or  (int, None) or int                        |            size            | w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |             s              | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |          disabled          | set disable state for element |
+|                                      bool                                      |       auto_size_text       | True if element should be the same size as the contents |
+|                       (str or (str, int[, str]) or None)                       |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |        no_scrollbar        | Controls if a scrollbar should be shown. If True, no scrollbar will be shown |
+|                                      str                                       |      background_color      | color of background |
+|                                      str                                       |         text_color         | color of the text |
+|                                      str                                       | highlight_background_color | color of the background when an item is selected. Defaults to normal text color (a reverse look) |
+|                                      str                                       |    highlight_text_color    | color of the text when an item is selected. Defaults to the normal background color (a rerverse look) |
+|                         str or int or tuple or object                          |            key             | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |             k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |          tooltip           | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |          expand_x          | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |          expand_y          | If True the element will automatically expand in the Y direction to fill available space |
+|                         List[List[ List[str] or str ]]                         |      right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |          visible           | set visibility state of the element |
+|                                      Any                                       |          metadata          | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -5036,19 +5042,19 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                     List[List[Tuple[str, List[str]]]                     |   menu_definition   | The Menu definition specified using lists (docs explain the format) |
-|                                   str                                    |  background_color   | color of the background |
-|                                   str                                    |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
-|                                   str                                    | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
-|                                (int, int)                                |        size         | Not used in the tkinter port |
-|                        (int, int) or (None, None)                        |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                    (str or (str, int[, str]) or None)                    |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                      str or int or tuple or object                       |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |       visible       | set visibility state of the element |
-|                                   Any                                    |      metadata       | User metadata that can be set to ANYTHING |
+|                        List[List[Tuple[str, List[str]]]                        |   menu_definition   | The Menu definition specified using lists (docs explain the format) |
+|                                      str                                       |  background_color   | color of the background |
+|                                      str                                       |     text_color      | element's text color. Can be in #RRGGBB format or a color name "black" |
+|                                      str                                       | disabled_text_color | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                                   (int, int)                                   |        size         | Not used in the tkinter port |
+|                          (int, int)  or (None, None)                           |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                         str or int or tuple or object                          |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |       visible       | set visibility state of the element |
+|                                      Any                                       |      metadata       | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -5339,18 +5345,18 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                     List[List[Tuple[str, List[str]]]                     |   menu_definition    | The Menu definition specified using lists (docs explain the format) |
-|                                   str                                    | disabled_text_color  | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
-|                    (str or (str, int[, str]) or None)                    |       bar_font       | specifies the font family, size to be used for the chars in the bar itself |
-|                    (str or (str, int[, str]) or None)                    |         font         | specifies the font family, size to be used for the menu items |
-|                                   bool                                   |       tearoff        | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |         pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |   background_color   | color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text |
-|                                   str                                    |      text_color      | color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background |
-|                                   str                                    | bar_background_color | color to use for the menubar. Can be in #RRGGBB format or a color name "black". Defaults to theme's button text color |
-|                                   str                                    |    bar_text_color    | color to use for the menu items text when item is disabled. Can be in #RRGGBB format or a color name "black". Defaults to theme's button background color |
-|                      str or int or tuple or object                       |         key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |          k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                        List[List[Tuple[str, List[str]]]                        |   menu_definition    | The Menu definition specified using lists (docs explain the format) |
+|                                      str                                       | disabled_text_color  | color to use for text when item is disabled. Can be in #RRGGBB format or a color name "black" |
+|                       (str or (str, int[, str]) or None)                       |       bar_font       | specifies the font family, size to be used for the chars in the bar itself |
+|                       (str or (str, int[, str]) or None)                       |         font         | specifies the font family, size to be used for the menu items |
+|                                      bool                                      |       tearoff        | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |   background_color   | color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text |
+|                                      str                                       |      text_color      | color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background |
+|                                      str                                       | bar_background_color | color to use for the menubar. Can be in #RRGGBB format or a color name "black". Defaults to theme's button text color |
+|                                      str                                       |    bar_text_color    | color to use for the menu items text when item is disabled. Can be in #RRGGBB format or a color name "black". Defaults to theme's button background color |
+|                         str or int or tuple or object                          |         key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |          k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ---------
 
@@ -5400,39 +5406,39 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |    default_text    | Initial text to show |
-|                                   bool                                   |   enter_submits    | if True, the Window.Read call will return is enter key is pressed in this element |
-|                                   bool                                   |      disabled      | set disable state |
-|                                   bool                                   |     autoscroll     | If True the contents of the element will automatically scroll as more data added to the end |
-|                                   int                                    |    border_width    | width of border around element in pixels |
-|                        (int, int) or (None, None)                        |        size        | (width, height) width = characters-wide, height = rows-high |
-|                        (int, int) or (None, None)                        |         s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |   auto_size_text   | if True will size the element to match the length of the text |
-|                                   str                                    |  background_color  | color of background |
-|                                   str                                    |     text_color     | color of the text |
-|                                   bool                                   |   change_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |   enable_events    | Turns on the element specific events. Spin events happen when an item changes |
-|                                   bool                                   |    do_not_clear    | if False the element will be cleared any time the Window.Read call returns |
-|                      str or int or tuple or object                       |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |     write_only     | If True then no entry will be added to the values dictionary when the window is read |
-|                                   bool                                   |    auto_refresh    | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
-|                                   bool                                   |   reroute_stdout   | If True then all output to stdout will be output to this element |
-|                                   bool                                   |   reroute_stderr   | If True then all output to stderr will be output to this element |
-|                                   bool                                   |   reroute_cprint   | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
-|                                   bool                                   | echo_stdout_stderr | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
-|                                   bool                                   |       focus        | if True initial focus will go to this element |
-|                    (str or (str, int[, str]) or None)                    |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
-|                                   str                                    |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
-|                                   bool                                   |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
-|                                   bool                                   |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |       rstrip       | If True the value returned in will have whitespace stripped from the right side |
-|                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |      visible       | set visibility state of the element |
-|                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
+|                                      str                                       |    default_text    | Initial text to show |
+|                                      bool                                      |   enter_submits    | if True, the Window.Read call will return is enter key is pressed in this element |
+|                                      bool                                      |      disabled      | set disable state |
+|                                      bool                                      |     autoscroll     | If True the contents of the element will automatically scroll as more data added to the end |
+|                                      int                                       |    border_width    | width of border around element in pixels |
+|                       (int, int)  or (None, None) or int                       |        size        | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |         s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |   auto_size_text   | if True will size the element to match the length of the text |
+|                                      str                                       |  background_color  | color of background |
+|                                      str                                       |     text_color     | color of the text |
+|                                      bool                                      |   change_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |   enable_events    | Turns on the element specific events. Spin events happen when an item changes |
+|                                      bool                                      |    do_not_clear    | if False the element will be cleared any time the Window.Read call returns |
+|                         str or int or tuple or object                          |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     write_only     | If True then no entry will be added to the values dictionary when the window is read |
+|                                      bool                                      |    auto_refresh    | If True then anytime the element is updated, the window will be refreshed so that the change is immediately displayed |
+|                                      bool                                      |   reroute_stdout   | If True then all output to stdout will be output to this element |
+|                                      bool                                      |   reroute_stderr   | If True then all output to stderr will be output to this element |
+|                                      bool                                      |   reroute_cprint   | If True your cprint calls will output to this element. It's the same as you calling cprint_set_output_destination |
+|                                      bool                                      | echo_stdout_stderr | If True then output to stdout and stderr will be output to this element AND also to the normal console location |
+|                                      bool                                      |       focus        | if True initial focus will go to this element |
+|                       (str or (str, int[, str]) or None)                       |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
+|                                      str                                       |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
+|                                      bool                                      |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
+|                                      bool                                      |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |       rstrip       | If True the value returned in will have whitespace stripped from the right side |
+|                         List[List[ List[str] or str ]]                         |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |      visible       | set visibility state of the element |
+|                                      Any                                       |      metadata      | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -5881,22 +5887,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                         List[Any] or Tuple[Any]                          |      values      | Values to be displayed |
-|                                   Any                                    |  default_value   | the value to choose by default |
-|                        (int, int) (width, UNUSED)                        |       size       | (width, height) size in characters (wide), height is ignored and present to be consistent with other elements |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |     disabled     | control enabled / disabled |
-|                                   bool                                   |  auto_size_text  | True if size of Element should match the contents of the items |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   str                                    | background_color | color of background |
-|                                   str                                    |    text_color    | color of the text |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |     tooltip      | text that will appear when mouse hovers over this element |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                            List[Any] or Tuple[Any]                             |      values      | Values to be displayed |
+|                                      Any                                       |  default_value   | the value to choose by default |
+|                           (int, int) (width, UNUSED)                           |       size       | (width, height) size in characters (wide), height is ignored and present to be consistent with other elements |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |     disabled     | control enabled / disabled |
+|                                      bool                                      |  auto_size_text  | True if size of Element should match the contents of the items |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      str                                       | background_color | color of background |
+|                                      str                                       |    text_color    | color of the text |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |     tooltip      | text that will appear when mouse hovers over this element |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -6217,21 +6223,21 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                        (int, int) or (None, None)                        |        size        | (width, height) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |         s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   str                                    |  background_color  | color of background |
-|                                   str                                    |     text_color     | color of the text |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad         | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
-|                    (str or (str, int[, str]) or None)                    |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |      tooltip       | text, that will appear when mouse hovers over the element |
-|                      str or int or tuple or object                       |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                      List[List[ List[str] or str ]]                      |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |      visible       | set visibility state of the element |
-|                                   Any                                    |      metadata      | User metadata that can be set to ANYTHING |
+|                       (int, int)  or (None, None) or int                       |        size        | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |         s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      str                                       |  background_color  | color of background |
+|                                      str                                       |     text_color     | color of the text |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
+|                       (str or (str, int[, str]) or None)                       |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
+|                         str or int or tuple or object                          |        key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |         k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                         List[List[ List[str] or str ]]                         |  right_click_menu  | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |      expand_x      | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |      expand_y      | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |      visible       | set visibility state of the element |
+|                                      Any                                       |      metadata      | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -6562,22 +6568,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                               List[Column]                               |    pane_list     | Must be a list of Column Elements. Each Column supplied becomes one pane that's shown |
-|                                   str                                    | background_color | color of background |
-|                                (int, int)                                |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |   orientation    | 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide |
-|                                   bool                                   |   show_handle    | if True, the handle is drawn that makes it easier to grab and slide |
-|                                   enum                                   |      relief      | relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                   int                                    |   handle_size    | Size of the handle in pixels |
-|                                   int                                    |   border_width   | width of border around element in pixels |
-|                      str or int or tuple or object                       |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   bool                                   |     expand_x     | If True the column will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the column will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                  List[Column]                                  |    pane_list     | Must be a list of Column Elements. Each Column supplied becomes one pane that's shown |
+|                                      str                                       | background_color | color of background |
+|                                   (int, int)                                   |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
+|                          (int, int)  or (None, None)                           |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |   orientation    | 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide |
+|                                      bool                                      |   show_handle    | if True, the handle is drawn that makes it easier to grab and slide |
+|                                      enum                                      |      relief      | relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                                      int                                       |   handle_size    | Size of the handle in pixels |
+|                                      int                                       |   border_width   | width of border around element in pixels |
+|                         str or int or tuple or object                          |       key        | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      bool                                      |     expand_x     | If True the column will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the column will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -6864,23 +6870,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   int                                    |    max_value     | max value of progressbar |
-|                                   str                                    |   orientation    | 'horizontal' or 'vertical' |
-|                       (int, int)  or (None, None)                        |       size       | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | Not sure why this is here |
-|                            (str, str) or str                             |    bar_color     | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
-|                                   str                                    |      style       | Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
-|                                   int                                    |   border_width   | The amount of pixels that go around the outside of the bar |
-|                                   str                                    |      relief      | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF) |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      int                                       |    max_value     | max value of progressbar |
+|                                      str                                       |   orientation    | 'horizontal' or 'vertical' |
+|                           (int, int) or  (int, None)                           |       size       | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
+|                          (int, int)  or (None, None)                           |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | Not sure why this is here |
+|                               (str, str) or str                                |    bar_color     | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
+|                                      str                                       |      style       | Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
+|                                      int                                       |   border_width   | The amount of pixels that go around the outside of the bar |
+|                                      str                                       |      relief      | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` (Default value = DEFAULT_PROGRESS_BAR_RELIEF) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -7200,28 +7206,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |       text       | Text to display next to button |
-|                                   Any                                    |     group_id     | Groups together multiple Radio Buttons. Any type works |
-|                                   bool                                   |     default      | Set to True for the one element of the group you want initially selected |
-|                                   bool                                   |     disabled     | set disable state |
-|                        (int, int) or (None, None)                        |       size       | (width, height) width = characters-wide, height = rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
-|                                   str                                    | background_color | color of background |
-|                                   str                                    |    text_color    | color of the text |
-|                                   str                                    |   circle_color   | color of background of the circle that has the dot selection indicator in it |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. Radio Button events happen when an item is selected |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      str                                       |       text       | Text to display next to button |
+|                                      Any                                       |     group_id     | Groups together multiple Radio Buttons. Any type works |
+|                                      bool                                      |     default      | Set to True for the one element of the group you want initially selected |
+|                                      bool                                      |     disabled     | set disable state |
+|                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
+|                                      str                                       | background_color | color of background |
+|                                      str                                       |    text_color    | color of the text |
+|                                      str                                       |   circle_color   | color of background of the circle that has the dot selection indicator in it |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. Radio Button events happen when an item is selected |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -7794,31 +7800,31 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                    (int, int) or Tuple[float, float]                     |         range          | slider's range (min value, max value) |
-|                               int or float                               |     default_value      | starting value for the slider |
-|                               int or float                               |       resolution       | the smallest amount the slider can be moved |
-|                               int or float                               |     tick_interval      | how often a visible tick should be shown next to slider |
-|                                   str                                    |      orientation       | 'horizontal' or 'vertical' ('h' or 'v' also work) |
-|                                   bool                                   | disable_number_display | if True no number will be displayed by the Slider Element |
-|                                   int                                    |      border_width      | width of border around element in pixels |
-|                               str or None                                |         relief         | relief style. Use constants - RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
-|                                   bool                                   |     change_submits     | * DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                   bool                                   |     enable_events      | If True then moving the slider will generate an Event |
-|                                   bool                                   |        disabled        | set disable state for element |
-|                                (int, int)                                |          size          | (w=characters-wide, h=rows-high) |
-|                        (int, int) or (None, None)                        |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                    (str or (str, int[, str]) or None)                    |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |    background_color    | color of slider's background |
-|                                   str                                    |       text_color       | color of the slider's text |
-|                                   str                                    |      trough_color      | color of the slider's trough |
-|                      str or int or tuple or object                       |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   |        expand_x        | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |        expand_y        | If True the element will automatically expand in the Y direction to fill available space |
-|                                   str                                    |        tooltip         | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |        visible         | set visibility state of the element |
-|                                   Any                                    |        metadata        | User metadata that can be set to ANYTHING |
+|                       (int, int) or Tuple[float, float]                        |         range          | slider's range (min value, max value) |
+|                                  int or float                                  |     default_value      | starting value for the slider |
+|                                  int or float                                  |       resolution       | the smallest amount the slider can be moved |
+|                                  int or float                                  |     tick_interval      | how often a visible tick should be shown next to slider |
+|                                      str                                       |      orientation       | 'horizontal' or 'vertical' ('h' or 'v' also work) |
+|                                      bool                                      | disable_number_display | if True no number will be displayed by the Slider Element |
+|                                      int                                       |      border_width      | width of border around element in pixels |
+|                                  str or None                                   |         relief         | relief style. Use constants - RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
+|                                      bool                                      |     change_submits     | * DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                      bool                                      |     enable_events      | If True then moving the slider will generate an Event |
+|                                      bool                                      |        disabled        | set disable state for element |
+|                                   (int, int)                                   |          size          | (l=length chars/rows, w=width pixels) |
+|                          (int, int)  or (None, None)                           |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                       (str or (str, int[, str]) or None)                       |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |    background_color    | color of slider's background |
+|                                      str                                       |       text_color       | color of the slider's text |
+|                                      str                                       |      trough_color      | color of the slider's trough |
+|                         str or int or tuple or object                          |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      |        expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      str                                       |        tooltip         | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |        visible         | set visibility state of the element |
+|                                      Any                                       |        metadata        | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -8121,27 +8127,27 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                         Tuple[Any] or List[Any]                          |      values      | List of valid values |
-|                                   Any                                    |  initial_value   | Initial item to show in window. Choose from list of values supplied |
-|                                   bool                                   |     disabled     | set disable state |
-|                                   bool                                   |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
-|                                   bool                                   |     readonly     | Turns on the element specific events. Spin events happen when an item changes |
-|                        (int, int) or (None, None)                        |       size       | (width, height) width = characters-wide, height = rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | if True will size the element to match the length of the text |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    | background_color | color of background |
-|                                   str                                    |    text_color    | color of the text |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                            Tuple[Any] or List[Any]                             |      values      | List of valid values |
+|                                      Any                                       |  initial_value   | Initial item to show in window. Choose from list of values supplied |
+|                                      bool                                      |     disabled     | set disable state |
+|                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. Spin events happen when an item changes |
+|                                      bool                                      |     readonly     | Turns on the element specific events. Spin events happen when an item changes |
+|                       (int, int)  or (None, None) or int                       |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | if True will size the element to match the length of the text |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       | background_color | color of background |
+|                                      str                                       |    text_color    | color of the text |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -8477,26 +8483,26 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |       text       | Text that is to be displayed in the widget |
-|                       (int, int)  or (None, None)                        |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | True if size should fit the text length |
-|                                   bool                                   |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. StatusBar events occur when the bar is clicked |
-|                                   enum                                   |      relief      | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |    text_color    | color of the text |
-|                                   str                                    | background_color | color of background |
-|                                   str                                    |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      str                                       |       text       | Text that is to be displayed in the widget |
+|                       (int, int) or  (int, None) or int                        |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | True if size should fit the text length |
+|                                      bool                                      |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. StatusBar events occur when the bar is clicked |
+|                                      enum                                      |      relief      | relief style. Values are same as progress meter relief values. Can be a constant or a string: `RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID` |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |    text_color    | color of the text |
+|                                      str                                       | background_color | color of background |
+|                                      str                                       |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -8771,6 +8777,18 @@ Parameter Descriptions:
 
 ---------
 
+## Stretch Element 
+
+Acts like a Stretch element found in the Qt port.
+Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
+Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
+
+```
+Stretch()
+```
+
+---------
+
 ## Tab Element 
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
@@ -8800,23 +8818,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |         title         | text to show on the tab |
-|                           List[List[Element]]                            |        layout         | The element layout that will be shown in the tab |
-|                                   str                                    |      title_color      | color of the tab text (note not currently working on tkinter) |
-|                                   str                                    |   background_color    | color of background of the entire layout |
-|                    (str or (str, int[, str]) or None)                    |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad          | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   bool                                   |       disabled        | If True button will be created disabled |
-|                                   int                                    |     border_width      | width of border around element in pixels |
-|                      str or int or tuple or object                       |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |        tooltip        | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |        visible        | set visibility state of the element |
-|                                   str                                    | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
-|                                   Any                                    |       metadata        | User metadata that can be set to ANYTHING |
+|                                      str                                       |         title         | text to show on the tab |
+|                              List[List[Element]]                               |        layout         | The element layout that will be shown in the tab |
+|                                      str                                       |      title_color      | color of the tab text (note not currently working on tkinter) |
+|                                      str                                       |   background_color    | color of background of the entire layout |
+|                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      bool                                      |       disabled        | If True button will be created disabled |
+|                                      int                                       |     border_width      | width of border around element in pixels |
+|                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |       expand_x        | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |       expand_y        | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |        visible        | set visibility state of the element |
+|                                      str                                       | element_justification | All elements inside the Tab will have this justification 'left', 'right', 'center' are valid values |
+|                                      Any                                       |       metadata        | User metadata that can be set to ANYTHING |
 
 ### add_row
 
@@ -9191,29 +9209,29 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                             List[List[Tab]]                              |          layout           | Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row |
-|                                   str                                    |       tab_location        | location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright |
-|                                   str                                    |        title_color        | color of text on tabs |
-|                                   str                                    |   tab_background_color    | color of all tabs that are not selected |
-|                                   str                                    |   selected_title_color    | color of tab text when it is selected |
-|                                   str                                    | selected_background_color | color of tab when it is selected |
-|                                   str                                    |     background_color      | color of background area that tabs are located on |
-|                    (str or (str, int[, str]) or None)                    |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
-|                                   bool                                   |       enable_events       | If True then switching tabs will generate an Event |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |            pad            | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                                   int                                    |       border_width        | width of border around element in pixels |
-|                                   enum                                   |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
-|                      str or int or tuple or object                       |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                          (intorNone, intorNone)                          |           size            | (width, height) w=pixels-wide, h=pixels-high. Either item in tuple can be None to indicate use the computed value and set only 1 direction |
-|                          (intorNone, intorNone)                          |             s             | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   str                                    |          tooltip          | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      |     right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |         expand_x          | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |         expand_y          | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |          visible          | set visibility state of the element |
-|                                   Any                                    |         metadata          | User metadata that can be set to ANYTHING |
+|                                List[List[Tab]]                                 |          layout           | Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row |
+|                                      str                                       |       tab_location        | location that tabs will be displayed. Choices are left, right, top, bottom, lefttop, leftbottom, righttop, rightbottom, bottomleft, bottomright, topleft, topright |
+|                                      str                                       |        title_color        | color of text on tabs |
+|                                      str                                       |   tab_background_color    | color of all tabs that are not selected |
+|                                      str                                       |   selected_title_color    | color of tab text when it is selected |
+|                                      str                                       | selected_background_color | color of tab when it is selected |
+|                                      str                                       |     background_color      | color of background area that tabs are located on |
+|                       (str or (str, int[, str]) or None)                       |           font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
+|                                      bool                                      |       enable_events       | If True then switching tabs will generate an Event |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad            | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                                      int                                       |       border_width        | width of border around element in pixels |
+|                                      enum                                      |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
+|                         str or int or tuple or object                          |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |             k             | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                             (intorNone, intorNone)                             |           size            | (width, height) w=pixels-wide, h=pixels-high. Either item in tuple can be None to indicate use the computed value and set only 1 direction |
+|                             (intorNone, intorNone)                             |             s             | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      str                                       |          tooltip          | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |     right_click_menu      | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |         expand_x          | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |         expand_y          | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |          visible          | set visibility state of the element |
+|                                      Any                                       |         metadata          | User metadata that can be set to ANYTHING |
 
 ### add_tab
 
@@ -9576,42 +9594,42 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                     List[List[str or int or float]]                      |         values          | ??? |
-|                                List[str]                                 |        headings         | The headings to show on the top line |
-|                                List[bool]                                |   visible_column_map    | One entry for each column. False indicates the column is not shown |
-|                                List[int]                                 |       col_widths        | Number of characters that each column will occupy |
-|                                   int                                    |      def_col_width      | Default column width in characters |
-|                                   bool                                   |    auto_size_columns    | if True columns will be sized automatically |
-|                                   int                                    |      max_col_width      | Maximum width for all columns in characters |
-|                                   enum                                   |       select_mode       | Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
-|                                   bool                                   |   display_row_numbers   | if True, the first column of the table will be the row # |
-|                                   int                                    |        num_rows         | The number of rows of the table to display at a time |
-|                                   int                                    |       row_height        | height of a single row in pixels |
-|                    (str or (str, int[, str]) or None)                    |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |      justification      | 'left', 'right', 'center' are valid choices |
-|                                   str                                    |       text_color        | color of the text |
-|                                   str                                    |    background_color     | color of background |
-|                                   str                                    |  alternating_row_color  | if set then every other row will have this color in the background. |
-|                            str or (str, str)                             |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
-|                                   str                                    |    header_text_color    | sets the text color for the header |
-|                                   str                                    | header_background_color | sets the background color for the header |
-|                    (str or (str, int[, str]) or None)                    |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|              List[Tuple[int, str] or Tuple[Int, str, str]]               |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
-|                                   bool                                   |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
-|                                   bool                                   |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
-|                                (int, int)                                |          size           | DO NOT USE! Use num_rows instead |
-|                                   bool                                   |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
-|                                   bool                                   |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |         tooltip         | text, that will appear when mouse hovers over the element |
-|                      List[List[ List[str] or str ]]                      |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |         visible         | set visibility state of the element |
-|                                   Any                                    |        metadata         | User metadata that can be set to ANYTHING |
+|                        List[List[str or int or float]]                         |         values          | ??? |
+|                                   List[str]                                    |        headings         | The headings to show on the top line |
+|                                   List[bool]                                   |   visible_column_map    | One entry for each column. False indicates the column is not shown |
+|                                   List[int]                                    |       col_widths        | Number of characters that each column will occupy |
+|                                      int                                       |      def_col_width      | Default column width in characters |
+|                                      bool                                      |    auto_size_columns    | if True columns will be sized automatically |
+|                                      int                                       |      max_col_width      | Maximum width for all columns in characters |
+|                                      enum                                      |       select_mode       | Select Mode. Valid values start with "TABLE_SELECT_MODE_". Valid values are: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
+|                                      bool                                      |   display_row_numbers   | if True, the first column of the table will be the row # |
+|                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
+|                                      int                                       |       row_height        | height of a single row in pixels |
+|                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
+|                                      str                                       |       text_color        | color of the text |
+|                                      str                                       |    background_color     | color of background |
+|                                      str                                       |  alternating_row_color  | if set then every other row will have this color in the background. |
+|                               str or (str, str)                                |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
+|                                      str                                       |    header_text_color    | sets the text color for the header |
+|                                      str                                       | header_background_color | sets the background color for the header |
+|                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                 List[Tuple[int, str] or Tuple[Int, str, str]]                  |       row_colors        | list of tuples of (row, background color) OR (row, foreground color, background color). Sets the colors of listed rows to the color(s) provided (note the optional foreground color) |
+|                                      bool                                      |  vertical_scroll_only   | if True only the vertical scrollbar will be visible |
+|                                      bool                                      |  hide_vertical_scroll   | if True vertical scrollbar will be hidden |
+|                                   (int, int)                                   |          size           | DO NOT USE! Use num_rows instead |
+|                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
+|                                      bool                                      |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
+|                         List[List[ List[str] or str ]]                         |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |         visible         | set visibility state of the element |
+|                                      Any                                       |        metadata         | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -9947,28 +9965,28 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   Any                                    |       text       | The text to display. Can include /n to achieve multiple lines. Will convert (optional) parameter into a string |
-|                (int, int) or  (int, None) or (None, None)                |       size       | (width, height) width = characters-wide, height = rows-high |
-|                (int, int) or  (int, None) or (None, None)                |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |  auto_size_text  | if True size of the Text Element will be sized to fit the string provided in 'text' parm |
-|                                   bool                                   |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
-|                                (str/enum)                                |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID` |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |    text_color    | color of the text |
-|                                   str                                    | background_color | color of background |
-|                                   int                                    |   border_width   | number of pixels for the border (if using a relief) |
-|                                   str                                    |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                      List[List[ List[str] or str ]]                      | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |       grab       | If True can grab this element and move the window around. Default is False |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   bool                                   |     visible      | set visibility state of the element |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      Any                                       |       text       | The text to display. Can include /n to achieve multiple lines. Will convert (optional) parameter into a string |
+|          (int, int) or  (int, None) or (None, None) or (int, ) or int          |       size       | (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1 |
+|          (int, int) or  (int, None) or (None, None) or (int, ) or int          |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |  auto_size_text  | if True size of the Text Element will be sized to fit the string provided in 'text' parm |
+|                                      bool                                      |  click_submits   | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |  enable_events   | Turns on the element specific events. Text events happen when the text is clicked |
+|                                   (str/enum)                                   |      relief      | relief style around the text. Values are same as progress meter relief values. Should be a constant that is defined at starting with "RELIEF_" - `RELIEF_RAISED, RELIEF_SUNKEN, RELIEF_FLAT, RELIEF_RIDGE, RELIEF_GROOVE, RELIEF_SOLID` |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |    text_color    | color of the text |
+|                                      str                                       | background_color | color of background |
+|                                      int                                       |   border_width   | number of pixels for the border (if using a relief) |
+|                                      str                                       |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |       grab       | If True can grab this element and move the window around. Default is False |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      bool                                      |     visible      | set visibility state of the element |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 
 ### bind
 
@@ -10336,37 +10354,37 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                 TreeData                                 |          data           | The data represented using a PySimpleGUI provided TreeData class |
-|                                List[str]                                 |        headings         | List of individual headings for each column |
-|                                List[bool]                                |   visible_column_map    | Determines if a column should be visible. If left empty, all columns will be shown |
-|                                List[int]                                 |       col_widths        | List of column widths so that individual column widths can be controlled |
-|                                   int                                    |       col0_width        | Size of Column 0 which is where the row numbers will be optionally shown |
-|                                   int                                    |      def_col_width      | default column width |
-|                                   bool                                   |    auto_size_columns    | if True, the size of a column is determined using the contents of the column |
-|                                   int                                    |      max_col_width      | the maximum size a column can be |
-|                                   enum                                   |       select_mode       | Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
-|                                   bool                                   |      show_expanded      | if True then the tree will be initially shown with all nodes completely expanded |
-|                                   bool                                   |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
-|                                   bool                                   |      enable_events      | Turns on the element specific events. Tree events happen when row is clicked |
-|                    (str or (str, int[, str]) or None)                    |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |      justification      | 'left', 'right', 'center' are valid choices |
-|                                   str                                    |       text_color        | color of the text |
-|                                   str                                    |    background_color     | color of background |
-|                            str or (str, str)                             |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
-|                                   str                                    |    header_text_color    | sets the text color for the header |
-|                                   str                                    | header_background_color | sets the background color for the header |
-|                    (str or (str, int[, str]) or None)                    |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   int                                    |        num_rows         | The number of rows of the table to display at a time |
-|                                   int                                    |       row_height        | height of a single row in pixels |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |           pad           | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
-|                      str or int or tuple or object                       |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |         tooltip         | text, that will appear when mouse hovers over the element |
-|                         List[List[str] or str]]                          |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                                   bool                                   |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
-|                                   bool                                   |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
-|                                   bool                                   |         visible         | set visibility state of the element |
-|                                   Any                                    |        metadata         | User metadata that can be set to ANYTHING |
+|                                    TreeData                                    |          data           | The data represented using a PySimpleGUI provided TreeData class |
+|                                   List[str]                                    |        headings         | List of individual headings for each column |
+|                                   List[bool]                                   |   visible_column_map    | Determines if a column should be visible. If left empty, all columns will be shown |
+|                                   List[int]                                    |       col_widths        | List of column widths so that individual column widths can be controlled |
+|                                      int                                       |       col0_width        | Size of Column 0 which is where the row numbers will be optionally shown |
+|                                      int                                       |      def_col_width      | default column width |
+|                                      bool                                      |    auto_size_columns    | if True, the size of a column is determined using the contents of the column |
+|                                      int                                       |      max_col_width      | the maximum size a column can be |
+|                                      enum                                      |       select_mode       | Use same values as found on Table Element. Valid values include: TABLE_SELECT_MODE_NONE TABLE_SELECT_MODE_BROWSE TABLE_SELECT_MODE_EXTENDED |
+|                                      bool                                      |      show_expanded      | if True then the tree will be initially shown with all nodes completely expanded |
+|                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
+|                                      bool                                      |      enable_events      | Turns on the element specific events. Tree events happen when row is clicked |
+|                       (str or (str, int[, str]) or None)                       |          font           | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |      justification      | 'left', 'right', 'center' are valid choices |
+|                                      str                                       |       text_color        | color of the text |
+|                                      str                                       |    background_color     | color of background |
+|                               str or (str, str)                                |   selected_row_colors   | Sets the text color and background color for a selected row. Same format as button colors - tuple ('red', 'yellow') or string 'red on yellow'. Defaults to theme's button color |
+|                                      str                                       |    header_text_color    | sets the text color for the header |
+|                                      str                                       | header_background_color | sets the background color for the header |
+|                       (str or (str, int[, str]) or None)                       |       header_font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
+|                                      int                                       |       row_height        | height of a single row in pixels |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
+|                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
+|                            List[List[str] or str]]                             |    right_click_menu     | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                                      bool                                      |        expand_x         | If True the element will automatically expand in the X direction to fill available space |
+|                                      bool                                      |        expand_y         | If True the element will automatically expand in the Y direction to fill available space |
+|                                      bool                                      |         visible         | set visibility state of the element |
+|                                      Any                                       |        metadata         | User metadata that can be set to ANYTHING |
 
 ### add_treeview_data
 
@@ -10761,10 +10779,10 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |  pad  | Amount of padding to put around element (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                      str or int or tuple or object                       |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
-|                      str or int or tuple or object                       |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |  pad  | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
+|                         str or int or tuple or object                          |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
 ### bind
 
@@ -10941,6 +10959,17 @@ Returns visibility state for the element.  This is a READONLY property
 |Type|Name|Meaning|
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
+
+---------
+
+## VStretch Element
+
+Acts like a Stretch element found in the Qt port.
+Used in a Vertical fashion.
+
+```
+VStretch()
+```
 
 ---------
 
@@ -11220,7 +11249,7 @@ Parameter Descriptions:
 ```
 Window(title,
     layout = None,
-    default_element_size = (45, 1),
+    default_element_size = None,
     default_button_element_size = (None, None),
     auto_size_text = None,
     auto_size_buttons = None,
@@ -11274,56 +11303,56 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                        str                        |                title                 | The title that will be displayed in the Titlebar and on the Taskbar |
-|               List[List[Elements]]                |                layout                | The layout for the window. Can also be specified in the Layout method |
-|           (int, int) - (width, height)            |         default_element_size         | size in characters (wide) and rows (high) for all elements in this window |
-|                    (int, int)                     |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
-|                       bool                        |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
-|                       bool                        |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
-|                    (int, int)                     |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
-|                    (int, int)                     |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user |
-|        (int, int or (int, int),(int,int))         |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)) |
-|                    (int, int)                     |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
-|                 (str, str) or str                 |             button_color             | Default button colors for all buttons in the window |
-|        (str or (str, int[, str]) or None)         |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                    (str, str)                     |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
-|                        str                        |           background_color           | color of background |
-|                        int                        |             border_depth             | Default border depth (width) for all elements in the window |
-|                       bool                        |              auto_close              | If True, the window will automatically close itself |
-|                        int                        |         auto_close_duration          | Number of seconds to wait before closing the window |
-|                  (str or bytes)                   |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's |
-|                       bool                        |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
-|                       float                       |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
-|                       bool                        |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
-|                       bool                        |          use_default_focus           | If True will use the default focus algorithm to set the focus to the "Correct" element |
-|           'left' or 'right' or 'center'           |          text_justification          | Default text justification for all Text Elements in window |
-|                       bool                        |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
-|                       bool                        |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
-|                       bool                        |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
-|                       bool                        |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
-|                       bool                        |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
-|                       bool                        |           disable_minimize           | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
-|          List[List[ List[str] or str ]]           |           right_click_menu           | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
-|                        str                        |          transparent_color           | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
-|                       bool                        |           debugger_enabled           | If True then the internal debugger will be enabled |
-|                        str                        |  right_click_menu_background_color   | Background color for right click menus |
-|                        str                        |     right_click_menu_text_color      | Text color for right click menus |
-|                        str                        | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
-| (str, str) or str or Tuple(int, int) or (None, None) |   right_click_menu_selected_colors   | Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background. |
-|        (str or (str, int[, str]) or None)         |        right_click_menu_font         | Font for right click menus |
-|                       bool                        |       right_click_menu_tearoff       | If True then all right click menus can be torn off |
-|                       bool                        |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
-|                        str                        |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
-|                        str                        |              ttk_theme               | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
-|                       bool                        |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
-|                       bool                        |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
-|                       bool                        |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
-|                   (str or None)                   |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
-|                   (str or None)                   |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
-|        (str or (str, int[, str]) or None)         |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
-|                  (bytes or str)                   |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
-|                       bool                        |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
-|                        Any                        |               metadata               | User metadata that can be set to ANYTHING |
+|                    str                    |                title                 | The title that will be displayed in the Titlebar and on the Taskbar |
+|           List[List[Elements]]            |                layout                | The layout for the window. Can also be specified in the Layout method |
+|       (int, int) - (width, height)        |         default_element_size         | size in characters (wide) and rows (high) for all elements in this window |
+|                (int, int)                 |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
+|                   bool                    |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
+|                   bool                    |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|                (int, int)                 |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
+|                (int, int)                 |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
+| (int, int or (int, int),(int,int)) or int |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
+|                (int, int)                 |               margins                | (left/right, top/bottom) Amount of pixels to leave inside the window's frame around the edges before your elements are shown. |
+|             (str, str) or str             |             button_color             | Default button colors for all buttons in the window |
+|    (str or (str, int[, str]) or None)     |                 font                 | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                (str, str)                 |          progress_bar_color          | (bar color, background color) Sets the default colors for all progress bars in the window |
+|                    str                    |           background_color           | color of background |
+|                    int                    |             border_depth             | Default border depth (width) for all elements in the window |
+|                   bool                    |              auto_close              | If True, the window will automatically close itself |
+|                    int                    |         auto_close_duration          | Number of seconds to wait before closing the window |
+|              (str or bytes)               |                 icon                 | Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's |
+|                   bool                    |            force_toplevel            | If True will cause this window to skip the normal use of a hidden master window |
+|                   float                   |            alpha_channel             | Sets the opacity of the window. 0 = invisible 1 = completely visible. Values bewteen 0 & 1 will produce semi-transparent windows in SOME environments (The Raspberry Pi always has this value at 1 and cannot change. |
+|                   bool                    |        return_keyboard_events        | if True key presses on the keyboard will be returned as Events from Read calls |
+|                   bool                    |          use_default_focus           | If True will use the default focus algorithm to set the focus to the "Correct" element |
+|       'left' or 'right' or 'center'       |          text_justification          | Default text justification for all Text Elements in window |
+|                   bool                    |             no_titlebar              | If true, no titlebar nor frame will be shown on window. This means you cannot minimize the window and it will not show up on the taskbar |
+|                   bool                    |            grab_anywhere             | If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems |
+|                   bool                    |             keep_on_top              | If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm |
+|                   bool                    |              resizable               | If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing. |
+|                   bool                    |            disable_close             | If True, the X button in the top right corner of the window will no work. Use with caution and always give a way out toyour users |
+|                   bool                    |           disable_minimize           | if True the user won't be able to minimize window. Good for taking over entire screen and staying that way. |
+|      List[List[ List[str] or str ]]       |           right_click_menu           | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
+|                    str                    |          transparent_color           | Any portion of the window that has this color will be completely transparent. You can even click through these spots to the window under this window. |
+|                   bool                    |           debugger_enabled           | If True then the internal debugger will be enabled |
+|                    str                    |  right_click_menu_background_color   | Background color for right click menus |
+|                    str                    |     right_click_menu_text_color      | Text color for right click menus |
+|                    str                    | right_click_menu_disabled_text_color | Text color for disabled right click menu items |
+|        (str, str) or str or Tuple         |   right_click_menu_selected_colors   | Text AND background colors for a selected item. Can be a Tuple OR a color string. simplified-button-color-string "foreground on background". Can be a single color if want to set only the background. Normally a tuple, but can be a simplified-dual-color-string "foreground on background". Can be a single color if want to set only the background. |
+|    (str or (str, int[, str]) or None)     |        right_click_menu_font         | Font for right click menus |
+|                   bool                    |       right_click_menu_tearoff       | If True then all right click menus can be torn off |
+|                   bool                    |               finalize               | If True then the Finalize method will be called. Use this rather than chaining .Finalize for cleaner code |
+|                    str                    |        element_justification         | All elements in the Window itself will have this justification 'left', 'right', 'center' are valid values |
+|                    str                    |              ttk_theme               | Set the tkinter ttk "theme" of the window. Default = DEFAULT_TTK_THEME. Sets all ttk widgets to this theme as their default |
+|                   bool                    |           use_ttk_buttons            | Affects all buttons in window. True = use ttk buttons. False = do not use ttk buttons. None = use ttk buttons only if on a Mac |
+|                   bool                    |                modal                 | If True then this window will be the only window a user can interact with until it is closed |
+|                   bool                    |     enable_close_attempted_event     | If True then the window will not close when "X" clicked. Instead an event WINDOW_CLOSE_ATTEMPTED_EVENT if returned from window.read |
+|               (str or None)               |      titlebar_background_color       | If custom titlebar indicated by use_custom_titlebar, then use this as background color |
+|               (str or None)               |         titlebar_text_color          | If custom titlebar indicated by use_custom_titlebar, then use this as text color |
+|    (str or (str, int[, str]) or None)     |            titlebar_font             | If custom titlebar indicated by use_custom_titlebar, then use this as title font |
+|              (bytes or str)               |            titlebar_icon             | If custom titlebar indicated by use_custom_titlebar, then use this as the icon (file or base64 bytes) |
+|                   bool                    |         use_custom_titlebar          | If True, then a custom titlebar will be used instead of the normal titlebar |
+|                    Any                    |               metadata               | User metadata that can be set to ANYTHING |
 
 ### add_row
 
@@ -11404,15 +11433,21 @@ close()
 ### current_location
 
 Get the current location of the window's top left corner.
-Note that this value may not take into account the titlebar and menubar.
-These parts of a window are created by the OS.  As a result, the value returned may be
-off depending on if your window has a titlebar or menubar.
+Sometimes, depending on the environment, the value returned does not include the titlebar,etc
+A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
+The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
+Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
 
-`current_location()`
+```
+current_location(more_accurate = False)
+```
+
+Parameter Descriptions:
 
 |Type|Name|Meaning|
-|---|---|---|
-|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
+|--|--|--|
+| bool | more_accurate | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| Tuple[(int or None), (int or None)] | **RETURN** | The x and y location in tuple form (x,y)
 
 ### ding
 
@@ -11636,6 +11671,25 @@ Hides the window from the screen and the task bar
 
 ```python
 hide()
+```
+
+### keep_on_top_clear
+
+Clears keep_on_top after a window has been created.  Effect is the same
+        as if the window was created with this set.
+
+```python
+keep_on_top_clear()
+```
+
+### keep_on_top_set
+
+Sets keep_on_top after a window has been created.  Effect is the same
+        as if the window was created with this set.  The Window is also brought
+        to the front
+
+```python
+keep_on_top_set()
 ```
 
 ### key_dict
@@ -12038,15 +12092,21 @@ Close()
 ### CurrentLocation
 
 Get the current location of the window's top left corner.
-Note that this value may not take into account the titlebar and menubar.
-These parts of a window are created by the OS.  As a result, the value returned may be
-off depending on if your window has a titlebar or menubar.
+Sometimes, depending on the environment, the value returned does not include the titlebar,etc
+A new option, more_accurate, can be used to get the theoretical upper leftmost corner of the window.
+The titlebar and menubar are crated by the OS. It gets really confusing when running in a webpage (repl, trinket)
+Thus, the values can appear top be "off" due to the sometimes unpredictable way the location is calculated.
 
-`CurrentLocation()`
+```
+CurrentLocation(more_accurate = False)
+```
+
+Parameter Descriptions:
 
 |Type|Name|Meaning|
-|---|---|---|
-|Tuple[(int), (int)]| **return** | The x and y location in tuple form (x,y) |
+|--|--|--|
+| bool | more_accurate | If True, will use the window's geometry to get the topmost location with titlebar, menubar taken into account |
+| Tuple[(int or None), (int or None)] | **RETURN** | The x and y location in tuple form (x,y)
 
 ### Disable
 
@@ -12840,35 +12900,35 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |      button_text       | text in the button |
-|                            (int, int) or Any                             |         target         | Key or "coordinate" (see docs) of target element |
-|                                   bool                                   | close_when_date_chosen | (Default = True) |
-|                         (int, int or None, int)                          |   default_date_m_d_y   | Beginning date to show |
-|                image filename if there is a button image                 |     image_filename     | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |       image_data       | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |       image_size       | image size (O.K.) |
-|                  amount to reduce the size of the image                  |    image_subsample     | amount to reduce the size of the image |
-|                                   str                                    |        tooltip         | text, that will appear when mouse hovers over the element |
-|                      width of border around element                      |      border_width      | width of border around element |
-|                                (int, int)                                |          size          | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   |    auto_size_button    | True if button size is determined by button text |
-|                            (str, str) or str                             |      button_color      | button color (foreground, background) |
-|                                   bool                                   |        disabled        | set disable state for element (Default = False) |
-|                    (str or (str, int[, str]) or None)                    |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |         focus          | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |          key           | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    |         locale         | defines the locale used to get day names |
-|                                   str                                    |         format         | formats result using this strftime format |
-|                                List[str]                                 |      month_names       | optional list of month names to use (should be 12 items) |
-|                                List[str]                                 |   day_abbreviations    | optional list of abbreviations to display as the day of week |
-|                                   str                                    |         title          | Title shown on the date chooser window |
-|                                   bool                                   |      no_titlebar       | if True no titlebar will be shown on the date chooser window |
-|                                (int, int)                                |        location        | Location on the screen (x,y) to show the calendar popup window |
-|                                   Any                                    |        metadata        | Anything you want to store along with this button |
+|                                      str                                       |      button_text       | text in the button |
+|                               (int, int) or Any                                |         target         | Key or "coordinate" (see docs) of target element |
+|                                      bool                                      | close_when_date_chosen | (Default = True) |
+|                            (int, int or None, int)                             |   default_date_m_d_y   | Beginning date to show |
+|                   image filename if there is a button image                    |     image_filename     | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |       image_data       | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |       image_size       | image size (O.K.) |
+|                     amount to reduce the size of the image                     |    image_subsample     | amount to reduce the size of the image |
+|                                      str                                       |        tooltip         | text, that will appear when mouse hovers over the element |
+|                         width of border around element                         |      border_width      | width of border around element |
+|                                   (int, int)                                   |          size          | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |           s            | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      |    auto_size_button    | True if button size is determined by button text |
+|                               (str, str) or str                                |      button_color      | button color (foreground, background) |
+|                                      bool                                      |        disabled        | set disable state for element (Default = False) |
+|                       (str or (str, int[, str]) or None)                       |          font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |         focus          | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |          key           | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       |         locale         | defines the locale used to get day names |
+|                                      str                                       |         format         | formats result using this strftime format |
+|                                   List[str]                                    |      month_names       | optional list of month names to use (should be 12 items) |
+|                                   List[str]                                    |   day_abbreviations    | optional list of abbreviations to display as the day of week |
+|                                      str                                       |         title          | Title shown on the date chooser window |
+|                                      bool                                      |      no_titlebar       | if True no titlebar will be shown on the date chooser window |
+|                                   (int, int)                                   |        location        | Location on the screen (x,y) to show the calendar popup window |
+|                                      Any                                       |        metadata        | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -12892,20 +12952,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Cancel') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Cancel') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -12935,26 +12995,26 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                            str or (int, int)                             |      target      | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
-|                                   str                                    |  image_filename  | image filename if there is a button image. GIFs and PNGs only. |
-|                               bytes or str                               |    image_data    | Raw or Base64 representation of the image to put on button. Choose either filename or data |
-|                                (int, int)                                |    image_size    | Size of the image in pixels (width, height) |
-|                                   int                                    | image_subsample  | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   int                                    |   border_width   | width of border around element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |      focus       | Determines if initial focus should go to this element. |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | User metadata that can be set to ANYTHING |
+|                                      str                                       |   button_text    | text in the button |
+|                               str or (int, int)                                |      target      | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
+|                                      str                                       |  image_filename  | image filename if there is a button image. GIFs and PNGs only. |
+|                                  bytes or str                                  |    image_data    | Raw or Base64 representation of the image to put on button. Choose either filename or data |
+|                                   (int, int)                                   |    image_size    | Size of the image in pixels (width, height) |
+|                                      int                                       | image_subsample  | amount to reduce the size of the image. Divides the size by this number. 2=1/2, 3=1/3, 4=1/4, etc |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      int                                       |   border_width   | width of border around element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |      focus       | Determines if initial focus should go to this element. |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -12978,20 +13038,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = '') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = '') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13020,25 +13080,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   int                                    |   border_width   | width of border around element |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      int                                       |   border_width   | width of border around element |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13062,20 +13122,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Exit') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Exit') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13102,23 +13162,23 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Browse') |
-|                            str or (int, int)                             |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                          Tuple[(str, str), ...]                          |    file_types    | filter file types (Default value = (("ALL Files", "*.*"))) |
-|                                                                          |  initial_folder  | starting path for folders and files |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
-|                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
+|                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
+|                             Tuple[(str, str), ...]                             |    file_types    | filter file types (Default value = (("ALL Files", "*.*"))) |
+|                                                                                |  initial_folder  | starting path for folders and files |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13146,24 +13206,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |    button_text    | text in the button (Default value = 'Save As...') |
-|                            str or (int, int)                             |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                          Tuple[(str, str), ...]                          |    file_types     | (Default value = (("ALL Files", "*.*"))) |
-|                                   str                                    | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|                                   str                                    |  initial_folder   | starting path for folders and files |
-|                                   bool                                   |     disabled      | set disable state for element (Default = False) |
-|                                   str                                    |      tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size        | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button  | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color    | button color (foreground, background) |
-|                                   bool                                   |  change_submits   | If True, pressing Enter key submits window (Default = False) |
-|                                   bool                                   |   enable_events   | Turns on the element specific events.(Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata      | Anything you want to store along with this button |
+|                                      str                                       |    button_text    | text in the button (Default value = 'Save As...') |
+|                               str or (int, int)                                |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
+|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.*"))) |
+|                                      str                                       | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                      str                                       |  initial_folder   | starting path for folders and files |
+|                                      bool                                      |     disabled      | set disable state for element (Default = False) |
+|                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size        | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button  | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color    | button color (foreground, background) |
+|                                      bool                                      |  change_submits   | If True, pressing Enter key submits window (Default = False) |
+|                                      bool                                      |   enable_events   | Turns on the element specific events.(Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |        key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
@@ -13193,24 +13253,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Browse') |
-|                            str or (int, int)                             |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                          Tuple[(str, str), ...]                          |    file_types    | (Default value = (("ALL Files", "*.*"))) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |  initial_folder  | starting path for folders and files |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
-|                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   str                                    | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
+|                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
+|                             Tuple[(str, str), ...]                             |    file_types    | (Default value = (("ALL Files", "*.*"))) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |  initial_folder  | starting path for folders and files |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      str                                       | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13236,22 +13296,22 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Browse') |
-|                            str or (int, int)                             |      target      | target for the button (Default value = (ThisRow, -1)) |
-|                                   str                                    |  initial_folder  | starting path for folders and files |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                                                                          |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   |  change_submits  | If True, pressing Enter key submits window (Default = False) |
-|                                   bool                                   |  enable_events   | Turns on the element specific events.(Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element |
-|                      str or int or tuple or object                       |       key        | Used with window.find_element and with return values to uniquely identify this element |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
+|                               str or (int, int)                                |      target      | target for the button (Default value = (ThisRow, -1)) |
+|                                      str                                       |  initial_folder  | starting path for folders and files |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                                                                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      |  change_submits  | If True, pressing Enter key submits window (Default = False) |
+|                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | The Button created
 
 ```
@@ -13275,20 +13335,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Help') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Help') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13312,20 +13372,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'No') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'No') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13349,20 +13409,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'OK') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'OK') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 Dumps an Object's values as a formatted string.  Very nicely done. Great way to display an object's member variables in human form
@@ -13414,20 +13474,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Ok') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Ok') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13451,20 +13511,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Open') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Open') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13488,20 +13548,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Quit') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Quit') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13530,25 +13590,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   int                                    |   border_width   | width of border around element |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      int                                       |   border_width   | width of border around element |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | Button created
 
 ```
@@ -13572,20 +13632,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Save') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Save') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13613,24 +13673,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |    button_text    | text in the button (Default value = 'Save As...') |
-|                            str or (int, int)                             |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                          Tuple[(str, str), ...]                          |    file_types     | (Default value = (("ALL Files", "*.*"))) |
-|                                   str                                    | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|                                   str                                    |  initial_folder   | starting path for folders and files |
-|                                   bool                                   |     disabled      | set disable state for element (Default = False) |
-|                                   str                                    |      tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size        | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button  | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color    | button color (foreground, background) |
-|                                   bool                                   |  change_submits   | If True, pressing Enter key submits window (Default = False) |
-|                                   bool                                   |   enable_events   | Turns on the element specific events.(Default = False) |
-|                    (str or (str, int[, str]) or None)                    |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |        key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata      | Anything you want to store along with this button |
+|                                      str                                       |    button_text    | text in the button (Default value = 'Save As...') |
+|                               str or (int, int)                                |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
+|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.*"))) |
+|                                      str                                       | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                      str                                       |  initial_folder   | starting path for folders and files |
+|                                      bool                                      |     disabled      | set disable state for element (Default = False) |
+|                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size        | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button  | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color    | button color (foreground, background) |
+|                                      bool                                      |  change_submits   | If True, pressing Enter key submits window (Default = False) |
+|                                      bool                                      |   enable_events   | Turns on the element specific events.(Default = False) |
+|                       (str or (str, int[, str]) or None)                       |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |        key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13654,20 +13714,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Submit') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Submit') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13691,20 +13751,20 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button (Default value = 'Yes') |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
-|                                                                          |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button (Default value = 'Yes') |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
+|                                                                                |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ## Button Functions No Longer Used (DO NOT USE)
@@ -13738,25 +13798,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   int                                    |   border_width   | width of border around element |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      int                                       |   border_width   | width of border around element |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | Button created
 
 ```
@@ -13785,25 +13845,25 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   int                                    |   border_width   | width of border around element |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      int                                       |   border_width   | width of border around element |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | Button created
 
 ```
@@ -13832,24 +13892,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13878,24 +13938,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                   str                                    |   button_text    | text in the button |
-|                image filename if there is a button image                 |  image_filename  | image filename if there is a button image |
-|                  in-RAM image to be displayed on button                  |    image_data    | in-RAM image to be displayed on button |
-|                            (Default = (None))                            |    image_size    | image size (O.K.) |
-|                  amount to reduce the size of the image                  | image_subsample  | amount to reduce the size of the image |
-|                                   str                                    |     tooltip      | text, that will appear when mouse hovers over the element |
-|                                (int, int)                                |       size       | (w,h) w=characters-wide, h=rows-high |
-|                        (int, int) or (None, None)                        |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                   bool                                   | auto_size_button | True if button size is determined by button text |
-|                            (str, str) or str                             |   button_color   | button color (foreground, background) |
-|                    (str or (str, int[, str]) or None)                    |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-|                                   bool                                   | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
-|                                   bool                                   |     disabled     | set disable state for element (Default = False) |
-|                              idk_yetReally                               |      focus       | if focus should be set to this |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) |
-|                      str or int or tuple or object                       |       key        | key for uniquely identify this element (for window.find_element) |
-|                      str or int or tuple or object                       |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                   Any                                    |     metadata     | Anything you want to store along with this button |
+|                                      str                                       |   button_text    | text in the button |
+|                   image filename if there is a button image                    |  image_filename  | image filename if there is a button image |
+|                     in-RAM image to be displayed on button                     |    image_data    | in-RAM image to be displayed on button |
+|                               (Default = (None))                               |    image_size    | image size (O.K.) |
+|                     amount to reduce the size of the image                     | image_subsample  | amount to reduce the size of the image |
+|                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
+|                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
+|                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                      bool                                      | auto_size_button | True if button size is determined by button text |
+|                               (str, str) or str                                |   button_color   | button color (foreground, background) |
+|                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
+|                                      bool                                      |     disabled     | set disable state for element (Default = False) |
+|                                 idk_yetReally                                  |      focus       | if focus should be set to this |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
+|                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                      Any                                       |     metadata     | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ## Debug Window Output
