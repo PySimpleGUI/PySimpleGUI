@@ -14,12 +14,7 @@ THEME = 'Dark green 3'  # Initial theme until user changes
 title_font = sg.user_settings_get_entry('-title font-', 'Courier 8')
 main_number_font = sg.user_settings_get_entry('-main number font-', 'Courier 70')
 main_info_size = (None, None)
-DAYS_OLD_ME = 20763
 # May add ability to change theme from the user interface.  For now forcing to constant
-
-GSIZE = (160, 160)
-UPDATE_FREQUENCY_MILLISECONDS = 1000 * 60 * 60  # update every hour
-
 
 def choose_theme(location):
     layout = [[sg.Text(f'Current theme {sg.theme()}')],
@@ -64,27 +59,25 @@ def make_window(location, test_window=False):
     # If this is a test window (for choosing theme), then uses some extra Text Elements to display theme info
     # and also enables events for the elements to make the window easy to close
     if test_window:
-        top_elements = [[sg.Text(title, expand_x=True, font=title_font,  k='-TITLE-', enable_events=True)],
+        top_elements = [[sg.Text(title, font=title_font,  k='-TITLE-', enable_events=True)],
                         [sg.Text('Click to close', font=title_font, enable_events=True)],
                         [sg.Text('This is theme', font=title_font, enable_events=True)],
                         [sg.Text(sg.theme(), font=title_font, enable_events=True)]]
         right_click_menu = [[''], ['Exit', ]]
     else:
-        top_elements = [[sg.Text(title, expand_x=True, font=title_font, justification='c', k='-TITLE-')]]
+        top_elements = [[sg.Stretch(), sg.Text(title, font=title_font, k='-TITLE-'), sg.Stretch()]]
 
         right_click_menu = [[''],
                             ['Set Counter', 'Choose Title', 'Edit Me', 'Change Theme', 'Set Button Font',
-                             'Set Title Font', 'Set Main Font', 'Set Click Sound', 'Alpha', [str(x) for x in range(1, 11)],
-                             'Exit', ]]
+                             'Set Title Font', 'Set Main Font', 'Set Click Sound', 'Show Settings', 'Alpha', [str(x) for x in range(1, 11)], 'Exit', ]]
 
     layout = top_elements + \
-             [[sg.Column([[sg.pin(sg.Text('0', size=main_info_size, font=main_number_font, k='-MAIN INFO NUM-', justification='c', enable_events=test_window, pad=(0, 0)))]],justification='c', element_justification='c', pad=(0,0))]] + \
-            [[sg.T('+', font=button_font, enable_events=True), sg.T('', expand_x=True), sg.T('-', font=button_font, enable_events=True)]]
+             [[sg.Column([[sg.pin(sg.Text('0', font=main_number_font, k='-MAIN INFO NUM-', justification='c', enable_events=test_window, pad=(0, 0)))]],justification='c', element_justification='c', pad=0)]] + \
+            [[sg.T('+', font=button_font, enable_events=True, pad=0), sg.Stretch(), sg.T('-', font=button_font, enable_events=True, pad=0)]]
 
     try:
-        window = sg.Window('Clicky Counter', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=(0, 0), alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, right_click_menu_tearoff=False,
-                           enable_close_attempted_event=True,
-                           keep_on_top=True)
+        window = sg.Window('Clicky Counter', layout, location=location, no_titlebar=True, grab_anywhere=True, margins=(0, 0), element_padding=0, alpha_channel=alpha, finalize=True, right_click_menu=right_click_menu, right_click_menu_tearoff=False,
+                           enable_close_attempted_event=True, keep_on_top=True)
     except Exception as e:
         if sg.popup_yes_no('Error creating your window', e, 'These are your current settings:', sg.user_settings(),
                            'Do you want to delete your settings file?') == 'Yes':
@@ -109,7 +102,7 @@ def main():
         # for debugging show the last update date time
 
         # -------------- Start of normal event loop --------------
-        event, values = window.read(timeout=UPDATE_FREQUENCY_MILLISECONDS)
+        event, values = window.read()
         print(event, values)
         if event == sg.WIN_CLOSED:
             break
@@ -128,7 +121,7 @@ def main():
             if new_count is not None:
                 counter = int(new_count)
         elif event == 'Choose Title':
-            new_title = sg.popup_get_text('Choose a title for your counter', default_text=sg.user_settings_get_entry('-coutitle-', ''), location=window.current_location(), keep_on_top=True)
+            new_title = sg.popup_get_text('Choose a title for your counter', default_text=sg.user_settings_get_entry('-title-', ''), location=window.current_location(), keep_on_top=True)
             if new_title is not None:
                 window['-TITLE-'].update(new_title)
                 sg.user_settings_set_entry('-title-', new_title)
@@ -170,7 +163,8 @@ def main():
                 sound_file = sg.popup_get_file('Choose the file to play when changing counter', file_types=(('WAV', '*.wav'),), keep_on_top=True, location=window.current_location(), default_path=sg.user_settings_get_entry('-sound file-', ''))
                 if sound_file is not None:
                     sg.user_settings_set_entry('-sound file-', sound_file)
-
+        elif event =='Show Settings':
+            sg.Print(sg.user_settings_object())
 
         sg.user_settings_set_entry('-counter-', counter)
 
