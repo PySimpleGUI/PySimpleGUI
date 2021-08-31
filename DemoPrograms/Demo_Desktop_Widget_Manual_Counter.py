@@ -164,7 +164,7 @@ def main():
                 if sound_file is not None:
                     sg.user_settings_set_entry('-sound file-', sound_file)
         elif event =='Show Settings':
-            sg.Print(sg.user_settings_object())
+            sg.Print(sg.UserSettings._default_for_function_interface)
 
         sg.user_settings_set_entry('-counter-', counter)
 
