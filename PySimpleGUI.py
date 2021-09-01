@@ -1,10 +1,16 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0 Released 30-Aug-2021"
+version = __version__ = "4.47.0.2 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
     
+
+    4,47.0.2
+        New set_option parm: keep_on_top - all windows will default to this value. If all your main_window has keep_on_top set
+            then you likely want all of your popups to also have it set. Now set it one time using this option.  You can override by manually
+            setting on a popup or window
+        Added user_settings_object to return the UserSettings object that the function level interfaces use (prints nicely for example)
  
 """
 
@@ -384,6 +390,7 @@ DEFAULT_WINDOW_LOCATION = (None, None)
 MAX_SCROLLED_TEXT_BOX_HEIGHT = 50
 DEFAULT_TOOLTIP_TIME = 400
 DEFAULT_TOOLTIP_OFFSET = (0, -20)
+DEFAULT_KEEP_ON_TOP = None
 TOOLTIP_BACKGROUND_COLOR = "#ffffe0"
 TOOLTIP_FONT = None
 #################### COLOR STUFF ####################
@@ -8068,7 +8075,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, resizable=False, disable_close=False,
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
                  right_click_menu_selected_colors=(None, None),
@@ -8224,6 +8231,10 @@ class Window:
         self.TextJustification = text_justification
         self.NoTitleBar = no_titlebar
         self.GrabAnywhere = grab_anywhere
+        if keep_on_top is None and DEFAULT_KEEP_ON_TOP is not None:
+            keep_on_top = DEFAULT_KEEP_ON_TOP
+        elif keep_on_top is None:
+            keep_on_top = False
         self.KeepOnTop = keep_on_top
         self.ForceTopLevel = force_toplevel
         self.Resizable = resizable
@@ -14978,7 +14989,7 @@ class QuickMeter(object):
     exit_reasons = {}
 
     def __init__(self, title, current_value, max_value, key, *args, orientation='v', bar_color=(None, None), button_color=(None, None),
-                 size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False, no_button=False):
+                 size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=None, no_button=False):
         """
 
         :param title:         text to display in element
@@ -15100,7 +15111,7 @@ class QuickMeter(object):
         return self.stat_messages
 
 
-def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=False, no_button=False):
+def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 1 meter', orientation='v', bar_color=(None, None), button_color=None, size=DEFAULT_PROGRESS_BAR_SIZE, border_width=None, grab_anywhere=False, no_titlebar=False, keep_on_top=None, no_button=False):
     """
     :param title:         text to display in eleemnt
     :type title:          (str)
@@ -15188,7 +15199,7 @@ class _DebugWin():
     debug_window = None
 
     def __init__(self, size=(None, None), location=(None, None), font=None, no_titlebar=False, no_button=False,
-                 grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, echo_stdout=False, resizable=True):
+                 grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, resizable=True):
         """
 
         :param size:                  (w,h) w=characters-wide, h=rows-high
@@ -15282,7 +15293,7 @@ class _DebugWin():
 
 
 def easy_print(*args, size=(None, None), end=None, sep=None, location=(None, None), font=None, no_titlebar=False,
-               no_button=False, grab_anywhere=False, keep_on_top=False, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
+               no_button=False, grab_anywhere=False, keep_on_top=None, do_not_reroute_stdout=True, echo_stdout=False, text_color=None, background_color=None, colors=None, c=None,
                erase_all=False, resizable=True):
     """
     Works like a "print" statement but with windowing options.  Routes output to the "Debug Window"
@@ -15600,7 +15611,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
                 suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
-                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None):
+                titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None):
     """
     :param icon:                            Can be either a filename or Base64 value. For Windows if filename, it MUST be ICO format. For Linux, must NOT be ICO. Most portable is to use a Base64 of a PNG file. This works universally across all OS's
     :type icon:                             bytes | str
@@ -15700,6 +15711,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type pysimplegui_settings_path:        (str)
     :param pysimplegui_settings_filename:   default filename for the global PySimpleGUI user_settings
     :type pysimplegui_settings_filename:    (str)
+    :param keep_on_top:                     If True then all windows will automatically be set to keep_on_top=True
+    :type keep_on_top:                      (bool)
     :return:                                None
     :rtype:                                 None
     """
@@ -15752,6 +15765,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global DEFAULT_USER_SETTINGS_PATH
     global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH
     global DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME
+    global DEFAULT_KEEP_ON_TOP
     global _pysimplegui_user_settings
     # global _my_windows
 
@@ -15910,6 +15924,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     if pysimplegui_settings_filename is not None or pysimplegui_settings_filename is not None:
         _pysimplegui_user_settings = UserSettings(filename=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_FILENAME,
                                                   path=DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH)
+
+    if keep_on_top is not None:
+        DEFAULT_KEEP_ON_TOP = keep_on_top
 
     return True
 
@@ -16972,7 +16989,7 @@ def clipboard_get():
 
 def popup(*args, title=None, button_color=None, background_color=None, text_color=None, button_type=POPUP_BUTTONS_OK, auto_close=False,
           auto_close_duration=None, custom_text=(None, None), non_blocking=False, icon=None, line_width=None, font=None, no_titlebar=False, grab_anywhere=False,
-          keep_on_top=False, location=(None, None), any_key_closes=False, image=None, modal=True):
+          keep_on_top=None, location=(None, None), any_key_closes=False, image=None, modal=True):
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
@@ -17129,7 +17146,7 @@ def MsgBox(*args):
 # ========================  Scrolled Text Box   =====#
 # ===================================================#
 def popup_scrolled(*args, title=None, button_color=None, background_color=None, text_color=None, yes_no=False, auto_close=False, auto_close_duration=None,
-                   size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=False, font=None,
+                   size=(None, None), location=(None, None), non_blocking=False, no_titlebar=False, grab_anywhere=False, keep_on_top=None, font=None,
                    image=None, icon=None, modal=True, no_sizegrip=False):
     """
     Show a scrolled Popup window containing the user's text that was supplied.  Use with as many items to print as you
@@ -17241,7 +17258,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
 # --------------------------- popup_no_buttons ---------------------------
 def popup_no_buttons(*args, title=None, background_color=None, text_color=None, auto_close=False,
                      auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                     no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                     no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """Show a Popup but without any buttons
 
     :param *args:               Variable number of items to display
@@ -17286,7 +17303,7 @@ def popup_no_buttons(*args, title=None, background_color=None, text_color=None, 
 # --------------------------- popup_non_blocking ---------------------------
 def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                        text_color=None, auto_close=False, auto_close_duration=None, non_blocking=True, icon=None,
-                       line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
+                       line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
                        location=(None, None), image=None, modal=False):
     """
     Show Popup window and immediately return (does not block)
@@ -17339,7 +17356,7 @@ def popup_non_blocking(*args, title=None, button_type=POPUP_BUTTONS_OK, button_c
 # --------------------------- popup_quick - a NonBlocking, Self-closing Popup  ---------------------------
 def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                 text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
+                font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=False):
     """
     Show Popup box that doesn't block and closes itself
 
@@ -17393,7 +17410,7 @@ def popup_quick(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=No
 # --------------------------- popup_quick_message - a NonBlocking, Self-closing Popup with no titlebar and no buttons ---------------------------
 def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS, button_color=None, background_color=None,
                         text_color=None, auto_close=True, auto_close_duration=2, non_blocking=True, icon=None, line_width=None,
-                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=False):
+                        font=None, no_titlebar=True, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=False):
     """
     Show Popup window with no titlebar, doesn't block, and auto closes itself.
 
@@ -17446,7 +17463,7 @@ def popup_quick_message(*args, title=None, button_type=POPUP_BUTTONS_NO_BUTTONS,
 # --------------------------- PopupNoTitlebar ---------------------------
 def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None,
                       text_color=None, auto_close=False, auto_close_duration=None, non_blocking=False, icon=None,
-                      line_width=None, font=None, grab_anywhere=True, keep_on_top=False, location=(None, None), image=None, modal=True):
+                      line_width=None, font=None, grab_anywhere=True, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display a Popup without a titlebar.   Enables grab anywhere so you can move it
 
@@ -17497,7 +17514,7 @@ def popup_no_titlebar(*args, title=None, button_type=POPUP_BUTTONS_OK, button_co
 # --------------------------- PopupAutoClose ---------------------------
 def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_color=None, background_color=None, text_color=None,
                      auto_close=True, auto_close_duration=None, non_blocking=False, icon=None,
-                     line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
+                     line_width=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
                      location=(None, None), image=None, modal=True):
     """Popup that closes itself after some time period
 
@@ -17551,7 +17568,7 @@ def popup_auto_close(*args, title=None, button_type=POPUP_BUTTONS_OK, button_col
 # --------------------------- popup_error ---------------------------
 def popup_error(*args, title=None, button_color=(None, None), background_color=None, text_color=None, auto_close=False,
                 auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Popup with colored button and 'Error' as button text
 
@@ -17603,7 +17620,7 @@ def popup_error(*args, title=None, button_color=(None, None), background_color=N
 # --------------------------- popup_cancel ---------------------------
 def popup_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display Popup with "cancelled" button text
 
@@ -17654,7 +17671,7 @@ def popup_cancel(*args, title=None, button_color=None, background_color=None, te
 # --------------------------- popup_ok ---------------------------
 def popup_ok(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
              auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-             no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+             no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display Popup with OK button only
 
@@ -17704,7 +17721,7 @@ def popup_ok(*args, title=None, button_color=None, background_color=None, text_c
 # --------------------------- popup_ok_cancel ---------------------------
 def popup_ok_cancel(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                     auto_close_duration=None, non_blocking=False, icon=DEFAULT_WINDOW_ICON, line_width=None, font=None,
-                    no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                    no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display popup with OK and Cancel buttons
 
@@ -17755,7 +17772,7 @@ def popup_ok_cancel(*args, title=None, button_color=None, background_color=None,
 # --------------------------- popup_yes_no ---------------------------
 def popup_yes_no(*args, title=None, button_color=None, background_color=None, text_color=None, auto_close=False,
                  auto_close_duration=None, non_blocking=False, icon=None, line_width=None, font=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display Popup with Yes and No buttons
 
@@ -17812,7 +17829,7 @@ def popup_yes_no(*args, title=None, button_color=None, background_color=None, te
 
 def popup_get_folder(message, title=None, default_path='', no_window=False, size=(None, None), button_color=None,
                      background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                     grab_anywhere=False, keep_on_top=False, location=(None, None), initial_folder=None, image=None, modal=True, history=False,
+                     grab_anywhere=False, keep_on_top=None, location=(None, None), initial_folder=None, image=None, modal=True, history=False,
                      history_setting_filename=None):
     """
     Display popup with text entry field and browse button so that a folder can be chosen.
@@ -17972,7 +17989,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 def popup_get_file(message, title=None, default_path='', default_extension='', save_as=False, multiple_files=False,
                    file_types=(("ALL Files", "*.*"),),
                    no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
-                   icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=False,
+                   icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
                    location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False,
                    history_setting_filename=None):
     """
@@ -18167,7 +18184,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
 def popup_get_text(message, title=None, default_text='', password_char='', size=(None, None), button_color=None,
                    background_color=None, text_color=None, icon=None, font=None, no_titlebar=False,
-                   grab_anywhere=False, keep_on_top=False, location=(None, None), image=None, modal=True):
+                   grab_anywhere=False, keep_on_top=None, location=(None, None), image=None, modal=True):
     """
     Display Popup with text entry field. Returns the text entered or None if closed / cancelled
 
@@ -19325,12 +19342,22 @@ def user_settings():
     """
     Returns the current settings dictionary.  If you've not setup the filename for the
     settings, a default one will be used and then read.
-
-    :return: The current settings dictionary
-    :rtype:  (dict)
+    :return:            The current settings dictionary as a dictionary or a nicely formatted string representing it
+    :rtype:             (dict or str)
     """
     settings = UserSettings._default_for_function_interface
     return settings.get_dict()
+
+
+def user_settings_object():
+    """
+    Returns the object that is used for the function version of this API.
+    With this object you can use the object interface, print it out in a nice format, etc.
+
+    :return:    The UserSettings obect used for the function level interface
+    :rtype:     (UserSettings)
+    """
+    return UserSettings._default_for_function_interface
 
 
 '''
@@ -21569,7 +21596,7 @@ def _create_main_window():
               col_widths=[5, 5, 5, 5], size=(400, 200), ),
         T('  '),
         Tree(data=treedata, headings=['col1', 'col2', 'col3'], change_submits=True, auto_size_columns=True,
-             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, )]]
+             num_rows=10, col0_width=10, key='_TREE_', show_expanded=True, )],[VStretch()]]
     frame7 = [[T('ONE thing.... you had one thing to NOT do.  "Do NOT click"')], [Image(data=_random_error_emoji())],
               [T("""Well, now what?\nYou could take moment and help this project out by sponsoring.\nAt the moment PySimpleGUI is still free of charge to use.\nYou have no financial responsibility.\nI hope you are enjoying using PySimpleGUI whether you sponsor the product or not.""")],
               [T('Click here to help --->>>'),
