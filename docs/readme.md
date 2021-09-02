@@ -75,6 +75,27 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/GUI%20Gap%202020.png" width="600px">
 </p>
 
+
+
+## Getting Over "The Bar"
+
+It's been said by some that "the bar is pretty high" when it comes to learning GUI programming in Python.  
+>	 What happens when the bar is placed on the ground and can be stepped over?  
+
+This is one of the questions that the PySimpleGUI project has tried to answer.  Here's a humorous look at what's been a not funny situation.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/GettingOverThe%20GUILearningBar.jpg" width="600px">
+</p>
+
+The results have been fascinating to witness and it's been touching to read the accounts of the journeys of users. 
+
+Nothing prepared me for the emails that started to arrive soon after the first release of PySimpleGUI. They are heartwarming and heartbreaking tales of life-long dreams of creating a program that required a GUI. Some made a few attempts, giving up each time. Others never started once they started to research what was required. 
+
+After recounting the varied and long road to finding PySimpleGUI, the stories became similar. They each found success and expressed joy and gratitude. The joy expressed in these messages was unlike anything I had encountered in the entirety of career in the computing field.
+
+It's been these emails and the messages of gratitude seen here in the GitHub Issues that made dedicating my life to his project a non-decision.
+
 <hr>
 
 # About Me 👋
