@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.2 Unreleased"
+version = __version__ = "4.47.0.3 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -11,6 +11,8 @@ version = __version__ = "4.47.0.2 Unreleased"
             then you likely want all of your popups to also have it set. Now set it one time using this option.  You can override by manually
             setting on a popup or window
         Added user_settings_object to return the UserSettings object that the function level interfaces use (prints nicely for example)
+    4,47.0.3
+        Changed docstring for set_clipboard to take str or bytes
  
 """
 
@@ -16944,7 +16946,7 @@ def clipboard_set(new_value):
     need to stay running for Linux systems.
 
     :param new_value: value to set the clipboard to. Will be converted to a string
-    :type new_value:  (str)
+    :type new_value:  (str | bytes)
     """
     # Create and use a temp window
     root = tk.Tk()
@@ -21865,7 +21867,7 @@ if running_trinket():
     USE_CUSTOM_TITLEBAR = True
 
 if tclversion_detailed.startswith('8.5'):
-    warnings.warn('You are running a VERY old version of tkinter {}'.format(tclversion_detailed), UserWarning)
+    warnings.warn('You are running a VERY old version of tkinter {}. You cannot use PNG formatted images for example.  Please upgrade to 8.6.x'.format(tclversion_detailed), UserWarning)
 
 _read_mac_global_settings()
 if running_mac():
