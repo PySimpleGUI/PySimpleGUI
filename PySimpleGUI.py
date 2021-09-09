@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.4 Unreleased"
+version = __version__ = "4.47.0.5 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -15,6 +15,8 @@ version = __version__ = "4.47.0.4 Unreleased"
         Changed docstring for set_clipboard to take str or bytes
     4,47.0.4
         Changed ProgressMeter docstring to more accurately describe the weird size parm (it DOES make sense... just weird sense is all)
+    4,47.0.5
+        New parameter alias for elements.... p == pad.  It is like the other 2 parameter aliases s == size and k == key
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1468,7 +1470,7 @@ class Input(Element):
 
     def __init__(self, default_text='', size=(None, None), s=(None, None), disabled=False, password_char='',
                  justification=None, background_color=None, text_color=None, font=None, tooltip=None, border_width=None,
-                 change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None,
+                 change_submits=False, enable_events=False, do_not_clear=True, key=None, k=None, focus=False, pad=None, p=None,
                  use_readonly_for_disable=True, readonly=False, disabled_readonly_background_color=None, disabled_readonly_text_color=None, expand_x=False, expand_y=False,
                  right_click_menu=None, visible=True, metadata=None):
         """
@@ -1508,6 +1510,8 @@ class Input(Element):
         :type focus:                               (bool)
         :param pad:                                Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)). If int is given, then converted to tuple (int, int) with the value provided duplicated
         :type pad:                                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                                  Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param use_readonly_for_disable:           If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled'
         :type use_readonly_for_disable:            (bool)
         :param readonly:                           If True tkinter state set to 'readonly'.  Use this in place of use_readonly_for_disable as another way of achieving readonly.  Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag
@@ -1547,6 +1551,7 @@ class Input(Element):
         self.TKEntry = self.Widget = None  # type: tk.Entry
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -1639,7 +1644,7 @@ class Combo(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), s=(None, None), auto_size_text=None, background_color=None,
-                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, expand_x=False, expand_y=False,
+                 text_color=None, bind_return_key=False, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False,
                  tooltip=None, readonly=False, font=None, visible=True, metadata=None):
         """
         :param values:           values to choose. While displayed as text, the items returned are what the caller supplied, not text
@@ -1670,6 +1675,8 @@ class Combo(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
         :type expand_x:          (bool)
         :param expand_y:         If True the element will automatically expand in the Y direction to fill available space
@@ -1695,6 +1702,7 @@ class Combo(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -1831,7 +1839,7 @@ class OptionMenu(Element):
     """
 
     def __init__(self, values, default_value=None, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, expand_x=False, expand_y=False,
-                 background_color=None, text_color=None, key=None, k=None, pad=None, tooltip=None, visible=True, metadata=None):
+                 background_color=None, text_color=None, key=None, k=None, pad=None, p=None, tooltip=None, visible=True, metadata=None):
         """
         :param values:           Values to be displayed
         :type values:            List[Any] or Tuple[Any]
@@ -1859,6 +1867,8 @@ class OptionMenu(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text that will appear when mouse hovers over this element
         :type tooltip:           (str)
         :param visible:          set visibility state of the element
@@ -1875,6 +1885,7 @@ class OptionMenu(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -1953,7 +1964,7 @@ class Listbox(Element):
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
                  bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
-                 key=None, k=None, pad=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
+                 key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
         :param values:                     list of values to display. Can be any type including mixed types as long as they have __str__ method
         :type values:                      List[Any] or Tuple[Any]
@@ -1993,6 +2004,8 @@ class Listbox(Element):
         :type k:                           str | int | tuple | object
         :param pad:                        Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                         (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                          Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                           (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:                    text, that will appear when mouse hovers over the element
         :type tooltip:                     (str)
         :param expand_x:                   If True the element will automatically expand in the X direction to fill available space
@@ -2034,6 +2047,7 @@ class Listbox(Element):
         self.NoScrollbar = no_scrollbar
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -2173,7 +2187,7 @@ class Radio(Element):
     """
 
     def __init__(self, text, group_id, default=False, disabled=False, size=(None, None), s=(None, None), auto_size_text=None,
-                 background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, tooltip=None,
+                 background_color=None, text_color=None, circle_color=None, font=None, key=None, k=None, pad=None, p=None, tooltip=None,
                  change_submits=False, enable_events=False, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param text:             Text to display next to button
@@ -2204,6 +2218,8 @@ class Radio(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param change_submits:   DO NOT USE. Only listed for backwards compat - Use enable_events instead
@@ -2251,6 +2267,7 @@ class Radio(Element):
         self.EncodedRadioValue = None
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -2362,7 +2379,7 @@ class Checkbox(Element):
     """
 
     def __init__(self, text, default=False, size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None,
-                 text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, tooltip=None,
+                 text_color=None, checkbox_color=None, change_submits=False, enable_events=False, disabled=False, key=None, k=None, pad=None, p=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param text:             Text to display next to checkbox
@@ -2395,6 +2412,8 @@ class Checkbox(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -2436,6 +2455,7 @@ class Checkbox(Element):
         self.ChangeSubmits = change_submits or enable_events
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -2539,7 +2559,7 @@ class Spin(Element):
     """
 
     def __init__(self, values, initial_value=None, disabled=False, change_submits=False, enable_events=False, readonly=False,
-                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None,
+                 size=(None, None), s=(None, None), auto_size_text=None, font=None, background_color=None, text_color=None, key=None, k=None, pad=None, p=None,
                  tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:           List of valid values
@@ -2572,6 +2592,8 @@ class Spin(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:          text, that will appear when mouse hovers over the element
         :type tooltip:           (str)
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
@@ -2599,6 +2621,7 @@ class Spin(Element):
         fg = text_color if text_color is not None else DEFAULT_INPUT_TEXT_COLOR
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -2714,7 +2737,7 @@ class Multiline(Element):
 
     def __init__(self, default_text='', enter_submits=False, disabled=False, autoscroll=False, border_width=None,
                  size=(None, None), s=(None, None), auto_size_text=None, background_color=None, text_color=None, change_submits=False,
-                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
+                 enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:       Initial text to show
         :type default_text:        (str)
@@ -2764,6 +2787,8 @@ class Multiline(Element):
         :type font:                (str or (str, int[, str]) or None)
         :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                  Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param tooltip:            text, that will appear when mouse hovers over the element
         :type tooltip:             (str)
         :param justification:      text justification. left, right, center. Can use single characters l, r, c.
@@ -2807,6 +2832,7 @@ class Multiline(Element):
         self.echo_stdout_stderr = echo_stdout_stderr
         self.Justification = 'left' if justification is None else justification
         self.justification_tag = self.just_center_tag = self.just_left_tag = self.just_right_tag = None
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
         self.rstrip = rstrip
@@ -3092,7 +3118,7 @@ class Text(Element):
     """
 
     def __init__(self, text='', size=(None, None), s=(None, None), auto_size_text=None, click_submits=False, enable_events=False, relief=None, font=None,
-                 text_color=None, background_color=None, border_width=None, justification=None, pad=None, key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None,
+                 text_color=None, background_color=None, border_width=None, justification=None, pad=None, p=None, key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, grab=None,
                  tooltip=None, visible=True, metadata=None):
         """
         :param text:             The text to display. Can include /n to achieve multiple lines.  Will convert (optional) parameter into a string
@@ -3121,6 +3147,8 @@ class Text(Element):
         :type justification:     (str)
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str or int or tuple or object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -3156,6 +3184,7 @@ class Text(Element):
         self.Grab = grab
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -3287,7 +3316,7 @@ class StatusBar(Element):
     """
 
     def __init__(self, text, size=(None, None), s=(None, None), auto_size_text=None, click_submits=None, enable_events=False,
-                 relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None,
+                 relief=RELIEF_SUNKEN, font=None, text_color=None, background_color=None, justification=None, pad=None, p=None,
                  key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, tooltip=None, visible=True, metadata=None):
         """
         :param text:             Text that is to be displayed in the widget
@@ -3314,6 +3343,8 @@ class StatusBar(Element):
         :type justification:     (str)
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -3346,6 +3377,7 @@ class StatusBar(Element):
         key = key if key is not None else k
         self.RightClickMenu = right_click_menu
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -3610,7 +3642,7 @@ class Output(Element):
     features such as routing the cprint output to the element.
     """
 
-    def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, echo_stdout_stderr=False, font=None, tooltip=None,
+    def __init__(self, size=(None, None), s=(None, None), background_color=None, text_color=None, pad=None, p=None, echo_stdout_stderr=False, font=None, tooltip=None,
                  key=None, k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param size:               (w, h) w=characters-wide, h=rows-high. If an int instead of a tuple is supplied, then height is auto-set to 1
@@ -3623,6 +3655,8 @@ class Output(Element):
         :type text_color:          (str)
         :param pad:                Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                  Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param echo_stdout_stderr: If True then output to stdout will be output to this element AND also to the normal console location
         :type echo_stdout_stderr:  (bool)
         :param font:               specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
@@ -3652,6 +3686,7 @@ class Output(Element):
         key = key if key is not None else k
         self.echo_stdout_stderr = echo_stdout_stderr
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -3749,7 +3784,7 @@ class Button(Element):
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
-                 highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, key=None,
+                 highlight_colors=None, mouseover_colors=(None, None), use_ttk_buttons=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None,
                  k=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param button_text:           Text to be displayed on the button
@@ -3806,6 +3841,8 @@ class Button(Element):
         :type focus:                  (bool)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                   Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                    str | int | tuple | object
         :param k:                     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -3899,6 +3936,7 @@ class Button(Element):
             self.MouseOverColors = (self.ButtonColor[1], self.ButtonColor[0])
         else:
             self.MouseOverColors = (theme_button_color()[1], theme_button_color()[0])
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -4263,7 +4301,7 @@ class ButtonMenu(Element):
     def __init__(self, button_text, menu_def, tooltip=None, disabled=False,
                  image_filename=None, image_data=None, image_size=(None, None), image_subsample=None, border_width=None,
                  size=(None, None), s=(None, None), auto_size_button=None, button_color=None, text_color=None, background_color=None, disabled_text_color=None,
-                 font=None, item_font=None, pad=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True, metadata=None):
+                 font=None, item_font=None, pad=None, p=None, expand_x=False, expand_y=False, key=None, k=None, tearoff=False, visible=True, metadata=None):
         """
         :param button_text:         Text to be displayed on the button
         :type button_text:          (str)
@@ -4303,11 +4341,13 @@ class ButtonMenu(Element):
         :type item_font:            (str or (str, int[, str]) or None)
         :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-        :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
+        :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param expand_x:            If True the element will automatically expand in the X direction to fill available space
         :type expand_x:             (bool)
         :param expand_y:            If True the element will automatically expand in the Y direction to fill available space
         :type expand_y:             (bool)
+        :param key:                 Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                  str | int | tuple | object
         :param k:                   Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:                    str | int | tuple | object
@@ -4345,6 +4385,7 @@ class ButtonMenu(Element):
         # self.temp_size = size if size != (NONE, NONE) else
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -4427,7 +4468,7 @@ class ProgressBar(Element):
     """
 
     def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None,
-                 relief=None, key=None, k=None, pad=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
+                 relief=None, key=None, k=None, pad=None, p=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param max_value:        max value of progressbar
         :type max_value:         (int)
@@ -4453,6 +4494,8 @@ class ProgressBar(Element):
         :type k:                 str | int | tuple | object
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param right_click_menu: A list of lists of Menu items to show when this element is right clicked. See user docs for exact format.
         :type right_click_menu:  List[List[ List[str] | str ]]
         :param expand_x:         If True the element will automatically expand in the X direction to fill available space
@@ -4490,6 +4533,7 @@ class ProgressBar(Element):
         self.BarExpired = False
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -4572,7 +4616,7 @@ class Image(Element):
     Image Element - show an image in the window. Should be a GIF or a PNG only
     """
 
-    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
+    def __init__(self, source=None, filename=None, data=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, enable_events=False, metadata=None):
         """
         :param source:           A filename or a base64 bytes. Will automatically detect the type and fill in filename or data for you.
@@ -4589,6 +4633,8 @@ class Image(Element):
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -4633,6 +4679,7 @@ class Image(Element):
         self.Source = filename if filename is not None else data
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -4808,7 +4855,7 @@ Im = Image
 # ---------------------------------------------------------------------- #
 class Canvas(Element):
 
-    def __init__(self, canvas=None, background_color=None, size=(None, None), s=(None, None), pad=None, key=None, k=None, tooltip=None,
+    def __init__(self, canvas=None, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, border_width=0, metadata=None):
         """
         :param canvas:           Your own tk.Canvas if you already created it. Leave blank to create a Canvas
@@ -4821,6 +4868,8 @@ class Canvas(Element):
         :type s:                 (int, int)  | (None, None) | int
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:              Used with window.find_element and with return values to uniquely identify this element
         :type key:               str | int | tuple | object
         :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -4848,6 +4897,7 @@ class Canvas(Element):
         self.BorderWidth = border_width
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -4887,7 +4937,7 @@ class Graph(Element):
     Drawing primitives return an "id" that is referenced when you want to operation on that item (e.g. to erase it)
     """
 
-    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None,
+    def __init__(self, canvas_size, graph_bottom_left, graph_top_right, background_color=None, pad=None, p=None,
                  change_submits=False, drag_submits=False, enable_events=False, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, float_values=False, border_width=0, metadata=None):
         """
@@ -4901,6 +4951,8 @@ class Graph(Element):
         :type background_color:   (str)
         :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                 Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param change_submits:    * DEPRICATED DO NOT USE. Use `enable_events` instead
         :type change_submits:     (bool)
         :param drag_submits:      if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down
@@ -4943,6 +4995,7 @@ class Graph(Element):
         self.FloatValues = float_values
         self.BorderWidth = border_width
         key = key if key is not None else k
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -5619,7 +5672,7 @@ class Frame(Element):
     """
 
     def __init__(self, title, layout, title_color=None, background_color=None, title_location=None,
-                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, border_width=None, key=None, k=None,
+                 relief=DEFAULT_FRAME_RELIEF, size=(None, None), s=(None, None), font=None, pad=None, p=None, border_width=None, key=None, k=None,
                  tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', vertical_alignment=None, metadata=None):
         """
         :param title:                 text that is displayed as the Frame's "label" or title
@@ -5642,6 +5695,8 @@ class Frame(Element):
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param border_width:          width of border around element in pixels
         :type border_width:           (int)
         :param key:                   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -5689,6 +5744,7 @@ class Frame(Element):
         self.Layout(layout)
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -5827,19 +5883,21 @@ class VerticalSeparator(Element):
     Column Element if extra height is needed
     """
 
-    def __init__(self, color=None, pad=None, key=None, k=None):
+    def __init__(self, color=None, pad=None, p=None, key=None, k=None):
         """
         :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
         :type color:  (str)
         :param pad:   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:    str | int | tuple | object
         :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
         :type k:      str | int | tuple | object
         """
         key = key if key is not None else k
-
+        pad = pad if pad is not None else p
         self.Orientation = 'vertical'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
@@ -5858,12 +5916,14 @@ class HorizontalSeparator(Element):
     Horizontal Separator Element draws a Horizontal line at the given location.
     """
 
-    def __init__(self, color=None, pad=None, key=None, k=None):
+    def __init__(self, color=None, pad=None, p=None, key=None, k=None):
         """
         :param color: Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format
         :type color:  (str)
         :param pad:   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:   Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
         :type key:    str | int | tuple | object
         :param k:     Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -5873,6 +5933,7 @@ class HorizontalSeparator(Element):
         self.Orientation = 'horizontal'  # for now only vertical works
         self.color = color if color is not None else theme_text_color()
         key = key if key is not None else k
+        pad = pad if pad is not None else p
 
         super().__init__(ELEM_TYPE_SEPARATOR, pad=pad, key=key)
 
@@ -5914,7 +5975,7 @@ class Tab(Element):
     Tabs are never placed directly into a layout.  They are always "Contained" in a TabGroup layout
     """
 
-    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, disabled=False,
+    def __init__(self, title, layout, title_color=None, background_color=None, font=None, pad=None, p=None, disabled=False,
                  border_width=None, key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, element_justification='left', metadata=None):
         """
         :param title:                 text to show on the tab
@@ -5929,6 +5990,8 @@ class Tab(Element):
         :type font:                   (str or (str, int[, str]) or None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param disabled:              If True button will be created disabled
         :type disabled:               (bool)
         :param border_width:          width of border around element in pixels
@@ -5972,6 +6035,7 @@ class Tab(Element):
         self.ContainerElemementNumber = Window._GetAContainerNumber()
         self.ElementJustification = element_justification
         key = key if key is not None else k
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -6133,7 +6197,7 @@ class TabGroup(Element):
     """
 
     def __init__(self, layout, tab_location=None, title_color=None, tab_background_color=None, selected_title_color=None, selected_background_color=None,
-                 background_color=None, font=None, change_submits=False, enable_events=False, pad=None, border_width=None, theme=None, key=None, k=None,
+                 background_color=None, font=None, change_submits=False, enable_events=False, pad=None, p=None, border_width=None, theme=None, key=None, k=None,
                  size=(None, None), s=(None, None), tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param layout:                    Layout of Tabs. Different than normal layouts. ALL Tabs should be on first row
@@ -6158,6 +6222,8 @@ class TabGroup(Element):
         :type enable_events:              (bool)
         :param pad:                       Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                         Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                          (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param border_width:              width of border around element in pixels
         :type border_width:               (int)
         :param theme:                     DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis
@@ -6209,6 +6275,7 @@ class TabGroup(Element):
 
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -6393,7 +6460,7 @@ class Slider(Element):
     def __init__(self, range=(None, None), default_value=None, resolution=None, tick_interval=None, orientation=None,
                  disable_number_display=False, border_width=None, relief=None, change_submits=False,
                  enable_events=False, disabled=False, size=(None, None), s=(None, None), font=None, background_color=None,
-                 text_color=None, trough_color=None, key=None, k=None, pad=None, expand_x=False, expand_y=False, tooltip=None, visible=True, metadata=None):
+                 text_color=None, trough_color=None, key=None, k=None, pad=None, p=None, expand_x=False, expand_y=False, tooltip=None, visible=True, metadata=None):
         """
         :param range:                  slider's range (min value, max value)
         :type range:                   (int, int) | Tuple[float, float]
@@ -6435,6 +6502,8 @@ class Slider(Element):
         :type k:                       str | int | tuple | object
         :param pad:                    Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                      Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                       (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param expand_x:               If True the element will automatically expand in the X direction to fill available space
         :type expand_x:                (bool)
         :param expand_y:               If True the element will automatically expand in the Y direction to fill available space
@@ -6464,6 +6533,7 @@ class Slider(Element):
         if temp_size == (None, None):
             temp_size = (20, 20) if self.Orientation.startswith('h') else (8, 20)
         key = key if key is not None else k
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -6679,7 +6749,7 @@ class Column(Element):
     A container element that is used to create a layout within your window's layout
     """
 
-    def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), pad=None, scrollable=False,
+    def __init__(self, layout, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, scrollable=False,
                  vertical_scroll_only=False, right_click_menu=None, key=None, k=None, visible=True, justification=None, element_justification=None,
                  vertical_alignment=None, grab=None, expand_x=None, expand_y=None, metadata=None):
         """
@@ -6693,6 +6763,8 @@ class Column(Element):
         :type s:                      (int, int)  | (None, None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param scrollable:            if True then scrollbars will be added to the column
         :type scrollable:             (bool)
         :param vertical_scroll_only:  if Truen then no horizontal scrollbar will be shown
@@ -6746,6 +6818,7 @@ class Column(Element):
         self.ExpandY = expand_y
         self.Layout(layout)
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
 
         super().__init__(ELEM_TYPE_COLUMN, background_color=bg, size=sz, pad=pad, key=key, visible=visible, metadata=metadata)
         return
@@ -6896,7 +6969,7 @@ class Pane(Element):
     A sliding Pane that is unique to tkinter.  Uses Columns to create individual panes
     """
 
-    def __init__(self, pane_list, background_color=None, size=(None, None), s=(None, None), pad=None, orientation='vertical',
+    def __init__(self, pane_list, background_color=None, size=(None, None), s=(None, None), pad=None, p=None, orientation='vertical',
                  show_handle=True, relief=RELIEF_RAISED, handle_size=None, border_width=None, key=None, k=None,  expand_x=None, expand_y=None, visible=True, metadata=None):
         """
         :param pane_list:        Must be a list of Column Elements. Each Column supplied becomes one pane that's shown
@@ -6909,6 +6982,8 @@ class Pane(Element):
         :type s:                 (int, int)  | (None, None)
         :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param orientation:      'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide
         :type orientation:       (str)
         :param show_handle:      if True, the handle is drawn that makes it easier to grab and slide
@@ -6954,6 +7029,7 @@ class Pane(Element):
         self.Rows = [pane_list]
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -7225,7 +7301,7 @@ class Menu(Element):
     """
 
     def __init__(self, menu_definition, background_color=None, text_color=None, disabled_text_color=None, size=(None, None), s=(None, None), tearoff=False,
-                 font=None, pad=None, key=None, k=None, visible=True, metadata=None):
+                 font=None, pad=None, p=None, key=None, k=None, visible=True, metadata=None):
         """
         :param menu_definition:     The Menu definition specified using lists (docs explain the format)
         :type menu_definition:      List[List[Tuple[str, List[str]]]
@@ -7243,6 +7319,8 @@ class Menu(Element):
         :type tearoff:              (bool)
         :param pad:                 Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                   Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param font:                specifies the  font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike
         :type font:                 (str or (str, int[, str]) or None)
         :param key:                 Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window
@@ -7264,6 +7342,7 @@ class Menu(Element):
         self.MenuItemChosen = None
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
 
         super().__init__(ELEM_TYPE_MENUBAR, background_color=self.BackgroundColor, text_color=self.TextColor, size=sz, pad=pad, key=key, visible=visible,
                          font=font, metadata=metadata)
@@ -7357,7 +7436,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
-                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None,
+                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:                  ???
@@ -7416,6 +7495,8 @@ class Table(Element):
         :type bind_return_key:          (bool)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                     Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                      str | int | tuple | object
         :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -7479,6 +7560,7 @@ class Table(Element):
         self.tree_ids = []  # ids returned when inserting items into table - will use to delete colors
         key = key if key is not None else k
         sz = size if size != (None, None) else s
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -7630,7 +7712,7 @@ class Tree(Element):
                  def_col_width=10, auto_size_columns=True, max_col_width=20, select_mode=None, show_expanded=False,
                  change_submits=False, enable_events=False, font=None, justification='right', text_color=None,
                  background_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None, num_rows=None,
-                 row_height=None, pad=None, key=None, k=None, tooltip=None,
+                 row_height=None, pad=None, p=None, key=None, k=None, tooltip=None,
                  right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param data:                    The data represented using a PySimpleGUI provided TreeData class
@@ -7679,6 +7761,8 @@ class Tree(Element):
         :type row_height:               (int)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                      (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+        :param p:                       Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+        :type p:                        (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param key:                     Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element
         :type key:                      str | int | tuple | object
         :param k:                       Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -7739,6 +7823,7 @@ class Tree(Element):
         self.IdToKey = {'': ''}
         self.KeyToID = {'': ''}
         key = key if key is not None else k
+        pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
 
@@ -10888,7 +10973,7 @@ def Titlebar(title='', icon=None, text_color=None, background_color=None, font=N
 
 
 # Not ready for prime time
-def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, background_color=None, text_color=None,
+def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font=None, tearoff=False, pad=None, p=None, background_color=None, text_color=None,
                   bar_background_color=None, bar_text_color=None, key=None, k=None):
     """
     A custom Menubar that replaces the OS provided Menubar
@@ -10908,6 +10993,8 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     :type tearoff:               (bool)
     :param pad:                  Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:                   (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                    Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param background_color:     color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text
     :type background_color:      (str)
     :param text_color:           color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background
@@ -10928,6 +11015,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
     bar_text = bar_text_color if bar_text_color is not None else theme_button_color()[1]
     menu_bg = background_color if background_color is not None else bar_text
     menu_text = text_color if text_color is not None else bar_bg
+    pad = pad if pad is not None else p
 
     row = []
     for menu in menu_definition:
@@ -10951,7 +11039,7 @@ def MenubarCustom(menu_definition, disabled_text_color=None, bar_font=None, font
 # -------------------------  FOLDER BROWSE Element lazy function  ------------------------- #
 def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None, tooltip=None, size=(None, None), s=(None, None),
                  auto_size_button=None, button_color=None, disabled=False, change_submits=False, enable_events=False,
-                 font=None, pad=None, key=None, k=None, metadata=None):
+                 font=None, pad=None, p=None, key=None, k=None, metadata=None):
     """
     :param button_text:      text in the button (Default value = 'Browse')
     :type button_text:       (str)
@@ -10979,6 +11067,8 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              Used with window.find_element and with return values to uniquely identify this element
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -10992,14 +11082,14 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FOLDER, target=target,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   disabled=disabled, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
 def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
-               pad=None, key=None, k=None, metadata=None):
+               pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Browse')
@@ -11030,6 +11120,8 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type disabled:          (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11042,14 +11134,14 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     return Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   change_submits=change_submits, enable_events=enable_events, disabled=disabled,
-                  button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
+                  button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
 def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
-                font=None, pad=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
+                font=None, pad=None, p=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
     """
     Allows browsing of multiple files. File list is returned as a single list with the delimiter defined using the files_delimiter parameter.
 
@@ -11081,6 +11173,8 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type font:              (str or (str, int[, str]) or None)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11095,7 +11189,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     button = Button(button_text=button_text, button_type=BUTTON_TYPE_BROWSE_FILES, target=target, file_types=file_types,
                     initial_folder=initial_folder, change_submits=change_submits, enable_events=enable_events,
                     tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
-                    disabled=disabled, button_color=button_color, font=font, pad=pad, key=key, k=k, metadata=metadata)
+                    disabled=disabled, button_color=button_color, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
     button._files_delimiter = files_delimiter
     return button
 
@@ -11104,7 +11198,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
                default_extension='', disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
-               pad=None, key=None, k=None, metadata=None):
+               pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -11137,6 +11231,8 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:               key for uniquely identify this element (for window.find_element)
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11149,14 +11245,14 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
 def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='',
            disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
-           pad=None, key=None, k=None, metadata=None):
+           pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:       text in the button (Default value = 'Save As...')
@@ -11189,7 +11285,8 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type font:               (str or (str, int[, str]) or None)
     :param pad:               Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:                (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
-    :param key:               key for uniquely identify this element (for window.find_element)
+    :param p:                 Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                  (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int    :param key:               key for uniquely identify this element (for window.find_element)
     :type key:                str | int | tuple | object
     :param k:                 Same as the Key. You can use either k or key. Which ever is set will be used.
     :type k:                  str | int | tuple | object
@@ -11201,12 +11298,12 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SAVEAS_FILE, target=target, file_types=file_types,
                   initial_folder=initial_folder, default_extension=default_extension, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, change_submits=change_submits,
-                  enable_events=enable_events, font=font, pad=pad, key=key, k=k, metadata=metadata)
+                  enable_events=enable_events, font=font, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SAVE BUTTON Element lazy function  ------------------------- #
 def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, bind_return_key=True,
-         disabled=False, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
+         disabled=False, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Save')
@@ -11231,6 +11328,8 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11242,12 +11341,12 @@ def Save(button_text='Save', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  SUBMIT BUTTON Element lazy function  ------------------------- #
 def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
+           bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Submit')
@@ -11272,6 +11371,8 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11283,13 +11384,13 @@ def Submit(button_text='Submit', size=(None, None), s=(None, None), auto_size_bu
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 # -------------------------  OPEN BUTTON Element lazy function  ------------------------- #
 def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
+         bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Open')
@@ -11314,6 +11415,8 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11325,12 +11428,12 @@ def Open(button_text='Open', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  OK BUTTON Element lazy function  ------------------------- #
 def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'OK')
@@ -11355,6 +11458,8 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11366,12 +11471,12 @@ def OK(button_text='OK', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, key=None, k=None, metadata=None):
+       bind_return_key=True, tooltip=None, font=None, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Ok')
@@ -11396,6 +11501,8 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11407,12 +11514,12 @@ def Ok(button_text='Ok', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CANCEL BUTTON Element lazy function  ------------------------- #
 def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False,
-           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+           tooltip=None, font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Cancel')
@@ -11437,6 +11544,8 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11448,12 +11557,12 @@ def Cancel(button_text='Cancel', size=(None, None), s=(None, None), auto_size_bu
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  QUIT BUTTON Element lazy function  ------------------------- #
 def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Quit')
@@ -11478,6 +11587,8 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11489,12 +11600,12 @@ def Quit(button_text='Quit', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Exit BUTTON Element lazy function  ------------------------- #
 def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-         font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+         font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Exit')
@@ -11519,6 +11630,8 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11530,12 +11643,12 @@ def Exit(button_text='Exit', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  YES BUTTON Element lazy function  ------------------------- #
 def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-        font=None, bind_return_key=True, focus=False, pad=None, key=None, k=None, metadata=None):
+        font=None, bind_return_key=True, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Yes')
@@ -11560,6 +11673,8 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11571,12 +11686,12 @@ def Yes(button_text='Yes', size=(None, None), s=(None, None), auto_size_button=N
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, tooltip=None,
-       font=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+       font=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'No')
@@ -11601,6 +11716,8 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11612,12 +11729,12 @@ def No(button_text='No', size=(None, None), s=(None, None), auto_size_button=Non
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-         tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+         tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = 'Help')
@@ -11642,6 +11759,8 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11653,12 +11772,12 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  NO BUTTON Element lazy function  ------------------------- #
 def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
-          tooltip=None, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+          tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button (Default value = '')
@@ -11683,6 +11802,8 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :type focus:
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11694,14 +11815,14 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     """
     return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
                   image_subsample=4, border_width=0, metadata=metadata)
 
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                  border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
-                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
+                 font=None, bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -11734,6 +11855,8 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11747,13 +11870,13 @@ def SimpleButton(button_text, image_filename=None, image_data=None, image_size=(
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  CLOSE BUTTON Element lazy function  ------------------------- #
 def CloseButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-                bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
+                bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -11786,6 +11909,8 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11799,7 +11924,7 @@ def CloseButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 CButton = CloseButton
@@ -11808,7 +11933,7 @@ CButton = CloseButton
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
 def ReadButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-               bind_return_key=False, disabled=False, focus=False, pad=None, key=None, k=None, metadata=None):
+               bind_return_key=False, disabled=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
     :param button_text:      text in the button
     :type button_text:       (str)
@@ -11840,6 +11965,8 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
     :type focus:             idk_yetReally
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11856,7 +11983,7 @@ def ReadButton(button_text, image_filename=None, image_data=None, image_size=(No
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, s=s, disabled=disabled,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 ReadFormButton = ReadButton
@@ -11866,7 +11993,7 @@ RButton = ReadFormButton
 # -------------------------  Realtime BUTTON Element lazy function  ------------------------- #
 def RealtimeButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                    border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
-                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+                   font=None, disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -11899,6 +12026,8 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11914,13 +12043,13 @@ def RealtimeButton(button_text, image_filename=None, image_data=None, image_size
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, disabled=disabled, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Dummy BUTTON Element lazy function  ------------------------- #
 def DummyButton(button_text, image_filename=None, image_data=None, image_size=(None, None), image_subsample=None,
                 border_width=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, font=None,
-                disabled=False, bind_return_key=False, focus=False, pad=None, key=None, k=None, metadata=None):
+                disabled=False, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
 
     :param button_text:      text in the button
@@ -11955,6 +12084,8 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -11968,14 +12099,14 @@ def DummyButton(button_text, image_filename=None, image_data=None, image_size=(N
                   image_data=image_data, image_size=image_size, image_subsample=image_subsample,
                   border_width=border_width, tooltip=tooltip, size=size, s=s, auto_size_button=auto_size_button,
                   button_color=button_color, font=font, disabled=disabled, bind_return_key=bind_return_key, focus=focus,
-                  pad=pad, key=key, k=k, metadata=metadata)
+                  pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=True, default_date_m_d_y=(None, None, None),
                    image_filename=None, image_data=None, image_size=(None, None),
                    image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
-                   button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, enable_events=None,
+                   button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None, enable_events=None,
                    key=None, k=None, locale=None, format='%Y-%m-%d %H:%M:%S', begin_at_sunday_plus=0, month_names=None, day_abbreviations=None,
                    title='Choose Date',
                    no_titlebar=True, location=(None, None), metadata=None):
@@ -12020,6 +12151,8 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
     :type focus:                   bool
     :param pad:                    Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:                     (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                      Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                       (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:                    key for uniquely identify this element (for window.find_element)
     :type key:                     str | int | tuple | object
     :param k:                      Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -12047,7 +12180,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
                     image_filename=image_filename, image_data=image_data, image_size=image_size,
                     image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                     auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled, enable_events=enable_events,
-                    bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                    bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
     button.calendar_close_when_chosen = close_when_date_chosen
     button.calendar_default_date_M_D_Y = default_date_m_d_y
     button.calendar_locale = locale
@@ -12065,7 +12198,7 @@ def CalendarButton(button_text, target=(ThisRow, -1), close_when_date_chosen=Tru
 # -------------------------  Calendar Chooser Button lazy function  ------------------------- #
 def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, image_data=None, image_size=(None, None),
                        image_subsample=None, tooltip=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None,
-                       button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None,
+                       button_color=None, disabled=False, font=None, bind_return_key=False, focus=False, pad=None, p=None,
                        key=None, k=None, metadata=None):
     """
 
@@ -12104,6 +12237,8 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
     :type focus:             (bool)
     :param pad:              Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
     :type pad:               (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
+    :param p:                Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
+    :type p:                 (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
     :param key:              key for uniquely identify this element (for window.find_element)
     :type key:               str | int | tuple | object
     :param k:                Same as the Key. You can use either k or key. Which ever is set will be used.
@@ -12117,7 +12252,7 @@ def ColorChooserButton(button_text, target=(ThisRow, -1), image_filename=None, i
                   image_filename=image_filename, image_data=image_data, image_size=image_size,
                   image_subsample=image_subsample, border_width=border_width, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=button_color, font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, key=key, k=k, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, metadata=metadata)
 
 
 #####################################  -----  BUTTON Functions   ------ ##################################################
@@ -16997,6 +17132,10 @@ def popup(*args, title=None, button_color=None, background_color=None, text_colo
     """
     Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
     "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
+
+    If this popup doesn't have the features you want, then you can easily make your own. Popups can be accomplished in 1 line of code:
+    choice, _ = sg.Window('Continue?', [[sg.T('Do you want to continue?')], [sg.Yes(s=10), sg.No(s=10)]], disable_close=True).read(close=True)
+
 
     :param *args:               Variable number of your arguments.  Load up the call with stuff to see!
     :type *args:                (Any)
