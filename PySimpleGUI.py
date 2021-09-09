@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.5 Unreleased"
+version = __version__ = "4.47.0.6 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -17,6 +17,8 @@ version = __version__ = "4.47.0.5 Unreleased"
         Changed ProgressMeter docstring to more accurately describe the weird size parm (it DOES make sense... just weird sense is all)
     4,47.0.5
         New parameter alias for elements.... p == pad.  It is like the other 2 parameter aliases s == size and k == key
+    4,47.0.6
+        New parameter size_px for ProgressBar - yes, finally a sensible measurement for this element using pixels rather than chars and pixels
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4467,7 +4469,7 @@ class ProgressBar(Element):
     Progress Bar Element - Displays a colored bar that is shaded as progress of some operation is made
     """
 
-    def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None,
+    def __init__(self, max_value, orientation=None, size=(None, None), s=(None, None), size_px=(None, None), auto_size_text=None, bar_color=None, style=None, border_width=None,
                  relief=None, key=None, k=None, pad=None, p=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param max_value:        max value of progressbar
@@ -4478,6 +4480,8 @@ class ProgressBar(Element):
         :type size:              (int, int) |  (int, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None)
+        :param size_px:          Size in pixels (length, width). Will be used in place of size parm if specified
+        :type size_px:           (int, int) | (None, None)
         :param auto_size_text:   Not sure why this is here
         :type auto_size_text:    (bool)
         :param bar_color:        The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green".
@@ -4536,6 +4540,7 @@ class ProgressBar(Element):
         pad = pad if pad is not None else p
         self.expand_x = expand_x
         self.expand_y = expand_y
+        self.size_px = size_px
 
         super().__init__(ELEM_TYPE_PROGRESS_BAR, size=sz, auto_size_text=auto_size_text, key=key, pad=pad,
                          visible=visible, metadata=metadata)
@@ -13971,12 +13976,14 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
             # -------------------------  PROGRESS placement element  ------------------------- #
             elif element_type == ELEM_TYPE_PROGRESS_BAR:
                 element = element  # type: ProgressBar
-                # save this form because it must be 'updated' (refreshed) solely for the purpose of updating bar
-                width = element_size[0]
-                fnt = tkinter.font.Font()
-                char_width = fnt.measure('A')  # single character width
-                progress_length = width * char_width
-                progress_width = element_size[1]
+                if element.size_px != (None, None):
+                    progress_length, progress_width = element.size_px
+                else:
+                    width = element_size[0]
+                    fnt = tkinter.font.Font()
+                    char_width = fnt.measure('A')  # single character width
+                    progress_length = width * char_width
+                    progress_width = element_size[1]
                 direction = element.Orientation
                 if element.BarColor != (None, None):  # if element has a bar color, use it
                     bar_color = element.BarColor
