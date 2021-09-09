@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.3 Unreleased"
+version = __version__ = "4.47.0.4 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -13,7 +13,8 @@ version = __version__ = "4.47.0.3 Unreleased"
         Added user_settings_object to return the UserSettings object that the function level interfaces use (prints nicely for example)
     4,47.0.3
         Changed docstring for set_clipboard to take str or bytes
- 
+    4,47.0.4
+        Changed ProgressMeter docstring to more accurately describe the weird size parm (it DOES make sense... just weird sense is all)
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4432,7 +4433,7 @@ class ProgressBar(Element):
         :type max_value:         (int)
         :param orientation:      'horizontal' or 'vertical'
         :type orientation:       (str)
-        :param size:             Size of the bar.  If horizontal (chars wide, pixels high), vert (pixels wide, rows high)
+        :param size:             Size of the bar.  If horizontal (chars long, pixels wide), vert (chars high, pixels wide). Vert height measured using horizontal chars units.
         :type size:              (int, int) |  (int, None)
         :param s:                Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
         :type s:                 (int, int)  | (None, None)
@@ -14540,6 +14541,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     row_fill_direction = tk.X
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.X, expand=True)
                 else:
+                    row_fill_direction = tk.Y
                     separator.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=tk.Y, expand=True)
                 element.Widget.configure(style=style_name)  # IMPORTANT!  Apply the style
             # -------------------------  SizeGrip placement element  ------------------------- #
