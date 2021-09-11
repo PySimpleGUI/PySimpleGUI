@@ -1735,7 +1735,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),). There's a difference between (("Text and py-script",("*.txt","*.py"))) and (("Text",("*.txt")),("Py-Script","*.py"))|
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
