@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.6 Unreleased"
+version = __version__ = "4.47.0.7 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -19,6 +19,9 @@ version = __version__ = "4.47.0.6 Unreleased"
         New parameter alias for elements.... p == pad.  It is like the other 2 parameter aliases s == size and k == key
     4,47.0.6
         New parameter size_px for ProgressBar - yes, finally a sensible measurement for this element using pixels rather than chars and pixels
+    4,47.0.7
+        New alias for Stretch - Push - P.  Stretch is a Widget name from Qt.  I gave it some thought and realized what it DOES is Pushes elements
+            around.  So, Push seemed like a good name, and it's shorter.  I then also make the 1-letter version P. 
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8126,6 +8129,8 @@ def Stretch():
     """
     return Text(font='_ 1', pad=(0,0), expand_x=True)
 
+Push = Stretch
+P = Push
 
 def VStretch():
     """
