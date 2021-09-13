@@ -206,7 +206,7 @@ def find_in_file(string, demo_files_dict, regex=False, verbose=False, window=Non
     """
 
 
-    # So you face a prediciment here. You wish to read files, both small and large; however the bigger the file/bigger the list, the longer to read the file.
+    # So you face a predicament here. You wish to read files, both small and large; however the bigger the file/bigger the list, the longer to read the file.
     # This probably isn't what you want, right?
     # Well, we can't use a direct command line to run grep and parse. But it is an option. The user may not have it.
     # We could check if grep exists and if not use our method; but it isn't the best way.
@@ -513,6 +513,7 @@ def make_window():
         window['-OPTIONS BOTTOM-'].update(visible=False)
 
     # sg.cprint_set_output_destination(window, ML_KEY)
+    window.bring_to_front()
     return window
 
 
