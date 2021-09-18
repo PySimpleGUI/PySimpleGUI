@@ -1,24 +1,33 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.6 Unreleased"
+version = __version__ = "4.47.0.8 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
     
 
-    4,47.0.2
+    4.47.0.2
         New set_option parm: keep_on_top - all windows will default to this value. If all your main_window has keep_on_top set
             then you likely want all of your popups to also have it set. Now set it one time using this option.  You can override by manually
             setting on a popup or window
         Added user_settings_object to return the UserSettings object that the function level interfaces use (prints nicely for example)
-    4,47.0.3
+    4.47.0.3
         Changed docstring for set_clipboard to take str or bytes
-    4,47.0.4
+    4.47.0.4
         Changed ProgressMeter docstring to more accurately describe the weird size parm (it DOES make sense... just weird sense is all)
-    4,47.0.5
+    4.47.0.5
         New parameter alias for elements.... p == pad.  It is like the other 2 parameter aliases s == size and k == key
-    4,47.0.6
+    4.47.0.6
         New parameter size_px for ProgressBar - yes, finally a sensible measurement for this element using pixels rather than chars and pixels
+    4.47.0.7
+        New alias for Stretch - Push - P.  Stretch is a Widget name from Qt.  I gave it some thought and realized what it DOES is Pushes elements
+            around.  So, Push seemed like a good name, and it's shorter.  I then also make the 1-letter version P. 
+    4.47.0.8
+        New Table parameter / event.  Setting the parm enable_click_events=True will cause events to be generated that are tuples when a user clicks on the table.
+        The event tuple format is: ('-TABLE KEY-', '+CICKED+', (3, 3))  3 items in the tuple:
+            1. The Table's key
+            2. "An additional event name" in this case I've called it "+CLICKED+"
+            3. The (row, col) format that Jason designed where the header is row 0.  I've thought about making the header row -1 so that the table clicks remain 0 based.
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7441,7 +7450,7 @@ class Table(Element):
                  row_height=None, font=None, justification='right', text_color=None, background_color=None,
                  alternating_row_color=None, selected_row_colors=(None, None), header_text_color=None, header_background_color=None, header_font=None,
                  row_colors=None, vertical_scroll_only=True, hide_vertical_scroll=False,
-                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, bind_return_key=False, pad=None, p=None,
+                 size=(None, None), s=(None, None), change_submits=False, enable_events=False, enable_click_events=False, bind_return_key=False, pad=None, p=None,
                  key=None, k=None, tooltip=None, right_click_menu=None, expand_x=False, expand_y=False, visible=True, metadata=None):
         """
         :param values:                  ???
@@ -7496,6 +7505,8 @@ class Table(Element):
         :type change_submits:           (bool)
         :param enable_events:           Turns on the element specific events. Table events happen when row is clicked
         :type enable_events:            (bool)
+        :param enable_click_events:     Turns on the element click events that will give you (row, col) click data when the table is clicked
+        :type enable_click_events:      (bool)
         :param bind_return_key:         if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True
         :type bind_return_key:          (bool)
         :param pad:                     Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
@@ -7548,7 +7559,8 @@ class Table(Element):
         self.BindReturnKey = bind_return_key
         self.StartingRowNumber = 0  # When displaying row numbers, where to start
         self.RowHeaderText = 'Row'
-
+        self.enable_click_events = enable_click_events
+        self.last_clicked_position = (None, None)
         if selected_row_colors == (None, None):
             # selected_row_colors = DEFAULT_TABLE_AND_TREE_SELECTED_ROW_COLORS
             selected_row_colors = theme_button_color()
@@ -7657,6 +7669,7 @@ class Table(Element):
         :param event: event information from tkinter
         :type event:  (unknown)
         """
+        print('**-- in treeview selected --**')
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
@@ -7689,6 +7702,52 @@ class Table(Element):
             #     self.ParentForm.TKroot.quit()
             _exit_mainloop(self.ParentForm)
 
+
+    def _table_clicked(self, event):
+        """
+        Not user callable.  Callback function that is called a click happens on a table.
+        Stores the selected rows in Element as they are being selected. If events enabled, then returns from Read
+
+        :param event: event information from tkinter
+        :type event:  (unknown)
+        """
+        if not self._widget_was_created():  # if widget hasn't been created yet, then don't allow
+            return
+        try:
+            region = self.Widget.identify('region', event.x, event.y)
+            if region == 'heading':
+                row = 0
+            elif region == 'cell':
+                row = int(self.Widget.identify_row(event.y))
+            elif region == 'separator':
+                row = None
+            else:
+                row = None
+            column = int(self.Widget.identify_column(event.x)[1:])
+        except Exception as e:
+            warnings.warn('Error getting table click data for table with key='.format(self.Key), UserWarning)
+            if not SUPPRESS_ERROR_POPUPS:
+                _error_popup_with_traceback('Unable to complete operation getting the clicked event for table with key {}'.format(self.Key), _create_error_message())
+            row = column = None
+
+        self.last_clicked_position = (row, column)
+
+        # update the rows being selected if appropriate
+        self.ParentForm.TKroot.update()
+        # self.TKTreeview.()
+        selections = self.TKTreeview.selection()
+        # print(selections)
+        self.SelectedRows = [int(x) - 1 for x in selections]
+        # print('The new selected rows = ', self.SelectedRows)
+        if self.enable_click_events is True:
+            if self.Key is not None:
+                self.ParentForm.LastButtonClicked = (self.Key, '+CICKED+', (row, column))
+            else:
+                self.ParentForm.LastButtonClicked = ''
+            self.ParentForm.FormRemainedOpen = True
+            _exit_mainloop(self.ParentForm)
+
+
     def get(self):
         """
         Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
@@ -7699,6 +7758,21 @@ class Table(Element):
         :rtype:  List[List[Any]]
         """
         return self.Values
+
+
+    def get_last_clicked_position(self):
+        """
+        Dummy function for tkinter port.  In the Qt port you can read back the values in the table in case they were
+        edited.  Don't know yet how to enable editing of a Tree in tkinter so just returning the values provided by
+        user when Table was created or Updated.
+
+        :return: the current table values (for now what was originally provided up updated)
+        :rtype:  (int | None, int | None)
+        """
+        return self.last_clicked_position
+
+
+
 
     Update = update
     Get = get
@@ -8126,6 +8200,8 @@ def Stretch():
     """
     return Text(font='_ 1', pad=(0,0), expand_x=True)
 
+Push = Stretch
+P = Push
 
 def VStretch():
     """
@@ -9962,7 +10038,7 @@ class Window:
         :param event:       Event data passed in by tkinter (not used)
         :type event:
         """
-
+        print('bind callback', bind_string, event)
         key = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
         if key is not None:
@@ -14516,6 +14592,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 table_style.configure(style_name, font=font)
                 treeview.configure(style=style_name)
                 # scrollable_frame.pack(side=tk.LEFT,  padx=elementpad[0], pady=elementpad[1], expand=True, fill='both')
+                if element.enable_click_events is True:
+                    treeview.bind('<Button-1>', element._table_clicked)
                 treeview.bind("<<TreeviewSelect>>", element._treeview_selected)
                 if element.BindReturnKey:
                     treeview.bind('<Return>', element._treeview_double_click)
@@ -14532,6 +14610,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                     hscrollbar.pack(side=tk.BOTTOM, fill='x')
                     hscrollbar.config(command=treeview.xview)
                     treeview.configure(xscrollcommand=hscrollbar.set)
+
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element.TKTreeview.pack(side=tk.LEFT, padx=0, pady=0, expand=expand, fill=fill)
                 if element.visible is False:
@@ -18140,7 +18219,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
                    file_types=(("ALL Files", "*.*"),),
                    no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                    icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
-                   location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False,
+                   location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
                    history_setting_filename=None):
     """
     Display popup window with text entry field and browse button so that a file can be chosen by user.
@@ -18241,6 +18320,21 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
         except:
             pass
 
+        if show_hidden is False:
+            try:
+                # call a dummy dialog with an impossible option to initialize the file
+                # dialog without really getting a dialog window; this will throw a
+                # TclError, so we need a try...except :
+                try:
+                    root.tk.call('tk_getOpenFile', '-foobarbaz')
+                except tk.TclError:
+                    pass
+                # now set the magic variables accordingly
+                root.tk.call('set', '::tk::dialog::file::showHiddenBtn', '1')
+                root.tk.call('set', '::tk::dialog::file::showHiddenVar', '0')
+            except:
+                pass
+
         if root and icon is not None:
             _set_icon_for_tkinter_window(root, icon=icon)
         # for Macs, setting parent=None fixes a warning problem.
@@ -18300,9 +18394,12 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     layout += [[Button('Ok', size=(6, 1), bind_return_key=True), Button('Cancel', size=(6, 1))]]
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
-                    font=font,
-                    background_color=background_color,
-                    no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal)
+                    font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal, finalize=True)
+    window.read()
+    if show_hidden is True:
+        window.TKroot.tk.eval('catch {tk_getOpenFile -badoption}')  # dirty hack to force autoloading of Tk's file dialog code
+        window.TKroot.setvar('::tk::dialog::file::showHiddenBtn', 1)  # enable the "show hidden files" checkbox (it's necessary)
+        window.TKroot.setvar('::tk::dialog::file::showHiddenVar', 0)  # start with the hidden files... well... hidden
 
     while True:
         event, values = window.read()
