@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.8 Unreleased"
+version = __version__ = "4.47.0.9 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -28,6 +28,8 @@ version = __version__ = "4.47.0.8 Unreleased"
             1. The Table's key
             2. "An additional event name" in this case I've called it "+CLICKED+"
             3. The (row, col) format that Jason designed where the header is row 0.  I've thought about making the header row -1 so that the table clicks remain 0 based.
+    4.47.0.9
+        Removed debug print
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7669,7 +7671,7 @@ class Table(Element):
         :param event: event information from tkinter
         :type event:  (unknown)
         """
-        print('**-- in treeview selected --**')
+        # print('**-- in treeview selected --**')
         selections = self.TKTreeview.selection()
         self.SelectedRows = [int(x) - 1 for x in selections]
         if self.ChangeSubmits:
