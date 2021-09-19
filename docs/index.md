@@ -3,6 +3,7 @@
   <h1 align="center">Python GUIs for Humans</h1>
 </p>
 
+
 <!-- Default Statcounter code for PySimpleGUI
 http://www.PySimpleGUI.com -->
 <script type="text/javascript">
