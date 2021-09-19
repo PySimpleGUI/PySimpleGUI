@@ -4,7 +4,6 @@
 </p>
 
 
-
 <!-- Default Statcounter code for PySimpleGUI
 http://www.PySimpleGUI.com -->
 <script type="text/javascript">
@@ -22,6 +21,7 @@ src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
 alt="Web Analytics Made Easy - Statcounter"
 referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- End of Statcounter Code -->
+
 ## PyPI Statistics & Versions
 
 | TK | TK 2.7 | Qt| WxPython | Web (Remi) |
