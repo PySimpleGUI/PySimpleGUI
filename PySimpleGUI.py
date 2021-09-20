@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.9 Unreleased"
+version = __version__ = "4.47.0.10 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -30,6 +30,9 @@ version = __version__ = "4.47.0.9 Unreleased"
             3. The (row, col) format that Jason designed where the header is row 0.  I've thought about making the header row -1 so that the table clicks remain 0 based.
     4.47.0.9
         Removed debug print
+    4.47.0.10
+        For new Table parm enable_click_events.  If True, the header will be row -1. If show row numbers is true, then col will be -1 if clicked on row num (like header)
+            This keeps the (row, col) matching user data portion when user data is clicked  
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7718,14 +7721,14 @@ class Table(Element):
         try:
             region = self.Widget.identify('region', event.x, event.y)
             if region == 'heading':
-                row = 0
+                row = -1
             elif region == 'cell':
-                row = int(self.Widget.identify_row(event.y))
+                row = int(self.Widget.identify_row(event.y))-1
             elif region == 'separator':
                 row = None
             else:
                 row = None
-            column = int(self.Widget.identify_column(event.x)[1:])
+            column = int(self.Widget.identify_column(event.x)[1:])-1-int(self.DisplayRowNumbers is True)
         except Exception as e:
             warnings.warn('Error getting table click data for table with key='.format(self.Key), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
