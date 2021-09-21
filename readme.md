@@ -8,7 +8,7 @@ Transforms the tkinter, Qt, WxPython, and Remi (browser-based) GUI frameworks in
 
 Your code is not _required_ to have an object oriented architecture which makes the package usable by a larger audience. While the architecture is simple to understand, it does not *necessarily* limit you to only simple problems.  
 
-Some programs are not well-suited for PySimpleGUI however.  By definition, PySimpleGUI implements a subset of the underlying GUI frameworks' capabilities.  It's difficult to define exactly which programs are well suited for PySimpleGUI and which are not.  It depends on the details of your program.  Duplicating Excel in every detail is an example of something not well suited for PySimpleGUI.
+Some programs are not well-suited for PySimpleGUI, however.  By definition, PySimpleGUI implements a subset of the underlying GUI frameworks' capabilities.  It's difficult to define exactly which programs are well suited for PySimpleGUI and which are not.  It depends on the details of your program.  Duplicating Excel in every detail is an example of something not well suited for PySimpleGUI.
 
 [Japanese version of this readme](https://github.com/PySimpleGUI/PySimpleGUI/blob/master/readme.ja.md).
 
@@ -58,7 +58,7 @@ I could use a coffee!  It fuels consultants, editors, domain registration and so
 
 # What Is PySimpleGUI ❓
 
-PySimpleGUI is a Python package that enables Python programmers of all levels to create GUIs.  You specify your GUI window using a "layout" which contains widgets (they're called "Elements" in PySimpleGUI).  Your layout is used to create a window using one of the 4 supported frameworks to display and interact with your window.  Supported frameworks include tkinter, Qt, WxPython, or Remi. The term "wrapper" is sometimes used for these kinds of packages.
+PySimpleGUI is a Python package that enables Python programmers of all levels to create GUIs.  You specify your GUI window using a "layout" which contains widgets (they're called "Elements" in PySimpleGUI).  Your layout is used to create a window using one of the 4 supported frameworks to display and interact with your window.  Supported frameworks include Tkinter, Qt, WxPython, or Remi. The term "wrapper" is sometimes used for these kinds of packages.
 
 Your PySimpleGUI code is simpler and shorter than writing directly using the underlying framework because PySimpleGUI implements much of the "boilerplate code" for you.  Additionally, interfaces are simplified to require as little code as possible to get the desired result.  Depending on the program and framework used, a PySimpleGUI program may require 1/2 to 1/10th amount of code to create an identical window using one of the frameworks directly.
 
@@ -68,7 +68,7 @@ While the goal is to encapsulate/hide the specific objects and code used by the 
 
 Python has brought a large number of people into the programming community. The number of programs and the range of areas it touches is mindboggling.  But more often than not, these technologies are out of reach of all but a handful of people.  The majority of Python programs are "command line" based. This isn't a problem for programmer-types as we're all used to interacting with computers through a text interface.  While programmers don't have a problem with command-line interfaces, most "normal people" do.  This creates a digital divide, a "GUI Gap".
 
-Adding a GUI to a program opens that program up to a wider audience. It becomes more approachable. GUIs can also make interacting with some programs easier, even for those that are comfortable with a command-line interface.  And finally, some problems require a GUI.  
+Adding a GUI to a program opens that program up to a wider audience. It becomes more approachable. GUIs can also make interacting with some programs easier, even for those comfortable with a command-line interface.  And finally, some problems require a GUI.  
 
 
 <p align="center">
@@ -79,7 +79,7 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
 
 ## Getting Over "The Bar"
 
-It's been said by some that "the bar is pretty high" when it comes to learning GUI programming in Python.  
+Some have said that "the bar is pretty high" when it comes to learning GUI programming in Python.  
 >	 What happens when the bar is placed on the ground and can be stepped over?  
 
 This is one of the questions that the PySimpleGUI project has tried to answer.  Here's a humorous look at what's been a not funny situation.
@@ -88,9 +88,9 @@ This is one of the questions that the PySimpleGUI project has tried to answer.  
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/GettingOverThe%20GUILearningBar.jpg" width="600px">
 </p>
 
-The results have been fascinating to witness and it's been touching to read the accounts of the journeys of users. 
+The results have been fascinating to witness, and it's been touching to read the accounts of users' journeys. 
 
-Nothing prepared me for the emails that started to arrive soon after the first release of PySimpleGUI. They are heartwarming and heartbreaking tales of life-long dreams of creating a program that required a GUI. Some made a few attempts, giving up each time. Others never started once they started to research what was required. 
+Nothing prepared me for the emails that started to arrive soon after the first release of PySimpleGUI. They are heartwarming and heartbreaking tales of life-long dreams of creating a program that requires a GUI. Some made a few attempts, giving up each time. Others never started once they started to research what was needed. 
 
 After recounting the varied and long road to finding PySimpleGUI, the stories became similar. They each found success and expressed joy and gratitude. The joy expressed in these messages was unlike anything I had encountered in the entirety of career in the computing field.
 
@@ -102,7 +102,7 @@ It's been these emails and the messages of gratitude seen here in the GitHub Iss
 
 Hi there!  I'm Mike.  You'll find me right here, on the PySimpleGUI GitHub, solving problems and continuously pushing PySimpleGUI forward.  I've dedicated my days, nights, and weekends to the project and PySimpleGUI users.  Our successes are ultimately shared.  I'm successful when you're successful.  
 
-While I'm a relative newcomer to Python, I've been writing software since the 70s.  The majority of my career was spent creating products in Silicon Valley. I bring to PySimpleGUI the same professionalism and dedication as I did to the corporate products I developed. You are my customers now.
+While I'm a relative newcomer to Python, I've been writing software since the 70s.  The majority of my career was spent creating products in Silicon Valley. I bring PySimpleGUI the same professionalism and dedication as I did to the corporate products I developed. You are my customers now.
 
 
 ## Project Goals 🥅
@@ -112,7 +112,7 @@ Two of the most important goals of the PySimpleGUI project:
 * Having fun
 * Your success 
 
-**Fun** as a goal on a serious project sounds odd, but it's a serious goal. I find writing these GUI programs to be a lot of fun. One reason is how little time it takes to write a complete solution. If we're not enjoying the process then someone's going to give up. 
+**Fun** as a goal on a serious project sounds odd, but it's a serious goal. I find writing these GUI programs to be a lot of fun. One reason is how little time it takes to write a complete solution. If we're not enjoying the process, then someone's going to give up. 
 
 There is a significant amount of documentation, a cookbook, 100's of demo programs to get you immediately running, a detailed call reference, YouTube videos, online Trinket demos, and more... all working to create... a fun experience.
 
@@ -130,11 +130,11 @@ There are 100s of pages of written documentation and 100s of example programs th
 
 ## Example 1 - The One-Shot Window
 
-This type of program is called a "one-shot" window because the window is displayed one time, the values collected, and then it is closed.  It doesn't remain open for a long time like you would in a Word Processor.
+This type of program is called a "one-shot" window because the window is displayed one time, the values are collected and then closed.  It doesn't remain open for a long time like you would in a Word Processor.
 
 ### Anatomy of a Simple PySimpleGUI Program
 
-There are 5 sections to a PySimpleGUI program
+There are five sections to a PySimpleGUI program.
 
 ```python
 import PySimpleGUI as sg                        # Part 1 - The import
@@ -186,7 +186,7 @@ window = sg.Window('Window Title', layout)
 # Display and interact with the Window using an Event Loop
 while True:
     event, values = window.read()
-    # See if user wants to quit or window was closed
+    # See if the user wants to quit or window was closed
     if event == sg.WINDOW_CLOSED or event == 'Quit':
         break
     # Output a message to the window
@@ -217,7 +217,7 @@ Another difference is the addition of this `Text` element:
           [sg.Text(size=(40,1), key='-OUTPUT-')],
 ```
 
-There are 2 parameters, the `key` we already covered.  The `size` parameter defines the size of the element in characters.  In this case, we're indicating that this `Text` element is 40 characters wide, by 1 character high.  Notice that there is no text string specified which means it'll be blank.  You can easily see this blank row in the window that's created.
+There are two parameters, the `key` we already covered.  The `size` parameter defines the size of the element in characters.  In this case, we're indicating that this `Text` element is 40 characters wide by 1 character high.  Notice that there is no text string specified, which means it'll be blank.  You can easily see this blank row in the window that's created.
 
 We also added a button,  "Quit".
 
@@ -237,7 +237,7 @@ If the window wasn't closed nor the Quit button clicked, then execution continue
     window['-OUTPUT-'].update('Hello ' + values['-INPUT-'] + "! Thanks for trying PySimpleGUI")
 ```
 
-This statement updates the `Text` element that has the key `-OUTPUT-` with a string.  `window['-OUTPUT-']` finds the element with the key `-OUTPUT-`.  That key belongs to our blank `Text` element.  Once that element is returned from the lookup, then its `update` method is called.  Nearly all elements have an `update` method.  This method is used to change the value of the element or to change some configuration of the element. 
+This statement updates the `Text` element that has the key `-OUTPUT-` with a string.  `window['-OUTPUT-']` finds the element with the key `-OUTPUT-`.  That key belongs to our blank `Text` element.  Once that element is returned from the lookup, then its `update` method is called.  Nearly all elements have an `update` method.  This method is used to change the value of the element or change some configuration of the element. 
 
 If we wanted the text to be yellow, then that can be accomplished by adding a `text_color` parameter to the `update` method so that it reads:
 ```python
@@ -261,15 +261,15 @@ The parameters available for each element are documented in both the [call refer
 </p>
 
 
-As you can see several things can be changed for a `Text` element.  The call reference documentation is a valuable resource that will make programming in PySimpleGUI, uhm, simple.
+As you can see, several things can be changed for a `Text` element.  The call reference documentation is a valuable resource that will make programming in PySimpleGUI, uhm, simple.
 
 <hr>
 
 ## Layouts Are Funny LOL! 😆
 
-Your window's layout is a "list of lists" (LOL).  Windows are broken down into "rows".  Each row in your window becomes a list in your layout.  Concatenate together all of the lists and you've got a layout...a list of lists.
+Your window's layout is a "list of lists" (LOL).  Windows are broken down into "rows".  Each row in your window becomes a list in your layout.  Concatenate together all of the lists, and you've got a layout...a list of lists.
 
-Here is the same layout as before with an extra `Text` element added to each row so that you can more easily see how rows are defined:
+Here is the same layout as before, with an extra `Text` element added to each row so that you can more easily see how rows are defined:
 
 ```python
 layout = [  [sg.Text('Row 1'), sg.Text("What's your name?")],
@@ -304,7 +304,7 @@ produces this window which has a 4 x 4 grid of buttons:
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/4x4grid.jpg">
 </p>
 
-Recall how "fun" is one of the goals of the project.  It's fun to directly apply Python's powerful basic capabilities to GUI problems. Instead of pages of code to create a GUI, it's a few (or often 1) lines of code.
+Recall how "fun" is one of the goals of the project.  It's fun to apply Python's powerful basic capabilities to GUI problems directly. Instead of pages of code to create a GUI, it's a few (or often 1) lines of code.
 
 ## Collapsing Code
 
@@ -319,7 +319,7 @@ event, values = sg.Window('Window Title', [[sg.Text("What's your name?")],[sg.In
 </p>
 
 
-The same window is shown and returns the same values as the example showing the sections of a PySimpleGUI program.  Being able to do so much with so little enables you to quickly and easily add GUIs to your Python code.  If you want to display some data and get a choice from your user, it can be done in a line of code instead of a page of code.
+The same window is shown and returns the same values as the example showing the sections of a PySimpleGUI program.  Doing so much with so little enables you to quickly and easily add GUIs to your Python code.  If you want to display some data and get a choice from your user, it can be done in a line of code instead of a page of code.
 
 By using short-hand aliases, you can save even more space in your code by using fewer characters.  All of the Elements have one or more shorter names that can be used.  For example, the `Text` element can be written simply as `T`. The `Input` element can be written as `I` and the `Button` as `B`.  Your single-line window code thus becomes:
 
@@ -330,7 +330,7 @@ event, values = sg.Window('Window Title', [[sg.T("What's your name?")],[sg.I()],
 
 ### Code Portability
 
-PySimpleGUI is currently capable of running on 4 Python GUI Frameworks.  The framework to use is specified using the import statement.  Change the import and you'll change the underlying GUI framework.  For some programs, no other changes are needed than the import statement to run on a different GUI framework.  In the example above, changing the import from `PySimpleGUI` to `PySimpleGUIQt`, `PySimpleGUIWx`, `PySimpleGUIWeb` will change the framework.
+PySimpleGUI is currently capable of running on 4 Python GUI Frameworks.  The framework to use is specified using the import statement.  Change the import, and you'll change the underlying GUI framework.  For some programs, no other changes are needed than the import statement to run on a different GUI framework.  In the example above, changing the import from `PySimpleGUI` to `PySimpleGUIQt`, `PySimpleGUIWx`, `PySimpleGUIWeb` will change the framework.
 
 | Import Statement | Resulting Window |
 |--|--|
@@ -341,9 +341,9 @@ PySimpleGUI is currently capable of running on 4 Python GUI Frameworks.  The fra
 
 
 
-Porting GUI code from one framework to another (e.g. moving your code from tkinter to Qt) usually requires a rewrite of your code.  PySimpleGUI is designed to enable you to have easy movement between the frameworks.  Sometimes some changes are required of you, but the goal is to have highly portable code with minimal changes.  
+Porting GUI code from one framework to another (e.g., moving your code from Tkinter to Qt) usually requires a code rewrite.  PySimpleGUI is designed to enable you to have easy movement between the frameworks.  Sometimes some changes are required of you, but the goal is to have highly portable code with minimal changes.  
 
-Some features, like a System Tray Icon, are not available on all of the ports.  The System Tray Icon feature is available on the Qt and WxPython ports.  A simulated version is available on tkinter.  There is no support for a System Tray icon in the PySimpleGUIWeb port.
+Some features, like a System Tray Icon, are not available on all of the ports.  The System Tray Icon feature is available on the Qt and WxPython ports.  A simulated version is available on Tkinter.  There is no support for a System Tray icon in the PySimpleGUIWeb port.
 
 ## Runtime Environments
 
@@ -352,8 +352,8 @@ Some features, like a System Tray Icon, are not available on all of the ports.  
 | Python |  Python 3.4+ |
 | Operating Systems | Windows, Linux, Mac |
 | Hardware | Desktop PCs, Laptops, Raspberry Pi, Android devices running PyDroid3 |
-| Online | repli.it, Trinket.com (both run tkinter in a browser) |
-| GUI Frameworks | tkinter, pyside2, WxPython, Remi |
+| Online | repli.it, Trinket.com (both run Tkinter in a browser) |
+| GUI Frameworks | Tkinter, pyside2, WxPython, Remi |
 
 
 ## Integrations
@@ -384,7 +384,7 @@ These packages and more are ready for you to put into your GUI as there are demo
 Two common ways of installing PySimpleGUI:
 
 1. pip to install from PyPI
-2. Download the file PySimpleGUI.py and place in your application's folder
+2. Download the file PySimpleGUI.py and place it in your application's folder
 
 ### Pip Installing & Upgrading
 
@@ -394,7 +394,7 @@ Initial install for Windows:
 
 `python -m pip install PySimpleGUI`
 
-Initial install for Linux and MacOS:
+Initial install for Linux and macOS:
 
 `python3 -m pip install PySimpleGUI`
 
@@ -404,20 +404,20 @@ Upgrade installation on Windows:
 
 `python -m pip install --upgrade --no-cache-dir PySimpleGUI`
 
-Upgrade for Linux and MacOS:
+Upgrade for Linux and macOS:
 
 `python3 -m pip install --upgrade --no-cache-dir PySimpleGUI`
 
 
 ### Single File Installing
 
-PySimpleGUI was created as a single .py file so that it would be very easy for you to install it, even on systems that are not connected to the internet like a Raspberry Pi.  It's as simple as placing the PySimpleGUI.py file into the same folder as your application that imports it. Python will use your local copy when performing the import.
+PySimpleGUI was created as a single .py file so that it would be straightforward for you to install it, even on systems that are not connected to the internet, like a Raspberry Pi.  It's as simple as placing the PySimpleGUI.py file into the same folder as your application that imports it. Python will use your local copy when performing the import.
 
-When installing using just the .py file, you can get it from either PyPI or if you want to run the most recent unreleased version then you'll download it from GitHub.
+When installing using just the .py file, you can get it from  PyPI, or if you want to run the most recent unreleased version, you'll download it from GitHub.
 
-To install from PyPI, download either the wheel or the .gz file and unzip the file.  If you rename the .whl file to .zip you can open it just like any normal zip file.  You will find the PySimpleGUI.py file in one of the folders.  Copy this file to your application's folder and you're done.
+To install from PyPI, download either the wheel or the .gz file and unzip the file.  If you rename the .whl file to .zip, you can open it just like any regular zip file.  You will find the PySimpleGUI.py file in one of the folders.  Copy this file to your application's folder, and you're done.
 
-The PyPI link for the tkinter version of PySimpleGUI is:
+The PyPI link for the Tkinter version of PySimpleGUI is:
 https://pypi.org/project/PySimpleGUI/#files
 
 The GitHub repo's latest version can be found here:
@@ -430,27 +430,27 @@ Now some of you are thinking, "yea, but, wait, having a single huge source file 
 
 ## Galleries 🎨
 
-Work on a more formal gallery of user-submitted GUIs as well as those found on GitHub is underway but as of this writing it's not complete.  There are currently 2 places you can go to see some screenshots in a centralized way.  Hopefully, a Wiki or other mechanism can be released soon to do justice to the awesome creations people are making.
+Work on a more formal gallery of user-submitted GUIs and those found on GitHub is underway, but as of this writing, it's not complete.  There are currently two places you can go to see some screenshots in a centralized way.  Hopefully, a Wiki or other mechanism can be released soon to do justice to people's awesome creations.
 
 ### User Submitted Gallery
 
-The first is a [user submitted screenshots issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/10) located on the GitHub.  It's an informal way for people to show off what they've made.  It's not ideal, but it was a start.
+The first is a [user submitted screenshots issue](https://github.com/PySimpleGUI/PySimpleGUI/issues/10) located on GitHub.  It's an informal way for people to show off what they've made.  It's not ideal, but it was a start.
 
 ### Massive Scraped GitHub Images
 
-The second is a [massive gallery of over 3,000 images](https://www.dropbox.com/sh/g67ms0darox0i2p/AAAMrkIM6C64nwHLDkboCWnaa?dl=0) scraped from 1,000 projects on GitHub that are reportedly using PySimpleGUI.  It's not been hand-filtered and there are plenty of old screenshots that were used in the early documentation.  But, you may find something in there that sparks your imagination.
+The second is a [massive gallery of over 3,000 images](https://www.dropbox.com/sh/g67ms0darox0i2p/AAAMrkIM6C64nwHLDkboCWnaa?dl=0) scraped from 1,000 projects on GitHub that are reportedly using PySimpleGUI.  It's not been hand-filtered, and there are plenty of old screenshots used in the early documentation.  But, you may find something in there that sparks your imagination.
 
 <hr>
 
 # Uses for PySimpleGUI 🔨
 
-The following sections showcase a fraction of the uses for PySimpleGUI.  There are over 1,000 projects on GitHub alone that use PySimpleGUI.  It's truly amazing how possibilities have opened up for so many people.  Many users have spoken about previously attempting to create a GUI in Python and failing, but finally achieving their dreams when they tried PySimpleGUI.
+The following sections showcase a fraction of the uses for PySimpleGUI.  There are over 1,000 projects on GitHub alone that use PySimpleGUI.  It's truly amazing how possibilities have opened up for so many people.  Many users have previously mentioned attempting to create a GUI in Python and failing, but finally achieving their dreams when they tried PySimpleGUI.
 
 ## Your First GUI
 
-Of course one of the best uses of PySimpleGUI is getting you into making GUIs for your Python projects.  You can start as small as requesting a filename.  For this, you only need to make a single call to one of the "high-level functions" called `popup`.  There are all kinds of popups, some collect information.
+Of course, one of the best uses of PySimpleGUI is getting you into making GUIs for your Python projects.  You can start as small as requesting a filename.  For this, you only need to make a single call to one of the "high-level functions" called `popup`.  There are all kinds of popups, and some collect information.
 
-`popup` on itself makes a window to display information.  You can pass multiple parameters just like a print.  If you want to get information, then you will call functions that start with `popup_get_` such as `popup_get_filename`.
+`popup` on itself makes a window to display information.  You can pass multiple parameters just like a print.  If you want to get information, you will call functions that start with `popup_get_` such as `popup_get_filename`.
 
 Adding a single line to get a filename instead of specifying a filename on the command line can transform your program into one that "normal people" will feel comfortable using.
 
@@ -466,7 +466,7 @@ sg.popup('You entered', filename)
 ```
 
 
-This code will display 2 popup windows.  One to get the filename, which can be browsed to or pasted into the input box.  
+This code will display 2 popup windows to get the filename, which can be browsed to or pasted into the input box.  
 
 <p align="center">
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/First_GUI1.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/First_GUI1.jpg"  alt="img" width="400px"></a>
@@ -485,9 +485,9 @@ The other window will output what is collected.
 ## Rainmeter-Style Windows
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/RainmeterStyleWidgets.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/RainmeterStyleWidgets.jpg"  alt="img" align="right" width="500px"></a>
-The default settings for GUI frameworks don't tend to produce the nicest looking windows.  However, with some attention to detail, you can do several things to make windows look attractive.  PySimpleGUI makes it easier to manipulate colors and features like removing the title bar.  The result is windows that don't look like your typical tkinter windows.
+The default settings for GUI frameworks don't tend to produce the nicest looking windows.  However, with some attention to detail, you can do several things to make windows look attractive.  PySimpleGUI makes it easier to manipulate colors and features like removing the title bar.  The result is windows that don't look like your typical Tkinter windows.
 
-Here is an example of how you can create windows that don't look like your typical tkinter in windows.  In this example, the windows have their titlebars removed.  The result is windows that look much like those found when using Rainmeter, a desktop widget program.
+Here is an example of creating windows that don't look like your typical Tkinter in windows.  In this example, the windows have their title bars removed.  The result is windows that look much like those found when using Rainmeter, a desktop widget program.
 
 <br><br>
 You can easily set the transparency of a window as well.  Here are more examples of desktop widgets in the same Rainmeter style.  Some are dim appearing because they are semi-transparent.
@@ -495,7 +495,7 @@ You can easily set the transparency of a window as well.  Here are more examples
 
 
 
-Both of these effects; removing the titlebar and making a window semi-transparent, are achieved by setting 2 parameters when creating the window.  This is an example of how PySimpleGUI enables easy access to features.  And because PySimpleGUI code is portable across the GUI frameworks, these same parameters work for the other ports such as Qt.
+These effects, removing the title bar and making a window semi-transparent, are achieved by setting 2 parameters when creating the window.  This is an example of how PySimpleGUI enables easy access to features.  And because PySimpleGUI code is portable across the GUI frameworks, these same parameters work for the other ports such as Qt.
 
 
 Changing the Window creation call in Example 1 to this line of code produces a similar semi-transparent window:
@@ -506,7 +506,7 @@ window = sg.Window('My window', layout, no_titlebar=True, alpha_channel=0.5)
 
 ## Games
 
-While not specifically written as a game development SDK, PySimpleGUI makes the development of some games quite easy.
+While not explicitly written as a game development SDK, PySimpleGUI makes the development of some games relatively easy.
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Chess.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Chess.png"  alt="img" align="right" width="500px"></a>
 This Chess program not only plays chess, but it integrates with the Stockfish chess-playing AI.
@@ -537,7 +537,7 @@ While not specifically written as a game development SDK, PySimpleGUI makes deve
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/OpenCV.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/OpenCV.jpg"  alt="img" align="right" width="400px"></a>
 
 
-Capturing and displaying video from your webcam in a GUI is 4 lines of PySimpleGUI code.  Even more impressive is that these 4 lines of code work with the tkinter, Qt, and Web ports.  You can display your webcam, in realtime, in a browser using the same code that displays the image using tkinter.
+Capturing and displaying video from your webcam in a GUI is 4 lines of PySimpleGUI code.  Even more impressive is that these 4 lines of code work with the Tkinter, Qt, and Web ports.  You can display your webcam in a browser using the same code that displays the image using Tkinter in real-time.
 
 
 Media playback, audio and video, can also be achieved using the VLC player.  A demo application is provided to you so that you have a working example to start from. Everything you see in this readme is available to you as a starting point for your own creations.
@@ -551,11 +551,11 @@ Media playback, audio and video, can also be achieved using the VLC player.  A d
 
 
 
-AI and Python have long been a recognized superpower when the two are paired together. What's often missing however is a way for users to interact with these AI algorithms familiarly, using a GUI.
+AI and Python have long been recognized superpowers when the two are paired together. What's often missing, however, is a way for users to interact with these AI algorithms familiarly, using a GUI.
 
-These YOLO demos are a great example of how a GUI can make a tremendous difference in interacting with AI algorithms.  Notice two sliders at the bottom of these windows.  These 2 sliders change a couple of the parameters used by the YOLO algorithm.  
+These YOLO demos are a great example of how a GUI can make a tremendous difference interacting with AI algorithms.  Notice two sliders at the bottom of these windows.  These 2 sliders change a couple of the parameters used by the YOLO algorithm.  
 
-If you were tuning your YOLO demo using only the command line, you would need to set the parameters, once, when you launch the application, see how they perform, stop the application, change the parameters, and finally restart the application with the new parameters.
+If you were tuning your YOLO demo using only the command line, you would need to set the parameters once when you launch the application, see how they perform, stop the application, change the parameters, and finally restart the application with the new parameters.
 <br><br><br><br>
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/YOLO%20Object%20Detection.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/YOLO%20Object%20Detection.jpg"  alt="img" align="right" width="500px"></a>
@@ -572,9 +572,9 @@ Contrast those steps against what can be done using a GUI.  A GUI enables you to
 There are SO many AI programs that have been published that are command-line driven.  This in itself isn't a huge hurdle, but it's enough of a "pain in the ass" to type/paste the filename you want to colorize on the command line, run the program, then open the resulting output file in a file viewer.
 
 
-GUIs have the power to **change the user experience**, to fill the "GUI Gap".  With this colorizer example, the user only needs to supply a folder full of images, and then click on an image to both colorize and display the result.  
+GUIs have the power to **change the user experience**, to fill the "GUI Gap".  With this colorizer example, the user only needs to supply a folder full of images and then click on an image to colorize and display the result.  
 
-The program/algorithm to do the colorization was freely available, ready to use.  What was missing is the ease of use that a GUI could bring.
+The program/algorithm to do the colorization was freely available, ready to use.  What was missing was the ease of use that a GUI could bring.
 
 
 <hr>
@@ -593,7 +593,7 @@ You can use the built-in drawing/graphing capabilities to produce custom graphs.
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Matplotlib.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Matplotlib.jpg"  alt="img" align="right" width="500px"></a>
 
 
-Matplotlib is a popular choice with Python users.  PySimpleGUI can enable you to embed Matplotlib graphs directly into your GUI window.  You can even embed the interactive controls into your window if you want to retain the Matplotlib interactive features.
+Matplotlib is a popular choice with Python users.  PySimpleGUI can enable you to embed Matplotlib graphs directly into your GUI window.  You can even embed the interactive controls into your window to retain the Matplotlib interactive features.
 
 <br><br>
 <br><br>
@@ -619,11 +619,11 @@ Using PySimpleGUI's color themes, you can produce graphs that are a notch above 
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/JumpCutter.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/JumpCutter.png"  alt="img" align="right" width="500px"></a>
 
-The "GUI Gap" mentioned earlier can be easily solved using PySimpleGUI.  You don't even need to have the source code to the program you wish to add a GUI onto.  A "front-end" GUI is one that collects information that is then passed to a command-line application.  
+The "GUI Gap" mentioned earlier can be easily solved using PySimpleGUI.  You don't even need to have the source code to the program you wish to add a GUI.  A "front-end" GUI collects information that is then passed to a command-line application.  
 
 Front-end GUIs are a fantastic way for a programmer to distribute an application that users were reluctant to use previously because they didn't feel comfortable using a command-line interface.  These GUIs are your only choice for command-line programs that you don't have access to the source code for.
 
-This example is a front-end for a program called "Jump Cutter".  The parameters are collected via the GUI, a command-line is constructed using those parameters, and then the command is executed with the output from the command-line program being routed to the GUI interface.  In this example, you can see in yellow the command that was executed.
+This example is a front-end for a program called "Jump Cutter".  The parameters are collected via the GUI. A command line is constructed using those parameters. Then, the command is executed with the output from the command-line program being routed to the GUI interface.  In this example, you can see in yellow the command that was executed.
 <br><br>
 <hr>
 
@@ -632,7 +632,7 @@ This example is a front-end for a program called "Jump Cutter".  The parameters 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Raspberry%20Pi.jpg"  alt="img" align="right" width="500px"></a>
 
 
-Because PySimpleGUI is compatible back to Python 3.4, it is capable of creating a GUI for your Raspberry Pi projects.  It works particularly well when paired with a touchscreen.  You can also use PySimpleGUIWeb to control your Pi if it doesn't have a monitor attached.
+Because PySimpleGUI is compatible back to Python 3.4, it can create a GUI for your Raspberry Pi projects.  It works particularly well when paired with a touchscreen.  You can also use PySimpleGUIWeb to control your Pi if it doesn't have a monitor attached.
 
 <br><br>
 <br><br>
@@ -652,7 +652,7 @@ For example, it's not possible to change the color/look-and-feel of a titlebar u
 
 <a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Desktop%20Bouncing%20Balls.gif"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Desktop%20Bouncing%20Balls.gif"  alt="img" align="right" width="500px"></a>
 
-Unbelievably, this window is using tkinter to achieve what appears to be something like a screensaver.
+Unbelievably, this window is using Tkinter to achieve what appears to be something like a screensaver.
 
 
 On windows, tkinter can completely remove the background from your application.  Once again, PySimpleGUI makes accessing these capabilities trivial.  Creating a transparent window requires adding a single parameter to the call that creates your `Window`.  One parameter change can result in a simple application with this effect:
@@ -672,7 +672,7 @@ Tired of the default grey GUIs?  PySimpleGUI makes it trivial for your window to
 
 With most GUI frameworks, you must specify the color for every widget you create.  PySimpleGUI takes this chore from you and will automatically color the Elements to match your chosen theme.
 
-To use a theme, call the `theme` function with the name of the theme before creating your window. You can add spaces for readability.  To set the theme to "Dark Grey 9":
+To use a theme, call the `theme` function with the theme's name before creating your window. You can add spaces for readability.  To set the theme to "Dark Grey 9":
 
 ```python
 import PySimpleGUI as sg
@@ -687,28 +687,28 @@ This single line of code changes the window's appearance entirely:
 </p>
 
 
-The theme changed colors of the background, text, input background, input text, and button colors.  In other GUI packages, to change color schemes like this, you would need to specify the colors of each widget individually, requiring numerous changes to your code.
+The theme changed the background, text, input background, input text, and button colors.  In other GUI packages, to change color schemes like this, you would need to specify the colors of each widget individually, requiring numerous changes to your code.
 
 <hr>
 
 # Support 💪
 
-Your first stop should be the [documentation](http://www.PySimpleGUI.org) and [demo programs](http://Demos.PySimpleGUI.org).  If you still have a question or need help...  no problem... help is available to you, at no cost. Simply [file an Issue](http://Issues.PySimpleGUI.org) on the PySimpleGUI GitHub repo and you'll get help.  
+Your first stop should be the [documentation](http://www.PySimpleGUI.org) and [demo programs](http://Demos.PySimpleGUI.org).  If you still have a question or need help...  no problem... help is available to you at no cost. [File an issue](http://Issues.PySimpleGUI.org) on the PySimpleGUI GitHub repo, and you'll get help.  
 
 Nearly all software companies have a form that accompanies bug reports.  It's not a bad trade... fill in the form, get free software support.  This information helps get you an answer efficiently.
 
 In addition to requesting information such as the version numbers of PySimpleGUI and underlying GUI frameworks, you're also given a checklist of items that may help you solve your problem.
 
-***Please fill in the form.***  It may feel pointless to you.  It may feel painful, despite it taking just a moment.  It helps get you a solution faster.  If it wasn't useful and necessary information to help you get a speedy reply and fix, you wouldn't be asked to fill it out.  "Help me help you".
+***Please fill in the form.***  It may feel pointless to you.  It may feel painful, despite it taking just a moment.  It helps get you a solution faster.  If it weren't useful and necessary information to help you get a speedy reply and fix, you wouldn't be asked to fill it out.  "Help me help you".
 
 
 # Supporting 	<a href="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"><img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/PSGSuperHero.png"  alt="img"  width="90px"></a>
 
-Financial support for the project is greatly appreciated.  To be honest, financial help is needed.  It's expensive just keeping the lights on.  The domain name registrations, a long list of subscriptions for things like Trinket, consulting help, etc., quickly add up to a sizable recurring cost.  
+Financial support for the project is greatly appreciated.  To be honest, financial help is needed.  It's expensive just keeping the lights on.  The domain name registrations, a long list of subscriptions for things like Trinket, consulting support, etc., quickly add up to a sizable recurring cost.  
 
 PySimpleGUI wasn't inexpensive to create. While a labor of love, it was very laborious over several years, and quite a bit was invested, and continues to be invested, in creating what you see today.
 
-PySimpleGUI has an open-source license and it would be great if it could remain that way.  If you or your company (especially if you're using PySimpleGUI in a company) are benefiting financially by using PySimpleGUI, you have the capability of extending the life of the project for you and other users.
+PySimpleGUI has an open-source license, and it would be great if it could remain that way.  If you or your company (especially if you're using PySimpleGUI in a company) are benefiting financially by using PySimpleGUI, you have the capability of extending the life of the project for you and other users.
 
 ### Buy Me A Coffee
 
@@ -724,22 +724,22 @@ Buy Me a Coffee is a great way to publicly support developers.  It's quick, easy
 
 <a href="https://github.com/sponsors/PySimpleGUI" target="_blank"><img src="https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=%3Curl%3E&color=f88379"></a>
 
-The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is how you can sponsor the project at varying levels of support on an ongoing basis.  It's how many Open Source developers are able to receive corporate level sponsorship.
+The [GitHub recurring sponsorship](https://github.com/sponsors/PySimpleGUI) is how you can sponsor the project at varying levels of support on an ongoing basis.  It's how many Open Source developers can receive corporate-level sponsorship.
 
-Your help in financially contributing to the project would be greatly appreciated. Being an Open Source developer is financially challenging.  YouTube video creators are able to make a living creating videos.  It's not so easy yet for Open Source developers.
+Your help in financially contributing to the project would be greatly appreciated. Being an Open Source developer is financially challenging.  YouTube video creators can make a living creating videos.  It's not so easy yet for Open Source developers.
 
 
 # Thank you for the Thank You's
 
-To everyone that's helped, in whatever fashion, I'm very very grateful.
+To everyone that's helped, in whatever fashion, I'm very, very grateful.
 
-Even taking a moment to say "thank you" helps, and a HUGE number of you have done that.  It's been an amazing number actually.  I value these thanks and find inspiration in the words alone.  Every message is a little push forward.  It adds a little bit of energy and keeps the whole project's momentum.  I'm so very grateful to everyone that's helped in whatever form it's been.
+Even taking a moment to say "thank you" helps, and a HUGE number of you have done that.  It's been an amazing number, actually.  I value these thanks and find inspiration in words alone.  Every message is a little push forward.  It adds a little bit of energy and keeps the whole project's momentum.  I'm so very grateful to everyone that's helped in whatever form it's been.
 
 
 
 # Contributing  👷
 
-While PySimpleGUI is currently licensed under an open-source license, the project itself is structured like a proprietary product.  Pull Requests are not accepted.
+While PySimpleGUI is currently licensed under an open-source license, the project is structured like a proprietary product.  Pull Requests are not accepted.
 
 One of the best ways for you to contribute code is to write and publish applications.  Users are inspired by seeing what other users build.  Here's a simple set of steps you can take - Create a GitHub repo, post the code, and include a screenshot in your repo's readme file.  Then come back to the PySimpleGUI repo and post a screenshot in Issue #10 or in the project's WIKI.
 
@@ -748,7 +748,7 @@ If there is a feature missing that you need or you have an enhancement to sugges
 
 # Special Thanks 🙏
 
-This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  The unique minesweeper that uses an image for the board was created by Israel.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  [@Chr0nicT](https://github.com/Chr0nicT) is the youngest developer I've worked with, ever, on projects. This kid shocks me on a regular basis.  Ask for a capability, such as the PySimpleGUI GitHub Issues form error checking bot, and it simply happens regardless of the technologies involved. I'm fortunate that we were introduced. Someday he's going to be whisked away, but until then we're all benefiting from his talent.  The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35). [@nngogol](https://github.com/nngogol) has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of initial release.  He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of doc strings as well as tools that generate the online documenation using the PySimpleGUI code itself.  PySimpleGUI would not be where it is today were it not for the help of these individuals.
+This version of the PySimpleGUI readme wouldn't have come together without the help from [@M4cs](https://github.com/M4cs). He's a fantastic developer and has been a PySimpleGUI supporter since the project's launch.   [@israel-dryer](https://github.com/israel-dryer) is another long-term supporter and has written several PySimpleGUI programs that pushed the envelope of the package's capabilities.  Israel created the unique minesweeper that uses an image for the board.  [@jason990420](https://github.com/jason990420) surprised many when he published the first card game using PySimpleGUI that you see pictured above as well as the first minesweeper game made with PySimpleGUI.  [@Chr0nicT](https://github.com/Chr0nicT) is the youngest developer I've worked with, ever, on projects. This kid shocks me regularly.  Ask for a capability, such as the PySimpleGUI GitHub Issues form error checking bot, and it simply happens regardless of the technologies involved. I'm fortunate that we were introduced. Someday he's going to be whisked away, but until then, we're all benefiting from his talent.  The Japanese version of the readme was greatly improved with help from  [@okajun35](https://github.com/okajun35). [@nngogol](https://github.com/nngogol) has had a very large impact on the project, also getting involved with PySimpleGUI in the first year of the initial release.  He wrote a designer, came up with the familiar window[key] lookup syntax, wrote the tools that create the documentation, designed the first set of docstrings, and tools that generate the online documentation using the PySimpleGUI code itself.  PySimpleGUI would not be where it is today were it not for the help of these individuals.
 
 The more than 2,200 GitHub repos that use PySimpleGUI are owed a "Thank You" as well, for it is *you* that has been the inspiration that fuels this project's engine.  
 
@@ -757,4 +757,3 @@ The overseas users that post on Twitter overnight are the spark that starts the 
 You've all been the best user community an Open Source developer could hope for.
 
 © Copyright 2021 PySimpleGUI
-
