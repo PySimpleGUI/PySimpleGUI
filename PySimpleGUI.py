@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.10 Unreleased"
+version = __version__ = "4.47.0.11 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -33,6 +33,9 @@ version = __version__ = "4.47.0.10 Unreleased"
     4.47.0.10
         For new Table parm enable_click_events.  If True, the header will be row -1. If show row numbers is true, then col will be -1 if clicked on row num (like header)
             This keeps the (row, col) matching user data portion when user data is clicked  
+    4.47.0.11
+        Right click exit available for the SDK reference window in case it gets off the screen on something like a Pi with a small screen.
+        Fixed return type for Window.read_all_windows
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10500,7 +10503,7 @@ def read_all_windows(timeout=None, timeout_key=TIMEOUT_KEY):
     :param timeout_key: Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY
     :type timeout_key:  (Any)
     :return:            A tuple with the  (Window, event, values dictionary/list)
-    :rtype:             Tuple[Window, Any, (Dict or List)]
+    :rtype:             (Window, Any, Dict | List)
     """
 
     if len(Window._active_windows) == 0:
@@ -21647,7 +21650,7 @@ def main_sdk_help():
     layout += [[CBox('Summary Only', enable_events=True, k='-SUMMARY-'), CBox('Display Only PEP8 Functions', default=True, k='-PEP8-')]]
     # layout += [[Button('Exit', size=(15, 1))]]
 
-    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=EMOJI_BASE64_THINK, finalize=True)
+    window = Window('SDK API Call Reference', layout, use_default_focus=False, keep_on_top=True, icon=EMOJI_BASE64_THINK, finalize=True, right_click_menu=MENU_RIGHT_CLICK_EDITME_EXIT)
     window['-DOC LINK-'].set_cursor('hand1')
     online_help_link = ''
     ml = window['-ML-']
