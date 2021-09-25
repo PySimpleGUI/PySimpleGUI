@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.13 Unreleased"
+version = __version__ = "4.47.0.14 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -40,6 +40,9 @@ version = __version__ = "4.47.0.13 Unreleased"
         Fix for popout debugger using binding (finally got it)
     4.47.0.13
         Redefinition of the Debug button
+    4.47.0.14
+        Fixed problem of building internal windows
+        Removed printing of Mac warnings about global settings at the startup
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8248,6 +8251,8 @@ class Window:
     _read_call_from_debugger = False
     _timeout_0_counter = 0  # when timeout=0 then go through each window one at a time
     _counter_for_ttk_widgets = 0
+    _floating_debug_window_build_needed = False
+    _main_debug_window_build_needed = False
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
@@ -8935,6 +8940,16 @@ class Window:
         :return:            (event, values)
         :rtype:             Tuple[(Any), Dict[Any, Any], List[Any], None]
         """
+
+        if Window._floating_debug_window_build_needed is True:
+            Window._floating_debug_window_build_needed = False
+            _Debugger.debugger._build_floating_window()
+
+        if Window._main_debug_window_build_needed is True:
+            Window._main_debug_window_build_needed = False
+            _Debugger.debugger._build_main_debugger_window()
+
+
         # ensure called only 1 time through a single read cycle
         if not Window._read_call_from_debugger:
             _refresh_debugger()
@@ -10083,7 +10098,8 @@ class Window:
         :param event: (event) not used. Passed in event info
         :type event:
         """
-        _Debugger.debugger._build_main_debugger_window()
+        Window._main_debug_window_build_needed = True
+        # _Debugger.debugger._build_main_debugger_window()
 
     def _callback_popout_window_create_keystroke(self, event):
         """
@@ -10092,7 +10108,8 @@ class Window:
         :param event: (event) not used. Passed in event info
         :type event:
         """
-        _Debugger.debugger._build_floating_window()
+        Window._floating_debug_window_build_needed = True
+        # _Debugger.debugger._build_floating_window()
 
     def enable_debugger(self):
         """
@@ -22132,12 +22149,12 @@ if tclversion_detailed.startswith('8.5'):
     warnings.warn('You are running a VERY old version of tkinter {}. You cannot use PNG formatted images for example.  Please upgrade to 8.6.x'.format(tclversion_detailed), UserWarning)
 
 _read_mac_global_settings()
-if running_mac():
-    print('Your Mac patches are:')
-    print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
-    print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
-    print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
-    print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
+# if running_mac():
+#     print('Your Mac patches are:')
+#     print('Modal windows disabled:', ENABLE_MAC_MODAL_DISABLE_PATCH)
+#     print('No titlebar patch:', ENABLE_MAC_NOTITLEBAR_PATCH)
+#     print('No grab anywhere allowed with titlebar:', ENABLE_MAC_DISABLE_GRAB_ANYWHERE_WITH_TITLEBAR)
+#     print('Currently the no titlebar patch ' + ('WILL' if _mac_should_apply_notitlebar_patch() else 'WILL NOT') + ' be applied')
 
 # -------------------------------- ENTRY POINT IF RUN STANDALONE -------------------------------- #
 if __name__ == '__main__':
