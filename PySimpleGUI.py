@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.12 Unreleased"
+version = __version__ = "4.47.0.13 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -38,6 +38,8 @@ version = __version__ = "4.47.0.12 Unreleased"
         Fixed return type for Window.read_all_windows
     4.47.0.12
         Fix for popout debugger using binding (finally got it)
+    4.47.0.13
+        Redefinition of the Debug button
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -4165,10 +4167,10 @@ class Button(Element):
             self.ParentForm.FormRemainedOpen = True
             should_submit_window = False
             _exit_mainloop(self.ParentForm)
-        elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
-            if self.ParentForm.DebuggerEnabled:
-                # _Debugger.debugger._build_floating_window()
-                show_debugger_popout_window()
+        # elif self.BType == BUTTON_TYPE_SHOW_DEBUGGER:
+            # **** DEPRICATED *****
+            # if self.ParentForm.DebuggerEnabled:
+                # show_debugger_popout_window()
 
         if should_submit_window:
             self.ParentForm.LastButtonClicked = target_element.Key
@@ -11870,7 +11872,10 @@ def Help(button_text='Help', size=(None, None), s=(None, None), auto_size_button
 def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=None, button_color=None, disabled=False, font=None,
           tooltip=None, bind_return_key=False, focus=False, pad=None, p=None, key=None, k=None, metadata=None):
     """
-
+    This Button has been changed in how it works!!
+    Your button has been replaced with a normal button that has the PySimpleGUI Debugger buggon logo on it.
+    In your event loop, you will need to check for the event of this button and then call:
+            show_debugger_popout_window()
     :param button_text:      text in the button (Default value = '')
     :type button_text:       (str)
     :param size:             (w,h) w=characters-wide, h=rows-high
@@ -11904,10 +11909,14 @@ def Debug(button_text='', size=(None, None), s=(None, None), auto_size_button=No
     :return:                 returns a button
     :rtype:                  (Button)
     """
-    return Button(button_text=button_text, button_type=BUTTON_TYPE_SHOW_DEBUGGER, tooltip=tooltip, size=size, s=s,
+
+
+    user_key = key if key is not None else k if k is not None else button_text
+
+    return Button(button_text='', button_type=BUTTON_TYPE_READ_FORM, tooltip=tooltip, size=size, s=s,
                   auto_size_button=auto_size_button, button_color=theme_button_color(), font=font, disabled=disabled,
-                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=key, k=k, image_data=PSG_DEBUGGER_LOGO,
-                  image_subsample=4, border_width=0, metadata=metadata)
+                  bind_return_key=bind_return_key, focus=focus, pad=pad, p=p, key=user_key, k=k, image_data=PSG_DEBUGGER_LOGO,
+                  image_subsample=2, border_width=0, metadata=metadata)
 
 
 # -------------------------  GENERIC BUTTON Element lazy function  ------------------------- #
