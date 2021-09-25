@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.11 Unreleased"
+version = __version__ = "4.47.0.12 Unreleased"
 
 """
     Changelog since 4.47.0 release to PyPI on 30 Aug 2021
@@ -36,6 +36,8 @@ version = __version__ = "4.47.0.11 Unreleased"
     4.47.0.11
         Right click exit available for the SDK reference window in case it gets off the screen on something like a Pi with a small screen.
         Fixed return type for Window.read_all_windows
+    4.47.0.12
+        Fix for popout debugger using binding (finally got it)
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -20463,12 +20465,10 @@ class _Debugger():
             layout.append(line)
         layout = [[T(SYMBOL_X, enable_events=True, key='-EXIT-', font='_ 7')], [Column(layout)]]
 
+        Window._read_call_from_debugger = True
         self.popout_window = Window('Floating', layout, alpha_channel=0, no_titlebar=True, grab_anywhere=True,
                                     element_padding=(0, 0), margins=(0, 0), keep_on_top=True,
-                                    right_click_menu=['&Right', ['Debugger::RightClick', 'Exit::RightClick']], location=location, finalize=False)
-
-        Window._read_call_from_debugger = True
-        self.popout_window.Finalize()
+                                    right_click_menu=['&Right', ['Debugger::RightClick', 'Exit::RightClick']], location=location, finalize=True)
         Window._read_call_from_debugger = False
 
         if location == (None, None):
