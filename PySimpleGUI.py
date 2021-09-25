@@ -1,48 +1,10 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.47.0.14 Unreleased"
+version = __version__ = "4.48.0 Released 25-Sept-2021"
 
 """
-    Changelog since 4.47.0 release to PyPI on 30 Aug 2021
+    Changelog since 4.48.0 release to PyPI on 25 Sept 2021
     
-
-    4.47.0.2
-        New set_option parm: keep_on_top - all windows will default to this value. If all your main_window has keep_on_top set
-            then you likely want all of your popups to also have it set. Now set it one time using this option.  You can override by manually
-            setting on a popup or window
-        Added user_settings_object to return the UserSettings object that the function level interfaces use (prints nicely for example)
-    4.47.0.3
-        Changed docstring for set_clipboard to take str or bytes
-    4.47.0.4
-        Changed ProgressMeter docstring to more accurately describe the weird size parm (it DOES make sense... just weird sense is all)
-    4.47.0.5
-        New parameter alias for elements.... p == pad.  It is like the other 2 parameter aliases s == size and k == key
-    4.47.0.6
-        New parameter size_px for ProgressBar - yes, finally a sensible measurement for this element using pixels rather than chars and pixels
-    4.47.0.7
-        New alias for Stretch - Push - P.  Stretch is a Widget name from Qt.  I gave it some thought and realized what it DOES is Pushes elements
-            around.  So, Push seemed like a good name, and it's shorter.  I then also make the 1-letter version P. 
-    4.47.0.8
-        New Table parameter / event.  Setting the parm enable_click_events=True will cause events to be generated that are tuples when a user clicks on the table.
-        The event tuple format is: ('-TABLE KEY-', '+CICKED+', (3, 3))  3 items in the tuple:
-            1. The Table's key
-            2. "An additional event name" in this case I've called it "+CLICKED+"
-            3. The (row, col) format that Jason designed where the header is row 0.  I've thought about making the header row -1 so that the table clicks remain 0 based.
-    4.47.0.9
-        Removed debug print
-    4.47.0.10
-        For new Table parm enable_click_events.  If True, the header will be row -1. If show row numbers is true, then col will be -1 if clicked on row num (like header)
-            This keeps the (row, col) matching user data portion when user data is clicked  
-    4.47.0.11
-        Right click exit available for the SDK reference window in case it gets off the screen on something like a Pi with a small screen.
-        Fixed return type for Window.read_all_windows
-    4.47.0.12
-        Fix for popout debugger using binding (finally got it)
-    4.47.0.13
-        Redefinition of the Debug button
-    4.47.0.14
-        Fixed problem of building internal windows
-        Removed printing of Mac warnings about global settings at the startup
 """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
