@@ -2004,6 +2004,33 @@ if __name__ == '__main__':
 ```
 
 
+### What if my function takes parameters?
+
+Note that the first parameter for `perform_long_operation` is your function.  If you're like most of us, you'll enter `my_func()` instead of `my_func`. The first actually calls your function immediately, the second passes your function's object rather than calling it.
+
+If you need to pass parameters to your function, then you'll need to make one simple change... add a lambda.  Think of it as how you would want your function called.
+
+In the Demo Program for this call, `Demo_Long_Operations.py`, it uses a function that takes parameters as the example. Here is the line of code from that demo:
+
+```python
+# This is where the magic happens.  Add your function call as a lambda
+window.perform_long_operation(lambda :
+                              my_long_func(int(values['-IN-']), a=10),
+                              '-END KEY-')
+```
+
+I've broken the code up with newlines to emphasize where your function call goes. A more common format may be:
+
+```python
+window.perform_long_operation(lambda : my_long_func(int(values['-IN-']), a=10), '-END KEY-')
+```
+
+Here is the function definition that is to be called:
+```python
+def my_long_func(count, a=1, b=2):
+```
+
+
 ## The Thread-based Solution
 
 If you're ready to jump on into threading, then you can do that too.
