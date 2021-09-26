@@ -1,11 +1,18 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.48.0 Released 25-Sept-2021"
+version = __version__ = "4.48.0.1 Unreleased"
 
-"""
+_change_log = """
+
     Changelog since 4.48.0 release to PyPI on 25 Sept 2021
     
-"""
+    4.48.0.1
+        Image.update_animation_no_buffering - bug fix - wasn't checking timer between frames (DOH!)
+
+    
+    
+    
+    """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
@@ -4787,6 +4794,7 @@ class Image(Element):
         except Exception as e:
             print('Exception in update_animation', e)
 
+
     def update_animation_no_buffering(self, source, time_between_frames=0):
         """
         Show an Animated GIF. Call the function as often as you like. The function will determine when to show the next frame and will automatically advance to the next frame at the right time.
@@ -4802,6 +4810,14 @@ class Image(Element):
             self.AnimatedFrames = None
             self.Source = source
             self.frame_num = 0
+
+        now = time.time()
+
+        if time_between_frames:
+            if (now - self.LastFrameTime) * 1000 > time_between_frames:
+                self.LastFrameTime = now
+            else:  # don't reshow the frame again if not time for new frame
+                return
 
         # read a frame
         while True:
@@ -4819,14 +4835,6 @@ class Image(Element):
                     self.frame_num = 0
             if self.frame_num:
                 break
-
-        now = time.time()
-
-        if time_between_frames:
-            if (now - self.LastFrameTime) * 1000 > time_between_frames:
-                self.LastFrameTime = now
-            else:  # don't reshow the frame again if not time for new frame
-                return
 
         try:  # needed in case the window was closed with an "X"
             self.tktext_label.configure(image=self.image, width=self.image.width(), heigh=self.image.height())
