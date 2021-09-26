@@ -1,7 +1,5 @@
 ![LOGO](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png)
 
-
-
 <!-- Default Statcounter code for PySimpleGUI
 http://www.PySimpleGUI.com -->
 <script type="text/javascript">
@@ -19,7 +17,6 @@ src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
 alt="Web Analytics Made Easy - Statcounter"
 referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 <!-- End of Statcounter Code -->
-
 
 # The PySimpleGUI Cookbook      
       
@@ -1933,7 +1930,9 @@ print(f'You chose: {values["-FILE-"]}')
 
 ***Brief summary:***
 
-Threads can "inject" events and data into a `window.read()` call.  This allows your application to simply stop, pend and awaken immediatrely when something happens.  This makes for zero CPU time used when nothing's happening and it means 0ms latentcy.
+PySimpleGUI can help you with running long operations as threads without you needing to learn the threading library.  The `Window` method `perform_long_operation` makes this serious GUI problem a non-issue.
+
+Threads can "inject" events and data into a `window.read()` call.  This allows your GUI application to simply stop, pend and awaken immediately when something happens.  This makes for zero CPU time used when northing's happening and it means 0ms latency.  In other words, you're not polling, you're pending.
 
 
 ### The Long Operation
@@ -1941,7 +1940,7 @@ Threads can "inject" events and data into a `window.read()` call.  This allows y
 
 A classic problem of GUI programming is when you try to perform some operation that requires a lot of time.  The problem is simple enough.... you have a GUI and when you press a button, you want a 10 second operation to take place while you're GUI patiently waits.
 
-What happens to most people that give this a try gets the dreaded windows/linux/mac "Your program has stopped 
+What happens to most people that give this a try gets the dreaded Windows/Linux/Mac "Your program has stopped 
 responding do you wish to close it"
 
 If you add a sleep(30) to your code, it's not very many seconds before your window does this:
@@ -1950,72 +1949,83 @@ If you add a sleep(30) to your code, it's not very many seconds before your wind
 
 No Bueno
 
-## PySimpleGUI to the Rescue
+## PySimpleGUI `Window.perform_long_operation`
 
-This is likely the most significant feature addition in the past year.
+To get you over the initial hump of multi-threaded programming, you can let PySimpleGUI create and manage threads for you.  Like other APIs in PySimpleGUI, it's been simplified down as far as possible.
 
-You hav always had this capability, but only in a manually created and polled fashion.
-
-## The Solution
-
-1. You put your long-running operation into a thread
-2. Your thread signals the window when it iws done
+Here's the basic steps using `perform_long_operation`
+1. Pass your function name and a key to the call to `window.perform_long_operation`
+2. Continue running your GUI event loop
 3. Windows pend using their typical `window.read()` call
+4. You will get the event when your function returns
+5. The `values` dictionary will contain your function's return value. They key will be the same as the event.  So, `values[event]` is your function's return value.
 
-
-## The 10 Second Operation Example
-
-In summary, there are 2 approaches.
-
-1. Brute force - Do the operation and don't return back until it's done
-2. Threaded - Begin the opration and be informed later when it completes
-
-The previous 3rd method relied on a poll of new never that would happen on a refular bnasis instad of pending
-
-
-### Brute Force Long Operation
-
-Here's our "Bruce Force" code:
 
 ```python
 import PySimpleGUI as sg
 import time
 
-def long_function():
-    time.sleep(10)
+# My function that takes a long time to do...
+def my_long_operation():
+    time.sleep(15)
+    return 'My return value'
 
-layout = [[sg.Output(size=(60,10))],
-          [sg.Button('Go'), sg.Button('Nothing'), sg.Button('Exit')]  ]
 
-window = sg.Window('Window Title', layout)
+def main():
+    layout = [  [sg.Text('My Window')],
+                [sg.Input(key='-IN-')],
+                [sg.Text(key='-OUT-')],
+                [sg.Button('Go'), sg.Button('Threaded'), sg.Button('Dummy')]  ]
 
-while True:             # Event Loop
-    event, values = window.read()
-    if event == sg.WIN_CLOSED or event == 'Exit':
-        break
-    if event == 'Go':
-        print('About to go to call my long function')
-        long_function()
-        print('Your long operation completed')
-window.close()
+    window = sg.Window('Window Title', layout, keep_on_top=True)
+
+    while True:             # Event Loop
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+
+        window['-OUT-'].update(f'{event, values}')  # show the event and values in the window
+        window.refresh()                            # make sure it's shown immediately
+
+        if event == 'Go':
+            return_value = my_long_operation()
+            window['-OUT-'].update(f'direct return value = {return_value}')
+        elif event  == 'Threaded':
+            # Let PySimpleGUI do the threading for you...
+            window.perform_long_operation(my_long_operation, '-OPERATION DONE-')
+        elif event  == '-OPERATION DONE-':
+            window['-OUT-'].update(f'indirect return value = {values[event]}')
+
+    window.close()
+
+if __name__ == '__main__':
+    main()
 
 ```
 
 
-Take a moment to get to know the code.  You'll find the typcical event loop. If you run this program, and you don't touch anything like your mouse, then it should sit for 10 seconds doing nothing and then print out the completed thmeesage.
+## The Thread-based Solution
+
+If you're ready to jump on into threading, then you can do that too.
+
+Here's the basic steps
+1. You put your long-running operation into a thread
+2. Your thread signals the window when it is done
+3. Windows pend using their typical `window.read()` call
+4. The `values` dictionary will contain your function's return value if you pass it through
+
+
+Take a moment to get to know the code.  You'll find the typical event loop. If you run this program, and you don't touch anything like your mouse, then it should sit for 10 seconds doing nothing and then print out the completed the message.
 
 ![SNAG-0867](https://user-images.githubusercontent.com/46163555/87882466-25a15f00-c9ce-11ea-98fe-0907dc915540.jpg)
 
-If you attempted to interact with the window by pressing the "Nothing" button, then you will likely get a mewssage about your window stoppedin g responding.  
+If you attempted to interact with the window by pressing the "Nothing" button, then you will likely get a message about your window stopped responding.  
 
 
 
 ### Threaded Long Operation
 
-
 I think we can agree that brute force, no matter how badly we want it to work, won't.  Bummer
-
-
 
 ```python
 import PySimpleGUI as sg
@@ -2054,11 +2064,11 @@ window.close()
 
 If you click the "Nothing" button, then you'll get a line printed in the Multiline that has the event and the values dictionary.
 
-Because there are no "input" elements, yourvalues sictionary is empy.
+Because there are no "input" elements, your values dictionary is empty.
 
 Clicking "Go" is when the fun begins.
 
-You are immediately shown  a message that the long-operatrion function is starting.  The same function name as before is called `long_function`.  But now the contents of that function have been replaced with starting a thread  that executes the same code.
+You are immediately shown  a message that the long-operation function is starting.  The same function name as before is called `long_function`.  But now the contents of that function have been replaced with starting a thread  that executes the same code.
 
 This single line of code is all that was needed to create our long0runing function as a thread and to start that thread:
 
@@ -2066,25 +2076,25 @@ This single line of code is all that was needed to create our long0runing functi
 threading.Thread(target=the_thread, args=(window,), daemon=True).start()
 ```
 
-The conversion over to a thead was done in 3 simple steps:
+The conversion over to a thread was done in 3 simple steps:
 
 1. Renamed the `long_fundtion` to `long_function_thread`
-2. Pass into the `long_function_thread` the `window` that it will commmunicate with
+2. Pass into the `long_function_thread` the `window` that it will communicate with
 3. Add call to `window.write_event_value` when the long_running_thread is existing
 
-The result is a GUI that continutes to operate and be responsive to user's requests during the long running operation.
+The result is a GUI that continues to operate and be responsive to user's requests during the long running operation.
 
 
 
 ### Long operations with feedback
 
-The power of the `Window.write_event_value` is that it can be used at any time, not just at the beginning and end of operations.  If a long operation can be broken intosmaller parts, then progress can be shown to the user.  Rather than calling `Window.write_event_value` once time, it can be called a number of times to 
+The power of the `Window.write_event_value` is that it can be used at any time, not just at the beginning and end of operations.  If a long operation can be broken into smaller parts, then progress can be shown to the user.  Rather than calling `Window.write_event_value` one time, it can be called a number of times too. 
 
 
 If we modify the code so that instead of sleeping for 10 seconds, we sleep for 1 second 10 times, then it's possible to show information about progress.
 
 
-Here's the code with the new operation broek up into 10 parts
+Here's the code with the new operation broken up into 10 parts
 
 ```python
 import PySimpleGUI as sg
