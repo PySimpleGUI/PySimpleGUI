@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+from fbmessenger.templates import MediaTemplate
 
-version = __version__ = "4.48.0.1 Unreleased"
+version = __version__ = "4.48.0.2 Unreleased"
 
 _change_log = """
 
@@ -8,9 +9,8 @@ _change_log = """
     
     4.48.0.1
         Image.update_animation_no_buffering - bug fix - wasn't checking timer between frames (DOH!)
-
-    
-    
+    4.48.0.2
+        one_line_progress_meter - no longer returns a not OK when max reached.  Makes the user if statements much easier to get only cancel as False  
     
     """
 
@@ -15306,10 +15306,10 @@ class QuickMeter(object):
             value=''.join(map(lambda x: str(x) + '\n', args)))  ###  update the string with the args
         event, values = self.window.read(timeout=0)
         if event in ('Cancel', None) or current_value >= max_value:
-            self.window.Close()
+            exit_reason = METER_REASON_CANCELLED if event in ('Cancel', None) else METER_REASON_REACHED_MAX if current_value >= max_value else METER_STOPPED
+            self.window.close()
             del (QuickMeter.active_meters[self.key])
-            QuickMeter.exit_reasons[
-                self.key] = METER_REASON_CANCELLED if event == 'Cancel' else METER_REASON_CLOSED if event is None else METER_REASON_REACHED_MAX
+            QuickMeter.exit_reasons[self.key] = exit_reason
             return QuickMeter.exit_reasons[self.key]
         return METER_OK
 
@@ -15378,12 +15378,15 @@ def one_line_progress_meter(title, current_value, max_value, *args, key='OK for 
     if key not in QuickMeter.active_meters:
         meter = QuickMeter(title, current_value, max_value, key, *args, orientation=orientation, bar_color=bar_color, button_color=button_color, size=size, border_width=border_width, grab_anywhere=grab_anywhere, no_titlebar=no_titlebar, keep_on_top=keep_on_top, no_button=no_button)
         QuickMeter.active_meters[key] = meter
+        QuickMeter.exit_reasons[key] = None
+
     else:
         meter = QuickMeter.active_meters[key]
 
     rc = meter.UpdateMeter(current_value, max_value, *args)  ### pass the *args to to UpdateMeter function
     OneLineProgressMeter.exit_reasons = getattr(OneLineProgressMeter, 'exit_reasons', QuickMeter.exit_reasons)
-    return rc == METER_OK
+    exit_reason = OneLineProgressMeter.exit_reasons.get(key)
+    return METER_OK if exit_reason in (None, METER_REASON_REACHED_MAX) else METER_STOPPED
 
 
 def one_line_progress_meter_cancel(key='OK for 1 meter'):
