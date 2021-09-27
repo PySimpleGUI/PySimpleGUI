@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.48.0.3 Unreleased"
+version = __version__ = "4.48.0.4 Unreleased"
 
 _change_log = """
 
@@ -14,6 +14,8 @@ _change_log = """
         popup_get_file - fixed bug when show_hidden is set. Added docstring
         Added popup_get_file, get_folder, get_data to the test harness under the popups tab
         Changed docstring for Multiline default value to Any and added a cast to string
+    4.48.0.4
+        More test harness additions
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -21861,8 +21863,9 @@ def _create_main_window():
                T('YES - I want to support PySimpleGUI!', enable_events=True, text_color='red', background_color='yellow', k='-SPONSOR-')], ]
 
     pop_test_tab_layout = [
-        [T('Popup Tests --->'), Push(), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
-        [Push(), B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
+        [T('Popup tests... good idea!'),Image(EMOJI_BASE64_HAPPY_IDEA), Push(), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
+        [T('Get popups too!'), Push(), B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
+
 
     graph_elem = Graph((600, 250), (0, 0), (800, 300), key='+GRAPH+')
 
@@ -21894,7 +21897,7 @@ def _create_main_window():
         return [T(version, justification=justification, font='Any 12', text_color='yellow', size=size, pad=(0,0)), vtop(T(description, font='Any 12', pad=(0,0)))]
 
     layout_top = Column([
-        [Image(data=DEFAULT_BASE64_ICON, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
+        [Image(EMOJI_BASE64_HAPPY_BIG_SMILE, enable_events=True, key='-LOGO-', tooltip='This is PySimpleGUI logo'),
          Image(data=DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='_IMAGE_'),
          Text('PySimpleGUI Test Harness\nYou are running PySimpleGUI.py file instead of importing', font='ANY 15',
               tooltip='My tooltip', key='_TEXT1_')],
