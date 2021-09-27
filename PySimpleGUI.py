@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-from fbmessenger.templates import MediaTemplate
 
-version = __version__ = "4.48.0.2 Unreleased"
+version = __version__ = "4.48.0.3 Unreleased"
 
 _change_log = """
 
@@ -10,8 +9,11 @@ _change_log = """
     4.48.0.1
         Image.update_animation_no_buffering - bug fix - wasn't checking timer between frames (DOH!)
     4.48.0.2
-        one_line_progress_meter - no longer returns a not OK when max reached.  Makes the user if statements much easier to get only cancel as False  
-    
+        one_line_progress_meter - no longer returns a not OK when max reached.  Makes the user if statements much easier to get only cancel as False
+    4.48.0.3
+        popup_get_file - fixed bug when show_hidden is set. Added docstring
+        Added popup_get_file, get_folder, get_data to the test harness under the popups tab
+        Changed docstring for Multiline default value to Any and added a cast to string
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2735,7 +2737,7 @@ class Multiline(Element):
                  enable_events=False, do_not_clear=True, key=None, k=None, write_only=False, auto_refresh=False, reroute_stdout=False, reroute_stderr=False, reroute_cprint=False, echo_stdout_stderr=False, focus=False, font=None, pad=None, p=None, tooltip=None, justification=None, no_scrollbar=False, expand_x=False, expand_y=False, rstrip=True, right_click_menu=None, visible=True, metadata=None):
         """
         :param default_text:       Initial text to show
-        :type default_text:        (str)
+        :type default_text:        (Any)
         :param enter_submits:      if True, the Window.Read call will return is enter key is pressed in this element
         :type enter_submits:       (bool)
         :param disabled:           set disable state
@@ -2804,7 +2806,7 @@ class Multiline(Element):
         :type metadata:            (Any)
         """
 
-        self.DefaultText = default_text
+        self.DefaultText = str(default_text)
         self.EnterSubmits = enter_submits
         bg = background_color if background_color else DEFAULT_INPUT_ELEMENTS_COLOR
         self.Focus = focus
@@ -2847,7 +2849,7 @@ class Multiline(Element):
         """
         Changes some of the settings for the Multiline Element. Must call `Window.Read` or `Window.Finalize` prior
         :param value:                      new text to display
-        :type value:                       (str)
+        :type value:                       (Any)
         :param disabled:                   disable or enable state of the element
         :type disabled:                    (bool)
         :param append:                     if True then new value will be added onto the end of the current value. if False then contents will be replaced.
@@ -18279,6 +18281,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type modal:                     bool
     :param history:                  If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided
     :type history:                   bool
+    :param show_hidden:              If True then enables the checkbox in the system dialog to select hidden files to be shown
+    :type show_hidden:               bool
     :param history_setting_filename: Filename to use for the User Settings. Will store list of previous entries in this settings file
     :type history_setting_filename:  (str)
     :return:                         string representing the file(s) chosen, None if cancelled or window closed with X
@@ -18404,8 +18408,8 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
 
     window = Window(title=title or message, layout=layout, icon=icon, auto_size_text=True, button_color=button_color,
                     font=font, background_color=background_color, no_titlebar=no_titlebar, grab_anywhere=grab_anywhere, keep_on_top=keep_on_top, location=location, modal=modal, finalize=True)
-    window.read()
-    if show_hidden is True:
+
+    if running_linux() and show_hidden is True:
         window.TKroot.tk.eval('catch {tk_getOpenFile -badoption}')  # dirty hack to force autoloading of Tk's file dialog code
         window.TKroot.setvar('::tk::dialog::file::showHiddenBtn', 1)  # enable the "show hidden files" checkbox (it's necessary)
         window.TKroot.setvar('::tk::dialog::file::showHiddenVar', 0)  # start with the hidden files... well... hidden
@@ -21857,8 +21861,8 @@ def _create_main_window():
                T('YES - I want to support PySimpleGUI!', enable_events=True, text_color='red', background_color='yellow', k='-SPONSOR-')], ]
 
     pop_test_tab_layout = [
-        [T('Popup Tests --->'), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'),
-         B('Auto Close', k='P AutoClose')]]
+        [T('Popup Tests --->'), Push(), B('Popup', k='P '), B('No Titlebar', k='P NoTitle'), B('Not Modal', k='P NoModal'), B('Non Blocking', k='P NoBlock'), B('Auto Close', k='P AutoClose')],
+        [Push(), B('Get File'), B('Get Folder'), B('Get Date'), B('Get Text')]]
 
     graph_elem = Graph((600, 250), (0, 0), (800, 300), key='+GRAPH+')
 
@@ -21959,6 +21963,7 @@ def main():
     The PySimpleGUI "Test Harness".  This is meant to be a super-quick test of the Elements.
     """
     window = _create_main_window()
+    set_options(keep_on_top=True)
     graph_elem = window['+GRAPH+']
     i = 0
     # Don't use the debug window
@@ -21991,15 +21996,22 @@ def main():
         elif event == 'Launch Debugger':
             show_debugger_window()
         elif event == 'About...':
-            popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', version, keep_on_top=True,
-                  image=DEFAULT_BASE64_ICON)
+            popup('About this program...', 'You are looking at the test harness for the PySimpleGUI program', version, keep_on_top=True, image=DEFAULT_BASE64_ICON)
         elif event.startswith('See'):
             window._see_through = not window._see_through
             window.set_transparent_color(theme_background_color() if window._see_through else '')
         elif event == '-INSTALL-':
             _upgrade_gui()
         elif event == 'Popup':
-            popup('This is your basic popup', keep_on_top=True)
+            popup('This is your basic popup')
+        elif event == 'Get File':
+            popup_scrolled('Returned:', popup_get_file('Get File'))
+        elif event == 'Get Folder':
+            popup_scrolled('Returned:', popup_get_folder('Get Folder'))
+        elif event == 'Get Date':
+            popup_scrolled('Returned:', popup_get_date())
+        elif event == 'Get Text':
+            popup_scrolled('Returned:', popup_get_text('Enter some text'))
         elif event.startswith('-SPONSOR-'):
             if webbrowser_available:
                 webbrowser.open_new_tab(r'https://www.paypal.me/psgui')
