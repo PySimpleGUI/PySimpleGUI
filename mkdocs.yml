@@ -1,6 +1,6 @@
 site_name: PySimpleGUI
 # mkdocs.yml:
-
+repo_url: https://github.com/PySimpleGUI/PySimpleGUI
 nav:
     ## add your custom pages hierarchy here
 
