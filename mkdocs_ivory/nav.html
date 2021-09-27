@@ -1,0 +1,22 @@
+{%- if nav_item.is_section -%}
+<button class="section nav-item{% if navlevel > 1 and not nav_item.active %} hide{% endif %}">{{ nav_item.title }}</button>
+{%- elif nav_item.toc -%}
+{%- for toc_item in nav_item.toc -%}
+<a class="nav-item{% if nav_item.active %} current{%endif%}" href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
+{%- endfor %}
+{%- else %}
+<a class="nav-item{% if nav_item.active %} current{%endif%}" href="{{ nav_item.url|url }}">{{ nav_item.title }}</a>
+{%- endif -%}
+
+{%- if nav_item == page or nav_item.children %}
+<ul class="subnav{% if navlevel > 1 and not nav_item.active %} hide{% endif %}">
+    {%- if nav_item == page %}{% include 'toc.html' %}{%- endif %}
+    {%- if nav_item.children %}
+    {%- set navlevel = navlevel + 1 %}
+    {%- for nav_item in nav_item.children %}
+    <li class="toctree-l{{ navlevel }}{% if nav_item.active %} current{%endif%}">{% include 'nav.html' %}</li>
+    {%- endfor %}
+    {%- set navlevel = navlevel - 1%}
+    {%- endif %}
+</ul>
+{%- endif %}

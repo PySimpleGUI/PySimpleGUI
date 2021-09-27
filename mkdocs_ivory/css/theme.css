@@ -1,0 +1,657 @@
+html {
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body, button {
+  font-family: Lato, "Yu Gothic Medium", "游ゴシック Medium", YuGothic, "游ゴシック体", "ヒラギノ角ゴ Pro W3", "メイリオ", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+code {
+  font-family: "Fira Code", "Courier New", Consolas, monospace;
+  font-size: 0.83rem;
+  color: #7700FF;
+  border: 1px solid #E0E0E0;
+  border-radius: 3px;
+  padding: 1px 4px;
+  margin: 0px 1px;
+  background: white;
+}
+
+pre code {
+  font-size: 0.8rem;
+}
+
+p {
+  line-height: 1.65rem;
+}
+
+main ul {
+  margin-top: 0px;
+  margin-bottom: 8px;
+}
+
+main li {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+pre {
+  line-height: 1.6;
+}
+
+a {
+  color: #39f;
+  text-decoration: none;
+}
+
+button {
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ul, ol, dl {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    list-style-image: none;
+} */
+
+.nav ul,
+.breadcrumbs ul {
+  padding: 0px;
+  list-style-type: none;
+}
+
+.site-name {
+  display: inline-block;
+  color: #ddd;
+  font-weight: bold;
+}
+
+.site-name::before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f015";
+}
+
+.nav-item {
+  display: block;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 5px;
+}
+
+.nav-item.section {
+  color: #ddd;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item.section:hover {
+  background: #999;
+  color: #333;
+}
+
+a.nav-item {
+  color: #999;
+}
+
+a.nav-item.current {
+  color: #333;
+  background: #eee;
+}
+
+a.nav-item.current:hover {
+  color: #333;
+  background: #bbb;
+}
+
+a.nav-item:hover {
+  background: #666;
+}
+
+.subnav.hide {
+  display: none;
+}
+
+.nav-item.section::before {
+  position: absolute;
+  text-align: center;
+  width: 5px;
+}
+
+.nav-item.section::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+  content: "\f107";
+}
+
+.nav-item.section.hide::before {
+  content: "\f105";
+}
+
+.toctree-l1>.nav-item.section {
+  padding-left: 25px;
+}
+
+.toctree-l1>a.nav-item {
+  padding-left: 25px;
+}
+
+.toctree-l1>.nav-item.section::before {
+  left: 10px;
+}
+
+.toctree-l2>.nav-item.section {
+  padding-left: 35px;
+}
+
+.toctree-l2>a.nav-item {
+  padding-left: 25px;
+}
+
+.toctree-l2>.nav-item.section::before {
+  left: 20px;
+}
+
+.toctree-l3>.nav-item.section {
+  padding-left: 45px;
+}
+
+.toctree-l3>a.nav-item {
+  padding-left: 35px;
+}
+
+.toctree-l3>.nav-item.section::before {
+  left: 30px;
+}
+
+.toctree-l4>.nav-item.section {
+  padding-left: 55px;
+}
+
+.toctree-l4>a.nav-item {
+  padding-left: 45px;
+}
+
+.toctree-l4>.nav-item.section::before {
+  left: 40px;
+}
+
+.toctree-l5>.nav-item.section {
+  padding-left: 65px;
+}
+
+.toctree-l5>a.nav-item {
+  padding-left: 55px;
+}
+
+.toctree-l5>.nav-item.section::before {
+  left: 50px;
+}
+
+.toctree-l6>.nav-item.section {
+  padding-left: 75px;
+}
+
+.toctree-l6>a.nav-item {
+  padding-left: 65px;
+}
+
+.toctree-l6>.nav-item.section::before {
+  left: 45px;
+}
+
+.nav-item.toc {
+  background: #ccc;
+  color: #555;
+  border: none;
+}
+
+.nav-item.toc:hover {
+  background: #bbb;
+  color: #555;
+  border: none;
+}
+
+.repo div {
+  padding: 0 10px;
+}
+
+.repo div:first-child {
+  margin-right: auto;
+}
+
+.repo a {
+  color: #ddd;
+  font-size: 0.9rem;
+}
+
+.breadcrumbs li {
+  font-size: 0.9rem;
+  display: inline;
+}
+
+.footer-buttons {
+  position: relative;
+  height: 2.5rem;
+}
+
+.footer-buttons .previous {
+  position: absolute;
+  left: 0;
+  margin: auto;
+}
+
+.footer-buttons .next {
+  position: absolute;
+  right: 0;
+}
+
+.footer-buttons a {
+  display: inline-block;
+  color: #444;
+  background: #eee;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.footer-buttons span::after,
+.footer-buttons span::before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: bold;
+}
+
+.footer-buttons .previous span::before {
+  margin-right: 6px;
+  content: "\f359";
+}
+
+.footer-buttons .next span::after {
+  margin-left: 6px;
+  content: "\f35a";
+}
+
+.footer-note {
+  display: flex;
+  font-size: 0.9rem;
+  color: #aaa;
+  height: 40px;
+  border-top: 1px solid #ccc;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-note a {
+  color: #88d;
+}
+
+/**************************************/
+/* layout                             */
+/**************************************/
+#container {
+  display: flex;
+}
+
+aside {
+  flex: 0 0 300px;
+  width: 300px;
+  order: 1;
+  background: #333;
+  z-index: 999;
+}
+
+aside>* {
+  width: inherit;
+}
+
+.home, .home-top {
+  display: flex;
+  background: #48c;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.home {
+  position: fixed;
+  top: 0;
+}
+
+.home .search input {
+  display: inline-block;
+  border-radius: 40px;
+  padding: 4px 10px;
+  outline: none;
+  width: 250px;
+  border: 1px solid #999;
+}
+
+.nav {
+  position: fixed;
+  overflow-y: auto;
+  background: #333;
+}
+
+.repo {
+  display: flex;
+  background: #222;
+  position: fixed;
+  bottom: 0;
+  height: 40px;
+  align-items: center;
+}
+
+#spacer {
+  flex: 0 0 22px;
+  order: 2;
+}
+
+main {
+  flex: 1 1 300px;
+  order: 3;
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+  html.show {
+    overflow-y: hidden;
+  }
+
+  aside {
+    display: none;
+  }
+
+  aside.show {
+    display: block;
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
+  .home, .home-top {
+    height: 40px;
+  }
+
+  .home-top {
+    position: relative;
+  }
+
+  .home .version,
+  .home .search {
+    display: none;
+  }
+
+  .hamburger {
+    position: absolute;
+    right: 15px;
+  }
+
+  .hamburger::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f0c9";
+    font-weight: bold;
+    color: #ddd;
+    font-size: 1.3rem;
+  }
+
+  .nav {
+    top: 40px;
+    height: calc(100% - 80px);
+  }
+
+  .site-name.hide {
+    display: none;
+  }
+
+  #spacer {
+    display: none;
+  }
+
+  #main {
+    margin: 10px 15px;
+  }
+
+  .footer-note {
+    display: none;
+  }
+
+  h1 {
+    font-size: 1.45rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  h4 {
+    font-size: 1.15rem;
+  }
+
+  h5 {
+    font-size: 1.1rem;
+  }
+
+  h6 {
+    font-size: 1.0rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .home-top {
+    display: none;
+  }
+
+  .home {
+    height: 100px;
+  }
+
+  .home .title {
+    margin-top: 5px;
+    margin-bottom: 2px;
+  }
+
+  .home .version {
+    margin-bottom: 2px;
+    color: #aaa;
+  }
+
+  .nav {
+    top: 100px;
+    height: calc(100% - 140px);
+  }
+
+  #main {
+    margin: 10px 50px 10px 30px;
+  }
+
+  .hamburger {
+    display: none;
+  }
+
+  .arrow {
+    position: fixed;
+    top: calc(50% - 23px);
+    bottom: calc(50% - 23px);
+    border: 1px solid #eee;
+    border-radius: 0px 14px 14px 0px;
+    padding-left: 3px;
+    padding-right: 6px;
+    margin-left: -10px;
+    transition: 0.3s ease 0s;
+  }
+
+  .arrow::before {
+    font-family: "Font Awesome 5 Free";
+    content: "\f053";
+    font-weight: bold;
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .arrow.hide::before {
+    content: "\f054";
+  }
+
+  .arrow:hover {
+    background: #555;
+    color: #ddd;
+    border-color: #555;
+    margin-left: 0px;
+  }
+
+  aside.hide {
+    display: none;
+  }
+
+  h1 {
+    font-size: 1.65rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.2rem;
+  }
+
+  h5 {
+    font-size: 1.1rem;
+  }
+
+  h6 {
+    font-size: 1.0rem;
+  }
+}
+
+/**************************************************
+ Table style
+**************************************************/
+table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: auto;
+}
+
+th, td {
+  text-align: center;
+  padding: 2px 4px;
+}
+
+th {
+  color: darkblue;
+  background: #eee;
+  border: 1px solid #333;
+}
+
+td {
+  color: black;
+  border: 1px solid #b9b9b9;
+}
+
+tr th:first-child, tr td:first-child {
+  border-left: 1px solid #333366;
+}
+
+tr th:last-child, tr td:last-child {
+  border-right: 1px solid #333366;
+}
+
+tr:first-child td, tr:first-child th {
+  border-top: 1px solid #333366;
+}
+
+tr:last-child td, tr:last-child th {
+  border-bottom: 1px solid #333366;
+}
+
+tbody tr:nth-child(2n+1) td {
+  background: #fafafa;
+}
+
+.admonition {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0px;
+  padding-bottom: 10px;
+}
+
+.admonition.note {
+  background: #F0F0FF;
+}
+
+.note p.admonition-title {
+  color: white;
+  background: #555599;
+  margin: 0px;
+  padding: 4px 8px;
+}
+
+.note p.admonition-title:before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f303";
+  font-weight: 900;
+  padding-right: 5px;
+  color: white;
+}
+
+.admonition.warning {
+  background: #FFEEEE;
+}
+
+.warning p.admonition-title {
+  color: white;
+  background: #FF6666;
+  margin: 0px;
+  padding: 4px 8px;
+}
+
+.warning p.admonition-title:before {
+  font-family: "Font Awesome 5 Free";
+  content: "\f071";
+  font-weight: 900;
+  padding-right: 5px;
+  color: white;
+}
+
+.admonition p {
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  padding: 4px;
+}
+
+.admonition pre {
+  margin-top: 5px;
+  margin-left: 15px;
+}

@@ -1,0 +1,12 @@
+{% if page %}
+<ul>
+    {% for doc in page.ancestors|reverse -%}
+    {%- if doc.link -%}
+    <li><a href="{{ doc.link|e }}">{{ doc.title }}</a>
+        {%- else -%}
+    <li>{{ doc.title }}
+        {%- endif -%}
+        {%- if not loop.last %} &raquo; {% endif %}</li>
+    {%- endfor %}
+</ul>
+{% endif %}

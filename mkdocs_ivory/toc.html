@@ -1,0 +1,7 @@
+{%- for toc_item in page.toc %}
+{%- if toc_item.children %}
+{%- for toc_item in toc_item.children %}
+<li class="toctree-l{{ navlevel + 1 }}"><a class="nav-item toc" href="{{ toc_item.url }}">{{ toc_item.title }}</a></li>
+{%- endfor %}
+{%- endif %}
+{%- endfor %}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {%- block site_meta %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- if page and page.is_homepage %}
+    <meta name="description" content="{{ config.site_description }}">{% endif %}
+    {%- if config.site_author %}
+    <meta name="author" content="{{ config.site_author }}">{% endif %}
+    {%- if config.site_favicon %}
+    <link rel="shortcut icon" href="{{ config.site_favicon|url }}">
+    {%- else %}
+    <link rel="shortcut icon" href="{{ 'img/favicon.ico'|url }}">{% endif %}
+    {%- endblock %}
+
+    {%- block htmltitle %}
+    <title>{% if page and page.title and not page.is_hompage %}{{ page.title|striptags }} &mdash; {% endif %}{{ config.site_name }}</title>
+    {%- endblock %}
+
+    {%- block styles %}
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="{{ 'css/theme.css'|url }}">
+    {%- if config.theme.highlightjs %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    {%- endif %}
+    {%- for path in config['extra_css'] %}
+    <link rel="stylesheet" href="{{ path|url }}">
+    {%- endfor %}
+    {%- endblock %}
+
+    {%- block libs %}
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    {%- if config.theme.highlightjs %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    {%- for lang in config.theme.hljs_languages %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/{{lang}}.min.js"></script>
+    {%- endfor %}
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+    {%- endif %}
+    {%- endblock %}
+
+    {%- block extrahead %} {% endblock %}
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="{{ nav.homepage.url|url }}" class="site-name"> {{ config.site_name }}</a>
+                </div>
+                {%- if config.theme.version -%}
+                <div class="version">{{ config.theme.version }}</div>
+                {%- endif %}
+                {%- if 'search' in config['plugins'] %}
+                <div class="search">
+                    {%- block search_button %}
+                    {% include "searchbox.html" %}
+                    {%- endblock %}
+                </div>
+                {%- endif %}
+            </div>
+            <nav class="nav">
+                {%- block site_nav %}
+                <ul class="root">
+                    {%- set navlevel = 1 %}
+                    {%- for nav_item in nav %}
+                    <li class="toctree-l{{ navlevel }}{% if nav_item.active and not nav_item.children %} current{%endif%}">
+                        {%- include 'nav.html' -%}
+                    </li>
+                    {%- endfor %}
+                </ul>
+                {%- endblock %}
+            </nav>
+            {% include "repo.html" %}
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="{{ nav.homepage.url|url }}" class="site-name"> {{ config.site_name }}</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">{% include "breadcrumbs.html" %}</nav>
+                {% block content %}<div id="content">{{ page.content }}</div>{% endblock %}
+                {% block footer %}{% include "footer.html" %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    {%- block scripts %}
+    <script>var base_url = '{{ base_url }}';</script>
+    <script src="{{ 'js/theme.js'|url }}"></script>
+    {%- for path in config['extra_javascript'] %}
+    <script src="{{ path|url }}"></script>{% endfor %}
+    {%- endblock %}
+</body>
+
+</html>
