@@ -1,0 +1,28 @@
+{# 1st H1 is often == file name. Prevent duplicate links #}
+{% if toc_item.title | lower != nav_item.title | lower or (navlevel != 2 and navlevel != 1) %}
+  <li class="toctree-l{{ navlevel }}{% if toc_first_loop%} current with-children{%endif%}">
+    <a href="{{ toc_item.url }}">
+      {{ toc_item.title }}
+      <span class="toctree-expand"></span>
+    </a>
+  </li>
+{% endif %}
+
+{% if toc_item.children %}
+  <li class="toctree-l{{ navlevel }}{% if toc_first_loop%} current{%endif%}">
+    <ul class="subnav-l{{ navlevel }} {% if toc_first_loop%}current{%else%}toc-hidden{%endif%}">
+    {%- set navlevel = navlevel + 1%}
+    {% for toc_item in toc_item.children %}
+      {%- set toc_first_loop = loop.first %}
+      {% if toc_item.children %}
+          {% include 'toc.html' %}
+      {% else %}
+        <li class="toctree-l{{ navlevel }}">
+          <a class="toctree-l{{ navlevel + 1 }}" href="{{ toc_item.url }}">{{ toc_item.title }}</a>
+        </li>
+      {%- endif %}
+    {% endfor %}
+    {%- set navlevel = navlevel - 1%}
+    </ul>
+  </li>
+{% endif %}
