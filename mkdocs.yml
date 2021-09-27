@@ -5,4 +5,7 @@ nav:
     ## add your custom pages hierarchy here
 
 theme:
+  name: null
   custom_dir: 'mkdocs_ivory'
+  include_search_page: true
+  
