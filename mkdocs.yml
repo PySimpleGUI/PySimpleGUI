@@ -6,6 +6,14 @@ nav:
 
 theme:
   name: null
-  custom_dir: 'mkdocs_ivory'
+  custom_dir: 'mkdocs_docskimmer'
   include_search_page: true
-  
+  search_index_only: false
+  static_templates:
+  - 404.html
+
+plugins: ['search']
+
+# add theme version number here
+extra:
+    version: 0.3.x
