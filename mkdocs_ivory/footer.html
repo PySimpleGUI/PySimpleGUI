@@ -1,0 +1,20 @@
+<footer>
+    {%- block next_prev %}
+    {%- if page and page.next_page or page.previous_page %}
+    <div class="footer-buttons">
+        {%- if page.previous_page %}
+        <div class="previous"><a href="{{ page.previous_page.url|url }}" title="{{ page.previous_page.title|striptags }}"><span>Previous</span></a></div>
+        {%- endif %}
+        {%- if page.next_page %}
+        <div class="next"><a href="{{ page.next_page.url|url }}" title="{{ page.next_page.title|striptags }}"><span>Next</span></a></div>
+        {%- endif %}
+    </div>
+    {%- endif %}
+    {%- endblock %}
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
