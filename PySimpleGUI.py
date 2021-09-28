@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.48.0.4 Unreleased"
+version = __version__ = "4.48.0.5 Unreleased"
 
 _change_log = """
 
@@ -16,6 +16,8 @@ _change_log = """
         Changed docstring for Multiline default value to Any and added a cast to string
     4.48.0.4
         More test harness additions
+    4.48.0.5
+        VPush and VP element aliases added for VStretch
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -8190,7 +8192,7 @@ def Stretch():
     return Text(font='_ 1', pad=(0,0), expand_x=True)
 
 Push = Stretch
-P = Push
+P = Stretch
 
 def VStretch():
     """
@@ -8201,6 +8203,8 @@ def VStretch():
     return Text(font='_ 1', pad=(0,0), expand_y=True)
 
 
+VPush = VStretch
+VP = VStretch
 
 
 # ------------------------------------------------------------------------- #
