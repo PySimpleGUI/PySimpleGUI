@@ -463,7 +463,7 @@ def make_window():
         [sg.Listbox(values=get_file_list(), select_mode=sg.SELECT_MODE_EXTENDED, size=(50,20), bind_return_key=True, key='-DEMO LIST-')],
         [sg.Text('Filter (F1):', tooltip=filter_tooltip), sg.Input(size=(25, 1), focus=True, enable_events=True, key='-FILTER-', tooltip=filter_tooltip),
          sg.T(size=(15,1), k='-FILTER NUMBER-')],
-        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder'), ],
+        [sg.Button('Run'), sg.B('Edit'), sg.B('Clear'), sg.B('Open Folder'), sg.B('Copy Path')],
         [sg.Text('Find (F2):', tooltip=find_tooltip), sg.Input(size=(25, 1), enable_events=True, key='-FIND-', tooltip=find_tooltip),
          sg.T(size=(15,1), k='-FIND NUMBER-')],
     ], element_justification='l', expand_x=True, expand_y=True)
@@ -694,6 +694,16 @@ def main():
                         file_path = file_path.replace('/', '\\')
                     sg.cprint(file_path, text_color='white', background_color='purple')
                     execute_command_subprocess(explorer_program, file_path)
+        elif event == 'Copy Path':
+            for file in values['-DEMO LIST-']:
+                sg.cprint('Copying the last highlighted filename in your list')
+                if find_in_file.file_list_dict is not None:
+                    full_filename, line = window_choose_line_to_edit(file, find_in_file.file_list_dict[file][0], find_in_file.file_list_dict[file][1], find_in_file.file_list_dict[file][2])
+                else:
+                    full_filename, line = get_file_list_dict()[file], 1
+                if line is not None:
+                    sg.cprint(f'Added to Clipboard Full Path {full_filename}', c='white on purple')
+                    sg.clipboard_set(full_filename)
 
     window.close()
 #
