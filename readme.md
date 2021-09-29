@@ -16,7 +16,6 @@ Some programs are not well-suited for PySimpleGUI however.  By definition, PySim
 
 I could use a coffee!  It fuels consultants, editors, domain registration and so many other things required for PySimpleGUI to be a thriving project.  Every donation helps, and help is needed and appreciated.
 
-
 <hr>
 
 # Statistics  📈
@@ -75,7 +74,57 @@ Adding a GUI to a program opens that program up to a wider audience. It becomes 
   <img src="https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/GUI%20Gap%202020.png" width="600px">
 </p>
 
+## Recognition of Open Source Use
+In the Demo Programs or one of the PySimpleGUI Account's Repos these packages were used at least one time. Some of your are the goodies on the right of the GUI gap.
+chatterbot
+cv2
+fitz
+forecastio
+gtts
+matplotlib
+mido
+mpl_toolkits
+notifypy
+numpy
+pandas
+PIL
+praw
+psgtray
+psutil
+pyfiglet
+pygame
+pylab
+pymunk
+requests
+vlc
+win32api
+win32con
+win32gui
+win32process
 
+#### LPLG3 as an Example
+
+The licensing terms in the LLC3 Licensing, it states:
+
+>   4. Combined Works.
+> You may convey a Combined Work under terms of your choice that,
+> taken together, effectively do not restrict modification of the
+> portions of the Library contained in the Combined Work and reverse
+> engineering for debugging such modifications, if you also do each of
+> the following:
+> 
+>    a) Give prominent notice with each copy of the Combined Work that
+>    the Library is used in it and that the Library and its use are
+>    covered by this License.
+> 
+>    b) Accompany the Combined Work with a copy of the GNU GPL and this license
+>    document.
+
+Since the above packages each have a similar license clause, I'm listing them here, in what I would consider a "prominent notice" location, that I'm using the fine works of these groups or individuals.  They are used in the Demo Programs most likely or one of the Repos that are under this account as this list is all inclusive.
+
+You all have my respect and admiration.  You're enabling bigger things. What a special kind of thing to make. Who knows what you've enabled. I believe more people are getting over to your creations and getting to experience them.
+
+tkinter team - PySimpleGUI would be nowhere without your lengthy work & continios dedication. ONE GUI API for 3 different OS's? Really? With no code changes to move between? That's a huge accomplishment. You're #1 to me.
 
 ## Getting Over "The Bar"
 
