@@ -2130,16 +2130,59 @@ Image element - Simpler to use
 	- Changed the repr method of the user settings object to use the pretty printer to format the dictionary information into a nicer string
 
 
-## Upcoming
+## 4.48.0 PySimpleGUI 25-Sept-2021
+- Highlights:  
+	- Table clicking   
+	- Push element   
+	- p = pad in layouts   
 
-The future for PySimpleGUI looks bright!  
+* Table Element - Feature expansion
+    * enable_click_events - New parameter and associated events
+	* If parm is True, then events will be generated that are tuples when a user clicks on the table and headers
+	* The event format is a tuple: ('-TABLE KEY-', '+CICKED+', (3, 3))  3 items in the tuple:
+            1. The Table's key
+            2. "An additional event name" in this case I've called it "+CLICKED+"
+            3. The (row, col) 
+	* The (row, col) will match the user's data unless one of these is clicked:
+		* A header (will return a row of -1)
+		* A row number (these are artificially generated numbers) and has a column of -1
+* set_options - new keep_on_top option. Makes all windows you create, including popups, have keep_on_top set to True
+* User Settings APIs
+    * user_settings_object() - returns the UserSettings object that is used by the function interface for the user_settings APIs
+	* Improved print by returning the pprint formattted dictionary rather than just the string version
+* Docstrings
+    * set_clipboard takes str or bytes
+	* ProgressBar - better size parm description
+	* Fixed return type for Window.read_all_windows
+* ProgressBar - new size_px parameter allows you to specify your meter directly in pixels	
+* pad alias!  Lazy coders and those wanting ultra-compact layouts may like this one
+	* You can use the parameter p just like the parameter pad
+    * pad joins the parameters size (s) and key (k)
+* Push Element
+    * Alias for Stretch - they are the exact same thing
+	* Stretch was a term used by Qt.
+	* Push "feels" more like what it does.  It "pushes" other elements around
+	* Alias is P - like many other Elements, it has a 1-letter alias that can be used to write more compact code
+* Removed printing of Mac warnings about global settings at the startup
+* Redefined the Debug button to be a simple button with a the graphic as before
+* Added a right click menu to the SDK reference so the window can be closed if moved off the screen too far
 
-The overall road-map is a simple one:
-* Continue to build-out the tkinter port
-* Continue to bring features forward from the tkinter port to the other ports (Qt, WxPython, Remi)
-* Add mobile applications (native built applications instead of PyDriod3 that's used today)
+## 4.49.0 PySimpleGUI 30-Sept-2021
 
+- Highlights    
+	- popup_get_file bug fix (primary reason for a quick release)   
+	- VPush   
+	- popup_get_file fix   
 
+- VPush = VP = VStretch
+	- Same concept as Push element except in the Vertical direction
+- `Image.update_animation_no_buffering` bug fix wasn't checking timer between frames (DOH!)
+- `one_line_progress_meter` no longer returns a not OK when max reached.  Makes the user if statements much easier to get only cancel as False
+	- Note that this is a backward compatibility problem is you are relying on a False being returned when the counter reaches the maximum
+- `popup_get_file` fixed bug when `show_hidden` is set. Added to docstring
+- Added `popup_get_file`, get_folder, get_data to the test harness under the popups tab
+- Changed docstring for Multiline default value to Any and added a cast to string
+- Added more tests and information to the `sg.main()` test harness
 
 ## Code Condition
 
@@ -2182,7 +2225,7 @@ From the start of the PSG project, tkinter was not meant to be the only underlyi
 
 # Author & Owner
 
-Written and owned by PySimpleGUI Inc
+Written and owned by PySimpleGUI.
 
 This documentation as well as all PySimpleGUI documentation and  code is Copyright 2018, 2019, 2020, 2021 by PySimpleGUI
 
@@ -2199,6 +2242,7 @@ Please note that this license does **not** allow you to break copyright laws.  Y
 There are a number of people that have been key contributors to this project both directly and indirectly.  Paid professional help has been deployed a number of critical times in the project's history.  This happens in the life of software development from time to time.
 
 If you've helped, I sure hope that you feel like you've been properly thanked.  That you have been recognized.  If not, then say something.... drop an email to comments@PySimpleGUI.org. 
+Please see the readme file for usage of other Python packages by this project.
 
 ## Support
 
@@ -2208,6 +2252,8 @@ The project is self-funded and there are ongoing costs just to offer the softwar
 
 ## Legal
 
-All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Tech LLC.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have a copyright owned by PySimpleGUI Inc.
+All documentation in this file and in the PySimpleGUI GitHub account are copyright 2021 by PySimpleGUI Tech LLC.  The PySimpleGUI code, the demo programs and other source code in the PySimpleGUI account also have are copyright owned by PySimpleGUI
 
 The name "PySimpleGUI" and the PySimpleGUI logo are Trademarked
+
+When in doubt, ask.

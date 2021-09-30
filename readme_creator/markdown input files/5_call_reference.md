@@ -1,21 +1,38 @@
 ![LOGO](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png)
 
 
+<!-- Start of ST -->
+<script type="text/javascript">
+var sc_project=12622535; 
+var sc_invisible=1; 
+var sc_security="1d3e2cc1"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of ST -->
+
 # ELEMENT AND FUNCTION CALL REFERENCE
 
 Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
 
-## Currently PySimpleGUI (tkinter) only
+## This call reference document covers the tkinter port
 
 This documentation is created using the PySimpleGUI.py file which means it's based on the tkinter code. Some of the calls are different, might not exist at all, or there may be more methods/functions for the other PySimpleGUI ports (Qt, Wx, Web).  
 
-Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
+The PySimpleGUIQt call reference is located in another location.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
 This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
-Here are all of the Elements, the Window & SystemTray classes, and all functions
+# Here are all of the Elements, the Window  class, and all functions
 
 ---------
 
@@ -1943,13 +1960,6 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ---------
 
-
-
-## Stretch Element 
-<!-- <+func.Stretch+> -->
-
----------
-
 ## Tab Element 
 <!-- <+Tab.doc+> -->
 <!-- <+Tab.__init__+> -->
@@ -2430,12 +2440,30 @@ The following methods are here for backwards compatibility reference.  You will 
 
 ### visible
 <!-- <+VerticalSeparator.visible+> -->
----------
 
 
-## VStretch Element
-<!-- <+func.VStretch+> -->
----------
+--------------------------------------
+# The `Push` / `Stretch` Elements
+
+These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
+
+The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
+
+In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
+
+The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
+
+## Push-style Elements Use
+
+These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
+
+## Push Element (alias include `P` and `Stretch`)
+
+<!-- <+func.Push+> -->
+
+## VPush Element (aliases include `VP` and `VStretch`)
+
+<!-- <+func.VPush+> -->
 
 ### These are non-PEP8 Compliant Methods - do NOT use
 

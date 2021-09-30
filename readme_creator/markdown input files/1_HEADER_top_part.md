@@ -32,6 +32,22 @@ HOW DO I INSERT IMAGES ???
 </p>
 
 
+<!-- Start of SC -->
+<script type="text/javascript">
+var sc_project=12622535; 
+var sc_invisible=1; 
+var sc_security="1d3e2cc1"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of SC -->
 
 
 ## PyPI Statistics & Versions

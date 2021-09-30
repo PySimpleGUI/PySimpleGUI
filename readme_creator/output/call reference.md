@@ -1,20 +1,35 @@
 ![LOGO](https://raw.githubusercontent.com/PySimpleGUI/PySimpleGUI/master/images/for_readme/Logo%20with%20text%20for%20GitHub%20Top.png)
 
+<script type="text/javascript">
+var sc_project=12622535; 
+var sc_invisible=1; 
+var sc_security="1d3e2cc1"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/12622535/0/1d3e2cc1/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+
 # ELEMENT AND FUNCTION CALL REFERENCE
 
 Here you will find the details for all Elements, Objects, and Functions that are available to you.  If you want to use a complex element and don't understand the parameters, then this is the right place to come.  For every element you're shown the parameters used to create it as well as all methods available to call.
 
-## Currently PySimpleGUI (tkinter) only
+## This call reference document covers the tkinter port
 
 This documentation is created using the PySimpleGUI.py file which means it's based on the tkinter code. Some of the calls are different, might not exist at all, or there may be more methods/functions for the other PySimpleGUI ports (Qt, Wx, Web).  
 
-Work is underway to get the PySimpleGUIQt docstrings completed and corrected.
+The PySimpleGUIQt call reference is located in another location.
 
 ## Caution - Some functions / methods may be internal only yet exposed in this documentation
 
 This section of the documentation is generated directly from the source code.  As a result, sometimes internal only functions or methods that you are not supposed to be calling are accidentally shown in this documentation.  Hopefully these accidents don't happen often.
 
-Here are all of the Elements, the Window & SystemTray classes, and all functions
+# Here are all of the Elements, the Window  class, and all functions
 
 ---------
 
@@ -50,6 +65,7 @@ Button(button_text = "",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     right_click_menu = None,
@@ -90,6 +106,7 @@ Parameter Descriptions:
 |                                      bool                                      |    bind_return_key    | If True the return key will cause this button to be pressed |
 |                                      bool                                      |         focus         | if True, initial focus will be put on this button |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |          key          | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -463,6 +480,7 @@ ButtonMenu(button_text,
     font = None,
     item_font = None,
     pad = None,
+    p = None,
     expand_x = False,
     expand_y = False,
     key = None,
@@ -495,8 +513,10 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                       (str or (str, int[, str]) or None)                       |      item_font      | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike, for the menu items |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-|                                      bool                                      |         key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element :param expand_x: If True the element will automatically expand in the X direction to fill available space |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                      bool                                      |      expand_x       | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |      expand_y       | If True the element will automatically expand in the Y direction to fill available space |
+|                         str or int or tuple or object                          |         key         | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |       tearoff       | Determines if menus should allow them to be torn off |
 |                                      bool                                      |       visible       | set visibility state of the element |
@@ -792,6 +812,7 @@ Canvas(canvas = None,
     size = (None, None),
     s = (None, None),
     pad = None,
+    p = None,
     key = None,
     k = None,
     tooltip = None,
@@ -812,6 +833,7 @@ Parameter Descriptions:
 |                           (int,int) or (None, None)                            |       size       | (width in char, height in rows) size in pixels to make canvas |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
@@ -1091,6 +1113,7 @@ Checkbox(text,
     key = None,
     k = None,
     pad = None,
+    p = None,
     tooltip = None,
     right_click_menu = None,
     expand_x = False,
@@ -1118,6 +1141,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
@@ -1436,6 +1460,7 @@ Column(layout,
     size = (None, None),
     s = (None, None),
     pad = None,
+    p = None,
     scrollable = False,
     vertical_scroll_only = False,
     right_click_menu = None,
@@ -1460,6 +1485,7 @@ Parameter Descriptions:
 |                                   (int, int)                                   |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
 |                          (int, int)  or (None, None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column |
 |                                      bool                                      | vertical_scroll_only  | if Truen then no horizontal scrollbar will be shown |
 |                         List[List[ List[str] or str ]]                         |   right_click_menu    | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -1832,6 +1858,7 @@ Combo(values,
     key = None,
     k = None,
     pad = None,
+    p = None,
     expand_x = False,
     expand_y = False,
     tooltip = None,
@@ -1859,6 +1886,7 @@ Parameter Descriptions:
 |                                  str or int or tuple or object                                  |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                                  str or int or tuple or object                                  |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |         (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int         |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+|         (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int         |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                              bool                                               |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 | bool)        :param tooltip:          text that will appear when mouse hovers over this element |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
 |                                              bool                                               |     readonly     | make element readonly (user can't change). True means user cannot change |
@@ -2194,6 +2222,7 @@ Frame(title,
     s = (None, None),
     font = None,
     pad = None,
+    p = None,
     border_width = None,
     key = None,
     k = None,
@@ -2221,6 +2250,7 @@ Parameter Descriptions:
 |                       (int, int)  or (None, None) or int                       |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      int                                       |     border_width      | width of border around element in pixels |
 |                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |           k           | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -2568,6 +2598,7 @@ Graph(canvas_size,
     graph_top_right,
     background_color = None,
     pad = None,
+    p = None,
     change_submits = False,
     drag_submits = False,
     enable_events = False,
@@ -2592,6 +2623,7 @@ Parameter Descriptions:
 |                                   (int, int)                                   |  graph_top_right  | (x,y) The top right corner of your coordinate system |
 |                                      str                                       | background_color  | background color of the drawing area |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |  change_submits   | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                      bool                                      |   drag_submits    | if True and Events are enabled for the Graph, will report Events any time the mouse moves while button down |
 |                                      bool                                      |   enable_events   | If True then clicks on the Graph are immediately reported as an event. Use this instead of change_submits |
@@ -3576,6 +3608,7 @@ Returns the underlying tkiner Canvas widget
 ```
 HorizontalSeparator(color = None,
     pad = None,
+    p = None,
     key = None,
     k = None)
 ```
@@ -3586,6 +3619,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |  pad  | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |   p   | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
@@ -3830,6 +3864,7 @@ Image(source = None,
     size = (None, None),
     s = (None, None),
     pad = None,
+    p = None,
     key = None,
     k = None,
     tooltip = None,
@@ -3852,6 +3887,7 @@ Parameter Descriptions:
 |                                   (int, int)                                   |       size       | (width, height) size of image in pixels |
 |                       (int, int)  or (None, None) or int                       |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
@@ -4210,6 +4246,7 @@ Input(default_text = "",
     k = None,
     focus = False,
     pad = None,
+    p = None,
     use_readonly_for_disable = True,
     readonly = False,
     disabled_readonly_background_color = None,
@@ -4243,6 +4280,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |                 k                  | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      bool                                      |               focus                | Determines if initial focus should go to this element. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |                pad                 | Amount of padding to put around element. Normally (horizontal pixels, vertical pixels) but can be split apart further into ((horizontal left, horizontal right), (vertical above, vertical below)). If int is given, then converted to tuple (int, int) with the value provided duplicated |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |                 p                  | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |      use_readonly_for_disable      | If True (the default) tkinter state set to 'readonly'. Otherwise state set to 'disabled' |
 |                                      bool                                      |              readonly              | If True tkinter state set to 'readonly'. Use this in place of use_readonly_for_disable as another way of achieving readonly. Note cannot set BOTH readonly and disabled as tkinter only supplies a single flag |
 |                                      str                                       | disabled_readonly_background_color | If state is set to readonly or disabled, the color to use for the background |
@@ -4597,6 +4635,7 @@ Listbox(values,
     key = None,
     k = None,
     pad = None,
+    p = None,
     tooltip = None,
     expand_x = False,
     expand_y = False,
@@ -4628,6 +4667,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |            key             | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |             k              | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad             | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             p              | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |          tooltip           | text, that will appear when mouse hovers over the element |
 |                                      bool                                      |          expand_x          | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |          expand_y          | If True the element will automatically expand in the Y direction to fill available space |
@@ -5032,6 +5072,7 @@ Menu(menu_definition,
     tearoff = False,
     font = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     visible = True,
@@ -5050,6 +5091,7 @@ Parameter Descriptions:
 |                          (int, int)  or (None, None)                           |          s          | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 |                                      bool                                      |       tearoff       | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                       (str or (str, int[, str]) or None)                       |        font         | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                         str or int or tuple or object                          |         key         | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |          k          | Same as the Key. You can use either k or key. Which ever is set will be used. |
@@ -5333,6 +5375,7 @@ MenubarCustom(menu_definition,
     font = None,
     tearoff = False,
     pad = None,
+    p = None,
     background_color = None,
     text_color = None,
     bar_background_color = None,
@@ -5351,6 +5394,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |         font         | specifies the font family, size to be used for the menu items |
 |                                      bool                                      |       tearoff        | if True, then can tear the menu off from the window ans use as a floating window. Very cool effect |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |   background_color   | color to use for background of the menus that are displayed after making a section. Can be in #RRGGBB format or a color name "black". Defaults to the color of the bar text |
 |                                      str                                       |      text_color      | color to use for the text of the many items in the displayed menus. Can be in #RRGGBB format or a color name "black". Defaults to the bar background |
 |                                      str                                       | bar_background_color | color to use for the menubar. Can be in #RRGGBB format or a color name "black". Defaults to theme's button text color |
@@ -5391,6 +5435,7 @@ Multiline(default_text = "",
     focus = False,
     font = None,
     pad = None,
+    p = None,
     tooltip = None,
     justification = None,
     no_scrollbar = False,
@@ -5406,7 +5451,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                      str                                       |    default_text    | Initial text to show |
+|                                      Any                                       |    default_text    | Initial text to show |
 |                                      bool                                      |   enter_submits    | if True, the Window.Read call will return is enter key is pressed in this element |
 |                                      bool                                      |      disabled      | set disable state |
 |                                      bool                                      |     autoscroll     | If True the contents of the element will automatically scroll as more data added to the end |
@@ -5430,6 +5475,7 @@ Parameter Descriptions:
 |                                      bool                                      |       focus        | if True initial focus will go to this element |
 |                       (str or (str, int[, str]) or None)                       |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
 |                                      str                                       |   justification    | text justification. left, right, center. Can use single characters l, r, c. |
 |                                      bool                                      |    no_scrollbar    | If False then a scrollbar will be shown (the default) |
@@ -5752,7 +5798,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |           value            | new text to display |
+|                Any                 |           value            | new text to display |
 |                bool                |          disabled          | disable or enable state of the element |
 |                bool                |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
 | (str or (str, int[, str]) or None) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
@@ -5842,7 +5888,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                str                 |           value            | new text to display |
+|                Any                 |           value            | new text to display |
 |                bool                |          disabled          | disable or enable state of the element |
 |                bool                |           append           | if True then new value will be added onto the end of the current value. if False then contents will be replaced. |
 | (str or (str, int[, str]) or None) |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike for the entire element |
@@ -5878,6 +5924,7 @@ OptionMenu(values,
     key = None,
     k = None,
     pad = None,
+    p = None,
     tooltip = None,
     visible = True,
     metadata = None)
@@ -5900,6 +5947,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |     tooltip      | text that will appear when mouse hovers over this element |
 |                                      bool                                      |     visible      | set visibility state of the element |
 |                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
@@ -6207,6 +6255,7 @@ Output(size = (None, None),
     background_color = None,
     text_color = None,
     pad = None,
+    p = None,
     echo_stdout_stderr = False,
     font = None,
     tooltip = None,
@@ -6228,6 +6277,7 @@ Parameter Descriptions:
 |                                      str                                       |  background_color  | color of background |
 |                                      str                                       |     text_color     | color of the text |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad         | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p          | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      | echo_stdout_stderr | If True then output to stdout will be output to this element AND also to the normal console location |
 |                       (str or (str, int[, str]) or None)                       |        font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      str                                       |      tooltip       | text, that will appear when mouse hovers over the element |
@@ -6551,6 +6601,7 @@ Pane(pane_list,
     size = (None, None),
     s = (None, None),
     pad = None,
+    p = None,
     orientation = "vertical",
     show_handle = True,
     relief = "raised",
@@ -6573,6 +6624,7 @@ Parameter Descriptions:
 |                                   (int, int)                                   |       size       | (width, height) w=characters-wide, h=rows-high How much room to reserve for the Pane |
 |                          (int, int)  or (None, None)                           |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |   orientation    | 'horizontal' or 'vertical' or ('h' or 'v'). Direction the Pane should slide |
 |                                      bool                                      |   show_handle    | if True, the handle is drawn that makes it easier to grab and slide |
 |                                      enum                                      |      relief      | relief style. Values are same as other elements that use relief values. RELIEF_RAISED RELIEF_SUNKEN RELIEF_FLAT RELIEF_RIDGE RELIEF_GROOVE RELIEF_SOLID |
@@ -6851,6 +6903,7 @@ ProgressBar(max_value,
     orientation = None,
     size = (None, None),
     s = (None, None),
+    size_px = (None, None),
     auto_size_text = None,
     bar_color = None,
     style = None,
@@ -6859,6 +6912,7 @@ ProgressBar(max_value,
     key = None,
     k = None,
     pad = None,
+    p = None,
     right_click_menu = None,
     expand_x = False,
     expand_y = False,
@@ -6872,8 +6926,9 @@ Parameter Descriptions:
 |--|--|--|
 |                                      int                                       |    max_value     | max value of progressbar |
 |                                      str                                       |   orientation    | 'horizontal' or 'vertical' |
-|                           (int, int) or  (int, None)                           |       size       | Size of the bar. If horizontal (chars wide, pixels high), vert (pixels wide, rows high) |
+|                           (int, int) or  (int, None)                           |       size       | Size of the bar. If horizontal (chars long, pixels wide), vert (chars high, pixels wide). Vert height measured using horizontal chars units. |
 |                          (int, int)  or (None, None)                           |        s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                           (int, int) or (None, None)                           |     size_px      | Size in pixels (length, width). Will be used in place of size parm if specified |
 |                                      bool                                      |  auto_size_text  | Not sure why this is here |
 |                               (str, str) or str                                |    bar_color     | The 2 colors that make up a progress bar. Easy to remember which is which if you say "ON" between colors. "red" on "green". |
 |                                      str                                       |      style       | Progress bar style defined as one of these 'default', 'winnative', 'clam', 'alt', 'classic', 'vista', 'xpnative' |
@@ -6882,6 +6937,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |     expand_y     | If True the element will automatically expand in the Y direction to fill available space |
@@ -7192,6 +7248,7 @@ Radio(text,
     key = None,
     k = None,
     pad = None,
+    p = None,
     tooltip = None,
     change_submits = False,
     enable_events = False,
@@ -7220,6 +7277,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                      bool                                      |  change_submits  | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |  enable_events   | Turns on the element specific events. Radio Button events happen when an item is selected |
@@ -7789,6 +7847,7 @@ Slider(range = (None, None),
     key = None,
     k = None,
     pad = None,
+    p = None,
     expand_x = False,
     expand_y = False,
     tooltip = None,
@@ -7820,6 +7879,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |          key           | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |        expand_x        | If True the element will automatically expand in the X direction to fill available space |
 |                                      bool                                      |        expand_y        | If True the element will automatically expand in the Y direction to fill available space |
 |                                      str                                       |        tooltip         | text, that will appear when mouse hovers over the element |
@@ -8115,6 +8175,7 @@ Spin(values,
     key = None,
     k = None,
     pad = None,
+    p = None,
     tooltip = None,
     right_click_menu = None,
     expand_x = False,
@@ -8142,6 +8203,7 @@ Parameter Descriptions:
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
 |                                      bool                                      |     expand_x     | If True the element will automatically expand in the X direction to fill available space |
@@ -8469,6 +8531,7 @@ StatusBar(text,
     background_color = None,
     justification = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     right_click_menu = None,
@@ -8495,6 +8558,7 @@ Parameter Descriptions:
 |                                      str                                       | background_color | color of background |
 |                                      str                                       |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -8777,18 +8841,6 @@ Parameter Descriptions:
 
 ---------
 
-## Stretch Element 
-
-Acts like a Stretch element found in the Qt port.
-Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
-Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
-
-```
-Stretch()
-```
-
----------
-
 ## Tab Element 
 
     Tab Element is another "Container" element that holds a layout and displays a tab with text. Used with TabGroup only
@@ -8801,6 +8853,7 @@ Tab(title,
     background_color = None,
     font = None,
     pad = None,
+    p = None,
     disabled = False,
     border_width = None,
     key = None,
@@ -8824,6 +8877,7 @@ Parameter Descriptions:
 |                                      str                                       |   background_color    | color of background of the entire layout |
 |                       (str or (str, int[, str]) or None)                       |         font          | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |       disabled        | If True button will be created disabled |
 |                                      int                                       |     border_width      | width of border around element in pixels |
 |                         str or int or tuple or object                          |          key          | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
@@ -9191,6 +9245,7 @@ TabGroup(layout,
     change_submits = False,
     enable_events = False,
     pad = None,
+    p = None,
     border_width = None,
     theme = None,
     key = None,
@@ -9220,6 +9275,7 @@ Parameter Descriptions:
 |                                      bool                                      |      change_submits       | * DEPRICATED DO NOT USE. Use `enable_events` instead |
 |                                      bool                                      |       enable_events       | If True then switching tabs will generate an Event |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            pad            | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |             p             | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      int                                       |       border_width        | width of border around element in pixels |
 |                                      enum                                      |           theme           | DEPRICATED - You can only specify themes using set options or when window is created. It's not possible to do it on an element basis |
 |                         str or int or tuple or object                          |            key            | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
@@ -9578,8 +9634,10 @@ Table(values,
     s = (None, None),
     change_submits = False,
     enable_events = False,
+    enable_click_events = False,
     bind_return_key = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     tooltip = None,
@@ -9620,8 +9678,10 @@ Parameter Descriptions:
 |                                   (int, int)                                   |          size           | DO NOT USE! Use num_rows instead |
 |                                      bool                                      |     change_submits      | DO NOT USE. Only listed for backwards compat - Use enable_events instead |
 |                                      bool                                      |      enable_events      | Turns on the element specific events. Table events happen when row is clicked |
+|                                      bool                                      |   enable_click_events   | Turns on the element click events that will give you (row, col) click data when the table is clicked |
 |                                      bool                                      |     bind_return_key     | if True, pressing return key will cause event coming from Table, ALSO a left button double click will generate an event if this parameter is True |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
@@ -9950,6 +10010,7 @@ Text(text = "",
     border_width = None,
     justification = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     right_click_menu = None,
@@ -9978,6 +10039,7 @@ Parameter Descriptions:
 |                                      int                                       |   border_width   | number of pixels for the border (if using a relief) |
 |                                      str                                       |  justification   | how string should be aligned within space provided by size. Valid choices = `left`, `right`, `center` |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                         List[List[ List[str] or str ]]                         | right_click_menu | A list of lists of Menu items to show when this element is right clicked. See user docs for exact format. |
@@ -10340,6 +10402,7 @@ Tree(data = None,
     num_rows = None,
     row_height = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     tooltip = None,
@@ -10377,6 +10440,7 @@ Parameter Descriptions:
 |                                      int                                       |        num_rows         | The number of rows of the table to display at a time |
 |                                      int                                       |       row_height        | height of a single row in pixels |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |            p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |           key           | Used with window.find_element and with return values to uniquely identify this element to uniquely identify this element |
 |                         str or int or tuple or object                          |            k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |         tooltip         | text, that will appear when mouse hovers over the element |
@@ -10771,6 +10835,7 @@ Parameter Descriptions:
 ```
 VerticalSeparator(color = None,
     pad = None,
+    p = None,
     key = None,
     k = None)
 ```
@@ -10781,6 +10846,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       | color | Color of the line. Defaults to theme's text color. Can be name or #RRGGBB format |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |  pad  | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |   p   | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |  key  | Value that uniquely identifies this element from all other elements. Used when Finding an element or in return values. Must be unique to the window |
 |                         str or int or tuple or object                          |   k   | Same as the Key. You can use either k or key. Which ever is set will be used. |
 
@@ -10960,18 +11026,39 @@ Returns visibility state for the element.  This is a READONLY property
 |---|---|---|
 |(bool)| **return** | Visibility state for element |
 
----------
+--------------------------------------
+# The `Push` / `Stretch` Elements
 
-## VStretch Element
+These elements `Push` and `VPush` as aliases for `Stretch` and `VStretch` and are implemented using a function rather than a class.  They're not meant to be manipulated like other elements.  They have a functional role in a layout that is much like the "Layout Helper Functions" (pin, vtop, etc).
+
+The name `Stretch` originally appeared in the PySimpleGUI APIs when the PySimpleGUIQt port was added.
+
+In the Sept 2021 timeframe, a functioning version of this element appeared in the tkinter port, along with some aliases and a vertical addition.
+
+The PySimpleGUI documentation, demos, etc, will be using the names `Push` and `VPush`.
+
+## Push-style Elements Use
+
+These elements modify the placement of other elements inside of containers.  As the name implies, these elements `Push` and `VPush` will "push" other elements around.  `Push` works in the horizontal direction, `VPush` in the vertical.
+
+## Push Element (alias include `P` and `Stretch`)
+
+Acts like a Stretch element found in the Qt port.
+Used in a Horizontal fashion.  Placing one on each side of an element will enter the element.
+Place one to the left and the element to the right will be right justified.  See VStretch for vertical type
+
+```
+Push()
+```
+
+## VPush Element (aliases include `VP` and `VStretch`)
 
 Acts like a Stretch element found in the Qt port.
 Used in a Vertical fashion.
 
 ```
-VStretch()
+VPush()
 ```
-
----------
 
 ### These are non-PEP8 Compliant Methods - do NOT use
 
@@ -11272,7 +11359,7 @@ Window(title,
     text_justification = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     resizable = False,
     disable_close = False,
     disable_minimize = False,
@@ -12856,7 +12943,7 @@ Parameter Descriptions:
 |--|--|--|
 | int |   timeout   | Time in milliseconds to delay before a returning a timeout event |
 | Any | timeout_key | Key to return when a timeout happens. Defaults to the standard TIMEOUT_KEY |
-| Tuple[Window, Any, (Dict or List)] | **RETURN** | A tuple with the  (Window, event, values dictionary/list)
+| (Window, Any, Dict or List) | **RETURN** | A tuple with the  (Window, event, values dictionary/list)
 
 ## Button Related
 
@@ -12882,6 +12969,7 @@ CalendarButton(button_text,
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     enable_events = None,
     key = None,
     k = None,
@@ -12919,6 +13007,7 @@ Parameter Descriptions:
 |                                      bool                                      |    bind_return_key     | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                      bool                                      |         focus          | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad           | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p            | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |          key           | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |           k            | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       |         locale         | defines the locale used to get day names |
@@ -12943,6 +13032,7 @@ Cancel(button_text = "Cancel",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -12963,6 +13053,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -12986,6 +13077,7 @@ ColorChooserButton(button_text,
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13012,10 +13104,16 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | If True, then the return key will cause a the Listbox to generate an event |
 |                                      bool                                      |      focus       | Determines if initial focus should go to this element. |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | User metadata that can be set to ANYTHING |
 | (Button) | **RETURN** | returns a button
+
+This Button has been changed in how it works!!
+Your button has been replaced with a normal button that has the PySimpleGUI Debugger buggon logo on it.
+In your event loop, you will need to check for the event of this button and then call:
+show_debugger_popout_window()
 
 ```
 Debug(button_text = "",
@@ -13029,6 +13127,7 @@ Debug(button_text = "",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13049,6 +13148,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13071,6 +13171,7 @@ DummyButton(button_text,
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13096,6 +13197,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13113,6 +13215,7 @@ Exit(button_text = "Exit",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13133,6 +13236,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13153,6 +13257,7 @@ FileBrowse(button_text = "Browse",
     font = None,
     disabled = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13176,6 +13281,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13197,6 +13303,7 @@ FileSaveAs(button_text = "Save As...",
     enable_events = False,
     font = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13221,6 +13328,7 @@ Parameter Descriptions:
 |                                      bool                                      |   enable_events   | Turns on the element specific events.(Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |        key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata      | Anything you want to store along with this button |
@@ -13243,6 +13351,7 @@ FilesBrowse(button_text = "Browse",
     enable_events = False,
     font = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     files_delimiter = ";",
@@ -13267,6 +13376,7 @@ Parameter Descriptions:
 |                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      str                                       | files_delimiter  | String to place between files when multiple files are selected. Normally a ; |
@@ -13287,6 +13397,7 @@ FolderBrowse(button_text = "Browse",
     enable_events = False,
     font = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13309,6 +13420,7 @@ Parameter Descriptions:
 |                                      bool                                      |  enable_events   | Turns on the element specific events.(Default = False) |
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | Used with window.find_element and with return values to uniquely identify this element |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13326,6 +13438,7 @@ Help(button_text = "Help",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13346,6 +13459,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13363,6 +13477,7 @@ No(button_text = "No",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13383,6 +13498,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13400,6 +13516,7 @@ OK(button_text = "OK",
     font = None,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13420,6 +13537,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13465,6 +13583,7 @@ Ok(button_text = "Ok",
     font = None,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13485,6 +13604,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13502,6 +13622,7 @@ Open(button_text = "Open",
     font = None,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13522,6 +13643,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13539,6 +13661,7 @@ Quit(button_text = "Quit",
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13559,6 +13682,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13581,6 +13705,7 @@ RealtimeButton(button_text,
     bind_return_key = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13605,6 +13730,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = False) If True, then the return key will cause a the Listbox to generate an event |
 |                                      bool                                      |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      int                                       |   border_width   | width of border around element |
@@ -13623,6 +13749,7 @@ Save(button_text = "Save",
     font = None,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13643,6 +13770,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13664,6 +13792,7 @@ SaveAs(button_text = "Save As...",
     enable_events = False,
     font = None,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13673,24 +13802,24 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-|                                      str                                       |    button_text    | text in the button (Default value = 'Save As...') |
-|                               str or (int, int)                                |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.*"))) |
-|                                      str                                       | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
-|                                      str                                       |  initial_folder   | starting path for folders and files |
-|                                      bool                                      |     disabled      | set disable state for element (Default = False) |
-|                                      str                                       |      tooltip      | text, that will appear when mouse hovers over the element |
-|                                   (int, int)                                   |       size        | (w,h) w=characters-wide, h=rows-high |
-|                       (int, int)  or (None, None) or int                       |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
-|                                      bool                                      | auto_size_button  | True if button size is determined by button text |
-|                               (str, str) or str                                |   button_color    | button color (foreground, background) |
-|                                      bool                                      |  change_submits   | If True, pressing Enter key submits window (Default = False) |
-|                                      bool                                      |   enable_events   | Turns on the element specific events.(Default = False) |
-|                       (str or (str, int[, str]) or None)                       |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
-| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
-|                         str or int or tuple or object                          |        key        | key for uniquely identify this element (for window.find_element) |
-|                         str or int or tuple or object                          |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
-|                                      Any                                       |     metadata      | Anything you want to store along with this button |
+|                                                                                     str                                                                                      |    button_text    | text in the button (Default value = 'Save As...') |
+|                                                                              str or (int, int)                                                                               |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
+|                                                                            Tuple[(str, str), ...]                                                                            |    file_types     | (Default value = (("ALL Files", "*.*"))) |
+|                                                                                     str                                                                                      | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
+|                                                                                     str                                                                                      |  initial_folder   | starting path for folders and files |
+|                                                                                     bool                                                                                     |     disabled      | set disable state for element (Default = False) |
+|                                                                                     str                                                                                      |      tooltip      | text, that will appear when mouse hovers over the element |
+|                                                                                  (int, int)                                                                                  |       size        | (w,h) w=characters-wide, h=rows-high |
+|                                                                      (int, int)  or (None, None) or int                                                                      |         s         | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                                                                                     bool                                                                                     | auto_size_button  | True if button size is determined by button text |
+|                                                                              (str, str) or str                                                                               |   button_color    | button color (foreground, background) |
+|                                                                                     bool                                                                                     |  change_submits   | If True, pressing Enter key submits window (Default = False) |
+|                                                                                     bool                                                                                     |   enable_events   | Turns on the element specific events.(Default = False) |
+|                                                                      (str or (str, int[, str]) or None)                                                                      |       font        | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
+|                                               (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int                                                |        pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int    :param key:               key for uniquely identify this element (for window.find_element) |         p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
+|                                                                        str or int or tuple or object                                                                         |         k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
+|                                                                                     Any                                                                                      |     metadata      | Anything you want to store along with this button |
 | (Button) | **RETURN** | returns a button
 
 ```
@@ -13705,6 +13834,7 @@ Submit(button_text = "Submit",
     font = None,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13725,6 +13855,7 @@ Parameter Descriptions:
 |                       (str or (str, int[, str]) or None)                       |       font       | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13742,6 +13873,7 @@ Yes(button_text = "Yes",
     bind_return_key = True,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13762,6 +13894,7 @@ Parameter Descriptions:
 |                                      bool                                      | bind_return_key  | (Default = True) If True, then the return key will cause a the Listbox to generate an event |
 |                                                                                |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13789,6 +13922,7 @@ RButton(button_text,
     disabled = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13813,6 +13947,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      int                                       |   border_width   | width of border around element |
@@ -13836,6 +13971,7 @@ ReadButton(button_text,
     disabled = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13860,6 +13996,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      int                                       |   border_width   | width of border around element |
@@ -13883,6 +14020,7 @@ CButton(button_text,
     disabled = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13907,6 +14045,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13929,6 +14068,7 @@ CloseButton(button_text,
     disabled = False,
     focus = False,
     pad = None,
+    p = None,
     key = None,
     k = None,
     metadata = None)
@@ -13953,6 +14093,7 @@ Parameter Descriptions:
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                 idk_yetReally                                  |      focus       | if focus should be set to this |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |       pad        | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
+| (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |        p         | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                         str or int or tuple or object                          |       key        | key for uniquely identify this element (for window.find_element) |
 |                         str or int or tuple or object                          |        k         | Same as the Key. You can use either k or key. Which ever is set will be used. |
 |                                      Any                                       |     metadata     | Anything you want to store along with this button |
@@ -13979,7 +14120,7 @@ easy_print(args=*<1 or N object>,
     no_titlebar = False,
     no_button = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     do_not_reroute_stdout = True,
     echo_stdout = False,
     text_color = None,
@@ -14039,7 +14180,7 @@ eprint(args=*<1 or N object>,
     no_titlebar = False,
     no_button = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     do_not_reroute_stdout = True,
     echo_stdout = False,
     text_color = None,
@@ -14093,7 +14234,7 @@ sgprint(args=*<1 or N object>,
     no_titlebar = False,
     no_button = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     do_not_reroute_stdout = True,
     echo_stdout = False,
     text_color = None,
@@ -14153,7 +14294,7 @@ EasyPrint(args=*<1 or N object>,
     no_titlebar = False,
     no_button = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     do_not_reroute_stdout = True,
     echo_stdout = False,
     text_color = None,
@@ -14213,7 +14354,7 @@ Print(args=*<1 or N object>,
     no_titlebar = False,
     no_button = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     do_not_reroute_stdout = True,
     echo_stdout = False,
     text_color = None,
@@ -14348,7 +14489,7 @@ OneLineProgressMeter(title,
     border_width = None,
     grab_anywhere = False,
     no_titlebar = False,
-    keep_on_top = False,
+    keep_on_top = None,
     no_button = False)
 ```
 
@@ -14398,7 +14539,7 @@ one_line_progress_meter(title,
     border_width = None,
     grab_anywhere = False,
     no_titlebar = False,
-    keep_on_top = False,
+    keep_on_top = None,
     no_button = False)
 ```
 
@@ -14440,6 +14581,9 @@ Parameter Descriptions:
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
+If this popup doesn't have the features you want, then you can easily make your own. Popups can be accomplished in 1 line of code:
+choice, _ = sg.Window('Continue?', [[sg.T('Do you want to continue?')], [sg.Yes(s=10), sg.No(s=10)]], disable_close=True).read(close=True)
+
 ```
 popup(args=*<1 or N object>,
     title = None,
@@ -14456,7 +14600,7 @@ popup(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     any_key_closes = False,
     image = None,
@@ -14548,7 +14692,7 @@ popup_auto_close(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14594,7 +14738,7 @@ popup_cancel(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14639,7 +14783,7 @@ popup_error(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14726,13 +14870,14 @@ popup_get_file(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     initial_folder = None,
     image = None,
     files_delimiter = ";",
     modal = True,
     history = False,
+    show_hidden = True,
     history_setting_filename = None)
 ```
 
@@ -14763,6 +14908,7 @@ Parameter Descriptions:
 |                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
 |                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 |                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                bool                |       show_hidden        | If True then enables the checkbox in the system dialog to select hidden files to be shown |
 |                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -14781,7 +14927,7 @@ popup_get_folder(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     initial_folder = None,
     image = None,
@@ -14830,7 +14976,7 @@ popup_get_text(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14895,7 +15041,7 @@ popup_no_buttons(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14938,7 +15084,7 @@ popup_no_titlebar(args=*<1 or N object>,
     line_width = None,
     font = None,
     grab_anywhere = True,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -14984,7 +15130,7 @@ popup_non_blocking(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -15058,7 +15204,7 @@ popup_ok(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15103,7 +15249,7 @@ popup_ok_cancel(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15149,7 +15295,7 @@ popup_quick(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -15196,7 +15342,7 @@ popup_quick_message(args=*<1 or N object>,
     font = None,
     no_titlebar = True,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -15243,7 +15389,7 @@ popup_scrolled(args=*<1 or N object>,
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     font = None,
     image = None,
     icon = None,
@@ -15292,7 +15438,7 @@ popup_yes_no(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15340,7 +15486,7 @@ sprint(args=*<1 or N object>,
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     font = None,
     image = None,
     icon = None,
@@ -15390,7 +15536,7 @@ ScrolledTextBox(args=*<1 or N object>,
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     font = None,
     image = None,
     icon = None,
@@ -15432,6 +15578,9 @@ These versions of the popup functions are here only for backwards compatibility.
 Popup - Display a popup Window with as many parms as you wish to include.  This is the GUI equivalent of the
 "print" statement.  It's also great for "pausing" your program's flow until the user can read some error messages.
 
+If this popup doesn't have the features you want, then you can easily make your own. Popups can be accomplished in 1 line of code:
+choice, _ = sg.Window('Continue?', [[sg.T('Do you want to continue?')], [sg.Yes(s=10), sg.No(s=10)]], disable_close=True).read(close=True)
+
 ```
 Popup(args=*<1 or N object>,
     title = None,
@@ -15448,7 +15597,7 @@ Popup(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     any_key_closes = False,
     image = None,
@@ -15539,7 +15688,7 @@ PopupAnnoying(args=*<1 or N object>,
     line_width = None,
     font = None,
     grab_anywhere = True,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15585,7 +15734,7 @@ PopupAutoClose(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15631,7 +15780,7 @@ PopupCancel(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15676,7 +15825,7 @@ PopupError(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15724,13 +15873,14 @@ PopupGetFile(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     initial_folder = None,
     image = None,
     files_delimiter = ";",
     modal = True,
     history = False,
+    show_hidden = True,
     history_setting_filename = None)
 ```
 
@@ -15761,6 +15911,7 @@ Parameter Descriptions:
 |                str                 |     files_delimiter      | String to place between files when multiple files are selected. Normally a ; |
 |                bool                |          modal           | If True then makes the popup will behave like a Modal window... all other windows are non-operational until this one is closed. Default = True |
 |                bool                |         history          | If True then enable a "history" feature that will display previous entries used. Uses settings filename provided or default if none provided |
+|                bool                |       show_hidden        | If True then enables the checkbox in the system dialog to select hidden files to be shown |
 |                str                 | history_setting_filename | Filename to use for the User Settings. Will store list of previous entries in this settings file |
 | str or None | **RETURN** | string representing the file(s) chosen, None if cancelled or window closed with X
 
@@ -15779,7 +15930,7 @@ PopupGetFolder(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     initial_folder = None,
     image = None,
@@ -15828,7 +15979,7 @@ PopupGetText(message,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15872,7 +16023,7 @@ PopupNoBorder(args=*<1 or N object>,
     line_width = None,
     font = None,
     grab_anywhere = True,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15916,7 +16067,7 @@ PopupNoButtons(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -15959,7 +16110,7 @@ PopupNoFrame(args=*<1 or N object>,
     line_width = None,
     font = None,
     grab_anywhere = True,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16004,7 +16155,7 @@ PopupNoTitlebar(args=*<1 or N object>,
     line_width = None,
     font = None,
     grab_anywhere = True,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16050,7 +16201,7 @@ PopupNonBlocking(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -16095,7 +16246,7 @@ PopupOK(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16140,7 +16291,7 @@ PopupOKCancel(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16186,7 +16337,7 @@ PopupQuick(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -16233,7 +16384,7 @@ PopupQuickMessage(args=*<1 or N object>,
     font = None,
     no_titlebar = True,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = False)
@@ -16280,7 +16431,7 @@ PopupScrolled(args=*<1 or N object>,
     non_blocking = False,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     font = None,
     image = None,
     icon = None,
@@ -16330,7 +16481,7 @@ PopupTimed(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16376,7 +16527,7 @@ PopupYesNo(args=*<1 or N object>,
     font = None,
     no_titlebar = False,
     grab_anywhere = False,
-    keep_on_top = False,
+    keep_on_top = None,
     location = (None, None),
     image = None,
     modal = True)
@@ -16840,7 +16991,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (dict) | **RETURN** | The current settings dictionary
+| (dict or str) | **RETURN** | The current settings dictionary as a dictionary or a nicely formatted string representing it
 
 Deletes an individual entry.  If no filename has been specified up to this point,
 then a default filename will be used.
@@ -17157,7 +17308,7 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| str | new_value | value to set the clipboard to. Will be converted to a string |
+| (str or bytes) | new_value | value to set the clipboard to. Will be converted to a string |
 
 ## Misc
 
@@ -17328,7 +17479,8 @@ set_options(icon = None,
     titlebar_icon = None,
     user_settings_path = None,
     pysimplegui_settings_path = None,
-    pysimplegui_settings_filename = None)
+    pysimplegui_settings_filename = None,
+    keep_on_top = None)
 ```
 
 Parameter Descriptions:
@@ -17384,6 +17536,7 @@ Parameter Descriptions:
 |                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
 |                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
+|                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 | None | **RETURN** | None
 
 ### Non PEP8 versions
@@ -17450,7 +17603,8 @@ SetOptions(icon = None,
     titlebar_icon = None,
     user_settings_path = None,
     pysimplegui_settings_path = None,
-    pysimplegui_settings_filename = None)
+    pysimplegui_settings_filename = None,
+    keep_on_top = None)
 ```
 
 Parameter Descriptions:
@@ -17506,6 +17660,7 @@ Parameter Descriptions:
 |                      str                       |       user_settings_path        | default path for user_settings API calls. Expanded with os.path.expanduser so can contain ~ to represent user |
 |                      str                       |    pysimplegui_settings_path    | default path for the global PySimpleGUI user_settings |
 |                      str                       |  pysimplegui_settings_filename  | default filename for the global PySimpleGUI user_settings |
+|                      bool                      |           keep_on_top           | If True then all windows will automatically be set to keep_on_top=True |
 | None | **RETURN** | None
 
 ## Old Themes (Look and Feel) - Replaced by theme()
