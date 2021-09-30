@@ -1,11 +1,1 @@
 site_name: PySimpleGUI
-
-site_name: PySimpleGUI
-# mkdocs.yml:
-
-nav:
-    ## add your custom pages hierarchy here
-
-theme:
-  name: null
-  custom_dir: 'mkdocs_ivory'
