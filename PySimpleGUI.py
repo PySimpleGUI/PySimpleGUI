@@ -1,23 +1,11 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.48.0.5 Unreleased"
+version = __version__ = "4.49.0 Released 30-Sept-2021"
 
 _change_log = """
 
-    Changelog since 4.48.0 release to PyPI on 25 Sept 2021
-    
-    4.48.0.1
-        Image.update_animation_no_buffering - bug fix - wasn't checking timer between frames (DOH!)
-    4.48.0.2
-        one_line_progress_meter - no longer returns a not OK when max reached.  Makes the user if statements much easier to get only cancel as False
-    4.48.0.3
-        popup_get_file - fixed bug when show_hidden is set. Added docstring
-        Added popup_get_file, get_folder, get_data to the test harness under the popups tab
-        Changed docstring for Multiline default value to Any and added a cast to string
-    4.48.0.4
-        More test harness additions
-    4.48.0.5
-        VPush and VP element aliases added for VStretch
+    Changelog since 4.49.0 release to PyPI on 30 Sept 2021
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
