@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.4 Unreleased"
+version = __version__ = "4.49.0.5 Unreleased"
 
 _change_log = """
 
@@ -15,7 +15,8 @@ _change_log = """
     4.49.0.4
         Addition of running_replit to determine if running on replit's site.
         If on replit then a path for user settigs is set to .
-
+    4.49.0.5
+        Make pin's background match the element's background
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -11003,7 +11004,7 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
     :rtype:                    Column
     """
     if shrink:
-        return Column([[elem, Canvas(size=(0, 0), pad=(0, 0))]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
+        return Column([[elem, Canvas(size=(0, 0),background_color=elem.BackgroundColor, pad=(0, 0))]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
     else:
         return Column([[elem]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
 
