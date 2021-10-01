@@ -1,10 +1,14 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0 Released 30-Sept-2021"
+version = __version__ = "4.49.0.1 Unreleased"
 
 _change_log = """
 
     Changelog since 4.49.0 release to PyPI on 30 Sept 2021
+
+    4.49.0.1
+        Element.set_right_click_menu added so can set or change the right click menu for an element
+
 
     """
 
@@ -1426,6 +1430,51 @@ class Element():
         """
         self.ParentForm._grab_anywhere_include_these_list.append(self.Widget)
 
+
+
+    def set_right_click_menu(self, menu):
+        if menu == MENU_RIGHT_CLICK_DISABLED:
+            return
+        if menu:
+            top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
+
+            if self.ParentForm.right_click_menu_background_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(bg=self.ParentForm.right_click_menu_background_color)
+            if self.ParentForm.right_click_menu_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(fg=self.ParentForm.right_click_menu_text_color)
+            if self.ParentForm.right_click_menu_disabled_text_color not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(disabledforeground=self.ParentForm.right_click_menu_disabled_text_color)
+            if self.ParentForm.right_click_menu_font is not None:
+                top_menu.config(font=self.ParentForm.right_click_menu_font)
+
+            if self.ParentForm.right_click_menu_selected_colors[0] not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(activeforeground=self.ParentForm.right_click_menu_selected_colors[0])
+            if self.ParentForm.right_click_menu_selected_colors[1] not in (COLOR_SYSTEM_DEFAULT, None):
+                top_menu.config(activebackground=self.ParentForm.right_click_menu_selected_colors[1])
+            AddMenuItem(top_menu, menu[1], self, right_click_menu=True)
+            self.TKRightClickMenu = top_menu
+            if self.ParentForm.RightClickMenu:            # if the top level has a right click menu, then setup a callback for the Window itself
+                if self.ParentForm.TKRightClickMenu is None:
+                    self.ParentForm.TKRightClickMenu = top_menu
+                    if (running_mac()):
+                        self.ParentForm.TKroot.bind('<ButtonRelease-2>', self.ParentForm._RightClickMenuCallback)
+                    else:
+                        self.ParentForm.TKroot.bind('<ButtonRelease-3>', self.ParentForm._RightClickMenuCallback)
+            if (running_mac()):
+                self.Widget.bind('<ButtonRelease-2>', self._RightClickMenuCallback)
+            else:
+                self.Widget.bind('<ButtonRelease-3>', self._RightClickMenuCallback)
+
+
+
+
+
+
+
+
+
+
+
     def update(self, *args, **kwargs):
         """
         A dummy update call.  This will only be called if an element hasn't implemented an update method
@@ -1433,6 +1482,7 @@ class Element():
         that this is not the function that will be called.  Your actual element's update method will be called
         """
         print('* Base Element Class update was called. Your element does not seem to have an update method')
+
 
     def __call__(self, *args, **kwargs):
         """
@@ -1444,6 +1494,11 @@ class Element():
                     window.find_element('T')('new text value')
         """
         return self.update(*args, **kwargs)
+
+
+
+
+
 
     SetTooltip = set_tooltip
     SetFocus = set_focus
