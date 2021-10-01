@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.3 Unreleased"
+version = __version__ = "4.49.0.4 Unreleased"
 
 _change_log = """
 
@@ -12,6 +12,9 @@ _change_log = """
         Element.set_right_click_menu - If no menu supplied, use the parent form's right click menu
     4.49.0.3
         User Settings path created specifically for Trinkets
+    4.49.0.4
+        Addition of running_replit to determine if running on replit's site.
+        If on replit then a path for user settigs is set to .
 
     """
 
@@ -327,6 +330,23 @@ def running_trinket():
     return False
 
 
+def running_replit():
+    """
+    A special case for REPLIT.  Checks both the OS and for the existance of the number of environment variable REPL_OWNER
+    Currently, Trinket only has ONE environment variable.  This fact is used to figure out if Trinket is being used.
+
+    Returns True if running on "replit"
+
+    :return: True if sys.platform indicates Linux and setting REPL_OWNER is found in the environment variables
+    :rtype:  (bool)
+    """
+    if 'REPL_OWNER' in os.environ and sys.platform.startswith('linux'):
+        return True
+    return False
+
+
+
+
 # Handy python statements to increment and decrement with wrapping that I don't want to forget
 # count = (count + (MAX - 1)) % MAX           # Decrement - roll over to MAX from 0
 # count = (count + 1) % MAX                   # Increment to MAX then roll over to 0
@@ -602,6 +622,7 @@ DEFAULT_USER_SETTINGS_WIN_PATH = r'~\AppData\Local\PySimpleGUI\settings'
 DEFAULT_USER_SETTINGS_LINUX_PATH = r'~/.config/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_MAC_PATH = r'~/Library/Application Support/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_TRINKET_PATH = r'.'
+DEFAULT_USER_SETTINGS_REPLIT_PATH = r'.'
 DEFAULT_USER_SETTINGS_UNKNOWN_OS_PATH = r'~/Library/Application Support/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_PATH = None  # value set by user to override all paths above
 DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = None  # location of the global PySimpleGUI settings
@@ -15015,6 +15036,8 @@ def _convert_window_to_tk(window):
     window.TKroot.y = int(y)
     window.starting_window_position = (int(x), (int(y)))
     master.update_idletasks()  # don't forget
+    master.geometry(move_string)
+    master.update_idletasks()  # don't forget
 
     _no_titlebar_setup(window)
 
@@ -19197,6 +19220,8 @@ class UserSettings:
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_PATH)
             elif running_trinket():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_TRINKET_PATH)
+            elif running_replit():
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_REPLIT_PATH)
             elif running_windows():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_WIN_PATH)
             elif running_linux():
