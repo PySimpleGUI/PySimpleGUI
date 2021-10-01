@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.1 Unreleased"
+version = __version__ = "4.49.0.2 Unreleased"
 
 _change_log = """
 
@@ -8,6 +8,8 @@ _change_log = """
 
     4.49.0.1
         Element.set_right_click_menu added so can set or change the right click menu for an element
+    4.49.0.2
+        Element.set_right_click_menu - If no menu supplied, use the parent form's right click menu
 
 
     """
@@ -1432,9 +1434,13 @@ class Element():
 
 
 
-    def set_right_click_menu(self, menu):
+    def set_right_click_menu(self, menu=None):
         if menu == MENU_RIGHT_CLICK_DISABLED:
             return
+        if menu is None:
+            menu = self.ParentForm.RightClickMenu
+            if menu is None:
+                return
         if menu:
             top_menu = tk.Menu(self.ParentForm.TKroot, tearoff=self.ParentForm.right_click_menu_tearoff, tearoffcommand=self._tearoff_menu_callback)
 
