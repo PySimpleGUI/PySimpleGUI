@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.2 Unreleased"
+version = __version__ = "4.49.0.3 Unreleased"
 
 _change_log = """
 
@@ -10,7 +10,8 @@ _change_log = """
         Element.set_right_click_menu added so can set or change the right click menu for an element
     4.49.0.2
         Element.set_right_click_menu - If no menu supplied, use the parent form's right click menu
-
+    4.49.0.3
+        User Settings path created specifically for Trinkets
 
     """
 
@@ -600,6 +601,7 @@ else:
 DEFAULT_USER_SETTINGS_WIN_PATH = r'~\AppData\Local\PySimpleGUI\settings'
 DEFAULT_USER_SETTINGS_LINUX_PATH = r'~/.config/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_MAC_PATH = r'~/Library/Application Support/PySimpleGUI/settings'
+DEFAULT_USER_SETTINGS_TRINKET_PATH = r'.'
 DEFAULT_USER_SETTINGS_UNKNOWN_OS_PATH = r'~/Library/Application Support/PySimpleGUI/settings'
 DEFAULT_USER_SETTINGS_PATH = None  # value set by user to override all paths above
 DEFAULT_USER_SETTINGS_PYSIMPLEGUI_PATH = None  # location of the global PySimpleGUI settings
@@ -19193,6 +19195,8 @@ class UserSettings:
                 path = os.path.expanduser(self.path)  # expand user provided path in case it has user ~ in it. Don't think it'll hurt
             elif DEFAULT_USER_SETTINGS_PATH is not None:  # if user set the path manually system-wide using set options
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_PATH)
+            elif running_trinket():
+                path = os.path.expanduser(DEFAULT_USER_SETTINGS_TRINKET_PATH)
             elif running_windows():
                 path = os.path.expanduser(DEFAULT_USER_SETTINGS_WIN_PATH)
             elif running_linux():
