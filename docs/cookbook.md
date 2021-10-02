@@ -530,6 +530,75 @@ If you have an explorer program specified in the settings or in the PySimpleGUI 
 
 -----
 
+# Recipe - No Console Launching
+
+## Windows 10
+
+You've just coded up your nice GUI, ready for that "Windows experience".... you double click your .py file in Windows explorer and up comes 2 windows, a console and your GUI Window.
+
+If you're ready for a more Windows-like experience for you and your users, then these steps should get you there.
+
+There are a couple of simple tricks needed.
+
+### Rename Your `.py` to `.pyw`
+
+1. Rename your .py file to .pyw
+2. Launch it using pythonw.exe instead of python.exe
+
+When you right click on your .pyw file, you'll want to associate it with `pythonw.exe` if that's not already been done by Python for you when it was installed.
+
+Right click your .pyw file and choose "Properties"
+
+You'll see a window like this which will tell you what will open the file if you double click it.  You can click the "Change..." button to change what opens the file.
+
+![image](https://user-images.githubusercontent.com/46163555/135723031-92d7688e-e2e2-4342-baf2-cce7c95358c9.png)
+
+### Make A Shortcut
+
+You've learned how to use explorer to double-click and launch your GUI window without a console.  Let's go 1 step further.
+
+If you were to simply drag your .pyw file to your taskbar to "pin" it for quick launching, unfortunately that doesn't work.  It'll try and launch Python instead.
+
+What we're going to do is make an icon/shortcut to your python program that you can place anywhere AND you can also pin it to your taskbar.
+
+To make a shortcut, right click your .pyw file and choose "Create Shortcut".  It's near the end of the list of right click options
+
+![image](https://user-images.githubusercontent.com/46163555/135723159-5a443cc1-9df0-49d3-859e-762c1876e582.png)
+
+My program is called `Demo_Desktop_Widget_Launcher_Bar.pyw`. After I created the shortcut, a file named `Demo_Desktop_Widget_Launcher_Bar.pyw - Shortcut` was created in the same folder.
+
+You should now do these 2 operations on that shortcut
+1. Rename it something that looks like any other program
+2. Choose an icon for your shortcut. On windows, this needs to be a .ICO file
+3. Set a specific program that opens it (your pythonw.exe file)
+
+I named my shortcut "Launcher".
+
+Because I wanted the 3.9 version of Python to open this specific program, I added pythonw.exe part to the target field in the properties.  After the pythonw.exe add your full path to your .pyw file.  If there are any spaces, put "" around it.  It should look something like this:
+
+![image](https://user-images.githubusercontent.com/46163555/135723399-d5dd3996-c42e-428a-8857-f360883f4568.png)
+
+In my folder with my program, I now see the shortcut with the icon I chose earlier
+
+![image](https://user-images.githubusercontent.com/46163555/135723500-e5850138-aab3-49e6-b8cc-b6a82032e0a0.png)
+
+Double-clicking this icon will start your .pyw file without a console.  It will look "like a real windows program"
+
+### Pin Your Shortcut
+
+If you want to be able to quickly launch your program, you can "pin" your shortcut to your taskbar.  To do this, you can drag and drop the icon onto the taskbar.  Or, you can right click the icon and choose "pin to taskbar".
+
+After pinning it, I see this as my taskbar.  The launcher icon is there ready to be clicked.  When I click it, the program runs without any console windows.
+
+![image](https://user-images.githubusercontent.com/46163555/135723601-dda82b5e-7e69-4dd5-b4f6-7aa00255e1eb.png)
+
+This particular .pyw file is the Demo Launcher Bar.  Clicking the icon launches this launcher.
+
+![A7arqWk7eB](https://user-images.githubusercontent.com/46163555/135723729-6bbf127a-2706-4d94-a738-37af67e548a5.gif)
+
+
+-----
+
 # Themes - Window "Beautification"
 
 "Beautiful windows" don't just happen, but coloring your window can be accomplished with 1 line of code.
