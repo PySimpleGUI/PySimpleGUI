@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import PySimpleGUI as sg
+import sys
 
 """
    Big chart of tkinter colors shown as swatches.
@@ -672,20 +673,29 @@ color_map = {
 
 def make_window():
     layout = [[sg.Text(f'Swatches for {len(color_list)} Colors', font='Default 14'),],
-              [sg.Text(f'Hover - see color "name"\nRight click - see hex value\nClick - see buttons & hex value copied to clipboard', font='Default 12')]]
+              [sg.Text(f'Hover - see color "name"\nRight click - see hex value\nClick - see buttons & hex value copied to clipboard', font='Default 12')],
+              [sg.Text(f'PySimpleGUI version: {sg.ver}', font='_ 12')],
+              [sg.Text(f'Python version: {sys.version}', font='_ 12')],
+              [sg.Text(f'tkinter version: {sg.tclversion_detailed}', font='_ 12')],
+              ]
+
 
     for rows in range(len(color_list)//COLORS_PER_ROW+1):
         row = []
         for i in range(COLORS_PER_ROW):
             try:
                 color = color_list[rows*COLORS_PER_ROW+i]
-                row.append(sg.T(sg.SYMBOL_SQUARE, text_color=color, pad=(0, 0), font=('Default', font_size), right_click_menu=['Nothing', color_map[color]],
+                row.append(sg.T(' ', s=1, background_color=color, text_color=color, font=('Default', font_size), right_click_menu=['_', color_map[color]],
                              tooltip=color, enable_events=True, key=(color, color_map[color])))
+            except IndexError as e:
+                break
             except Exception as e:
-                pass
+                sg.popup_error(f'Error while creating color window. Something with the Text elements perhaps....', e,
+                               f'rows = {rows}  i = {i}')
+                break
         layout.append(row)
 
-    return sg.Window('Color Swatches Viewer', layout, font='Any 9', element_padding=(0,0), border_depth=0)
+    return sg.Window('Color Swatches Viewer', layout, font='Any 9', element_padding=(1,1), border_depth=0, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_EXIT, use_ttk_buttons=True)
 
 def main():
     sg.theme('black')
@@ -695,7 +705,10 @@ def main():
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
-        if isinstance(event, tuple):
+        if event == 'Edit Me':
+            sg.execute_editor(__file__)
+            continue
+        elif isinstance(event, tuple):
             color, color_hex = event[0], event[1]
         else:
             color, color_hex = hex_to_color[event], event
@@ -704,8 +717,7 @@ def main():
                    [sg.DummyButton(color, button_color=('white',color), tooltip=color_hex),
                     sg.DummyButton(color, button_color=('black',color), tooltip=color_hex)]]
         window2 = sg.Window('Buttons with white and black text', layout2, keep_on_top=True, finalize=True)
-        window2.TKroot.clipboard_clear()
-        window2.TKroot.clipboard_append(color_hex)
+        sg.clipboard_set(color_hex)
 
     window.close()
 
@@ -719,7 +731,8 @@ if __name__ == '__main__':
 
     # -- Create primary color viewer window --
     hex_to_color = {v: k for k, v in color_map.items()}
-    color_list = [key for key in color_map]
+    color_list = list(color_map.keys())
+    # [key for key in color_map]
     COLORS_PER_ROW = 40
     font_size = 18
     main()
