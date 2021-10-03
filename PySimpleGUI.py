@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.5 Unreleased"
+version = __version__ = "4.49.0.6 Unreleased"
 
 _change_log = """
 
@@ -17,6 +17,8 @@ _change_log = """
         If on replit then a path for user settigs is set to .
     4.49.0.5
         Make pin's background match the element's background
+    4.49.0.6
+        set_options new option warn_button_key_duplicates - warn duplicate keys on buttons - defaults to False
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -9431,7 +9433,7 @@ class Window:
                         top_window.DictionaryKeyCounter += 1
                 if element.Key is not None:
                     if element.Key in key_dict.keys():
-                        if element.Type != ELEM_TYPE_BUTTON:  # for Buttons, let duplicate key errors be silent
+                        if element.Type == ELEM_TYPE_BUTTON and WARN_DUPLICATE_BUTTON_KEY_ERRORS:  # for Buttons see if should complain
                             warnings.warn('*** Duplicate key found in your layout {} ***'.format(element.Key), UserWarning)
                             warnings.warn('*** Replaced new key with {} ***'.format(str(element.Key) + str(self.UniqueKeyCounter)))
                             if not SUPPRESS_ERROR_POPUPS:
@@ -15926,7 +15928,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
                 text_element_background_color=None, input_elements_background_color=None, input_text_color=None,
                 scrollbar_color=None, text_color=None, element_text_color=None, debug_win_size=(None, None),
                 window_location=(None, None), error_button_color=(None, None), tooltip_time=None, tooltip_font=None, use_ttk_buttons=None, ttk_theme=None,
-                suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None, enable_treeview_869_patch=None,
+                suppress_error_popups=None, suppress_raise_key_errors=None, suppress_key_guessing=None,warn_button_key_duplicates=False, enable_treeview_869_patch=None,
                 enable_mac_notitlebar_patch=None, use_custom_titlebar=None, titlebar_background_color=None, titlebar_text_color=None, titlebar_font=None,
                 titlebar_icon=None, user_settings_path=None, pysimplegui_settings_path=None, pysimplegui_settings_filename=None, keep_on_top=None):
     """
@@ -16008,6 +16010,8 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     :type suppress_raise_key_errors:        (bool)
     :param suppress_key_guessing:           If True then key errors won't try and find closest matches for you
     :type suppress_key_guessing:            (bool)
+    :param warn_button_key_duplicates:      If True then duplicate Button Keys generate warnings (not recommended as they're expected)
+    :type warn_button_key_duplicates:       (bool)    
     :param enable_treeview_869_patch:       If True, then will use the treeview color patch for tk 8.6.9
     :type enable_treeview_869_patch:        (bool)
     :param enable_mac_notitlebar_patch:     If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10
@@ -16072,6 +16076,7 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
     global SUPPRESS_ERROR_POPUPS
     global SUPPRESS_RAISE_KEY_ERRORS
     global SUPPRESS_KEY_GUESSING
+    global WARN_DUPLICATE_BUTTON_KEY_ERRORS
     global ENABLE_TREEVIEW_869_PATCH
     global ENABLE_MAC_NOTITLEBAR_PATCH
     global USE_CUSTOM_TITLEBAR
@@ -16207,6 +16212,9 @@ def set_options(icon=None, button_color=None, element_size=(None, None), button_
 
     if suppress_key_guessing is not None:
         SUPPRESS_KEY_GUESSING = suppress_key_guessing
+
+    if warn_button_key_duplicates is not None:
+        WARN_DUPLICATE_BUTTON_KEY_ERRORS = warn_button_key_duplicates
 
     if enable_treeview_869_patch is not None:
         ENABLE_TREEVIEW_869_PATCH = enable_treeview_869_patch
