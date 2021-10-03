@@ -63,7 +63,7 @@ def main():
               [sg.T('Python Command (optional)', s=txt_size), sg.Input(key='-PYTHON COMMAND-')],
               [sg.Button('Go', bind_return_key=True), sg.Button('Exit')]]
 
-    window = sg.Window('Create Shortcut To Python File', layout)
+    window = sg.Window('Create Shortcut To Python File', layout, icon=main_icon)
 
     while True:
         event, values = window.read()
@@ -93,4 +93,5 @@ def main():
 
 
 if __name__ == '__main__':
+    main_icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR7WXO2tVQRSFv7QWRmMIIggKAUW0SKNFGvMjFLsUooWPNIqVoqI2ShpFQbCwFNME/QMWggqCj0pQJIiSIkSSQgVRkHWZCTs7Z85rxg2Xe8+ZuXuts2ftNXOG+D+xE9gL7AH+AB+Aj8A3DzdUGH8CuAAcS+R9CpwLZAZTShK4HMA3tXioK8DVkgQErqQ2VoEvwF9gF7DFjYvorxIVqAJfe0ID+hg4Yq5vABdzCbQFj7h+/lgOga7gkcQKMBwupvoS6Asu3PfAgUDgdB8COeDZBMaBV8CIEVOV4Oo6MWsJbgNnM8CzRDgKLBnwOeBoC9OJU24B5838O8BMFw1MAs9DApVxq0n2ANgGvI0O54gJ7Iy59x04BHzqQuAkcD8kEZB8X3EKuGuS7wAWzfU1GY4j1MuKUwT0JC8NwKwptcS6nALX/VQFZJn7gHfAfEhQtwRenGNBL/L7H3WirSJglboA7A4JvAgHIjLJ17UX8CyMxYd5AzzxovUEfJt8BXS4iCENaCliTBmgdQ4H3GvTIZZAlcNdAq6bRCKjLTbGCUAdoMgiUOVwKq/K7ENEDwKfnSmllqC2ELECXkQyDKm5bWxwOGdayTwikOtwHtyLs7ECde3VVAEPvuZwTX+M46pAymCacuRuy4P8fQkUAY8Eui5BMfBIoIsIi4JHAvp+CEybRW9zrNb0rqehDbqKPrAZ0IuEDdnwi7CZHA4vF3Y8G9xWQL+rylvVCT+Bm4mDR1PnJCsQB7YH7z+eyPQogGtnKxKp88B+QN2hz++w470Or9lFgGOSf3MNjp/Wcz63AAAAAElFTkSuQmCC'
     main()
