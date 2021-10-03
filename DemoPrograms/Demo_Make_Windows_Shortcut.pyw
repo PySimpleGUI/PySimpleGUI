@@ -31,24 +31,18 @@ def create_shortcut(path, target='', icon=''):
     """
     filename, ext = os.path.splitext(path)
     working_dir = os.path.dirname(filename)
-    if ext == 'url':
-        shortcut = file(filename, 'w')
-        shortcut.write('[InternetShortcut]\n')
-        shortcut.write('URL=%s' % target)
-        shortcut.close()
+    shell = Dispatch('WScript.Shell')
+    shortcut_filename = filename + ".lnk"
+    shortcut = shell.CreateShortCut(f'{shortcut_filename}')
+    target_path = f'{target}'
+    shortcut.Targetpath = target_path
+    shortcut.Arguments = f'"{path}"'
+    shortcut.WorkingDirectory = working_dir
+    if icon == '':
+        pass
     else:
-        shell = Dispatch('WScript.Shell')
-        shortcut_filename = filename + ".lnk"
-        shortcut = shell.CreateShortCut(f'{shortcut_filename}')
-        target_path = f'{target}'
-        shortcut.Targetpath = target_path
-        shortcut.Arguments = f'"{path}"'
-        shortcut.WorkingDirectory = working_dir
-        if icon == '':
-            pass
-        else:
-            shortcut.IconLocation = icon
-        shortcut.save()
+        shortcut.IconLocation = icon
+    shortcut.save()
     return shortcut_filename
 
 
