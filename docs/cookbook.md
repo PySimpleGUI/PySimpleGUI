@@ -530,6 +530,73 @@ If you have an explorer program specified in the settings or in the PySimpleGUI 
 
 -----
 
+# Recipe - A Simple & Standard Right Click Menu
+
+You'll find that many/most of the PySimpleGUI Demo Programs that are newer have a standard right click menu added to them with these 3 items:
+
+* Edit Me
+* Version
+* Exit
+
+## Adding the Menu
+
+There are several pre-defined right-click menus included with PySimpleGUI.  To get the one that includes these 3 options, add this parameter to your `Window` creation call.
+  
+```python
+right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT
+```
+
+If you right click your Window, you'll see a menu that looks something like this:
+
+![image](https://user-images.githubusercontent.com/46163555/135859117-f29ee527-ee88-4b73-b906-0cd495a8c996.png)
+
+In the PySimpleGUI code, the constant `MENU_RIGHT_CLICK_EDITME_VER_EXIT` makes this menu definition:
+
+```python
+MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
+```
+
+
+## Edit Me
+
+When you're developing your code and even after it's done, sometimes you'll see something while the code is running that triggers you to want to make a change.  Maybe it's a bug fix, a mispelling (sic), or a new feature idea.
+
+The problem you face now is.... where's the source code?  
+
+The Edit Me item launches the editor you've specified in the PySimpleGUI Global Settings and opens the file in that editor.
+
+2 mouse clicks and you're editing your code.
+
+In order for this feature to work, you'll need to add these 2 lines to your event loop:
+
+```python
+        if event == 'Edit Me':
+            sg.execute_editor(__file__)
+```
+
+You don't need to modify them.  Just add them as they are to your PySimpleGUI programs
+
+## Version
+
+This is another runtime question that is often handy to know without having to look - "What version of PySimpleGUI, Python and tkinter is this running again?"
+
+To add this feature, add these 2 lines to your event loop:
+
+```python
+        if event == 'Version':
+            sg.popup_scrolled(sg.get_versions())
+```
+
+You'll see something like this:
+
+![image](https://user-images.githubusercontent.com/46163555/135858712-93076218-9a3e-470b-88a6-0918d756a857.png)
+
+## Exit
+
+This one is easy.  It's particularly good for "Desktop Widgets" that have no titlebar and thus have no "X" to click to exit the program.  If your event loop already has a change for the event "Exit" then you don't need to do anything to get this feature.
+
+-----
+
 # Recipe - No Console Launching
 
 ## Windows 10
