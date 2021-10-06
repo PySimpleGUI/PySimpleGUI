@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.6 Unreleased"
+version = __version__ = "4.49.0.7 Unreleased"
 
 _change_log = """
 
@@ -19,6 +19,9 @@ _change_log = """
         Make pin's background match the element's background
     4.49.0.6
         set_options new option warn_button_key_duplicates - warn duplicate keys on buttons - defaults to False
+    4.49.0.7
+        Addition of Window.get_size_accurate - size based on the geometry string
+        Removed window move of the theme color swatch preview window. Seems to center correctly now.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10025,6 +10028,26 @@ class Window:
             x, y = (None, None)
         return (x,y)
 
+    def current_size_accurate(self):
+        """
+        Get the current location of the window based on tkinter's geometry setting
+
+        :return:              The x and y size in tuple form (x,y)
+        :rtype:               Tuple[(int | None), (int | None)]
+        """
+
+        if not self._is_window_created('tried Window.current_location'):
+            return (None, None)
+        try:
+            geometry = self.TKroot.geometry()
+            geometry_tuple = geometry.split('+')
+            window_size = geometry_tuple[0].split('x')
+            x, y = int(window_size[0]), int(window_size[1])
+        except Exception as e:
+            warnings.warn('Error in Window.current_size_accurate. Trouble getting x,y size\n{} {}'.format(geometry, geometry_tuple) + str(e), UserWarning)
+            x, y = (None, None)
+        return (x,y)
+
     @property
     def size(self):
         """
@@ -17032,7 +17055,7 @@ def theme_previewer_swatches():
     # col_height = window.get_screen_size()[1]-200
     # if window.size[1] > 100:
     #     window.size = (window.size[0], col_height)
-    window.move(window.get_screen_size()[0] // 2 - window.size[0] // 2, 0)
+    # window.move(window.get_screen_size()[0] // 2 - window.size[0] // 2, 0)
 
     while True:  # Event Loop
         event, values = window.read()
