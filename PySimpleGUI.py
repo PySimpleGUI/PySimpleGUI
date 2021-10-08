@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.7 Unreleased"
+version = __version__ = "4.49.0.8 Unreleased"
 
 _change_log = """
 
@@ -22,6 +22,9 @@ _change_log = """
     4.49.0.7
         Addition of Window.get_size_accurate - size based on the geometry string
         Removed window move of the theme color swatch preview window. Seems to center correctly now.
+    4.49.0.8
+        Added check for a bad value being returned from tkinter during the table clicked event
+        Removed print when patch of 8.6.9 ttk treeview code is patched
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -7792,11 +7795,15 @@ class Table(Element):
                 row = None
             else:
                 row = None
-            column = int(self.Widget.identify_column(event.x)[1:])-1-int(self.DisplayRowNumbers is True)
+            col_identified = self.Widget.identify_column(event.x)
+            if col_identified:      # Sometimes tkinter returns a value of '' which would cause an error if cast to an int
+                column = int(self.Widget.identify_column(event.x)[1:])-1-int(self.DisplayRowNumbers is True)
+            else:
+                column = None
         except Exception as e:
-            warnings.warn('Error getting table click data for table with key='.format(self.Key), UserWarning)
+            warnings.warn('Error getting table click data for table with key= {}\nError: {}'.format(self.Key, e), UserWarning)
             if not SUPPRESS_ERROR_POPUPS:
-                _error_popup_with_traceback('Unable to complete operation getting the clicked event for table with key {}'.format(self.Key), _create_error_message())
+                _error_popup_with_traceback('Unable to complete operation getting the clicked event for table with key {}'.format(self.Key), _create_error_message(), e, 'Event data:', obj_to_string_single_obj(event))
             row = column = None
 
         self.last_clicked_position = (row, column)
@@ -14734,7 +14741,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 _add_right_click_menu(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
-                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    # print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
                     table_style.map(style_name,
                                     foreground=_fixed_map(table_style, style_name, 'foreground', element.SelectedRowColors),
                                     background=_fixed_map(table_style, style_name, 'background', element.SelectedRowColors))
@@ -14854,7 +14861,7 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 _add_right_click_menu(element)
 
                 if tclversion_detailed == '8.6.9' and ENABLE_TREEVIEW_869_PATCH:
-                    print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
+                    # print('*** tk version 8.6.9 detected.... patching ttk treeview code ***')
                     tree_style.map(style_name,
                                    foreground=_fixed_map(tree_style, style_name, 'foreground', element.SelectedRowColors),
                                    background=_fixed_map(tree_style, style_name, 'background', element.SelectedRowColors))
