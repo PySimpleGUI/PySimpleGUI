@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.8 Unreleased"
+version = __version__ = "4.49.0.9 Unreleased"
 
 _change_log = """
 
@@ -25,6 +25,8 @@ _change_log = """
     4.49.0.8
         Added check for a bad value being returned from tkinter during the table clicked event
         Removed print when patch of 8.6.9 ttk treeview code is patched
+    4.49.0.9
+        Removed print when bind callback happens. Was there for debugging and forgot to remove.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -10148,7 +10150,7 @@ class Window:
         :param event:       Event data passed in by tkinter (not used)
         :type event:
         """
-        print('bind callback', bind_string, event)
+        # print('bind callback', bind_string, event)
         key = self.user_bind_dict.get(bind_string, '')
         self.user_bind_event = event
         if key is not None:
