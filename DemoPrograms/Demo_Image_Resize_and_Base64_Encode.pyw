@@ -17,8 +17,10 @@ def resize(input_file, output_file, size):
     image = Image.open(input_file)
     width, height = image.size
     print(f"The original image size is {width} wide x {height} high")
-
-    resized_image = image.resize(size)
+    new_width, new_height = size
+    scale = min(new_height / height, new_width / width)
+    resized_image = image.resize((int(width * scale), int(height * scale)), Image.ANTIALIAS)
+    # resized_image = image.resize(size)
     width, height = resized_image.size
     print(f"The resized image size is {width} wide x {height} high")
     resized_image.save(output_file)
@@ -38,9 +40,9 @@ def main():
                 [sg.T('Original size'), sg.T(k='-ORIG WIDTH-'), sg.T('X'), sg.T(k='-ORIG HEIGHT-')]])],
                 [sg.Frame('New Size', [[sg.In(50, s=4, k='-WIDTH-'), sg.T('X'), sg.In(50, s=4, k='-HEIGHT-')]])],
                 [sg.CBox('Encode to Base64 and leave on Clipboard', default=True,k='-BASE64-')],
-                [sg.Button('Resize'), sg.Button('Exit')]  ]
+                [sg.Button('Resize', bind_return_key=True), sg.Button('Exit')]  ]
 
-    window = sg.Window('Resize Image', layout, icon=image_resize_icon)
+    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
     while True:
         event, values = window.read()
@@ -66,6 +68,10 @@ def main():
                 except Exception as e:
                     sg.popup_error_with_traceback('Error resizing or converting', 'Error encountered during the resize or Base64 encoding', e)
                 sg.popup_quick_message('DONE!', font='_ 40', background_color='red', text_color='white')
+        elif event == 'Version':
+            sg.popup_scrolled(sg.get_versions(), non_blocking=True)
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
     window.close()
 
 
