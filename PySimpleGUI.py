@@ -19204,7 +19204,7 @@ class UserSettings:
     # to access the user settings without diarectly using the UserSettings class
     _default_for_function_interface = None  # type: UserSettings
 
-    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True, use_config_file=False, retain_config_comments=True, convert_bools_and_none=True):
+    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True, use_config_file=False, convert_bools_and_none=True):
         """
         User Settings
 
@@ -19218,8 +19218,8 @@ class UserSettings:
         :type autosave:                (bool)
         :param use_config_file:        If True then the file format will be a config.ini rather than json
         :type use_config_file:         (bool)
-        :param retain_config_comments: Not yet implemented
-        :type retain_config_comments:  (bool)
+        :param convert_bools_and_none: If True then "True", "False", "None" will be converted to the Python values True, False, None. Default is TRUE
+        :type convert_bools_and_none:  (bool)
         """
 
         self.path = path
@@ -19230,7 +19230,7 @@ class UserSettings:
         self.silent_on_error = silent_on_error
         self.autosave = autosave
         self.use_config_file = use_config_file
-        self.retain_config_comments = retain_config_comments
+        # self.retain_config_comments = retain_config_comments
         self.convert_bools = convert_bools_and_none
         if use_config_file:
             self.config = configparser.ConfigParser()
@@ -19622,8 +19622,8 @@ class UserSettings:
                         self.dict = self.section_class_dict
                         self.config_sections = self.config.sections()
                         # self.config_dict = {section_name : dict(self.config[section_name]) for section_name in self.config.sections()}
-                    if self.retain_config_comments:
-                        self.config_file_contents = f.readlines()
+                    # if self.retain_config_comments:
+                    #     self.config_file_contents = f.readlines()
         except Exception as e:
             if not self.silent_on_error:
                 _error_popup_with_traceback('User settings read warning', 'Error reading settings from file', self.full_filename, e)
