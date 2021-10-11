@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.9 Unreleased"
+version = __version__ = "4.49.0.10 Unreleased"
 
 _change_log = """
 
@@ -27,6 +27,20 @@ _change_log = """
         Removed print when patch of 8.6.9 ttk treeview code is patched
     4.49.0.9
         Removed print when bind callback happens. Was there for debugging and forgot to remove.
+    4.49.0.10
+        Phase 1 Support of config files for UserSettings APIs - load, read/modify, save are done. The basic version is done.
+            This first phase supports them only via the object interface
+            Read access:  settings[section][key]
+            Modify existing section and key:  settings[section][key] = new_value
+            Create a new key in an existing section:  settings[section][new_key] = new_value
+            Create a new section and key:  settings[new_section][new_key] = new_value
+            Get a section as a dictionary-like object:   settings[section]
+                This object can be modified and it will modify the settings file as a result.
+                Has a get and set method just like a normal setting.
+            Delete a section: settings.delete_section(section)
+            Save the INI file: settings.save()
+            Option to convert bools and None. Normally stored as strings. Will convert them to Python True, False, None automatically (on by default)
+            
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -178,6 +192,7 @@ import threading
 import itertools
 import os
 import json
+import configparser
 import queue
 
 try:
@@ -19189,18 +19204,22 @@ class UserSettings:
     # to access the user settings without diarectly using the UserSettings class
     _default_for_function_interface = None  # type: UserSettings
 
-    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True):
+    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True, use_config_file=False, retain_config_comments=True, convert_bools_and_none=True):
         """
         User Settings
 
-        :param filename:        The name of the file to use. Can be a full path and filename or just filename
-        :type filename:         (str or None)
-        :param path:            The folder that the settings file will be stored in. Do not include the filename.
-        :type path:             (str or None)
-        :param silent_on_error: If True errors will not be reported
-        :type silent_on_error:  (bool)
-        :param autosave:        If True the settings file is saved after every update
-        :type autosave:         (bool)
+        :param filename:               The name of the file to use. Can be a full path and filename or just filename
+        :type filename:                (str or None)
+        :param path:                   The folder that the settings file will be stored in. Do not include the filename.
+        :type path:                    (str or None)
+        :param silent_on_error:        If True errors will not be reported
+        :type silent_on_error:         (bool)
+        :param autosave:               If True the settings file is saved after every update
+        :type autosave:                (bool)
+        :param use_config_file:        If True then the file format will be a config.ini rather than json
+        :type use_config_file:         (bool)
+        :param retain_config_comments: Not yet implemented
+        :type retain_config_comments:  (bool)
         """
 
         self.path = path
@@ -19210,8 +19229,130 @@ class UserSettings:
         self.default_value = None
         self.silent_on_error = silent_on_error
         self.autosave = autosave
+        self.use_config_file = use_config_file
+        self.retain_config_comments = retain_config_comments
+        self.convert_bools = convert_bools_and_none
+        if use_config_file:
+            self.config = configparser.ConfigParser()
+            self.config.optionxform = str
+            # self.config_dict = {}
+            self.section_class_dict = {}        # type: dict[self._SectionDict]
         if filename is not None or path is not None:
             self.load(filename=filename, path=path)
+
+
+    ########################################################################################################
+    ## FIRST is the SectionDict helper class
+    ########################################################################################################
+
+    class _SectionDict:
+        item_count = 0
+        def __init__(self, section_name, section_dict, config, user_settings_parent):  # (str, Dict, configparser.ConfigParser)
+
+            self.section_name = section_name
+            self.section_dict = section_dict            # type: Dict
+            self.new_section = False
+            self.config = config            # type: configparser.ConfigParser
+            self.user_settings_parent = user_settings_parent    # type: UserSettings
+            UserSettings._SectionDict.item_count += 1
+
+            if self.user_settings_parent.convert_bools:
+                for key, value in self.section_dict.items():
+                    if value == 'True':
+                        value = True
+                        self.section_dict[key] = value
+                    elif value == 'False':
+                        value = False
+                        self.section_dict[key] = value
+                    elif value == 'None':
+                        value = None
+                        self.section_dict[key] = value
+            # print(f'++++++ making a new SectionDict with name = {section_name}')
+        def __repr__(self):
+            """
+            Converts the settings dictionary into a string for easy display
+
+            :return: the dictionary as a string
+            :rtype:  (str)
+            """
+            # return '{} :\n           {}'.format(self.section_name, pprint.pformat(self.section_dict))
+            return '{} :\n           {}\n'.format(self.section_name, self.section_dict)
+
+        def get(self, key, default=None):
+            """
+            Returns the value of a specified setting.  If the setting is not found in the settings dictionary, then
+            the user specified default value will be returned.  It no default is specified and nothing is found, then
+            the "default value" is returned.  This default can be specified in this call, or previously defined
+            by calling set_default. If nothing specified now or previously, then None is returned as default.
+
+            :param key:     Key used to lookup the setting in the settings dictionary
+            :type key:      (Any)
+            :param default: Value to use should the key not be found in the dictionary
+            :type default:  (Any)
+            :return:        Value of specified settings
+            :rtype:         (Any)
+            """
+            value = self.section_dict.get(key, default)
+            if self.user_settings_parent.convert_bools:
+                if value == 'True':
+                    value = True
+                elif value == 'False':
+                    value = False
+            return value
+
+        def set(self, key, value):
+            value = str(value)      # all values must be strings
+            if self.new_section:
+                self.config.add_section(self.section_name)
+                self.new_section = False
+            self.config.set(section=self.section_name, option=key, value=value)
+            self.section_dict[key] = value
+            if self.user_settings_parent.autosave:
+                self.user_settings_parent.save()
+
+        def delete_section(self):
+            # print(f'** Section Dict deleting section = {self.section_name}')
+            self.config.remove_section(section=self.section_name)
+
+        def __getitem__(self, item):
+            # print('*** In SectionDict Get ***')
+            return self.get(item)
+
+        def __setitem__(self, item, value):
+            """
+            Enables setting a setting by using [ ] notation like a dictionary.
+            Your code will have this kind of design pattern:
+            settings = sg.UserSettings()
+            settings[item] = value
+
+            :param item:  The key for the setting to change. Needs to be a hashable type. Basically anything but a list
+            :type item:   Any
+            :param value: The value to set the setting to
+            :type value:  Any
+            """
+            # print(f'*** In SectionDict SET *** item = {item} value = {value}')
+            self.set(item, value)
+            self.section_dict[item]  = value
+
+        def __delitem__(self, item):
+            """
+            Delete an individual user setting.  This is the same as calling delete_entry.  The syntax
+            for deleting the item using this manner is:
+                del settings['entry']
+            :param item: The key for the setting to delete
+            :type item:  Any
+            """
+            # print(f'** In SectionDict delete! section name = {self.section_name} item = {item} ')
+            self.config.remove_option(section=self.section_name, option=item)
+            del self.section_dict[item]
+            if self.user_settings_parent.autosave:
+                self.user_settings_parent.save()
+            # self.section_dict.pop(item)
+            # print(f'id of section_dict = {id(self.section_dict)} id of self = {id(self)} item count = {self.item_count}')
+            # print(self.section_dict)
+
+
+    ########################################################################################################
 
     def __repr__(self):
         """
@@ -19220,8 +19361,18 @@ class UserSettings:
         :return: the dictionary as a string
         :rtype:  (str)
         """
-        return pprint.pformat(self.dict)
-        return str(self.dict)           # previouisly returned just a string version of the dictionary
+        if not self.use_config_file:
+            return pprint.pformat(self.dict)
+        else:
+            rvalue = '-------------------- Settings ----------------------\n'
+            for section in self.section_class_dict.keys():
+                rvalue += str(self.section_class_dict[section])
+
+            rvalue += '\n-------------------- Settings End----------------------\n'
+
+            return rvalue
+        # return str(self.dict)           # previouisly returned just a string version of the dictionary
+
 
     def set_default_value(self, default):
         """
@@ -19251,7 +19402,10 @@ class UserSettings:
         elif self.filename is not None:
             filename = self.filename
         else:
-            filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.json'
+            if not self.use_config_file:
+                filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.json'
+            else:
+                filename = os.path.splitext(os.path.basename(sys.modules["__main__"].__file__))[0] + '.ini'
 
         if path is None:
             if self.path is not None:
@@ -19309,10 +19463,39 @@ class UserSettings:
         :return:         The full pathname of the settings file that has both the path and filename combined.
         :rtype:          (str)
         """
-        if filename is not None or path is not None or (filename is None and path is None):
+        if filename is not None or path is not None or (filename is None and path is None and self.full_filename is None):
             self.set_location(filename=filename, path=path)
             self.read()
         return self.full_filename
+
+
+    def merge_comments_from_file(self, full_filename):
+        print('--- merging comments -----')
+        merged_lines = []
+        with open(full_filename, 'r') as f:
+            new_file_contents = f.readlines()
+            current_section = ''
+            for line in new_file_contents:
+                if len(line) == 0:      # skip blank lines
+                    merged_lines.append(line)
+                    continue
+                if line[0] == '[':      # if a new section
+                    current_section = line[:line.index(']')]
+                    merged_lines.append(line)
+                    continue
+                if len(line.lstrip()):
+                    if line.lstrip()[0] == '#':     # if a comment line, save it
+                        merged_lines.append(line)
+                # Process a line with an = in it
+                try:
+                    key = line[:line.index('=')]
+                    merged_lines.append(line)
+                except:
+                    merged_lines.append(line)
+        print('--- merging complete ----')
+        print(*merged_lines)
+
+
 
     def save(self, filename=None, path=None):
         """
@@ -19332,12 +19515,20 @@ class UserSettings:
             if not os.path.exists(self.path):
                 os.makedirs(self.path)
             with open(self.full_filename, 'w') as f:
-                json.dump(self.dict, f)
+                if not self.use_config_file:
+                    json.dump(self.dict, f)
+                else:
+                    self.config.write(f)
         except Exception as e:
             if not self.silent_on_error:
-                print('*** Error saving settings to file:***\n', self.full_filename, e)
-                print(_create_error_message())
+                _error_popup_with_traceback('UserSettings.save error', '*** UserSettings.save()  Error saving settings to file:***\n', self.full_filename, e)
+
+        # if self.use_config_file and self.retain_config_comments:
+        #    self.merge_comments_from_file(self.full_filename)
+
         return self.full_filename
+
+
 
     def load(self, filename=None, path=None):
         """
@@ -19376,8 +19567,8 @@ class UserSettings:
             os.remove(self.full_filename)
         except Exception as e:
             if not self.silent_on_error:
-                print('*** User settings delete filename warning ***\n', e)
-                print(_create_error_message())
+                _error_popup_with_traceback('UserSettings delete_file warning ***', 'Exception trying to perform os.remove', e)
+                # print(_create_error_message())
         self.dict = {}
 
     def write_new_dictionary(self, settings_dict):
@@ -19392,10 +19583,24 @@ class UserSettings:
         self.dict = settings_dict
         self.save()
 
+    # def as_dict(config):
+    #     """
+    #     Converts a ConfigParser object into a dictionary.
+    #
+    #     The resulting dictionary has sections as keys which point to a dict of the
+    #     sections options as key => value pairs.
+    #     """
+    #     the_dict = {}
+    #     for section in config.sections():
+    #         the_dict[section] = {}
+    #         for key, val in config.items(section):
+    #             the_dict[section][key] = val
+    #     return the_dict
+
     def read(self):
         """
         Reads settings file and returns the dictionary.
-
+        If you have anything changed in an existing settings dictionary, you will lose your changes.
         :return: settings dictionary
         :rtype:  (dict)
         """
@@ -19404,11 +19609,26 @@ class UserSettings:
         try:
             if os.path.exists(self.full_filename):
                 with open(self.full_filename, 'r') as f:
-                    self.dict = json.load(f)
+                    if not self.use_config_file:        # if using json
+                        self.dict = json.load(f)
+                    else:                               # if using a config file
+                        self.config.read_file(f)
+                        # Make a dictionary of SectionDict classses. Keys are the config.sections().
+                        self.section_class_dict = {}
+                        for section in self.config.sections():
+                            section_dict = dict(self.config[section])
+                            self.section_class_dict[section] = self._SectionDict(section, section_dict, self.config, self)
+
+                        self.dict = self.section_class_dict
+                        self.config_sections = self.config.sections()
+                        # self.config_dict = {section_name : dict(self.config[section_name]) for section_name in self.config.sections()}
+                    if self.retain_config_comments:
+                        self.config_file_contents = f.readlines()
         except Exception as e:
             if not self.silent_on_error:
-                print('*** Error reading settings from file: ***\n', self.full_filename, e)
-                print(_create_error_message())
+                _error_popup_with_traceback('User settings read warning', 'Error reading settings from file', self.full_filename, e)
+                # print('*** UserSettings.read - Error reading settings from file: ***\n', self.full_filename, e)
+                # print(_create_error_message())
 
         return self.dict
 
@@ -19426,7 +19646,7 @@ class UserSettings:
             return True
         return False
 
-    def delete_entry(self, key):
+    def delete_entry(self, key, section=None):
         """
         Deletes an individual entry.  If no filename has been specified up to this point,
         then a default filename will be used.
@@ -19437,28 +19657,46 @@ class UserSettings:
         """
         if self.full_filename is None:
             self.set_location()
-        self.read()
-        if key in self.dict:
-            del self.dict[key]
-            if self.autosave:
-                self.save()
+            self.read()
+        if not self.use_config_file:        # Is using JSON file
+            if key in self.dict:
+                del self.dict[key]
+                if self.autosave:
+                    self.save()
+            else:
+                if not self.silent_on_error:
+                    print('*** Warning - key ', key, ' not found in settings ***\n')
+                    print(_create_error_message())
         else:
-            if not self.silent_on_error:
-                print('*** Warning - key ', key, ' not found in settings ***\n')
-                print(_create_error_message())
+            if section is not None:
+                section_dict = self.get(section)
+                # print(f'** Trying to delete an entry with a config file in use ** id of section_dict = {id(section_dict)}')
+                # section_dict = self.section_class_dict[section]
+                del self.get(section)[key]
+                # del section_dict[key]
+                # del section_dict[key]
+
+    def delete_section(self, section):
+        if not self.use_config_file:
+            return
+
+        section_dict = self.section_class_dict.get(section, None)
+        section_dict.delete_section()
+        del self.section_class_dict[section]
+        if self.autosave:
+            self.save()
 
     def set(self, key, value):
         """
         Sets an individual setting to the specified value.  If no filename has been specified up to this point,
         then a default filename will be used.
         After value has been modified, the settings file is written to disk.
-
+        Note that this call is not value for a config file normally. If it is, then the key is assumed to be the
+            Section key and the value written will be the default value.
         :param key:      Setting to be saved. Can be any valid dictionary key type
         :type key:       (Any)
         :param value:    Value to save as the setting's value. Can be anything
         :type value:     (Any)
-        :param autosave: If True then the value will be saved to the file
-        :type autosave:  (bool)
         :return:         value that key was set to
         :rtype:          (Any)
         """
@@ -19466,9 +19704,13 @@ class UserSettings:
         if self.full_filename is None:
             self.set_location()
         # if not autosaving, then don't read the file or else will lose changes
-        if self.autosave or self.dict == {}:
-            self.read()
-        self.dict[key] = value
+        if not self.use_config_file:
+            if self.autosave or self.dict == {}:
+                self.read()
+            self.dict[key] = value
+        else:
+            self.section_class_dict[key].set(value, self.default_value)
+
         if self.autosave:
             self.save()
         return value
@@ -19494,13 +19736,14 @@ class UserSettings:
             self.set_location()
             if self.autosave or self.dict == {}:
                 self.read()
-        value = self.dict.get(key, default)
-        # Previously was saving creating an entry and saving the dictionary if the
-        # key was not found.  I don't understand why it was originally coded this way.
-        # Hopefully nothing is going to break removing this code.
-        # if key not in self.dict:
-        #     self.set(key, value)
-        #     self.save()
+        if not self.use_config_file:
+            value = self.dict.get(key, default)
+        else:
+            value = self.section_class_dict.get(key, None)
+            if key not in list(self.section_class_dict.keys()):
+                self.section_class_dict[key] = self._SectionDict(key, {}, self.config, self)
+                value = self.section_class_dict[key]
+                value.new_section = True
         return value
 
     def get_dict(self):
@@ -19532,8 +19775,7 @@ class UserSettings:
         :param value: The value to set the setting to
         :type value:  Any
         """
-
-        self.set(item, value)
+        return self.set(item, value)
 
     def __getitem__(self, item):
         """
@@ -19556,7 +19798,10 @@ class UserSettings:
         :param item: The key for the setting to delete
         :type item:  Any
         """
-        self.delete_entry(key=item)
+        if self.use_config_file:
+            return self.get(item)
+        else:
+            self.delete_entry(key=item)
 
 
 # Create a singleton for the settings information so that the settings functions can be used
