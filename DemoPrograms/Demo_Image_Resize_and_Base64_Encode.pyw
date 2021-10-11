@@ -30,7 +30,8 @@ def convert_file_to_base64(filename):
         contents = open(filename, 'rb').read()
         encoded = base64.b64encode(contents)
         sg.clipboard_set(encoded)
-        sg.popup('Copied to your clipboard!', 'Keep window open until you have pasted the base64 bytestring')
+        if not sg.user_settings_get_entry('-autoclose-'):
+            sg.popup('Copied to your clipboard!', 'Keep program open until you have pasted the base64 bytestring', auto_close=True, auto_close_duration=4)
     except Exception as error:
         sg.popup_error('Cancelled - An error occurred', error)
 
@@ -40,15 +41,19 @@ def main():
                 [sg.T('Original size'), sg.T(k='-ORIG WIDTH-'), sg.T('X'), sg.T(k='-ORIG HEIGHT-')]])],
                 [sg.Frame('New Size', [[sg.In(50, s=4, k='-WIDTH-'), sg.T('X'), sg.In(50, s=4, k='-HEIGHT-')]])],
                 [sg.CBox('Encode to Base64 and leave on Clipboard', default=True,k='-BASE64-')],
-                [sg.Button('Resize', bind_return_key=True), sg.Button('Exit')]  ]
+                [sg.CBox('Autoclose Immediately When Done', default=sg.user_settings_get_entry('-autoclose-', True if sg.running_windows() else False),k='-AUTOCLOSE-')],
+                [sg.Button('Resize', bind_return_key=True), sg.Button('Exit')],
+                [sg.T('Note - on some systems, autoclose cannot be used\nbecause the clipboard is cleared by tkinter')],]
 
-    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
+    window = sg.Window('Resize Image', layout, icon=image_resize_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT, enable_close_attempted_event=True)
 
     while True:
         event, values = window.read()
         print(event, values)
-        if event == sg.WIN_CLOSED or event == 'Exit':
+        if event in (sg.WIN_CLOSED, sg.WIN_CLOSE_ATTEMPTED_EVENT, 'Exit'):
+            sg.user_settings_set_entry('-autoclose-', values['-AUTOCLOSE-'])
             break
+        sg.user_settings_set_entry('-autoclose-', values['-AUTOCLOSE-'])
         infile = values['-IN-']
         if event == '-IN-':
             if os.path.isfile(infile):
@@ -59,15 +64,18 @@ def main():
             if os.path.isfile(infile):
                 infilename = os.path.basename(infile)
                 infilenameonly, infileext = os.path.splitext(infilename)
-                outfile = f'{infilenameonly}50x50{infileext}'
-                outfullfilename = os.path.join(os.path.dirname(infile), outfile)
                 try:
-                    resize(input_file=infile, output_file=outfullfilename, size=(int(values['-WIDTH-']), int(values['-HEIGHT-'])))
+                    width, height = int(values['-WIDTH-']), int(values['-HEIGHT-'])
+                    outfile = f'{infilenameonly}{width}x{height}{infileext}'
+                    outfullfilename = os.path.join(os.path.dirname(infile), outfile)
+                    resize(input_file=infile, output_file=outfullfilename, size=(width, height))
                     if values['-BASE64-']:
                         convert_file_to_base64(outfullfilename)
                 except Exception as e:
                     sg.popup_error_with_traceback('Error resizing or converting', 'Error encountered during the resize or Base64 encoding', e)
                 sg.popup_quick_message('DONE!', font='_ 40', background_color='red', text_color='white')
+                if sg.user_settings_get_entry('-autoclose-'):
+                    break
         elif event == 'Version':
             sg.popup_scrolled(sg.get_versions(), non_blocking=True)
         elif event == 'Edit Me':
