@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.10 Unreleased"
+version = __version__ = "4.49.0.11 Unreleased"
 
 _change_log = """
 
@@ -40,7 +40,8 @@ _change_log = """
             Delete a section: settings.delete_section(section)
             Save the INI file: settings.save()
             Option to convert bools and None. Normally stored as strings. Will convert them to Python True, False, None automatically (on by default)
-            
+    4.49.0.11
+        Better formnatted printing of INI based UserSettings object
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19276,7 +19277,14 @@ class UserSettings:
             :rtype:  (str)
             """
             # return '{} :\n           {}'.format(self.section_name, pprint.pformat(self.section_dict))
-            return '{} :\n           {}\n'.format(self.section_name, self.section_dict)
+            section_dict_formattted =  pprint.pformat(self.section_dict)
+
+            # return '{} :\n           {}\n'.format(self.section_name, self.section_dict)
+            return_string = '{}:\n'.format(self.section_name)
+            for line in section_dict_formattted.split('\n'):
+                return_string += '          {}\n'.format(line)
+
+            return return_string
 
         def get(self, key, default=None):
             """
@@ -19364,12 +19372,13 @@ class UserSettings:
         if not self.use_config_file:
             return pprint.pformat(self.dict)
         else:
-            rvalue = '-------------------- Settings ----------------------\n'
+            # rvalue = '-------------------- Settings ----------------------\n'
+            rvalue = ''
             for section in self.section_class_dict.keys():
                 rvalue += str(self.section_class_dict[section])
 
-            rvalue += '\n-------------------- Settings End----------------------\n'
-
+            # rvalue += '\n-------------------- Settings End----------------------\n'
+            rvalue += '\n'
             return rvalue
         # return str(self.dict)           # previouisly returned just a string version of the dictionary
 
