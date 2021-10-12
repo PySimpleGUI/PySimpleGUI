@@ -58,7 +58,7 @@ def main():
               [sg.T('Python Command (optional)', s=txt_size), sg.Input(key='-PYTHON COMMAND-')],
               [sg.Button('Go', bind_return_key=True), sg.Button('Exit')]]
 
-    window = sg.Window('Create Shortcut To Python File', layout, icon=main_icon)
+    window = sg.Window('Create Shortcut To Python File', layout, icon=main_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
 
     while True:
         event, values = window.read()
@@ -86,7 +86,10 @@ def main():
                 break
             except Exception as e:
                 sg.popup_error('Error encountered', e)
-
+        elif event == 'Edit Me':
+            sg.execute_editor(__file__)
+        elif event == 'Version':
+            sg.popup_scrolled(sg.get_versions(), keep_on_top=True)
     window.close()
 
 
