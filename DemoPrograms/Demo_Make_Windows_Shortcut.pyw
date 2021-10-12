@@ -17,7 +17,7 @@ import os
     Copyright 2021 PySimpleGUI
 """
 
-python_command = r'python.exe'
+
 
 
 def create_shortcut(path, target='', icon=''):
@@ -47,6 +47,7 @@ def create_shortcut(path, target='', icon=''):
 
 
 def main():
+    python_command = sg.execute_py_get_interpreter()
     sg.theme('dark grey 13')
     txt_size = 22
 
@@ -61,7 +62,7 @@ def main():
 
     while True:
         event, values = window.read()
-        print(event, values)
+        # print(event, values)
         if event == sg.WIN_CLOSED or event == 'Exit':
             break
         if event == 'Go':
@@ -70,6 +71,9 @@ def main():
                     py_cmd = values['-PYTHON COMMAND-']
                 else:
                     py_cmd = python_command
+                    if '.pyw' in values['-IN FILE-'].lower():       # if a .pyw file specified, use pythonw to launch it
+                        if 'pythonw' not in py_cmd:
+                            py_cmd = py_cmd.replace('python.exe', 'pythonw.exe')
                 shortcut_name = create_shortcut(values['-IN FILE-'], target=fr'{py_cmd}', icon=values['-ICON-'])
                 if values['-SHORTCUT NAME-']:
                     new_shortcut_name = os.path.join(os.path.dirname(shortcut_name), values['-SHORTCUT NAME-'] + '.lnk')
