@@ -63,7 +63,7 @@ def main():
 
     layout = [[sg.Text('Process Killer - Choose one or more processes',
                        size=(45,1), font=('Helvetica', 15), text_color='yellow')],
-              [sg.Listbox(values=[' '], size=(90, 30), select_mode=sg.SELECT_MODE_EXTENDED,  font=('Courier', 12), key='-PROCESSES-')],
+              [sg.Listbox(values=[' '], size=(130, 30), select_mode=sg.SELECT_MODE_EXTENDED, horizontal_scroll=True,  font=('Courier', 12), key='-PROCESSES-')],
               [sg.Col([
               [sg.Text('Click refresh once or twice.. once for list, second to get CPU usage')],
               [sg.Text('Filter by typing name', font='ANY 14'), sg.Input(size=(15,1), font='any 14', key='-FILTER-')],
@@ -123,6 +123,9 @@ def main():
             psutil.cpu_percent(interval=.1)
             procs = psutil.process_iter()
             all_procs = [[proc.cpu_percent(), proc.name(), proc.pid] for proc in procs]
+            # procs = psutil.process_iter()
+            # for proc in procs:
+            #     sg.Print(sg.obj_to_string_single_obj(proc))
             sorted_by_cpu_procs = sorted(all_procs, key=operator.itemgetter(0), reverse=True)
             display_list = []
             for process in sorted_by_cpu_procs:
