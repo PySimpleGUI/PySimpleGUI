@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.11 Unreleased"
+version = __version__ = "4.49.0.12 Unreleased"
 
 _change_log = """
 
@@ -42,6 +42,8 @@ _change_log = """
             Option to convert bools and None. Normally stored as strings. Will convert them to Python True, False, None automatically (on by default)
     4.49.0.11
         Better formnatted printing of INI based UserSettings object
+    4.49.0.12
+        Addition of horizontal scrollbar to Listbox. Parameter is horizontal_scroll. Default = False
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -2062,7 +2064,7 @@ class Listbox(Element):
     """
 
     def __init__(self, values, default_values=None, select_mode=None, change_submits=False, enable_events=False,
-                 bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False,
+                 bind_return_key=False, size=(None, None), s=(None, None), disabled=False, auto_size_text=None, font=None, no_scrollbar=False, horizontal_scroll=False,
                  background_color=None, text_color=None, highlight_background_color=None, highlight_text_color=None,
                  key=None, k=None, pad=None, p=None, tooltip=None, expand_x=False, expand_y=False,right_click_menu=None, visible=True, metadata=None):
         """
@@ -2090,6 +2092,8 @@ class Listbox(Element):
         :type font:                        (str or (str, int[, str]) or None)
         :param no_scrollbar:               Controls if a scrollbar should be shown.  If True, no scrollbar will be shown
         :type no_scrollbar:                (bool)
+        :param horizontal_scroll:          Controls if a horizontal scrollbar should be shown.  If True a horizontal scrollbar will be shown in addition to vertical
+        :type horizontal_scroll:           (bool)
         :param background_color:           color of background
         :type background_color:            (str)
         :param text_color:                 color of the text
@@ -2141,10 +2145,12 @@ class Listbox(Element):
         self.HighlightBackgroundColor = highlight_background_color if highlight_background_color is not None else fg
         self.HighlightTextColor = highlight_text_color if highlight_text_color is not None else bg
         self.RightClickMenu = right_click_menu
-        self.vsb = None  # type: tk.Scrollbar
+        self.vsb = None  # type: tk.Scrollbar or None
+        self.hsb = None  # type: tk.Scrollbar | None
         self.TKListbox = self.Widget = None  # type: tk.Listbox
         self.element_frame = None  # type: tk.Frame
         self.NoScrollbar = no_scrollbar
+        self.HorizontalScroll = horizontal_scroll
         key = key if key is not None else k
         sz = size if size != (None, None) else s
         pad = pad if pad is not None else p
@@ -14057,13 +14063,26 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                 if element.ChangeSubmits:
                     element.TKListbox.bind('<<ListboxSelect>>', element._ListboxSelectHandler)
                 if not element.NoScrollbar:
+                    # Vertical scrollbar
                     element.vsb = tk.Scrollbar(element_frame, orient="vertical", command=element.TKListbox.yview)
                     element.TKListbox.configure(yscrollcommand=element.vsb.set)
                     element.vsb.pack(side=tk.RIGHT, fill='y')
 
+                    # Horizontal scrollbar
+                    if element.HorizontalScroll:
+                        hscrollbar = tk.Scrollbar(element_frame, orient=tk.HORIZONTAL)
+                        hscrollbar.pack(side=tk.BOTTOM, fill='x')
+                        hscrollbar.config(command=element.Widget.xview)
+                        element.Widget.configure(xscrollcommand=hscrollbar.set)
+                        element.hsb = hscrollbar
+
                     # Chr0nic
                     element.TKListbox.bind("<Enter>", lambda event, em=element: testMouseHook(em))
                     element.TKListbox.bind("<Leave>", lambda event, em=element: testMouseUnhook(em))
+
+
+
+
 
                 expand, fill, row_should_expand, row_fill_direction = _add_expansion(element, row_should_expand, row_fill_direction)
                 element_frame.pack(side=tk.LEFT, padx=elementpad[0], pady=elementpad[1], fill=fill, expand=expand)
@@ -19205,7 +19224,7 @@ class UserSettings:
     # to access the user settings without diarectly using the UserSettings class
     _default_for_function_interface = None  # type: UserSettings
 
-    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True, use_config_file=False, convert_bools_and_none=True):
+    def __init__(self, filename=None, path=None, silent_on_error=False, autosave=True, use_config_file=None, convert_bools_and_none=True):
         """
         User Settings
 
@@ -19219,7 +19238,7 @@ class UserSettings:
         :type autosave:                (bool)
         :param use_config_file:        If True then the file format will be a config.ini rather than json
         :type use_config_file:         (bool)
-        :param convert_bools_and_none: If True then "True", "False", "None" will be converted to the Python values True, False, None. Default is TRUE
+        :param convert_bools_and_none: If True then "True", "False", "None" will be converted to the Python values True, False, None when using INI files. Default is TRUE
         :type convert_bools_and_none:  (bool)
         """
 
@@ -19230,6 +19249,9 @@ class UserSettings:
         self.default_value = None
         self.silent_on_error = silent_on_error
         self.autosave = autosave
+        if filename is not None and filename.endswith('.ini') and use_config_file is None:
+            warnings.warn('[UserSettings] You have specified a filename with .ini extension but did not set use_config_file. Setting use_config_file for you.', UserWarning)
+            use_config_file = True
         self.use_config_file = use_config_file
         # self.retain_config_comments = retain_config_comments
         self.convert_bools = convert_bools_and_none
