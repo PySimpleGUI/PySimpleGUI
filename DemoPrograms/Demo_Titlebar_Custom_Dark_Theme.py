@@ -10,6 +10,9 @@ import PySimpleGUI as sg
     If possible it could be good to use combinations that are known to match like the input element colors
     or the button colors.
     
+    This code eventually grew into the internal implementation of the Titlebar element.  It's a good example
+    of how user code is just as powerful as internal PySimpleGUI code.
+    
     Copyright 2020 PySimpleGUI.org
 """
 
@@ -47,17 +50,22 @@ def dummy_minimized_window(title):
 
 def title_bar(title, text_color, background_color):
     """
-    Creates a "row" that can be added to a layout. This row looks like a titlebar
+    Creates a Column element meant to be used as a single row. This row looks like a titlebar.
     :param title: The "title" to show in the titlebar
     :type title: str
-    :return: A list of elements (i.e. a "row" for a layout)
-    :type: List[sg.Element]
+    :return: A single Column element that can be used as a single row in your layout
+    :type: sg.Column
     """
     bc = background_color
     tc = text_color
 
-    return [sg.Col([[sg.T(title,text_color=tc, background_color=bc )]], pad=(0, 0), background_color=bc),
-     sg.Col([[sg.T('_', text_color=tc, background_color=bc, enable_events=True, key='-MINIMIZE-'),sg.Text('❎', text_color=tc, background_color=bc, enable_events=True, key='Exit')]], element_justification='r', key='-C-', pad=(0, 0), background_color=bc)]
+    return sg.Col([[sg.Col(
+        [[sg.T(title,text_color=tc, background_color=bc, grab=True, expand_x=True)]],
+                           pad=(0, 0), background_color=bc, expand_x=True),
+     sg.Col(
+         [[sg.T('_', text_color=tc, background_color=bc, enable_events=True, key='-MINIMIZE-'),sg.Text('❎', text_color=tc, background_color=bc, enable_events=True, key='Exit')]],
+            element_justification='r', key='-C-', pad=(0, 0), expand_x=True, background_color=bc, grab=True)]],
+                  pad=(0,0), grab=True, expand_x=True)
 
 
 
@@ -69,17 +77,15 @@ def main():
 
     title = 'Customized Titlebar Window'
     # Here the titlebar colors are based on the theme. A few suggestions are shown. Try each of them
-    layout = [   title_bar(title, sg.theme_button_color()[0], sg.theme_button_color()[1]),
-                # title_bar(title, sg.theme_button_color()[1], sg.theme_slider_color()),
-                # title_bar(title, sg.theme_slider_color(), sg.theme_button_color()[0]),
+    layout = [  [title_bar(title, sg.theme_button_color()[0], sg.theme_button_color()[1])],
+                # [title_bar(title, sg.theme_button_color()[1], sg.theme_slider_color())],
+                # [title_bar(title, sg.theme_slider_color(), sg.theme_button_color()[0])],
                 [sg.T('This is normal window text.   The above is the fake "titlebar"')],
                 [sg.T('Input something:')],
                 [sg.Input(key='-IN-'), sg.Text(size=(12,1), key='-OUT-')],
-                [sg.Button('Go')]  ]
+                [sg.Button('Go')]]
 
-    window = sg.Window(title, layout, resizable=True, no_titlebar=True, grab_anywhere=True, keep_on_top=True, margins=(0,0), finalize=True)
-
-    window['-C-'].expand(True, False, False)        # expand the titlebar's rightmost column so that it resizes correctly
+    window = sg.Window(title, layout, resizable=True, no_titlebar=True, keep_on_top=True, margins=(0,0), finalize=True)
 
     while True:             # Event Loop
         event, values = window.read()
