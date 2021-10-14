@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.12 Unreleased"
+version = __version__ = "4.49.0.13 Unreleased"
 
 _change_log = """
 
@@ -43,7 +43,13 @@ _change_log = """
     4.49.0.11
         Better formnatted printing of INI based UserSettings object
     4.49.0.12
-        Addition of horizontal scrollbar to Listbox. Parameter is horizontal_scroll. Default = False
+        Addition of horizontal scrollbar to Listbox
+    4.49.0.13
+        Better pin implementation, maybe. Was able to not use a Canvas element and instead use a blank Column element. Blended better. Still uses 1 pixel :-(
+        Column element - Changed how None in one of locations in size tuple handled. 
+            If width is None, then required width will be used, if height is None, then 1/2 required height.
+            These are same values as None, None currently.
+        Window.LayoutAndRead deprication made more friendly with popup.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -6868,9 +6874,9 @@ class Column(Element):
         :param background_color:      color of background of entire Column
         :type background_color:       (str)
         :param size:                  (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes
-        :type size:                   (int, int)
+        :type size:                   (int | None, int | None)
         :param s:                     Same as size parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used
-        :type s:                      (int, int)  | (None, None)
+        :type s:                      (int | None, int | None)
         :param pad:                   Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int)
         :type pad:                    (int, int) or ((int, int),(int,int)) or (int,(int,int)) or  ((int, int),int) | int
         :param p:                     Same as pad parameter.  It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used
@@ -8810,6 +8816,9 @@ class Window:
         :param non_blocking: if True the Read call will not block
         :type non_blocking:  (bool)
         """
+        _error_popup_with_traceback('LayoutAndRead Depricated', 'Wow!  You have been using PySimpleGUI for a very long time.',
+                                                                'The Window.LayoutAndRead call is no longer supported')
+
         raise DeprecationWarning(
             'LayoutAndRead is no longer supported... change your call window.Layout(layout).Read()\nor window(title, layout).Read()')
         # self.AddRows(rows)
@@ -11060,7 +11069,8 @@ def pin(elem, vertical_alignment=None, shrink=True, expand_x=None, expand_y=None
     :rtype:                    Column
     """
     if shrink:
-        return Column([[elem, Canvas(size=(0, 0),background_color=elem.BackgroundColor, pad=(0, 0))]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
+        # return Column([[elem, Canvas(size=(0, 0),background_color=elem.BackgroundColor, pad=(0, 0))]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
+        return Column([[elem, Column([[]],pad=(0,0))]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
     else:
         return Column([[elem]], pad=(0, 0), vertical_alignment=vertical_alignment, expand_x=expand_x, expand_y=expand_y)
 
@@ -13315,6 +13325,8 @@ def PackFormIntoFrame(form, containing_frame, toplevel_form):
                         element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
                                                          height=element.TKColFrame.TKFrame.winfo_reqheight() // 2)
                     else:
+                        element.TKColFrame.canvas.config(width=element.TKColFrame.TKFrame.winfo_reqwidth(),
+                                                         height=element.TKColFrame.TKFrame.winfo_reqheight() // 2)
                         if None not in (element.Size[0], element.Size[1]):
                             element.TKColFrame.canvas.config(width=element.Size[0], height=element.Size[1])
                         elif element.Size[1] is not None:
