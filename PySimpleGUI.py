@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.15 Unreleased"
+version = __version__ = "4.49.0.16 Unreleased"
 
 _change_log = """
 
@@ -54,6 +54,9 @@ _change_log = """
         Added * to default for all place file_types is a parameter so that files without extensions are shown
     4.49.0.15
         Fixed errors in file_types in 0.14.  Made into a constant FILE_TYPES_ALL_FILES so it's easy to find and change in the future
+    4.49.0.16
+        Reworked the repr method of UserSettings for config.ini files.  Dumped using pprint and did my own instaed
+        popup_scrolled - add an additional line per parm. Sometimes not enough height was computed
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -17629,7 +17632,7 @@ def popup_scrolled(*args, title=None, button_color=None, background_color=None, 
         max_line_total = max(max_line_total, width_used)
         max_line_width = width
         lines_needed = _GetNumLinesNeeded(message, width_used)
-        height_computed += lines_needed
+        height_computed += lines_needed + 1
         complete_output += message + '\n'
         total_lines += lines_needed
     height_computed = MAX_SCROLLED_TEXT_BOX_HEIGHT if height_computed > MAX_SCROLLED_TEXT_BOX_HEIGHT else height_computed
@@ -19309,6 +19312,8 @@ class UserSettings:
                         value = None
                         self.section_dict[key] = value
             # print(f'++++++ making a new SectionDict with name = {section_name}')
+
+
         def __repr__(self):
             """
             Converts the settings dictionary into a string for easy display
@@ -19316,15 +19321,12 @@ class UserSettings:
             :return: the dictionary as a string
             :rtype:  (str)
             """
-            # return '{} :\n           {}'.format(self.section_name, pprint.pformat(self.section_dict))
-            section_dict_formattted =  pprint.pformat(self.section_dict)
-
-            # return '{} :\n           {}\n'.format(self.section_name, self.section_dict)
             return_string = '{}:\n'.format(self.section_name)
-            for line in section_dict_formattted.split('\n'):
-                return_string += '          {}\n'.format(line)
+            for entry in self.section_dict.keys():
+                return_string += '          {} : {}\n'.format(entry, self.section_dict[entry])
 
             return return_string
+
 
         def get(self, key, default=None):
             """
@@ -19414,8 +19416,8 @@ class UserSettings:
         else:
             # rvalue = '-------------------- Settings ----------------------\n'
             rvalue = ''
-            for section in self.section_class_dict.keys():
-                rvalue += str(self.section_class_dict[section])
+            for name, section in self.section_class_dict.items():
+                rvalue += str(section)
 
             # rvalue += '\n-------------------- Settings End----------------------\n'
             rvalue += '\n'
