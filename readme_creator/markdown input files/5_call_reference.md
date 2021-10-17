@@ -2490,6 +2490,11 @@ The following methods are here for backwards compatibility reference.  You will 
 ### delete_file
 <!-- <+UserSettings.delete_file+> -->
 
+
+### delete_section
+<!-- <+UserSettings.delete_section+> -->
+
+
 ### exists
 <!-- <+UserSettings.exists+> -->
 

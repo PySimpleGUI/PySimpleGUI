@@ -1,68 +1,12 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.19 Unreleased"
+version = __version__ = "4.50.0 Released 17-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.49.0 release to PyPI on 30 Sept 2021
+    Changelog since 4.50.0 release to PyPI on 17-Oct-2021
 
-    4.49.0.1
-        Element.set_right_click_menu added so can set or change the right click menu for an element
-    4.49.0.2
-        Element.set_right_click_menu - If no menu supplied, use the parent form's right click menu
-    4.49.0.3
-        User Settings path created specifically for Trinkets
-    4.49.0.4
-        Addition of running_replit to determine if running on replit's site.
-        If on replit then a path for user settigs is set to .
-    4.49.0.5
-        Make pin's background match the element's background
-    4.49.0.6
-        set_options new option warn_button_key_duplicates - warn duplicate keys on buttons - defaults to False
-    4.49.0.7
-        Addition of Window.get_size_accurate - size based on the geometry string
-        Removed window move of the theme color swatch preview window. Seems to center correctly now.
-    4.49.0.8
-        Added check for a bad value being returned from tkinter during the table clicked event
-        Removed print when patch of 8.6.9 ttk treeview code is patched
-    4.49.0.9
-        Removed print when bind callback happens. Was there for debugging and forgot to remove.
-    4.49.0.10
-        Phase 1 Support of config files for UserSettings APIs - load, read/modify, save are done. The basic version is done.
-            This first phase supports them only via the object interface
-            Read access:  settings[section][key]
-            Modify existing section and key:  settings[section][key] = new_value
-            Create a new key in an existing section:  settings[section][new_key] = new_value
-            Create a new section and key:  settings[new_section][new_key] = new_value
-            Get a section as a dictionary-like object:   settings[section]
-                This object can be modified and it will modify the settings file as a result.
-                Has a get and set method just like a normal setting.
-            Delete a section: settings.delete_section(section)
-            Save the INI file: settings.save()
-            Option to convert bools and None. Normally stored as strings. Will convert them to Python True, False, None automatically (on by default)
-    4.49.0.11
-        Better formnatted printing of INI based UserSettings object
-    4.49.0.12
-        Addition of horizontal scrollbar to Listbox
-    4.49.0.13
-        Better pin implementation, maybe. Was able to not use a Canvas element and instead use a blank Column element. Blended better. Still uses 1 pixel :-(
-        Column element - Changed how None in one of locations in size tuple handled. 
-            If width is None, then required width will be used, if height is None, then 1/2 required height.
-            These are same values as None, None currently.
-        Window.LayoutAndRead deprication made more friendly with popup.
-    4.49.0.14
-        Added * to default for all place file_types is a parameter so that files without extensions are shown
-    4.49.0.15
-        Fixed errors in file_types in 0.14.  Made into a constant FILE_TYPES_ALL_FILES so it's easy to find and change in the future
-    4.49.0.16
-        Reworked the repr method of UserSettings for config.ini files.  Dumped using pprint and did my own instaed
-        popup_scrolled - add an additional line per parm. Sometimes not enough height was computed
-    4.49.0.17
-        Fixed problem in the delete_section code for UserSettings for INI files.
-    4.49.0.18
-        Removed the UserSettings merge_comments_from_file code (for now)        
-    4.49.0.19
-        Docstring updates for FINAL RELEASE
+
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345

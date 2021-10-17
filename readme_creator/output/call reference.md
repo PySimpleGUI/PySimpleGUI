@@ -42,7 +42,7 @@ Button(button_text = "",
     button_type = 7,
     target = (None, None),
     tooltip = None,
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     initial_folder = None,
     default_extension = "",
     disabled = False,
@@ -83,7 +83,7 @@ Parameter Descriptions:
 |                                      int                                       |      button_type      | You should NOT be setting this directly. ONLY the shortcut functions set this |
 |                               str or (int, int)                                |        target         | key or (row,col) target for the button. Note that -1 for column means 1 element to the left of this one. The constant ThisRow is used to indicate the current row. The Button itself is a valid target for some types of button |
 |                                      str                                       |        tooltip        | text, that will appear when mouse hovers over the element |
-|                             Tuple[(str, str), ...]                             |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),). Note - NOT SUPPORTED ON MAC |
+|                             Tuple[(str, str), ...]                             |      file_types       | the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),). Note - NOT SUPPORTED ON MAC |
 |                                      str                                       |    initial_folder     | starting path for folders and files |
 |                                      str                                       |   default_extension   | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                 (bool or str)                                  |       disabled        | If True button will be created disabled. If BUTTON_DISABLED_MEANS_IGNORE then the button will be ignored rather than disabled using tkinter |
@@ -1482,8 +1482,8 @@ Parameter Descriptions:
 |--|--|--|
 |                              List[List[Element]]                               |        layout         | Layout that will be shown in the Column container |
 |                                      str                                       |   background_color    | color of background of entire Column |
-|                                   (int, int)                                   |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
-|                          (int, int)  or (None, None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
+|                           (int or None, int or None)                           |         size          | (width, height) size in pixels (doesn't work quite right, sometimes only 1 dimension is set by tkinter. Use a Sizer Element to help set sizes |
+|                           (int or None, int or None)                           |           s           | Same as size parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, size will be used |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |          pad          | Amount of padding to put around element in pixels (left/right, top/bottom) or ((left, right), (top, bottom)) or an int. If an int, then it's converted into a tuple (int, int) |
 | (int, int or (int, int),(int,int) or int,(int,int)) or  ((int, int),int) or int |           p           | Same as pad parameter. It's an alias. If EITHER of them are set, then the one that's set will be used. If BOTH are set, pad will be used |
 |                                      bool                                      |      scrollable       | if True then scrollbars will be added to the column |
@@ -4628,6 +4628,7 @@ Listbox(values,
     auto_size_text = None,
     font = None,
     no_scrollbar = False,
+    horizontal_scroll = False,
     background_color = None,
     text_color = None,
     highlight_background_color = None,
@@ -4660,6 +4661,7 @@ Parameter Descriptions:
 |                                      bool                                      |       auto_size_text       | True if element should be the same size as the contents |
 |                       (str or (str, int[, str]) or None)                       |            font            | specifies the font family, size, etc. Tuple or Single string format 'name size styles'. Styles: italic * roman bold normal underline overstrike |
 |                                      bool                                      |        no_scrollbar        | Controls if a scrollbar should be shown. If True, no scrollbar will be shown |
+|                                      bool                                      |     horizontal_scroll      | Controls if a horizontal scrollbar should be shown. If True a horizontal scrollbar will be shown in addition to vertical |
 |                                      str                                       |      background_color      | color of background |
 |                                      str                                       |         text_color         | color of the text |
 |                                      str                                       | highlight_background_color | color of the background when an item is selected. Defaults to normal text color (a reverse look) |
@@ -11102,17 +11104,21 @@ User Settings
 UserSettings(filename = None,
     path = None,
     silent_on_error = False,
-    autosave = True)
+    autosave = True,
+    use_config_file = None,
+    convert_bools_and_none = True)
 ```
 
 Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| (str or None) |    filename     | The name of the file to use. Can be a full path and filename or just filename |
-| (str or None) |      path       | The folder that the settings file will be stored in. Do not include the filename. |
-|     bool      | silent_on_error | If True errors will not be reported |
-|     bool      |    autosave     | If True the settings file is saved after every update |
+| (str or None) |        filename        | The name of the file to use. Can be a full path and filename or just filename |
+| (str or None) |          path          | The folder that the settings file will be stored in. Do not include the filename. |
+|     bool      |    silent_on_error     | If True errors will not be reported |
+|     bool      |        autosave        | If True the settings file is saved after every update |
+|     bool      |    use_config_file     | If True then the file format will be a config.ini rather than json |
+|     bool      | convert_bools_and_none | If True then "True", "False", "None" will be converted to the Python values True, False, None when using INI files. Default is TRUE |
 
 ### delete_entry
 
@@ -11121,7 +11127,7 @@ then a default filename will be used.
 After value has been deleted, the settings file is written to disk.
 
 ```
-delete_entry(key)
+delete_entry(key, section = None)
 ```
 
 Parameter Descriptions:
@@ -11148,6 +11154,20 @@ Parameter Descriptions:
 |--|--|--|
 | (str or None) | filename | The name of the file to use. Can be a full path and filename or just filename |
 | (str or None) |   path   | The folder that the settings file will be stored in. Do not include the filename. |
+
+### delete_section
+
+Deletes a section with the name provided in the section parameter.  Your INI file will be saved afterwards if auto-save enabled (default is ON)
+
+```
+delete_section(section)
+```
+
+Parameter Descriptions:
+
+|Type|Name|Meaning|
+|--|--|--|
+| str | section | Name of the section to delete |
 
 ### exists
 
@@ -11241,6 +11261,7 @@ Parameter Descriptions:
 ### read
 
 Reads settings file and returns the dictionary.
+If you have anything changed in an existing settings dictionary, you will lose your changes.
 
 `read()`
 
@@ -11270,6 +11291,8 @@ Parameter Descriptions:
 Sets an individual setting to the specified value.  If no filename has been specified up to this point,
 then a default filename will be used.
 After value has been modified, the settings file is written to disk.
+Note that this call is not value for a config file normally. If it is, then the key is assumed to be the
+Section key and the value written will be the default value.
 
 ```
 set(key, value)
@@ -11279,9 +11302,8 @@ Parameter Descriptions:
 
 |Type|Name|Meaning|
 |--|--|--|
-| Any  |   key    | Setting to be saved. Can be any valid dictionary key type |
-| Any  |  value   | Value to save as the setting's value. Can be anything |
-| bool | autosave | If True then the value will be saved to the file |
+| Any |  key  | Setting to be saved. Can be any valid dictionary key type |
+| Any | value | Value to save as the setting's value. Can be anything |
 | (Any) | **RETURN** | value that key was set to
 
 ### set_default_value
@@ -13245,7 +13267,7 @@ Parameter Descriptions:
 ```
 FileBrowse(button_text = "Browse",
     target = (555666777, -1),
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     initial_folder = None,
     tooltip = None,
     size = (None, None),
@@ -13269,7 +13291,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
 |                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types    | filter file types (Default value = (("ALL Files", "*.*"))) |
+|                             Tuple[(str, str), ...]                             |    file_types    | filter file types (Default value = (("ALL Files", "*.* *"))) |
 |                                                                                |  initial_folder  | starting path for folders and files |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
 |                                   (int, int)                                   |       size       | (w,h) w=characters-wide, h=rows-high |
@@ -13290,7 +13312,7 @@ Parameter Descriptions:
 ```
 FileSaveAs(button_text = "Save As...",
     target = (555666777, -1),
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     initial_folder = None,
     default_extension = "",
     disabled = False,
@@ -13315,7 +13337,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |    button_text    | text in the button (Default value = 'Save As...') |
 |                               str or (int, int)                                |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.*"))) |
+|                             Tuple[(str, str), ...]                             |    file_types     | (Default value = (("ALL Files", "*.* *"))) |
 |                                      str                                       | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                      str                                       |  initial_folder   | starting path for folders and files |
 |                                      bool                                      |     disabled      | set disable state for element (Default = False) |
@@ -13339,7 +13361,7 @@ Allows browsing of multiple files. File list is returned as a single list with t
 ```
 FilesBrowse(button_text = "Browse",
     target = (555666777, -1),
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     disabled = False,
     initial_folder = None,
     tooltip = None,
@@ -13364,7 +13386,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                      str                                       |   button_text    | text in the button (Default value = 'Browse') |
 |                               str or (int, int)                                |      target      | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                             Tuple[(str, str), ...]                             |    file_types    | (Default value = (("ALL Files", "*.*"))) |
+|                             Tuple[(str, str), ...]                             |    file_types    | (Default value = (("ALL Files", "*.* *"))) |
 |                                      bool                                      |     disabled     | set disable state for element (Default = False) |
 |                                      str                                       |  initial_folder  | starting path for folders and files |
 |                                      str                                       |     tooltip      | text, that will appear when mouse hovers over the element |
@@ -13779,7 +13801,7 @@ Parameter Descriptions:
 ```
 SaveAs(button_text = "Save As...",
     target = (555666777, -1),
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     initial_folder = None,
     default_extension = "",
     disabled = False,
@@ -13804,7 +13826,7 @@ Parameter Descriptions:
 |--|--|--|
 |                                                                                     str                                                                                      |    button_text    | text in the button (Default value = 'Save As...') |
 |                                                                              str or (int, int)                                                                               |      target       | key or (row,col) target for the button (Default value = (ThisRow, -1)) |
-|                                                                            Tuple[(str, str), ...]                                                                            |    file_types     | (Default value = (("ALL Files", "*.*"))) |
+|                                                                            Tuple[(str, str), ...]                                                                            |    file_types     | (Default value = (("ALL Files", "*.* *"))) |
 |                                                                                     str                                                                                      | default_extension | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                                                                                     str                                                                                      |  initial_folder   | starting path for folders and files |
 |                                                                                     bool                                                                                     |     disabled      | set disable state for element (Default = False) |
@@ -14860,7 +14882,7 @@ popup_get_file(message,
     default_extension = "",
     save_as = False,
     multiple_files = False,
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     no_window = False,
     size = (None, None),
     button_color = None,
@@ -14891,7 +14913,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -15863,7 +15885,7 @@ PopupGetFile(message,
     default_extension = "",
     save_as = False,
     multiple_files = False,
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     no_window = False,
     size = (None, None),
     button_color = None,
@@ -15894,7 +15916,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -17470,6 +17492,7 @@ set_options(icon = None,
     suppress_error_popups = None,
     suppress_raise_key_errors = None,
     suppress_key_guessing = None,
+    warn_button_key_duplicates = False,
     enable_treeview_869_patch = None,
     enable_mac_notitlebar_patch = None,
     use_custom_titlebar = None,
@@ -17526,6 +17549,7 @@ Parameter Descriptions:
 |                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
 |                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
 |                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |   warn_button_key_duplicates    | If True then duplicate Button Keys generate warnings (not recommended as they're expected) |
 |                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
 |                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
 |                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |
@@ -17594,6 +17618,7 @@ SetOptions(icon = None,
     suppress_error_popups = None,
     suppress_raise_key_errors = None,
     suppress_key_guessing = None,
+    warn_button_key_duplicates = False,
     enable_treeview_869_patch = None,
     enable_mac_notitlebar_patch = None,
     use_custom_titlebar = None,
@@ -17650,6 +17675,7 @@ Parameter Descriptions:
 |                      bool                      |      suppress_error_popups      | If True then error popups will not be shown if generated internally to PySimpleGUI |
 |                      bool                      |    suppress_raise_key_errors    | If True then key errors won't be raised (you'll still get popup error) |
 |                      bool                      |      suppress_key_guessing      | If True then key errors won't try and find closest matches for you |
+|                      bool                      |   warn_button_key_duplicates    | If True then duplicate Button Keys generate warnings (not recommended as they're expected) |
 |                      bool                      |    enable_treeview_869_patch    | If True, then will use the treeview color patch for tk 8.6.9 |
 |                      bool                      |   enable_mac_notitlebar_patch   | If True then Windows with no titlebar use an alternative technique when tkinter version < 8.6.10 |
 |                      bool                      |       use_custom_titlebar       | If True then a custom titlebar is used instead of the normal system titlebar |

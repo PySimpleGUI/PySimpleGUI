@@ -133,6 +133,54 @@ and returns the value input as well as the button clicked.
 
 ---
 
+# 2021 Updates....
+
+This documentation was originally written in 2018.  So much has changed since, but the early stuff still runs just fine so there's not been a huge rush to update.
+
+Some sections have been updated and added so it's not like this is a stale document. 
+
+## What's newer?
+
+New APIs to save you time - not just for beginners
+
+* Exec APIs (execution of subprocesses)
+* User Settings APIs (management of settings in form of a dictionary)
+* Threading API call - `write_event_value`
+* True multiple windows support - `read_all_windows`
+* System-wide global settings - theme, interpreter to use, Mac settings, ...
+* Advanced error handling including launching your editor to line of code with error
+* More advanced layouts - still trivial,maybe more trivial, to make windows
+* Go wild - have a complicated (i.e. not simple) application... no problem here supporting your  App.  "It's on you".  PSG solved the GUI problem, but you still have to make an application
+* Docstrings - Tight integration with docstrings provides type checking and in-IDE documentation
+* `sg.main` utilities - upgrade to the GitHub version in 1 click. Lots of good stuff built-into PySimpleGUI
+* Demo Browser - Navigate the 315+ Demo Programs easily. Search, execute, edit all from one application
+* Cookbook - There have been a number of updates in 2021
+* This document has some sections new such as the User Settings APIs
+
+### Dynamic Windows
+
+- Making parts of windows expand/contract with the window.
+- Swap out or collapse sections
+- More parms in Elements to help with justification
+- New `Push` & `VPush` Elements trivialize justification
+
+
+### Threading
+
+One simple call, `write_event_value`, solves threading issues.
+
+Not ready for the threading module but need to run a thread?  Use `window.perform_long_operation` to use threads. One call and done.
+
+### What's Old?
+
+The old parts of this documentation are the images.  The good news is that things look better than you see here.  Themes have made Windows colorful in 1 line of code.
+
+
+
+
+------------------
+
+
 
 #### Looking for a GUI package?     Are you...
 
@@ -304,11 +352,9 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
 
-###### Python 2.7 Code will be deleted from this GitHub on Dec 31, 2019
+### Python 2.7 Code was be deleted from this GitHub on Dec 31, 2019
 
-Note that the 2.7 port will *cease to exist on this GitHub* on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
-
-By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.  It sounds cruel, but experts in security particularly says 2.7 is a huge risk. Furthering it use only hurts the computing world.
+At the suggestion of the Python community at large, the experts, and security folks, the support for 2.7 was pulled from this Repo.  
 
 #### Warning - tkinter + Python 3.7.3 and later, including 3.8 has problems
 
@@ -405,6 +451,14 @@ At the moment there are 4 actively developed and maintained "ports" of PySimpleG
 
 While PySimpleGUI, the tkinter port, is the only 100% completed version of PySimpleGUI, the other 3 ports have a LOT of functionality in them and are in active use by a large portion of the installations.  You can see the number of Pip installs at the very top of this document to get a comparison as to the size of the install base for each port.  The "badges" are right after the logo.
 
+
+## The Chain Link Fence
+
+Maybe you've heard the "Walled Garden" term before.  It's a boxing in effect.
+
+While PySimpleGUI has a well-established parameter so you know where the edges are, there is no wall between you and the rest of the GUI framework.  There's a chain link fence that's easy to reach through and get full access to the underlying frameworks.
+
+The net result - it's easy to expand features that are not yet available in PySimpleGUI and easy to remove them too. Maybe the Listbox Element doesn't have a mode exposed that you want to enable.  No problem, you can access the underlying Listbox Widget and make what is likely 1 or 2 calls and be done.
 
 # The PySimpleGUI "Family"
 
