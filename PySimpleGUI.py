@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.17 Unreleased"
+version = __version__ = "4.49.0.18 Unreleased"
 
 _change_log = """
 
@@ -59,6 +59,8 @@ _change_log = """
         popup_scrolled - add an additional line per parm. Sometimes not enough height was computed
     4.49.0.17
         Fixed problem in the delete_section code for UserSettings for INI files.
+    4.49.0.18
+        Removed the UserSettings merge_comments_from_file code (for now)        
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19525,33 +19527,33 @@ class UserSettings:
             self.read()
         return self.full_filename
 
-
-    def merge_comments_from_file(self, full_filename):
-        print('--- merging comments -----')
-        merged_lines = []
-        with open(full_filename, 'r') as f:
-            new_file_contents = f.readlines()
-            current_section = ''
-            for line in new_file_contents:
-                if len(line) == 0:      # skip blank lines
-                    merged_lines.append(line)
-                    continue
-                if line[0] == '[':      # if a new section
-                    current_section = line[:line.index(']')]
-                    merged_lines.append(line)
-                    continue
-                if len(line.lstrip()):
-                    if line.lstrip()[0] == '#':     # if a comment line, save it
-                        merged_lines.append(line)
-                # Process a line with an = in it
-                try:
-                    key = line[:line.index('=')]
-                    merged_lines.append(line)
-                except:
-                    merged_lines.append(line)
-        print('--- merging complete ----')
-        print(*merged_lines)
-
+    #
+    # def merge_comments_from_file(self, full_filename):
+    #     print('--- merging comments -----')
+    #     merged_lines = []
+    #     with open(full_filename, 'r') as f:
+    #         new_file_contents = f.readlines()
+    #         current_section = ''
+    #         for line in new_file_contents:
+    #             if len(line) == 0:      # skip blank lines
+    #                 merged_lines.append(line)
+    #                 continue
+    #             if line[0] == '[':      # if a new section
+    #                 current_section = line[:line.index(']')]
+    #                 merged_lines.append(line)
+    #                 continue
+    #             if len(line.lstrip()):
+    #                 if line.lstrip()[0] == '#':     # if a comment line, save it
+    #                     merged_lines.append(line)
+    #             # Process a line with an = in it
+    #             try:
+    #                 key = line[:line.index('=')]
+    #                 merged_lines.append(line)
+    #             except:
+    #                 merged_lines.append(line)
+    #     print('--- merging complete ----')
+    #     print(*merged_lines)
+    #
 
 
     def save(self, filename=None, path=None):
