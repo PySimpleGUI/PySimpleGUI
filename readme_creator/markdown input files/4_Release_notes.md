@@ -2184,6 +2184,48 @@ Image element - Simpler to use
 - Changed docstring for Multiline default value to Any and added a cast to string
 - Added more tests and information to the `sg.main()` test harness
 
+
+## 4.50.0 PySimpleGUI 17-Oct-2021
+UserSettings API - support for .INI files  
+Listbox horizontal scrollbar  
+Column Element allow None for 1 size direction
+
+* UserSettings API
+	* INI File Support
+		* Read access:  `settings[section][key]`  
+	    Modify existing section and key:  `settings[section][key] = new_value`  
+	    Create a new key in an existing section:  `settings[section][new_key] = new_value`  
+	    Create a new section and key:  `settings[new_section][new_key] = new_value`    
+        Delete a section: `settings.delete_section(section)`  
+        Save the INI file: `settings.save()`  
+		* Available for UserSettings object only, not the function interface
+		* Demo Program released specific to .ini features
+		* Option to convert strings to Python values for True, False, None
+	* Added checks for running on Trinket or Replit so path can be set to "." if on either
+* Added `running_replit` function. Returns True if environment is repl.it
+* New option in set_options - `warn_button_key_duplicates` will show a warning if duplicate keys found on buttons. Defaults to OFF (duplicate key attempts on Buttons are common and OK)
+* Right Click Menus
+	* New Element method `Element.set_right_click_menu`
+		* Enables changing a right click menu after initial window is created
+		* If none specified, uses the parent's menu
+* Added `Window.get_size_accurate()` to get the window's size based on the geometry string from tkinter
+* Removed moving of the theme color swatch preview window and allowed to center now
+* Added check for bad value returned from tkinter when table clicked event happens
+* Removed print when 8.6.9 ttk treeview code is patched
+* Removed a debug print accidentally left in the bind code
+* Listbox - added horizontal scrollbar option
+* New `pin` layout helper function implementation (hopefully better, not worse)
+* Column Element - Allow `None` to be used in any part of the `size`.
+	* If None used on width, then Column will default to width required by contents.  
+	* If None used on height, then Column will default to width required by contents divided by 2
+	* These are same values as `(None, None)` today but can invidually control now.
+* Made `Window.LayoutAndRead` deprication more user friendly with a popup
+* Added * to the `file_types` default so that files without an extension are shown (only a problem on non-Windows systems). Default is now `(("ALL Files", "*.* *"),)`
+	* Changed `popup_get_file`, the Browse buttons, etc
+	* `FILE_TYPES_ALL_FILES` is a new constant with this value
+* `popup_scrolled` added 1 line per argument to fit the contents better in some cases
+
+
 ## Code Condition
 
     Make it run

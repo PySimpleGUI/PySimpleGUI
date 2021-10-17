@@ -249,7 +249,9 @@ Consider this is a ***stern warning***
 
 Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+There is ONE (and only one?) safe call you can make into PySimpleGUI from a thread - `window.write_event_value`
+
+There are several examples of using threads with PySimpleGUI.  Use the Demo Programs!  Use the Cookbook!  They will give you an immediate and valuable jump start.
 
 Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
 
@@ -282,7 +284,7 @@ The sequence looks like this in code:
     gc.collect()
 ```
     
-This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidently run the Garbage Collect
+This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidentally run the Garbage Collect
 
 
 

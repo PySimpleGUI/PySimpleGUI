@@ -4612,13 +4612,15 @@ Exception module 'tkinter' has no attribute '__version__'
 
 # User Settings API
 
-In release 4.30.0 there is a new set of API calls available to help with "user settings".  Think of user settings as a dictionary that is automatically written to your hard drive.  That's basically what it is.  Underpinning the code is the JSON package provided by Python.
+In release 4.30.0 there is a new set of API calls available to help with "user settings".  Think of user settings as a dictionary that is automatically written to your hard drive.  That's basically what it is.  
 
-While using JSON files to save and load a settings dictionary isn't very difficult, it is still code you'll need to write if you want to save settings as part of your GUI.  Since having "settings" for a GUI based program isn't uncommon, it made sense to build this capability into PySimpleGUI.  Clearly you can still use your own method for saving settings, but if you're looking for a simple and easy way to do it, these calls are likely about as easy as it gets.
+In release 4.50.0 support for INI files was added in addition to the existing JSON file format.
+
+While using JSON or config files to save and load a settings dictionary isn't very difficult, it is still code you'll need to write if you want to save settings as part of your GUI.  Since having "settings" for a GUI based program isn't uncommon, it made sense to build this capability into PySimpleGUI.  Clearly you can still use your own method for saving settings, but if you're looking for a simple and easy way to do it, these calls are likely about as easy as it gets.
 
 There have already been some demo programs written that use JSON files to store settings.  You can expect that this capability will begin to show up in more demos in the future since it's now part of PySimpleGUI.
 
-User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  You do not need to explicitly read nor write the file.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.
+User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  **You do not need to explicitly read nor write the file**.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.
 
 ## Two Interfaces
 
@@ -4629,6 +4631,7 @@ There are 2 ways to access User Settings
 
 They both offer the same basic operations.  The class interface has an added benefit of being able to access the individual settings using the same syntax as Python dictionary.
 
+If you want to use INI files, then you'll need to use the object interface.
 
 ## List of Calls for Function Interface
 
@@ -4881,7 +4884,7 @@ in main
 
 You should be able to easily figure out these errors as they are file operations and the error messages are clear in detailing what's happened and where the call originated.
 
-### Silenting the Errors
+### Silencing the Errors
 
 If you're the type that doesn't want to see any error messages printed out on your console, then you can silence the error output.
 
@@ -4889,6 +4892,139 @@ When using the class interface, there is a parameter `silent_on_error` that you 
 
 For the function interface, call the function `user_settings_silent_on_error()` and set the parameter to `True`
 
+
+## Config INI File Support
+
+Using INI files has some advantages over JSON, particularly  when humans are going to be modifying the settings files directly.
+
+To specify use of INI files instead of JSON, set the parameter `use_config_file=True` when creating your `UserSetting` object.
+
+```python
+settings = sg.UserSettings('my_config.ini', use_config_file=True, convert_bools_and_none=True)
+```
+
+Note the 2 parameters that are specific for .ini files:
+* `use_config_file` - Set to `True` to indicate you're using an INI file
+* `convert_bools_and_none` - Defaults to `True`. Normally all settings from INI files are strings. This parameter will convert 'True', 'False', and 'None' to Python values `True`, `False`, `None`
+
+There is also an additional method added `delete_section` which will delete an entire section from your INI file.
+
+### Example File
+
+Let's use this as our example INI file:
+
+```
+[My Section]
+filename = test1234
+filename2 = number 2
+filename3 = number 3
+
+[Section 2]
+var = 123
+
+[Empty]
+
+[last section]
+bool = True
+```
+
+
+### Getting / Setting Entries
+
+Just like the JSON files, you can access the individual settings using the UserSettings class by using the `[ ]` notation or by calling `get` and `set` methods.
+
+The big difference with the INI file support is the addition of an extra lookup / parameter, the section name.
+
+To access the entry `var` in section `Section 2`, you can use wither of these:
+
+```python
+settings['Section 2']['var']
+settings['Section 2'].get('var', 'Default Value')
+```
+
+
+The advantage of using the `get` method is that if the entry is not present, a default value will be returned instead.
+
+To set an entry, you also have 2 choices:
+
+```python
+settings['Section 2']['var'] = 'New Value'
+settings['Section 2'].set('var', 'New Value')
+```
+
+### Accessing INI File Sections
+
+Once you have created your `UserSettings` object, then you'll be accessing entries using 2 keys instead of 1 like JSON uses.
+
+
+To access an entire section, you'll write:
+
+`settings['section']`
+
+To get all of 'My Section' it will be:
+
+`settings['My Section']` which returns a section object that behaves much like a dictionary.
+
+To access a value within a section, add on one more lookup.  To get the value of the `filename` setting in the `My Section` section, it's done with this code:
+
+`settings['My Section']['filename']`
+
+### Deleting Entries
+
+To delete an individual entry, you can use several different techniques.  One is to use `del`
+
+```python
+del settings['My Section1']['test']
+```
+
+This deletes the setting `test` in the section `My Section1`
+
+You can also do this by calling the `delete_entry` method
+
+```python
+settings.delete_entry(section='My Section1', key='test')
+```
+
+
+### Deleting Sections
+
+If you want to delete an entire section, you have 2 methods for doing this.  One is to call the method `UserSettings.delete_section` and pass in the name of the section to be deleted.
+
+```python
+settings.delete_section(section='My Section1')
+```
+
+The other is to lookup the section and then call `delete_section` on that section.
+
+```python
+settings['My Section1'].delete_section()
+```
+
+
+### Printing Settings for INI Files
+
+If you print (or cast to a string) a section or a UserSettings object for an INI file, then you will get a nicely formated output that shows the sections and what settings are in each section.
+
+Going back to the example INI file from earlier.  Printing the UserSettings object for this file produces this output:
+
+```
+My Section:
+          filename : test1234
+          filename2 : number 2
+          filename3 : number 3
+Section 2:
+          var : 123
+Empty:
+last section:
+          bool : True
+```
+
+
+### INI File Comments (WARNING)
+
+If you have created an INI file using a test editor or it was created output of Python, then when the file is written, your comments will be stripped out.  Code is being added to PySimpleGUI to merge back your comments, but the code isn't done yet.   You'll either live with this limitation for now or write your own merge code.
+
+Yea, I know, it's a bummer, but the plan is to overcome this Python limitation.
 
 ## Coding Convention for User Settings Keys
 

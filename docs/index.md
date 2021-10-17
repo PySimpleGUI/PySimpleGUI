@@ -90,6 +90,49 @@ and returns the value input as well as the button clicked.
 
 ---
 
+# 2021 Updates....
+
+This documentation was originally written in 2018.  So much has changed since, but the early stuff still runs just fine so there's not been a huge rush to update.
+
+Some sections have been updated and added so it's not like this is a stale document. 
+
+## What's newer?
+
+New APIs to save you time - not just for beginners
+
+* Exec APIs (execution of subprocesses)
+* User Settings APIs (management of settings in form of a dictionary)
+* Threading API call - `write_event_value`
+* True multiple windows support - `read_all_windows`
+* System-wide global settings - theme, interpreter to use, Mac settings, ...
+* Advanced error handling including launching your editor to line of code with error
+* More advanced layouts - still trivial,maybe more trivial, to make windows
+* Go wild - have a complicated (i.e. not simple) application... no problem here supporting your  App.  "It's on you".  PSG solved the GUI problem, but you still have to make an application
+* Docstrings - Tight integration with docstrings provides type checking and in-IDE documentation
+* `sg.main` utilities - upgrade to the GitHub version in 1 click. Lots of good stuff built-into PySimpleGUI
+* Demo Browser - Navigate the 315+ Demo Programs easily. Search, execute, edit all from one application
+* Cookbook - There have been a number of updates in 2021
+* This document has some sections new such as the User Settings APIs
+
+### Dynamic Windows
+
+- Making parts of windows expand/contract with the window.
+- Swap out or collapse sections
+- More parms in Elements to help with justification
+- New `Push` & `VPush` Elements trivialize justification
+
+### Threading
+
+One simple call, `write_event_value`, solves threading issues.
+
+Not ready for the threading module but need to run a thread?  Use `window.perform_long_operation` to use threads. One call and done.
+
+### What's Old?
+
+The old parts of this documentation are the images.  The good news is that things look better than you see here.  Themes have made Windows colorful in 1 line of code.
+
+------------------
+
 #### Looking for a GUI package?     Are you...
 
 * looking to take your Python code from the world of command lines and into the convenience of a GUI? 
@@ -254,11 +297,9 @@ PySimpleGUI runs on Windows, Linux and Mac, just like tkinter, Qt, WxPython and 
 
 As of 9/25/2018 **both Python 3 and Python 2.7 are supported** when using **tkinter version** of PySimpleGUI! The Python 3 version is named `PySimpleGUI`. The Python 2.7 version is `PySimpleGUI27`.  They are installed separately and the imports are different. See instructions in Installation section for more info.  **None** of the other ports can use Python 2.
 
-###### Python 2.7 Code will be deleted from this GitHub on Dec 31, 2019
+### Python 2.7 Code was be deleted from this GitHub on Dec 31, 2019
 
-Note that the 2.7 port will *cease to exist on this GitHub* on Jan 1, 2020.  If you would like to know how much time you have to move over to the Python 3 version of PySimpleGUI, then go here: https://pythonclock.org/.  The only thing that will be available is an unsupported PyPI release of PySimpleGUI27.
-
-By "will cease to exist on this GitHub" I mean, it will be deleted entirely.  No source code, no supporting programs.  Nothing.  If you're stuck using 2.7 in December, it would behoove you to fork the 2.7 code on Dec 31, 2019.  Legacy Python doesn't have a permanent home here.  It sounds cruel, but experts in security particularly says 2.7 is a huge risk. Furthering it use only hurts the computing world.
+At the suggestion of the Python community at large, the experts, and security folks, the support for 2.7 was pulled from this Repo.  
 
 #### Warning - tkinter + Python 3.7.3 and later, including 3.8 has problems
 
@@ -349,6 +390,14 @@ At the moment there are 4 actively developed and maintained "ports" of PySimpleG
 4. Remi (Web browser support) - Development stage, pre-release.
 
 While PySimpleGUI, the tkinter port, is the only 100% completed version of PySimpleGUI, the other 3 ports have a LOT of functionality in them and are in active use by a large portion of the installations.  You can see the number of Pip installs at the very top of this document to get a comparison as to the size of the install base for each port.  The "badges" are right after the logo.
+
+## The Chain Link Fence
+
+Maybe you've heard the "Walled Garden" term before.  It's a boxing in effect.
+
+While PySimpleGUI has a well-established parameter so you know where the edges are, there is no wall between you and the rest of the GUI framework.  There's a chain link fence that's easy to reach through and get full access to the underlying frameworks.
+
+The net result - it's easy to expand features that are not yet available in PySimpleGUI and easy to remove them too. Maybe the Listbox Element doesn't have a mode exposed that you want to enable.  No problem, you can access the underlying Listbox Widget and make what is likely 1 or 2 calls and be done.
 
 # The PySimpleGUI "Family"
 
@@ -1723,7 +1772,7 @@ popup_get_file(message,
     default_extension = "",
     save_as = False,
     multiple_files = False,
-    file_types = (('ALL Files', '*.*'),),
+    file_types = (('ALL Files', '*.* *'),),
     no_window = False,
     size = (None, None),
     button_color = None,
@@ -1754,7 +1803,7 @@ Parameter Descriptions:
 |                str                 |    default_extension     | If no extension entered by user, add this to filename (only used in saveas dialogs) |
 |                bool                |         save_as          | if True, the "save as" dialog is shown which will verify before overwriting |
 |                bool                |      multiple_files      | if True, then allows multiple files to be selected that are returned with ';' between each filename |
-|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),) |
+|       Tuple[Tuple[str,str]]        |        file_types        | List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.* *"),) |
 |                bool                |        no_window         | if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown |
 |             (int, int)             |           size           | (width, height) of the InputText Element or Combo element if using history feature |
 |         (str, str) or str          |       button_color       | Color of the button (text, background) |
@@ -6046,13 +6095,15 @@ Exception module 'tkinter' has no attribute '__version__'
 
 # User Settings API
 
-In release 4.30.0 there is a new set of API calls available to help with "user settings".  Think of user settings as a dictionary that is automatically written to your hard drive.  That's basically what it is.  Underpinning the code is the JSON package provided by Python.
+In release 4.30.0 there is a new set of API calls available to help with "user settings".  Think of user settings as a dictionary that is automatically written to your hard drive.  That's basically what it is.  
 
-While using JSON files to save and load a settings dictionary isn't very difficult, it is still code you'll need to write if you want to save settings as part of your GUI.  Since having "settings" for a GUI based program isn't uncommon, it made sense to build this capability into PySimpleGUI.  Clearly you can still use your own method for saving settings, but if you're looking for a simple and easy way to do it, these calls are likely about as easy as it gets.
+In release 4.50.0 support for INI files was added in addition to the existing JSON file format.
+
+While using JSON or config files to save and load a settings dictionary isn't very difficult, it is still code you'll need to write if you want to save settings as part of your GUI.  Since having "settings" for a GUI based program isn't uncommon, it made sense to build this capability into PySimpleGUI.  Clearly you can still use your own method for saving settings, but if you're looking for a simple and easy way to do it, these calls are likely about as easy as it gets.
 
 There have already been some demo programs written that use JSON files to store settings.  You can expect that this capability will begin to show up in more demos in the future since it's now part of PySimpleGUI.
 
-User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  You do not need to explicitly read nor write the file.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.
+User settings are stored in a Python dictionary which is saved to / loaded from disk.  Individual settings are thus keys into a dictionary.  **You do not need to explicitly read nor write the file**.  Changing any entry will cause the file to be saved.  Reading any entry will cause the file to be read if it hasn't already been read.
 
 ## Two Interfaces
 
@@ -6062,6 +6113,8 @@ There are 2 ways to access User Settings
 2. The `UserSettings` class
 
 They both offer the same basic operations.  The class interface has an added benefit of being able to access the individual settings using the same syntax as Python dictionary.
+
+If you want to use INI files, then you'll need to use the object interface.
 
 ## List of Calls for Function Interface
 
@@ -6305,13 +6358,140 @@ in main
 
 You should be able to easily figure out these errors as they are file operations and the error messages are clear in detailing what's happened and where the call originated.
 
-### Silenting the Errors
+### Silencing the Errors
 
 If you're the type that doesn't want to see any error messages printed out on your console, then you can silence the error output.
 
 When using the class interface, there is a parameter `silent_on_error` that you can set to `True`.
 
 For the function interface, call the function `user_settings_silent_on_error()` and set the parameter to `True`
+
+## Config INI File Support
+
+Using INI files has some advantages over JSON, particularly  when humans are going to be modifying the settings files directly.
+
+To specify use of INI files instead of JSON, set the parameter `use_config_file=True` when creating your `UserSetting` object.
+
+```python
+settings = sg.UserSettings('my_config.ini', use_config_file=True, convert_bools_and_none=True)
+```
+
+Note the 2 parameters that are specific for .ini files:
+* `use_config_file` - Set to `True` to indicate you're using an INI file
+* `convert_bools_and_none` - Defaults to `True`. Normally all settings from INI files are strings. This parameter will convert 'True', 'False', and 'None' to Python values `True`, `False`, `None`
+
+There is also an additional method added `delete_section` which will delete an entire section from your INI file.
+
+### Example File
+
+Let's use this as our example INI file:
+
+```
+[My Section]
+filename = test1234
+filename2 = number 2
+filename3 = number 3
+
+[Section 2]
+var = 123
+
+[Empty]
+
+[last section]
+bool = True
+```
+
+### Getting / Setting Entries
+
+Just like the JSON files, you can access the individual settings using the UserSettings class by using the `[ ]` notation or by calling `get` and `set` methods.
+
+The big difference with the INI file support is the addition of an extra lookup / parameter, the section name.
+
+To access the entry `var` in section `Section 2`, you can use wither of these:
+
+```python
+settings['Section 2']['var']
+settings['Section 2'].get('var', 'Default Value')
+```
+
+The advantage of using the `get` method is that if the entry is not present, a default value will be returned instead.
+
+To set an entry, you also have 2 choices:
+
+```python
+settings['Section 2']['var'] = 'New Value'
+settings['Section 2'].set('var', 'New Value')
+```
+
+### Accessing INI File Sections
+
+Once you have created your `UserSettings` object, then you'll be accessing entries using 2 keys instead of 1 like JSON uses.
+
+To access an entire section, you'll write:
+
+`settings['section']`
+
+To get all of 'My Section' it will be:
+
+`settings['My Section']` which returns a section object that behaves much like a dictionary.
+
+To access a value within a section, add on one more lookup.  To get the value of the `filename` setting in the `My Section` section, it's done with this code:
+
+`settings['My Section']['filename']`
+
+### Deleting Entries
+
+To delete an individual entry, you can use several different techniques.  One is to use `del`
+
+```python
+del settings['My Section1']['test']
+```
+
+This deletes the setting `test` in the section `My Section1`
+
+You can also do this by calling the `delete_entry` method
+
+```python
+settings.delete_entry(section='My Section1', key='test')
+```
+
+### Deleting Sections
+
+If you want to delete an entire section, you have 2 methods for doing this.  One is to call the method `UserSettings.delete_section` and pass in the name of the section to be deleted.
+
+```python
+settings.delete_section(section='My Section1')
+```
+
+The other is to lookup the section and then call `delete_section` on that section.
+
+```python
+settings['My Section1'].delete_section()
+```
+
+### Printing Settings for INI Files
+
+If you print (or cast to a string) a section or a UserSettings object for an INI file, then you will get a nicely formated output that shows the sections and what settings are in each section.
+
+Going back to the example INI file from earlier.  Printing the UserSettings object for this file produces this output:
+
+```
+My Section:
+          filename : test1234
+          filename2 : number 2
+          filename3 : number 3
+Section 2:
+          var : 123
+Empty:
+last section:
+          bool : True
+```
+
+### INI File Comments (WARNING)
+
+If you have created an INI file using a test editor or it was created output of Python, then when the file is written, your comments will be stripped out.  Code is being added to PySimpleGUI to merge back your comments, but the code isn't done yet.   You'll either live with this limitation for now or write your own merge code.
+
+Yea, I know, it's a bummer, but the plan is to overcome this Python limitation.
 
 ## Coding Convention for User Settings Keys
 
@@ -6848,7 +7028,9 @@ Consider this is a ***stern warning***
 
 Tkinter also wants to be the MAIN thread in your code.  So, if you have to run multiple threads, make sure the GUI is the main thread.
 
-Other than that, feel free to use threads with PySimpleGUI on all of the ports.  You'll find a good example for how to run "long running tasks" in your event loop by looking at the demo program: `Demo_Multithreaded_Long_Tasks.py`.  There are several examples of using threads with PySimpleGUI.
+There is ONE (and only one?) safe call you can make into PySimpleGUI from a thread - `window.write_event_value`
+
+There are several examples of using threads with PySimpleGUI.  Use the Demo Programs!  Use the Cookbook!  They will give you an immediate and valuable jump start.
 
 Be sure and **delete** your windows after you close them if you are running with multiple threads.  There is a chance another thread's garbage collect will attempt to delete the window when not in the mainthread which will cause tkinter to crash.
 
@@ -6881,7 +7063,7 @@ The sequence looks like this in code:
     gc.collect()
 ```
 
-This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidently run the Garbage Collect
+This will ensure that the tkinter widgets are all deleted in the context of the main-thread and another thread won't accidentally run the Garbage Collect
 
 # Contributing to PySimpleGUI
 
@@ -9036,6 +9218,46 @@ Image element - Simpler to use
 - Added `popup_get_file`, get_folder, get_data to the test harness under the popups tab
 - Changed docstring for Multiline default value to Any and added a cast to string
 - Added more tests and information to the `sg.main()` test harness
+
+## 4.50.0 PySimpleGUI 17-Oct-2021
+UserSettings API - support for .INI files  
+Listbox horizontal scrollbar  
+Column Element allow None for 1 size direction
+
+* UserSettings API
+	* INI File Support
+		* Read access:  `settings[section][key]`  
+	    Modify existing section and key:  `settings[section][key] = new_value`  
+	    Create a new key in an existing section:  `settings[section][new_key] = new_value`  
+	    Create a new section and key:  `settings[new_section][new_key] = new_value`    
+        Delete a section: `settings.delete_section(section)`  
+        Save the INI file: `settings.save()`  
+		* Available for UserSettings object only, not the function interface
+		* Demo Program released specific to .ini features
+		* Option to convert strings to Python values for True, False, None
+	* Added checks for running on Trinket or Replit so path can be set to "." if on either
+* Added `running_replit` function. Returns True if environment is repl.it
+* New option in set_options - `warn_button_key_duplicates` will show a warning if duplicate keys found on buttons. Defaults to OFF (duplicate key attempts on Buttons are common and OK)
+* Right Click Menus
+	* New Element method `Element.set_right_click_menu`
+		* Enables changing a right click menu after initial window is created
+		* If none specified, uses the parent's menu
+* Added `Window.get_size_accurate()` to get the window's size based on the geometry string from tkinter
+* Removed moving of the theme color swatch preview window and allowed to center now
+* Added check for bad value returned from tkinter when table clicked event happens
+* Removed print when 8.6.9 ttk treeview code is patched
+* Removed a debug print accidentally left in the bind code
+* Listbox - added horizontal scrollbar option
+* New `pin` layout helper function implementation (hopefully better, not worse)
+* Column Element - Allow `None` to be used in any part of the `size`.
+	* If None used on width, then Column will default to width required by contents.  
+	* If None used on height, then Column will default to width required by contents divided by 2
+	* These are same values as `(None, None)` today but can invidually control now.
+* Made `Window.LayoutAndRead` deprication more user friendly with a popup
+* Added * to the `file_types` default so that files without an extension are shown (only a problem on non-Windows systems). Default is now `(("ALL Files", "*.* *"),)`
+	* Changed `popup_get_file`, the Browse buttons, etc
+	* `FILE_TYPES_ALL_FILES` is a new constant with this value
+* `popup_scrolled` added 1 line per argument to fit the contents better in some cases
 
 ## Code Condition
 
