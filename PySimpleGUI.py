@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.16 Unreleased"
+version = __version__ = "4.49.0.17 Unreleased"
 
 _change_log = """
 
@@ -57,6 +57,8 @@ _change_log = """
     4.49.0.16
         Reworked the repr method of UserSettings for config.ini files.  Dumped using pprint and did my own instaed
         popup_scrolled - add an additional line per parm. Sometimes not enough height was computed
+    4.49.0.17
+        Fixed problem in the delete_section code for UserSettings for INI files.
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19363,6 +19365,9 @@ class UserSettings:
         def delete_section(self):
             # print(f'** Section Dict deleting section = {self.section_name}')
             self.config.remove_section(section=self.section_name)
+            del self.user_settings_parent.section_class_dict[self.section_name]
+            if self.user_settings_parent.autosave:
+                self.user_settings_parent.save()
 
         def __getitem__(self, item):
             # print('*** In SectionDict Get ***')
@@ -19394,12 +19399,13 @@ class UserSettings:
             """
             # print(f'** In SectionDict delete! section name = {self.section_name} item = {item} ')
             self.config.remove_option(section=self.section_name, option=item)
-            del self.section_dict[item]
+            try:
+                del self.section_dict[item]
+            except Exception as e:
+                pass
+                # print(e)
             if self.user_settings_parent.autosave:
                 self.user_settings_parent.save()
-            # self.section_dict.pop(item)
-            # print(f'id of section_dict = {id(self.section_dict)} id of self = {id(self)} item count = {self.item_count}')
-            # print(self.section_dict)
 
 
     ########################################################################################################
