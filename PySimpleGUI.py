@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.13 Unreleased"
+version = __version__ = "4.49.0.14 Unreleased"
 
 _change_log = """
 
@@ -50,6 +50,8 @@ _change_log = """
             If width is None, then required width will be used, if height is None, then 1/2 required height.
             These are same values as None, None currently.
         Window.LayoutAndRead deprication made more friendly with popup.
+    4.49.0.14
+        Added * to default for all places file_types is a parameter so that files without extensions are shown
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -3892,7 +3894,7 @@ class Button(Element):
     """
 
     def __init__(self, button_text='', button_type=BUTTON_TYPE_READ_FORM, target=(None, None), tooltip=None,
-                 file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='', disabled=False, change_submits=False,
+                 file_types=(("ALL Files", "*.* *"),), initial_folder=None, default_extension='', disabled=False, change_submits=False,
                  enable_events=False, image_filename=None, image_data=None, image_size=(None, None),
                  image_subsample=None, border_width=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                  disabled_button_color=None,
@@ -3907,7 +3909,7 @@ class Button(Element):
         :type target:                 str | (int, int)
         :param tooltip:               text, that will appear when mouse hovers over the element
         :type tooltip:                (str)
-        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.*"),).  Note - NOT SUPPORTED ON MAC
+        :param file_types:            the filetypes that will be used to match files. To indicate all files: (("ALL Files", "*.* *"),).  Note - NOT SUPPORTED ON MAC
         :type file_types:             Tuple[(str, str), ...]
         :param initial_folder:        starting path for folders and files
         :type initial_folder:         (str)
@@ -4176,7 +4178,7 @@ class Button(Element):
             return
         target_element, strvar, should_submit_window = self._find_target()
 
-        filetypes = (("ALL Files", "*.*"),) if self.FileTypes is None else self.FileTypes
+        filetypes = (("ALL Files", "*.* *"),) if self.FileTypes is None else self.FileTypes
 
         if self.BType == BUTTON_TYPE_BROWSE_FOLDER:
             if running_mac():  # macs don't like seeing the parent window (go firgure)
@@ -11313,7 +11315,7 @@ def FolderBrowse(button_text='Browse', target=(ThisRow, -1), initial_folder=None
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.* *"),), initial_folder=None,
                tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None, change_submits=False,
                enable_events=False, font=None, disabled=False,
                pad=None, p=None, key=None, k=None, metadata=None):
@@ -11323,7 +11325,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       filter file types (Default value = (("ALL Files", "*.*")))
+    :param file_types:       filter file types (Default value = (("ALL Files", "*.* *")))
     :type file_types:        Tuple[(str, str), ...]
     :param initial_folder:   starting path for folders and files
     :type initial_folder:
@@ -11365,7 +11367,7 @@ def FileBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fil
 
 
 # -------------------------  FILES BROWSE Element (Multiple file selection) lazy function  ------------------------- #
-def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), disabled=False,
+def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Files", "*.* *"),), disabled=False,
                 initial_folder=None, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                 change_submits=False, enable_events=False,
                 font=None, pad=None, p=None, key=None, k=None, files_delimiter=BROWSE_FILES_DELIMITER, metadata=None):
@@ -11376,7 +11378,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
     :type button_text:       (str)
     :param target:           key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:            str | (int, int)
-    :param file_types:       (Default value = (("ALL Files", "*.*")))
+    :param file_types:       (Default value = (("ALL Files", "*.* *")))
     :type file_types:        Tuple[(str, str), ...]
     :param disabled:         set disable state for element (Default = False)
     :type disabled:          (bool)
@@ -11422,7 +11424,7 @@ def FilesBrowse(button_text='Browse', target=(ThisRow, -1), file_types=(("ALL Fi
 
 
 # -------------------------  FILE BROWSE Element lazy function  ------------------------- #
-def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None,
+def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.* *"),), initial_folder=None,
                default_extension='', disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
                change_submits=False, enable_events=False, font=None,
                pad=None, p=None, key=None, k=None, metadata=None):
@@ -11432,7 +11434,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        (Default value = (("ALL Files", "*.*")))
+    :param file_types:        (Default value = (("ALL Files", "*.* *")))
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -11476,7 +11478,7 @@ def FileSaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL
 
 
 # -------------------------  SAVE AS Element lazy function  ------------------------- #
-def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.*"),), initial_folder=None, default_extension='',
+def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Files", "*.8 *"),), initial_folder=None, default_extension='',
            disabled=False, tooltip=None, size=(None, None), s=(None, None), auto_size_button=None, button_color=None,
            change_submits=False, enable_events=False, font=None,
            pad=None, p=None, key=None, k=None, metadata=None):
@@ -11486,7 +11488,7 @@ def SaveAs(button_text='Save As...', target=(ThisRow, -1), file_types=(("ALL Fil
     :type button_text:        (str)
     :param target:            key or (row,col) target for the button (Default value = (ThisRow, -1))
     :type target:             str | (int, int)
-    :param file_types:        (Default value = (("ALL Files", "*.*")))
+    :param file_types:        (Default value = (("ALL Files", "*.8 *")))
     :type file_types:         Tuple[(str, str), ...]
     :param default_extension: If no extension entered by user, add this to filename (only used in saveas dialogs)
     :type default_extension:  (str)
@@ -18395,7 +18397,7 @@ def popup_get_folder(message, title=None, default_path='', no_window=False, size
 # --------------------------- popup_get_file ---------------------------
 
 def popup_get_file(message, title=None, default_path='', default_extension='', save_as=False, multiple_files=False,
-                   file_types=(("ALL Files", "*.*"),),
+                   file_types=(("ALL Files", "*.* *"),),
                    no_window=False, size=(None, None), button_color=None, background_color=None, text_color=None,
                    icon=None, font=None, no_titlebar=False, grab_anywhere=False, keep_on_top=None,
                    location=(None, None), initial_folder=None, image=None, files_delimiter=BROWSE_FILES_DELIMITER, modal=True, history=False, show_hidden=True,
@@ -18415,7 +18417,7 @@ def popup_get_file(message, title=None, default_path='', default_extension='', s
     :type save_as:                   (bool)
     :param multiple_files:           if True, then allows multiple files to be selected that are returned with ';' between each filename
     :type multiple_files:            (bool)
-    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.*"),)
+    :param file_types:               List of extensions to show using wildcards. All files (the default) = (("ALL Files", "*.8 *"),)
     :type file_types:                Tuple[Tuple[str,str]]
     :param no_window:                if True, no PySimpleGUI window will be shown. Instead just the tkinter dialog is shown
     :type no_window:                 (bool)
