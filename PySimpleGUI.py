@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.49.0.18 Unreleased"
+version = __version__ = "4.49.0.19 Unreleased"
 
 _change_log = """
 
@@ -61,6 +61,8 @@ _change_log = """
         Fixed problem in the delete_section code for UserSettings for INI files.
     4.49.0.18
         Removed the UserSettings merge_comments_from_file code (for now)        
+    4.49.0.19
+        Docstring updates for FINAL RELEASE
     """
 
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -19290,13 +19292,25 @@ class UserSettings:
 
 
     ########################################################################################################
-    ## FIRST is the SectionDict helper class
+    ## FIRST is the _SectionDict helper class
+    ## It is typically not directly accessed, although it is possible to call delete_section, get, set
     ########################################################################################################
 
     class _SectionDict:
         item_count = 0
         def __init__(self, section_name, section_dict, config, user_settings_parent):  # (str, Dict, configparser.ConfigParser)
+            """
+            The Section Dictionary.  It holds the values for a section.
 
+            :param section_name:                Name of the section
+            :type section_name:                 str
+            :param section_dict:                Dictionary of values for the section
+            :type section_dict:                 dict
+            :param config:                      The configparser object
+            :type config:                       configparser.ConfigParser
+            :param user_settings_parent:        The parent UserSettings object that hdas this section
+            :type user_settings_parent:         UserSettings
+            """
             self.section_name = section_name
             self.section_dict = section_dict            # type: Dict
             self.new_section = False
@@ -19736,6 +19750,11 @@ class UserSettings:
                 # del section_dict[key]
 
     def delete_section(self, section):
+        """
+        Deletes a section with the name provided in the section parameter.  Your INI file will be saved afterwards if auto-save enabled (default is ON)
+        :param section:     Name of the section to delete
+        :type section:      str
+        """
         if not self.use_config_file:
             return
 
