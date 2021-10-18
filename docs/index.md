@@ -9259,6 +9259,14 @@ Column Element allow None for 1 size direction
 	* `FILE_TYPES_ALL_FILES` is a new constant with this value
 * `popup_scrolled` added 1 line per argument to fit the contents better in some cases
 
+## 4.51.0 PySimpleGUI 18-Oct-2021
+`relative_location` parameter for `Window`   
+
+* New parameter for `Window` - `relative_location`
+	* Locates the window at an **offset** from the normal location
+	* Very useful for multi-window applications
+	* Also works when you've set a default window location using the `set_options` call.
+
 ## Code Condition
 
     Make it run
