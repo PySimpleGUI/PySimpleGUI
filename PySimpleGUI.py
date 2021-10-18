@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.50.0 Released 17-Oct-2021"
+version = __version__ = "4.51.0 Released 18-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.50.0 release to PyPI on 17-Oct-2021
+    Changelog since 4.51.0 release to PyPI on 18-Oct-2021
 
 
     """
@@ -8308,7 +8308,7 @@ class Window:
 
     def __init__(self, title, layout=None, default_element_size=None,
                  default_button_element_size=(None, None),
-                 auto_size_text=None, auto_size_buttons=None, location=(None, None), size=(None, None),
+                 auto_size_text=None, auto_size_buttons=None, location=(None, None), relative_location=(None, None), size=(None, None),
                  element_padding=None, margins=(None, None), button_color=None, font=None,
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
@@ -8334,6 +8334,8 @@ class Window:
         :type auto_size_text:                        (bool)
         :param auto_size_buttons:                    True if Buttons in this Window should be sized to exactly fit the text on this.
         :type auto_size_buttons:                     (bool)
+        :param relative_location:                    (x,y) location relative to the CENTER of the window, in pixels. Normally the window centers.  This location is relative to THAT centered location. Note they can be negative.
+        :type relative_location:                     (int, int)
         :param location:                             (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen.
         :type location:                              (int, int)
         :param size:                                 (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead
@@ -8433,6 +8435,7 @@ class Window:
         self.DefaultButtonElementSize = default_button_element_size if default_button_element_size != (
             None, None) else DEFAULT_BUTTON_ELEMENT_SIZE
         self.Location = location
+        self.RelativeLoction = relative_location
         self.ButtonColor = button_color_to_tuple(button_color)
         self.BackgroundColor = background_color if background_color else DEFAULT_BACKGROUND_COLOR
         self.ParentWindow = None
@@ -15069,6 +15072,10 @@ def _convert_window_to_tk(window):
             y = screen_height - win_height
         if x + win_width > screen_width:
             x = screen_width - win_width
+
+    if window.RelativeLoction != (None, None):
+        x += window.RelativeLoction[0]
+        y += window.RelativeLoction[1]
 
     move_string = '+%i+%i' % (int(x), int(y))
     master.geometry(move_string)

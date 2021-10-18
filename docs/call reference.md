@@ -11363,6 +11363,7 @@ Window(title,
     auto_size_text = None,
     auto_size_buttons = None,
     location = (None, None),
+    relative_location = (None, None),
     size = (None, None),
     element_padding = None,
     margins = (None, None),
@@ -11418,6 +11419,7 @@ Parameter Descriptions:
 |                (int, int)                 |     default_button_element_size      | (width, height) size in characters (wide) and rows (high) for all Button elements in this window |
 |                   bool                    |            auto_size_text            | True if Elements in Window should be sized to exactly fir the length of text |
 |                   bool                    |          auto_size_buttons           | True if Buttons in this Window should be sized to exactly fit the text on this. |
+|                (int, int)                 |          relative_location           | (x,y) location relative to the CENTER of the window, in pixels. Normally the window centers. This location is relative to THAT centered location. Note they can be negative. |
 |                (int, int)                 |               location               | (x,y) location, in pixels, to locate the upper left corner of the window on the screen. Default is to center on screen. |
 |                (int, int)                 |                 size                 | (width, height) size in pixels for this window. Normally the window is autosized to fit contents, not set to an absolute size by the user. Try not to set this value. You risk, the contents being cut off, etc. Let the layout determine the window size instead |
 | (int, int or (int, int),(int,int)) or int |           element_padding            | Default amount of padding to put around elements in window (left/right, top/bottom) or ((left, right), (top, bottom)), or an int. If an int, then it's converted into a tuple (int, int) |
