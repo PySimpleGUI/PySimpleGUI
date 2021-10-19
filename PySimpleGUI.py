@@ -1,11 +1,17 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.51.0 Released 18-Oct-2021"
+version = __version__ = "4.51.0.1 Unreleased"
 
 _change_log = """
 
     Changelog since 4.51.0 release to PyPI on 18-Oct-2021
 
+    4.51.0.1
+        New Right-Click Menu constant - MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT
+            Adds "File Location" to the standard list.
+            The code I've been using for the file location choice is:
+                if event == 'File Location':
+                    sg.popup_scrolled('This Python file is:', __file__)
 
     """
 
@@ -550,6 +556,7 @@ MENU_KEY_SEPARATOR = '::'
 MENU_SEPARATOR_LINE = '---'
 MENU_RIGHT_CLICK_EDITME_EXIT = ['', ['Edit Me', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_EXIT = ['', ['Edit Me', 'Version', 'Exit']]
+MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT = ['', ['Edit Me', 'Version', 'File Location', 'Exit']]
 MENU_RIGHT_CLICK_EDITME_VER_SETTINGS_EXIT = ['', ['Edit Me', 'Settings', 'Version', 'Exit']]
 MENU_RIGHT_CLICK_EXIT = ['', ['Exit']]
 MENU_RIGHT_CLICK_DISABLED = [[]]
