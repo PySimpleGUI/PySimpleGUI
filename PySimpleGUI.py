@@ -1,20 +1,14 @@
 #!/usr/bin/python3
 
-version = __version__ = "4.51.0.1 Unreleased"
+
+version = __version__ = "4.51.2 Released 19-Oct-2021"
 
 _change_log = """
 
-    Changelog since 4.51.0 release to PyPI on 18-Oct-2021
+    Changelog since 4.51.2 release to PyPI on 19-Oct-2021
 
-    4.51.0.1
-        New Right-Click Menu constant - MENU_RIGHT_CLICK_EDITME_VER_LOC_EXIT
-            Adds "File Location" to the standard list.
-            The code I've been using for the file location choice is:
-                if event == 'File Location':
-                    sg.popup_scrolled('This Python file is:', __file__)
 
     """
-
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
 
 # The shortened version of version
@@ -15414,8 +15408,9 @@ class QuickMeter(object):
                        key='_OPTMSG_')]]  ### convert all *args into one string that can be updated
             col += [[T('', size=(30, 10), key='_STATS_')],
                     [ProgressBar(max_value=self.max_value, orientation='h', key='_PROG_', size=self.size,
-                                 bar_color=self.bar_color)],
-                    [Cancel(button_color=self.button_color), Stretch()]]
+                                 bar_color=self.bar_color)]]
+            if not self.no_button:
+                col += [[Cancel(button_color=self.button_color), Stretch()]]
             layout = [Column(col)]
         else:
             col = [[ProgressBar(max_value=self.max_value, orientation='v', key='_PROG_', size=self.size,
