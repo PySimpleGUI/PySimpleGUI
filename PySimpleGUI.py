@@ -1,12 +1,19 @@
 #!/usr/bin/python3
 
 
-version = __version__ = "4.51.2 Released 19-Oct-2021"
+version = __version__ = "4.51.2.1 Unreleased"
 
 _change_log = """
 
     Changelog since 4.51.2 release to PyPI on 19-Oct-2021
 
+    4.51.2.1
+        New Window parameter!  grab_anywhere_using_control
+            Default is TRUE
+            Feels like a risky change to have default to True, but it also means no one changes their code and gets the feature
+            If enabled, you can use the control key + Left Mouse button to move your Window, just like Grab Anywhere.
+            Enables you to move windows that you can no longer reach the titlebar for
+            Let's see if anyone notices or complains
 
     """
 __version__ = version.split()[0]  # For PEP 396 and PEP 345
@@ -1417,6 +1424,17 @@ class Element():
                                             _create_error_message(),
                                             )
             return False
+
+
+    def _grab_anywhere_on_using_control_key(self):
+        """
+        Turns on Grab Anywhere functionality AFTER a window has been created.  Don't try on a window that's not yet
+        been Finalized or Read.
+        """
+        self.Widget.bind("<Control-Button-1>", self.ParentForm._StartMove)
+        self.Widget.bind("<Control-ButtonRelease-1>", self.ParentForm._StopMove)
+        self.Widget.bind("<Control-B1-Motion>", self.ParentForm._OnMotion)
+
 
     def _grab_anywhere_on(self):
         """
@@ -8314,7 +8332,7 @@ class Window:
                  progress_bar_color=(None, None), background_color=None, border_depth=None, auto_close=False,
                  auto_close_duration=DEFAULT_AUTOCLOSE_TIME, icon=None, force_toplevel=False,
                  alpha_channel=1, return_keyboard_events=False, use_default_focus=True, text_justification=None,
-                 no_titlebar=False, grab_anywhere=False, keep_on_top=None, resizable=False, disable_close=False,
+                 no_titlebar=False, grab_anywhere=False, grab_anywhere_using_control=True, keep_on_top=None, resizable=False, disable_close=False,
                  disable_minimize=False, right_click_menu=None, transparent_color=None, debugger_enabled=True,
                  right_click_menu_background_color=None, right_click_menu_text_color=None, right_click_menu_disabled_text_color=None,
                  right_click_menu_selected_colors=(None, None),
@@ -8375,6 +8393,8 @@ class Window:
         :type no_titlebar:                           (bool)
         :param grab_anywhere:                        If True can use mouse to click and drag to move the window. Almost every location of the window will work except input fields on some systems
         :type grab_anywhere:                         (bool)
+        :param grab_anywhere_using_control:          If True can use CONTROL key + left mouse mouse to click and drag to move the window. DEFAULT is TRUE. Unlike normal grab anywhere, it works on all elements.
+        :type grab_anywhere_using_control:           (bool)
         :param keep_on_top:                          If True, window will be created on top of all other windows on screen. It can be bumped down if another window created with this parm
         :type keep_on_top:                           (bool)
         :param resizable:                            If True, allows the user to resize the window. Note the not all Elements will change size or location when resizing.
@@ -8473,6 +8493,7 @@ class Window:
         self.TextJustification = text_justification
         self.NoTitleBar = no_titlebar
         self.GrabAnywhere = grab_anywhere
+        self.GrabAnywhereUsingControlKey = grab_anywhere_using_control
         if keep_on_top is None and DEFAULT_KEEP_ON_TOP is not None:
             keep_on_top = DEFAULT_KEEP_ON_TOP
         elif keep_on_top is None:
@@ -9601,7 +9622,7 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if (isinstance(event.widget,
+        if self.GrabAnywhereUsingControlKey is False and (isinstance(event.widget,
                        GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
@@ -9642,7 +9663,7 @@ class Window:
         :param event: event information passed in by tkinter. Contains x,y position of mouse
         :type event:  (event)
         """
-        if (isinstance(event.widget,
+        if self.GrabAnywhereUsingControlKey is False and (isinstance(event.widget,
                        GRAB_ANYWHERE_IGNORE_THESE_WIDGETS) or event.widget in self._grab_anywhere_ignore_these_list) and event.widget not in self._grab_anywhere_include_these_list:
             # print('Found widget to ignore in grab anywhere...')
             return
@@ -15182,7 +15203,11 @@ def StartupTK(window):
             root.bind("<ButtonPress-1>", window._StartMove)
             root.bind("<ButtonRelease-1>", window._StopMove)
             root.bind("<B1-Motion>", window._OnMotion)
-
+    if (window.GrabAnywhereUsingControlKey is not False and not (
+            window.NonBlocking and window.GrabAnywhere is not True)):
+        root.bind("<Control-Button-1>", window._StartMove)
+        root.bind("<Control-ButtonRelease-1>", window._StopMove)
+        root.bind("<Control-B1-Motion>", window._OnMotion)
     window.set_icon(window.WindowIcon)
 
     try:
