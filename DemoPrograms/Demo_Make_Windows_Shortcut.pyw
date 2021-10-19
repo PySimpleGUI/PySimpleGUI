@@ -17,7 +17,6 @@ import os
     Copyright 2021 PySimpleGUI
 """
 
-
 '''
 MM""""""""`M                                        
 MM  mmmmmmmM                                        
@@ -34,6 +33,7 @@ MMMMMMMMMMMM                      88            .88
 88     88 88 88.  ...       88 
 dP     dP dP `88888P' `88888P'
 '''
+
 
 def create_shortcut_for_python_file(arguments='', target='', icon='', new_name=''):
     """
@@ -72,7 +72,7 @@ MM  MMMMMMMM 88'  `88 88'  `88    88'  `88   88   88'  `88 88ooood8 88'  `88
 MM  MMMMMMMM 88.  .88 88          88.  .88   88   88    88 88.  ... 88       
 MM  MMMMMMMM `88888P' dP          `88888P'   dP   dP    dP `88888P' dP       
 MMMMMMMMMMMM                                                                 
-                                                                             
+
 .8888b oo dP                   
 88   "    88                   
 88aaa  dP 88 .d8888b. .d8888b. 
@@ -80,6 +80,8 @@ MMMMMMMMMMMM
 88     88 88 88.  ...       88 
 dP     dP dP `88888P' `88888P'
 '''
+
+
 def create_shortcut_exe_or_other(arguments='', target='', icon='', new_name=''):
     """
     Create a shortcut for a given target filename
@@ -111,7 +113,7 @@ def create_shortcut_exe_or_other(arguments='', target='', icon='', new_name=''):
 
 def shortcut_exists(target, new_name=''):
     filename, ext = os.path.splitext(target)
-    filename = new_name if new_name!='' else filename
+    filename = new_name if new_name != '' else filename
     shortcut_filename = filename + ".lnk"
     shortcut_filename = os.path.join(os.path.dirname(target), shortcut_filename)
     print('looking for exists filename', shortcut_filename)
@@ -120,7 +122,7 @@ def shortcut_exists(target, new_name=''):
 
 def shortcut_delete(target, new_name=''):
     filename, ext = os.path.splitext(target)
-    filename = new_name if new_name!='' else filename
+    filename = new_name if new_name != '' else filename
     shortcut_filename = filename + ".lnk"
     shortcut_filename = os.path.join(os.path.dirname(target), shortcut_filename)
     os.remove(shortcut_filename)
@@ -128,28 +130,31 @@ def shortcut_delete(target, new_name=''):
 
 '''
                     oo          
-                                
+
 88d8b.d8b. .d8888b. dP 88d888b. 
 88'`88'`88 88'  `88 88 88'  `88 
 88  88  88 88.  .88 88 88    88 
 dP  dP  dP `88888P8 dP dP    dP
 '''
 
+
 def main():
+    main_icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR7WXO2tVQRSFv7QWRmMIIggKAUW0SKNFGvMjFLsUooWPNIqVoqI2ShpFQbCwFNME/QMWggqCj0pQJIiSIkSSQgVRkHWZCTs7Z85rxg2Xe8+ZuXuts2ftNXOG+D+xE9gL7AH+AB+Aj8A3DzdUGH8CuAAcS+R9CpwLZAZTShK4HMA3tXioK8DVkgQErqQ2VoEvwF9gF7DFjYvorxIVqAJfe0ID+hg4Yq5vABdzCbQFj7h+/lgOga7gkcQKMBwupvoS6Asu3PfAgUDgdB8COeDZBMaBV8CIEVOV4Oo6MWsJbgNnM8CzRDgKLBnwOeBoC9OJU24B5838O8BMFw1MAs9DApVxq0n2ANgGvI0O54gJ7Iy59x04BHzqQuAkcD8kEZB8X3EKuGuS7wAWzfU1GY4j1MuKUwT0JC8NwKwptcS6nALX/VQFZJn7gHfAfEhQtwRenGNBL/L7H3WirSJglboA7A4JvAgHIjLJ17UX8CyMxYd5AzzxovUEfJt8BXS4iCENaCliTBmgdQ4H3GvTIZZAlcNdAq6bRCKjLTbGCUAdoMgiUOVwKq/K7ENEDwKfnSmllqC2ELECXkQyDKm5bWxwOGdayTwikOtwHtyLs7ECde3VVAEPvuZwTX+M46pAymCacuRuy4P8fQkUAY8Eui5BMfBIoIsIi4JHAvp+CEybRW9zrNb0rqehDbqKPrAZ0IuEDdnwi7CZHA4vF3Y8G9xWQL+rylvVCT+Bm4mDR1PnJCsQB7YH7z+eyPQogGtnKxKp88B+QN2hz++w470Or9lFgGOSf3MNjp/Wcz63AAAAAElFTkSuQmCC'
     sg.set_options(keep_on_top=True)
     python_command = sg.execute_py_get_interpreter()
     sg.theme('dark grey 13')
     txt_size = 40
 
-    layout = [[sg.Text('Create a link to your Python file (Click Go or return key to start)', font='_ 15')],
-              [sg.T('Python (.PY/.PYW), EXE or other file - (absolute path)', s=txt_size), sg.Input(key='-IN FILE-'), sg.FileBrowse(file_types=(("Python Files", "*.py *.pyw *.PY *.PYW"),), )],
+    layout = [[sg.Text('Create Windows shortcut (Click Create Shortcut or return key to start)', font='_ 15')],
+              [sg.T('Python (.PY/.PYW), EXE or other file - (absolute path)', s=txt_size), sg.Input(key='-IN FILE-'),
+               sg.FileBrowse(file_types=(("Python Files", "*.py *.pyw *.PY *.PYW"),), )],
               [sg.T('Icon file (optional)', s=txt_size), sg.Input(key='-ICON-'), sg.FileBrowse(file_types=(("Icon Files", "*.ico *.ICO",),), )],
               [sg.T('Shortcut Name (optional)', s=txt_size), sg.Input(key='-SHORTCUT NAME-')],
               [sg.T('Python Command (optional)', s=txt_size), sg.Input(python_command, key='-PYTHON COMMAND-')],
               [sg.T('Arguments (optional)', s=txt_size), sg.Input(key='-ARGUMENTS-')],
               [sg.Button('Create Shortcut', bind_return_key=True), sg.Button('Exit')]]
 
-    window = sg.Window('Create Shortcut To Python File', layout, icon=main_icon, right_click_menu=sg.MENU_RIGHT_CLICK_EDITME_VER_EXIT)
+    window = sg.Window('Create Windows Shortcut', layout, icon=main_icon, right_click_menu=['', ['Edit Me', 'Version', 'File Location', 'Exit']])
 
     while True:
         event, values = window.read()
@@ -167,15 +172,17 @@ def main():
             try:
                 if '.pyw' in infile or '.py' in infile:
                     if values['-PYTHON COMMAND-']:
-                        if '.pyw' in values['-IN FILE-'].lower():       # if a .pyw file specified, use pythonw to launch it
+                        if '.pyw' in values['-IN FILE-'].lower():  # if a .pyw file specified, use pythonw to launch it
                             if 'pythonw' not in py_cmd:
                                 py_cmd = py_cmd.replace('python.exe', 'pythonw.exe')
                     if py_cmd:
-                        shortcut_name = create_shortcut_for_python_file(target=fr'{py_cmd}', arguments=values['-IN FILE-'], icon=values['-ICON-'], new_name=values['-SHORTCUT NAME-'])
+                        shortcut_name = create_shortcut_for_python_file(target=fr'{py_cmd}', arguments=values['-IN FILE-'], icon=values['-ICON-'],
+                                                                        new_name=values['-SHORTCUT NAME-'])
                     else:
                         shortcut_name = create_shortcut_exe_or_other(target=values['-IN FILE-'], icon=values['-ICON-'], new_name=values['-SHORTCUT NAME-'])
                 else:
-                    shortcut_name = create_shortcut_exe_or_other(target=infile, arguments=values['-ARGUMENTS-'], icon=values['-ICON-'], new_name=values['-SHORTCUT NAME-'])
+                    shortcut_name = create_shortcut_exe_or_other(target=infile, arguments=values['-ARGUMENTS-'], icon=values['-ICON-'],
+                                                                 new_name=values['-SHORTCUT NAME-'])
                 choice = sg.popup('Done!', 'Created shortcut:', shortcut_name, custom_text=('Take me there', 'Close'))
                 if choice == 'Take me there':
                     sg.execute_command_subprocess(r'explorer.exe', os.path.dirname(shortcut_name))
@@ -185,9 +192,10 @@ def main():
             sg.execute_editor(__file__)
         elif event == 'Version':
             sg.popup_scrolled(sg.get_versions(), keep_on_top=True)
+        elif event == 'File Location':
+            sg.popup_scrolled('This Python file is:', __file__)
     window.close()
 
 
 if __name__ == '__main__':
-    main_icon = b'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACWElEQVRYR7WXO2tVQRSFv7QWRmMIIggKAUW0SKNFGvMjFLsUooWPNIqVoqI2ShpFQbCwFNME/QMWggqCj0pQJIiSIkSSQgVRkHWZCTs7Z85rxg2Xe8+ZuXuts2ftNXOG+D+xE9gL7AH+AB+Aj8A3DzdUGH8CuAAcS+R9CpwLZAZTShK4HMA3tXioK8DVkgQErqQ2VoEvwF9gF7DFjYvorxIVqAJfe0ID+hg4Yq5vABdzCbQFj7h+/lgOga7gkcQKMBwupvoS6Asu3PfAgUDgdB8COeDZBMaBV8CIEVOV4Oo6MWsJbgNnM8CzRDgKLBnwOeBoC9OJU24B5838O8BMFw1MAs9DApVxq0n2ANgGvI0O54gJ7Iy59x04BHzqQuAkcD8kEZB8X3EKuGuS7wAWzfU1GY4j1MuKUwT0JC8NwKwptcS6nALX/VQFZJn7gHfAfEhQtwRenGNBL/L7H3WirSJglboA7A4JvAgHIjLJ17UX8CyMxYd5AzzxovUEfJt8BXS4iCENaCliTBmgdQ4H3GvTIZZAlcNdAq6bRCKjLTbGCUAdoMgiUOVwKq/K7ENEDwKfnSmllqC2ELECXkQyDKm5bWxwOGdayTwikOtwHtyLs7ECde3VVAEPvuZwTX+M46pAymCacuRuy4P8fQkUAY8Eui5BMfBIoIsIi4JHAvp+CEybRW9zrNb0rqehDbqKPrAZ0IuEDdnwi7CZHA4vF3Y8G9xWQL+rylvVCT+Bm4mDR1PnJCsQB7YH7z+eyPQogGtnKxKp88B+QN2hz++w470Or9lFgGOSf3MNjp/Wcz63AAAAAElFTkSuQmCC'
     main()
